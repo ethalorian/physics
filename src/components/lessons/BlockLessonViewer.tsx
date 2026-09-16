@@ -267,9 +267,9 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
       scene={<>{teachingCommand.error && <p role="alert">{teachingCommand.error}</p>}{opener ? <TeachingToolRenderer key={opener.id} block={opener}/> : null}<BlockRenderer hideBlockHeadings blocks={page.blocks.filter(b=>b!==opener && !page.captureBlocks.includes(b))} referenceBlocks={blocks} lessonId={lesson.id} readOnly /></>}
       task={<BlockRenderer hideBlockHeadings blocks={page.captureBlocks} referenceBlocks={blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} readOnly={staffView||submissionLocked} readOnlyExceptBlockId={!staffView&&submissionLocked?live.session?.pollBlockId??undefined:undefined} />}
       submit={!staffView && isLast ? <>
-        {submissionLocked ? <p>This lesson was submitted. Your teacher can return it if you need to work on the rebuilt activity; your earlier submission is kept.</p> : <p>Save your {totalTasks} responses, then send them for review. Your teacher checks the work; practice attempts do not become grades.</p>}
-        {pendingBlocks.length>0 && <p role="status">Save your changed responses before submitting.</p>}
-        {preview ? <button type="button" disabled={!allTasksDone||pendingBlocks.length>0||submitted} onClick={()=>setSubmitted(true)}>{submitted?'Preview submitted':'Submit workshop (preview)'}</button> : <SubmitLessonButton lessonId={lesson.id} blocked={pendingBlocks.length>0} complete={allTasksDone} onChange={st=>{setSubmitted(Boolean(st.submittedAt));setSubmissionLocked(st.locked)}}/>}
+        {submissionLocked ? <p>This lesson was submitted. Your teacher can return it if you need to work on the rebuilt activity; your earlier submission is kept.</p> : <p>Submit your work when you are ready for review. Changed answers are saved when you submit. Your teacher checks the work; practice attempts do not become grades.</p>}
+        {pendingBlocks.length>0 && <p role="status">Your changed responses will be saved when you submit.</p>}
+        {preview ? <button type="button" disabled={!allTasksDone||pendingBlocks.length>0||submitted} onClick={()=>setSubmitted(true)}>{submitted?'Preview submitted':'Submit workshop (preview)'}</button> : <SubmitLessonButton lessonId={lesson.id} prepare={() => store.savePending(blocks)} complete={allTasksDone} onChange={st=>{setSubmitted(Boolean(st.submittedAt));setSubmissionLocked(st.locked)}}/>}
         {submitted && <p role="status">Submitted · awaiting your teacher’s review. {xpSession} XP earned.</p>}
       </> : null}
     /></TeachingToolContext.Provider>
@@ -515,18 +515,18 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
               }}
             >
               <div className="text-sm max-w-sm" style={{ color: 'var(--muted-foreground)' }}>
-                <span className="font-semibold" style={{ color: 'var(--foreground)' }}>Save your required answers, then submit.</span>{' '}
-                Check that your answers show what you understand and why. Clear reasoning matters more than length. Autosave keeps drafts; Save answer records your work for review.
+                <span className="font-semibold" style={{ color: 'var(--foreground)' }}>Submit your work for review.</span>{' '}
+                Check that your answers show what you understand and why. Clear reasoning matters more than length. Submit saves your changed answers and sends your work to your teacher. You can submit even if some activities are unfinished.
               </div>
               {pendingBlocks.length > 0 && <div className="w-full text-sm" role="status">
-                <p>Save these changed answers before submitting:</p>
+                <p>These changed answers will be saved when you submit:</p>
                 <ul className="mt-1 list-disc pl-5">{pendingBlocks.map((b) => {
                   const index = pages.findIndex((p) => p.blocks.some((x) => x.id === b.id))
                   return <li key={b.id}><button type="button" className="underline" onClick={() => breakAway(Math.min(index, Math.max(0, lockedFrom - 1)))}>Section {index + 1}: {sections[index]?.title}</button></li>
                 })}</ul>
               </div>}
               {preview ? <button type="button" disabled={!allTasksDone || pendingBlocks.length > 0 || submitted} onClick={() => setSubmitted(true)} className="rounded-lg bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50">{submitted ? 'Preview submitted' : 'Submit lesson (preview)'}</button> :
-                <SubmitLessonButton lessonId={lesson.id} blocked={pendingBlocks.length > 0} complete={allTasksDone} onChange={(st) => { setSubmitted(Boolean(st.submittedAt)); setSubmissionLocked(st.locked) }} />}
+                <SubmitLessonButton lessonId={lesson.id} prepare={() => store.savePending(blocks)} complete={allTasksDone} onChange={(st) => { setSubmitted(Boolean(st.submittedAt)); setSubmissionLocked(st.locked) }} />}
             </div>
           )}
 
@@ -538,7 +538,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
             return (
               <div className="mt-4 rounded-2xl border p-5" style={{ borderColor: 'color-mix(in oklch, var(--success) 45%, var(--border))', background: 'color-mix(in oklch, var(--success) 8%, var(--card))' }}>
                 <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--success)' }}>Submitted</div>
-                <h2 className="lesson-headline mt-0.5" style={{ fontSize: 22, color: 'var(--foreground)' }}>{lesson.title} is in.</h2>
+                <h2 className="lesson-headline mt-0.5 text-title-2" style={{ color: 'var(--foreground)' }}>{lesson.title} is in.</h2>
                 <div className="mt-3 grid gap-2 text-sm" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
                   <div className="rounded-xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}><div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Auto-checked</div><div className="text-lg font-bold">{t.autoChecked > 0 ? `${t.autoRight} of ${t.autoChecked} right` : '—'}</div></div>
                   <div className="rounded-xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}><div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Awaiting your teacher’s rating</div><div className="text-lg font-bold">{t.awaiting}</div></div>

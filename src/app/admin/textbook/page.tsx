@@ -24,7 +24,7 @@ function chapterFromName(name: string): { n: number | null; te: boolean } {
 const STATUS_UI: Record<Status, { label: string; icon: typeof CheckCircle2; color: string }> = {
   'student': { label: 'Student edition in bucket', icon: CheckCircle2, color: C.ok },
   'fallback-te': { label: 'Falling back to public TEACHER copy', icon: AlertTriangle, color: C.warn },
-  'missing': { label: 'Not available to students', icon: XCircle, color: 'var(--destructive, #c0392b)' },
+  'missing': { label: 'Not available to students', icon: XCircle, color: 'var(--destructive)' },
 }
 
 export default function TextbookAdminPage() {
@@ -102,7 +102,7 @@ export default function TextbookAdminPage() {
           {jobs.map((j, i) => (
             <div key={i} className="flex items-center justify-between px-4 py-1.5 border-b last:border-b-0" style={{ borderColor: C.line, color: C.fg }}>
               <span><code>{j.name}</code>{j.chapter ? ` → chapter ${j.chapter}` : ''}</span>
-              <span style={{ color: j.state === 'done' ? C.ok : j.state === 'error' ? 'var(--destructive, #c0392b)' : C.muted }}>
+              <span style={{ color: j.state === 'done' ? C.ok : j.state === 'error' ? 'var(--destructive)' : C.muted }}>
                 {j.state === 'done' ? 'uploaded' : j.state === 'error' ? j.msg : j.state}
               </span>
             </div>
@@ -110,13 +110,13 @@ export default function TextbookAdminPage() {
         </div>
       )}
 
-      {error && <div className="text-sm mb-4" style={{ color: 'var(--destructive, #c0392b)' }}>{error}</div>}
+      {error && <div className="text-sm mb-4" style={{ color: 'var(--destructive)' }}>{error}</div>}
 
       {counts && (
         <div className="flex flex-wrap gap-3 text-sm mb-3" style={{ color: C.muted }}>
           <span><b style={{ color: C.ok }}>{counts.student}</b> student edition</span>
           <span><b style={{ color: C.warn }}>{counts.te}</b> falling back to teacher edition</span>
-          <span><b style={{ color: 'var(--destructive, #c0392b)' }}>{counts.missing}</b> missing</span>
+          <span><b style={{ color: 'var(--destructive)' }}>{counts.missing}</b> missing</span>
         </div>
       )}
 

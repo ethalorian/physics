@@ -89,15 +89,15 @@ export default function GlossaryTerm({ term, definition, cognate, tier, partOfSp
         >
           <span className="block text-overline" style={{ color: 'var(--primary)' }}>
             {term}
-            {tier && <span className="ml-1.5 rounded px-1 py-0.5 text-[9px] font-bold" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>Tier {tier}</span>}
-            {partOfSpeech && <span className="ml-1 text-[10px] font-normal italic" style={{ color: 'var(--muted-foreground)' }}>{partOfSpeech}</span>}
+            {tier && <span className="ml-1.5 rounded px-1 py-0.5 text-overline font-bold" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>Tier {tier}</span>}
+            {partOfSpeech && <span className="ml-1 text-overline font-normal italic" style={{ color: 'var(--muted-foreground)' }}>{partOfSpeech}</span>}
           </span>
           {cognate && (
-            <span className="block text-[12px] italic" style={{ color: 'var(--muted-foreground)' }}>{cognate}</span>
+            <span className="block text-caption italic" style={{ color: 'var(--muted-foreground)' }}>{cognate}</span>
           )}
           <span className="block text-[13px] mt-0.5" style={{ color: 'var(--foreground)', lineHeight: 1.4 }}>{definition}</span>
           {example && (
-            <span className="block text-[12px] mt-1" style={{ color: 'var(--muted-foreground)', lineHeight: 1.4 }}>“{example}”</span>
+            <span className="block text-caption mt-1" style={{ color: 'var(--muted-foreground)', lineHeight: 1.4 }}>“{example}”</span>
           )}
         </span>
       )}

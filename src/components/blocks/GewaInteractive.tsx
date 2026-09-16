@@ -113,7 +113,7 @@ function describeMove(eq: Equation, d: Drag): string {
 }
 
 const badge = (l: string, color: string, fg = 'var(--primary-foreground)') => (
-  <span className="grid place-items-center font-bold flex-shrink-0" style={{ width: 30, height: 30, borderRadius: 9, fontSize: 14, background: color, color: fg }}>{l}</span>
+  <span className="grid place-items-center font-bold flex-shrink-0 text-sm" style={{ width: 30, height: 30, borderRadius: 'var(--radius-sm)', background: color, color: fg }}>{l}</span>
 )
 const stepHead = (l: string, color: string, title: string, fg?: string) => (
   <div className="flex items-center gap-2 mb-2">{badge(l, color, fg)}<span className="text-sm font-semibold">{title}</span></div>
@@ -330,7 +330,7 @@ export default function GewaInteractive({
       style={{ ...dragHandleStyle, display: 'inline-flex', alignItems: 'center', padding: '2px 8px',
         border: `1.5px solid ${isArmed(d) ? 'var(--success)' : 'var(--primary)'}`,
         background: isArmed(d) ? 'color-mix(in oklch, var(--success) 18%, var(--card))' : 'color-mix(in oklch, var(--primary) 10%, var(--card))',
-        color: 'var(--foreground)', borderRadius: 8, lineHeight: 1.4 }}>
+        color: 'var(--foreground)', borderRadius: 'var(--radius-sm)', lineHeight: 1.4 }}>
       {children}
     </span>
   )
@@ -352,7 +352,7 @@ export default function GewaInteractive({
     return (
       <span data-drop={`side:${which}`}
         onClick={() => { if (armed?.type === 'move' && armed.which !== which) applyMove(armed) }}
-        style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 10, minHeight: 44,
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 'var(--radius-md)', minHeight: 44,
           border: validTarget ? `2px dashed ${hover === `side:${which}` ? 'var(--success)' : 'color-mix(in oklch, var(--primary) 45%, var(--border))'}` : '2px dashed transparent',
           background: validTarget && hover === `side:${which}` ? 'color-mix(in oklch, var(--success) 10%, transparent)' : 'transparent' }}>
         {s.terms.length === 0 ? <span style={{ color: 'var(--muted-foreground)' }}>0</span> : s.terms.length > 1
@@ -388,7 +388,7 @@ export default function GewaInteractive({
       const isHover = (hover === `slot:${x.base}` && drag?.type === 'given' && drag.chip.sym === x.base) || (armed?.type === 'given' && armed.chip.sym === x.base)
       return <span key={k} data-drop={`slot:${x.base}`}
         onClick={() => { if (armed?.type === 'given' && armed.chip.sym === x.base) { fillSlot(armed.chip); setArmed(null) } }}
-        style={{ padding: '2px 9px', border: `1.5px dashed ${isHover ? 'var(--success)' : 'var(--border)'}`, borderRadius: 7, color: 'var(--muted-foreground)', background: isHover ? 'color-mix(in oklch, var(--success) 12%, transparent)' : 'transparent', cursor: armed?.type === 'given' && armed.chip.sym === x.base ? 'pointer' : 'default' }}><FactorView x={x} /></span>
+        style={{ padding: '2px 9px', border: `1.5px dashed ${isHover ? 'var(--success)' : 'var(--border)'}`, borderRadius: 'var(--radius-sm)', color: 'var(--muted-foreground)', background: isHover ? 'color-mix(in oklch, var(--success) 12%, transparent)' : 'transparent', cursor: armed?.type === 'given' && armed.chip.sym === x.base ? 'pointer' : 'default' }}><FactorView x={x} /></span>
     }
     const termSub = (t: Term, i: number, first: boolean) => (
       <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
@@ -464,7 +464,7 @@ export default function GewaInteractive({
             : isolatedOn
             ? <p className="text-xs mb-2" style={{ color: 'var(--success)' }}>✓ Solved for {unknown}. Now drag (or tap) your knowns in below.</p>
             : <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>Drag a term or factor onto the other side of the = — or tap it, then tap the other side. The operation flips automatically.</p>}
-          <div className="rounded-xl p-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)', fontSize: 22 }}>
+          <div className="rounded-xl p-4 text-title-2" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
               {renderSide('lhs')}<span style={{ color: 'var(--muted-foreground)' }}>=</span>{renderSide('rhs')}
             </span>
@@ -485,7 +485,7 @@ export default function GewaInteractive({
             <ol className="mt-2 flex flex-col gap-1" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
               {opHistory.map((op, i) => (
                 <li key={i} className="text-xs flex items-center gap-2" style={{ color: 'var(--muted-foreground)' }}>
-                  <span className="grid place-items-center" style={{ width: 16, height: 16, borderRadius: '50%', background: 'color-mix(in oklch, oklch(0.58 0.10 255) 20%, var(--card))', color: 'oklch(0.42 0.12 255)', fontWeight: 700, fontSize: 10 }}>{i + 1}</span>
+                  <span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: '50%', background: 'color-mix(in oklch, oklch(0.58 0.10 255) 20%, var(--card))', color: 'oklch(0.42 0.12 255)' }}>{i + 1}</span>
                   {op}
                 </li>
               ))}
@@ -504,10 +504,10 @@ export default function GewaInteractive({
               const used = subs && subs[c.sym] !== undefined
               const usable = slots.includes(c.sym)
               return (
-                <span key={i} onPointerDown={(e) => { if (usable && !used) startDrag(e, { type: 'given', chip: c, label: `${c.sym} = ${c.val} ${c.unit}` }) }}
+                <span className="text-sm" key={i} onPointerDown={(e) => { if (usable && !used) startDrag(e, { type: 'given', chip: c, label: `${c.sym} = ${c.val} ${c.unit}` }) }}
                   title={usable ? 'drag onto its variable' : 'not used in this equation'}
-                  style={{ ...(usable && !used ? dragHandleStyle : { cursor: 'default' }), display: 'inline-flex', alignItems: 'center', borderRadius: 8, padding: '6px 10px', fontSize: 14, fontFamily: 'Georgia, serif',
-                    border: `0.5px solid ${used ? 'var(--border)' : usable ? 'var(--success)' : 'var(--border)'}`,
+                  style={{ ...(usable && !used ? dragHandleStyle : { cursor: 'default' }), display: 'inline-flex', alignItems: 'center', borderRadius: 'var(--radius-sm)', padding: '6px 10px', fontFamily: 'Georgia, serif',
+                    border: `1px solid ${used ? 'var(--border)' : usable ? 'var(--success)' : 'var(--border)'}`,
                     background: used ? 'var(--secondary)' : usable ? 'color-mix(in oklch, var(--success) 12%, var(--card))' : 'var(--card)',
                     color: usable ? 'var(--foreground)' : 'var(--muted-foreground)', opacity: used ? 0.55 : usable ? 1 : 0.5 }}>
                   {used ? '✓ ' : ''}{c.sym} = {c.val} {c.unit}
@@ -522,7 +522,7 @@ export default function GewaInteractive({
           )}
           {convNote && <p className="text-xs mb-2 rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, var(--reward) 16%, transparent)', color: 'var(--reward-foreground)' }}><b>{convNote.startsWith("Couldn't read") ? 'Check that value:' : 'Converted to MCAS units:'}</b> {convNote}</p>}
           {constantSlots.length > 0 && <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>Constant{constantSlots.length > 1 ? 's' : ''} filled for you: {constantSlots.join(', ')}.</p>}
-          <div className="rounded-xl p-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)', fontSize: 22 }}>
+          <div className="rounded-xl p-4 text-title-2" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
               <Symbol base={unknown} /><span style={{ color: 'var(--muted-foreground)' }}>=</span>{renderSub()}
             </span>
@@ -568,7 +568,7 @@ export default function GewaInteractive({
 
       {/* drag ghost — follows the pointer */}
       {drag && (
-        <div style={{ position: 'fixed', left: pt.x + 10, top: pt.y + 10, pointerEvents: 'none', zIndex: 60, padding: '3px 10px', borderRadius: 8, background: 'var(--primary)', color: 'var(--primary-foreground)', fontSize: 18, fontFamily: 'Georgia, serif', boxShadow: '0 4px 12px rgba(0,0,0,0.18)' }}>
+        <div className="text-lg" style={{ position: 'fixed', left: pt.x + 10, top: pt.y + 10, pointerEvents: 'none', zIndex: 60, padding: '3px 10px', borderRadius: 'var(--radius-sm)', background: 'var(--primary)', color: 'var(--primary-foreground)', fontFamily: 'Georgia, serif', boxShadow: '0 4px 12px color-mix(in oklch, var(--primary) 18%, transparent)' }}>
           {drag.type === 'given' ? drag.label : <span style={{ fontStyle: 'italic' }}>{drag.label || 'term'}</span>}
         </div>
       )}

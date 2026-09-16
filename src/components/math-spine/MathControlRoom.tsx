@@ -351,7 +351,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
         <div className="flex items-center gap-1" role="group" aria-label="Sort students">
           {([['name', 'A–Z'], ['progress', 'Most progress'], ['needs-me', 'Needs me first']] as [SnapshotSort, string][]).map(([v, label]) => (
             <button key={v} onClick={() => setSnapshotSort(v)}
-              className="text-[11px] font-semibold rounded-md px-2 py-1"
+              className="text-overline font-semibold rounded-md px-2 py-1"
               aria-pressed={snapshotSort === v}
               style={{ border: '1px solid var(--border)', cursor: 'pointer', background: snapshotSort === v ? 'var(--primary)' : 'var(--card)', color: snapshotSort === v ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>
               {label}
@@ -394,11 +394,11 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
           <>
             {/* 1 — class ladder strip */}
             <div className="rounded-xl border p-3 mb-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-              <div className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Where the class is on the ladder</div>
+              <div className="text-overline font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Where the class is on the ladder</div>
               <div style={{ display: 'grid', gridTemplateColumns: `repeat(${comps.length}, minmax(44px, 1fr))`, gap: 6 }}>
                 {comps.map((c, i) => {
                   const t = tally[i]
-                  const seg = (count: number, color: string) => count > 0 ? <div style={{ height: Math.max(3, Math.round((count / Math.max(1, n)) * 44)), background: color, borderRadius: 2 }} /> : null
+                  const seg = (count: number, color: string) => count > 0 ? <div style={{ height: Math.max(3, Math.round((count / Math.max(1, n)) * 44)), background: color, borderRadius: 'var(--radius-xs)' }} /> : null
                   return (
                     <div key={c.id} title={`${c.code} — ${c.statement}\nGot it ${t['got-it']} · Almost ${t.almost} · Not yet ${t['not-yet']} · Refresh ${t.refresh} · No evidence ${t.none}`}
                       style={{ textAlign: 'center' }}>
@@ -409,8 +409,8 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                         {seg(t.refresh, 'color-mix(in oklch, var(--primary) 65%, transparent)')}
                         {seg(t.none, 'var(--muted)')}
                       </div>
-                      <div className="text-[10px] font-bold mt-1" style={{ color: 'var(--muted-foreground)' }}>{c.code}</div>
-                      <div className="text-[10px] tabular-nums" style={{ color: t['got-it'] > 0 ? 'var(--success)' : 'var(--muted-foreground)' }}>{t['got-it']}/{n}</div>
+                      <div className="text-overline font-bold mt-1" style={{ color: 'var(--muted-foreground)' }}>{c.code}</div>
+                      <div className="text-overline tabular-nums" style={{ color: t['got-it'] > 0 ? 'var(--success)' : 'var(--muted-foreground)' }}>{t['got-it']}/{n}</div>
                     </div>
                   )
                 })}
@@ -422,10 +422,10 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
               <table style={{ borderCollapse: 'separate', borderSpacing: 2 }}>
                 <thead>
                   <tr>
-                    <th style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--background)', textAlign: 'left', padding: '4px 8px', fontSize: 12 }}>Student</th>
-                    <th style={{ padding: '4px 8px', fontSize: 11, color: 'var(--muted-foreground)', fontWeight: 600, textAlign: 'left', whiteSpace: 'nowrap' }}>Today&apos;s rung</th>
+                    <th className="text-caption" style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--background)', textAlign: 'left', padding: '4px 8px' }}>Student</th>
+                    <th className="text-overline" style={{ padding: '4px 8px', color: 'var(--muted-foreground)', textAlign: 'left', whiteSpace: 'nowrap' }}>Today&apos;s rung</th>
                     {comps.map((c) => (
-                      <th key={c.id} title={c.statement} scope="col" style={{ padding: '4px 6px', fontSize: 11, color: 'var(--muted-foreground)', fontWeight: 600 }}>{c.code}</th>
+                      <th className="text-overline" key={c.id} title={c.statement} scope="col" style={{ padding: '4px 6px', color: 'var(--muted-foreground)' }}>{c.code}</th>
                     ))}
                   </tr>
                 </thead>
@@ -437,15 +437,15 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                     const rungWord = rung?.kind === 'refresh' ? 'refresh' : rung?.kind === 'recheck' ? 're-check' : rung?.kind === 'maintenance' ? 'stretch' : 'climb'
                     return (
                       <tr key={st.id}>
-                        <td style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--background)', padding: '4px 8px', fontSize: 13, whiteSpace: 'nowrap' }}>
+                        <td className="text-caption" style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--background)', padding: '4px 8px', whiteSpace: 'nowrap' }}>
                           {st.name}
-                          <span className="tabular-nums" style={{ marginLeft: 6, fontSize: 11, color: roll.fluent > 0 ? 'var(--success)' : 'var(--muted-foreground)' }}>{roll.fluent}/{comps.length}</span>
+                          <span className="tabular-nums text-overline" style={{ marginLeft: 6, color: roll.fluent > 0 ? 'var(--success)' : 'var(--muted-foreground)' }}>{roll.fluent}/{comps.length}</span>
                         </td>
                         <td style={{ padding: '2px 8px 2px 4px', whiteSpace: 'nowrap' }}>
                           {roll.evidence === 0 ? (
-                            <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>No evidence yet · starts at {rungComp?.code ?? comps[0]?.code}</span>
+                            <span className="text-overline" style={{ color: 'var(--muted-foreground)' }}>No evidence yet · starts at {rungComp?.code ?? comps[0]?.code}</span>
                           ) : rungComp ? (
-                            <span className="text-[11px] font-semibold rounded-md px-1.5 py-0.5" title={rungComp.statement}
+                            <span className="text-overline font-semibold rounded-md px-1.5 py-0.5" title={rungComp.statement}
                               style={{ background: 'color-mix(in oklch, var(--primary) 12%, transparent)', color: 'var(--primary)' }}>
                               {rungComp.code} · {rungWord}
                             </span>
@@ -458,10 +458,10 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                           const label = `${st.name} · ${c.code}: ${state ? STATE_META[state].word : 'no evidence yet'}${cell.value != null ? ` (${cell.value.toFixed(1)})` : ''}${cell.pending ? ` · ${cell.pending} to review` : ''}`
                           return (
                             <td key={c.id} style={{ padding: 0 }}>
-                              <div role="img" aria-label={label} title={label}
-                                style={{ ...(meta ? meta.style : EMPTY_CELL), position: 'relative', width: 40, height: 30, borderRadius: 6, fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+                              <div className="text-caption" role="img" aria-label={label} title={label}
+                                style={{ ...(meta ? meta.style : EMPTY_CELL), position: 'relative', width: 40, height: 30, borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
                                 {cell.value === null ? '·' : cell.value.toFixed(1)}
-                                {meta?.glyph && <span aria-hidden style={{ fontSize: 11 }}>{meta.glyph}</span>}
+                                {meta?.glyph && <span className="text-overline" aria-hidden >{meta.glyph}</span>}
                                 {cell.pending > 0 && (
                                   <span style={{ position: 'absolute', top: 2, right: 3, width: 7, height: 7, borderRadius: '50%', background: 'var(--destructive)' }} />
                                 )}
@@ -476,14 +476,14 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
               </table>
             </div>
             {/* legend — the same four words students see, plus the empty state */}
-            <div className="flex items-center gap-3 flex-wrap mt-2 text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
+            <div className="flex items-center gap-3 flex-wrap mt-2 text-overline" style={{ color: 'var(--muted-foreground)' }}>
               {(['got-it', 'almost', 'not-yet', 'refresh'] as RungState[]).map((k) => (
                 <span key={k} className="inline-flex items-center gap-1.5">
-                  <span style={{ ...STATE_META[k].style, width: 14, height: 14, borderRadius: 4, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 9 }}>{STATE_META[k].glyph}</span>
+                  <span className="text-overline" style={{ ...STATE_META[k].style, width: 14, height: 14, borderRadius: 'var(--radius-xs)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{STATE_META[k].glyph}</span>
                   {STATE_META[k].word}
                 </span>
               ))}
-              <span className="inline-flex items-center gap-1.5"><span style={{ ...EMPTY_CELL, width: 14, height: 14, borderRadius: 4, display: 'inline-block' }} /> No evidence yet</span>
+              <span className="inline-flex items-center gap-1.5"><span style={{ ...EMPTY_CELL, width: 14, height: 14, borderRadius: 'var(--radius-xs)', display: 'inline-block' }} /> No evidence yet</span>
               <span className="inline-flex items-center gap-1.5"><span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--destructive)', display: 'inline-block' }} /> Warm-up waiting</span>
             </div>
             <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
@@ -516,9 +516,9 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                       style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', textAlign: 'left', padding: '10px 14px', border: 'none', borderLeft: `2px solid ${active ? 'var(--reward)' : 'transparent'}`, background: active ? 'color-mix(in oklch, var(--reward) 14%, transparent)' : 'transparent', color: 'var(--foreground)', opacity: done ? 0.45 : 1, cursor: done ? 'default' : 'pointer' }}
                     >
                       <span className={styles.initials} aria-hidden="true">{st.name.split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('')}</span>
-                      <span style={{ flex: 1, fontSize: 14, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{st.name}<small className={styles.studentStatus}>{active ? 'Reviewing now' : done ? 'Reviewed · open history' : `${qc} to review`}</small></span>
-                      {done ? <span style={{ color: 'var(--success)', fontWeight: 700, fontSize: 12 }}>✓</span>
-                        : <span style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 9, fontSize: 11, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{qc}</span>}
+                      <span className="text-sm" style={{ flex: 1, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{st.name}<small className={styles.studentStatus}>{active ? 'Reviewing now' : done ? 'Reviewed · open history' : `${qc} to review`}</small></span>
+                      {done ? <span className="text-caption" style={{ color: 'var(--success)' }}>✓</span>
+                        : <span className="text-overline" style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 'var(--radius-sm)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{qc}</span>}
                     </button>
                   )
                 })}
@@ -581,13 +581,12 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                                 disabled={savingKey !== null}
                                 onClick={() => setSelectedLevel(lv as 1 | 2 | 3)}
                                 aria-pressed={selectedLevel === lv}
-                                className={styles.rating}
+                                className={[styles.rating, 'text-sm'].filter(Boolean).join(' ')}
                                 aria-label={`${lv} · ${levelWord(lv)}`}
                                 style={{
-                                  padding: '12px', fontSize: 14, cursor: 'pointer', border: selectedLevel === lv ? '2px solid currentColor' : '2px solid transparent',
+                                  padding: '12px', cursor: 'pointer', border: selectedLevel === lv ? '2px solid currentColor' : '2px solid transparent',
                                   background: lv === 1 ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : lv === 2 ? 'color-mix(in oklch, var(--reward) 22%, transparent)' : 'color-mix(in oklch, var(--success) 14%, transparent)',
-                                  color: lv === 1 ? 'var(--destructive)' : lv === 2 ? 'var(--reward-foreground)' : 'var(--success)',
-                                }}
+                                  color: lv === 1 ? 'var(--destructive)' : lv === 2 ? 'var(--reward-foreground)' : 'var(--success)' }}
                               >
                                 <span className={styles.ratingKey} aria-hidden="true">{lv}</span><span className={styles.ratingCopy}><strong>{levelWord(lv)}</strong><small>{lv === 1 ? 'With mathematical support' : lv === 2 ? 'Independent in a routine context' : 'Transfers and explains why'}</small></span><kbd className={styles.shortcut}>{lv}</kbd>
                               </button>
@@ -642,22 +641,22 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
               <h3 className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{sel.name}</h3>
               </div>
               <div className={styles.studentNav}><button type="button" aria-label="Previous student" disabled={!previousStudent || savingKey !== null} onClick={() => previousStudent && openStudent(previousStudent.id, previousStudent.name)}>← Previous student <small>Shift + ←</small></button><button type="button" aria-label="Next student" disabled={!nextStudent || savingKey !== null} onClick={() => nextStudent && openStudent(nextStudent.id, nextStudent.name)}>Next student → <small>{nextStudent?.name ?? 'End of queue'} · Shift + →</small></button></div>
-              <button aria-label="Close math review" className={styles.close} onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 26, lineHeight: 1, cursor: 'pointer' }}>×</button>
+              <button aria-label="Close math review" className={[styles.close, 'text-title-1'].filter(Boolean).join(' ')} onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', lineHeight: 1, cursor: 'pointer' }}>×</button>
             </footer>
             {nextGate && (
               <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'color-mix(in oklch, var(--background) 94%, transparent)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
-                <div className={styles.savedSeal} aria-hidden="true">✓</div><div style={{ fontSize: 13, fontWeight: 600, color: 'var(--success)' }}>Review saved. One more next step delivered.</div><div className={styles.sessionCount}>{reviewsSaved} reviews saved this session</div>
-                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--foreground)' }}>Next: {nextGate.name}</div>
-                <div style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>
+                <div className={styles.savedSeal} aria-hidden="true">✓</div><div className="text-caption" style={{ color: 'var(--success)' }}>Review saved. One more next step delivered.</div><div className={styles.sessionCount}>{reviewsSaved} reviews saved this session</div>
+                <div className="text-title-2" style={{ color: 'var(--foreground)' }}>Next: {nextGate.name}</div>
+                <div className="text-caption" style={{ color: 'var(--muted-foreground)' }}>
                   {queue.find((q) => q.studentId === nextGate.id)?.count ?? 0} to review · {queue.length} student{queue.length === 1 ? '' : 's'} left
                 </div>
-                <button
+                <button className="text-sm"
                   onClick={() => { const g = nextGate; setNextGate(null); openStudent(g.id, g.name) }}
-                  style={{ marginTop: 4, background: 'var(--reward)', color: 'var(--reward-foreground)', border: 'none', borderRadius: 10, padding: '10px 22px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}
+                  style={{ marginTop: 4, background: 'var(--reward)', color: 'var(--reward-foreground)', border: 'none', borderRadius: 'var(--radius-md)', padding: '10px 22px', fontWeight: 700, cursor: 'pointer' }}
                 >
                   Continue →
                 </button>
-                <div style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>or press any key · Esc to close</div>
+                <div className="text-caption" style={{ color: 'var(--muted-foreground)' }}>or press any key · Esc to close</div>
               </div>
             )}
             </div>

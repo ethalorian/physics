@@ -39,9 +39,9 @@ export default function QuestionBankPage() {
     const questions = exportQuestions()
     const dataStr = JSON.stringify(questions, null, 2)
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
-    
+
     const exportFileDefaultName = `question-bank-${new Date().toISOString().split('T')[0]}.json`
-    
+
     const linkElement = document.createElement('a')
     linkElement.setAttribute('href', dataUri)
     linkElement.setAttribute('download', exportFileDefaultName)
@@ -56,7 +56,7 @@ export default function QuestionBankPage() {
     try {
       const text = await file.text()
       const questions = JSON.parse(text)
-      
+
       if (Array.isArray(questions)) {
         importQuestions(questions)
         alert(`Successfully imported ${questions.length} questions!`)
@@ -88,7 +88,7 @@ export default function QuestionBankPage() {
           <div className="flex gap-2">
             <Button
               onClick={() => setShowQuestionEditor(true)}
-              className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Edit className="h-4 w-4 mr-2" />
               Create Question
@@ -132,26 +132,26 @@ export default function QuestionBankPage() {
               <p className="text-xs text-muted-foreground mt-1">In your bank</p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">By Difficulty</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex gap-2">
-                <Badge variant="outline" className="bg-green-50 text-green-700">
+                <Badge variant="outline" className="bg-success/10 text-success">
                   {stats.by_difficulty.easy} Easy
                 </Badge>
-                <Badge variant="outline" className="bg-yellow-50 text-yellow-700">
+                <Badge variant="outline" className="bg-reward/10 text-foreground">
                   {stats.by_difficulty.medium} Med
                 </Badge>
-                <Badge variant="outline" className="bg-red-50 text-red-700">
+                <Badge variant="outline" className="bg-destructive/10 text-destructive">
                   {stats.by_difficulty.hard} Hard
                 </Badge>
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">Question Types</CardTitle>
@@ -167,7 +167,7 @@ export default function QuestionBankPage() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-muted-foreground">Most Used</CardTitle>

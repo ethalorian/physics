@@ -46,7 +46,7 @@ export default function VocabularyMatchingGameWrapper({
     completedMatches: 0,
     totalMatches: 0
   })
-  
+
   const [gameTerms, setGameTerms] = useState<VocabularyTerm[]>([])
   const [currentMatches, setCurrentMatches] = useState<Record<string, string>>({})
   const [elapsed, setElapsed] = useState(0)
@@ -92,30 +92,30 @@ export default function VocabularyMatchingGameWrapper({
     if (vocabularyTerms.length > 0) {
       // Filter by difficulty if specified
       let filteredTerms = vocabularyTerms
-      
+
       // Only filter if difficulty is not medium, and include terms without difficulty
       if (difficulty === 'easy') {
-        filteredTerms = vocabularyTerms.filter(term => 
+        filteredTerms = vocabularyTerms.filter(term =>
           term.difficulty === 'easy' || !term.difficulty
         )
       } else if (difficulty === 'hard') {
-        filteredTerms = vocabularyTerms.filter(term => 
+        filteredTerms = vocabularyTerms.filter(term =>
           term.difficulty === 'hard' || !term.difficulty
         )
       }
       // For medium difficulty, use all terms (no filtering)
-      
+
       console.log('Matching Game Debug:', {
         totalTerms: vocabularyTerms.length,
         difficulty,
         filteredTerms: filteredTerms.length,
         requestedMatches: maxMatches
       })
-      
+
       // Shuffle and select terms for the game
       const shuffled = [...filteredTerms].sort(() => Math.random() - 0.5)
       const gameTerms = shuffled.slice(0, Math.min(maxMatches, shuffled.length))
-      
+
       console.log('Matching Game Terms:', gameTerms.length)
       setGameTerms(gameTerms)
       setGameState(prev => ({
@@ -143,7 +143,7 @@ export default function VocabularyMatchingGameWrapper({
   const handleMatchingAnswer = useCallback((answer: { matches: Record<string, string> }) => {
     const matches = answer.matches || {}
     const completedMatches = Object.keys(matches).length
-    
+
     setCurrentMatches(matches)
     setGameState(prev => ({
       ...prev,
@@ -198,7 +198,7 @@ export default function VocabularyMatchingGameWrapper({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="flex items-center justify-center gap-2">
-            <Users className="h-6 w-6 text-blue-600" />
+            <Users className="h-6 w-6 text-primary" />
             Matching Game Ready
           </CardTitle>
           <CardDescription>
@@ -207,24 +207,24 @@ export default function VocabularyMatchingGameWrapper({
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-4 md:grid-cols-3 text-center">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-700">{gameState.totalMatches}</div>
-              <div className="text-sm text-blue-600">Matches</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{gameState.totalMatches}</div>
+              <div className="text-sm text-muted-foreground">Matches</div>
             </div>
-            <div className="p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-700">
+            <div className="p-4 bg-reward/10 rounded-lg">
+              <div className="text-2xl font-bold text-foreground">
                 {difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30}
               </div>
-              <div className="text-sm text-green-600">Points Each</div>
+              <div className="text-sm text-muted-foreground">Points Each</div>
             </div>
-            <div className="p-4 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-700">
+            <div className="p-4 bg-reward/10 rounded-lg">
+              <div className="text-2xl font-bold text-foreground">
                 {gameState.totalMatches * (difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30)}
               </div>
-              <div className="text-sm text-purple-600">Max Score</div>
+              <div className="text-sm text-muted-foreground">Max Score</div>
             </div>
           </div>
-          
+
           <div className="text-center">
             <Button onClick={startGame} size="lg">
               <Users className="h-4 w-4 mr-2" />
@@ -238,29 +238,29 @@ export default function VocabularyMatchingGameWrapper({
 
   if (gameState.gameStatus === 'complete') {
     return (
-      <Card className="border-green-200 bg-green-50">
+      <Card className="border-success/40 bg-success/10">
         <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-2 text-green-800">
+          <CardTitle className="flex items-center justify-center gap-2 text-success">
             <Trophy className="h-6 w-6" />
             Perfect Match!
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-4 md:grid-cols-3 text-center">
-            <div className="p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{gameState.score}</div>
-              <div className="text-sm text-green-600">Final Score</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{gameState.score}</div>
+              <div className="text-sm text-muted-foreground">Final Score</div>
             </div>
-            <div className="p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{gameState.completedMatches}/{gameState.totalMatches}</div>
-              <div className="text-sm text-green-600">Matches</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{gameState.completedMatches}/{gameState.totalMatches}</div>
+              <div className="text-sm text-muted-foreground">Matches</div>
             </div>
-            <div className="p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-green-700">100%</div>
-              <div className="text-sm text-green-600">Accuracy</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">100%</div>
+              <div className="text-sm text-muted-foreground">Accuracy</div>
             </div>
           </div>
-          
+
           <div className="text-center space-y-2">
             <Button onClick={resetGame} variant="outline">
               <RotateCcw className="h-4 w-4 mr-2" />
@@ -277,7 +277,7 @@ export default function VocabularyMatchingGameWrapper({
 
   return (
     <div className={`space-y-6 ${shake ? 'arcade-shake' : ''}`}>
-      <style>{`@keyframes arcadeShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}.arcade-shake{animation:arcadeShake .45s}`}</style>
+
       {/* Game Header */}
       <Card>
         <CardContent className="p-4">

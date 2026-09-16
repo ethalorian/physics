@@ -168,7 +168,7 @@ export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomI
               onClick={() => act({ action: 'start' })}
               disabled={game.players.length < game.minPlayers}
               className="rounded-lg px-5 py-2.5 text-sm font-medium mt-5"
-              style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: game.players.length < game.minPlayers ? 0.5 : 1 }}
+              style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', opacity: game.players.length < game.minPlayers ? 0.5 : 1 }}
             >
               Start game
             </button>
@@ -228,7 +228,7 @@ export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomI
             onClick={() => act({ action: 'write', text: draft || r.myText || '' })}
             disabled={(draft || r.myText || '').trim().length < 3}
             className="rounded-lg px-4 py-2 text-sm font-medium"
-            style={{ background: submitted ? 'var(--success)' : 'var(--primary)', color: 'var(--primary-foreground, white)' }}
+            style={{ background: submitted ? 'var(--success)' : 'var(--primary)', color: 'var(--primary-foreground)' }}
           >
             {submitted ? 'Update fake' : 'Submit fake'}
           </button>

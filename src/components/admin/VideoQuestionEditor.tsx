@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -7,10 +8,10 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
-import { 
-  Plus, 
-  Trash2, 
-  Edit2, 
+import {
+  Plus,
+  Trash2,
+  Edit2,
   Clock,
   AlertCircle,
   Play,
@@ -97,7 +98,7 @@ function VideoPlayerWithScrubber({
 
     // Check if script is already in the document
     const existingScript = document.querySelector('script[src="https://www.youtube.com/iframe_api"]')
-    
+
     if (!existingScript) {
       // Load the IFrame Player API code asynchronously
       const tag = document.createElement('script')
@@ -162,7 +163,7 @@ function VideoPlayerWithScrubber({
       if (!containerRef.current.children.length) {
         const playerDiv = document.createElement('div')
         containerRef.current.appendChild(playerDiv)
-        
+
         playerRef.current = new window.YT.Player(playerDiv, {
           videoId: youtubeId,
           width: '100%',
@@ -180,7 +181,7 @@ function VideoPlayerWithScrubber({
             onReady: (event: any) => {
               console.log('YouTube player ready')
               setIsPlayerReady(true)
-              
+
               // Get actual video duration
               try {
                 if (typeof event.target.getDuration === 'function') {
@@ -311,9 +312,9 @@ function VideoPlayerWithScrubber({
       <div className="relative bg-black rounded-lg overflow-hidden aspect-video">
         <div ref={containerRef} className="w-full h-full" />
         {!isPlayerReady && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-900/80">
+          <div className="absolute inset-0 flex items-center justify-center bg-foreground/80">
             <div className="text-center text-white">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-3"></div>
+              <Spinner size="lg" className="mx-auto mb-3 text-background" />
               <p className="text-sm">Loading video player...</p>
             </div>
           </div>
@@ -344,7 +345,7 @@ function VideoPlayerWithScrubber({
           >
             <SkipBack className="h-4 w-4" />
           </Button>
-          
+
           <Button
             size="lg"
             onClick={handlePlayPause}
@@ -358,7 +359,7 @@ function VideoPlayerWithScrubber({
               <Play className="h-5 w-5" />
             )}
           </Button>
-          
+
           <Button
             size="sm"
             variant="outline"
@@ -369,14 +370,14 @@ function VideoPlayerWithScrubber({
             <SkipForward className="h-4 w-4" />
           </Button>
 
-          <div className="mx-4 px-4 py-2 bg-white rounded-md border border-border font-mono text-sm font-semibold">
+          <div className="mx-4 px-4 py-2 bg-card rounded-md border border-border font-mono text-sm font-semibold">
             {secondsToMMSS(currentTime)} / {secondsToMMSS(displayDuration)}
           </div>
 
           <Button
             onClick={handleAddQuestion}
             disabled={!isPlayerReady}
-            className="bg-gradient-to-r from-primary/15 to-pink-600 hover:from-primary/15 hover:to-pink-700"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
             title={!isPlayerReady ? "Loading..." : `Add question at ${secondsToMMSS(currentTime)}`}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -407,8 +408,8 @@ function VideoPlayerWithScrubber({
 }
 
 // Timeline component showing questions
-function VideoTimeline({ 
-  questions, 
+function VideoTimeline({
+  questions,
   duration,
   currentTime,
   onQuestionClick
@@ -425,8 +426,8 @@ function VideoTimeline({
         <span className="text-xs font-medium">Questions on Timeline</span>
         <span>{secondsToMMSS(duration)}</span>
       </div>
-      
-      <div className="relative h-16 bg-gradient-to-r from-primary/15 via-primary/10 to-pink-100 rounded-lg border-2 border-border">
+
+      <div className="relative h-16 rounded-lg border-2 border-border bg-primary/10 text-foreground">
         {/* Time markers */}
         <div className="absolute inset-0 flex items-center justify-between px-1">
           {[0, 0.25, 0.5, 0.75, 1].map((percent) => (
@@ -435,7 +436,7 @@ function VideoTimeline({
         </div>
 
         {/* Current playhead position */}
-        <div 
+        <div
           className="absolute top-0 bottom-0 w-0.5 bg-destructive z-10"
           style={{ left: `${(currentTime / duration) * 100}%` }}
         >
@@ -454,10 +455,10 @@ function VideoTimeline({
               style={{ left: `${position}%` }}
             >
               <div className="relative">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary/15 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:scale-110 transition-transform border-2 border-white">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-lg group-hover:scale-110 transition-transform border-2 border-white bg-primary text-primary-foreground hover:bg-primary/90">
                   {q.question.points}
                 </div>
-                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-foreground text-background text-xs rounded px-2 py-1 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                   {secondsToMMSS(q.timestamp)} - {q.question.type}
                 </div>
               </div>
@@ -473,7 +474,7 @@ function VideoTimeline({
           <span>Current position</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-6 h-6 bg-gradient-to-br from-primary/15 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-[10px]">
+          <div className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-overline bg-primary text-primary-foreground hover:bg-primary/90">
             3
           </div>
           <span>Question (points shown)</span>
@@ -573,7 +574,7 @@ export default function VideoQuestionEditor({
 
   const handleQuestionUpdate = (updatedQuestion: Question) => {
     if (!editingQuestion) return
-    
+
     // Update the editing question
     setEditingQuestion(prev => prev ? { ...prev, question: updatedQuestion } : null)
   }
@@ -583,10 +584,10 @@ export default function VideoQuestionEditor({
 
     // Find if this is an existing question
     const existingIndex = questions.findIndex(q => q.id === editingQuestion.id)
-    
+
     if (existingIndex >= 0) {
       // Update existing question
-      setQuestions(prev => prev.map((q, idx) => 
+      setQuestions(prev => prev.map((q, idx) =>
         idx === existingIndex
           ? { ...editingQuestion, timestamp: selectedTimestamp }
           : q
@@ -644,10 +645,10 @@ export default function VideoQuestionEditor({
             <X className="h-4 w-4 mr-2" />
             Cancel
           </Button>
-          <Button 
+          <Button
             onClick={handleSaveAll}
             disabled={isSaving}
-            className="bg-gradient-to-r from-success/15 to-success/5 hover:from-success/15 hover:to-success/5"
+            className="bg-success/15 text-foreground hover:bg-success/25"
           >
             {isSaving ? (
               <>Saving...</>
@@ -676,7 +677,7 @@ export default function VideoQuestionEditor({
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
@@ -754,19 +755,19 @@ export default function VideoQuestionEditor({
       {/* Question Editor */}
       {isCreating && selectedTimestamp !== null && (
         <Card className="border-2 border-primary/30 bg-primary/5/30">
-          <CardHeader className="bg-gradient-to-r from-primary/15 to-pink-600 text-white">
+          <CardHeader className="bg-primary text-primary-foreground hover:bg-primary/90">
             <CardTitle className="text-sm flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <AlertCircle className="h-5 w-5" />
                 {editingQuestion ? 'Edit Question' : 'Add New Question'}
-                <Badge className="bg-white/20 text-white border-0">
+                <Badge className="bg-card/20 text-white border-0">
                   at {secondsToMMSS(selectedTimestamp)}
                 </Badge>
               </div>
               <Button
                 size="sm"
                 variant="ghost"
-                className="text-white hover:bg-white/20"
+                className="text-white hover:bg-card/20"
                 onClick={() => {
                   setIsCreating(false)
                   setEditingQuestion(null)
@@ -829,12 +830,12 @@ export default function VideoQuestionEditor({
                     }
                   }}
                 />
-                
+
                 {/* Save/Cancel Buttons */}
                 <div className="flex gap-3 mt-6 pt-6 border-t">
                   <Button
                     onClick={handleQuestionSave}
-                    className="flex-1 bg-gradient-to-r from-success/15 to-success/5 hover:from-success/15 hover:to-success/5"
+                    className="flex-1 bg-success/15 text-foreground hover:bg-success/25"
                   >
                     <SaveIcon className="h-4 w-4 mr-2" />
                     Save Question
@@ -867,7 +868,7 @@ export default function VideoQuestionEditor({
                 className="flex items-center gap-4 p-4 bg-muted rounded-lg border border-border hover:border-primary/30 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-primary/15 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm bg-primary text-primary-foreground hover:bg-primary/90">
                     {index + 1}
                   </div>
                   <div className="flex flex-col">

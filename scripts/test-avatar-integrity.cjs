@@ -9,7 +9,7 @@ const fixture=`
 CREATE TABLE students(id uuid PRIMARY KEY,name text,first_name text,alias text,is_active boolean DEFAULT true);
 CREATE TABLE learning_targets(id uuid PRIMARY KEY,statement text);
 CREATE TABLE student_avatars(user_id uuid PRIMARY KEY REFERENCES students,traits jsonb DEFAULT '{}',equipped jsonb DEFAULT '{}',setup_completed boolean DEFAULT false,use_custom_avatar boolean DEFAULT false,updated_at timestamptz DEFAULT now());
-CREATE TABLE avatar_items(slug text PRIMARY KEY,slot text,name text,cost_xp integer,unlock_target_id uuid REFERENCES learning_targets,unlock_min_level numeric,svg_layer text,z_order integer DEFAULT 0,sort_order integer DEFAULT 0,enabled boolean DEFAULT true);
+CREATE TABLE avatar_items(slug text PRIMARY KEY,slot text CHECK (slot IN ('eyewear','head','body','pin','background','facial_hair')),name text,cost_xp integer,unlock_target_id uuid REFERENCES learning_targets,unlock_min_level numeric,svg_layer text,z_order integer DEFAULT 0,sort_order integer DEFAULT 0,enabled boolean DEFAULT true);
 CREATE TABLE student_owned_items(user_id uuid REFERENCES students,item_slug text REFERENCES avatar_items,source text,PRIMARY KEY(user_id,item_slug));
 CREATE TABLE avatar_likes(liker_user_id uuid REFERENCES students,target_user_id uuid REFERENCES students,PRIMARY KEY(liker_user_id,target_user_id));
 CREATE TABLE courses(id uuid PRIMARY KEY,teacher_email text);
@@ -55,5 +55,25 @@ check('XP caps and rounding match the existing economy',()=>{run(`insert into vo
 check('re-approval cannot spend refunded XP twice',()=>{const id=run(`select id from reward_redemptions where user_id='${u}' and cost_points=100 limit 1`);run(`update reward_redemptions set status='denied' where id='${id}'`);run(buy('comet-pin'));assert.throws(()=>run(`update reward_redemptions set status='fulfilled' where id='${id}'`),/INSUFFICIENT_FUNDS/)});
 check('refund restores spending power without awarding XP',()=>{const before=JSON.parse(run(`select economy_totals('${v}')`));run(`update reward_redemptions set status='denied' where user_id='${v}'`);assert.deepEqual(JSON.parse(run(`select economy_totals('${v}')`)),{lifetimeEarned:before.lifetimeEarned,spent:0,balance:before.lifetimeEarned});assert.equal(before.lifetimeEarned,300)});
 check('staff identity transfer preserves an existing charge',()=>{const id=run(`select id from reward_redemptions where user_id='${u}' and status<>'denied' limit 1`);const before=run(`select cost_points from reward_redemptions where id='${id}'`);run(`update reward_redemptions set user_id='${w}' where id='${id}'`);assert.equal(run(`select cost_points from reward_redemptions where id='${id}'`),before)});
+const vampireMigration=fs.readFileSync('supabase/migrations/20260916164359_avatar_vampire_collection.sql','utf8');
+run(vampireMigration);
+check('new slots preserve ownership and slot checks',()=>{
+  assert.throws(()=>run(`select save_avatar_state('${w}',0,'{"equipped":{"mouth":"vampire-fangs","ears":"vampire-ears"}}')`),/ITEM_NOT_OWNED/);
+  run(`insert into economy_point_grants values('${w}',1000)`);
+  for(const slug of ['vampire-fangs','vampire-ears','midnight-vampire-dress'])run(buy(slug,w));
+  assert.throws(()=>run(`select save_avatar_state('${w}',0,'{"equipped":{"ears":"vampire-fangs"}}')`),/ITEM_NOT_OWNED/);
+  const equipped={mouth:'vampire-fangs',ears:'vampire-ears',body:'midnight-vampire-dress'};
+  const patch=JSON.stringify({equipped,saved_looks:[{name:'Vampire night',traits:{skin:'brown'},equipped}]});
+  run(`select save_avatar_state('${w}',0,'${patch}')`);
+  assert.deepEqual(JSON.parse(run(`select equipped from student_avatars where user_id='${w}'`)),equipped);
+  assert.deepEqual(JSON.parse(run(`select saved_looks->0->'equipped' from student_avatars where user_id='${w}'`)),equipped);
+});
+check('vampire migration is repeatable and preserves staff pricing/retirement',()=>{
+  run(`update avatar_items set cost_xp=88,enabled=false where slug='vampire-fangs'`);
+  run(vampireMigration);
+  assert.equal(run(`select cost_xp||'/'||enabled from avatar_items where slug='vampire-fangs'`),'88/false');
+  assert.equal(run(`select count(*) from avatar_items where slot in ('ears','mouth')`),'2');
+  assert.throws(()=>run(`update avatar_items set slot='unknown' where slug='vampire-fangs'`),/avatar_items_slot_check/);
+});
 console.log(`${passed} database checks passed`);
 }finally{run(`DROP DATABASE ${name} WITH (FORCE)`,base)}})().catch(e=>{console.error(e.stderr?.toString()||e);process.exitCode=1});

@@ -366,7 +366,7 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
   if (phase === 'waiting') {
     return (
       <div className="rounded-2xl border p-8 text-center" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
-        <div className="grid place-items-center mx-auto mb-3" style={{ width: 52, height: 52, borderRadius: 14, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}><ShoppingBasket size={26} /></div>
+        <div className="grid place-items-center mx-auto mb-3" style={{ width: 52, height: 52, borderRadius: 'var(--radius-md)', background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}><ShoppingBasket size={26} /></div>
         <div className="text-xl font-semibold">Letter Catch</div>
         <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Catch the letters in order to spell the term. Your basket only grabs the letter you need — wrong letters bounce off. Snag <Star className="inline h-3.5 w-3.5" style={{ color: 'var(--reward)' }} /> power-ups, dodge <Skull className="inline h-3.5 w-3.5" style={{ color: '#C0392B' }} /> hazards. {best > 0 && <>Beat your best of <b style={{ color: 'var(--foreground)' }}>{best.toLocaleString()}</b>.</>}</p>
         <Button onClick={startGame} size="lg" className="mt-5"><Zap className="h-4 w-4 mr-2" /> Start</Button>
@@ -383,14 +383,14 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
 
   return (
     <div className="space-y-3" style={{ color: 'var(--foreground)' }}>
-      <style>{`@keyframes lcShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-6px)}40%,60%{transform:translateX(6px)}}.lc-shake{animation:lcShake .32s}@keyframes lcFloat{0%{opacity:0;transform:translate(-50%,0) scale(.7)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-70px) scale(1.15)}}@keyframes lcPop{0%{transform:scale(.5);opacity:0}55%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}`}</style>
+
 
       {/* header */}
       <div className="rounded-2xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-3 text-sm">
             <span style={{ color: 'var(--muted-foreground)' }}>{Math.min(qIndex + 1, total)} / {total}</span>
-            <span className="font-bold" style={{ fontSize: 18 }}>{score.toLocaleString()}</span>
+            <span className="text-title-3" >{score.toLocaleString()}</span>
             {streak > 0 && (
               <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: 'color-mix(in oklch, var(--reward) 20%, transparent)', color: 'var(--reward)', transform: `scale(${Math.min(1 + streak * 0.05, 1.35)})` }}>
                 <Flame className="h-3.5 w-3.5" /> ×{multiplier}
@@ -424,7 +424,7 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
           {target.map((ch, i) => {
             const done = i < filled, isNext = i === filled
             return (
-              <span key={i} className="grid place-items-center rounded-lg font-bold" style={{ width: 34, height: 40, fontSize: 18, border: '2px solid', borderColor: done ? 'var(--success)' : isNext ? 'var(--primary)' : 'var(--border)', background: done ? 'color-mix(in oklch, var(--success) 18%, var(--card))' : 'var(--card)', color: done ? 'var(--success)' : 'var(--foreground)', boxShadow: isNext ? '0 0 0 3px color-mix(in oklch, var(--primary) 22%, transparent)' : 'none', animation: done ? 'lcPop .25s' : undefined }}>{done ? ch : ''}</span>
+              <span key={i} className="grid place-items-center rounded-lg text-title-3" style={{ width: 34, height: 40, border: '2px solid', borderColor: done ? 'var(--success)' : isNext ? 'var(--primary)' : 'var(--border)', background: done ? 'color-mix(in oklch, var(--success) 18%, var(--card))' : 'var(--card)', color: done ? 'var(--success)' : 'var(--foreground)', animation: done ? 'arcade-pop .25s' : undefined }}>{done ? ch : ''}</span>
             )
           })}
         </div>
@@ -440,29 +440,29 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
           style={{ height: ARENA_H, cursor: 'none', background: slowOn ? 'radial-gradient(120% 80% at 50% -10%, color-mix(in oklch, #3A6FA5 16%, transparent), transparent 60%), var(--card)' : 'radial-gradient(120% 80% at 50% -10%, color-mix(in oklch, var(--primary) 16%, transparent), transparent 60%), var(--card)' }}>
 
           {/* particles */}
-          {particles.map((p) => <div key={p.id} className="absolute pointer-events-none" style={{ left: p.x, top: p.y, width: 6, height: 6, borderRadius: 2, background: p.color, opacity: Math.max(0, p.life / p.max) }} />)}
+          {particles.map((p) => <div key={p.id} className="absolute pointer-events-none" style={{ left: p.x, top: p.y, width: 6, height: 6, borderRadius: 'var(--radius-xs)', background: p.color, opacity: Math.max(0, p.life / p.max) }} />)}
 
           {/* floating texts */}
-          {floats.map((f) => <div key={f.id} className="absolute pointer-events-none z-20 font-extrabold" style={{ left: f.x, top: f.y, fontSize: 26, color: f.color, animation: 'lcFloat 0.85s ease-out forwards' }}>{f.text}</div>)}
+          {floats.map((f) => <div key={f.id} className="absolute pointer-events-none z-20 text-title-1" style={{ left: f.x, top: f.y, color: f.color, animation: 'arcade-float 0.85s var(--ease-out-expo) forwards' }}>{f.text}</div>)}
 
           {/* tiles */}
           {tiles.map((t) => {
             if (t.kind === 'power') {
               const m = POWERS[t.power!]
-              return <div key={t.id} className="absolute grid place-items-center rounded-full pointer-events-none" style={{ left: t.x, top: t.y, width: TILE, height: TILE, color: m.color, border: `2.5px solid ${m.color}`, background: `color-mix(in oklch, ${m.color} 18%, var(--card))`, boxShadow: `0 0 0 4px color-mix(in oklch, ${m.color} 22%, transparent)`, animation: 'lcPop .3s' }}>{powerIcon(t.power!)}</div>
+              return <div key={t.id} className="absolute grid place-items-center rounded-full pointer-events-none" style={{ left: t.x, top: t.y, width: TILE, height: TILE, color: m.color, border: `2.5px solid ${m.color}`, background: `color-mix(in oklch, ${m.color} 18%, var(--card))`, boxShadow: `0 0 0 4px color-mix(in oklch, ${m.color} 22%, transparent)`, animation: 'arcade-pop .3s' }}>{powerIcon(t.power!)}</div>
             }
             if (t.kind === 'hazard') {
               return <div key={t.id} className="absolute grid place-items-center rounded-lg pointer-events-none" style={{ left: t.x, top: t.y, width: TILE, height: TILE, color: '#fff', border: '2.5px solid #8E2A1F', background: '#C0392B', boxShadow: '0 2px 8px rgba(192,57,43,0.4)' }}><Skull size={24} /></div>
             }
             const glow = cfg.highlightTarget && t.ch === target[filled]
             return (
-              <div key={t.id} className="absolute grid place-items-center rounded-lg font-bold pointer-events-none" style={{ left: t.x, top: t.y, width: TILE, height: TILE, fontSize: 22, border: glow ? '2px solid var(--success)' : '2px solid color-mix(in oklch, var(--primary) 30%, var(--border))', background: glow ? 'color-mix(in oklch, var(--success) 22%, var(--card))' : 'var(--card)', color: glow ? 'var(--success)' : 'var(--foreground)', boxShadow: glow ? '0 0 0 4px color-mix(in oklch, var(--success) 28%, transparent), 0 2px 8px rgba(0,0,0,0.08)' : '0 2px 8px rgba(0,0,0,0.08)' }}>{t.ch}</div>
+              <div key={t.id} className="absolute grid place-items-center rounded-lg pointer-events-none text-title-2" style={{ left: t.x, top: t.y, width: TILE, height: TILE, border: glow ? '2px solid var(--success)' : '2px solid color-mix(in oklch, var(--primary) 30%, var(--border))', background: glow ? 'color-mix(in oklch, var(--success) 22%, var(--card))' : 'var(--card)', color: glow ? 'var(--success)' : 'var(--foreground)', boxShadow: glow ? '0 0 0 4px color-mix(in oklch, var(--success) 28%, transparent), 0 2px 8px color-mix(in oklch, var(--primary) 8%, transparent)' : '0 2px 8px color-mix(in oklch, var(--primary) 8%, transparent)' }}>{t.ch}</div>
             )
           })}
 
           {/* basket */}
           <div className="absolute pointer-events-none flex flex-col items-center" style={{ left: basketLeft, top: ARENA_H - BASKET_H - BASKET_GAP, width: BASKET_W, height: BASKET_H, zIndex: 10 }}>
-            <div style={{ width: '100%', height: 5, borderRadius: 999, background: 'var(--primary)' }} />
+            <div style={{ width: '100%', height: 5, borderRadius: 'var(--radius-full)', background: 'var(--primary)' }} />
             <div className="flex-1 w-full grid place-items-center rounded-b-2xl" style={{ marginTop: 2, background: 'color-mix(in oklch, var(--primary) 22%, var(--card))', border: '3px solid var(--primary)', borderTopWidth: 0 }}>
               <ShoppingBasket size={28} style={{ color: 'var(--primary)' }} />
             </div>

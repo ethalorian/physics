@@ -125,16 +125,16 @@ export default function AnimationStage({ def, caption }: { def: AnimDefinition; 
     <div>
       {reducedMotion && <p className="text-sm mb-2 text-muted-foreground">Motion is paused. Use Next step or the timeline to compare still frames; Play starts motion only when you choose it.</p>}
       {caption && <p className="text-sm mb-2" style={{ color: 'var(--foreground)' }}>{caption}</p>}
-      <div ref={wrapRef} className="rounded-lg overflow-hidden" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+      <div ref={wrapRef} className="rounded-lg overflow-hidden" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
         <canvas ref={canvasRef} style={{ display: 'block', width: '100%' }} aria-label={def.title} role="img" />
 
         {/* step caption strip */}
-        <div className="px-3 py-2 text-sm" style={{ minHeight: 38, background: 'color-mix(in oklch, var(--primary) 8%, var(--card))', color: 'var(--foreground)', borderTop: '0.5px solid var(--border)' }}>
+        <div className="px-3 py-2 text-sm" style={{ minHeight: 38, background: 'color-mix(in oklch, var(--primary) 8%, var(--card))', color: 'var(--foreground)', borderTop: '1px solid var(--border)' }}>
           {currentStep ? currentStep.label : 'Press play to begin.'}
         </div>
 
         {/* transport + scrub */}
-        <div className="flex items-center gap-2 px-3 py-2" style={{ borderTop: '0.5px solid var(--border)' }}>
+        <div className="flex items-center gap-2 px-3 py-2" style={{ borderTop: '1px solid var(--border)' }}>
           <button
             onClick={() => { if (atEnd) seek(0); setPlaying((p) => !p) }}
             className="grid place-items-center rounded-full"
@@ -178,7 +178,7 @@ export default function AnimationStage({ def, caption }: { def: AnimDefinition; 
         </div>
 
         {/* THE knob */}
-        <div className="flex items-center gap-3 px-3 py-2" style={{ borderTop: '0.5px solid var(--border)', background: 'color-mix(in oklch, var(--reward) 8%, var(--card))' }}>
+        <div className="flex items-center gap-3 px-3 py-2" style={{ borderTop: '1px solid var(--border)', background: 'color-mix(in oklch, var(--reward) 8%, var(--card))' }}>
           <span className="text-xs font-semibold whitespace-nowrap" style={{ color: 'var(--foreground)' }}>{k.label}</span>
           <input
             type="range"
@@ -195,7 +195,7 @@ export default function AnimationStage({ def, caption }: { def: AnimDefinition; 
 
         {/* live readout */}
         {readout && (
-          <div className="px-3 py-1.5 text-xs font-mono" style={{ borderTop: '0.5px solid var(--border)', color: 'var(--success)', background: 'color-mix(in oklch, var(--success) 7%, var(--card))' }}>
+          <div className="px-3 py-1.5 text-xs font-mono" style={{ borderTop: '1px solid var(--border)', color: 'var(--success)', background: 'color-mix(in oklch, var(--success) 7%, var(--card))' }}>
             {readout}
           </div>
         )}

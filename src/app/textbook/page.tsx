@@ -100,7 +100,7 @@ function TextbookReader() {
           style={{ borderColor: 'var(--border)', background: 'var(--card)', maxHeight: 'calc(100vh - 170px)', position: 'sticky', top: 88 }}>
           {TEXTBOOK_PARTS.map((p) => (
             <div key={p.part} className="py-2">
-              <div className="px-3 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{p.part}</div>
+              <div className="px-3 pt-2 pb-1 text-overline font-semibold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{p.part}</div>
               {p.chapters.map((c) => {
                 const active = c.n === current
                 return (

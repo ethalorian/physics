@@ -200,7 +200,7 @@ export default function VocabularyDuelGame({ matchId, onComplete }: { matchId: s
         Round {Math.min(idx + 1, match.totalRounds)} of {match.totalRounds}
       </div>
       <div className="flex items-center gap-1.5">
-        <Score name={oppName} wins={match.wins[opp]} accent="var(--viz-down, #C08B8B)" />
+        <Score name={oppName} wins={match.wins[opp]} accent="var(--viz-down)" />
         {ghostPlayback ? (
           <span title="Racing a recorded run" style={{ color: 'var(--muted-foreground)' }}><Ghost size={14} /></span>
         ) : (
@@ -237,7 +237,7 @@ export default function VocabularyDuelGame({ matchId, onComplete }: { matchId: s
   return (
     <Panel wide>
       {scoreStrip}
-      <div className="h-1.5 rounded-full overflow-hidden mb-4" style={{ background: 'var(--muted, #eee)' }}>
+      <div className="h-1.5 rounded-full overflow-hidden mb-4" style={{ background: 'var(--muted)' }}>
         <div className="h-full rounded-full" style={{ width: `${pct * 100}%`, background: pct < 0.25 ? '#C08B8B' : 'var(--primary)', transition: 'width 100ms linear' }} />
       </div>
       <div className="flex items-center gap-2 text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>

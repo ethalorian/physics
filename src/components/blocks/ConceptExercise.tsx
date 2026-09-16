@@ -174,14 +174,14 @@ export default function ConceptExercise({ chapter, sectionIds, value, onSave, on
           // Native-viewer fallback: always renders the PDF (no scroll-sync). Use the
           // section chips on the right to jump the reading.
           <iframe key="iframe" src={data.textPdfUrl} title={`Chapter ${data.chapter} reading`}
-            style={{ width: '100%', height: isNarrow ? '82vh' : paneH, border: `0.5px solid ${C.hair}`, borderRadius: 12, background: C.card }} />
+            style={{ width: '100%', height: isNarrow ? '82vh' : paneH, border: `1px solid ${C.hair}`, borderRadius: 'var(--radius-md)', background: C.card }} />
         ) : (
           <div ref={leftRef} onScroll={onLeftScroll}
             className="rounded-xl border overflow-y-auto" style={{ borderColor: C.hair, background: C.card, maxHeight: paneH, position: 'relative', overscrollBehavior: 'contain' }}>
             <Document file={data.textPdfUrl} onLoadSuccess={({ numPages: n }) => setNumPages(n)} onLoadError={() => setPdfFailed(true)} onSourceError={() => setPdfFailed(true)}
               loading={<div className="p-4 text-sm" style={{ color: C.mute }}>Loading the reading…</div>}>
               {Array.from({ length: numPages }, (_, i) => (
-                <div key={i} ref={(el) => { if (el) pageEls.current.set(i + 1, el) }} style={{ display: 'flex', justifyContent: 'center', padding: '6px 0', borderBottom: `0.5px solid ${C.hair}` }}>
+                <div key={i} ref={(el) => { if (el) pageEls.current.set(i + 1, el) }} style={{ display: 'flex', justifyContent: 'center', padding: '6px 0', borderBottom: `1px solid ${C.hair}` }}>
                   <Page pageNumber={i + 1} width={pageWidth} renderTextLayer={false} renderAnnotationLayer={false} />
                 </div>
               ))}

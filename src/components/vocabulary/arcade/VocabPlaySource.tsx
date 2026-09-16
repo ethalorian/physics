@@ -138,7 +138,7 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
       <div className="flex gap-1.5">
         {(['lesson', 'unit'] as const).map((s) => (
           <button key={s} onClick={() => { setScope(s); setLessonId(''); setUnitId(''); setCount(null); onResolved({ terms: [], scoreSetId: null, label: '' }) }}
-            className="text-sm rounded-lg border px-3 py-1.5 capitalize" style={{ borderColor: 'var(--border)', background: scope === s ? 'var(--primary)' : 'var(--card)', color: scope === s ? 'var(--primary-foreground, white)' : 'var(--foreground)' }}>
+            className="text-sm rounded-lg border px-3 py-1.5 capitalize" style={{ borderColor: 'var(--border)', background: scope === s ? 'var(--primary)' : 'var(--card)', color: scope === s ? 'var(--primary-foreground)' : 'var(--foreground)' }}>
             {s === 'lesson' ? 'By lesson' : 'By unit'}
           </button>
         ))}

@@ -66,7 +66,7 @@ export default function GrowthPage() {
   return (
     <div className="max-w-3xl mx-auto p-4">
       {loading && <p className="text-sm text-muted-foreground">Loading your growth…</p>}
-      {error && <p className="text-sm text-red-600">Could not load your growth: {error}</p>}
+      {error && <p className="text-sm text-destructive">Could not load your growth: {error}</p>}
       {data && <MasteryGrowth {...data} />}
       <TeacherFeedbackCard />
       {mathData && (

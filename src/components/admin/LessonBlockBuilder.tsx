@@ -168,7 +168,7 @@ function BuilderSession({
 
   const save = async () => {
     if (savingRef.current) return
-    const issues = validateBlockDocument(doc, Boolean(published))
+    const issues = validateBlockDocument(doc)
     setSaveIssues(issues)
     if (issues.length) { setMsg('Fix the activities listed below before saving.'); return }
     const sent = documentJSON
@@ -277,15 +277,15 @@ function BuilderSession({
                       const on = ((b.data.visibilityTrack as string | undefined) ?? undefined) === val
                       const onBg = val === 'cpa' ? 'var(--success)' : val === 'honors' ? 'var(--reward)' : 'var(--primary)'
                       const onFg = val === 'honors' ? 'var(--reward-foreground)' : '#fff'
-                      return <button key={lbl} type="button" onClick={() => setField(b.id, 'visibilityTrack', val)} className="text-[10px] font-semibold px-1.5 py-0.5" style={{ background: on ? onBg : 'transparent', color: on ? onFg : 'var(--muted-foreground)' }}>{lbl}</button>
+                      return <button key={lbl} type="button" onClick={() => setField(b.id, 'visibilityTrack', val)} className="text-overline font-semibold px-1.5 py-0.5" style={{ background: on ? onBg : 'transparent', color: on ? onFg : 'var(--muted-foreground)' }}>{lbl}</button>
                     })}
                   </div>
                   <button onClick={() => removeBlock(b.id)} className="bb-btn text-sm px-1.5 rounded" style={{ border: 'none', background: 'none', color: 'var(--destructive)' }} aria-label="remove">✕</button>
                 </div>
                 <BlockRenderer blocks={[liveOf(b)]} lessonId={`play:${lessonId}`} responses={play} save={playSave} />
-                {hidden && <div className="absolute left-2 top-2 z-10 text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5" style={{ background: 'var(--card)', color: 'var(--muted-foreground)', border: '1px solid var(--border)' }}>hidden for {viewAs}</div>}
+                {hidden && <div className="absolute left-2 top-2 z-10 text-overline font-bold uppercase tracking-wide rounded px-1.5 py-0.5" style={{ background: 'var(--card)', color: 'var(--muted-foreground)', border: '1px solid var(--border)' }}>hidden for {viewAs}</div>}
                 {!hidden && trackOf(b) && (
-                  <div className="absolute left-2 top-2 z-10 text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5"
+                  <div className="absolute left-2 top-2 z-10 text-overline font-bold uppercase tracking-wide rounded px-1.5 py-0.5"
                     style={{ background: `color-mix(in oklch, ${TRACK_UI[trackOf(b)!].color} 18%, var(--card))`, color: TRACK_UI[trackOf(b)!].fg, border: `1px solid color-mix(in oklch, ${TRACK_UI[trackOf(b)!].color} 50%, transparent)` }}>
                     {TRACK_UI[trackOf(b)!].label}
                   </div>
@@ -419,7 +419,7 @@ function ImageUploadField({ value, placeholder, onChange }: { value: string; pla
       {err && <div className="text-xs mt-1" style={{ color: 'var(--destructive)' }}>{err}</div>}
       {value && !err && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={value} alt="" style={{ marginTop: 8, maxHeight: 120, borderRadius: 8, border: '1px solid var(--border)' }} />
+        <img src={value} alt="" style={{ marginTop: 8, maxHeight: 120, borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }} />
       )}
     </div>
   )
@@ -492,11 +492,11 @@ function FieldEditor({ field, value, onChange, sims, blockType, blockData, onPat
     const toggle = (id: string) => onChange(ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id])
     return (
       <div>{label}
-        <p className="text-[11px] mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Check the formulas relevant to this unit — only those appear in the student&apos;s bank. Leave all unchecked to show every formula.</p>
+        <p className="text-overline mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Check the formulas relevant to this unit — only those appear in the student&apos;s bank. Leave all unchecked to show every formula.</p>
         <div className="flex flex-col gap-2">
           {FORMULA_CATEGORIES.map((cat) => (
             <div key={cat}>
-              <div className="text-[10px] font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--primary)' }}>{cat}</div>
+              <div className="text-overline font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--primary)' }}>{cat}</div>
               <div className="flex flex-wrap gap-1.5">
                 {PHYSICS_FORMULAS.filter((f) => f.category === cat).map((f) => {
                   const on = ids.includes(f.id)

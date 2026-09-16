@@ -2,6 +2,16 @@
 export interface DeckRef { src: string; title: string }
 
 const LESSON_DECKS: Record<string, Record<number, DeckRef>> = {
+  "proj-1": {
+    "11": {
+      "src": "/decks/project-physics/week-1-day-1.html",
+      "title": "Week 1 · Day 1 — Walk the graph"
+    },
+    "13": {
+      "src": "/decks/project-physics/week-1-day-3.html",
+      "title": "Week 1 · Day 3 — Slope and area"
+    }
+  },
   "unit-1": {
     "1": {
       "src": "/decks/classroom/U1 Day 1 - The Briefing.dc.html",

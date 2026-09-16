@@ -2,16 +2,15 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+function Card({ className, density = "default", ...props }: React.ComponentProps<"div"> & { density?: "default" | "compact" }) {
   return (
     <div
       data-slot="card"
+      data-density={density}
       className={cn(
-        // Apple-style card: glass surface + one shared tinted elevation
-        // (.card-elevation). Solid border so edges survive cheap TN/LCD panels.
-        "card-elevation bg-card/80 text-card-foreground flex flex-col gap-5 rounded-2xl border border-border py-6",
-        "backdrop-blur-xl backdrop-saturate-150",
-        "dark:bg-card/70",
+        // Solid in-flow surface; the shared elevation carries the hierarchy.
+        "card-elevation bg-card text-card-foreground flex flex-col rounded-lg border border-border",
+        density === "compact" ? "gap-3 p-4 [&>[data-slot=card-header]]:px-0 [&>[data-slot=card-content]]:px-0 [&>[data-slot=card-footer]]:px-0" : "gap-5 py-6",
         className
       )}
       {...props}

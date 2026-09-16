@@ -40,5 +40,5 @@ export function useBlockResponses(lessonId: string, enabled = true) {
     }
   }, [scope, store])
   return { ...snapshot, loadError: enabled && status === 'unauthenticated' ? 'Sign in to load your saved work.' : snapshot.loadError,
-    save: store.save, draft: store.draft, retryLoad: store.load, studentId }
+    save: store.save, savePending: store.savePending, draft: store.draft, retryLoad: store.load, studentId }
 }

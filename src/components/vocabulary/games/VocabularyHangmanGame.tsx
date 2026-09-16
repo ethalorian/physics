@@ -8,12 +8,12 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { VocabularyTerm } from '@/types/assignment'
-import { 
-  Heart, 
-  Trophy, 
-  RotateCcw, 
-  Lightbulb, 
-  CheckCircle, 
+import {
+  Heart,
+  Trophy,
+  RotateCcw,
+  Lightbulb,
+  CheckCircle,
   XCircle,
   Skull,
   Target,
@@ -68,7 +68,7 @@ export default function VocabularyHangmanGame({
     startTime: Date.now(),
     hintsUsed: 0
   })
-  
+
   const [currentGuess, setCurrentGuess] = useState('')
   const [showHint, setShowHint] = useState(false)
   const [gameWords, setGameWords] = useState<VocabularyTerm[]>([])
@@ -78,23 +78,23 @@ export default function VocabularyHangmanGame({
     if (vocabularyTerms && vocabularyTerms.length > 0) {
       // Filter by difficulty if specified
       let filteredTerms = vocabularyTerms
-      
+
       // Only filter if difficulty is not medium, and include terms without difficulty
       if (difficulty === 'easy') {
-        filteredTerms = vocabularyTerms.filter(term => 
+        filteredTerms = vocabularyTerms.filter(term =>
           term.difficulty === 'easy' || !term.difficulty
         )
       } else if (difficulty === 'hard') {
-        filteredTerms = vocabularyTerms.filter(term => 
+        filteredTerms = vocabularyTerms.filter(term =>
           term.difficulty === 'hard' || !term.difficulty
         )
       }
       // For medium difficulty, use all terms (no filtering)
-      
+
       // Shuffle and select terms for the game
       const shuffled = [...filteredTerms].sort(() => Math.random() - 0.5)
       const gameTerms = shuffled.slice(0, Math.min(10, shuffled.length)) // Max 10 words per game
-      
+
       setGameWords(gameTerms)
       setGameState(prev => ({
         ...prev,
@@ -107,20 +107,20 @@ export default function VocabularyHangmanGame({
   const resetGame = useCallback(() => {
     // Apply same difficulty filtering as initialization
     let filteredTerms = vocabularyTerms
-    
+
     if (difficulty === 'easy') {
-      filteredTerms = vocabularyTerms.filter(term => 
+      filteredTerms = vocabularyTerms.filter(term =>
         term.difficulty === 'easy' || !term.difficulty
       )
     } else if (difficulty === 'hard') {
-      filteredTerms = vocabularyTerms.filter(term => 
+      filteredTerms = vocabularyTerms.filter(term =>
         term.difficulty === 'hard' || !term.difficulty
       )
     }
-    
+
     const shuffled = [...filteredTerms].sort(() => Math.random() - 0.5)
     const gameTerms = shuffled.slice(0, Math.min(10, shuffled.length))
-    
+
     setGameWords(gameTerms)
     setGameState({
       currentTerm: gameTerms[0] || null,
@@ -139,18 +139,18 @@ export default function VocabularyHangmanGame({
   // Get a helpful letter hint
   const getLetterHint = useCallback(() => {
     if (!gameState.currentTerm) return 'A'
-    
+
     const word = gameState.currentTerm.term.toUpperCase()
     const unguessedLetters = word
       .split('')
       .filter(letter => letter.match(/[A-Z]/) && !gameState.guessedLetters.has(letter))
-    
+
     if (unguessedLetters.length === 0) return 'A'
-    
+
     // Prioritize vowels first, then common consonants
     const vowels = unguessedLetters.filter(letter => 'AEIOU'.includes(letter))
     const commonConsonants = unguessedLetters.filter(letter => 'RSTLNM'.includes(letter))
-    
+
     if (vowels.length > 0) {
       return vowels[0]
     } else if (commonConsonants.length > 0) {
@@ -162,7 +162,7 @@ export default function VocabularyHangmanGame({
 
   const makeGuess = useCallback((letter: string) => {
     if (!gameState.currentTerm || gameState.gameStatus !== 'playing') return
-    
+
     const normalizedLetter = letter.toLowerCase()
     if (gameState.guessedLetters.has(normalizedLetter)) return
 
@@ -171,36 +171,36 @@ export default function VocabularyHangmanGame({
 
     const termLetters = gameState.currentTerm.term.toLowerCase().replace(/[^a-z]/g, '')
     const isCorrectGuess = termLetters.includes(normalizedLetter)
-    
+
     const won = termLetters.split('').every(letter => newGuessedLetters.has(letter))
     const lost = !won && gameState.wrongGuesses + (isCorrectGuess ? 0 : 1) >= maxWrongGuesses
     if (won || lost) attempts.record(gameState.currentTerm, won)
     setGameState(prev => {
       const newWrongGuesses = isCorrectGuess ? prev.wrongGuesses : prev.wrongGuesses + 1
-      
+
       // Check if word is complete
-      const wordComplete = termLetters.split('').every(letter => 
+      const wordComplete = termLetters.split('').every(letter =>
         newGuessedLetters.has(letter)
       )
-      
+
       // Check if game is over
       const gameOver = newWrongGuesses >= maxWrongGuesses
-      
+
       let newGameStatus = prev.gameStatus
       let newScore = prev.score
       let newWordIndex = prev.currentWordIndex
       let newCurrentTerm = prev.currentTerm
-      
+
       if (wordComplete) {
         // Calculate score based on difficulty and hints used
         const baseScore = difficulty === 'hard' ? 30 : difficulty === 'medium' ? 20 : 10
         const hintPenalty = prev.hintsUsed * 5
         const wrongGuessPenalty = newWrongGuesses * 2
         const wordScore = Math.max(1, baseScore - hintPenalty - wrongGuessPenalty)
-        
+
         newScore = prev.score + wordScore
         newWordIndex = prev.currentWordIndex + 1
-        
+
         // Move to next word or end game
         if (newWordIndex >= gameWords.length) {
           newGameStatus = 'won'
@@ -220,7 +220,7 @@ export default function VocabularyHangmanGame({
       } else if (gameOver) {
         newGameStatus = 'lost'
       }
-      
+
       return {
         ...prev,
         guessedLetters: newGuessedLetters,
@@ -237,7 +237,7 @@ export default function VocabularyHangmanGame({
       setGameState(prev => ({ ...prev, gameStatus: 'won' }))
       return
     }
-    
+
     setGameState(prev => ({
       ...prev,
       currentTerm: gameWords[prev.currentWordIndex + 1],
@@ -251,7 +251,7 @@ export default function VocabularyHangmanGame({
 
   const useHint = useCallback(() => {
     if (!gameState.currentTerm || showHint) return
-    
+
     setShowHint(true)
     setGameState(prev => ({
       ...prev,
@@ -271,7 +271,7 @@ export default function VocabularyHangmanGame({
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (gameState.gameStatus !== 'playing') return
-      
+
       const letter = event.key.toLowerCase()
       if (letter.match(/[a-z]/) && letter.length === 1) {
         makeGuess(letter)
@@ -284,13 +284,13 @@ export default function VocabularyHangmanGame({
 
   const renderWord = () => {
     if (!gameState.currentTerm) return ''
-    
+
     return gameState.currentTerm.term
       .split('')
       .map(char => {
         if (char === ' ') return ' '
         if (!/[a-zA-Z]/.test(char)) return char
-        
+
         const letter = char.toLowerCase()
         return gameState.guessedLetters.has(letter) ? char : '_'
       })
@@ -299,13 +299,13 @@ export default function VocabularyHangmanGame({
 
   const renderAlphabet = () => {
     const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
-    
+
     return (
       <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-13 gap-2">
         {alphabet.map(letter => {
           const isGuessed = gameState.guessedLetters.has(letter)
           const isCorrect = gameState.currentTerm?.term.toLowerCase().includes(letter)
-          
+
           return (
             <Button
               key={letter}
@@ -324,10 +324,10 @@ export default function VocabularyHangmanGame({
   }
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 dark:text-green-300'
-    if (score >= 60) return 'text-blue-600 dark:text-blue-300'
-    if (score >= 40) return 'text-yellow-600 dark:text-yellow-300'
-    return 'text-red-600 dark:text-red-300'
+    if (score >= 80) return 'text-success '
+    if (score >= 60) return 'text-primary '
+    if (score >= 40) return 'text-primary '
+    return 'text-destructive '
   }
 
   if (gameWords.length === 0) {
@@ -376,15 +376,15 @@ export default function VocabularyHangmanGame({
 
       {/* Game Status */}
       {gameState.gameStatus === 'won' && (
-        <Card className="border-green-500 bg-green-50">
+        <Card className="border-success bg-success/10">
           <CardContent className="flex items-center justify-center py-8">
             <div className="text-center">
-              <Trophy className="h-12 w-12 text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-green-800 mb-2">Congratulations!</h3>
-              <p className="text-green-700">
+              <Trophy className="h-12 w-12 text-success mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-success mb-2">Congratulations!</h3>
+              <p className="text-success">
                 You completed all {gameWords.length} words with a score of {gameState.score}!
               </p>
-              <p className="text-sm text-green-600 mt-2">
+              <p className="text-sm text-success mt-2">
                 Time: {Math.floor((Date.now() - gameState.startTime) / 1000)}s
               </p>
               <Button onClick={resetGame} className="mt-4">
@@ -397,15 +397,15 @@ export default function VocabularyHangmanGame({
       )}
 
       {gameState.gameStatus === 'lost' && (
-        <Card className="border-red-500 bg-red-50">
+        <Card className="border-destructive bg-destructive/10">
           <CardContent className="flex items-center justify-center py-8">
             <div className="text-center">
-              <Skull className="h-12 w-12 text-red-600 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-red-800 mb-2">Game Over!</h3>
-              <p className="text-red-700 mb-2">
+              <Skull className="h-12 w-12 text-destructive mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-destructive mb-2">Game Over!</h3>
+              <p className="text-destructive mb-2">
                 The word was: <span className="font-bold">{gameState.currentTerm ? <TermLabel term={gameState.currentTerm} /> : null}</span>
               </p>
-              <p className="text-sm text-red-600">
+              <p className="text-sm text-destructive">
                 Final Score: {gameState.score} • Words Completed: {gameState.currentWordIndex}/{gameWords.length}
               </p>
               <Button onClick={resetGame} className="mt-4">
@@ -426,7 +426,7 @@ export default function VocabularyHangmanGame({
               <CardTitle className="flex items-center justify-between text-base sm:text-lg">
                 <span>Guess the Word</span>
                 <div className="flex items-center gap-2">
-                  <Heart className="h-4 w-4 text-red-500" />
+                  <Heart className="h-4 w-4 text-destructive" />
                   <span className="font-bold">
                     {maxWrongGuesses - gameState.wrongGuesses}
                   </span>
@@ -455,7 +455,7 @@ export default function VocabularyHangmanGame({
               {showDefinitions && gameState.currentTerm?.definition && (
                 <div className="space-y-2">
                   <h4 className="font-medium text-sm sm:text-base">Definition:</h4>
-                  <p className="text-xs sm:text-sm text-muted-foreground p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700 break-words">
+                  <p className="text-xs sm:text-sm text-muted-foreground p-3 bg-primary/10 rounded-lg border border-primary/40 break-words">
                     {gameState.currentTerm.icon && <span aria-hidden className="block text-3xl mb-1">{gameState.currentTerm.icon}</span>}
                     <DefinitionLabel term={gameState.currentTerm} />
                   </p>
@@ -467,11 +467,11 @@ export default function VocabularyHangmanGame({
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium">Need help with letters?</h4>
                   {!showHint && (
-                    <Button 
-                      onClick={useHint} 
-                      size="sm" 
+                    <Button
+                      onClick={useHint}
+                      size="sm"
                       variant="outline"
-                      className="text-blue-600 border-blue-600"
+                      className="text-primary border-primary"
                     >
                       <Lightbulb className="h-3 w-3 mr-1" />
                       Letter Hint (-5 pts)
@@ -479,8 +479,8 @@ export default function VocabularyHangmanGame({
                   )}
                 </div>
                 {showHint ? (
-                  <p className="text-sm text-muted-foreground p-3 bg-green-50 rounded-lg border border-green-200">
-                    💡 Try the letter: <strong className="text-green-700">{getLetterHint()}</strong>
+                  <p className="text-sm text-muted-foreground p-3 bg-success/10 rounded-lg border border-success/40">
+                    💡 Try the letter: <strong className="text-success">{getLetterHint()}</strong>
                   </p>
                 ) : (
                   <p className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
@@ -520,7 +520,7 @@ export default function VocabularyHangmanGame({
                     className="flex-1"
                     maxLength={1}
                   />
-                  <Button 
+                  <Button
                     onClick={() => {
                       if (currentGuess) {
                         makeGuess(currentGuess)
@@ -537,7 +537,7 @@ export default function VocabularyHangmanGame({
               {/* Game Stats */}
               <div className="grid grid-cols-2 gap-4 pt-4 border-t">
                 <div className="text-center">
-                  <div className="text-lg font-bold text-green-600">
+                  <div className="text-lg font-bold text-success">
                     {Array.from(gameState.guessedLetters).filter(letter =>
                       gameState.currentTerm?.term.toLowerCase().includes(letter)
                     ).length}
@@ -545,7 +545,7 @@ export default function VocabularyHangmanGame({
                   <p className="text-xs text-muted-foreground">Correct</p>
                 </div>
                 <div className="text-center">
-                  <div className="text-lg font-bold text-red-600">
+                  <div className="text-lg font-bold text-destructive">
                     {gameState.wrongGuesses}
                   </div>
                   <p className="text-xs text-muted-foreground">Wrong</p>
@@ -571,10 +571,10 @@ export default function VocabularyHangmanGame({
 
       {/* Wrong Guesses Display */}
       {gameState.wrongGuesses > 0 && gameState.gameStatus === 'playing' && (
-        <Card className="border-red-200">
+        <Card className="border-destructive/40">
           <CardContent className="py-4">
             <div className="flex items-center gap-2">
-              <XCircle className="h-4 w-4 text-red-500" />
+              <XCircle className="h-4 w-4 text-destructive" />
               <span className="text-sm font-medium">Wrong guesses:</span>
               <div className="flex gap-1">
                 {Array.from(gameState.guessedLetters)

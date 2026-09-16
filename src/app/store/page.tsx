@@ -173,7 +173,7 @@ export default function StorePage() {
       ) : (
         <div className="rounded-lg border bg-card px-4" style={{ borderColor: C.hairline }}>
           {shopRedemptions.map((r, i) => (
-            <div key={r.id} className="flex items-center gap-3 py-2.5" style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--border)' }}>
+            <div key={r.id} className="flex items-center gap-3 py-2.5" style={{ borderTop: i === 0 ? 'none' : '1px solid var(--border)' }}>
               <span className="flex-1 text-sm">{r.reward_name}</span>
               <span className="text-sm" style={{ color: C.muted }}>{r.cost_points} XP</span>
               <span className="text-xs rounded px-2 py-0.5" style={{ background: 'var(--card)', border: `1px solid ${STATUS_COLOR[r.status] ?? C.hairline}`, color: STATUS_COLOR[r.status] ?? C.muted }}>{STATUS_LABEL[r.status] ?? r.status}</span>

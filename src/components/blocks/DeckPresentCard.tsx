@@ -50,7 +50,7 @@ export default function DeckPresentCard({ src, title }: { src: string; title: st
           Lesson deck
         </span>
         <span
-          className="ml-auto text-[10px] font-semibold uppercase tracking-widest"
+          className="ml-auto text-overline font-semibold uppercase tracking-widest"
           style={{ color: 'var(--muted-foreground)' }}
         >
           Teachers only
@@ -60,12 +60,12 @@ export default function DeckPresentCard({ src, title }: { src: string; title: st
       <div className="p-4 flex items-center justify-between gap-4 flex-wrap">
         <div className="min-w-0">
           <div className="text-sm font-semibold truncate" style={{ color: 'var(--foreground)' }}>{title}</div>
-          <div className="flex items-center gap-3 mt-1 text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
+          <div className="flex items-center gap-3 mt-1 text-overline" style={{ color: 'var(--muted-foreground)' }}>
             <span className="inline-flex items-center gap-1"><Keyboard size={12} /> ← → to navigate</span>
             <span className="inline-flex items-center gap-1"><Timer size={12} /> T for the class timer</span>
           </div>
           {opened && (
-            <div className="text-[11px] mt-1.5" style={{ color: 'var(--muted-foreground)' }}>
+            <div className="text-overline mt-1.5" style={{ color: 'var(--muted-foreground)' }}>
               If the deck opened on this screen: drag it to the projector, then press{' '}
               <strong>{fullscreenKeyHint()}</strong> for fullscreen.
               Display mode must be <strong>Extend</strong>, not Mirror.

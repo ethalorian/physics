@@ -46,13 +46,13 @@ function sample(): BankItem[] {
 
 function Certificate({ score, mastery }: { score: number; mastery: boolean }) {
   return (
-    <div className={`rounded-xl border-4 ${mastery ? 'border-amber-400' : 'border-border'} p-6 text-center space-y-2 bg-gradient-to-b from-amber-50 to-transparent dark:from-amber-950/30`}>
+    <div className={`rounded-xl border-4 ${mastery ? 'border-primary' : 'border-border'} p-6 text-center space-y-2 bg-gradient-to-b from-primary/10 to-transparent `}>
       <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">République Française · An VII</div>
       <div className="text-xl font-bold">Certificate of the Republic of Measures</div>
       <p className="text-sm text-muted-foreground">This certifies that the bearer has journeyed from the chaos of 1789 to the metric system, and inspected the new measures with a score of</p>
       <div className="text-4xl font-mono font-bold tabular-nums">{score}%</div>
       {mastery ? (
-        <div className="inline-block px-3 py-1 rounded-full bg-amber-400 text-amber-950 font-semibold text-sm">
+        <div className="inline-block px-3 py-1 rounded-full bg-primary/25 text-primary font-semibold text-sm">
           ★ Master Inspector — for all time, for all people ★
         </div>
       ) : (

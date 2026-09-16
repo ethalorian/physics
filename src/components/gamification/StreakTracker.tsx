@@ -10,10 +10,10 @@ interface StreakTrackerProps {
   totalDays: number
 }
 
-export default function StreakTracker({ 
-  currentStreak, 
-  longestStreak, 
-  totalDays 
+export default function StreakTracker({
+  currentStreak,
+  longestStreak,
+  totalDays
 }: StreakTrackerProps) {
   // Flame count scales with the streak — real icons, not emoji (audit 1.1).
   const streakFlames = (streak: number) => (streak >= 30 ? 3 : streak >= 14 ? 2 : 1)
@@ -47,14 +47,14 @@ export default function StreakTracker({
 
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-muted rounded-lg p-3 text-center border">
-            <div className="text-muted-foreground text-[11px] uppercase mb-1">Best Streak</div>
+            <div className="text-muted-foreground text-overline uppercase mb-1">Best Streak</div>
             <div className="text-foreground font-bold text-xl">{longestStreak}</div>
-            <div className="text-muted-foreground text-[11px]">days</div>
+            <div className="text-muted-foreground text-overline">days</div>
           </div>
           <div className="bg-muted rounded-lg p-3 text-center border">
-            <div className="text-muted-foreground text-[11px] uppercase mb-1">Total Days</div>
+            <div className="text-muted-foreground text-overline uppercase mb-1">Total Days</div>
             <div className="text-foreground font-bold text-xl">{totalDays}</div>
-            <div className="text-muted-foreground text-[11px]">active</div>
+            <div className="text-muted-foreground text-overline">active</div>
           </div>
         </div>
 

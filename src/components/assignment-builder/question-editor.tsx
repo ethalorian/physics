@@ -1,4 +1,5 @@
 "use client"
+import { Spinner } from '@/components/ui/spinner'
 import { useState } from 'react'
 import { Question, QuestionType, MultipleChoiceQuestion, NumericalQuestion, OpenResponseQuestion, VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion, VocabularyHangmanQuestion } from '@/types/assignment'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -7,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Trash2, Plus, RefreshCw, Image as ImageIcon, Calculator, BookPlus, Sparkles } from 'lucide-react'
+import { Trash2, Plus, Image as ImageIcon, Calculator, BookPlus, Sparkles } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import RubricBuilder from './rubric-builder'
 import { calculatePhysicsSolution, generateIncorrectUnits } from '@/utils/physics-calculator'
@@ -40,14 +41,14 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
   // Handle vocabulary questions with specialized editor
   if (question.type === 'vocabulary-matching' || question.type === 'vocabulary-crossword' || question.type === 'vocabulary-fill-blank' || question.type === 'vocabulary-hangman') {
     return (
-      <VocabularyQuestionEditor 
+      <VocabularyQuestionEditor
         question={question as VocabularyMatchingQuestion | VocabularyCrosswordQuestion | VocabularyFillBlankQuestion | VocabularyHangmanQuestion}
         onUpdate={onUpdate}
         onDelete={onDelete}
       />
     )
   }
-  
+
   const updateQuestion = (updates: Partial<Question>) => {
     onUpdate({ ...question, ...updates } as Question)
   }
@@ -62,20 +63,20 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
     try {
       // Try to calculate the answer
       const solution = calculatePhysicsSolution(question.question)
-      
+
       if (solution) {
         // Generate incorrect unit options
         const incorrectUnits = generateIncorrectUnits(solution.unit)
         const allUnits = [solution.unit, ...incorrectUnits.slice(0, 3)]
         // Shuffle the units
         const shuffledUnits = allUnits.sort(() => Math.random() - 0.5)
-        
-        updateQuestion({ 
+
+        updateQuestion({
           correctValue: solution.value,
           unit: solution.unit,
           unitOptions: shuffledUnits
         } as Partial<NumericalQuestion>)
-        
+
         setUnitOptions(shuffledUnits)
       } else {
         alert('Unable to auto-calculate for this question. Please enter the answer manually.')
@@ -109,7 +110,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                         updateQuestion({ options: newOptions })
                       }}
                       placeholder={`Option ${index + 1}`}
-                      className="bg-white"
+                      className="bg-card"
                     />
                     <Button
                       type="button"
@@ -127,7 +128,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                       onClick={() => {
                         const newOptions = mcQuestion.options.filter((_: string, i: number) => i !== index)
                         const newExplanations = optionExplanations.filter((_, i) => i !== index)
-                        updateQuestion({ 
+                        updateQuestion({
                           options: newOptions,
                           correctAnswer: mcQuestion.correctAnswer === index ? undefined : mcQuestion.correctAnswer
                         })
@@ -149,13 +150,13 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                           newExplanations[index] = e.target.value
                           setOptionExplanations(newExplanations)
                         }}
-                        placeholder={mcQuestion.correctAnswer === index 
-                          ? "Explain why this is correct..." 
+                        placeholder={mcQuestion.correctAnswer === index
+                          ? "Explain why this is correct..."
                           : "Describe the misconception or logic error..."}
                         className={`text-xs min-h-[60px] ${
-                          mcQuestion.correctAnswer === index 
-                            ? 'bg-success/5 border-success/30' 
-                            : 'bg-orange-50 border-orange-200'
+                          mcQuestion.correctAnswer === index
+                            ? 'bg-success/5 border-success/30'
+                            : 'bg-primary/10 border-primary/40'
                         }`}
                         rows={2}
                       />
@@ -221,17 +222,17 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                 size="sm"
                 onClick={handleAutoCalculate}
                 disabled={isCalculating || !question.question}
-                  className="bg-gradient-to-r from-success/15 to-success/5 hover:from-success/15 hover:to-success/5 border-success/30"
+                  className="border-success/30 bg-success/15 text-foreground hover:bg-success/25"
               >
                 {isCalculating ? (
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin text-success" />
+                    <Spinner size="sm" className="mr-2 text-success" />
                 ) : (
                     <Calculator className="h-4 w-4 mr-2 text-success" />
                 )}
                   {isCalculating ? 'Calculating...' : 'Quick Calculate'}
               </Button>
             </div>
-              
+
               <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Correct Value</label>
@@ -270,7 +271,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                 <label className="block text-sm font-medium mb-2">Unit Options (for students to choose)</label>
                 <div className="flex flex-wrap gap-2">
                   {numQuestion.unitOptions.map((unitOption, idx) => (
-                    <Badge 
+                    <Badge
                       key={idx}
                       variant={unitOption === numQuestion.unit ? "default" : "outline"}
                       className={unitOption === numQuestion.unit ? "bg-success/10 text-success border-success/30" : ""}
@@ -289,22 +290,22 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                 <button
                   type="button"
                   onClick={() => setShowSolution(!showSolution)}
-                  className="w-full p-4 bg-gradient-to-r from-amber-50 to-orange-50 flex items-center justify-between hover:from-amber-100 hover:to-orange-100 transition-colors"
+                  className="w-full p-4 flex items-center justify-between transition-colors bg-primary text-primary-foreground hover:bg-primary/90"
                 >
                   <div className="flex items-center gap-2">
-                    <Calculator className="h-5 w-5 text-amber-600" />
-                    <span className="font-medium text-amber-800">Step-by-Step Solution</span>
+                    <Calculator className="h-5 w-5 text-primary" />
+                    <span className="font-medium text-primary">Step-by-Step Solution</span>
                     {numQuestion.solutionGeneratedByAI && (
-                      <Badge className="bg-amber-100 text-amber-700 border-amber-300 text-xs">
+                      <Badge className="bg-primary/10 text-primary border-primary/40 text-xs">
                         <Sparkles className="w-3 h-3 mr-1" /> AI
                       </Badge>
                     )}
                   </div>
-                  <span className="text-amber-600">{showSolution ? '▼ Hide' : '▶ Show'}</span>
+                  <span className="text-primary">{showSolution ? '▼ Hide' : '▶ Show'}</span>
                 </button>
-                
+
                 {showSolution && (
-                  <div className="p-4 space-y-4 bg-white">
+                  <div className="p-4 space-y-4 bg-card">
                     {/* Formula */}
                     {numQuestion.formula && (
                       <div className="p-3 bg-primary/5 rounded-lg border border-primary/30">
@@ -314,21 +315,21 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                         </div>
                       </div>
                     )}
-                    
+
                     {/* Given Values */}
                     {numQuestion.givenValues && numQuestion.givenValues.length > 0 && (
                       <div className="p-3 bg-muted rounded-lg">
                         <span className="text-xs font-medium text-muted-foreground block mb-2">Given Values:</span>
                         <div className="flex flex-wrap gap-3">
                           {numQuestion.givenValues.map((gv, idx) => (
-                            <div key={idx} className="px-3 py-1 bg-white rounded border text-sm">
+                            <div key={idx} className="px-3 py-1 bg-card rounded border text-sm">
                               <InlineMath math={`${gv.symbol} = ${gv.value} \\text{ ${gv.unit}}`} />
                             </div>
                           ))}
                         </div>
                       </div>
                     )}
-                    
+
                     {/* Steps */}
                     <div className="space-y-3">
                       {numQuestion.solutionSteps.map((step) => (
@@ -339,7 +340,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                           <div className="flex-1">
                             <p className="text-sm font-medium text-foreground mb-2">{step.description}</p>
                             {step.equation && (
-                              <div className="bg-white px-3 py-2 rounded border inline-block">
+                              <div className="bg-card px-3 py-2 rounded border inline-block">
                                 <InlineMath math={step.equation.replace(/\\\\/g, '\\')} />
                               </div>
                             )}
@@ -352,7 +353,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                         </div>
                       ))}
                     </div>
-                    
+
                     {/* Explanation */}
                     {numQuestion.explanation && (
                       <div className="p-3 bg-success/5 rounded-lg border border-success/30">
@@ -360,7 +361,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                         <p className="text-sm text-success">{numQuestion.explanation}</p>
                       </div>
                     )}
-                    
+
                     {/* Common Mistakes */}
                     {numQuestion.commonMistakes && numQuestion.commonMistakes.length > 0 && (
                       <div className="p-3 bg-destructive/5 rounded-lg border border-destructive/30">
@@ -428,8 +429,8 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
               <label className="block text-sm font-medium mb-2">Key Concepts</label>
                   <Input
                 value={(openResponseQuestion.correctConcepts || []).join(', ')}
-                    onChange={(e) => updateQuestion({ 
-                      correctConcepts: e.target.value.split(',').map(c => c.trim()).filter(c => c.length > 0) 
+                    onChange={(e) => updateQuestion({
+                      correctConcepts: e.target.value.split(',').map(c => c.trim()).filter(c => c.length > 0)
                     })}
                     placeholder="velocity, acceleration, Newton's laws"
                   />
@@ -443,8 +444,8 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
               <label className="block text-sm font-medium mb-2">Common Misconceptions</label>
                   <Input
                 value={(openResponseQuestion.commonMisconceptions || []).join(', ')}
-                    onChange={(e) => updateQuestion({ 
-                      commonMisconceptions: e.target.value.split(',').map(m => m.trim()).filter(m => m.length > 0) 
+                    onChange={(e) => updateQuestion({
+                      commonMisconceptions: e.target.value.split(',').map(m => m.trim()).filter(m => m.length > 0)
                     })}
                     placeholder="heavier objects fall faster, force equals velocity"
                   />
@@ -515,11 +516,11 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
               </Badge>
             </div>
             <div className="flex gap-2 self-start sm:self-auto">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setShowAddToBank(true)}
-                className="bg-gradient-to-r from-primary/15 to-primary/5 hover:from-primary/15 hover:to-primary/5 border-primary/30 text-xs sm:text-sm px-2 sm:px-3"
+                className="border-primary/30 text-xs sm:text-sm px-2 sm:px-3 bg-primary/10 text-foreground"
                 title="Save to Question Bank"
                 disabled={!question.question || question.question.trim() === ''}
               >
@@ -543,7 +544,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
             rows={3}
           />
         </div>
-        
+
         {/* Image Generation Section */}
         <div>
           <div className="flex items-center justify-between mb-2">
@@ -558,12 +559,12 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                     const dataUrl = `data:${imageData.mimeType};base64,${imageData.base64}`
                     updateQuestion({ scenarioImage: dataUrl })
                   }}
-                  className="h-8 text-xs bg-gradient-to-r from-primary/15 to-fuchsia-50 hover:from-primary/15 hover:to-fuchsia-100 border-primary/30"
+                  className="h-8 text-xs -50 -100 border-primary/30 bg-primary/10 text-foreground"
                 />
               </div>
             )}
           </div>
-          
+
           {question.scenarioImage && (
             <div className="relative rounded-lg overflow-hidden border-2 border-border">
               <img
@@ -601,7 +602,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
             </div>
           )}
         </div>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-2">Question Type</label>
@@ -638,7 +639,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
         {renderQuestionTypeEditor()}
       </CardContent>
     </Card>
-    
+
     {showAddToBank && (
       <AddToQuestionBankModal
         question={question}

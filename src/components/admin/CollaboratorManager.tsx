@@ -101,9 +101,9 @@ export default function CollaboratorManager() {
           <table style={{ borderCollapse: 'collapse', width: '100%' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                <th style={{ textAlign: 'left', padding: '10px 14px', fontSize: 12, color: 'var(--muted-foreground)', fontWeight: 600 }}>Collaborator</th>
+                <th className="text-caption" style={{ textAlign: 'left', padding: '10px 14px', color: 'var(--muted-foreground)' }}>Collaborator</th>
                 {areas.map((a) => (
-                  <th key={a} style={{ padding: '10px 12px', fontSize: 12, color: 'var(--muted-foreground)', fontWeight: 600, textAlign: 'center', minWidth: 96 }}>
+                  <th className="text-caption" key={a} style={{ padding: '10px 12px', color: 'var(--muted-foreground)', textAlign: 'center', minWidth: 96 }}>
                     {AREA_LABEL[a] ?? a}
                   </th>
                 ))}
@@ -111,8 +111,8 @@ export default function CollaboratorManager() {
             </thead>
             <tbody>
               {sorted.map((c) => (
-                <tr key={c.email} style={{ borderBottom: '0.5px solid var(--border)' }}>
-                  <td style={{ padding: '10px 14px', fontSize: 14, fontWeight: 500, whiteSpace: 'nowrap' }}>
+                <tr key={c.email} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td className="text-sm" style={{ padding: '10px 14px', fontWeight: 500, whiteSpace: 'nowrap' }}>
                     {c.email}
                     {c.areas.length === 0 && <span className="text-xs" style={{ color: 'var(--muted-foreground)', marginLeft: 8 }}>· no areas yet</span>}
                   </td>

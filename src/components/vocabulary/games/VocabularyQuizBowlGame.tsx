@@ -8,11 +8,11 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { VocabularyTerm } from '@/types/assignment'
-import { 
-  Clock, 
-  Trophy, 
-  RotateCcw, 
-  CheckCircle, 
+import {
+  Clock,
+  Trophy,
+  RotateCcw,
+  CheckCircle,
   XCircle,
   Zap,
   Target,
@@ -74,7 +74,7 @@ export default function VocabularyQuizBowlGame({
     streak: 0,
     maxStreak: 0
   })
-  
+
   const [gameTerms, setGameTerms] = useState<VocabularyTerm[]>([])
   const [questionResults, setQuestionResults] = useState<QuestionResult[]>([])
   const [showResult, setShowResult] = useState<boolean>(false)
@@ -99,30 +99,30 @@ export default function VocabularyQuizBowlGame({
     if (vocabularyTerms.length > 0) {
       // Filter by difficulty if specified
       let filteredTerms = vocabularyTerms
-      
+
       // Only filter if difficulty is not medium, and include terms without difficulty
       if (difficulty === 'easy') {
-        filteredTerms = vocabularyTerms.filter(term => 
+        filteredTerms = vocabularyTerms.filter(term =>
           term.difficulty === 'easy' || !term.difficulty
         )
       } else if (difficulty === 'hard') {
-        filteredTerms = vocabularyTerms.filter(term => 
+        filteredTerms = vocabularyTerms.filter(term =>
           term.difficulty === 'hard' || !term.difficulty
         )
       }
       // For medium difficulty, use all terms (no filtering)
-      
+
       console.log('Quiz Bowl Debug:', {
         totalTerms: vocabularyTerms.length,
         difficulty,
         filteredTerms: filteredTerms.length,
         requestedQuestions: totalQuestions
       })
-      
+
       // Shuffle and select terms for the game
       const shuffled = [...filteredTerms].sort(() => Math.random() - 0.5)
       const gameTerms = shuffled.slice(0, Math.min(totalQuestions, shuffled.length))
-      
+
       console.log('Quiz Bowl Game Terms:', gameTerms.length)
       setGameTerms(gameTerms)
     }
@@ -181,7 +181,7 @@ export default function VocabularyQuizBowlGame({
 
     const timeUsed = timeLimit - quizState.timeRemaining
     const userAnswer = quizState.currentAnswer.trim()
-    
+
     // Check if answer is correct (if not provided)
     let correct = isCorrect
     if (correct === undefined) {
@@ -236,7 +236,7 @@ export default function VocabularyQuizBowlGame({
     // Auto-advance to next question after showing result
     setTimeout(() => {
       setShowResult(false)
-      
+
       const nextIndex = quizState.questionsAnswered + 1
       if (nextIndex < Math.min(totalQuestions, gameTerms.length)) {
         setQuizState(prev => ({
@@ -280,9 +280,9 @@ export default function VocabularyQuizBowlGame({
 
   const getTimeColor = () => {
     const percentage = (quizState.timeRemaining / timeLimit) * 100
-    if (percentage > 50) return 'text-green-600'
-    if (percentage > 25) return 'text-yellow-600'
-    return 'text-red-600'
+    if (percentage > 50) return 'text-success'
+    if (percentage > 25) return 'text-primary'
+    return 'text-destructive'
   }
 
   if (gameTerms.length === 0) {
@@ -300,7 +300,7 @@ export default function VocabularyQuizBowlGame({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="flex items-center justify-center gap-2">
-            <Zap className="h-6 w-6 text-yellow-600" />
+            <Zap className="h-6 w-6 text-primary" />
             Quiz Bowl Ready
           </CardTitle>
           <CardDescription>
@@ -309,22 +309,22 @@ export default function VocabularyQuizBowlGame({
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-4 md:grid-cols-3 text-center">
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-700">{Math.min(totalQuestions, gameTerms.length)}</div>
-              <div className="text-sm text-blue-600">Questions</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{Math.min(totalQuestions, gameTerms.length)}</div>
+              <div className="text-sm text-muted-foreground">Questions</div>
             </div>
-            <div className="p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{timeLimit}s</div>
-              <div className="text-sm text-green-600">Per Question</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{timeLimit}s</div>
+              <div className="text-sm text-muted-foreground">Per Question</div>
             </div>
-            <div className="p-4 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-700">{difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30}</div>
-              <div className="text-sm text-purple-600">Base Points</div>
+            <div className="p-4 bg-reward/10 rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30}</div>
+              <div className="text-sm text-muted-foreground">Base Points</div>
             </div>
           </div>
-          
+
           <div className="text-center">
-            <Button onClick={startGame} size="lg" className="bg-yellow-600 hover:bg-yellow-700">
+            <Button onClick={startGame} size="lg">
               <Zap className="h-4 w-4 mr-2" />
               Start Quiz Bowl
             </Button>
@@ -337,35 +337,35 @@ export default function VocabularyQuizBowlGame({
   if (quizState.gameStatus === 'complete') {
     const accuracy = Math.round((quizState.correctAnswers / quizState.questionsAnswered) * 100)
     const totalTime = Math.floor((Date.now() - quizState.startTime) / 1000)
-    
+
     return (
-      <Card className="border-green-200 bg-green-50">
+      <Card className="border-success/40 bg-success/10">
         <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-2 text-green-800">
+          <CardTitle className="flex items-center justify-center gap-2 text-success">
             <Trophy className="h-6 w-6" />
             Quiz Bowl Complete!
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-4 md:grid-cols-4 text-center">
-            <div className="p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{quizState.score}</div>
-              <div className="text-sm text-green-600">Final Score</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{quizState.score}</div>
+              <div className="text-sm text-muted-foreground">Final Score</div>
             </div>
-            <div className="p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{quizState.correctAnswers}/{quizState.questionsAnswered}</div>
-              <div className="text-sm text-green-600">Correct</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{quizState.correctAnswers}/{quizState.questionsAnswered}</div>
+              <div className="text-sm text-muted-foreground">Correct</div>
             </div>
-            <div className="p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{accuracy}%</div>
-              <div className="text-sm text-green-600">Accuracy</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{accuracy}%</div>
+              <div className="text-sm text-muted-foreground">Accuracy</div>
             </div>
-            <div className="p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{quizState.maxStreak}</div>
-              <div className="text-sm text-green-600">Best Streak</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{quizState.maxStreak}</div>
+              <div className="text-sm text-muted-foreground">Best Streak</div>
             </div>
           </div>
-          
+
           <div className="text-center space-y-2">
             <Button onClick={resetGame} variant="outline">
               <RotateCcw className="h-4 w-4 mr-2" />
@@ -379,7 +379,7 @@ export default function VocabularyQuizBowlGame({
 
   return (
     <div className={`space-y-6 ${shake ? 'arcade-shake' : ''}`}>
-      <style>{`@keyframes arcadeShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}.arcade-shake{animation:arcadeShake .45s}`}</style>
+
       {/* Game Header */}
       <Card>
         <CardContent className="p-4">
@@ -388,7 +388,7 @@ export default function VocabularyQuizBowlGame({
               <Badge variant="outline">
                 {quizState.questionsAnswered + 1} of {Math.min(totalQuestions, gameTerms.length)}
               </Badge>
-              <span className="font-bold" style={{ fontSize: 18 }}>{quizState.score.toLocaleString()}</span>
+              <span className="text-title-3" >{quizState.score.toLocaleString()}</span>
               {quizState.streak > 0 && (
                 <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: 'color-mix(in oklch, var(--reward) 20%, transparent)', color: 'var(--reward)', transform: `scale(${Math.min(1 + quizState.streak * 0.04, 1.3)})` }}>
                   <Flame className="h-3.5 w-3.5" /> ×{multiplier}
@@ -417,9 +417,9 @@ export default function VocabularyQuizBowlGame({
       <Card className="relative">
         {showResult && lastResult && (
           <div className={`absolute inset-0 z-10 flex items-center justify-center rounded-lg ${
-            lastResult.isCorrect ? 'bg-green-500/90' : 'bg-red-500/90'
+            lastResult.isCorrect ? 'bg-success/15 border border-success' : 'bg-destructive/15 border border-destructive'
           }`}>
-            <div className="text-center text-white">
+            <div className="text-center text-foreground">
               <div className="flex items-center justify-center gap-2 mb-2">
                 {lastResult.isCorrect ? (
                   <CheckCircle className="h-8 w-8" />
@@ -438,20 +438,20 @@ export default function VocabularyQuizBowlGame({
             </div>
           </div>
         )}
-        
+
         <CardHeader>
           <CardTitle className="text-center text-xl">
             What physics term is defined as:
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="text-center p-6 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-lg text-blue-900 font-medium">
+          <div className="text-center p-6 bg-primary/10 rounded-lg border border-primary/40">
+            <p className="text-lg text-primary font-medium">
               {quizState.currentTerm?.icon && <span aria-hidden className="block text-4xl mb-2">{quizState.currentTerm.icon}</span>}
               {quizState.currentTerm ? <DefinitionLabel term={quizState.currentTerm} /> : null}
             </p>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex gap-2">
               <Input
@@ -467,11 +467,11 @@ export default function VocabularyQuizBowlGame({
                 Submit
               </Button>
             </div>
-            
+
             <div className="text-center">
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={handleSkip}
                 disabled={showResult}
               >

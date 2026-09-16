@@ -60,7 +60,7 @@ export default function AdminArcadePage() {
         <Link href="/admin/home" className="flex items-center gap-1 text-sm" style={{ color: 'var(--muted-foreground)' }}>
           <ArrowLeft size={16} /> Admin
         </Link>
-        <div className="grid place-items-center" style={{ width: 40, height: 40, borderRadius: 10, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
+        <div className="grid place-items-center" style={{ width: 40, height: 40, borderRadius: 'var(--radius-md)', background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
           <Joystick size={22} />
         </div>
         <div>
@@ -82,12 +82,12 @@ export default function AdminArcadePage() {
               style={{ borderColor: 'var(--border)', background: 'var(--card)', boxShadow: `inset 3px 0 0 ${accent}`, opacity: g.enabled ? 1 : 0.75 }}>
               <div className="flex-1 min-w-[160px]">
                 <div className="font-bold tracking-wide" style={{ color: accent }}>{g.name}</div>
-                <div className="text-[11px] uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{g.unit}</div>
+                <div className="text-overline uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{g.unit}</div>
               </div>
 
               {/* file/deploy status — the column today's bug paid for */}
               <div className="flex items-center gap-1.5 text-xs min-w-[120px]"
-                style={{ color: file === true ? 'var(--success, #22c55e)' : file === false ? 'var(--destructive, #ef4444)' : 'var(--muted-foreground)' }}>
+                style={{ color: file === true ? 'var(--success)' : file === false ? 'var(--destructive)' : 'var(--muted-foreground)' }}>
                 {file === true ? <CheckCircle2 size={15} /> : file === false ? <AlertTriangle size={15} /> : null}
                 {file === true ? 'file deployed' : file === false ? 'FILE MISSING — deploy first' : 'checking…'}
               </div>
@@ -112,14 +112,14 @@ export default function AdminArcadePage() {
                 className="relative rounded-full transition-colors"
                 style={{
                   width: 52, height: 28, border: 'none', cursor: 'pointer',
-                  background: g.enabled ? 'var(--success, #22c55e)' : 'var(--muted, #374151)',
+                  background: g.enabled ? 'var(--success)' : 'var(--muted)',
                   opacity: busy === g.slug ? 0.5 : 1,
                 }}
               >
                 <span className="absolute rounded-full transition-all"
                   style={{ top: 3, left: g.enabled ? 27 : 3, width: 22, height: 22, background: '#fff' }} />
               </button>
-              <span className="text-xs w-8" style={{ color: g.enabled ? 'var(--success, #22c55e)' : 'var(--muted-foreground)' }}>
+              <span className="text-xs w-8" style={{ color: g.enabled ? 'var(--success)' : 'var(--muted-foreground)' }}>
                 {g.enabled ? 'ON' : 'OFF'}
               </span>
             </div>

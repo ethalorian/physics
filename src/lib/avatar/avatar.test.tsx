@@ -6,6 +6,7 @@ import Avatar from '@/components/avatar/Avatar'
 import { safeSvgLayer } from './svg'
 import { DEFAULT_TRAITS, TRAIT_OPTIONS, validTraits, validEquipped, withDefaults, type AvatarItem } from './types'
 import catalog from '@/data/avatar-catalog.json'
+import { SKIN } from './palette'
 const items = catalog as AvatarItem[]
 
 test('untrusted or legacy traits never crash the composer', () => {
@@ -56,4 +57,36 @@ test('clip IDs are unique within one gallery and decorative images stay quiet', 
   const ids = [...output.matchAll(/clipPath id="([^"]+)"/g)].map(m => m[1])
   assert.equal(new Set(ids).size, 2)
   assert.doesNotMatch(output, /aria-label="Student avatar"/)
+})
+
+test('vampire accessories coexist, follow face controls, and restore the base mouth when removed', () => {
+  const equipped = { ears: 'vampire-ears', mouth: 'vampire-fangs', body: 'midnight-vampire-dress', eyewear: 'round-glasses' }
+  assert.ok(validEquipped(equipped))
+  for (const face of TRAIT_OPTIONS.face) for (const mouth_width of TRAIT_OPTIONS.mouth_width) {
+    const traits = { face, mouth_width, mouth: 'open' } as const
+    const output = renderToStaticMarkup(<Avatar traits={traits as never} items={items} equipped={equipped} />)
+    for (const slug of ['vampire-fangs', 'midnight-vampire-dress', 'round-glasses']) {
+      assert.ok(output.includes(safeSvgLayer(items.find(i => i.slug === slug)!.svg_layer)), `${face}/${mouth_width}/${slug}`)
+    }
+    assert.doesNotMatch(output, /<ellipse cx="0" cy="25"/)
+    if (mouth_width === 'wide') assert.match(output, /scale\(1\.25, 1\)/)
+    if (mouth_width === 'narrow') assert.match(output, /scale\(0\.8, 1\)/)
+    const unequipped = renderToStaticMarkup(<Avatar traits={traits as never} items={items} equipped={{ ears: equipped.ears }} />)
+    assert.match(unequipped, /<ellipse cx="0" cy="25"/)
+  }
+})
+
+test('pointed ears use every skin tone, fit all faces, and stay underneath covering masks', () => {
+  const ears = items.find(i => i.slug === 'vampire-ears')!
+  for (const skin of TRAIT_OPTIONS.skin) for (const face of TRAIT_OPTIONS.face) {
+    const traits = { skin, face, hair_style: 'bald' } as const
+    const output = renderToStaticMarkup(<Avatar traits={traits as never} items={items} equipped={{ ears: ears.slug }} />)
+    const artwork = ears.svg_layer.replaceAll('#E7B58B', SKIN[skin as keyof typeof SKIN].color)
+    assert.ok(output.includes(safeSvgLayer(artwork)), `${skin}/${face}`)
+    assert.doesNotMatch(output, /rx="5" ry="9"/)
+    if (face === 'heart') assert.match(output, /translate\(0, -6\) scale\(0\.913/)
+    if (face === 'square') assert.match(output, /scale\(1\.043/)
+    const masked = renderToStaticMarkup(<Avatar traits={traits as never} items={items} equipped={{ ears: ears.slug, head: 'spiderman-mask' }} />)
+    assert.ok(!masked.includes(safeSvgLayer(artwork)))
+  }
 })

@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useRef, useState } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { Trophy, Sparkles, RotateCcw, ArrowLeft, Star } from 'lucide-react'
 
@@ -22,7 +24,7 @@ interface Props {
 }
 
 function fireConfetti() {
-  if (typeof window === 'undefined') return
+  if (typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
   const canvas = document.createElement('canvas')
   canvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9999'
   canvas.width = window.innerWidth
@@ -110,7 +112,7 @@ export default function ArcadeEndScreen({ gameType, gameTitle, vocabularySetId, 
   }, [gameType, vocabularySetId, score, maxScore])
 
   return (
-    <div className="max-w-md mx-auto rounded-2xl border p-6 text-center" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
+    <Card className="max-w-md mx-auto items-center gap-0 p-6 text-center">
       <div className="grid place-items-center mx-auto mb-3" style={{ width: 56, height: 56, borderRadius: '50%', background: `color-mix(in oklch, ${accent} 18%, transparent)`, color: accent }}>
         <Trophy size={28} />
       </div>
@@ -121,7 +123,7 @@ export default function ArcadeEndScreen({ gameType, gameTitle, vocabularySetId, 
       </div>
 
       {isBest && score > 0 && (
-        <div className="inline-flex items-center gap-1.5 text-sm font-medium rounded-full px-3 py-1 mt-3" style={{ background: 'color-mix(in oklch, var(--reward) 18%, transparent)', color: 'var(--reward)' }}>
+        <div className="inline-flex items-center gap-1.5 text-sm font-medium rounded-full px-3 py-1 mt-3" style={{ background: 'color-mix(in oklch, var(--reward) 18%, transparent)', color: 'var(--foreground)' }}>
           <Sparkles size={15} /> New personal best!
         </div>
       )}
@@ -136,13 +138,13 @@ export default function ArcadeEndScreen({ gameType, gameTitle, vocabularySetId, 
       )}
 
       <div className="flex items-center gap-2 justify-center mt-5">
-        <button onClick={onPlayAgain} className="inline-flex items-center gap-1.5 text-sm rounded-lg px-4 py-2 font-medium" style={{ background: accent, color: 'var(--primary-foreground, white)' }}>
+        <Button onClick={onPlayAgain}>
           <RotateCcw size={15} /> Play again
-        </button>
+        </Button>
         <Link href="/vocabulary/work" className="inline-flex items-center gap-1.5 text-sm rounded-lg border px-4 py-2" style={{ borderColor: 'var(--border)' }}>
           <ArrowLeft size={15} /> Assignments
         </Link>
       </div>
-    </div>
+    </Card>
   )
 }

@@ -69,7 +69,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
   const NavBody = (
     <div className="flex flex-col h-full" style={{ background: 'var(--card)' }}>
       <Link href={homeHref} className="flex items-center gap-2 px-4 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
-        <span className="grid place-items-center shrink-0" style={{ width: 32, height: 32, borderRadius: 9, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
+        <span className="grid place-items-center shrink-0" style={{ width: 32, height: 32, borderRadius: 'var(--radius-sm)', background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
           <FlaskConical size={18} />
         </span>
         <span className="min-w-0">
@@ -99,7 +99,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
                         fontWeight: act ? 600 : 400,
                       }}
                     >
-                      {act && <span aria-hidden style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 3, borderRadius: 2, background: 'var(--primary)' }} />}
+                      {act && <span aria-hidden style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 3, borderRadius: 'var(--radius-xs)', background: 'var(--primary)' }} />}
                       <Ico size={17} style={{ color: act ? 'var(--primary)' : t.accent, opacity: act ? 1 : 0.85, flexShrink: 0 }} />
                       <span className="truncate">{t.label}</span>
                     </Link>
@@ -132,7 +132,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
               onClick={() => setMobileOpen(false)}
               aria-label="Close navigation"
               className="absolute"
-              style={{ top: 12, right: -46, width: 44, height: 44, borderRadius: 8, background: 'var(--card)', border: '1px solid var(--border)', display: 'grid', placeItems: 'center', cursor: 'pointer', color: 'var(--foreground)' }}
+              style={{ top: 12, right: -46, width: 44, height: 44, borderRadius: 'var(--radius-sm)', background: 'var(--card)', border: '1px solid var(--border)', display: 'grid', placeItems: 'center', cursor: 'pointer', color: 'var(--foreground)' }}
             >
               <X size={17} />
             </button>
@@ -151,7 +151,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
             onClick={() => setMobileOpen(true)}
             aria-label="Open navigation"
             className="lg:hidden grid place-items-center shrink-0"
-            style={{ width: 44, height: 44, borderRadius: 8, border: '1px solid var(--border)', background: 'var(--card)', cursor: 'pointer', color: 'var(--foreground)' }}
+            style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--card)', cursor: 'pointer', color: 'var(--foreground)' }}
           >
             <Menu size={18} />
           </button>

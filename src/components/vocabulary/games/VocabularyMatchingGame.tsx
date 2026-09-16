@@ -51,12 +51,12 @@ export default function VocabularyMatchingGame({
   useEffect(() => {
     const terms = question.vocabularyTerms || []
     const initialStates: Record<string, CardState> = {}
-    
+
     terms.forEach(term => {
       initialStates[`term-${term.id}`] = { id: `term-${term.id}`, status: 'unselected' }
       initialStates[`def-${term.id}`] = { id: `def-${term.id}`, status: 'unselected' }
     })
-    
+
     setCardStates(initialStates)
   }, [question.vocabularyTerms])
 
@@ -82,13 +82,13 @@ export default function VocabularyMatchingGame({
       const newCardStates = { ...cardStates }
       Object.entries(matches).forEach(([termId, definitionId]) => {
         const isCorrect = termId === definitionId
-        newCardStates[`term-${termId}`] = { 
-          id: `term-${termId}`, 
-          status: isCorrect ? 'correct' : 'incorrect' 
+        newCardStates[`term-${termId}`] = {
+          id: `term-${termId}`,
+          status: isCorrect ? 'correct' : 'incorrect'
         }
-        newCardStates[`def-${definitionId}`] = { 
-          id: `def-${definitionId}`, 
-          status: isCorrect ? 'correct' : 'incorrect' 
+        newCardStates[`def-${definitionId}`] = {
+          id: `def-${definitionId}`,
+          status: isCorrect ? 'correct' : 'incorrect'
         }
       })
       setCardStates(newCardStates)
@@ -115,10 +115,10 @@ export default function VocabularyMatchingGame({
 
   const processMatch = async (termId: string, definitionId: string) => {
     setIsProcessingMatch(true)
-    
+
     const termCardId = `term-${termId}`
     const defCardId = `def-${definitionId}`
-    
+
     // A correct match is when the term ID matches the definition ID (same vocabulary item)
     const isCorrectMatch = termId === definitionId
     onMatchAttempt?.(isCorrectMatch)
@@ -128,12 +128,12 @@ export default function VocabularyMatchingGame({
       // Correct match - flash green first, then stay in correct state
       updateCardState(termCardId, 'flashing-success')
       updateCardState(defCardId, 'flashing-success')
-      
+
       // After 600ms, change to permanent correct state
       setTimeout(() => {
         updateCardState(termCardId, 'correct')
         updateCardState(defCardId, 'correct')
-        
+
         // Add to matches
         setMatches(prev => ({ ...prev, [termId]: definitionId }))
       }, 600)
@@ -141,17 +141,17 @@ export default function VocabularyMatchingGame({
       // Incorrect match - flash red then return to unselected
       updateCardState(termCardId, 'flashing')
       updateCardState(defCardId, 'flashing')
-      
+
       // After 800ms, return to unselected
       setTimeout(() => {
         updateCardState(termCardId, 'unselected')
         updateCardState(defCardId, 'unselected')
       }, 800)
     }
-    
+
     // Clear selected cards
     setSelectedCards([])
-    
+
     // Re-enable card selection
     setTimeout(() => {
       setIsProcessingMatch(false)
@@ -160,43 +160,43 @@ export default function VocabularyMatchingGame({
 
   const handleCardClick = (cardId: string, cardType: 'term' | 'definition') => {
     if (disabled || isProcessingMatch) return
-    
+
     const cardState = cardStates[cardId]
     if (cardState?.status === 'correct') return // Can't select already matched cards
-    
+
     // Extract the actual term/definition ID from the card ID
     const actualId = cardId.replace('term-', '').replace('def-', '')
-    
+
     // If this exact card is already selected, deselect it
     if (selectedCards.some(card => card.cardId === cardId)) {
       setSelectedCards(prev => prev.filter(card => card.cardId !== cardId))
       updateCardState(cardId, 'unselected')
       return
     }
-    
+
     // If we already have 2 cards selected, ignore this click
     if (selectedCards.length >= 2) return
-    
+
     // Add this card to selection
     const newSelectedCards = [...selectedCards, { id: actualId, cardId: cardId, type: cardType }]
     setSelectedCards(newSelectedCards)
     updateCardState(cardId, 'selected')
-    
+
     // If we now have 2 cards, check for match
     if (newSelectedCards.length === 2) {
       const [first, second] = newSelectedCards
-      
+
       // Ensure we have one term and one definition
       if (first.type !== second.type) {
         const termCard = first.type === 'term' ? first : second
         const defCard = first.type === 'definition' ? first : second
-        
+
         processMatch(termCard.id, defCard.id)
       } else {
         // Both same type - flash red and deselect
         updateCardState(first.cardId, 'flashing')
         updateCardState(second.cardId, 'flashing')
-        
+
         setTimeout(() => {
           updateCardState(first.cardId, 'unselected')
           updateCardState(second.cardId, 'unselected')
@@ -210,7 +210,7 @@ export default function VocabularyMatchingGame({
     setMatches({})
     setSelectedCards([])
     setIsProcessingMatch(false)
-    
+
     // Reset all card states to unselected
     const resetStates: Record<string, CardState> = {}
     const terms = question.vocabularyTerms || []
@@ -230,33 +230,33 @@ export default function VocabularyMatchingGame({
       "transition-all duration-300 border-2",
       {
         // Unselected state - interactive
-        'border-gray-200 bg-white cursor-pointer hover:shadow-lg transform hover:-translate-y-1': state.status === 'unselected',
-        
+        'border-border bg-card cursor-pointer ': state.status === 'unselected',
+
         // Selected state - blue highlight, interactive
-        'border-blue-400 bg-blue-50 dark:bg-blue-900/30 ring-2 ring-blue-200 dark:ring-blue-700 scale-105 cursor-pointer': state.status === 'selected',
-        
+        'border-primary bg-primary/10  ring-2 ring-ring/40  scale-105 cursor-pointer': state.status === 'selected',
+
         // Correct match - green, NOT interactive, looks "pressed in"
-        'border-green-600 bg-green-300 dark:bg-green-900/50 text-green-900 dark:text-green-100 cursor-default shadow-inner scale-95': state.status === 'correct',
-        
+        'border-success bg-success/25  text-success  cursor-default shadow-inner scale-95': state.status === 'correct',
+
         // Incorrect match - red
-        'border-red-400 bg-red-100 text-red-800 cursor-pointer': state.status === 'incorrect',
-        
+        'border-destructive bg-destructive/10 text-destructive cursor-pointer': state.status === 'incorrect',
+
         // Flashing red animation (wrong answer)
-        'border-red-500 bg-red-200 dark:bg-red-900/50 animate-pulse cursor-pointer': state.status === 'flashing',
-        
+        'border-destructive bg-destructive/10  animate-pulse cursor-pointer': state.status === 'flashing',
+
         // Flashing green animation (correct answer)
-        'border-green-500 bg-green-200 animate-pulse cursor-pointer scale-105': state.status === 'flashing-success',
-        
+        'border-success bg-success/10 animate-pulse cursor-pointer scale-105': state.status === 'flashing-success',
+
         // Global disabled state
         'cursor-not-allowed opacity-50': disabled,
-        
+
         // Processing state
         'cursor-wait': isProcessingMatch && state.status !== 'correct' && state.status !== 'flashing-success'
       }
     )
   }
 
-  const correctMatches = showResults ? 
+  const correctMatches = showResults ?
     Object.entries(matches).filter(([termId, definitionId]) => termId === definitionId).length :
     Object.keys(matches).length
   const totalTerms = (question.vocabularyTerms || []).length
@@ -279,7 +279,7 @@ export default function VocabularyMatchingGame({
         </p>
         {showResults && (
           <div className="mb-4">
-            <Badge 
+            <Badge
               variant={correctMatches === totalTerms ? "default" : "secondary"}
               className="text-lg px-4 py-2"
             >
@@ -299,7 +299,7 @@ export default function VocabularyMatchingGame({
           <div className="space-y-2 sm:space-y-3">
             {shuffledTerms.map((term) => {
               const cardId = `term-${term.id}`
-              
+
               return (
                 <Card
                   key={term.id}
@@ -318,10 +318,10 @@ export default function VocabularyMatchingGame({
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         {showResults && cardStates[cardId]?.status === 'correct' && (
-                          <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                          <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-success" />
                         )}
                         {showResults && cardStates[cardId]?.status === 'incorrect' && (
-                          <XCircle className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
+                          <XCircle className="w-5 h-5 sm:w-6 sm:h-6 text-destructive" />
                         )}
                       </div>
                     </div>
@@ -338,7 +338,7 @@ export default function VocabularyMatchingGame({
           <div className="space-y-2 sm:space-y-3">
             {shuffledDefinitions.map((term) => {
               const cardId = `def-${term.id}`
-              
+
               return (
                 <Card
                   key={`def-${term.id}`}
@@ -357,10 +357,10 @@ export default function VocabularyMatchingGame({
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         {showResults && cardStates[cardId]?.status === 'correct' && (
-                          <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                          <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-success" />
                         )}
                         {showResults && cardStates[cardId]?.status === 'incorrect' && (
-                          <XCircle className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
+                          <XCircle className="w-5 h-5 sm:w-6 sm:h-6 text-destructive" />
                         )}
                       </div>
                     </div>
@@ -374,11 +374,11 @@ export default function VocabularyMatchingGame({
 
       {!disabled && (
         <div className="flex justify-center">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={handleReset}
             disabled={isProcessingMatch}
-            className="hover:bg-destructive hover:text-white transition-colors"
+            className="hover:bg-destructive hover:text-destructive-foreground transition-colors"
           >
             <RotateCcw className="w-4 h-4 mr-2" />
             Reset Game
@@ -397,18 +397,18 @@ export default function VocabularyMatchingGame({
               const term = (question.vocabularyTerms || []).find(t => t.id === termId)
               const matchedDefinition = (question.vocabularyTerms || []).find(t => t.id === definitionId)
               const isCorrect = termId === definitionId
-              
+
               return (
                 <div key={termId} className={cn(
                   "flex items-start gap-3 p-4 rounded-lg border-l-4 transition-all",
-                  isCorrect ? 
-                    "bg-green-50 border-green-400 text-green-900" : 
-                    "bg-red-50 border-red-400 text-red-900"
+                  isCorrect ?
+                    "bg-success/10 border-success text-success" :
+                    "bg-destructive/10 border-destructive text-destructive"
                 )}>
                   <div className="flex-shrink-0 mt-1">
-                    {isCorrect ? 
-                      <CheckCircle className="w-5 h-5 text-green-600" /> : 
-                      <XCircle className="w-5 h-5 text-red-600" />
+                    {isCorrect ?
+                      <CheckCircle className="w-5 h-5 text-success" /> :
+                      <XCircle className="w-5 h-5 text-destructive" />
                     }
                   </div>
                   <div className="flex-1">
@@ -417,7 +417,7 @@ export default function VocabularyMatchingGame({
                       <span className="font-medium">Your match:</span> {matchedDefinition?.definition}
                     </div>
                     {!isCorrect && (
-                      <div className="text-sm bg-white/50 p-2 rounded border border-current/20">
+                      <div className="text-sm bg-card/50 p-2 rounded border border-current/20">
                         <span className="font-medium">Correct definition:</span> {term?.definition}
                       </div>
                     )}
@@ -426,10 +426,10 @@ export default function VocabularyMatchingGame({
               )
             })}
           </div>
-          
+
           {correctMatches === totalTerms && (
             <div className="mt-6 text-center">
-              <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold">
+              <div className="inline-flex items-center gap-2 bg-success/10 text-success px-4 py-2 rounded-full font-semibold">
                 <Sparkles className="w-5 h-5" />
                 Perfect Score! Excellent work! 🎉
               </div>

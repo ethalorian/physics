@@ -49,7 +49,7 @@ export default function MathSpinePage() {
     <div className="max-w-5xl mx-auto p-4 sm:p-6">
       <header className="mb-4"><h1 className="text-2xl font-semibold">My math learning</h1><p className="mt-1 text-muted-foreground">Use feedback. See what you can do. Choose your next step.</p><button className="min-h-11 text-sm underline" onClick={()=>setReload(n=>n+1)} disabled={loading}>Refresh my learning</button></header>
       {loading && <p className="text-sm text-muted-foreground">Loading your math literacy…</p>}
-      {error && <p className="text-sm text-red-600">Could not load your math literacy: {error}</p>}
+      {error && <p className="text-sm text-destructive">Could not load your math literacy: {error}</p>}
       <MathFeedbackLoop refreshKey={reload} />
       <MissionAssignments />
       {data && <MathSpineGrowth {...data} />}

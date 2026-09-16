@@ -16,7 +16,7 @@ import { ViewModeProvider } from '@/contexts/ViewModeContext'
 import { SimulationProvider } from '@/contexts/SimulationContext'
 import { ToastProvider } from '@/providers/toast-provider'
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
@@ -33,8 +33,8 @@ export const viewport: Viewport = {
   // --background tokens (oklch) in globals.css, since metadata can't read CSS
   // vars. Update both together if --background changes.
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#faf9fb' },
-    { media: '(prefers-color-scheme: dark)', color: '#17141f' },
+    { media: '(prefers-color-scheme: light)', color: '#f9fafd' },
+    { media: '(prefers-color-scheme: dark)', color: '#0d0e1a' },
   ],
 }
 
@@ -45,7 +45,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body 
+      <body
         className={`${inter.variable} font-sans bg-background min-h-screen antialiased selection:bg-primary/20 selection:text-primary`}
         suppressHydrationWarning={true}
       >
@@ -55,7 +55,7 @@ export default function RootLayout({
           <div className="absolute top-1/3 -left-40 w-80 h-80 bg-accent/6 rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
         </div>
-        
+
         <AuthProvider>
           <ToastProvider>
             <ViewModeProvider>

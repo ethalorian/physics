@@ -236,10 +236,10 @@ export default function TeacherMathSpineEntry({
                   <div
                     key={c.id}
                     className="flex flex-wrap items-center gap-3 py-3"
-                    style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--secondary)' }}
+                    style={{ borderTop: i === 0 ? 'none' : '1px solid var(--secondary)' }}
                   >
                     <span
-                      className="text-[11px] font-medium rounded px-2 py-0.5 tabular-nums"
+                      className="text-overline font-medium rounded px-2 py-0.5 tabular-nums"
                       style={{ background: 'var(--secondary)', color: 'var(--foreground)' }}
                     >
                       {c.code}

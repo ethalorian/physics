@@ -145,8 +145,8 @@ export default function AddToQuestionBankModal({ question, onClose, onSuccess }:
             </div>
             <div>
               <Label htmlFor="lesson">Lesson *</Label>
-              <Select 
-                value={selectedLesson} 
+              <Select
+                value={selectedLesson}
                 onValueChange={setSelectedLesson}
                 disabled={!selectedUnit}
               >
@@ -220,8 +220,8 @@ export default function AddToQuestionBankModal({ question, onClose, onSuccess }:
             {topics.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {topics.map((topic, idx) => (
-                  <Badge 
-                    key={idx} 
+                  <Badge
+                    key={idx}
                     variant="secondary"
                     className="cursor-pointer"
                     onClick={() => setTopics(topics.filter((_, i) => i !== idx))}
@@ -256,8 +256,8 @@ export default function AddToQuestionBankModal({ question, onClose, onSuccess }:
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {tags.map((tag, idx) => (
-                  <Badge 
-                    key={idx} 
+                  <Badge
+                    key={idx}
                     variant="outline"
                     className="cursor-pointer"
                     onClick={() => setTags(tags.filter((_, i) => i !== idx))}
@@ -294,7 +294,7 @@ export default function AddToQuestionBankModal({ question, onClose, onSuccess }:
           <Button
             onClick={handleSave}
             disabled={saving || !selectedUnit || !selectedLesson || topics.length === 0}
-            className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
+            className="bg-gradient-to-r from-primary to-primary text-white"
           >
             {saving ? (
               <>Saving...</>

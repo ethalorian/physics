@@ -11,8 +11,8 @@ import MonthCalendar, { type CalSection } from '@/components/pacing/MonthCalenda
 function LongLegend() {
   return (
     <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
-      <span className="inline-flex items-center gap-1"><span className="rounded px-1 font-bold text-[9px]" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>LONG</span> long block</span>
-      <span className="inline-flex items-center gap-1"><span style={{ width: 10, height: 10, borderRadius: 3, border: '2px solid var(--primary)', display: 'inline-block' }} /> today</span>
+      <span className="inline-flex items-center gap-1"><span className="rounded px-1 font-bold text-overline" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>LONG</span> long block</span>
+      <span className="inline-flex items-center gap-1"><span style={{ width: 10, height: 10, borderRadius: 'var(--radius-xs)', border: '2px solid var(--primary)', display: 'inline-block' }} /> today</span>
     </div>
   )
 }
@@ -144,7 +144,7 @@ export default function PacingPage() {
         <div className="rounded-2xl border p-5 mb-6" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
           <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
             <div>
-              <div className="font-bold" style={{ fontSize: 15 }}>This month, across your classes</div>
+              <div className="text-title-3" >This month, across your classes</div>
               <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Each day shows the blocks that meet and the lesson they land on. Click a lesson to open its builder.</div>
             </div>
             <LongLegend />
@@ -283,7 +283,7 @@ function RotationEditor({ onSaved }: { onSaved?: () => void }) {
 
           <div className="flex items-center gap-2 mt-3">
             <button onClick={save} disabled={saving || !anchorDate}
-              className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: saving || !anchorDate ? 0.6 : 1 }}>
+              className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', opacity: saving || !anchorDate ? 0.6 : 1 }}>
               {saving ? 'Saving…' : 'Save rotation'}
             </button>
             {saved && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}
@@ -368,7 +368,7 @@ function GuideEditor({ onSaved }: { onSaved?: () => void }) {
                     {lessons.length === 0 && <div className="text-xs px-2 py-1" style={{ color: 'var(--muted-foreground)' }}><em>No lessons yet — the window is one placeholder item.</em></div>}
                     {lessons.map((it) => (
                       <div key={it.index} className="flex items-center gap-3 text-sm pl-4 pr-2">
-                        <span className="flex-1 truncate" style={{ color: it.core === false ? 'var(--muted-foreground)' : 'var(--foreground)' }}>{it.lessonNumber ? `D${it.lessonNumber} · ` : ''}{it.title}{it.core === false && <span className="ml-1.5 text-[9px] font-semibold rounded px-1 align-middle" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>FLEX</span>}</span>
+                        <span className="flex-1 truncate" style={{ color: it.core === false ? 'var(--muted-foreground)' : 'var(--foreground)' }}>{it.lessonNumber ? `D${it.lessonNumber} · ` : ''}{it.title}{it.core === false && <span className="ml-1.5 text-overline font-semibold rounded px-1 align-middle" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>FLEX</span>}</span>
                         <span className="text-xs tabular-nums" style={{ color: 'var(--muted-foreground)' }}>≈ {it.plannedDays.toFixed(1)}d</span>
                         <input type="number" min={0} step={0.5} defaultValue={it.plannedWeight ?? 1}
                           onChange={(e) => setEdits((p) => ({ ...p, [it.lessonId as string]: Number(e.target.value) }))}
@@ -383,7 +383,7 @@ function GuideEditor({ onSaved }: { onSaved?: () => void }) {
           )}
           <div className="flex items-center gap-2 mt-3">
             <button onClick={save} disabled={!dirty || saving}
-              className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: !dirty || saving ? 0.6 : 1 }}>
+              className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', opacity: !dirty || saving ? 0.6 : 1 }}>
               {saving ? 'Saving…' : 'Save pace'}
             </button>
             {saved && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}
@@ -485,7 +485,7 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
     <div className="rounded-2xl border p-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
-          <div className="font-bold" style={{ fontSize: 16 }}>
+          <div className="text-title-3" >
             {course.name}{course.section ? <span style={{ color: 'var(--muted-foreground)' }}> · {course.section}</span> : null}
             {data && data.blocks.length > 0 && <span className="ml-2 text-xs rounded-md px-1.5 py-0.5 align-middle" style={{ background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>{data.blocks.join('+')} block{data.blocks.length > 1 ? 's' : ''}{data.weekPattern === 'alternate' ? ' · alternating weeks' : ''}</span>}
             {data && <span className="ml-2 text-xs rounded-md px-1.5 py-0.5 align-middle" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{PROGRAM_LABEL[data.program]}</span>}
@@ -575,11 +575,11 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
             <div className="text-xs mb-1 flex items-center justify-between" style={{ color: 'var(--muted-foreground)' }}>
               <span>Academic weeks (Mondays) — leave empty to alternate strictly from the first week</span>
               {onWeekAnchor && (
-                <button type="button" className="text-[11px] underline" onClick={() => setOnWeekDates(parityOnWeekMondays(onWeekAnchor, '2026-08-24', '2027-06-11').join('\n'))}>fill from first week</button>
+                <button type="button" className="text-overline underline" onClick={() => setOnWeekDates(parityOnWeekMondays(onWeekAnchor, '2026-08-24', '2027-06-11').join('\n'))}>fill from first week</button>
               )}
             </div>
             <textarea value={onWeekDates} onChange={(e) => setOnWeekDates(e.target.value)} rows={3} placeholder={'2026-08-31\n2026-09-14\n…'} className="w-full rounded-lg border px-2.5 py-1.5 text-xs font-mono" style={fieldStyle} />
-            <div className="text-[11px] mt-1" style={{ color: 'var(--muted-foreground)' }}>If the school shifts the alternation at a vacation, edit this list — it overrides the strict every-other-week count.</div>
+            <div className="text-overline mt-1" style={{ color: 'var(--muted-foreground)' }}>If the school shifts the alternation at a vacation, edit this list — it overrides the strict every-other-week count.</div>
           </label>
         )}
         <label className="text-sm">
@@ -604,7 +604,7 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
 
       <div className="mt-3 flex items-center gap-2 flex-wrap">
         <button onClick={save} disabled={saving}
-          className="inline-flex items-center gap-1.5 text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: saving ? 0.6 : 1 }}>
+          className="inline-flex items-center gap-1.5 text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', opacity: saving ? 0.6 : 1 }}>
           <Check size={14} /> {saving ? 'Saving…' : 'Confirm pacing'}
         </button>
         {suggestion && (

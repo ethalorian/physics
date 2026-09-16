@@ -419,12 +419,13 @@ export default function MasteryReviewDesk({
                 {loadError && <p role="alert">{loadError}</p>}
                 {!loading && !active && (
                   <p>
-                    No submitted evidence is available for this target. Choose
+                    No saved evidence is available for this target. Choose
                     another target or student.
                   </p>
                 )}
                 {!loading && active && (
                   <article className={styles.paper}>
+                    {!active.submissionId && <p role="status">Saved work · not yet submitted. You can rate this evidence now.</p>}
                     <section className={styles.question}>
                       <p className={styles.overline}>
                         {index + 1} OF {evidence.length} · {activity(active)} ·{" "}

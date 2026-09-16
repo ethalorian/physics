@@ -48,7 +48,7 @@ export default function MathLadder({
             <span
               key={r.competencyId}
               title={`${r.code} — ${RUNG_STATE_LABEL[r.state]}${r.isToday ? ' (today)' : ''}`}
-              className="inline-flex items-center justify-center rounded-full text-[10px] font-bold tabular-nums"
+              className="inline-flex items-center justify-center rounded-full text-overline font-bold tabular-nums"
               style={{
                 width: 22,
                 height: 22,
@@ -62,7 +62,7 @@ export default function MathLadder({
             </span>
           )
         })}
-        <span className="text-[11px] text-muted-foreground ml-1">
+        <span className="text-overline text-muted-foreground ml-1">
           {gotIt} of {rungs.length} at “Got it”
         </span>
       </div>
@@ -86,17 +86,17 @@ export default function MathLadder({
             <div
               key={r.competencyId}
               className="flex items-center gap-3 py-2"
-              style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--secondary)' }}
+              style={{ borderTop: i === 0 ? 'none' : '1px solid var(--secondary)' }}
             >
               <span
                 aria-hidden
-                className="inline-flex items-center justify-center rounded-full text-[11px] font-bold"
+                className="inline-flex items-center justify-center rounded-full text-overline font-bold"
                 style={{ width: 24, height: 24, background: s.bg, color: s.fg }}
               >
                 {s.icon}
               </span>
               <span
-                className="text-[11px] font-medium rounded px-2 py-0.5 tabular-nums"
+                className="text-overline font-medium rounded px-2 py-0.5 tabular-nums"
                 style={{ background: 'var(--secondary)', color: 'var(--foreground)' }}
               >
                 {r.code}
@@ -104,7 +104,7 @@ export default function MathLadder({
               <span className="flex-1 text-[13px] leading-snug text-foreground">{r.statement}</span>
               {r.isToday && (
                 <span
-                  className="text-[10px] font-bold uppercase tracking-wide rounded-full px-2 py-0.5"
+                  className="text-overline font-bold uppercase tracking-wide rounded-full px-2 py-0.5"
                   style={{ background: 'color-mix(in oklch, var(--primary) 12%, transparent)', color: 'var(--primary)' }}
                 >
                   today

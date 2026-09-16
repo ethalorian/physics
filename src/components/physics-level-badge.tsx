@@ -118,16 +118,16 @@ export function PhysicsLevelInfo() {
  */
 export function FormulasQuickReference() {
   const { formulas } = PHYSICS_LEVEL
-  
+
   return (
-    <div className="bg-muted dark:bg-gray-800/50 rounded-lg p-4">
+    <div className="bg-muted rounded-lg p-4">
       <h4 className="font-semibold text-foreground dark:text-muted-foreground mb-3 flex items-center gap-2">
         <Calculator className="h-4 w-4" />
         Quick Formula Reference
       </h4>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
         {Object.entries(formulas).slice(0, 12).map(([name, formula]) => (
-          <div key={name} className="bg-white dark:bg-gray-800 rounded px-2 py-1 border border-border dark:border-border">
+          <div key={name} className="bg-card rounded px-2 py-1 border border-border dark:border-border">
             <span className="text-muted-foreground dark:text-muted-foreground">{name.replace(/([A-Z])/g, ' $1').toLowerCase()}:</span>
             <span className="ml-1 font-mono font-medium text-foreground dark:text-muted-foreground">{formula}</span>
           </div>

@@ -36,7 +36,7 @@ export default function Home() {
         <div
           className="mx-auto grid place-items-center mb-6"
           style={{
-            width: 64, height: 64, borderRadius: 18,
+            width: 64, height: 64, borderRadius: 'var(--radius-lg)',
             background: 'color-mix(in oklch, var(--primary) 12%, transparent)',
             color: 'var(--primary)',
           }}

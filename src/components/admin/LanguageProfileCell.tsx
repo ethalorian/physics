@@ -50,7 +50,7 @@ export default function LanguageProfileCell({ userId }: { userId: string }) {
       <label className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
         <input type="checkbox" checked={Boolean(p?.l1Default)} onChange={(e) => save({ l1_default: e.target.checked })} disabled={!p?.homeLang} /> L1 on
       </label>
-      <span className="text-[10px] rounded px-1.5 py-0.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>
+      <span className="text-overline rounded px-1.5 py-0.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>
         {state === 'saving' ? 'saving…' : state === 'saved' ? 'saved ✓' : state === 'error' ? 'error' : level}
       </span>
     </div>

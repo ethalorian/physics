@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -24,10 +25,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
-import { 
-  FileText, 
-  Plus, 
-  Search, 
+import {
+  FileText,
+  Plus,
+  Search,
   MoreVertical,
   Edit,
   Trash2,
@@ -101,7 +102,7 @@ export default function SimulationAssignmentsPage() {
     let filtered = assignments
 
     if (searchQuery) {
-      filtered = filtered.filter(a => 
+      filtered = filtered.filter(a =>
         a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         a.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         a.simulation_slug.toLowerCase().includes(searchQuery.toLowerCase())
@@ -197,7 +198,7 @@ export default function SimulationAssignmentsPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <Spinner size="lg" className="text-primary" />
         </div>
       </div>
     )
@@ -220,7 +221,7 @@ export default function SimulationAssignmentsPage() {
               setSelectedSimulation('')
               setShowEditor(true)
             }}
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Assignment
@@ -247,7 +248,7 @@ export default function SimulationAssignmentsPage() {
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-medium">Published</CardTitle>
-              <Eye className="h-4 w-4 text-green-600" />
+              <Eye className="h-4 w-4 text-success" />
             </div>
           </CardHeader>
           <CardContent>
@@ -262,7 +263,7 @@ export default function SimulationAssignmentsPage() {
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-medium">Total Questions</CardTitle>
-              <BarChart className="h-4 w-4 text-blue-600" />
+              <BarChart className="h-4 w-4 text-primary" />
             </div>
           </CardHeader>
           <CardContent>
@@ -277,7 +278,7 @@ export default function SimulationAssignmentsPage() {
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-medium">Simulations</CardTitle>
-              <Users className="h-4 w-4 text-purple-600" />
+              <Users className="h-4 w-4 text-primary" />
             </div>
           </CardHeader>
           <CardContent>
@@ -325,8 +326,8 @@ export default function SimulationAssignmentsPage() {
           <CardContent className="p-12 text-center">
             <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
             <h3 className="text-lg font-semibold mb-2">
-              {searchQuery || filterSimulation !== 'all' 
-                ? 'No assignments found' 
+              {searchQuery || filterSimulation !== 'all'
+                ? 'No assignments found'
                 : 'No assignments yet'}
             </h3>
             <p className="text-muted-foreground mb-4">
@@ -419,7 +420,7 @@ export default function SimulationAssignmentsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           onClick={() => {
                             setEditingAssignment(assignment)
                             setSelectedSimulation(assignment.simulation_slug)
@@ -447,7 +448,7 @@ export default function SimulationAssignmentsPage() {
                           )}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           onClick={() => deleteAssignment(assignment.id)}
                           className="text-destructive"
                         >
@@ -488,8 +489,8 @@ export default function SimulationAssignmentsPage() {
                     </Button>
                   ))}
                 </div>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   className="w-full mt-4"
                   onClick={() => {
                     setShowEditor(false)

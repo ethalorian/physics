@@ -1,10 +1,11 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { AlertCircle, Home, LogIn, RefreshCw, ChevronLeft } from "lucide-react"
+import { AlertCircle, Home, LogIn, ChevronLeft } from "lucide-react"
 import { signIn } from "next-auth/react"
 import { useState } from "react"
 
@@ -12,9 +13,9 @@ function AuthErrorContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isSigningIn, setIsSigningIn] = useState(false)
-  
+
   const error = searchParams.get("error")
-  
+
   // More detailed error messages with solutions
   const getErrorDetails = (errorCode: string | null) => {
     switch (errorCode) {
@@ -55,7 +56,7 @@ function AuthErrorContent() {
     setIsSigningIn(true)
     try {
       // Force account selection to allow choosing a different account
-      await signIn("google", { 
+      await signIn("google", {
         callbackUrl: "/home",
         prompt: "select_account"
       })
@@ -91,7 +92,7 @@ function AuthErrorContent() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10">
             <AlertCircle className="w-8 h-8 text-destructive" />
           </div>
-          
+
           <div className="space-y-2">
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
               {errorDetails.title}
@@ -126,7 +127,7 @@ function AuthErrorContent() {
             >
               {isSigningIn ? (
                 <>
-                  <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
+                  <Spinner size="sm" className="mr-2" />
                   Connecting to Google...
                 </>
               ) : (
@@ -147,7 +148,7 @@ function AuthErrorContent() {
               <ChevronLeft className="w-4 h-4 mr-1" />
               Go Back
             </Button>
-            
+
             <Button
               onClick={handleGoHome}
               variant="outline"

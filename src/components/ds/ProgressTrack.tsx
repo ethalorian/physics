@@ -29,7 +29,7 @@ export function ProgressTrack({
       className={cn('h-[7px] w-full rounded-full bg-secondary overflow-hidden', className)}
     >
       <div
-        className="h-full rounded-full bg-primary transition-[width] duration-700 ease-out"
+        className="h-full rounded-full bg-primary transition-[width] duration-700 ease-out-expo"
         style={{ width: `${pct}%` }}
       />
     </div>

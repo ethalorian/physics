@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Spinner } from '@/components/ui/spinner'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { 
+import {
   Search,
   Filter,
   Play,
@@ -19,10 +20,8 @@ import {
   Clock,
   Target,
   TrendingUp,
-  Award,
   Sparkles,
-  Loader2
-} from 'lucide-react'
+  } from 'lucide-react'
 
 interface Lesson {
   id: string
@@ -32,7 +31,6 @@ interface Lesson {
   unit?: string
   lesson_number?: number
   lesson_type: 'video' | 'simulation' | 'markdown'
-  difficulty?: 'beginner' | 'intermediate' | 'advanced'
   estimated_time?: number
   objectives?: string[]
   simulation?: {
@@ -86,7 +84,6 @@ interface LessonBrowserProps {
 }
 
 export default function LessonBrowser({ initialLessons = [], initialProgress = {} }: LessonBrowserProps) {
-  const router = useRouter()
   const [lessons, setLessons] = useState<Lesson[]>(initialLessons)
   const [progress, setProgress] = useState<Record<string, number>>(initialProgress)
   const [loading, setLoading] = useState(!initialLessons.length)
@@ -94,26 +91,12 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterUnit, setFilterUnit] = useState('all')
   const [filterType, setFilterType] = useState('all')
-  const [filterDifficulty, setFilterDifficulty] = useState('all')
 
-  // Fetch lessons on mount if not provided
-  useEffect(() => {
-    if (!initialLessons.length) {
-      fetchLessons()
-    }
-  }, [initialLessons.length])
-
-  const fetchLessons = async () => {
+  const fetchLessons = useCallback(async () => {
     try {
       setLoading(true)
       setLoadError(false)
-      const params = new URLSearchParams()
-      if (filterUnit !== 'all') params.append('unit', filterUnit)
-      if (filterType !== 'all') params.append('lesson_type', filterType)
-      if (filterDifficulty !== 'all') params.append('difficulty', filterDifficulty)
-      if (searchTerm) params.append('search', searchTerm)
-
-      const response = await fetch(`/api/lessons/published?${params.toString()}`)
+      const response = await fetch('/api/lessons/published')
       if (!response.ok) throw new Error('Failed to fetch lessons')
 
       const data = await response.json()
@@ -125,23 +108,20 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  // Refetch when filters change
+  // Fetch the authorized catalog once; filters use that same list so unit
+  // choices stay available and slower requests cannot overwrite newer filters.
   useEffect(() => {
-    if (initialLessons.length === 0) {
-      const timer = setTimeout(() => {
-        fetchLessons()
-      }, 300) // Debounce
-      return () => clearTimeout(timer)
-    }
-  }, [searchTerm, filterUnit, filterType, filterDifficulty])
+    if (!initialLessons.length) void fetchLessons()
+  }, [initialLessons.length, fetchLessons])
 
   // Get unique units
   const units = Array.from(new Set(lessons.map(l => l.unit).filter((u): u is string => Boolean(u)))).sort()
 
-  // Filter lessons locally if needed
   const filteredLessons = lessons.filter(lesson => {
+    if (filterUnit !== 'all' && lesson.unit !== filterUnit) return false
+    if (filterType !== 'all' && lesson.lesson_type !== filterType) return false
     if (searchTerm && !lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
         !lesson.description?.toLowerCase().includes(searchTerm.toLowerCase())) {
       return false
@@ -167,7 +147,7 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
     return (
       <div className="flex items-center justify-center py-24">
         <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
+          <Spinner size="lg" className="text-primary mx-auto" />
           <p className="text-muted-foreground">Loading lessons...</p>
         </div>
       </div>
@@ -268,18 +248,6 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
               </SelectContent>
             </Select>
 
-            {/* Difficulty Filter */}
-            <Select value={filterDifficulty} onValueChange={setFilterDifficulty}>
-              <SelectTrigger className="w-full md:w-40">
-                <SelectValue placeholder="All Levels" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Levels</SelectItem>
-                <SelectItem value="beginner">Beginner</SelectItem>
-                <SelectItem value="intermediate">Intermediate</SelectItem>
-                <SelectItem value="advanced">Advanced</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </CardContent>
       </Card>
@@ -302,9 +270,9 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
               {lessonsByUnit[unitId]
                 .sort((a, b) => (a.lesson_number || 0) - (b.lesson_number || 0))
                 .map(lesson => (
-                  <LessonCard 
-                    key={lesson.id} 
-                    lesson={lesson} 
+                  <LessonCard
+                    key={lesson.id}
+                    lesson={lesson}
                     progress={progress[lesson.id] || 0}
                   />
                 ))}
@@ -318,14 +286,13 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
             <Filter className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>{searchTerm || filterUnit !== 'all' || filterType !== 'all' || filterDifficulty !== 'all' ? 'No lessons match your filters.' : 'No lessons are available yet.'}</p>
-            <Button 
-              variant="link" 
+            <p>{searchTerm || filterUnit !== 'all' || filterType !== 'all' ? 'No lessons match your filters.' : 'No lessons are available yet.'}</p>
+            <Button
+              variant="link"
               onClick={() => {
                 setSearchTerm('')
                 setFilterUnit('all')
                 setFilterType('all')
-                setFilterDifficulty('all')
               }}
             >
               Clear filters
@@ -338,10 +305,10 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
 }
 
 // Lesson Card Component
-function LessonCard({ 
-  lesson, 
+function LessonCard({
+  lesson,
   progress
-}: { 
+}: {
   lesson: Lesson
   progress: number
 }) {
@@ -350,11 +317,11 @@ function LessonCard({
   const getTypeInfo = () => {
     switch (lesson.lesson_type) {
       case 'video':
-        return { icon: Video, color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200' }
+        return { icon: Video, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/30' }
       case 'simulation':
-        return { icon: Microscope, color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-200' }
+        return { icon: Microscope, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/40' }
       default:
-        return { icon: BookOpen, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' }
+        return { icon: BookOpen, color: 'text-primary', bg: 'bg-primary/10', border: 'border-primary/40' }
     }
   }
 
@@ -380,7 +347,7 @@ function LessonCard({
       {/* Progress Bar */}
       {progress > 0 && (
         <div className="absolute top-0 left-0 right-0 h-1 bg-muted">
-          <div 
+          <div
             className={`h-full transition-all ${isCompleted ? 'bg-success' : 'bg-primary'}`}
             style={{ width: `${progress}%` }}
           />
@@ -403,13 +370,8 @@ function LessonCard({
             <TypeIcon className={`h-5 w-5 ${typeInfo.color}`} />
           </div>
           <div className="flex gap-1">
-            {lesson.difficulty && (
-              <Badge variant="outline" className="text-xs">
-                {lesson.difficulty}
-              </Badge>
-            )}
             {isCompleted && (
-              <Badge variant="default" className="text-xs bg-success text-white">
+              <Badge variant="default" className="text-xs bg-success text-background">
                 <CheckCircle className="h-3 w-3 mr-1" />
                 Done
               </Badge>
@@ -451,7 +413,7 @@ function LessonCard({
           <div
             className={`flex items-center gap-1.5 text-xs font-medium ${
               urgent
-                ? 'text-amber-600 dark:text-amber-400'
+                ? 'text-primary '
                 : win.state === 'open'
                   ? 'text-muted-foreground'
                   : 'text-muted-foreground/80'

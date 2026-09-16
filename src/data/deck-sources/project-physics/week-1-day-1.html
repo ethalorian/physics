@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<title>Week 1 · Day 1 — Walk the graph</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="92e243b2-98be-4b8c-a7cb-6264ffb147e3"></script>
+</head>
+<body>
+<!-- CLASSROOM_BRIDGE -->
+<deck-stage hidden aria-hidden="true">
+<section data-label="Walk · Camina · 0–50" data-section-anchor="w01d1-predict" data-speaker-notes="Label the axes together. Explore free walking, then save the scripted-walk prediction before revealing it. Run all three matches; use the lesson block picker for w01d1-scores. Tool notes are temporary; save individual evidence in the lesson."></section>
+<section data-label="Talk · Habla · 50–75" data-section-anchor="w01d1-talk" data-speaker-notes="Partners compare sketch and trace, 60 seconds each. Use the timer, swap A and B, and name evidence for a claim in either language."></section>
+<section data-label="Write · Escribe · 75–110" data-section-anchor="w01d1-write" data-speaker-notes="Choose the language support needed. Save the three-part explanation in w01d1-write, then the individual audit-evidence-exit and w01d1-rate. Steeper means faster only when comparing the same axis scales."></section>
+</deck-stage>
+<x-dc>
+<helmet>
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("3452ea28-2a45-490b-b41e-e827977ae4dd") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("2c8db7df-4cd8-4397-8f6d-70cf7bc40e4a") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("7863c798-faee-405f-b56a-a57fe6144969") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("97818abd-cd2d-41db-886a-f5dde5466a5e") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("7c53fcb5-da68-44bb-9ec9-ae0c2874fac1") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("3452ea28-2a45-490b-b41e-e827977ae4dd") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("2c8db7df-4cd8-4397-8f6d-70cf7bc40e4a") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("7863c798-faee-405f-b56a-a57fe6144969") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("97818abd-cd2d-41db-886a-f5dde5466a5e") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("7c53fcb5-da68-44bb-9ec9-ae0c2874fac1") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("3452ea28-2a45-490b-b41e-e827977ae4dd") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("2c8db7df-4cd8-4397-8f6d-70cf7bc40e4a") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("7863c798-faee-405f-b56a-a57fe6144969") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("97818abd-cd2d-41db-886a-f5dde5466a5e") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("7c53fcb5-da68-44bb-9ec9-ae0c2874fac1") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+html,body{margin:0;background:#F5EDE0;color:#33291F;font-family:'Nunito',system-ui,sans-serif;}
+a{color:#C9673F;} a:hover{color:#A24E2B;}
+button,input,textarea{font-family:inherit;} button{cursor:pointer;min-height:44px;} button:disabled{opacity:.5;cursor:not-allowed;} input,textarea{box-sizing:border-box;} :focus-visible{outline:3px solid #3D8B96;outline-offset:3px;} @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important;}}
+</style>
+</helmet>
+<div data-screen-label="Day 1 Walk the graph" style="min-height:100vh;padding:20px 24px 28px;box-sizing:border-box;display:flex;flex-direction:column;gap:16px;outline:none;">
+  <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+    <div>
+      <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">Week 1 · Day 1 · Read the track</div>
+      <h1 style="margin:2px 0 0;font-size:clamp(22px,2.6vw,32px);font-weight:900;line-height:1.1;">Walk the graph <span style="color:#7D6E5E;font-weight:700;">/ Camina la gráfica</span></h1>
+      <p style="margin:4px 0 0;font-size:16px;color:#7D6E5E;">Sketch first. Then walk. Then fix. <i>Dibuja primero. Luego camina. Luego corrige.</i></p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a target="_blank" rel="noopener" href="/lessons/pp-w01-d1" style="text-decoration:none;font-weight:700;font-size:15px;padding:10px 16px;border-radius:999px;background:#FFFCF7;border:2px solid #E5D9C6;color:#33291F;">Open lesson / Abrir lección</a>
+      <a target="_blank" rel="noopener" href="/decks/project-physics/week-1-day-3.html" style="text-decoration:none;font-weight:700;font-size:15px;padding:10px 16px;border-radius:999px;background:#FFFCF7;border:2px solid #E5D9C6;color:#33291F;">Day 3 tool</a>
+    </div>
+  </header>
+
+  <p style="margin:0;font-size:14px;color:#7D6E5E;">Explore here. Save your prediction, three match scores and fixes, writing, and exit in <a href="/lessons/pp-w01-d1" target="_blank" rel="noopener">your lesson</a>. Notes here last until this page closes. <i>Guarda tu trabajo en la lección.</i></p>
+  <nav aria-label="Lesson stages" style="display:flex;gap:8px;flex-wrap:wrap;">
+    <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="3">
+      <button sc-camel-on-click="{{ tb.pick }}" style="border-radius:999px;padding:10px 18px;border:2px solid {{ tb.border }};background:{{ tb.bg }};color:{{ tb.color }};display:flex;align-items:center;gap:10px;">
+        <span style="font-size:12px;font-weight:900;opacity:.7;">{{ tb.time }}</span>
+        <span style="font-weight:900;font-size:16px;">{{ tb.en }}</span>
+        <span style="font-size:14px;font-style:italic;opacity:.75;">{{ tb.es }}</span>
+      </button>
+    </sc-for>
+  </nav>
+
+  <sc-if value="{{ isWalk }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">
+      <main style="flex:4 1 480px;min-width:0;display:flex;flex-direction:column;gap:14px;">
+        <section style="background:#FFFCF7;border-radius:24px;padding:16px 22px 12px;border:2px solid #E5D9C6;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;">
+            <div style="font-weight:900;font-size:18px;">The floor <span style="color:#7D6E5E;font-weight:700;">/ El piso</span></div>
+            <div style="font-size:15px;color:#7D6E5E;">Drag the walker, or focus the slider and hold ← → (Shift = fast). <i>Arrastra o usa las flechas.</i></div>
+          </div>
+          <div ref="{{ floorRef }}" sc-camel-on-pointer-down="{{ floorDown }}" sc-camel-on-pointer-move="{{ floorMove }}" sc-camel-on-pointer-up="{{ floorUp }}" sc-camel-on-pointer-cancel="{{ floorUp }}" style="position:relative;height:120px;margin:8px 0 0;touch-action:none;user-select:none;cursor:grab;">
+            <div style="position:absolute;left:0;right:0;top:88px;height:12px;border-radius:999px;background:#E5D9C6;"></div>
+            <div style="position:absolute;left:0;top:44px;width:44px;height:44px;border-radius:10px;background:#33291F;display:flex;align-items:center;justify-content:center;"><div style="width:16px;height:16px;border-radius:50%;background:#9FD3DA;"></div></div>
+            <div style="position:absolute;left:20px;top:86px;width:6px;height:4px;background:#33291F;"></div>
+            <div style="position:absolute;left:46px;top:64px;height:4px;border-top:3px dashed #B9AA95;width:{{ beamW }}%;"></div>
+            <div style="position:absolute;left:0;top:104px;font-size:12px;font-weight:900;color:#7D6E5E;">detector</div>
+            <sc-for list="{{ tapes }}" as="tp" hint-placeholder-count="3">
+              <div style="position:absolute;top:80px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:3px;left:{{ tp.pct }}%;">
+                <div style="width:34px;height:28px;background:#3D8B96;opacity:.85;border-radius:3px;"></div>
+                <div style="font-size:14px;font-weight:900;color:#3D8B96;">{{ tp.label }} m</div>
+              </div>
+            </sc-for>
+            <div style="position:absolute;top:18px;transform:translateX(-50%);left:{{ walkerPct }}%;display:flex;flex-direction:column;align-items:center;">
+              <div style="width:26px;height:26px;border-radius:50%;background:#C9673F;"></div>
+              <div style="width:34px;height:44px;border-radius:12px 12px 6px 6px;background:#C9673F;margin-top:-4px;"></div>
+            </div>
+          </div>
+          <label style="display:block;margin-top:16px;font-size:14px;font-weight:700;">Walker position / Posición del caminante
+            <input ref="{{ walkerRef }}" type="range" min="0.2" max="4" step="0.01" value="{{ walkerD }}" disabled="{{ autoMode }}" aria-label="Walker position in metres" sc-camel-on-change="{{ changeWalker }}" sc-camel-on-key-down="{{ keyDown }}" sc-camel-on-key-up="{{ keyUp }}" sc-camel-on-blur="{{ clearKeys }}" style="width:100%;min-height:44px;accent-color:#C9673F;">
+          </label>
+        </section>
+
+        <section style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+          <button disabled="{{ covered }}" sc-camel-on-click="{{ record }}" style="border:none;border-radius:999px;padding:12px 22px;font-size:17px;font-weight:900;background:{{ recBg }};color:#FFFCF7;min-width:200px;">{{ recLabel }}</button>
+          <button sc-camel-on-click="{{ reset }}" style="border:2px solid #E5D9C6;border-radius:999px;padding:10px 18px;font-size:16px;font-weight:700;background:#FFFCF7;color:#33291F;">Reset / Reiniciar</button>
+          <div style="flex:1;"></div>
+          <sc-for list="{{ modes }}" as="md" hint-placeholder-count="5">
+            <button sc-camel-on-click="{{ md.pick }}" style="border:2px solid {{ md.border }};border-radius:999px;padding:10px 16px;font-size:15px;font-weight:700;background:{{ md.bg }};color:#33291F;">{{ md.label }}</button>
+          </sc-for>
+        </section>
+
+        <section style="position:relative;background:#FFFCF7;border-radius:24px;padding:16px 18px 10px;border:2px solid #E5D9C6;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px;">
+            <div style="font-weight:900;font-size:18px;color:#C9673F;">{{ graphTitle }}</div>
+            <button sc-camel-on-click="{{ toggleLabels }}" style="border:2px solid {{ lblBorder }};background:{{ lblBg }};border-radius:999px;padding:8px 14px;font-weight:700;font-size:15px;color:#33291F;">{{ lblLabel }}</button>
+          </div>
+          <svg sc-camel-view-box="0 0 560 300" style="width:100%;height:auto;display:block;">
+            <sc-for list="{{ tGrid }}" as="g" hint-placeholder-count="11">
+              <line x1="{{ g.x }}" x2="{{ g.x }}" y1="16" y2="260" stroke="#EFE6D8"></line>
+            </sc-for>
+            <sc-for list="{{ dGrid }}" as="g" hint-placeholder-count="5">
+              <line x1="50" x2="544" y1="{{ g.y }}" y2="{{ g.y }}" stroke="#EFE6D8"></line>
+            </sc-for>
+            <line x1="50" x2="544" y1="260" y2="260" stroke="#B9AA95" stroke-width="2"></line>
+            <line x1="50" x2="50" y1="16" y2="260" stroke="#B9AA95" stroke-width="2"></line>
+            {{ axisTexts }}
+            <polyline points="{{ targetPts }}" fill="none" stroke="#B9AA95" stroke-width="5" stroke-dasharray="10 8" stroke-linecap="round" stroke-linejoin="round"></polyline>
+            <line x1="{{ cx }}" x2="{{ cx }}" y1="16" y2="260" stroke="#B9AA95" stroke-width="2" stroke-dasharray="4 4"></line>
+            <polyline points="{{ tracePts }}" fill="none" stroke="#C9673F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></polyline>
+            <circle cx="{{ cx }}" cy="{{ cy }}" r="9" fill="#C9673F" stroke="#FFFCF7" stroke-width="3"></circle>
+          </svg>
+          <sc-if value="{{ covered }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;border-radius:24px;background:#F5EDE0;border:2px dashed #B9AA95;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px;">
+              <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">Predict · Predice</div>
+              <div style="font-size:22px;font-weight:900;line-height:1.3;max-width:640px;">Stand 1 m away. Walk away slowly for 3 s. Stop for 2 s. Walk back fast.</div>
+              <div style="font-size:18px;color:#7D6E5E;font-style:italic;line-height:1.3;max-width:640px;">Párate a 1 m. Aléjate despacio 3 s. Detente 2 s. Regresa rápido.</div>
+              <div style="font-size:16px;font-weight:700;">Dibuja. Save your sketch in the lesson before revealing the walk.</div>
+              <button sc-camel-on-click="{{ reveal }}" style="margin-top:6px;border:none;border-radius:999px;padding:12px 26px;font-size:18px;font-weight:900;background:#C9673F;color:#FFFCF7;">Prediction saved — show the walk / Ya dibujé — mostrar</button>
+            </div>
+          </sc-if>
+        </section>
+      </main>
+
+      <aside style="flex:1 1 280px;max-width:360px;display:flex;flex-direction:column;gap:14px;">
+        <section style="background:#33291F;color:#FFFCF7;border-radius:24px;padding:18px 20px;display:flex;flex-direction:column;gap:6px;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#B9AA95;">Right now / Ahora</div>
+          <div style="font-size:26px;font-weight:900;line-height:1.15;">{{ statusEn }}</div>
+          <div style="font-size:19px;font-style:italic;color:#E5D9C6;">{{ statusEs }}</div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:16px;color:#E5D9C6;"><span>t = <b style="color:#FFFCF7;">{{ tText }}</b> s</span><span>position = <b style="color:#FFFCF7;">{{ dText }}</b> m</span></div>
+        </section>
+
+        <sc-if value="{{ isMatch }}" hint-placeholder-val="{{ false }}">
+          <section style="background:#FFFCF7;border-radius:24px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <div style="font-weight:900;font-size:16px;">Match score <i style="color:#7D6E5E;font-weight:400;">/ Puntaje</i></div>
+              <div style="font-size:34px;font-weight:900;color:#3D8B96;">{{ scoreText }}</div>
+            </div>
+            <button disabled="{{ cannotLog }}" sc-camel-on-click="{{ logScore }}" style="border:2px solid #3D8B96;background:#D9ECEE;border-radius:999px;padding:10px 16px;font-weight:700;font-size:15px;color:#33291F;">Keep this practice score / Anotar práctica</button>
+            <div style="display:grid;grid-template-columns:36px 64px 1fr;gap:6px;align-items:center;font-size:14px;">
+              <div style="font-weight:900;color:#7D6E5E;">#</div><div style="font-weight:900;color:#7D6E5E;">Score</div><div style="font-weight:900;color:#7D6E5E;">What I fixed / Qué corregí</div>
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="3">
+                <div style="font-weight:900;">{{ r.n }}</div>
+                <div style="font-weight:900;color:#3D8B96;">{{ r.score }}</div>
+                <input aria-label="{{ r.fixLabel }}" value="{{ r.fix }}" sc-camel-on-change="{{ r.setFix }}" placeholder="…" style="min-width:0;font-size:14px;padding:6px 8px;border:2px solid #E5D9C6;border-radius:8px;background:#F5EDE0;color:#33291F;">
+              </sc-for>
+            </div>
+            <div style="font-size:13px;color:#7D6E5E;">Finish all 10 seconds for a score. Then save each score and fix in the lesson. / Termina los 10 segundos y guarda el puntaje y la corrección en la lección.</div>
+          </section>
+        </sc-if>
+
+        <section style="background:#FFFCF7;border-radius:24px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">The floor did not change. What changed?</div>
+          <div style="font-size:15px;font-style:italic;color:#7D6E5E;">El piso no cambió. ¿Qué cambió?</div>
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;border-radius:12px;padding:10px;background:#F6E1D6;"><div style="font-weight:900;">← toward</div><div style="font-size:13px;font-style:italic;color:#7D6E5E;">hacia</div><div style="font-size:15px;margin-top:4px;">line goes <b>down</b> ↘</div></div>
+            <div style="flex:1;border-radius:12px;padding:10px;background:#F6E1D6;"><div style="font-weight:900;">away →</div><div style="font-size:13px;font-style:italic;color:#7D6E5E;">lejos</div><div style="font-size:15px;margin-top:4px;">line goes <b>up</b> ↗</div></div>
+            <div style="flex:1;border-radius:12px;padding:10px;background:#F5EDE0;"><div style="font-weight:900;">stopped</div><div style="font-size:13px;font-style:italic;color:#7D6E5E;">parado</div><div style="font-size:15px;margin-top:4px;">line is <b>flat</b> →</div></div>
+          </div>
+          <div style="font-size:14px;color:#7D6E5E;line-height:1.5;">The graph is not a picture of the path. Walk it twice; don't lecture it. <b style="color:#33291F;">¿Hacia o lejos?</b></div>
+        </section>
+
+        <section style="background:#FFFCF7;border-radius:24px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:6px;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">Say it / Dilo</div>
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:15px;">
+            <b>Miren.</b><span style="color:#7D6E5E;">Watch. Point at the screen.</span>
+            <b>Primero esto.</b><span style="color:#7D6E5E;">This first.</span>
+            <b>¿Más rápido o más lento?</b><span style="color:#7D6E5E;">Faster or slower? — one word.</span>
+            <b>Dibuja.</b><span style="color:#7D6E5E;">Draw.</span>
+            <b>Muéstrame.</b><span style="color:#7D6E5E;">Show me. Never "why" here.</span>
+            <b>Bien. Eso es física.</b><span style="color:#7D6E5E;">Good. That is physics.</span>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isTalk }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">
+      <section style="flex:3 1 420px;min-width:0;background:#33291F;color:#FFFCF7;border-radius:24px;padding:26px 30px;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#B9AA95;">Pairs · 60 seconds each, then swap / Parejas · 60 segundos, luego cambien</div>
+        <div style="font-size:28px;font-weight:900;line-height:1.3;">Show your sketch and the screen. Where do they disagree? What does the trace support?</div>
+        <div style="font-size:20px;font-style:italic;color:#E5D9C6;line-height:1.35;">Muestra tu dibujo y la pantalla. ¿Dónde no coinciden? ¿Qué muestra el trazo?</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:10px;flex-wrap:wrap;">
+          <div style="font-size:64px;font-weight:900;line-height:1;min-width:140px;color:{{ timerColor }};">{{ timerText }}</div>
+          <button sc-camel-on-click="{{ startTimer }}" style="border:none;border-radius:999px;padding:12px 22px;font-size:17px;font-weight:900;background:#C9673F;color:#FFFCF7;">{{ timerBtn }}</button>
+          <div style="font-size:17px;color:#E5D9C6;">Speaker: <b style="color:#FFFCF7;">{{ speaker }}</b></div>
+        </div>
+      </section>
+      <aside style="flex:1 1 280px;max-width:380px;display:flex;flex-direction:column;gap:14px;">
+        <section style="background:#FFFCF7;border-radius:24px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:10px;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">Frame cards / Tarjetas</div>
+          <div style="font-size:16px;line-height:1.55;">My sketch goes <b>up / down / flat</b> here. The screen goes <b>___</b>.<br><i style="color:#7D6E5E;">Mi dibujo sube / baja / es plano aquí. La pantalla ___.</i></div>
+          <div style="font-size:16px;line-height:1.55;">I was walking <b>toward / away / stopped</b>.<br><i style="color:#7D6E5E;">Yo caminaba hacia / lejos / parado.</i></div>
+          <div style="font-size:16px;line-height:1.55;">The trace supports <b>___</b> because <b>___</b>.<br><i style="color:#7D6E5E;">El trazo apoya ___ porque ___.</i></div>
+        </section>
+        <section style="background:#FFFCF7;border-radius:24px;padding:16px 18px;border:2px solid #E5D9C6;font-size:15px;line-height:1.5;color:#7D6E5E;">Bridge translates the physics, not the answer. One job: a physics claim lands on the page — in either language. <b style="color:#33291F;">En español está bien.</b></section>
+      </aside>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isWrite }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">
+      <section style="flex:3 1 460px;min-width:0;display:flex;flex-direction:column;gap:14px;">
+        <div style="background:#FFFCF7;border-radius:24px;padding:22px 26px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;">
+            <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">Level 1 · Tap a word / Toca una palabra</div>
+            <div style="font-size:14px;color:#7D6E5E;font-style:italic;">En español está bien.</div>
+          </div>
+          <sc-for list="{{ frames }}" as="f" hint-placeholder-count="3">
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+                <svg sc-camel-view-box="0 0 60 36" style="width:60px;height:36px;flex:none;"><polyline points="{{ f.icon }}" fill="none" stroke="#C9673F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+                <div style="font-size:24px;font-weight:700;line-height:1.4;">{{ f.lead }} <span style="display:inline-block;min-width:150px;border-bottom:3px solid #33291F;text-align:center;color:#C9673F;font-weight:900;">{{ f.answer }}</span>.</div>
+              </div>
+              <div style="font-size:16px;font-style:italic;color:#7D6E5E;padding-left:74px;">{{ f.es }}</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;padding-left:74px;">
+                <sc-for list="{{ f.chips }}" as="c" hint-placeholder-count="5">
+                  <button sc-camel-on-click="{{ c.pick }}" style="border:2px solid {{ c.border }};background:{{ c.bg }};border-radius:999px;padding:8px 14px;font-size:15px;font-weight:700;color:#33291F;">{{ c.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="background:#FFFCF7;border-radius:24px;padding:22px 26px;border:2px solid #E5D9C6;">
+          <div style="font-size:13px;font-weight:900;color:#7D6E5E;">Level 2 · Finish the frame / Completa la frase</div>
+          <p>When the line goes up, I am walking ___. Flat means ___. A steeper line means ___ because ___.</p>
+          <p><i>Cuando la línea sube, camino ___. Plana significa ___. Una línea más inclinada significa ___ porque ___.</i></p>
+          <textarea aria-label="Level 2 graph explanation" value="{{ levelTwo }}" sc-camel-on-change="{{ setLevelTwo }}" rows="3" style="width:100%;font-size:16px;padding:12px;border:2px solid #E5D9C6;border-radius:14px;background:#F5EDE0;color:#33291F;"></textarea>
+          <p style="font-size:14px;color:#7D6E5E;">Compare steepness on the same axis scales. / Compara la inclinación con las mismas escalas.</p>
+        </div>
+        <div style="background:#FFFCF7;border-radius:24px;padding:22px 26px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:10px;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">Level 3+ · In your own words / Con tus palabras</div>
+          <textarea aria-label="Graph evidence explanation" value="{{ ownWords }}" sc-camel-on-change="{{ setOwnWords }}" rows="3" placeholder="Choose one segment of your walking graph. Direction? Stopped or moving? Use the slope as evidence. / Elige un segmento. ¿Dirección? ¿Parado o en movimiento? Usa la pendiente como evidencia." style="font-size:16px;line-height:1.5;padding:12px 14px;border:2px solid #E5D9C6;border-radius:14px;background:#F5EDE0;color:#33291F;resize:vertical;"></textarea>
+        </div>
+      </section>
+      <aside style="flex:1 1 280px;max-width:380px;display:flex;flex-direction:column;gap:14px;">
+        <section style="background:#FFFCF7;border-radius:24px;padding:16px 18px;border:2px solid #E5D9C6;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;margin-bottom:10px;">Word wall / Pared de palabras</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <sc-for list="{{ words }}" as="w" hint-placeholder-count="8">
+              <div style="border-radius:12px;padding:8px 10px;background:{{ w.bg }};display:flex;flex-direction:column;">
+                <span style="font-weight:900;font-size:15px;">{{ w.en }}</span>
+                <span style="font-size:13px;font-style:italic;color:#7D6E5E;">{{ w.es }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+        <section style="background:#33291F;color:#FFFCF7;border-radius:24px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#B9AA95;">Close / Cierre</div>
+          <div style="font-size:17px;line-height:1.5;">Save the graph-evidence exit, then self-rate 1–3. Tomorrow: <b>the sims do not draw a graph you have not already drawn.</b></div>
+          <div style="font-size:15px;font-style:italic;color:#E5D9C6;">Los simuladores no dibujan una gráfica que tú no hayas dibujado antes.</div>
+        </section>
+      </aside>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{}">
+const L = 50, PW = 494, TOP = 16, PH = 244, T_MAX = 10, D_MAX = 4;
+const tx = t => L + t / T_MAX * PW, dy = d => TOP + (1 - d / D_MAX) * PH;
+const TARGETS = [
+  { label: 'Match 1: away, stop', pts: [[0, 1], [5, 3], [10, 3]] },
+  { label: 'Match 2: stand, toward fast', pts: [[0, 3], [4, 3], [6, 1], [10, 1]] },
+  { label: 'Match 3: away, stop, back', pts: [[0, 1], [3, 2.5], [5, 2.5], [6, 1], [10, 1]] },
+];
+const SCRIPT = TARGETS[2].pts;
+const interp = (pts, t) => { for (let i = 1; i < pts.length; i++) { const [t0, d0] = pts[i - 1], [t1, d1] = pts[i]; if (t <= t1) return d0 + (d1 - d0) * (t - t0) / (t1 - t0); } return pts[pts.length - 1][1]; };
+const T = (key, x, y, txt, o = {}) => React.createElement('text', { key, x, y, textAnchor: o.anchor || 'middle', fontSize: o.size || 13, fontWeight: o.w || 700, fill: o.fill || '#7D6E5E', transform: o.tf }, txt);
+class Component extends DCLogic {
+  state = { tab: 0, mode: 'free', t: 0, recording: false, trace: [], d: 1, labels: false, revealed: false, rows: [{ score: '—', fix: '' }, { score: '—', fix: '' }, { score: '—', fix: '' }],
+    timer: 60, timerOn: false, speaker: 'A', frames: [null, null, null], ownWords: '', levelTwo: '' };
+  floorRef = React.createRef(); walkerRef = React.createRef(); keys = {}; dragging = false;
+  componentDidMount() {
+    this.stage = document.querySelector('deck-stage');
+    this.stage?.connect(tab => { this.keys = {}; this.dragging = false; this.setState({tab, recording:false, timerOn:false}); });
+    let last = null;
+    const loop = ts => {
+      const dt = last ? Math.min(0.05, (ts - last) / 1000) : 0; last = ts;
+      const s = this.state;
+      const upd = {};
+      if (s.tab === 0) {
+        let d = s.d;
+        if (s.mode !== 'auto' && !this.dragging) {
+          const sp = this.keys.shift ? 2 : 0.8;
+          if (this.keys.left) d -= sp * dt;
+          if (this.keys.right) d += sp * dt;
+          d = Math.max(0.2, Math.min(D_MAX, d));
+        }
+        if (s.recording) {
+          const nt = Math.min(T_MAX, s.t + dt);
+          if (s.mode === 'auto') d = interp(SCRIPT, nt);
+          upd.t = nt; upd.trace = [...s.trace, [nt, d]]; upd.recording = nt < T_MAX;
+        }
+        if (d !== s.d) upd.d = d;
+      }
+      if (s.timerOn) { const nt = Math.max(0, s.timer - dt); upd.timer = nt; if (nt === 0) upd.timerOn = false; }
+      if (Object.keys(upd).length) this.setState(upd);
+      this._raf = requestAnimationFrame(loop);
+    };
+    this._raf = requestAnimationFrame(loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this._raf); }
+  key(e, down) { const k = e.key; if (k === 'ArrowLeft') this.keys.left = down; else if (k === 'ArrowRight') this.keys.right = down; else if (k === 'Shift') this.keys.shift = down; else return; if (down && !e.repeat && (k === 'ArrowLeft' || k === 'ArrowRight') && this.state.mode !== 'auto') { const step = e.shiftKey ? 0.2 : 0.08; this.setState({d:Math.max(0.2,Math.min(D_MAX,this.state.d+(k==='ArrowLeft'?-step:step)))}); } e.preventDefault(); }
+  floorD(e) { const r = this.floorRef.current.getBoundingClientRect(); return Math.max(0.2, Math.min(D_MAX, (e.clientX - r.left) / r.width * D_MAX)); }
+  startPosition(m) { return m.startsWith('m') ? TARGETS[+m[1]].pts[0][1] : 1; }
+  setMode(m) { this.keys = {}; this.dragging = false; this.setState({ mode: m, t: 0, trace: [], recording: false, revealed: m !== 'auto', d: this.startPosition(m) }); }
+  record() { const s=this.state; if(s.mode==='auto' && !s.revealed) return; this.setState(s.recording ? {recording:false} : {recording:true,t:0,trace:[[0,s.mode==='auto'?1:s.d]],d:s.mode==='auto'?1:s.d}); if(s.mode!=='auto') this.walkerRef.current?.focus(); }
+  renderVals() {
+    const s = this.state;
+    const tgt = s.mode.startsWith('m') ? TARGETS[+s.mode[1]] : null;
+    const isMatch = !!tgt;
+    let score = null;
+    if (isMatch && s.t >= T_MAX && s.trace.length) { const err = s.trace.reduce((a, [t, d]) => a + Math.abs(d - interp(tgt.pts, t)), 0) / s.trace.length; score = Math.max(0, Math.round(100 - err * 50)); }
+    const last = s.trace.length ? s.trace[s.trace.length - 1] : null, prev = s.trace.length > 6 ? s.trace[s.trace.length - 7] : null;
+    const v = last && prev ? (last[1] - prev[1]) / Math.max(1e-3, last[0] - prev[0]) : 0;
+    let statusEn = 'Ready. Miren.', statusEs = 'Listo. Miren.';
+    if (s.recording || s.trace.length) {
+      if (Math.abs(v) < 0.08) { statusEn = 'Stopped — line is flat'; statusEs = 'Parado — línea plana'; }
+      else if (v > 0) { statusEn = `Walking away${v > 1.2 ? ', fast' : ', slowly'} — line goes up`; statusEs = `Lejos${v > 1.2 ? ', rápido' : ', despacio'} — la línea sube`; }
+      else { statusEn = `Walking toward${v < -1.2 ? ', fast' : ', slowly'} — line goes down`; statusEs = `Hacia${v < -1.2 ? ', rápido' : ', despacio'} — la línea baja`; }
+    }
+    const axisTexts = s.labels ? [
+      ...Array.from({ length: 11 }, (_, i) => T('t' + i, tx(i), 280, i)),
+      ...[0, 1, 2, 3, 4].map(d => T('d' + d, 40, dy(d) + 4, d, { anchor: 'end' })),
+      T('xl', 297, 297, 'time / tiempo (s)', { w: 900 }), T('yl', 14, 138, 'position / posición (m)', { w: 900, fill: '#C9673F', tf: 'rotate(-90 14 138)' }),
+    ] : [T('q1', 297, 297, '?', { size: 18, w: 900 }), T('q2', 20, 138, '?', { size: 18, w: 900 })];
+    const CH = [['away', 'lejos'], ['toward', 'hacia'], ['stopped', 'parado'], ['faster', 'más rápido'], ['slower', 'más lento']];
+    const FR = [
+      { lead: 'When the line goes UP, I am walking', es: 'Cuando la línea SUBE, camino ___.', icon: '6,30 54,6' },
+      { lead: 'When the line is FLAT, I am', es: 'Cuando la línea es PLANA, estoy ___.', icon: '6,18 54,18' },
+      { lead: 'When the line is STEEPER, I am going', es: 'Cuando la línea es MÁS INCLINADA, voy ___.', icon: '6,32 30,4 54,32' },
+    ];
+    const cur = s.recording ? (s.mode === 'auto' ? interp(SCRIPT, s.t) : s.d) : s.d;
+    return {
+      tabs: [{ en: 'Walk', es: 'Camina', time: '0–50' }, { en: 'Talk', es: 'Habla', time: '50–75' }, { en: 'Write', es: 'Escribe', time: '75–110' }]
+        .map((t, i) => ({ ...t, pick: () => this.stage ? this.stage.navigate(i) : this.setState({ tab: i }), bg: i === s.tab ? '#33291F' : '#FFFCF7', border: i === s.tab ? '#33291F' : '#E5D9C6', color: i === s.tab ? '#FFFCF7' : '#33291F' })),
+      isWalk: s.tab === 0, isTalk: s.tab === 1, isWrite: s.tab === 2,
+      keyDown: e => this.key(e, true), keyUp: e => this.key(e, false),
+      floorRef: this.floorRef, walkerRef: this.walkerRef, walkerD:s.d, autoMode:s.mode==='auto',
+      clearKeys: () => { this.keys={}; }, changeWalker: e => this.setState({d:Number(e.target.value)}),
+      ownWords:s.ownWords, setOwnWords:e=>this.setState({ownWords:e.target.value}),
+      levelTwo:s.levelTwo, setLevelTwo:e=>this.setState({levelTwo:e.target.value}),
+      floorDown: e => { if (s.mode === 'auto') return; this.dragging = true; e.currentTarget.setPointerCapture?.(e.pointerId); this.setState({ d: this.floorD(e) }); },
+      floorMove: e => { if (this.dragging) this.setState({ d: this.floorD(e) }); },
+      floorUp: () => { this.dragging = false; },
+      tapes: [1, 2, 3].map(m => ({ pct: m / D_MAX * 100, label: m })),
+      walkerPct: cur / D_MAX * 100, beamW: Math.max(0, cur / D_MAX * 100 - 10),
+      record: () => this.record(),
+      recLabel: s.recording ? 'Stop / Parar' : (s.trace.length ? 'Record again / Grabar otra vez' : 'Record 10 s / Grabar'),
+      recBg: s.recording ? '#C9673F' : '#33291F',
+      reset: () => this.setMode(s.mode),
+      modes: [{ id: 'free', label: 'Free walk / Libre' }, { id: 'auto', label: 'Scripted walk · Predict first' }, ...TARGETS.map((t, i) => ({ id: 'm' + i, label: t.label }))]
+        .map(m => ({ label: m.label, pick: () => this.setMode(m.id), bg: s.mode === m.id ? '#F6E1D6' : '#FFFCF7', border: s.mode === m.id ? '#C9673F' : '#E5D9C6' })),
+      graphTitle: isMatch ? `${tgt.label} — walk the dashed line / camina la línea` : s.mode === 'auto' ? 'The scripted walk / La caminata' : 'What the detector sees / Lo que ve el detector',
+      toggleLabels: () => this.setState({ labels: !s.labels }), lblLabel: s.labels ? 'Hide labels / Ocultar' : 'Label the axes / Etiqueta los ejes', lblBg: s.labels ? '#F6E1D6' : '#FFFCF7', lblBorder: s.labels ? '#C9673F' : '#E5D9C6',
+      tGrid: Array.from({ length: 11 }, (_, i) => ({ x: tx(i) })), dGrid: [0, 1, 2, 3, 4].map(d => ({ y: dy(d) })), axisTexts,
+      targetPts: tgt ? tgt.pts.map(([t, d]) => `${tx(t)},${dy(d)}`).join(' ') : '',
+      tracePts: s.trace.map(([t, d]) => `${tx(t).toFixed(1)},${dy(d).toFixed(1)}`).join(' '),
+      cx: tx(s.t), cy: dy(last ? last[1] : cur), tText: s.t.toFixed(1), dText: cur.toFixed(2),
+      covered: s.mode === 'auto' && !s.revealed, reveal: () => this.setState({ revealed: true, recording:true, t:0, trace:[[0,1]], d:1 }),
+      statusEn, statusEs, isMatch, cannotLog:score===null, scoreText: score === null ? '—' : `${score}%`,
+      logScore: () => { if (score === null) return; const rows = s.rows.map(r => ({ ...r })); const i = +s.mode[1]; rows[i].score = `${score}%`; this.setState({ rows }); },
+      rows: s.rows.map((r, i) => ({ n: i + 1, fixLabel:'What I fixed in match '+(i+1), score: r.score, fix: r.fix, setFix: e => { const rows = s.rows.map(x => ({ ...x })); rows[i].fix = e.target.value; this.setState({ rows }); } })),
+      timerText: `${Math.ceil(s.timer)}`, timerColor: s.timer <= 10 ? '#F0B59A' : '#FFFCF7', speaker: s.speaker,
+      timerBtn: s.timerOn ? 'Pause / Pausa' : s.timer === 0 ? 'Swap → next speaker / Cambien' : s.timer < 60 ? 'Resume / Seguir' : 'Start 60 s / Empezar',
+      startTimer: () => this.setState(s.timer === 0 ? { timer: 60, timerOn: true, speaker: s.speaker === 'A' ? 'B' : 'A' } : { timerOn: !s.timerOn }),
+      frames: FR.map((f, i) => ({ ...f, answer: s.frames[i] ? `${s.frames[i][0]} / ${s.frames[i][1]}` : '______', chips: CH.map(c => ({ label: `${c[0]} / ${c[1]}`, pick: () => { const fr = [...s.frames]; fr[i] = c; this.setState({ frames: fr }); }, bg: s.frames[i]?.[0] === c[0] ? '#F6E1D6' : '#FFFCF7', border: s.frames[i]?.[0] === c[0] ? '#C9673F' : '#E5D9C6' })) })),
+      words: [['faster', 'más rápido'], ['slower', 'más lento'], ['graph', 'gráfica'], ['slope', 'pendiente'], ['position', 'posición'], ['velocity', 'velocidad'], ['acceleration', 'aceleración'], ['displacement', 'desplazamiento']].map(([en, es], i) => ({ en, es, bg: i < 2 ? '#F6E1D6' : '#F5EDE0' })),
+    };
+  }
+}
+</script>
+
+
+<div id="__claude_design_branding"><style>#__claude_design_branding{position:fixed;right:16px;bottom:16px;z-index:2147483646;display:flex;align-items:center;gap:7px;height:30px;padding:0 5px 0 10px;border-radius:999px;font-family:"Anthropic Sans",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:12.5px;font-weight:400;line-height:1;letter-spacing:normal;text-transform:none;color:#141413;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:0 0 0 .5px rgba(31,30,29,.14),0 2px 10px rgba(0,0,0,.09)}
+#__claude_design_branding *{box-sizing:border-box;margin:0}
+#__claude_design_branding a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+#__claude_design_branding a:hover span{text-decoration:underline}
+#__claude_design_branding svg{flex:none}
+#__claude_design_branding a svg{color:#D97757}
+#__claude_design_branding button{width:20px;height:20px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:currentColor;opacity:.55;border:0;background:none;cursor:pointer;flex:none;font:inherit;transition:opacity .14s}
+#__claude_design_branding button:hover{opacity:1;background:rgba(127,127,127,.22)}
+@media print{#__claude_design_branding{display:none}}</style><a href="https://claude.com/product/design" target="_blank" rel="noopener noreferrer"><svg width="14" height="14" viewBox="0 0 20 21" fill="none" aria-hidden="true"><path fill="currentColor" d="M9.99902 0C15.5258 0.000170936 19.999 4.50643 19.999 10.0547C19.999 11.7656 19.5863 12.9976 18.7861 13.8203C17.9924 14.6362 16.9465 14.9138 15.9854 15.0078C15.05 15.0993 14.0097 15.0262 13.2549 15.0186C12.8524 15.0145 12.5177 15.0267 12.2441 15.0703C11.9682 15.1144 11.8143 15.1813 11.7305 15.2432C11.4745 15.4322 11.3353 15.7121 11.2656 16.1602C11.2303 16.3875 11.2168 16.6362 11.209 16.9131C11.2017 17.1715 11.1986 17.4893 11.1807 17.7705C11.1469 18.2975 11.0495 19.0865 10.4199 19.5908C9.7846 20.0996 8.88652 20.1057 7.85449 19.877C7.36399 19.7682 6.88652 19.6232 6.42578 19.4453C2.66989 17.9949 0.000187748 14.3414 0 10.0547C0 4.50643 4.47223 0.000171048 9.99902 0ZM9.99902 1.60547C5.36781 1.60564 1.60547 5.38391 1.60547 10.0547C1.60566 13.6582 3.84823 16.7296 7.00391 17.9482C7.39027 18.0974 7.79085 18.2184 8.20215 18.3096C9.1375 18.5169 9.384 18.3633 9.41602 18.3379C9.4524 18.3087 9.54558 18.1915 9.5791 17.668C9.5947 17.4239 9.59473 17.1786 9.60352 16.8672C9.61179 16.5742 9.62831 16.2435 9.67969 15.9131C9.78359 15.2455 10.0474 14.4906 10.7764 13.9521C11.1479 13.6778 11.5842 13.5493 11.9912 13.4844C12.4007 13.4191 12.8434 13.4088 13.2705 13.4131C14.1753 13.4222 15.0071 13.4905 15.8291 13.4102C16.6257 13.3322 17.2249 13.1235 17.6357 12.7012C18.0401 12.2855 18.3935 11.5261 18.3936 10.0547C18.3936 5.38391 14.6302 1.60564 9.99902 1.60547ZM5.11621 9.86719C5.86386 9.91468 6.45486 10.5348 6.45508 11.2939C6.45506 12.0838 5.81519 12.7245 5.02539 12.7246C4.28481 12.7246 3.67573 12.1617 3.60254 11.4404L3.59473 11.2939L3.60156 11.1533C3.66942 10.4596 4.23282 9.91186 4.93359 9.86719H5.11621ZM14.9814 7.19141C15.729 7.23889 16.3199 7.85919 16.3203 8.61816C16.3203 9.40801 15.6804 10.0487 14.8906 10.0488C14.1501 10.0487 13.5409 9.48586 13.4678 8.76465L13.46 8.61816L13.4668 8.47754C13.5348 7.78403 14.0983 7.23618 14.7988 7.19141H14.9814ZM6.4541 4.93457C7.20161 4.9822 7.79275 5.60231 7.79297 6.36133C7.79288 7.151 7.15291 7.7917 6.36328 7.79199C5.62274 7.79199 5.01369 7.22903 4.94043 6.50781L4.93262 6.36133L4.93945 6.2207C5.00731 5.52698 5.5707 4.97922 6.27148 4.93457H6.4541ZM11.3867 3.59668C12.1343 3.64419 12.7253 4.26436 12.7256 5.02344C12.7256 5.81326 12.0857 6.45393 11.2959 6.4541C10.5553 6.4541 9.94622 5.89123 9.87305 5.16992L9.86523 5.02344L9.87207 4.88281C9.93996 4.18912 10.5033 3.64133 11.2041 3.59668H11.3867Z"></path></svg><span>Made with Claude Design</span></a><button type="button" aria-label="Dismiss" onclick="this.parentElement.remove()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></button></div></body></html>

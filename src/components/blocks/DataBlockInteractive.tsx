@@ -102,7 +102,7 @@ export default function DataBlockInteractive({ workshop=false, analysisMode = 'p
   }
 
   const badge = (l: string, color: string) => (
-    <span className="grid place-items-center font-bold flex-shrink-0" style={{ width: 30, height: 30, borderRadius: 9, fontSize: 14, background: color, color: 'var(--primary-foreground)' }}>{l}</span>
+    <span className="grid place-items-center font-bold flex-shrink-0 text-sm" style={{ width: 30, height: 30, borderRadius: 'var(--radius-sm)', background: color, color: 'var(--primary-foreground)' }}>{l}</span>
   )
 
   return (

@@ -147,7 +147,7 @@ function ClassCockpit() {
                 {attention.length === 0 && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{roster ? 'No students flagged for follow-up.' : 'Loading student activity…'}</p>}
                 {attention.map((s) => (
                   <div key={s.id} className="flex items-center gap-2.5 py-2" style={{ borderBottom: '1px solid color-mix(in oklch, var(--border) 50%, transparent)' }}>
-                    <span className="grid place-items-center text-[10px] font-bold rounded-full shrink-0" style={{ width: 26, height: 26, background: (s.idleDays ?? 0) >= 3 ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : 'color-mix(in oklch, var(--reward) 20%, transparent)', color: (s.idleDays ?? 0) >= 3 ? 'var(--destructive)' : 'var(--reward-foreground)' }}>{initials(s.name)}</span>
+                    <span className="grid place-items-center text-overline font-bold rounded-full shrink-0" style={{ width: 26, height: 26, background: (s.idleDays ?? 0) >= 3 ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : 'color-mix(in oklch, var(--reward) 20%, transparent)', color: (s.idleDays ?? 0) >= 3 ? 'var(--destructive)' : 'var(--reward-foreground)' }}>{initials(s.name)}</span>
                     <span className="flex-1 text-sm truncate">{s.name} <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>· {(s.idleDays ?? 0) >= 3 ? `no work in ${s.idleDays} days` : `avg ${s.unitAvg?.toFixed(1)}, low`}</span></span>
                   </div>
                 ))}
@@ -221,7 +221,7 @@ function ClassCockpit() {
                     <thead>
                       <tr style={{ background: 'var(--secondary)' }}>
                         {['Student ↓ needs attention', 'Last active', 'Lessons', 'XP · wk', ...roster.targets.map((t) => t.slug.replace(/^u\d+\./, '').slice(0, 12)), 'Unit avg'].map((h, i) => (
-                          <th key={i} className="text-left text-[10.5px] font-bold uppercase tracking-wide px-3 py-2.5 whitespace-nowrap" style={{ color: 'var(--muted-foreground)', textAlign: i >= 4 ? 'center' : 'left' }}>{h}</th>
+                          <th key={i} className="text-left text-overline font-bold uppercase tracking-wide px-3 py-2.5 whitespace-nowrap" style={{ color: 'var(--muted-foreground)', textAlign: i >= 4 ? 'center' : 'left' }}>{h}</th>
                         ))}
                       </tr>
                     </thead>
@@ -230,10 +230,10 @@ function ClassCockpit() {
                         <tr key={s.id} style={{ borderTop: '1px solid color-mix(in oklch, var(--border) 55%, transparent)', background: (s.idleDays ?? 0) >= 3 ? 'color-mix(in oklch, var(--destructive) 3%, transparent)' : undefined }}>
                           <td className="px-3 py-2.5 text-sm whitespace-nowrap">
                             <span className="inline-flex items-center gap-2">
-                              <span className="grid place-items-center text-[10px] font-bold rounded-full" style={{ width: 24, height: 24, background: band(s.unitAvg).bg, color: band(s.unitAvg).color }}>{initials(s.name)}</span>
+                              <span className="grid place-items-center text-overline font-bold rounded-full" style={{ width: 24, height: 24, background: band(s.unitAvg).bg, color: band(s.unitAvg).color }}>{initials(s.name)}</span>
                               {s.name}
-                              {(s.idleDays ?? 0) >= 3 && <span className="text-[10.5px] font-bold rounded-full px-2 py-0.5" style={{ color: 'var(--destructive)', background: 'color-mix(in oklch, var(--destructive) 10%, transparent)' }}>{s.idleDays}d idle</span>}
-                              {s.pending > 0 && <span className="text-[10.5px] font-bold rounded-full px-2 py-0.5" style={{ color: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 10%, transparent)' }}>{s.pending} to rate</span>}
+                              {(s.idleDays ?? 0) >= 3 && <span className="text-overline font-bold rounded-full px-2 py-0.5" style={{ color: 'var(--destructive)', background: 'color-mix(in oklch, var(--destructive) 10%, transparent)' }}>{s.idleDays}d idle</span>}
+                              {s.pending > 0 && <span className="text-overline font-bold rounded-full px-2 py-0.5" style={{ color: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 10%, transparent)' }}>{s.pending} to rate</span>}
                             </span>
                           </td>
                           <td className="px-3 py-2.5 text-xs" style={{ color: (s.idleDays ?? 0) >= 3 ? 'var(--destructive)' : 'var(--muted-foreground)', fontWeight: (s.idleDays ?? 0) >= 3 ? 600 : 400 }}>{ago(s.lastActive)}</td>
@@ -260,7 +260,7 @@ function ClassCockpit() {
                 {roster.calibration && (
                   <div className="rounded-xl px-4 py-3 flex items-start gap-3 flex-wrap" style={{ border: '1px solid var(--border)', background: 'color-mix(in oklch, var(--primary) 6%, var(--card))' }}>
                     <div className="min-w-0">
-                      <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Calibration · self-rating vs your rating</div>
+                      <div className="text-overline font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Calibration · self-rating vs your rating</div>
                       <div className="text-sm mt-0.5 tabular-nums">
                         <b style={{ color: 'var(--success)' }}>{Math.round((roster.calibration.calibrated / roster.calibration.pairs) * 100)}% calibrated</b>
                         {' · '}<b style={{ color: 'var(--reward-foreground)' }}>{Math.round((roster.calibration.over / roster.calibration.pairs) * 100)}% over</b>
@@ -288,8 +288,8 @@ function ClassCockpit() {
               {redemptions.slice(0, 5).map((r) => (
                 <div key={r.id} className="flex items-center gap-2 rounded-lg px-3 py-2" style={{ background: 'color-mix(in oklch, var(--reward) 7%, transparent)', border: '1px solid color-mix(in oklch, var(--reward) 40%, var(--border))' }}>
                   <span className="flex-1 text-sm min-w-0 truncate"><b>{(r.user_email ?? '').split('@')[0]}</b> · {r.reward_name} · <span style={{ color: 'var(--reward-foreground)', fontWeight: 600 }}>{r.cost_points} pts</span></span>
-                  <button onClick={() => setRedemption(r.id, 'fulfilled')} className="text-[11px] font-bold rounded-md px-2.5 py-1" style={{ background: 'var(--success)', color: '#fff', border: 'none', cursor: 'pointer' }}>Fulfil</button>
-                  <button onClick={() => setRedemption(r.id, 'denied')} className="text-[11px] font-semibold rounded-md px-2 py-1" style={{ border: '1px solid var(--border)', background: 'transparent', color: 'var(--muted-foreground)', cursor: 'pointer' }}>Deny</button>
+                  <button onClick={() => setRedemption(r.id, 'fulfilled')} className="text-overline font-bold rounded-md px-2.5 py-1" style={{ background: 'var(--success)', color: '#fff', border: 'none', cursor: 'pointer' }}>Fulfil</button>
+                  <button onClick={() => setRedemption(r.id, 'denied')} className="text-overline font-semibold rounded-md px-2 py-1" style={{ border: '1px solid var(--border)', background: 'transparent', color: 'var(--muted-foreground)', cursor: 'pointer' }}>Deny</button>
                 </div>
               ))}
               {redemptions.length === 0 && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Nothing to fulfil.</p>}
@@ -302,7 +302,7 @@ function ClassCockpit() {
                 <div key={c.id} className="rounded-lg px-3 py-2.5" style={{ background: 'color-mix(in oklch, var(--reward) 7%, transparent)', border: '1px solid color-mix(in oklch, var(--reward) 40%, var(--border))' }}>
                   <div className="flex justify-between text-sm"><span className="font-semibold">{c.title}</span><span className="font-bold" style={{ color: 'var(--reward-foreground)' }}>+{c.bonus_xp}</span></div>
                   <div className="rounded-full overflow-hidden mt-2" style={{ height: 7, background: 'var(--secondary)' }}>
-                    <span style={{ display: 'block', height: '100%', width: `${Math.min(100, (c.completedToday / Math.max(1, me?.students ?? 1)) * 100)}%`, background: 'var(--reward)', borderRadius: 9999 }} />
+                    <span style={{ display: 'block', height: '100%', width: `${Math.min(100, (c.completedToday / Math.max(1, me?.students ?? 1)) * 100)}%`, background: 'var(--reward)', borderRadius: 'var(--radius-full)' }} />
                   </div>
                   <div className="flex justify-between text-[11.5px] mt-1.5" style={{ color: 'var(--muted-foreground)' }}>
                     <span>{c.completedToday} hit today&apos;s target</span><span>ends {c.ends_on}{c.is_global ? ' · 🌐 global' : ''}</span>

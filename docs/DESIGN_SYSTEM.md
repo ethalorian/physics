@@ -49,13 +49,13 @@ One ramp. Tracking tightens as size grows (the Apple feel). No off-scale sizes.
 | `.text-overline` | 11 / 700, uppercase, tracked | section labels |
 
 ### Radius
-All radii derive from `--radius` (1rem): `--radius-sm/md/lg/xl`. Cards = `lg`, inputs = `md`, pills = full. Don't invent radii.
+Use the monotonic radius scale: `xs` = 4px, `sm` = 8px, `md` = 12px, `lg` = 16px (`--radius`), `xl` = 20px, `2xl` = 24px, `3xl` = 32px. Cards = `lg`; buttons and inputs = `md`; small buttons and chips = `sm`; pills = `full`. Inline styles use `var(--radius-*)`, never numeric radii.
 
 ### Elevation
-One tinted ramp. Cards use `.card-elevation` (indigo-tinted, never pure black). `apple-shadow-*` is the same language at four steps. `glass-card` is a *surface* (blur + translucent fill), not an elevation.
+Cards use `.card-elevation`: one primary-tinted shadow in both themes, with a shadow-only hover. In-flow cards are solid `bg-card`; reserve translucent glass for overlays. Primary buttons use only a small primary-tinted shadow.
 
 ### Motion
-- Transitions: `cubic-bezier(0.16, 1, 0.3, 1)`, ~200–500ms. Calm, single-step.
+- Transitions: `--ease-out-expo` (`cubic-bezier(0.16, 1, 0.3, 1)`), ~200–500ms. Use `ease-out-expo` in classes and `var(--ease-out-expo)` in CSS. Calm, single-step.
 - Motion explains a transition (where something came from/went) — it never decorates an idle element.
 - **No infinite idle animation** except loading skeletons (`animate-pulse`) and a single wayfinding "you-are-here" cue. Everything is disabled under `prefers-reduced-motion`.
 
@@ -74,9 +74,10 @@ One tinted ramp. Cards use `.card-elevation` (indigo-tinted, never pure black). 
 ## 4. Components
 
 ### shadcn primitives (`@/components/ui`)
-- `Card` — glass surface, `card-elevation`, solid `--border`. The default container.
-- `Button` — pill-ish, brand variants, focus ring, active scale. The only button. Don't build ad-hoc gradient buttons.
-- `Input` / `Textarea` — solid border, 44px touch target, Apple focus ring.
+- `Card` — solid surface, `card-elevation`, solid `--border`. Use `density="compact"` for 16px padding and 12px gaps; its header/content/footer remove their extra horizontal inset.
+- `Button` — 12px radius (8px small), brand variants, focus ring, active scale. No gradient fills.
+- `Input` / `Textarea` — solid border, 44px touch target, 12px radius. Shared controls use `focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2` with a background offset.
+- `Spinner` — `<Spinner size="sm|md|lg" />`, with `role="status"` and an accessible loading label. Use it for every loading state.
 - `Badge`, `Dialog`, `Select`, etc. — standard.
 
 ### Kit primitives (`@/components/ds`)
@@ -148,3 +149,9 @@ Same system, one scoped refinement:
 ---
 
 *Reference implementation: `docs/ux-rebuild-prototype.html`. Compliance history: `docs/UI_UX_VISUAL_AUDIT.md`.*
+
+## 9. Enforcement and shared assets
+
+`npm run audit:styles` runs before production builds. It rejects default Tailwind palette classes outside avatar/arcade artwork, numeric inline radii, sub-scale text, half-pixel borders, black inline shadows, legacy utilities, and duplicate loading indicators. `node scripts/audit-unused-source.cjs --css` checks global class usage, with documented exceptions for generated markdown/KaTeX classes.
+
+Measurement simulation text and controls use semantic UI tokens. Canvas and pigment colors stay stable in `src/lib/palette.ts` (`INK_PALETTE`, `WORKSHOP_INKS`, `PEDAGOGY`). Shared game feedback keyframes live in `src/styles/arcade.css`, imported once before rule blocks. Projected teaching content retains its own size scale and caps font weight at 700.

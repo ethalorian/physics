@@ -7,7 +7,7 @@
 
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { MessageCircle, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import styles from './teacher-feedback.module.css'
 
@@ -67,14 +67,12 @@ export default function TeacherFeedbackCard({ initialCount = 3, featured = false
   const shown = expanded ? items : items.slice(0, initialCount)
 
   if (featured) return <div className={styles.featured}>
-    <div className={styles.noteHeader}><span className={styles.noteIcon}><MessageCircle size={20} aria-hidden="true" /></span><div><h3 className="text-sm font-semibold">From your teacher</h3><p className="text-xs text-muted-foreground">Your latest written feedback</p></div></div>
-    {shown.map(f => <article key={f.id} className={styles.note}>
+    {items.slice(0, initialCount).map(f => <article key={f.id} className={styles.note}>
       <p className="mb-2 text-xs font-semibold text-muted-foreground">{when(f.created_at)}</p>
       <p className={styles.message}>{f.message}</p><EvidenceBreakdown review={f.evidence_review}/>
       {(f.target?.statement || f.target?.slug || f.competency?.statement || f.competency?.code) && <p className={styles.context}>{[f.target?.slug, f.target?.statement, f.competency?.code, f.competency?.statement].filter(Boolean).join(' · ')}</p>}
       {f.submission_id && <Button asChild className="mt-4 min-h-11"><Link href="/dashboard/math-spine#math-feedback">Open my work and respond<ArrowRight aria-hidden="true" /></Link></Button>}
     </article>)}
-    {items.length > initialCount && <Button variant="ghost" className="mt-4 min-h-11" aria-expanded={expanded} onClick={() => setExpanded(v => !v)}>{expanded ? 'Show fewer' : `Show all ${items.length}`}</Button>}
   </div>
 
   return (
@@ -85,7 +83,7 @@ export default function TeacherFeedbackCard({ initialCount = 3, featured = false
       </p>
       <div className="flex flex-col gap-2.5">
         {shown.map((f) => (
-          <div key={f.id} className="rounded-lg px-3 py-2.5" style={{ background: 'color-mix(in oklch, var(--secondary) 45%, transparent)', border: '0.5px solid var(--border)' }}>
+          <div key={f.id} className="rounded-lg px-3 py-2.5" style={{ background: 'color-mix(in oklch, var(--secondary) 45%, transparent)', border: '1px solid var(--border)' }}>
             <div className="flex items-center gap-2 mb-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
               {f.target?.slug && (
                 <span className="rounded px-1.5 py-0.5 font-semibold" title={f.target.statement ?? undefined} style={{ background: 'color-mix(in oklch, var(--reward) 18%, transparent)', color: 'var(--reward-foreground)' }}>

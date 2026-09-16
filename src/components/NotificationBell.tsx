@@ -77,7 +77,7 @@ export default function NotificationBell() {
         <Bell className="h-5 w-5 text-muted-foreground" />
         {unread > 0 && (
           <span
-            className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full text-[10px] font-bold grid place-items-center"
+            className="absolute -top-0.5 -right-0.5 min-w-[16px] h-4 px-1 rounded-full text-overline font-bold grid place-items-center"
             style={{ background: 'var(--destructive)', color: '#fff' }}
           >
             {unread > 9 ? '9+' : unread}
@@ -111,7 +111,7 @@ export default function NotificationBell() {
                         {n.unread && <span className="h-1.5 w-1.5 rounded-full shrink-0" style={{ background: 'var(--destructive)' }} />}
                       </div>
                       <div className="text-xs text-muted-foreground truncate">{n.detail}</div>
-                      <div className="text-[11px] text-muted-foreground/70 mt-0.5">{ago(n.at)}</div>
+                      <div className="text-overline text-muted-foreground/70 mt-0.5">{ago(n.at)}</div>
                     </div>
                   </Link>
                 )

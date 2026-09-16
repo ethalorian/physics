@@ -36,7 +36,7 @@ export default function TeacherAccessPage() {
   return (
     <div className="max-w-xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
       <div className="rounded-2xl border p-6" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-        <div className="grid place-items-center mb-3" style={{ width: 48, height: 48, borderRadius: 12, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
+        <div className="grid place-items-center mb-3" style={{ width: 48, height: 48, borderRadius: 'var(--radius-md)', background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
           <GraduationCap size={24} />
         </div>
         <h1 className="text-xl font-semibold tracking-tight">Teacher access</h1>

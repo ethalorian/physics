@@ -48,7 +48,7 @@ export default function ClassesLanding() {
     const inner = (
       <span className="inline-flex items-center gap-2 text-sm font-semibold rounded-full px-4 py-2"
         style={{ color: 'var(--foreground)', border: `1px solid color-mix(in oklch, ${tint} 38%, var(--border))`, background: `color-mix(in oklch, ${tint} 7%, transparent)` }}>
-        <b className="tabular-nums" style={{ color: tint, fontSize: 15 }}>{n}</b> {label}
+        <b className="tabular-nums text-callout" style={{ color: tint }}>{n}</b> {label}
       </span>
     )
     return href ? <Link key={label} href={href}>{inner}</Link> : <span key={label}>{inner}</span>
@@ -104,7 +104,7 @@ export default function ClassesLanding() {
                   <div className="flex justify-between items-center gap-2">
                     <div className="flex items-center gap-2.5 min-w-0">
                       <span className="text-[17px] font-bold truncate">{c.label}</span>
-                      <span className="text-[11px] font-bold uppercase tracking-wide rounded-full px-2.5 py-0.5 shrink-0" style={{ color: badge.color, background: badge.bg }}>{badge.label}</span>
+                      <span className="text-overline font-bold uppercase tracking-wide rounded-full px-2.5 py-0.5 shrink-0" style={{ color: badge.color, background: badge.bg }}>{badge.label}</span>
                     </div>
                     {c.onPace !== null && (
                       <span className="text-xs font-bold shrink-0" style={{ color: c.onPace ? 'var(--success)' : 'var(--reward-foreground)' }}>
@@ -123,7 +123,7 @@ export default function ClassesLanding() {
                         const current = c.dayN !== null && i === Math.min(c.dayN, c.dayM ?? 0) - 1
                         return (
                           <span key={i} style={{
-                            width: 20, height: current ? 11 : 8, borderRadius: 4,
+                            width: 20, height: current ? 11 : 8, borderRadius: 'var(--radius-xs)',
                             background: done ? 'var(--primary)' : current ? 'var(--reward)' : 'transparent',
                             border: done || current ? 'none' : '1.5px dashed var(--border)',
                             boxShadow: current ? '0 0 0 2px color-mix(in oklch, var(--reward) 30%, transparent)' : undefined,

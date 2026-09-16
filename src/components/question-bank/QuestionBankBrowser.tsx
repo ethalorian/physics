@@ -6,13 +6,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { 
-  Search, 
-  Filter, 
-  Plus, 
-  Copy, 
-  Edit, 
-  Trash2, 
+import {
+  Search,
+  Filter,
+  Plus,
+  Copy,
+  Edit,
+  Trash2,
   BookOpen,
   Target,
   Brain,
@@ -58,14 +58,14 @@ export default function QuestionBankBrowser({
   const handleUnitFilter = (unitId: string) => {
     const currentUnits = filters.units || []
     if (currentUnits.includes(unitId)) {
-      setFilters({ 
-        ...filters, 
+      setFilters({
+        ...filters,
         units: currentUnits.filter(u => u !== unitId),
         lessons: [] // Clear lesson filter when unit changes
       })
     } else {
-      setFilters({ 
-        ...filters, 
+      setFilters({
+        ...filters,
         units: [...currentUnits, unitId],
         lessons: [] // Clear lesson filter when unit changes
       })
@@ -75,13 +75,13 @@ export default function QuestionBankBrowser({
   const handleLessonFilter = (lessonId: string) => {
     const currentLessons = filters.lessons || []
     if (currentLessons.includes(lessonId)) {
-      setFilters({ 
-        ...filters, 
+      setFilters({
+        ...filters,
         lessons: currentLessons.filter(l => l !== lessonId)
       })
     } else {
-      setFilters({ 
-        ...filters, 
+      setFilters({
+        ...filters,
         lessons: [...currentLessons, lessonId]
       })
     }
@@ -90,13 +90,13 @@ export default function QuestionBankBrowser({
   const handleDifficultyFilter = (difficulty: 'easy' | 'medium' | 'hard') => {
     const currentDifficulties = filters.difficulty || []
     if (currentDifficulties.includes(difficulty)) {
-      setFilters({ 
-        ...filters, 
+      setFilters({
+        ...filters,
         difficulty: currentDifficulties.filter(d => d !== difficulty)
       })
     } else {
-      setFilters({ 
-        ...filters, 
+      setFilters({
+        ...filters,
         difficulty: [...currentDifficulties, difficulty]
       })
     }
@@ -105,13 +105,13 @@ export default function QuestionBankBrowser({
   const handleQuestionTypeFilter = (type: string) => {
     const currentTypes = filters.questionTypes || []
     if (currentTypes.includes(type)) {
-      setFilters({ 
-        ...filters, 
+      setFilters({
+        ...filters,
         questionTypes: currentTypes.filter(t => t !== type)
       })
     } else {
-      setFilters({ 
-        ...filters, 
+      setFilters({
+        ...filters,
         questionTypes: [...currentTypes, type]
       })
     }
@@ -133,7 +133,7 @@ export default function QuestionBankBrowser({
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'easy': return 'bg-success/10 text-success dark:bg-success/30 dark:text-success'
-      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
+      case 'medium': return 'bg-reward/10 text-foreground  '
       case 'hard': return 'bg-destructive/10 text-destructive dark:bg-destructive/30 dark:text-destructive'
       default: return 'bg-secondary text-secondary-foreground'
     }
@@ -332,8 +332,8 @@ export default function QuestionBankBrowser({
             const isSelected = selectedQuestions.includes(item.id)
 
             return (
-              <Card 
-                key={item.id} 
+              <Card
+                key={item.id}
                 className={`transition-all ${isSelected ? 'ring-2 ring-primary' : ''} ${selectionMode ? 'cursor-pointer' : ''}`}
                 onClick={() => selectionMode && handleQuestionSelect(item)}
               >
@@ -368,7 +368,7 @@ export default function QuestionBankBrowser({
                           </div>
                         )}
                       </div>
-                      <CardTitle 
+                      <CardTitle
                         className="text-base cursor-pointer hover:text-primary"
                         onClick={(e) => {
                           e.stopPropagation()
@@ -453,11 +453,11 @@ export default function QuestionBankBrowser({
                         {item.question.options.map((option, idx) => {
                           const mcQuestion = item.question as any // Type assertion for MultipleChoiceQuestion
                           return (
-                            <div 
-                              key={idx} 
+                            <div
+                              key={idx}
                               className={`text-sm p-2 rounded ${
-                                idx === mcQuestion.correctAnswer 
-                                  ? 'bg-success/5 border border-success/30' 
+                                idx === mcQuestion.correctAnswer
+                                  ? 'bg-success/5 border border-success/30'
                                   : 'bg-muted'
                               }`}
                             >

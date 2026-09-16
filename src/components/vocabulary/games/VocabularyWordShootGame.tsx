@@ -256,7 +256,7 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
   if (phase === 'waiting') {
     return (
       <div className="rounded-2xl border p-8 text-center" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
-        <div className="grid place-items-center mx-auto mb-3" style={{ width: 52, height: 52, borderRadius: 14, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}><Target size={26} /></div>
+        <div className="grid place-items-center mx-auto mb-3" style={{ width: 52, height: 52, borderRadius: 'var(--radius-md)', background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}><Target size={26} /></div>
         <div className="text-xl font-semibold">Word shoot — time attack</div>
         <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Answer fast: speed and combos multiply your score. {best > 0 && <>Beat your best of <b style={{ color: 'var(--foreground)' }}>{best.toLocaleString()}</b>.</>}</p>
         <div className="text-xs mt-3" style={{ color: 'var(--muted-foreground)' }}>{cfg.lives} lives · {Math.round(cfg.time / 1000)}s per term · combo up to ×5</div>
@@ -275,14 +275,14 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
 
   return (
     <div className="space-y-3" style={{ color: 'var(--foreground)' }}>
-      <style>{`@keyframes arcadeShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}.arcade-shake{animation:arcadeShake .45s}@keyframes arcadeFloat{0%{opacity:0;transform:translate(-50%,0) scale(.7)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-80px) scale(1.15)}}@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}`}</style>
+
 
       {/* header */}
       <div className="rounded-2xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-3 text-sm">
             <span style={{ color: 'var(--muted-foreground)' }}>{Math.min(qIndex + 1, total)} / {total}</span>
-            <span className="font-bold" style={{ fontSize: 18 }}>{score.toLocaleString()}</span>
+            <span className="text-title-3" >{score.toLocaleString()}</span>
             {streak > 0 && (
               <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: 'color-mix(in oklch, var(--reward) 20%, transparent)', color: 'var(--reward)', transform: `scale(${Math.min(1 + streak * 0.04, 1.3)})` }}>
                 <Flame className="h-3.5 w-3.5" /> ×{multiplier}
@@ -319,7 +319,7 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
           style={{ height: 540, background: 'radial-gradient(120% 80% at 50% -10%, color-mix(in oklch, var(--primary) 16%, transparent), transparent 60%), var(--card)' }}>
 
           {floatPts !== null && (
-            <div className="absolute left-1/2 pointer-events-none z-20" style={{ top: '40%', animation: 'arcadeFloat 0.9s ease-out forwards' }}>
+            <div className="absolute left-1/2 pointer-events-none z-20" style={{ top: '40%', animation: 'arcade-float 0.9s var(--ease-out-expo) forwards' }}>
               <span className="text-4xl font-extrabold" style={{ color: 'var(--success)' }}>+{floatPts}</span>
             </div>
           )}
@@ -328,18 +328,17 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
             const popped = Boolean(flash) && b.isCorrect
             return (
               <button key={b.id} onClick={() => hit(b)} disabled={phase !== 'playing'}
-                className="absolute grid place-items-center rounded-full text-center px-2 font-bold hover:brightness-105"
+                className="absolute grid place-items-center rounded-full text-center px-2 font-bold hover:brightness-105 text-sm"
                 style={{
                   left: b.x, top: b.y, width: BUBBLE, height: BUBBLE,
                   border: '3px solid',
                   borderColor: popped ? 'var(--success)' : 'color-mix(in oklch, var(--primary) 40%, var(--border))',
                   background: popped ? 'color-mix(in oklch, var(--success) 25%, var(--card))' : 'var(--card)',
-                  color: 'var(--foreground)', fontSize: 14, lineHeight: 1.1,
-                }}>
+                  color: 'var(--foreground)', lineHeight: 1.1 }}>
                 <span className="flex flex-col items-center gap-0.5">
-                  {b.term.icon && <span aria-hidden style={{ fontSize: 22, lineHeight: 1 }}>{b.term.icon}</span>}
+                  {b.term.icon && <span className="text-title-2" aria-hidden style={{ lineHeight: 1 }}>{b.term.icon}</span>}
                   <span>{b.term.term}</span>
-                  {sei.showL1 && wordTranslation(b.term,sei.homeLang).term && <span className="text-[10px] opacity-70">{wordTranslation(b.term,sei.homeLang).term}</span>}
+                  {sei.showL1 && wordTranslation(b.term,sei.homeLang).term && <span className="text-overline opacity-70">{wordTranslation(b.term,sei.homeLang).term}</span>}
                 </span>
               </button>
             )

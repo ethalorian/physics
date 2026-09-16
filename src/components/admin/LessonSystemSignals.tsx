@@ -69,7 +69,7 @@ export default function LessonSystemSignals({ unit }: { unit: string }) {
           <div className="text-sm">
             <div className="tabular-nums">More support <b>{lvl(sig.scaffold.heavyMean)}</b> <span style={{ color: 'var(--muted-foreground)' }}>({sig.scaffold.heavyPairs})</span> · Less support <b>{lvl(sig.scaffold.lightMean)}</b> <span style={{ color: 'var(--muted-foreground)' }}>({sig.scaffold.lightPairs})</span></div>
             {sig.scaffold.targets.length > 0 && <div className="text-xs mt-1.5" style={{ color: 'var(--muted-foreground)' }}>Largest gaps: {sig.scaffold.targets.map((t) => `${t.slug} ${t.gap > 0 ? '+' : ''}${t.gap}`).join(' · ')}</div>}
-            <div className="text-[11px] mt-1.5" style={{ color: 'var(--muted-foreground)' }}>These are associations, not evidence that support caused a rating difference. Unknown logs are excluded; ratings and work may come from different dates.</div>
+            <div className="text-overline mt-1.5" style={{ color: 'var(--muted-foreground)' }}>These are associations, not evidence that support caused a rating difference. Unknown logs are excluded; ratings and work may come from different dates.</div>
           </div>
         ))}
         {card(<Users size={14} style={{ color: 'var(--success)' }} />, 'Group-work comparison', 'Latest teacher level on targets with group artifacts', sig.lobby.targets === 0 ? empty('No lobby artifacts tagged to a target yet.') : (

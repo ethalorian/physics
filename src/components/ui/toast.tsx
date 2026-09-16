@@ -1,106 +1,61 @@
 "use client"
 
-import * as React from "react"
-import { cn } from "@/lib/utils"
-import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from "lucide-react"
+import type { ReactNode } from 'react'
+import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export interface ToastProps {
   id: string
   title?: string
   description?: string
-  variant?: "default" | "success" | "error" | "warning" | "info"
+  variant?: 'default' | 'success' | 'error' | 'warning' | 'info'
   duration?: number
   onClose?: () => void
 }
 
 const toastVariants = {
-  default: "bg-white border-gray-200",
-  success: "bg-green-50 border-green-200",
-  error: "bg-red-50 border-red-200",
-  warning: "bg-yellow-50 border-yellow-200",
-  info: "bg-blue-50 border-blue-200",
+  default: 'bg-card border-border',
+  success: 'bg-success/12 border-success/40',
+  error: 'bg-destructive/12 border-destructive/40',
+  warning: 'bg-reward/12 border-reward/40',
+  info: 'bg-primary/12 border-primary/40',
 }
 
-const iconVariants = {
+const icons = {
   default: null,
-  success: <CheckCircle className="h-5 w-5 text-green-600" />,
-  error: <AlertCircle className="h-5 w-5 text-red-600" />,
-  warning: <AlertTriangle className="h-5 w-5 text-yellow-600" />,
-  info: <Info className="h-5 w-5 text-blue-600" />,
+  success: <CheckCircle aria-hidden="true" className="size-5 text-success" />,
+  error: <AlertCircle aria-hidden="true" className="size-5 text-destructive" />,
+  warning: <AlertTriangle aria-hidden="true" className="size-5 text-foreground" />,
+  info: <Info aria-hidden="true" className="size-5 text-primary" />,
 }
 
-export function Toast({
-  title,
-  description,
-  variant = "default",
-  onClose,
-}: ToastProps) {
+export function Toast({ title, description, variant = 'default', onClose }: ToastProps) {
   return (
-    <div
-      className={cn(
-        "pointer-events-auto relative flex w-full items-center space-x-3 overflow-hidden rounded-lg border p-4 shadow-lg transition-all",
-        "animate-in slide-in-from-top-full duration-300",
-        toastVariants[variant]
-      )}
-    >
-      {iconVariants[variant] && (
-        <div className="flex-shrink-0">{iconVariants[variant]}</div>
-      )}
-      <div className="flex-1">
-        {title && (
-          <div className={cn(
-            "text-sm font-semibold",
-            variant === "success" && "text-green-900",
-            variant === "error" && "text-red-900",
-            variant === "warning" && "text-yellow-900",
-            variant === "info" && "text-blue-900",
-            variant === "default" && "text-gray-900"
-          )}>
-            {title}
-          </div>
+    <div className="rounded-lg bg-card">
+      <div
+        role={variant === 'error' ? 'alert' : 'status'}
+        className={cn(
+          'pointer-events-auto relative flex w-full items-center gap-3 overflow-hidden rounded-lg border p-4 text-foreground shadow-sm shadow-primary/15',
+          'animate-in slide-in-from-top-full duration-300 ease-out-expo',
+          toastVariants[variant],
         )}
-        {description && (
-          <div className={cn(
-            "mt-1 text-sm",
-            variant === "success" && "text-green-700",
-            variant === "error" && "text-red-700",
-            variant === "warning" && "text-yellow-700",
-            variant === "info" && "text-blue-700",
-            variant === "default" && "text-gray-600"
-          )}>
-            {description}
-          </div>
+      >
+        {icons[variant] && <div className="shrink-0">{icons[variant]}</div>}
+        <div className="min-w-0 flex-1">
+          {title && <div className="text-sm font-semibold">{title}</div>}
+          {description && <div className="mt-1 text-sm text-foreground">{description}</div>}
+        </div>
+        {onClose && (
+          <button type="button" onClick={onClose} aria-label="Dismiss notification"
+            className="shrink-0 rounded-sm p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <X aria-hidden="true" className="size-4" />
+          </button>
         )}
       </div>
-      {onClose && (
-        <button
-          onClick={onClose}
-          className={cn(
-            "flex-shrink-0 rounded-md p-1 hover:bg-black/5 transition-colors",
-            variant === "success" && "hover:bg-green-900/10",
-            variant === "error" && "hover:bg-red-900/10",
-            variant === "warning" && "hover:bg-yellow-900/10",
-            variant === "info" && "hover:bg-blue-900/10"
-          )}
-        >
-          <X className={cn(
-            "h-4 w-4",
-            variant === "success" && "text-green-600",
-            variant === "error" && "text-red-600",
-            variant === "warning" && "text-yellow-600",
-            variant === "info" && "text-blue-600",
-            variant === "default" && "text-gray-500"
-          )} />
-        </button>
-      )}
     </div>
   )
 }
 
-export function ToastContainer({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-md w-full">
-      {children}
-    </div>
-  )
+export function ToastContainer({ children }: { children: ReactNode }) {
+  return <div className="pointer-events-none fixed right-4 top-4 z-50 flex w-[calc(100%-2rem)] max-w-md flex-col gap-2">{children}</div>
 }

@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "katex/dist/katex.min.css";
+@import "../styles/arcade.css";
 
 body > main:has(.observation-workspace),
 main.container:has(.observation-workspace) {
@@ -7,7 +9,7 @@ main.container:has(.observation-workspace) {
 }
 
 .observation-workspace { min-height: 100dvh; background: var(--background); }
-@import "katex/dist/katex.min.css";
+
 
 /* Re-enable enter/exit animation utilities (animate-in, fade-in-0, zoom-in-95,
    slide-*). These ship via tailwindcss-animate, which was previously only wired
@@ -16,59 +18,6 @@ main.container:has(.observation-workspace) {
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
-
-/* Sheet Slide Animations for Mobile */
-@keyframes slide-in-from-right-full {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes slide-out-to-right-full {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes slide-in-from-left-full {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@keyframes slide-out-to-left-full {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-.animate-in[data-state=open].slide-in-from-right-full {
-  animation: slide-in-from-right-full 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-out[data-state=closed].slide-out-to-right-full {
-  animation: slide-out-to-right-full 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-in[data-state=open].slide-in-from-left-full {
-  animation: slide-in-from-left-full 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-out[data-state=closed].slide-out-to-left-full {
-  animation: slide-out-to-left-full 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
 
 /* Touch-friendly interactions */
 .touch-pan-y {
@@ -79,7 +28,7 @@ main.container:has(.observation-workspace) {
   touch-action: manipulation;
 }
 
-@theme inline {
+@theme inline static {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
@@ -101,6 +50,7 @@ main.container:has(.observation-workspace) {
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-reward: var(--reward);
@@ -116,14 +66,28 @@ main.container:has(.observation-workspace) {
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-none: 0;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
+  --radius-full: 9999px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --default-transition-timing-function: var(--ease-out-expo);
 }
 
 :root {
   --radius: 1rem;
+  --type-overline: 0.6875rem;
+  --type-caption: 0.8125rem;
+  --type-small: 0.875rem;
+  --type-callout: 0.9375rem;
+  --type-body: 1rem;
+  --type-title-3: 1.125rem;
+  --type-title-2: 1.375rem;
   
   /* Terrestrial & Galactical — Light Mode (Refined, Chromebook-hardened) */
   /* Truer indigo (hue ~282, not ~300) so it doesn't read sweet; deeper primary
@@ -145,8 +109,9 @@ main.container:has(.observation-workspace) {
   --accent-foreground: oklch(0.33 0.04 282);
   --reward: oklch(0.80 0.13 80);
   --reward-foreground: oklch(0.28 0.04 285);
-  --success: oklch(0.62 0.08 155);
+  --success: oklch(0.50 0.08 155);
   --destructive: oklch(0.55 0.18 25);
+  --destructive-foreground: oklch(0.99 0.004 280);
 
   /* Data-viz palette (growth dashboards). Calm by design; defined for BOTH
      modes so charts adapt instead of flashing white in dark mode. */
@@ -172,27 +137,6 @@ main.container:has(.observation-workspace) {
   --sidebar-border: oklch(0.78 0.014 282);
   --sidebar-ring: oklch(0.47 0.13 282);
 
-  /* ---------------------------------------------------------------
-     Legacy named palette — now thin ALIASES to the semantic tokens.
-     Previously these were referenced ~40x in .markdown-content and the
-     .gold-* utilities but defined NOWHERE, so the lesson reading surface
-     half-rendered. Aliasing to semantic tokens fixes the bug AND makes
-     them dark-mode-aware automatically (they resolve to whatever the
-     semantic token is at the element). Do not add new usages — prefer
-     the semantic tokens directly.
-     --------------------------------------------------------------- */
-  --royal-purple: var(--primary);
-  --lavender: var(--primary);
-  --deep-plum: var(--foreground);
-  --mauve: var(--muted-foreground);
-  --periwinkle: var(--accent);
-  --cream: var(--card);
-
-  /* Gold / reward accent — mapped onto the single --reward token. */
-  --gold: var(--reward);
-  --gold-light: oklch(0.88 0.10 85);
-  --gold-glow: color-mix(in oklch, var(--reward) 40%, transparent);
-  --gold-subtle: color-mix(in oklch, var(--reward) 15%, transparent);
 }
 
 .dark {
@@ -217,7 +161,8 @@ main.container:has(.observation-workspace) {
   --reward: oklch(0.82 0.13 80);
   --reward-foreground: oklch(0.22 0.04 285);
   --success: oklch(0.70 0.09 155);
-  --destructive: oklch(0.62 0.17 25);
+  --destructive: oklch(0.70 0.17 25);
+  --destructive-foreground: oklch(0.17 0.025 280);
 
   /* Data-viz palette — dark counterparts (lifted L + slightly higher C so the
      calm hues stay legible on the deep-indigo dark background). */
@@ -265,288 +210,7 @@ main.container:has(.observation-workspace) {
       min-height: 44px; /* Apple's recommended minimum touch target */
     }
     
-    .apple-card {
-      margin: 0.5rem;
-      border-radius: var(--radius-md);
-    }
   }
-}
-
-/* ============================================= */
-/* Apple-Inspired Design System                  */
-/* ============================================= */
-
-/* Glassmorphism Utilities */
-.apple-blur {
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-}
-
-.apple-blur-light {
-  backdrop-filter: saturate(150%) blur(12px);
-  -webkit-backdrop-filter: saturate(150%) blur(12px);
-}
-
-/* Refined Shadow System.
-   Light-mode shadows are tinted toward the lavender --primary instead of pure
-   black, which reads "soft/expensive" on a tinted surface rather than muddy. */
-.apple-shadow-sm {
-  box-shadow:
-    0 1px 2px color-mix(in oklch, var(--primary) 8%, transparent),
-    0 2px 4px color-mix(in oklch, var(--primary) 5%, transparent);
-}
-
-.apple-shadow {
-  box-shadow:
-    0 2px 8px color-mix(in oklch, var(--primary) 8%, transparent),
-    0 4px 16px color-mix(in oklch, var(--primary) 6%, transparent),
-    0 8px 32px color-mix(in oklch, var(--primary) 4%, transparent);
-}
-
-.apple-shadow-lg {
-  box-shadow:
-    0 4px 12px color-mix(in oklch, var(--primary) 9%, transparent),
-    0 8px 24px color-mix(in oklch, var(--primary) 7%, transparent),
-    0 16px 48px color-mix(in oklch, var(--primary) 5%, transparent);
-}
-
-.apple-shadow-xl {
-  box-shadow:
-    0 8px 24px color-mix(in oklch, var(--primary) 10%, transparent),
-    0 16px 48px color-mix(in oklch, var(--primary) 8%, transparent),
-    0 32px 64px color-mix(in oklch, var(--primary) 6%, transparent);
-}
-
-/* Dark mode shadow adjustments */
-.dark .apple-shadow-sm {
-  box-shadow: 
-    0 1px 2px rgba(0, 0, 0, 0.2),
-    0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.dark .apple-shadow {
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    0 4px 16px rgba(0, 0, 0, 0.12),
-    0 8px 32px rgba(0, 0, 0, 0.08);
-}
-
-.dark .apple-shadow-lg {
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.2),
-    0 8px 24px rgba(0, 0, 0, 0.15),
-    0 16px 48px rgba(0, 0, 0, 0.1);
-}
-
-/* Primary Card - Apple-style glassmorphism */
-.apple-card {
-  background: color-mix(in oklch, var(--card) 80%, transparent);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow:
-    0 2px 8px color-mix(in oklch, var(--primary) 8%, transparent),
-    0 8px 32px color-mix(in oklch, var(--primary) 5%, transparent),
-    inset 0 1px 0 color-mix(in oklch, var(--card) 80%, transparent);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.apple-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--foreground) 8%, transparent), transparent);
-}
-
-.apple-card:hover {
-  box-shadow:
-    0 4px 12px color-mix(in oklch, var(--primary) 10%, transparent),
-    0 16px 48px color-mix(in oklch, var(--primary) 6%, transparent),
-    inset 0 1px 0 color-mix(in oklch, var(--card) 90%, transparent);
-  transform: translateY(-2px);
-  border-color: color-mix(in oklch, var(--border) 70%, transparent);
-}
-
-.dark .apple-card {
-  background: color-mix(in oklch, var(--card) 60%, transparent);
-  border-color: color-mix(in oklch, var(--border) 30%, transparent);
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.25),
-    0 8px 32px rgba(0, 0, 0, 0.18),
-    inset 0 1px 0 color-mix(in oklch, var(--card) 30%, transparent);
-}
-
-.dark .apple-card:hover {
-  background: color-mix(in oklch, var(--card) 70%, transparent);
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.3),
-    0 16px 48px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 color-mix(in oklch, var(--card) 40%, transparent);
-}
-
-/* Apple-style Gradient */
-.apple-gradient {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
-}
-
-/* Apple-style Buttons.
-   NOTE: prefer the shadcn <Button> component (the canonical button). These
-   classes are kept only so any stray markup still renders correctly; they now
-   use valid oklch values + color-mix instead of the invalid hsl(var(--oklch)). */
-.apple-button {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  font-weight: 500;
-  font-size: 0.9375rem;
-  letter-spacing: -0.01em;
-  border-radius: 9999px;
-  padding: 0.75rem 1.5rem;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    0 2px 8px color-mix(in oklch, var(--primary) 30%, transparent),
-    inset 0 1px 0 color-mix(in oklch, var(--primary-foreground) 10%, transparent);
-  border: none;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.apple-button::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, color-mix(in oklch, var(--primary-foreground) 10%, transparent) 0%, transparent 50%);
-  pointer-events: none;
-}
-
-.apple-button:hover {
-  transform: scale(1.02);
-  box-shadow:
-    0 4px 16px color-mix(in oklch, var(--primary) 40%, transparent),
-    inset 0 1px 0 color-mix(in oklch, var(--primary-foreground) 15%, transparent);
-}
-
-.apple-button:active {
-  transform: scale(0.98);
-  box-shadow:
-    0 1px 4px color-mix(in oklch, var(--primary) 30%, transparent),
-    inset 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.apple-button-secondary {
-  background: var(--secondary);
-  color: var(--secondary-foreground);
-  font-weight: 500;
-  font-size: 0.9375rem;
-  letter-spacing: -0.01em;
-  border-radius: 9999px;
-  padding: 0.75rem 1.5rem;
-  transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid var(--border);
-  cursor: pointer;
-}
-
-.apple-button-secondary:hover {
-  background: var(--muted);
-  transform: scale(1.02);
-}
-
-.apple-button-secondary:active {
-  transform: scale(0.98);
-}
-
-/* Apple-style Navigation */
-.apple-nav {
-  background: color-mix(in oklch, var(--background) 80%, transparent);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-}
-
-.dark .apple-nav {
-  background: color-mix(in oklch, var(--background) 70%, transparent);
-  border-bottom-color: color-mix(in oklch, var(--border) 30%, transparent);
-}
-
-/* Apple-style Inputs */
-.apple-input {
-  background: var(--input);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: var(--foreground);
-}
-
-.apple-input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 15%, transparent);
-  background: var(--background);
-}
-
-.apple-input::placeholder {
-  color: var(--muted-foreground);
-}
-
-.apple-textarea {
-  background: var(--input);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  resize: none;
-  color: var(--foreground);
-}
-
-.apple-textarea:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 15%, transparent);
-  background: var(--background);
-}
-
-/* Vibrancy effect for sidebars/panels */
-.apple-vibrancy {
-  background: color-mix(in oklch, var(--background) 60%, transparent);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-}
-
-/* Smooth page transitions */
-.apple-transition {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Hover lift effect */
-.apple-lift:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    0 8px 24px color-mix(in oklch, var(--primary) 9%, transparent),
-    0 16px 48px color-mix(in oklch, var(--primary) 6%, transparent);
-}
-
-.dark .apple-lift:hover {
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.25),
-    0 16px 48px rgba(0, 0, 0, 0.15);
 }
 
 /* Docusaurus-style markdown rendering */
@@ -630,23 +294,23 @@ main.container:has(.observation-workspace) {
 
 .markdown-content li {
   margin: 0.5rem 0;
-  color: var(--deep-plum);
+  color: var(--foreground);
   line-height: 1.6;
 }
 
 .markdown-content li::marker {
-  color: var(--royal-purple);
+  color: var(--primary);
 }
 
 .markdown-content blockquote {
   margin: 1.5rem 0;
   padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, var(--periwinkle), var(--cream));
-  border-left: 4px solid var(--royal-purple);
-  border-radius: 0 0.5rem 0.5rem 0;
+  background: color-mix(in oklch, var(--primary) 6%, var(--card));
+  border-left: 4px solid var(--primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   font-style: italic;
-  color: var(--deep-plum);
-  box-shadow: 0 2px 8px rgba(74, 26, 74, 0.1);
+  color: var(--foreground);
+  box-shadow: 0 2px 8px color-mix(in oklch, var(--primary) 10%, transparent);
 }
 
 .markdown-content blockquote p {
@@ -655,24 +319,24 @@ main.container:has(.observation-workspace) {
 }
 
 .markdown-content code {
-  background: var(--periwinkle);
-  color: var(--deep-plum);
+  background: var(--muted);
+  color: var(--foreground);
   padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-xs);
   font-size: 0.9em;
   font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-  border: 1px solid var(--mauve);
+  border: 1px solid var(--border);
 }
 
 .markdown-content pre {
-  background: var(--deep-plum);
-  color: var(--cream);
+  background: var(--muted);
+  color: var(--foreground);
   padding: 1.5rem;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-md);
   overflow-x: auto;
   margin: 1.5rem 0;
-  box-shadow: 0 4px 16px rgba(74, 26, 74, 0.2);
-  border: 1px solid var(--royal-purple);
+  box-shadow: 0 4px 16px color-mix(in oklch, var(--primary) 20%, transparent);
+  border: 1px solid var(--primary);
   position: relative;
 }
 
@@ -689,15 +353,15 @@ main.container:has(.observation-workspace) {
   width: 100%;
   border-collapse: collapse;
   margin: 1.5rem 0;
-  background: var(--cream);
-  border-radius: 0.5rem;
+  background: var(--card);
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(74, 26, 74, 0.1);
+  box-shadow: 0 2px 8px color-mix(in oklch, var(--primary) 10%, transparent);
 }
 
 .markdown-content th {
-  background: linear-gradient(135deg, var(--royal-purple), var(--lavender));
-  color: var(--cream);
+  background: var(--primary);
+  color: var(--primary-foreground);
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
@@ -705,8 +369,8 @@ main.container:has(.observation-workspace) {
 
 .markdown-content td {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--periwinkle);
-  color: var(--deep-plum);
+  border-bottom: 1px solid var(--muted);
+  color: var(--foreground);
 }
 
 .markdown-content tr:last-child td {
@@ -714,11 +378,11 @@ main.container:has(.observation-workspace) {
 }
 
 .markdown-content tr:nth-child(even) td {
-  background: var(--periwinkle);
+  background: var(--muted);
 }
 
 .markdown-content a {
-  color: var(--royal-purple);
+  color: var(--primary);
   text-decoration: none;
   font-weight: 500;
   border-bottom: 1px solid transparent;
@@ -726,56 +390,56 @@ main.container:has(.observation-workspace) {
 }
 
 .markdown-content a:hover {
-  color: var(--deep-plum);
-  border-bottom-color: var(--royal-purple);
+  color: var(--foreground);
+  border-bottom-color: var(--primary);
 }
 
 .markdown-content img {
   max-width: 100%;
   height: auto;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-md);
   margin: 1.5rem auto;
-  box-shadow: 0 4px 16px rgba(74, 26, 74, 0.1);
-  border: 1px solid var(--periwinkle);
+  box-shadow: 0 4px 16px color-mix(in oklch, var(--primary) 10%, transparent);
+  border: 1px solid var(--muted);
   display: block;
 }
 
 .markdown-content hr {
   border: none;
   height: 2px;
-  background: linear-gradient(to right, var(--periwinkle), var(--mauve), var(--periwinkle));
+  background: linear-gradient(to right, var(--muted), var(--border), var(--muted));
   margin: 2rem 0;
-  border-radius: 1px;
+  border-radius: var(--radius-xs);
 }
 
 /* Enhanced math equations styling */
 .markdown-content .katex {
   font-size: 1.15em;
-  color: var(--deep-plum);
+  color: var(--foreground);
 }
 
 .markdown-content .katex-display {
   margin: 1.25rem 0;
   padding: 1.25rem;
-  background: linear-gradient(135deg, var(--cream), rgba(197, 185, 232, 0.05));
-  border-radius: 0.75rem;
-  border: 1px solid var(--periwinkle);
-  box-shadow: 0 4px 12px rgba(74, 26, 74, 0.08);
+  background: color-mix(in oklch, var(--primary) 5%, var(--card));
+  border-radius: var(--radius-md);
+  border: 1px solid var(--muted);
+  box-shadow: 0 4px 12px color-mix(in oklch, var(--primary) 8%, transparent);
   text-align: center;
   overflow-x: auto;
 }
 
 .markdown-content .katex-display .katex {
   font-size: 1.3em;
-  color: var(--deep-plum);
+  color: var(--foreground);
 }
 
 /* Inline math styling */
-.markdown-content .katex:not(.katex-display) {
-  background: rgba(197, 185, 232, 0.15);
+.markdown-content .katex:not(.katex-display .katex) {
+  background: color-mix(in oklch, var(--primary) 8%, var(--card));
   padding: 0.1rem 0.3rem;
-  border-radius: 0.25rem;
-  border: 1px solid rgba(177, 156, 217, 0.3);
+  border-radius: var(--radius-xs);
+  border: 1px solid color-mix(in oklch, var(--primary) 25%, var(--border));
 }
 
 /* Math in callouts */
@@ -784,17 +448,17 @@ main.container:has(.observation-workspace) {
 .markdown-content .admonition-warning .katex,
 .markdown-content .admonition-tip .katex,
 .markdown-content .admonition-note .katex {
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(177, 156, 217, 0.2);
+  background: var(--card);
+  border: 1px solid color-mix(in oklch, var(--primary) 25%, var(--border));
 }
 
 /* Better fraction and expression spacing */
 .markdown-content .katex .frac-line {
-  border-bottom-color: var(--royal-purple);
+  border-bottom-color: var(--primary);
 }
 
 .markdown-content .katex .sqrt > .root {
-  border-top-color: var(--royal-purple);
+  border-top-color: var(--primary);
 }
 
 /* Enhanced code blocks with language labels */
@@ -803,10 +467,10 @@ main.container:has(.observation-workspace) {
   position: absolute;
   top: 0.5rem;
   right: 1rem;
-  background: var(--royal-purple);
-  color: var(--cream);
+  background: var(--primary);
+  color: var(--primary-foreground);
   padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
+  border-radius: var(--radius-xs);
   font-size: 0.75rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -816,11 +480,11 @@ main.container:has(.observation-workspace) {
 .markdown-content .admonition {
   margin: 1.5rem 0;
   padding: 0;
-  border-radius: 0.75rem;
+  border-radius: var(--radius-md);
   border: 1px solid;
-  box-shadow: 0 4px 16px rgba(74, 26, 74, 0.1);
+  box-shadow: 0 4px 16px color-mix(in oklch, var(--primary) 10%, transparent);
   overflow: hidden;
-  background: var(--cream);
+  background: var(--card);
 }
 
 /* Alternative class names that remark-admonitions might use */
@@ -831,91 +495,51 @@ main.container:has(.observation-workspace) {
 .markdown-content .admonition-note {
   margin: 1rem 0;
   padding: 0.875rem 1rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-sm);
   border-left: 3px solid;
-  box-shadow: 0 2px 8px rgba(74, 26, 74, 0.08);
+  box-shadow: 0 2px 8px color-mix(in oklch, var(--primary) 8%, transparent);
   position: relative;
   display: block;
 }
 
 .markdown-content .admonition-info {
-  background: linear-gradient(135deg, rgba(197, 185, 232, 0.15), var(--cream));
-  border-left-color: var(--royal-purple);
+  background: color-mix(in oklch, var(--primary) 10%, var(--card));
+  border-left-color: var(--primary);
 }
-
-.markdown-content .admonition-info::before {
-  content: 'ℹ️';
-  display: inline-block;
-  font-weight: 600;
-  color: var(--royal-purple);
-  margin-right: 0.5rem;
-  font-size: 1rem;
-  vertical-align: top;
-  margin-top: 0.1rem;
-}
+.markdown-content .admonition-info::before { content: 'info'; }
 
 .markdown-content .admonition-caution {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), var(--cream));
-  border-left-color: #f59e0b;
+  background: color-mix(in oklch, var(--reward) 10%, var(--card));
+  border-left-color: var(--reward);
 }
-
-.markdown-content .admonition-caution::before {
-  content: '⚠️';
-  display: inline-block;
-  font-weight: 600;
-  color: #d97706;
-  margin-right: 0.5rem;
-  font-size: 1rem;
-  vertical-align: top;
-  margin-top: 0.1rem;
-}
+.markdown-content .admonition-caution::before { content: 'caution'; }
 
 .markdown-content .admonition-warning {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), var(--cream));
-  border-left-color: #dc2626;
+  background: color-mix(in oklch, var(--destructive) 10%, var(--card));
+  border-left-color: var(--destructive);
 }
-
-.markdown-content .admonition-warning::before {
-  content: '🚨';
-  display: inline-block;
-  font-weight: 600;
-  color: #dc2626;
-  margin-right: 0.5rem;
-  font-size: 1rem;
-  vertical-align: top;
-  margin-top: 0.1rem;
-}
+.markdown-content .admonition-warning::before { content: 'warning'; }
 
 .markdown-content .admonition-tip {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), var(--cream));
-  border-left-color: #16a34a;
+  background: color-mix(in oklch, var(--success) 10%, var(--card));
+  border-left-color: var(--success);
 }
-
-.markdown-content .admonition-tip::before {
-  content: '💡';
-  display: inline-block;
-  font-weight: 600;
-  color: #16a34a;
-  margin-right: 0.5rem;
-  font-size: 1rem;
-  vertical-align: top;
-  margin-top: 0.1rem;
-}
+.markdown-content .admonition-tip::before { content: 'tip'; }
 
 .markdown-content .admonition-note {
-  background: linear-gradient(135deg, rgba(154, 138, 192, 0.15), var(--cream));
-  border-left-color: var(--lavender);
+  background: color-mix(in oklch, var(--primary) 10%, var(--card));
+  border-left-color: var(--primary);
 }
+.markdown-content .admonition-note::before { content: 'note'; }
 
-.markdown-content .admonition-note::before {
-  content: '📝';
-  display: inline-block;
-  font-weight: 600;
-  color: var(--lavender);
-  margin-right: 0.5rem;
-  font-size: 1rem;
-  vertical-align: top;
-  margin-top: 0.1rem;
+.markdown-content [class*="admonition-"]::before {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--foreground);
 }
 
 /* Enhanced callout formatting */
@@ -936,27 +560,23 @@ main.container:has(.observation-workspace) {
 .markdown-content .admonition-note p {
   margin: 0;
   line-height: 1.5;
-  color: var(--deep-plum);
+  color: var(--foreground);
 }
-
-
-
-
 
 /* Table of contents styling */
 .markdown-content .toc {
-  background: var(--cream);
-  border: 1px solid var(--periwinkle);
-  border-radius: 0.5rem;
+  background: var(--card);
+  border: 1px solid var(--muted);
+  border-radius: var(--radius-sm);
   padding: 1rem;
   margin: 1.5rem 0;
-  box-shadow: 0 2px 8px rgba(74, 26, 74, 0.05);
+  box-shadow: 0 2px 8px color-mix(in oklch, var(--primary) 5%, transparent);
 }
 
 .markdown-content .toc h2 {
   margin: 0 0 0.5rem 0;
   font-size: 1.1rem;
-  color: var(--royal-purple);
+  color: var(--primary);
   border: none;
   padding: 0;
 }
@@ -970,568 +590,10 @@ main.container:has(.observation-workspace) {
   margin: 0.25rem 0;
 }
 
-/* Gold Accent Utility Classes */
-.gold-accent {
-  color: var(--gold);
-}
-
-.gold-accent-bg {
-  background-color: var(--gold);
-}
-
-.gold-accent-border {
-  border-color: var(--gold);
-}
-
-.gold-glow {
-  box-shadow: 0 0 20px var(--gold-glow);
-}
-
-.gold-text-glow {
-  text-shadow: 0 0 10px var(--gold-glow);
-}
-
-.gold-gradient {
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-}
-
-.purple-gold-gradient {
-  background: linear-gradient(135deg, var(--royal-purple), var(--gold));
-}
-
-.gold-shine {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Sweep runs once on hover/focus — a deliberate reward gesture, not an idle
-   ambient shimmer. (Was: animation: shine 3s infinite.) */
-.gold-shine::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, var(--gold-glow), transparent);
-}
-
-.gold-shine:hover::before,
-.gold-shine:focus-visible::before {
-  animation: shine 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes shine {
-  from {
-    left: -100%;
-  }
-  to {
-    left: 100%;
-  }
-}
-
-/* Gold hover effects */
-.hover-gold:hover {
-  color: var(--gold);
-  transition: color 0.3s;
-}
-
-.hover-gold-bg:hover {
-  background-color: var(--gold-subtle);
-  transition: background-color 0.3s;
-}
-
-.hover-gold-border:hover {
-  border-color: var(--gold);
-  box-shadow: 0 0 10px var(--gold-glow);
-  transition: all 0.3s;
-}
-
-/* Enhanced Lesson Styles */
-.lesson-interactive {
-  transition: all 0.3s ease-in-out;
-}
-
-.lesson-card-hover {
-  transition: all 0.3s ease;
-}
-
-.lesson-card-hover:hover {
-  box-shadow: 0 12px 32px color-mix(in oklch, var(--primary) 9%, transparent), 0 4px 10px color-mix(in oklch, var(--primary) 6%, transparent);
-  transform: scale(1.02) translateY(-4px);
-}
-
-/* Train Tracks Animation */
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.train-track-box {
-  animation: slide-in 0.5s ease-out;
-}
-
-/* Interactive Badge Pulse */
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(251, 191, 36, 0);
-  }
-}
-
-/* Static "interactive" cue — a calm reward-tinted ring, no idle pulse.
-   (Audit 1.2: cut shine-only looping motion. Also tokenized off the hardcoded
-   amber the old pulse used.) */
-.interactive-badge {
-  box-shadow: 0 0 0 3px color-mix(in oklch, var(--reward) 22%, transparent);
-}
-
-/* Section Complete Animation */
-@keyframes check-bounce {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-}
-
-.section-complete {
-  animation: check-bounce 0.5s ease-out;
-}
-
-/* Progress Bar Smooth */
-.progress-smooth {
-  transition: width 0.5s ease-out;
-}
-
-/* Interactive Input Focus */
-.lesson-input:focus {
-  border-color: var(--royal-purple);
-  box-shadow: 0 0 0 3px rgba(106, 76, 147, 0.1);
-  outline: none;
-  transition: all 0.2s;
-}
-
-/* Answer Reveal Animation */
-@keyframes answer-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.answer-reveal {
-  animation: answer-reveal 0.3s ease-out;
-}
-
-/* Toast Animations */
-@keyframes slide-in-from-top-full {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slide-out-to-top-full {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-}
-
-.animate-in {
-  animation-duration: 300ms;
-  animation-fill-mode: both;
-}
-
-.slide-in-from-top-full {
-  animation-name: slide-in-from-top-full;
-}
-
-.animate-out {
-  animation-duration: 200ms;
-  animation-fill-mode: both;
-}
-
-.slide-out-to-top-full {
-  animation-name: slide-out-to-top-full;
-}
-
-/* 3D Card Flip Effects for Concentration Game */
-.transform-style-preserve-3d {
-  transform-style: preserve-3d;
-}
-
-.backface-hidden {
-  backface-visibility: hidden;
-}
-
-.rotate-y-180 {
-  transform: rotateY(180deg);
-}
-
-/* Card flip animation */
-@keyframes card-flip {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(180deg);
-  }
-}
-
-.card-flip {
-  animation: card-flip 0.6s ease-in-out;
-}
-
-/* Card match success animation */
-@keyframes card-match {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.card-match {
-  animation: card-match 0.5s ease-in-out;
-}
-
-/* Word Shoot Bubble Animations */
-@keyframes bubble-float {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-10px) rotate(2deg);
-  }
-  50% {
-    transform: translateY(0) rotate(0deg);
-  }
-  75% {
-    transform: translateY(-5px) rotate(-2deg);
-  }
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-}
-
-.bubble-float {
-  animation: bubble-float 3s ease-in-out infinite;
-}
-
-@keyframes bubble-pop {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.3);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(0);
-    opacity: 0;
-  }
-}
-
-.bubble-pop {
-  animation: bubble-pop 0.4s ease-out forwards;
-}
-
-@keyframes bubble-spawn {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.bubble-spawn {
-  animation: bubble-spawn 0.3s ease-out;
-}
-
-@keyframes bubble-float-down {
-  0% {
-    transform: translateY(0) scale(0.8);
-    opacity: 0.8;
-  }
-  10% {
-    opacity: 1;
-    transform: translateY(30px) scale(1);
-  }
-  90% {
-    opacity: 1;
-    transform: translateY(550px) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(620px) scale(0.8);
-  }
-}
-
-.bubble-float-down {
-  animation: bubble-float-down linear infinite;
-}
-
-/* Slow pulse animation for simulation progress */
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 3s ease-in-out infinite;
-}
-
-/* ============================================= */
-/* Apple-Style Micro-Interactions               */
-/* ============================================= */
-
-/* Fade in animation */
-@keyframes apple-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.apple-fade-in {
-  animation: apple-fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-/* Staggered children animation */
-.apple-stagger > * {
-  opacity: 0;
-  animation: apple-fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.apple-stagger > *:nth-child(1) { animation-delay: 0.05s; }
-.apple-stagger > *:nth-child(2) { animation-delay: 0.1s; }
-.apple-stagger > *:nth-child(3) { animation-delay: 0.15s; }
-.apple-stagger > *:nth-child(4) { animation-delay: 0.2s; }
-.apple-stagger > *:nth-child(5) { animation-delay: 0.25s; }
-.apple-stagger > *:nth-child(6) { animation-delay: 0.3s; }
-.apple-stagger > *:nth-child(7) { animation-delay: 0.35s; }
-.apple-stagger > *:nth-child(8) { animation-delay: 0.4s; }
-
-/* Scale in animation */
-@keyframes apple-scale-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.apple-scale-in {
-  animation: apple-scale-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-/* Bounce tap feedback */
-@keyframes apple-bounce {
-  0% { transform: scale(1); }
-  50% { transform: scale(0.97); }
-  100% { transform: scale(1); }
-}
-
-.apple-bounce:active {
-  animation: apple-bounce 0.15s ease-out;
-}
-
-/* Smooth hover lift */
-.apple-hover-lift {
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.apple-hover-lift:hover {
-  transform: translateY(-2px);
-}
-
-/* Glow pulse for active states */
-@keyframes apple-glow-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 40%, transparent);
-  }
-  50% {
-    box-shadow: 0 0 0 8px color-mix(in oklch, var(--primary) 0%, transparent);
-  }
-}
-
-.apple-glow-pulse {
-  animation: apple-glow-pulse 2s ease-in-out infinite;
-}
-
-/* Shimmer loading effect */
-@keyframes apple-shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.apple-shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--muted) 0%,
-    color-mix(in oklch, var(--muted-foreground) 10%, transparent) 50%,
-    var(--muted) 100%
-  );
-  background-size: 200% 100%;
-  animation: apple-shimmer 1.5s ease-in-out infinite;
-}
-
-/* Smooth content transitions */
-.apple-content-transition {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Focus ring - Apple style */
-.apple-focus-ring:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 15%, transparent);
-}
-
-/* Subtle gradient overlay on hover */
-.apple-gradient-hover::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, color-mix(in oklch, var(--primary) 5%, transparent) 0%, transparent 50%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  border-radius: inherit;
-}
-
-.apple-gradient-hover:hover::before {
-  opacity: 1;
-}
-
-/* Glass morphism card variants */
-.glass-card {
-  background: color-mix(in oklch, var(--card) 70%, transparent);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
-}
-
-.glass-card-dark {
-  background: color-mix(in oklch, var(--card) 40%, transparent);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid color-mix(in oklch, var(--border) 30%, transparent);
-}
-
-/* Typography enhancements */
-.apple-headline {
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.1;
-}
-
-.apple-subhead {
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.2;
-}
-
-.apple-body {
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.5;
-}
-
-.apple-caption {
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  line-height: 1.4;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-}
-
-/* Divider with fade */
-.apple-divider {
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--border),
-    transparent
-  );
-}
-
-/* Section spacing */
-.apple-section {
-  @apply space-y-6 sm:space-y-8;
-}
-
-/* Card grid */
-.apple-card-grid {
-  @apply grid gap-4 sm:gap-6;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-}
-
-/* Smooth scrollbar */
-.apple-scrollbar::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-.apple-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.apple-scrollbar::-webkit-scrollbar-thumb {
-  background: color-mix(in oklch, var(--muted-foreground) 30%, transparent);
-  border-radius: 4px;
-}
-
-.apple-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in oklch, var(--muted-foreground) 50%, transparent);
-}
+/* Game card geometry. Animation definitions live in styles/arcade.css. */
+.transform-style-preserve-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+.rotate-y-180 { transform: rotateY(180deg); }
 
 /* ============================================= */
 /* Type scale — one modular ramp                 */
@@ -1580,7 +642,6 @@ main.container:has(.observation-workspace) {
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.35;
-  color: var(--muted-foreground);
 }
 .text-overline {
   font-size: 0.6875rem;
@@ -1588,7 +649,6 @@ main.container:has(.observation-workspace) {
   letter-spacing: 0.06em;
   line-height: 1.3;
   text-transform: uppercase;
-  color: var(--muted-foreground);
 }
 
 /* ============================================= */
@@ -1614,12 +674,12 @@ main.container:has(.observation-workspace) {
 /* ============================================= */
 /* Tinted toward the indigo primary (not pure black) so it reads soft, not
    muddy, on the lavender surface. Used by the shadcn <Card> so every card in
-   the app shares one elevation language. Hover lift is gentle and single-step. */
+   the app shares one elevation language. Hover changes only the shadow. */
 .card-elevation {
   box-shadow:
     0 1px 2px color-mix(in oklch, var(--primary) 7%, transparent),
     0 6px 20px color-mix(in oklch, var(--primary) 5%, transparent);
-  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: box-shadow 0.3s var(--ease-out-expo);
 }
 .card-elevation:hover {
   box-shadow:
@@ -1627,10 +687,10 @@ main.container:has(.observation-workspace) {
     0 12px 32px color-mix(in oklch, var(--primary) 6%, transparent);
 }
 .dark .card-elevation {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.25), 0 8px 28px rgba(0,0,0,0.18);
+  box-shadow: 0 2px 8px color-mix(in oklch, color-mix(in oklch, var(--primary) 30%, black) 25%, transparent), 0 8px 28px color-mix(in oklch, color-mix(in oklch, var(--primary) 30%, black) 18%, transparent);
 }
 .dark .card-elevation:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.30), 0 16px 40px rgba(0,0,0,0.22);
+  box-shadow: 0 4px 12px color-mix(in oklch, color-mix(in oklch, var(--primary) 30%, black) 30%, transparent), 0 16px 40px color-mix(in oklch, color-mix(in oklch, var(--primary) 30%, black) 22%, transparent);
 }
 
 /* ============================================= */
@@ -1658,7 +718,7 @@ main.container:has(.observation-workspace) {
     0 16px 40px color-mix(in oklch, var(--primary) 5%, transparent);
 }
 .dark .surface-refined .card-elevation {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.22), 0 10px 34px rgba(0,0,0,0.15);
+  box-shadow: 0 1px 3px color-mix(in oklch, color-mix(in oklch, var(--primary) 30%, black) 22%, transparent), 0 10px 34px color-mix(in oklch, color-mix(in oklch, var(--primary) 30%, black) 15%, transparent);
 }
 
 

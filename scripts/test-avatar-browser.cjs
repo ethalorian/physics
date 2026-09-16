@@ -20,6 +20,7 @@ const clientPlugin={name:'local-link',setup(build){build.onResolve({filter:/^nex
 let server,browser;let assertions=0;function passed(label){assertions++;console.log('PASS',label)}
 (async()=>{await buildRoutes();sql(`CREATE DATABASE ${name}`,base);try{
 const fixture=fs.readFileSync('scripts/test-avatar-integrity.cjs','utf8').match(/const fixture=`([\s\S]*?)`;/)[1];sql(fixture);sql('ALTER TABLE students ADD COLUMN email text');sql(fs.readFileSync('supabase/migrations/20260907142702_avatar_integrity_and_customization.sql','utf8'));sql(fs.readFileSync('supabase/migrations/20260909034823_avatars_always_shared.sql','utf8'));
+sql(fs.readFileSync('supabase/migrations/20260916164359_avatar_vampire_collection.sql','utf8'));
 const items=JSON.parse(fs.readFileSync('src/data/avatar-catalog.json'));for(const i of items){sql(`insert into avatar_items(slug,slot,name,cost_xp,unlock_target_id,unlock_min_level,svg_layer,z_order,enabled,render_options) values(${q(i.slug)},${q(i.slot)},${q(i.name)},${q(i.cost_xp)},NULL,${q(i.unlock_min_level)},${q(i.svg_layer)},${q(i.z_order)},true,${q(i.render_options)}) on conflict(slug) do nothing`)}
 sql(`insert into students(id,name,first_name) values('${u}','Test Student','Test');insert into economy_point_grants values('${u}',500)`);
 const js=await esbuild.build({stdin:{contents:"import React from 'react';import {createRoot} from 'react-dom/client';import Page from './src/app/avatar/page';createRoot(document.getElementById('root')).render(<Page/>);",resolveDir:root,loader:'jsx'},bundle:true,platform:'browser',format:'iife',jsx:'automatic',plugins:[clientPlugin],write:false,define:{'process.env.NODE_ENV':'"development"'}});
@@ -37,5 +38,28 @@ await page.getByRole('button',{name:'Appearance',exact:true}).click();await page
 await page.getByRole('button',{name:'Skin: brown',exact:true}).click();sql(`update student_avatars set revision=revision+1 where user_id='${u}'`);await page.getByRole('button',{name:'Save changes',exact:true}).click();await page.getByRole('button',{name:'Discard draft & load saved avatar'}).waitFor();assert.equal(sql(`select traits->>'skin' from student_avatars where user_id='${u}'`),'light');await page.getByRole('button',{name:'Discard draft & load saved avatar'}).click();await page.getByText('Loaded your saved avatar.',{exact:true}).waitFor();passed('Cross-window conflict cannot silently overwrite saved state');
 await page.getByRole('button',{name:'Hair',exact:true}).click();await page.getByRole('button',{name:'Hair style: afro',exact:true}).click();await page.getByRole('button',{name:'Save changes',exact:true}).click();await page.getByText('Saved.',{exact:true}).waitFor();await page.screenshot({path:path.join(output,'editor-desktop.png'),fullPage:true});
 await page.setViewportSize({width:375,height:812});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth));await page.screenshot({path:path.join(output,'editor-mobile.png'),fullPage:true});await page.getByRole('button',{name:'Wardrobe',exact:true}).click();assert(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth));await page.screenshot({path:path.join(output,'wardrobe-mobile.png'),fullPage:true});await page.evaluate(()=>document.documentElement.classList.add('dark'));await page.screenshot({path:path.join(output,'wardrobe-dark.png'),fullPage:true});passed('375px editor and wardrobe fit without horizontal scrolling; dark theme renders');
+sql(`insert into economy_point_grants values('${u}',1000)`);
+await page.reload();await page.getByRole('button',{name:'Wardrobe',exact:true}).click();
+for(const [category,name,cost] of [['Ears','Pointed vampire ears',100],['Fangs & mouths','Vampire fangs',100],['Outfits','Midnight vampire dress',240]]){
+  await page.getByRole('button',{name:category,exact:true}).click();
+  const card=page.getByRole('article').filter({has:page.getByRole('heading',{name,exact:true})});
+  await card.getByRole('button',{name:'Try on',exact:true}).click();
+  await page.getByText(`Trying ${name}.`,{exact:false}).waitFor();
+  await card.getByRole('button',{name:`Buy · ${cost} XP`,exact:true}).click();
+  await page.getByText(`${name} is yours.`,{exact:false}).waitFor();
+}
+await page.getByRole('button',{name:'Save changes',exact:true}).click();await page.getByText('Saved.',{exact:true}).waitFor();
+const vampireEquipped={ears:'vampire-ears',mouth:'vampire-fangs',body:'midnight-vampire-dress'};
+assert.deepEqual(JSON.parse(sql(`select equipped from student_avatars where user_id='${u}'`)),vampireEquipped);
+await page.getByRole('button',{name:'Saved looks',exact:true}).click();await page.getByLabel('Name this look').fill('Vampire night');await page.getByRole('button',{name:'Keep this look'}).click();await page.getByRole('button',{name:'Save changes',exact:true}).click();await page.getByText('Saved.',{exact:true}).waitFor();
+await page.reload();await page.getByRole('button',{name:'Saved looks',exact:true}).click();await page.getByText('Vampire night',{exact:true}).waitFor();
+assert.deepEqual(JSON.parse(sql(`select saved_looks->1->'equipped' from student_avatars where user_id='${u}'`)),vampireEquipped);
+passed('Vampire ears, fangs, and dress buy, equip together, and persist in saved looks after reload');
+await page.getByRole('button',{name:'Wardrobe',exact:true}).click();await page.getByRole('button',{name:'Fangs & mouths',exact:true}).click();
+assert(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth));
+await page.screenshot({path:path.join(output,'vampire-mobile.png'),fullPage:true});
+await page.getByRole('button',{name:'Remove fangs & mouths',exact:true}).click();await page.getByRole('button',{name:'Save changes',exact:true}).click();await page.getByText('Saved.',{exact:true}).waitFor();
+assert.deepEqual(JSON.parse(sql(`select equipped from student_avatars where user_id='${u}'`)),{ears:'vampire-ears',body:'midnight-vampire-dress'});
+passed('Removing fangs keeps the ears and outfit; new categories fit on mobile');
 assert.deepEqual(errors,[]);passed('No browser runtime errors');console.log(`${assertions} browser/API/database checks passed`);
 }finally{if(browser)await browser.close();if(server)await new Promise(r=>server.close(r));sql(`DROP DATABASE ${name} WITH (FORCE)`,base)}})().catch(e=>{console.error(e.stderr?.toString()||e);process.exitCode=1});

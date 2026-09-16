@@ -38,7 +38,7 @@ export default function Animation3DView({ slug, caption }: { slug: string; capti
   }
   if (!def) {
     return (
-      <div className="rounded-lg border grid place-items-center" style={{ borderColor: 'var(--border)', height: 280, background: 'var(--card)', color: 'var(--muted-foreground)', fontSize: 13 }}>
+      <div className="rounded-lg border grid place-items-center text-caption" style={{ borderColor: 'var(--border)', height: 280, background: 'var(--card)', color: 'var(--muted-foreground)' }}>
         Loading animation…
       </div>
     )

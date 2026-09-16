@@ -6,7 +6,8 @@ import { paintStrokes } from '@/lib/draw/strokes'
 import { makeStrokeHandlers, type EditorTool } from '@/lib/draw/input'
 import WorkshopDrawingToolbar from '@/components/lessons/WorkshopDrawingToolbar'
 import styles from '@/components/lessons/WorkshopResponses.module.css'
-import PaintToolbar, { PAINT_PALETTE } from '@/components/draw/PaintToolbar'
+import PaintToolbar from '@/components/draw/PaintToolbar'
+import { INK_PALETTE } from '@/lib/palette'
 
 // MS-Paint-style drawing pad on a plain white canvas. Controlled — reports via
 // onChange. All tools, rendering, and pointer logic come from the
@@ -40,7 +41,7 @@ export default function PaintPad({
   const remember = (before: Stroke[]) => { historyRef.current = [...historyRef.current.slice(-49), before]; futureRef.current = [] }
   const drawingRef = useRef(false)
   const [tool, setTool] = useState<EditorTool>('pen')
-  const [color, setColor] = useState((palette && palette[0]) || PAINT_PALETTE[0])
+  const [color, setColor] = useState((palette && palette[0]) || INK_PALETTE[0])
   const [size, setSize] = useState(4)
   const [fillShapes, setFillShapes] = useState(false)
   const [grid, setGrid] = useState(true)
@@ -124,7 +125,7 @@ export default function PaintPad({
           canvas always sits clearly below the tools. */}
       <div className={workshop ? styles.paper : undefined} style={{ position: 'relative', marginTop: workshop ? undefined : 10 }}>
         {background && (
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 8, overflow: 'hidden', background: '#fff' }}>
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 'var(--radius-sm)', overflow: 'hidden', background: '#fff' }}>
             {background}
           </div>
         )}
@@ -139,7 +140,7 @@ export default function PaintPad({
           onPointerUp={finishStroke}
           onPointerLeave={finishStroke}
           onPointerCancel={finishStroke}
-          style={{ position: 'relative', display: 'block', width: '100%', height: 'auto', touchAction: 'none', border: '1px solid var(--primary)', borderRadius: 8, background: (transparent || background || (workshop && grid)) ? 'transparent' : '#fff', cursor: tool === 'eraser' ? 'cell' : tool === 'fill' ? 'copy' : 'crosshair' }}
+          style={{ position: 'relative', display: 'block', width: '100%', height: 'auto', touchAction: 'none', border: '1px solid var(--primary)', borderRadius: 'var(--radius-sm)', background: (transparent || background || (workshop && grid)) ? 'transparent' : '#fff', cursor: tool === 'eraser' ? 'cell' : tool === 'fill' ? 'copy' : 'crosshair' }}
         />
       </div>
       {workshop && <div className={styles.paperHint}>{tool==='text' ? 'Label tool · tap to place text' : snap && (tool==='line'||tool==='arrow') ? 'Snap on · lines lock to 45° angles' : 'Draw with finger, pencil or mouse'}<span>Sketch only · not to scale</span></div>}

@@ -121,7 +121,7 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
     <div>
       <div className="flex items-center justify-between mb-3">
         <button onClick={prev} className="grid place-items-center rounded-lg border" style={{ width: 30, height: 30, borderColor: 'var(--border)' }} aria-label="Previous month"><ChevronLeft size={16} /></button>
-        <div className="font-semibold" style={{ fontSize: 15 }}>{MONTHS[month]} {year}</div>
+        <div className="text-title-3" >{MONTHS[month]} {year}</div>
         <button onClick={next} className="grid place-items-center rounded-lg border" style={{ width: 30, height: 30, borderColor: 'var(--border)' }} aria-label="Next month"><ChevronRight size={16} /></button>
       </div>
 
@@ -147,8 +147,8 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
               }}>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium" style={{ color: isToday ? 'var(--primary)' : 'var(--muted-foreground)' }}>{cell.d}</span>
-                {off && cell.inMonth && <span className="text-[10px]" style={{ color: 'var(--muted-foreground)' }}>no school</span>}
-                {!off && offWeek && cell.inMonth && <span className="text-[10px]" style={{ color: 'var(--muted-foreground)' }}>shop week</span>}
+                {off && cell.inMonth && <span className="text-overline" style={{ color: 'var(--muted-foreground)' }}>no school</span>}
+                {!off && offWeek && cell.inMonth && <span className="text-overline" style={{ color: 'var(--muted-foreground)' }}>shop week</span>}
               </div>
               <div className="flex flex-col gap-1 mt-1 min-w-0">
                 {meetings.map((m, j) => {
@@ -161,9 +161,9 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
                       <div key={j} title={`${m.block} block · ${m.title} · not built yet`}
                         className="text-left rounded-md px-1.5 py-1 w-full"
                         style={{ minWidth: 0, border: '1px dashed var(--border)', background: 'transparent' }}>
-                        <div className="text-[10px] font-bold" style={{ color: 'var(--muted-foreground)' }}>{label}</div>
-                        <div className="text-[11px] leading-tight truncate" style={{ color: 'var(--muted-foreground)' }}>{m.title}</div>
-                        <div className="text-[9px]" style={{ color: 'var(--muted-foreground)' }}>not built yet</div>
+                        <div className="text-overline font-bold" style={{ color: 'var(--muted-foreground)' }}>{label}</div>
+                        <div className="text-overline leading-tight truncate" style={{ color: 'var(--muted-foreground)' }}>{m.title}</div>
+                        <div className="text-overline" style={{ color: 'var(--muted-foreground)' }}>not built yet</div>
                       </div>
                     )
                   }
@@ -181,11 +181,11 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
                       }}
                     >
                       <div className="flex items-center gap-1">
-                        <span className="text-[10px] font-bold" style={{ color }}>{label}</span>
-                        {m.long && <span className="text-[9px] font-bold rounded px-1" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>LONG</span>}
-                        {!m.core && <span className="text-[9px] font-semibold rounded px-1" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>FLEX</span>}
+                        <span className="text-overline font-bold" style={{ color }}>{label}</span>
+                        {m.long && <span className="text-overline font-bold rounded px-1" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>LONG</span>}
+                        {!m.core && <span className="text-overline font-semibold rounded px-1" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>FLEX</span>}
                       </div>
-                      <div className="text-[11px] leading-tight truncate" style={{ color: m.core ? 'var(--foreground)' : 'var(--muted-foreground)', fontStyle: m.core ? 'normal' : 'italic' }}>{m.title}</div>
+                      <div className="text-overline leading-tight truncate" style={{ color: m.core ? 'var(--foreground)' : 'var(--muted-foreground)', fontStyle: m.core ? 'normal' : 'italic' }}>{m.title}</div>
                     </button>
                   )
                 })}

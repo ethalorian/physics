@@ -119,10 +119,10 @@ export default function AdminLessonEditor({
   }, [])
   const buildHref = lessonContextHref('/admin/lessons/'+lesson.id+'/build',{class:courseId,unit:form.unit_id,day:form.lesson_number,target,return:returnTo})
   const check = (publishing: boolean) => {
-    const issues = validateBlockDocument(
+    const issues = publishing ? validateBlockDocument(
       lesson.content_blocks ?? { schemaVersion: 1, blocks: [] },
-      publishing,
-    ).map((i) => i.message)
+      true,
+    ).map((i) => i.message) : []
     if (!form.title.trim()) issues.push('Give the lesson a title.')
     if (!units.some((u) => u.id === form.unit_id))
       issues.push('Choose a valid curriculum unit.')
@@ -137,7 +137,7 @@ export default function AdminLessonEditor({
   async function save(e: React.FormEvent) {
     e.preventDefault()
     if (pending.current) return
-    const issues = check(form.published)
+    const issues = check(canPublish && form.published && !savedPublished)
     if (issues.length) {
       setError(issues.join(' '))
       return

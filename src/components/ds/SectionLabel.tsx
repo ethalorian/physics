@@ -25,7 +25,7 @@ export function SectionLabel({
 }) {
   return (
     <div className={cn('flex items-center gap-2 mt-8 mb-3 text-overline', className)} style={style}>
-      <span aria-hidden style={{ width: 22, height: 3, borderRadius: 2, background: accent }} />
+      <span aria-hidden style={{ width: 22, height: 3, borderRadius: 'var(--radius-xs)', background: accent }} />
       {children}
     </div>
   )

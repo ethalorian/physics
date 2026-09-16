@@ -1,15 +1,16 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { useState, useEffect } from 'react'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { 
-  User, 
-  GraduationCap, 
-  Users, 
-  Shield, 
+import {
+  User,
+  GraduationCap,
+  Users,
+  Shield,
   LogOut,
   ChevronRight,
   Zap,
@@ -71,11 +72,11 @@ export function QuickTestAccountSwitcher() {
   useEffect(() => {
     setIsMounted(true)
     // Only show in development environment
-    const isDev = process.env.NODE_ENV === 'development' || 
+    const isDev = process.env.NODE_ENV === 'development' ||
       window.location.hostname === 'localhost' ||
       window.location.hostname === '127.0.0.1'
     setIsDevelopment(isDev)
-    
+
     // Load saved preference
     const saved = localStorage.getItem('dev-switcher-expanded')
     if (saved !== null) {
@@ -93,14 +94,14 @@ export function QuickTestAccountSwitcher() {
     // Keyboard shortcuts
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isDevelopment) return
-      
+
       // Toggle expanded with Ctrl/Cmd + \
       if ((e.metaKey || e.ctrlKey) && e.key === '\\') {
         e.preventDefault()
         setIsExpanded(prev => !prev)
         return
       }
-      
+
       // Quick switch with Ctrl/Cmd + number
       if ((e.metaKey || e.ctrlKey) && ['1', '2', '3'].includes(e.key)) {
         e.preventDefault()
@@ -110,7 +111,7 @@ export function QuickTestAccountSwitcher() {
         }
         return
       }
-      
+
       // Quick sign out with Ctrl/Cmd + 0
       if ((e.metaKey || e.ctrlKey) && e.key === '0') {
         e.preventDefault()
@@ -125,20 +126,20 @@ export function QuickTestAccountSwitcher() {
 
   const handleQuickSwitch = async (account: typeof TEST_ACCOUNTS[0]) => {
     setIsLoading(account.email)
-    
+
     try {
       // Sign out if currently signed in
       if (session) {
         await signOut({ redirect: false })
       }
-      
+
       // Sign in with test account (using the test-credentials provider)
       const result = await signIn('test-credentials', {
         email: account.email,
         password: account.password,
         redirect: false
       })
-      
+
       if (result?.ok) {
         // Navigate to appropriate dashboard
         if (account.role === 'admin' || account.role === 'teacher') {
@@ -180,7 +181,7 @@ export function QuickTestAccountSwitcher() {
         <Button
           onClick={() => setIsExpanded(true)}
           size="sm"
-          className="bg-gradient-to-r from-primary/15 to-primary/5 hover:from-primary/15 hover:to-primary/5 text-white shadow-lg animate-pulse"
+          className="bg-primary text-primary-foreground shadow-sm"
         >
           <Settings2 className="h-4 w-4 mr-1" />
           Dev
@@ -196,7 +197,7 @@ export function QuickTestAccountSwitcher() {
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
-              <Zap className="h-4 w-4 text-yellow-500" />
+              <Zap className="h-4 w-4 text-primary" />
               Quick Test Accounts
               <Badge variant="outline" className="text-xs">DEV</Badge>
             </CardTitle>
@@ -234,7 +235,7 @@ export function QuickTestAccountSwitcher() {
             {TEST_ACCOUNTS.map((account) => {
               const Icon = account.icon
               const isCurrentAccount = session?.user?.email === account.email
-              
+
               return (
                 <Button
                   key={account.email}
@@ -248,7 +249,7 @@ export function QuickTestAccountSwitcher() {
                   disabled={isLoading !== null || isCurrentAccount}
                 >
                   {isLoading === account.email ? (
-                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-r-transparent" />
+                    <Spinner size="sm" className="mr-2" />
                   ) : (
                     <Icon className={cn("h-4 w-4 mr-2", account.color, "text-white rounded p-0.5")} />
                   )}
@@ -279,7 +280,7 @@ export function QuickTestAccountSwitcher() {
               disabled={isLoading !== null}
             >
               {isLoading === 'signout' ? (
-                <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-r-transparent" />
+                <Spinner size="sm" className="mr-2" />
               ) : (
                 <LogOut className="h-4 w-4 mr-2" />
               )}

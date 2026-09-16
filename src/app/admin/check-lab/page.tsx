@@ -53,7 +53,7 @@ export default function CheckLabPage() {
   return (
     <div className="max-w-4xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
       <div className="flex items-center gap-3 mb-1">
-        <div className="grid place-items-center" style={{ width: 44, height: 44, borderRadius: 12, background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}>
+        <div className="grid place-items-center" style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}>
           <FlaskConical size={22} />
         </div>
         <div>
@@ -88,15 +88,15 @@ export default function CheckLabPage() {
             <div className="flex items-start gap-2 mb-1">
               {g.code && <span className="text-xs font-bold rounded px-2 py-0.5 tabular-nums shrink-0" style={{ background: 'var(--muted)', color: 'var(--muted-foreground)' }}>{g.code}</span>}
               <span className="text-[15px] font-semibold" style={{ lineHeight: 1.4 }}>{g.prompt}</span>
-              {g.hasTemplate && <span className="ml-auto text-[11px] rounded-full px-2 py-0.5 shrink-0" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>template</span>}
+              {g.hasTemplate && <span className="ml-auto text-overline rounded-full px-2 py-0.5 shrink-0" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>template</span>}
             </div>
             <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
-              Key: <code style={{ background: 'var(--secondary)', padding: '1px 5px', borderRadius: 4 }}>{g.answerKey ?? '—'}</code> · {g.checkMode}
+              Key: <code style={{ background: 'var(--secondary)', padding: '1px 5px', borderRadius: 'var(--radius-xs)' }}>{g.answerKey ?? '—'}</code> · {g.checkMode}
             </p>
             <div className="space-y-1.5">
               {g.answers.map((a) => (
                 <div key={a.answer} className="flex items-center gap-2 rounded-lg px-3 py-2" style={{ background: 'color-mix(in oklch, var(--secondary) 45%, transparent)' }}>
-                  <span className="text-[11px] font-bold rounded-full px-2 py-0.5 shrink-0" style={{
+                  <span className="text-overline font-bold rounded-full px-2 py-0.5 shrink-0" style={{
                     background: a.verdict === 'mismatch' ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : 'color-mix(in oklch, var(--reward) 16%, transparent)',
                     color: a.verdict === 'mismatch' ? 'var(--destructive)' : 'var(--reward-foreground)',
                   }}>{a.verdict === 'mismatch' ? '✗ judged wrong' : '? unreadable'}</span>

@@ -19,7 +19,7 @@ function CubeBuilder({ onBuilt }: { onBuilt: () => void }) {
       <div className="flex items-end gap-6 flex-wrap">
         <div className="h-[140px] flex items-end">
           <div
-            className={`rounded-md border-2 transition-all duration-300 ${hit ? 'border-green-500 bg-green-100 dark:bg-green-900/40' : 'border-amber-500 bg-amber-100 dark:bg-amber-900/30'}`}
+            className={`rounded-md border-2 transition-all duration-300 ${hit ? 'border-success bg-success/10 ' : 'border-primary bg-primary/10 '}`}
             style={{ width: px, height: px }}
             aria-label={`Cube with side ${side} centimeters`}
           />
@@ -27,7 +27,7 @@ function CubeBuilder({ onBuilt }: { onBuilt: () => void }) {
         <div className="space-y-1 text-[15px]">
           <div>side = <span className="font-mono font-semibold">{side} cm</span></div>
           <div>volume = {side} × {side} × {side} = <span className="font-mono font-semibold">{volume.toLocaleString()} cm³</span></div>
-          {hit && <div className="text-green-600 dark:text-green-400 font-semibold">1,000 cm³ — exactly the target.</div>}
+          {hit && <div className="text-success font-semibold">1,000 cm³ — exactly the target.</div>}
         </div>
       </div>
       <input
@@ -49,12 +49,12 @@ function FillAndWeigh({ onWeighed }: { onWeighed: () => void }) {
     <div className="space-y-3">
       <div className="flex items-end gap-8 flex-wrap">
         {/* the liter cube, filling with water */}
-        <div className="relative w-[98px] h-[98px] rounded-md border-2 border-slate-500 overflow-hidden bg-background">
+        <div className="relative w-[98px] h-[98px] rounded-md border-2 border-border overflow-hidden bg-background">
           <div
-            className="absolute bottom-0 left-0 right-0 bg-sky-400/80 transition-all duration-[1500ms] ease-out"
+            className="absolute bottom-0 left-0 right-0 bg-primary/80 transition-all duration-[1500ms] ease-out-expo"
             style={{ height: poured ? '100%' : '0%' }}
           />
-          <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-slate-700 dark:text-slate-200">
+          <span className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-muted-foreground">
             1 L cube
           </span>
         </div>
@@ -69,18 +69,18 @@ function FillAndWeigh({ onWeighed }: { onWeighed: () => void }) {
       <div className="flex gap-2">
         {!poured && (
           <button type="button" onClick={() => setPoured(true)}
-            className="px-3 py-2 rounded-lg bg-sky-500 text-white font-medium hover:bg-sky-600 transition">
+            className="px-3 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition">
             Pour in pure water
           </button>
         )}
         {poured && !weighed && (
           <button type="button" onClick={() => { setWeighed(true); onWeighed() }}
-            className="px-3 py-2 rounded-lg bg-amber-500 text-white font-medium hover:bg-amber-600 transition">
+            className="px-3 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary transition">
             Place on the balance
           </button>
         )}
         {weighed && (
-          <span className="self-center text-green-600 dark:text-green-400 font-semibold">
+          <span className="self-center text-success font-semibold">
             One liter of water is exactly one kilogram. By design.
           </span>
         )}

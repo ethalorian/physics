@@ -92,12 +92,12 @@ export default function ReferenceSheetPage() {
         )}
         <div className="grid gap-4 sm:grid-cols-2">
           {visibleCategories.map((cat) => (
-            <div key={cat} className="rounded-2xl p-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
-              <div className="text-[11px] font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--primary)' }}>{cat}</div>
+            <div key={cat} className="rounded-2xl p-4" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
+              <div className="text-overline font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--primary)' }}>{cat}</div>
               <ul className="space-y-3">
                 {matchedFormulas.filter((f) => f.category === cat).map((f) => (
                   <li key={f.id} className="flex items-baseline justify-between gap-3">
-                    <span style={{ fontSize: 18, color: 'var(--foreground)' }}><InlineMath math={f.latex} /></span>
+                    <span className="text-lg" style={{ color: 'var(--foreground)' }}><InlineMath math={f.latex} /></span>
                     <span className="text-xs text-right shrink-0" style={{ color: 'var(--muted-foreground)' }}>{f.name}</span>
                   </li>
                 ))}
@@ -110,7 +110,7 @@ export default function ReferenceSheetPage() {
       {/* VARIABLES */}
       <section className="mb-8">
         <SectionHeading>Variables</SectionHeading>
-        <div className="rounded-2xl p-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+        <div className="rounded-2xl p-4" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
           {matchedVariables.length === 0 && (
             <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No variables match &ldquo;{q}&rdquo;.</p>
           )}
@@ -134,7 +134,7 @@ export default function ReferenceSheetPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="mb-2">
           <SectionHeading>Unit Symbols</SectionHeading>
-          <div className="rounded-2xl p-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+          <div className="rounded-2xl p-4" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
             <ul className="grid grid-cols-2 gap-y-2 gap-x-6 text-sm">
               {PHYSICS_UNITS.map((u) => (
                 <li key={u.symbol} style={{ color: 'var(--muted-foreground)' }}>
@@ -147,16 +147,16 @@ export default function ReferenceSheetPage() {
 
         <section className="mb-2">
           <SectionHeading>Definitions &amp; Constants</SectionHeading>
-          <div className="rounded-2xl p-4 space-y-3" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+          <div className="rounded-2xl p-4 space-y-3" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
             {PHYSICS_CONSTANTS.map((c) => (
               <div key={c.symbol} className="text-sm">
-                <span style={{ fontSize: 16, color: 'var(--foreground)' }}><InlineMath math={c.latex} /></span>
+                <span className="text-body" style={{ color: 'var(--foreground)' }}><InlineMath math={c.latex} /></span>
                 <span style={{ color: 'var(--muted-foreground)' }}> — {c.name}</span>
               </div>
             ))}
-            <div className="flex flex-wrap gap-x-6 gap-y-1 pt-1" style={{ borderTop: '0.5px solid var(--border)' }}>
+            <div className="flex flex-wrap gap-x-6 gap-y-1 pt-1" style={{ borderTop: '1px solid var(--border)' }}>
               {PHYSICS_IDENTITIES.map((id) => (
-                <span key={id.display} style={{ fontSize: 15, color: 'var(--foreground)' }}><InlineMath math={id.latex} /></span>
+                <span className="text-callout" key={id.display} style={{ color: 'var(--foreground)' }}><InlineMath math={id.latex} /></span>
               ))}
             </div>
           </div>

@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { Suspense, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -7,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { User, Lock, RefreshCw } from 'lucide-react'
+import { User, Lock, } from 'lucide-react'
 
 // The test-credentials login moved here from /auth/signin so test passwords
 // and the credentials form never ship in the production sign-in bundle.
@@ -75,7 +76,7 @@ function DevLoginContent() {
             <Input id="dev-password" type="password" placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={busy} />
           </div>
           <Button type="submit" disabled={busy || !email || !password} className="w-full" size="sm">
-            {busy ? (<><RefreshCw className="w-4 h-4 mr-2 animate-spin" /> Signing in…</>) : (<><Lock className="w-4 h-4 mr-2" /> Sign in with test account</>)}
+            {busy ? (<><Spinner size="sm" className="mr-2" /> Signing in…</>) : (<><Lock className="w-4 h-4 mr-2" /> Sign in with test account</>)}
           </Button>
         </form>
       </Card>

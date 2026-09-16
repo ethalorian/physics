@@ -150,4 +150,17 @@ export class LessonResponseStore {
     this.queue = task.catch(() => {})
     return task
   }
+
+  /** Turning in is an explicit save of changed work, including unfinished optional practice. */
+  savePending = async (blocks: { id: string; type: string }[]): Promise<boolean> => {
+    if (!this.current() || !this.state.loaded) return false
+    await this.queue
+    const changed = blocks.filter((b) => this.state.responses[b.id]?.draft)
+    for (const block of changed) {
+      const response = this.state.responses[block.id]
+      if (response?.draft && !await this.save(block.id, block.type, response.response)) return false
+    }
+    // Edits made while a save was in flight must not be silently omitted.
+    return this.current() && !blocks.some((b) => this.state.responses[b.id]?.draft)
+  }
 }

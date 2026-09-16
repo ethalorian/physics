@@ -166,7 +166,7 @@ export default function LobbyLauncher() {
       <aside onClick={(e) => e.stopPropagation()} className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto p-5 flex flex-col gap-4" style={{ background: 'var(--card)', borderLeft: '1px solid var(--border)', boxShadow: '-16px 0 40px -24px color-mix(in oklch, var(--primary) 40%, transparent)' }} aria-label="Launch a lobby">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Launch a lobby</div>
+            <div className="text-overline font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Launch a lobby</div>
             <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Press <kbd>L</kbd> anywhere staff-facing · Esc closes</div>
           </div>
           <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-md p-1" style={{ color: 'var(--muted-foreground)' }}><X size={18} /></button>
@@ -211,7 +211,7 @@ export default function LobbyLauncher() {
           <div className="text-xs mb-1 flex items-baseline justify-between gap-2" style={{ color: 'var(--muted-foreground)' }}>
             <span>Lesson · day</span>
             {lessonScope && (
-              <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: 'var(--primary)' }}>
+              <span className="text-overline font-semibold uppercase tracking-wide" style={{ color: 'var(--primary)' }}>
                 {lessonScope.programLabel} · {lessonScope.track} · {lessons.length}
               </span>
             )}
@@ -234,7 +234,7 @@ export default function LobbyLauncher() {
             {choices.map((c) => (
               <button key={c.key} onClick={() => setChoice(c.key)} className="text-left rounded-xl border p-2.5"
                 style={{ borderColor: choice === c.key ? 'var(--primary)' : 'var(--border)', background: choice === c.key ? 'color-mix(in oklch, var(--primary) 10%, var(--card))' : 'var(--card)' }}>
-                <div className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>{c.kind}</div>
+                <div className="text-overline font-semibold uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>{c.kind}</div>
                 <div className="text-sm font-semibold" style={{ color: 'var(--foreground)' }}>{c.label}</div>
                 {c.key !== `b:${c.blockId}` && <div className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{c.prompt}</div>}
               </button>

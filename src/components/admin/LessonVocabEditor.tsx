@@ -104,7 +104,7 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
       <div className="flex items-center justify-between gap-3 mb-1 flex-wrap">
         <div className="flex items-center gap-2">
           <BookA size={18} style={{ color: 'var(--primary)' }} />
-          <span className="font-bold" style={{ fontSize: 15 }}>Lesson vocabulary (SEI tiers)</span>
+          <span className="text-title-3" >Lesson vocabulary (SEI tiers)</span>
         </div>
         <div className="flex items-center gap-2">
           <button onClick={togglePublished} disabled={saving || !loaded || (!hasTerms && !published)} title={!hasTerms && !published ? 'Add at least one term before making vocabulary available in games' : ''}
@@ -115,7 +115,7 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
           <button onClick={() => setShowPaste((v) => !v)} className="inline-flex items-center gap-1 text-sm rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)' }}>
             <ClipboardPaste size={14} /> Bulk paste {showPaste ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
           </button>
-          <button onClick={() => save()} disabled={saving || !loaded} className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: saving ? 0.6 : 1 }}>
+          <button onClick={() => save()} disabled={saving || !loaded} className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', opacity: saving ? 0.6 : 1 }}>
             {saving ? 'Saving…' : 'Save vocab'}
           </button>
           {saved && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}

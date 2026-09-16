@@ -75,14 +75,11 @@ export default function AccountMenu() {
     }
   }
 
-  // Nudge students to build their Mii — a soft glow on the bubble until done.
+  // Nudge students to build their Mii — a brief highlight when the setup prompt appears.
   const needsSetup = !!me && !me.setup_completed && realRole === 'student'
 
   return (
     <>
-      {needsSetup && (
-        <style>{`@keyframes avatarNudge{0%,100%{box-shadow:0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent)}50%{box-shadow:0 0 0 4px color-mix(in oklch, var(--primary) 22%, transparent),0 0 14px 2px color-mix(in oklch, var(--primary) 45%, transparent)}}.avatar-nudge-glow{animation:avatarNudge 2.2s ease-in-out infinite;border-radius:9999px}@media (prefers-reduced-motion:reduce){.avatar-nudge-glow{animation:none}}`}</style>
-      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

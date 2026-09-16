@@ -202,7 +202,7 @@ export default function WarmupBankPage() {
         ))}
       </div>
 
-      {error && <div className="text-sm rounded-md px-3 py-2 bg-red-50 text-red-700">{error}</div>}
+      {error && <div className="text-sm rounded-md px-3 py-2 bg-destructive/10 text-destructive">{error}</div>}
 
       {tab === 'items' && (
         <>
@@ -211,7 +211,7 @@ export default function WarmupBankPage() {
           )}
 
           {editingId !== null && (
-            <Card className="apple-card">
+            <Card>
               <CardHeader><CardTitle className="text-base text-foreground">{editingId === 'new' ? 'New warm-up' : 'Edit warm-up'}</CardTitle></CardHeader>
               <CardContent className="space-y-3">
                 <div>
@@ -229,30 +229,30 @@ export default function WarmupBankPage() {
                   </label>
                   {form.randomize && (
                     <>
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-overline text-muted-foreground">
                         Write the prompt with slots like <code className="bg-muted px-1 rounded">{'{a}'}</code>. Each student gets values drawn
                         from the ranges below; the answer key is computed from your expression, so the self-check works per student.
                       </p>
                       {form.tplVars.map((v, i) => (
                         <div key={i} className="flex flex-wrap items-end gap-2">
                           <div>
-                            <label className="text-[11px] text-muted-foreground">variable</label>
+                            <label className="text-overline text-muted-foreground">variable</label>
                             <input className={`${inputCls} w-16`} value={v.name} onChange={(e) => setForm({ ...form, tplVars: form.tplVars.map((x, j) => j === i ? { ...x, name: e.target.value } : x) })} />
                           </div>
                           <div>
-                            <label className="text-[11px] text-muted-foreground">min</label>
+                            <label className="text-overline text-muted-foreground">min</label>
                             <input className={`${inputCls} w-20`} value={v.min} onChange={(e) => setForm({ ...form, tplVars: form.tplVars.map((x, j) => j === i ? { ...x, min: e.target.value } : x) })} />
                           </div>
                           <div>
-                            <label className="text-[11px] text-muted-foreground">max</label>
+                            <label className="text-overline text-muted-foreground">max</label>
                             <input className={`${inputCls} w-20`} value={v.max} onChange={(e) => setForm({ ...form, tplVars: form.tplVars.map((x, j) => j === i ? { ...x, max: e.target.value } : x) })} />
                           </div>
                           <div>
-                            <label className="text-[11px] text-muted-foreground">step</label>
+                            <label className="text-overline text-muted-foreground">step</label>
                             <input className={`${inputCls} w-16`} value={v.step} placeholder="1" onChange={(e) => setForm({ ...form, tplVars: form.tplVars.map((x, j) => j === i ? { ...x, step: e.target.value } : x) })} />
                           </div>
                           {form.tplVars.length > 1 && (
-                            <Button size="sm" variant="ghost" className="rounded-full text-red-600" onClick={() => setForm({ ...form, tplVars: form.tplVars.filter((_, j) => j !== i) })}>✕</Button>
+                            <Button size="sm" variant="ghost" className="rounded-full text-destructive" onClick={() => setForm({ ...form, tplVars: form.tplVars.filter((_, j) => j !== i) })}>✕</Button>
                           )}
                         </div>
                       ))}
@@ -262,11 +262,11 @@ export default function WarmupBankPage() {
                       </Button>
                       <div className="flex flex-wrap gap-2">
                         <div className="flex-1 min-w-40">
-                          <label className="text-[11px] text-muted-foreground">answer expression (e.g. d / t, 0.5*m*v^2, sqrt(x))</label>
+                          <label className="text-overline text-muted-foreground">answer expression (e.g. d / t, 0.5*m*v^2, sqrt(x))</label>
                           <input className={inputCls} value={form.tplAnswer} onChange={(e) => setForm({ ...form, tplAnswer: e.target.value })} />
                         </div>
                         <div>
-                          <label className="text-[11px] text-muted-foreground">answer unit</label>
+                          <label className="text-overline text-muted-foreground">answer unit</label>
                           <input className={`${inputCls} w-24`} value={form.tplUnit} placeholder="m/s" onChange={(e) => setForm({ ...form, tplUnit: e.target.value })} />
                         </div>
                       </div>
@@ -286,7 +286,7 @@ export default function WarmupBankPage() {
                       Equation builder
                     </label>
                   </div>
-                  <p className="text-[11px] text-muted-foreground mt-1">The paintpad (type + draw) is always available.</p>
+                  <p className="text-overline text-muted-foreground mt-1">The paintpad (type + draw) is always available.</p>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <div>
@@ -318,7 +318,7 @@ export default function WarmupBankPage() {
                       </label>
                     ))}
                   </div>
-                  <p className="text-[11px] text-muted-foreground mt-1">Keep this lean — every tested competency is a separate rating per student.</p>
+                  <p className="text-overline text-muted-foreground mt-1">Keep this lean — every tested competency is a separate rating per student.</p>
                 </div>
                 <div className="flex items-center gap-2 pt-1">
                   <Button onClick={saveItem} disabled={busy} className="rounded-full">{busy ? 'Saving…' : 'Save'}</Button>
@@ -330,25 +330,25 @@ export default function WarmupBankPage() {
 
           <div className="space-y-2">
             {items.map((it) => (
-              <Card key={it.id} className="apple-card">
+              <Card key={it.id}>
                 <CardContent className="py-3">
                   <div className="flex items-start gap-3">
                     <div className="flex-1">
                       <div className="flex flex-wrap items-center gap-1.5 mb-1">
                         {it.testedCompetencyIds.map((cid) => (
-                          <Badge key={cid} variant="outline" className="text-[10px]">{codeById(cid)}</Badge>
+                          <Badge key={cid} variant="outline" className="text-overline">{codeById(cid)}</Badge>
                         ))}
-                        {it.difficulty && <span className="text-[11px] text-muted-foreground">· {it.difficulty}</span>}
-                        {it.firstUnitId && <span className="text-[11px] text-muted-foreground">· {it.firstUnitId}</span>}
-                        {it.needsGraph && <Badge variant="outline" className="text-[10px]">graph</Badge>}
-                        {it.needsEquationBuilder && <Badge variant="outline" className="text-[10px]">equation</Badge>}
-                        {it.template && <Badge variant="outline" className="text-[10px]">🎲 random</Badge>}
+                        {it.difficulty && <span className="text-overline text-muted-foreground">· {it.difficulty}</span>}
+                        {it.firstUnitId && <span className="text-overline text-muted-foreground">· {it.firstUnitId}</span>}
+                        {it.needsGraph && <Badge variant="outline" className="text-overline">graph</Badge>}
+                        {it.needsEquationBuilder && <Badge variant="outline" className="text-overline">equation</Badge>}
+                        {it.template && <Badge variant="outline" className="text-overline">🎲 random</Badge>}
                       </div>
                       <p className="text-sm text-foreground">{it.prompt}</p>
                     </div>
                     <div className="flex items-center gap-1">
                       <Button size="sm" variant="ghost" className="rounded-full" onClick={() => startEdit(it)}><Pencil className="h-4 w-4" /></Button>
-                      <Button size="sm" variant="ghost" className="rounded-full text-red-600" onClick={() => deleteItem(it.id)}><Trash2 className="h-4 w-4" /></Button>
+                      <Button size="sm" variant="ghost" className="rounded-full text-destructive" onClick={() => deleteItem(it.id)}><Trash2 className="h-4 w-4" /></Button>
                     </div>
                   </div>
                 </CardContent>
@@ -374,11 +374,11 @@ function TemplatePreview({ form }: { form: ItemForm }) {
   const tpl = templateFromForm(form)
   if (!tpl) return null
   const problem = validateTemplate(form.prompt, tpl)
-  if (problem) return <p className="text-[11px] text-amber-600">{problem}</p>
+  if (problem) return <p className="text-overline text-primary">{problem}</p>
   try {
     const ex = instantiateTemplate(form.prompt, tpl, `preview:${Date.now() % 7}`)
     return (
-      <p className="text-[11px] text-muted-foreground rounded-md bg-muted/60 px-2 py-1.5">
+      <p className="text-overline text-muted-foreground rounded-md bg-muted/60 px-2 py-1.5">
         <b>Example student version:</b> {ex.prompt} <b>→ key:</b> {ex.answerKey}
       </p>
     )
@@ -422,18 +422,18 @@ function LessonEditor({ comp, onSaved }: { comp: Comp; onSaved: () => void }) {
   }
 
   return (
-    <Card className="apple-card">
+    <Card>
       <CardContent className="py-3">
         <div className="flex items-center gap-2">
           <Lightbulb className="h-4 w-4 text-reward" />
-          <Badge variant="outline" className="text-[10px]">{comp.code}</Badge>
+          <Badge variant="outline" className="text-overline">{comp.code}</Badge>
           <span className="text-sm text-foreground flex-1">{defaults[0]?.title ?? '(no lesson)'}</span>
-          {usingDefault && <span className="text-[10px] text-muted-foreground">default</span>}
+          {usingDefault && <span className="text-overline text-muted-foreground">default</span>}
           <Button size="sm" variant="ghost" className="rounded-full" onClick={() => setOpen((o) => !o)}>{open ? 'Close' : 'Edit'}</Button>
         </div>
         {open && (
           <div className="space-y-4 mt-3">
-            <p className="text-[11px] text-muted-foreground">Three optional lesson notes: understand, work step by step, and extend. Students can open every level of support. The authored worked examples and practice checks remain available alongside these notes.</p>
+            <p className="text-overline text-muted-foreground">Three optional lesson notes: understand, work step by step, and extend. Students can open every level of support. The authored worked examples and practice checks remain available alongside these notes.</p>
             {tiers.map((t, i) => (
               <div key={i} className="space-y-2 rounded-lg border border-border p-3">
                 <div className="text-xs font-semibold text-foreground">{TIER_LABELS[i]} · tier {i + 1}</div>

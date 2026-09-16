@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { Suspense, useEffect, useState } from "react"
 import Link from "next/link"
 import { signIn, useSession } from "next-auth/react"
@@ -73,7 +74,7 @@ function SignInContent() {
         <div className="text-center space-y-2">
           <div
             className="mx-auto grid place-items-center"
-            style={{ width: 52, height: 52, borderRadius: 14, background: 'color-mix(in oklch, var(--primary) 12%, transparent)', color: 'var(--primary)' }}
+            style={{ width: 52, height: 52, borderRadius: 'var(--radius-md)', background: 'color-mix(in oklch, var(--primary) 12%, transparent)', color: 'var(--primary)' }}
           >
             <Atom size={28} strokeWidth={1.75} />
           </div>
@@ -108,7 +109,7 @@ function SignInContent() {
           >
             {isSigningIn ? (
               <>
-                <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
+                <Spinner size="sm" className="mr-2" />
                 Connecting to Google...
               </>
             ) : (

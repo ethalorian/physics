@@ -105,9 +105,9 @@ export default function Avatar({ traits, equipped, items, size = 140, crop = 'fu
       <defs><clipPath id={clipId}><path d="M -39,-10 Q -43,-47 0,-49 Q 43,-47 39,-10 L 37,14 L -37,14 Z" /></clipPath></defs>
       {itemBySlot.background && <RawLayer svg={itemBySlot.background.svg_layer} />}
       {itemBySlot.body ? <RawLayer svg={itemBySlot.body.svg_layer} /> : <Body color={SHIRT[t.shirt_color]} style={t.shirt_style} />}
-      {!headOptions?.covers_neck && <Neck skin={t.skin} face={t.face} />}
+      {!headOptions?.covers_neck && !itemBySlot.body?.render_options?.covers_neck && <Neck skin={t.skin} face={t.face} />}
       {hairMode === 'preserve' && <g transform={hairTransform}><HairBack style={hairStyle} color={t.hair_color} /></g>}
-      {!headOptions?.covers_ears && <Ears skin={t.skin} face={t.face} />}
+      {!headOptions?.covers_ears && <Ears skin={t.skin} face={t.face} item={itemBySlot.ears} />}
       <Head skin={t.skin} face={t.face} />
       {hairMode !== 'hide' && <g clipPath={hairMode === 'tuck' ? `url(#${clipId})` : undefined}><g transform={hairMode === 'tuck' ? undefined : hairTransform}><HairFront style={hairStyle} color={t.hair_color} fabric={SHIRT[t.fabric_color]} /></g></g>}
       {/* Face features + face-anchored items — translated together by
@@ -130,7 +130,7 @@ export default function Avatar({ traits, equipped, items, size = 140, crop = 'fu
           </g>
         )}
         <g transform={MOUTH_SX[t.mouth_width] !== 1 ? `scale(${MOUTH_SX[t.mouth_width]}, 1)` : undefined}>
-          <Mouth style={t.mouth} ink={ink} />
+          {itemBySlot.mouth ? <RawLayer svg={itemBySlot.mouth.svg_layer} /> : <Mouth style={t.mouth} ink={ink} />}
         </g>
         {itemBySlot.eyewear && <g transform={itemBySlot.eyewear.render_options?.fit_eyes ? `scale(${(15 + EYE_SPACING_DX[t.eye_spacing]) / 15}, 1)` : undefined}><RawLayer svg={itemBySlot.eyewear.svg_layer} /></g>}
       </g>
@@ -196,7 +196,7 @@ function Head({ skin, face }: { skin: SkinTone; face: FaceShape }) {
   return <path d="M -42,-8 Q -48,-58 0,-58 Q 48,-58 42,-8 Q 36,38 0,46 Q -36,38 -42,-8 Z" fill={c} />
 }
 
-function Ears({ skin, face }: { skin: SkinTone; face: FaceShape }) {
+function Ears({ skin, face, item }: { skin: SkinTone; face: FaceShape; item?: AvatarItem }) {
   const c = SKIN[skin].color
   // Ear anchor follows the widest point of the head silhouette.
   const positions: Record<FaceShape, { x: number; y: number }> = {
@@ -206,6 +206,11 @@ function Ears({ skin, face }: { skin: SkinTone; face: FaceShape }) {
     heart:  { x: 42, y: -4 },
   }
   const p = positions[face]
+  // Ear items use the round face's anchors (±46, 2). Scale to the head,
+  // independently of the facial-feature group. Tint only reserved skin colors.
+  if (item) return <g transform={`translate(0, ${p.y - 2}) scale(${p.x / 46}, 1)`}>
+    <RawLayer svg={item.render_options?.skin_tint ? item.svg_layer.replaceAll('#E7B58B', c) : item.svg_layer} />
+  </g>
   return (
     <g>
       <ellipse cx={-p.x} cy={p.y} rx="5" ry="9" fill={c} />

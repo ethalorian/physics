@@ -78,7 +78,7 @@ type StrokeShape = { color?: string; points?: { x: number; y: number }[] }
 function StrokesSvg({ strokes, label }: { strokes: StrokeShape[]; label: string }) {
   if (!strokes || strokes.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>[empty drawing]</p>
   return (
-    <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: '100%', height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label={label}>
+    <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: '100%', height: 'auto', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', background: '#fff' }} role="img" aria-label={label}>
       <StrokeShapes strokes={strokes as Stroke[]} />
     </svg>
   )
@@ -148,11 +148,11 @@ function ResponseView({ response, prompt }: { response: unknown; prompt?: string
           {sandboxLines.length > 0 && (
             <div className="mt-1.5">
               <div className="text-sm" style={{ marginBottom: 4 }}><b style={{ color: 'var(--secondary-foreground)' }}>Work &amp; Answer:</b></div>
-              <div className="rounded-lg p-2" style={{ background: 'var(--card)', border: '0.5px solid var(--border)' }}>
+              <div className="rounded-lg p-2" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
                 {sandboxLines.map((l, i) => (
                   <div key={i} className="flex items-baseline gap-2" style={{ marginBottom: 2 }}>
                     <span className="text-xs" style={{ color: i === ansI ? 'var(--reward)' : 'var(--muted-foreground)' }}>{i === ansI ? '★' : `${i + 1}.`}</span>
-                    <span style={{ fontSize: 16 }}><InlineMath math={i === ansI ? `\\boxed{${toLatex(l)}}` : toLatex(l)} /></span>
+                    <span className="text-body"><InlineMath math={i === ansI ? `\\boxed{${toLatex(l)}}` : toLatex(l)} /></span>
                   </div>
                 ))}
               </div>
@@ -191,7 +191,7 @@ function ResponseView({ response, prompt }: { response: unknown; prompt?: string
                 : <span style={{ color: 'var(--destructive)' }}>✗</span>
               const val = fmt(answers[String(n)])
               return (
-                <div key={n} className="flex items-baseline gap-2" style={{ borderBottom: '0.5px solid var(--border)', paddingBottom: 2 }}>
+                <div key={n} className="flex items-baseline gap-2" style={{ borderBottom: '1px solid var(--border)', paddingBottom: 2 }}>
                   <span className="shrink-0" style={{ color: 'var(--muted-foreground)', minWidth: 22 }}>{n}.</span>
                   <span className="flex-1" style={{ color: val.trim() ? 'var(--foreground)' : 'var(--muted-foreground)' }}>{val.trim() || '—'}</span>
                   <span className="shrink-0 text-xs">{badge}</span>
@@ -345,7 +345,7 @@ export default function ControlRoomPage() {
   useEffect(() => { loadPresence() }, [loadPresence])
   const seenTag = (gid: string) => {
     const iso = presence.get(gid)?.lastSeenAt ?? null
-    return <span style={{ fontSize: 10, fontWeight: 600, marginLeft: 6, color: lastSeenColor(iso) }} title={iso ? `Last signed in ${new Date(iso).toLocaleString()}` : 'No recorded sign-in yet'}>{lastSeenLabel(iso)}</span>
+    return <span className="text-overline" style={{ marginLeft: 6, color: lastSeenColor(iso) }} title={iso ? `Last signed in ${new Date(iso).toLocaleString()}` : 'No recorded sign-in yet'}>{lastSeenLabel(iso)}</span>
   }
 
   const openCell = useCallback((studentId: string, targetId: string) => {
@@ -426,15 +426,14 @@ export default function ControlRoomPage() {
               style={{ border: '1px solid var(--border)', background: active ? 'var(--primary)' : 'var(--card)', color: active ? 'var(--primary-foreground)' : 'var(--foreground)' }}>
               {label}
               {toGrade > 0 && (
-                <span className="inline-flex items-center justify-center"
-                  style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 9, fontSize: 11, fontWeight: 700,
-                    background: active ? 'var(--primary-foreground)' : 'var(--destructive)',
+                <span className="inline-flex items-center justify-center text-overline"
+                  style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 'var(--radius-sm)', background: active ? 'var(--primary-foreground)' : 'var(--destructive)',
                     color: active ? 'var(--primary)' : 'white' }}>
                   {toGrade}
                 </span>
               )}
               {active && hint && (
-                <span style={{ fontSize: 10, fontWeight: 600, opacity: 0.85, paddingLeft: 8, borderLeft: '1px solid color-mix(in oklch, var(--primary-foreground) 35%, transparent)', whiteSpace: 'nowrap' }}>
+                <span className="text-overline" style={{ opacity: 0.85, paddingLeft: 8, borderLeft: '1px solid color-mix(in oklch, var(--primary-foreground) 35%, transparent)', whiteSpace: 'nowrap' }}>
                   {hint}
                 </span>
               )}
@@ -535,7 +534,7 @@ export default function ControlRoomPage() {
       {view === 'math' && (
         <div className="mt-4">
           <details className="mb-3 rounded-xl border" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-            <summary style={{ cursor: 'pointer', listStyle: 'none', padding: '10px 14px', fontSize: 13, fontWeight: 600, color: 'var(--foreground)' }}>
+            <summary className="text-caption" style={{ cursor: 'pointer', listStyle: 'none', padding: '10px 14px', color: 'var(--foreground)' }}>
               Daily math-fluency rating
             </summary>
             <div style={{ padding: '0 14px 14px' }}><TeacherDailyMathTask /></div>
@@ -552,7 +551,7 @@ export default function ControlRoomPage() {
           "Not yet". The full pending set is walked by "Grade pending" above. */}
       {view === 'mastery' && priorityQueue.length > 0 && (
         <details className="rounded-xl border mt-4" style={{ borderColor: 'color-mix(in oklch, var(--reward) 35%, var(--border))', background: 'color-mix(in oklch, var(--reward) 8%, transparent)' }}>
-          <summary style={{ cursor: 'pointer', listStyle: 'none', padding: '10px 14px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted-foreground)' }}>
+          <summary className="text-overline" style={{ cursor: 'pointer', listStyle: 'none', padding: '10px 14px', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted-foreground)' }}>
             Priority · {priorityQueue.length} aged or flagged
           </summary>
           <div className="flex flex-col gap-1.5" style={{ padding: '0 14px 14px' }}>
@@ -588,9 +587,9 @@ export default function ControlRoomPage() {
           <table style={{ borderCollapse: 'separate', borderSpacing: 6, padding: 8 }}>
             <thead>
               <tr>
-                <th style={{ position: 'sticky', left: 0, zIndex: 2, background: 'var(--card)', textAlign: 'left', padding: '4px 10px', fontSize: 12, color: 'var(--muted-foreground)' }}>Student</th>
+                <th className="text-caption" style={{ position: 'sticky', left: 0, zIndex: 2, background: 'var(--card)', textAlign: 'left', padding: '4px 10px', color: 'var(--muted-foreground)' }}>Student</th>
                 {grid.targets.map((t, i) => (
-                  <th key={t.id} title={t.statement} style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted-foreground)', padding: '4px 2px', minWidth: 46 }}>
+                  <th className="text-overline" key={t.id} title={t.statement} style={{ color: 'var(--muted-foreground)', padding: '4px 2px', minWidth: 46 }}>
                     T{i + 1}
                   </th>
                 ))}
@@ -599,7 +598,7 @@ export default function ControlRoomPage() {
             <tbody>
               {grid.students.filter((s) => s.name.toLowerCase().includes(nameFilter.toLowerCase())).map((s) => (
                 <tr key={s.id}>
-                  <td style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', fontSize: 13, fontWeight: 500, padding: '4px 10px', whiteSpace: 'nowrap' }}>{s.name}{seenTag(s.id)}</td>
+                  <td className="text-caption" style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', padding: '4px 10px', whiteSpace: 'nowrap' }}>{s.name}{seenTag(s.id)}</td>
                   {grid.targets.map((t) => {
                     const c = grid.cells[s.id]?.[t.id]
                     const b = band(c?.value ?? null)
@@ -609,8 +608,8 @@ export default function ControlRoomPage() {
                           onClick={() => openCell(s.id, t.id)}
                           title={`${s.name} · ${t.statement}${b ? ` · ${levelWord(b)} (${b})` : ' · not rated'}`}
                           aria-label={`${s.name}, ${t.statement}: ${b ? `${levelWord(b)} (${b})` : 'not rated'}`}
-                          className="grid place-items-center font-bold"
-                          style={{ width: 40, height: 38, borderRadius: 9, fontSize: 15, cursor: 'pointer', ...cellStyle(b) }}
+                          className="grid place-items-center text-title-3"
+                          style={{ width: 40, height: 38, borderRadius: 'var(--radius-sm)', cursor: 'pointer', ...cellStyle(b) }}
                         >
                           {bandGlyph(b)}
                         </button>
@@ -626,10 +625,10 @@ export default function ControlRoomPage() {
 
       {view === 'mastery' && !loading && grid && (
         <div className="flex gap-4 flex-wrap mt-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
-          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center" style={{ width: 16, height: 16, borderRadius: 4, fontSize: 11, fontWeight: 700, ...cellStyle(3) }}>{bandGlyph(3)}</span> Got it (3)</span>
-          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center" style={{ width: 16, height: 16, borderRadius: 4, fontSize: 11, fontWeight: 700, ...cellStyle(2) }}>{bandGlyph(2)}</span> Almost (2)</span>
-          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center" style={{ width: 16, height: 16, borderRadius: 4, fontSize: 11, fontWeight: 700, ...cellStyle(1) }}>{bandGlyph(1)}</span> Not yet (1)</span>
-          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center" style={{ width: 16, height: 16, borderRadius: 4, fontSize: 11, fontWeight: 700, ...cellStyle(0) }}>{bandGlyph(0)}</span> Not rated</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(3) }}>{bandGlyph(3)}</span> Got it (3)</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(2) }}>{bandGlyph(2)}</span> Almost (2)</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(1) }}>{bandGlyph(1)}</span> Not yet (1)</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(0) }}>{bandGlyph(0)}</span> Not rated</span>
           <span style={{ marginLeft: 'auto' }}>Cells show shape + color — hover a cell for the level, a header for the target.</span>
         </div>
       )}

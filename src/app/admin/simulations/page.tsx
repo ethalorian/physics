@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect, useMemo } from 'react'
@@ -7,13 +8,12 @@ import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { 
+import {
   ArrowLeft,
   Play,
   BarChart3,
   Eye,
-  Loader2
-} from 'lucide-react'
+  } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 
@@ -54,7 +54,7 @@ export default function AdminSimulationsPage() {
     try {
       setLoading(true)
       const response = await fetch('/api/simulations?published=all')
-      
+
       if (response.ok) {
         const data = await response.json()
         const mappedSims = (data.simulations || []).map((sim: any) => ({
@@ -100,8 +100,8 @@ export default function AdminSimulationsPage() {
 
       if (response.ok) {
         // Update local state
-        setSimulations(prev => 
-          prev.map(sim => 
+        setSimulations(prev =>
+          prev.map(sim =>
             sim.id === id ? { ...sim, published: !currentStatus } : sim
           )
         )
@@ -158,7 +158,7 @@ export default function AdminSimulationsPage() {
   if (status === 'loading' || (loading && simulations.length === 0)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Spinner size="md" className="text-primary" />
       </div>
     )
   }
@@ -167,7 +167,7 @@ export default function AdminSimulationsPage() {
   if (!session || (userRole !== 'admin' && userRole !== 'teacher')) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Spinner size="md" className="text-primary" />
       </div>
     )
   }
@@ -175,13 +175,13 @@ export default function AdminSimulationsPage() {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'beginner':
-        return 'bg-green-500/10 text-green-700 dark:text-green-400'
+        return 'bg-success/10 text-success '
       case 'intermediate':
-        return 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400'
+        return 'bg-primary/10 text-primary '
       case 'advanced':
-        return 'bg-red-500/10 text-red-700 dark:text-red-400'
+        return 'bg-destructive/10 text-destructive '
       default:
-        return 'bg-gray-500/10 text-gray-700 dark:text-gray-400'
+        return 'bg-muted-foreground/10 text-muted-foreground '
     }
   }
 
@@ -189,15 +189,15 @@ export default function AdminSimulationsPage() {
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       {/* Header */}
       <div className="mb-8">
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={() => router.push('/admin')}
           className="mb-4"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Admin
         </Button>
-        
+
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-2">Physics Simulations Management</h1>
@@ -261,9 +261,9 @@ export default function AdminSimulationsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {simulations.length > 0 
+              {simulations.length > 0
                 ? Math.round(
-                    simulations.reduce((sum, s) => sum + (s.totalPlays || 0), 0) / 
+                    simulations.reduce((sum, s) => sum + (s.totalPlays || 0), 0) /
                     simulations.length
                   )
                 : 0

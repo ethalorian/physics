@@ -13,7 +13,6 @@ interface LessonListRow extends AccessibleLesson {
   description?: string | null
   lesson_number?: number
   lesson_type?: string | null
-  difficulty?: string | null
   created_at?: string
 }
 
@@ -35,7 +34,6 @@ export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const unit = searchParams.get('unit')
     const lessonType = searchParams.get('lesson_type')
-    const difficulty = searchParams.get('difficulty')
     const search = searchParams.get('search')
     // A-4: the client names a CLASS; the server resolves which curriculum that
     // class may see. Never accept a program/track straight off the query string.
@@ -46,7 +44,7 @@ export const GET = withAuth(async (request, ctx) => {
     // Note: Simulation join is optional for backward compatibility
     let query = supabaseAdmin
       .from('lessons')
-      .select(isAdmin ? '*' : 'id, title, slug, description, unit, unit_id, lesson_number, lesson_type, difficulty, estimated_time, objectives, created_at, published, visibility_track')
+      .select(isAdmin ? '*' : 'id, title, slug, description, unit, unit_id, lesson_number, lesson_type, estimated_time, objectives, created_at, published, visibility_track')
 
     // Students only see published lessons — and only their class's curriculum
     // (physics vs trades). Staff browse everything.
@@ -91,14 +89,11 @@ export const GET = withAuth(async (request, ctx) => {
       query = query.eq('unit', unit)
     }
 
-    // Skip lesson_type filter if column doesn't exist yet
-    // (After migration, this will work)
     if (lessonType && lessonType !== 'all') {
-      // Silently skip - will work after migration
-    }
-
-    if (difficulty && difficulty !== 'all') {
-      query = query.eq('difficulty', difficulty)
+      // Older lessons without a type are displayed as Reading.
+      query = lessonType === 'markdown'
+        ? query.or('lesson_type.is.null,lesson_type.eq.markdown')
+        : query.eq('lesson_type', lessonType)
     }
 
     if (search) {
@@ -165,7 +160,7 @@ export const GET = withAuth(async (request, ctx) => {
       if (!isAdmin) return {
         id: lesson.id, title: lesson.title, slug: lesson.slug, description: lesson.description,
         unit: lesson.unit, unit_id: lesson.unit_id, lesson_number: lesson.lesson_number,
-        lesson_type: lesson.lesson_type || 'markdown', difficulty: lesson.difficulty,
+        lesson_type: lesson.lesson_type || 'markdown',
         estimated_time: lesson.estimated_time, objectives: lesson.objectives ?? [],
         progress: progress[lesson.id] || 0, window: windowStatuses[lesson.id] ?? null,
         isNew: Boolean(lesson.created_at && Date.parse(lesson.created_at) > Date.now() - 7 * 24 * 60 * 60 * 1000),

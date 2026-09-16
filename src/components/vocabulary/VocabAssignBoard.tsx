@@ -122,7 +122,7 @@ export default function VocabAssignBoard() {
                   <div key={a.id} className="flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: on ? 'color-mix(in oklch, var(--primary) 12%, var(--card))' : 'transparent', border: `1px solid ${on ? 'var(--primary)' : 'var(--border)'}` }}>
                     <button type="button" onClick={() => setSelectedSet(a.vocabulary_set_id)} className="min-w-0 flex-1 text-left">
                       <div className="text-sm font-semibold truncate">{s?.label ?? 'Set'}</div>
-                      <div className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{s?.terms ?? '?'} words{a.due_on ? ` · due ${a.due_on}` : ''}</div>
+                      <div className="text-overline" style={{ color: 'var(--muted-foreground)' }}>{s?.terms ?? '?'} words{a.due_on ? ` · due ${a.due_on}` : ''}</div>
                     </button>
                     <button type="button" onClick={() => unassign(a.id)} disabled={busy} aria-label="Unassign" title="Unassign (attempts are kept)" className="shrink-0 rounded-full p-2" style={{ color: 'var(--muted-foreground)', minWidth: 36, minHeight: 36 }}><Trash2 size={14} /></button>
                   </div>
@@ -142,7 +142,7 @@ export default function VocabAssignBoard() {
                 <div key={s.id} className="flex items-center gap-2 rounded-lg px-2 py-1.5" style={{ border: '1px solid var(--border)' }}>
                   <div className="min-w-0 flex-1">
                     <div className="text-sm truncate">{s.label}</div>
-                    <div className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{s.unit ? `${s.unit} · ` : ''}{s.terms} words</div>
+                    <div className="text-overline" style={{ color: 'var(--muted-foreground)' }}>{s.unit ? `${s.unit} · ` : ''}{s.terms} words</div>
                   </div>
                   <button type="button" onClick={() => assign(s.id)} disabled={busy} className="shrink-0 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', minHeight: 32 }}><Plus size={12} /> Assign</button>
                 </div>
@@ -174,7 +174,7 @@ export default function VocabAssignBoard() {
                     <th className="sticky left-0 text-left px-2 py-2 font-semibold" style={{ background: 'var(--card)', minWidth: 160 }}>Student</th>
                     {grid.terms.map((t) => (
                       <th key={t.id} className="px-1 py-2 font-semibold text-center align-bottom" style={{ minWidth: 64 }} title={t.cognate ?? undefined}>
-                        <div style={{ fontSize: 18, lineHeight: 1 }}>{t.icon ?? ''}</div>
+                        <div className="text-lg" style={{ lineHeight: 1 }}>{t.icon ?? ''}</div>
                         <div className="truncate" style={{ maxWidth: 80 }}>{t.term}</div>
                         <div className="font-normal" style={{ color: 'var(--muted-foreground)' }}>T{t.tier ?? '·'}</div>
                       </th>
@@ -189,7 +189,7 @@ export default function VocabAssignBoard() {
                       <tr key={s.id} style={{ borderTop: '1px solid var(--border)' }}>
                         <td className="sticky left-0 px-2 py-1.5 whitespace-nowrap" style={{ background: 'var(--card)' }}>
                           <div className="font-medium truncate" style={{ maxWidth: 150 }}>{s.name}</div>
-                          {s.wida !== null && <div className="text-[10px]" style={{ color: 'var(--muted-foreground)' }}>WIDA {s.wida}{s.homeLang ? ` · ${s.homeLang}` : ''}</div>}
+                          {s.wida !== null && <div className="text-overline" style={{ color: 'var(--muted-foreground)' }}>WIDA {s.wida}{s.homeLang ? ` · ${s.homeLang}` : ''}</div>}
                         </td>
                         {grid.terms.map((t) => {
                           const v = pick(s.cells[t.id], view)
@@ -197,12 +197,12 @@ export default function VocabAssignBoard() {
                             <td key={t.id} className="px-1 py-1 text-center" title={v.n ? `${v.acc}% over ${v.n} attempt${v.n === 1 ? '' : 's'}` : 'no attempts'}>
                               <span className="inline-block rounded-md px-1.5 py-1 font-bold tabular-nums" style={{ minWidth: 40, color: bandColor(v.acc), background: bandBg(v.acc) }}>
                                 {v.acc === null ? '—' : `${v.acc}`}
-                                {v.n > 0 && <span className="ml-0.5 font-normal" style={{ fontSize: 9, color: 'var(--muted-foreground)' }}>{v.n}</span>}
+                                {v.n > 0 && <span className="ml-0.5 text-overline" style={{ color: 'var(--muted-foreground)' }}>{v.n}</span>}
                               </span>
                             </td>
                           )
                         })}
-                        <td className="px-2 py-1.5 text-right font-bold tabular-nums" style={{ color: bandColor(avg) }}>{avg === null ? '—' : `${avg}%`}<div className="text-[10px] font-normal">{grid.terms.filter(t => pick(s.cells[t.id], view).n > 0).length}/{grid.terms.length} words</div></td>
+                        <td className="px-2 py-1.5 text-right font-bold tabular-nums" style={{ color: bandColor(avg) }}>{avg === null ? '—' : `${avg}%`}<div className="text-overline font-normal">{grid.terms.filter(t => pick(s.cells[t.id], view).n > 0).length}/{grid.terms.length} words</div></td>
                       </tr>
                     )
                   })}
@@ -213,7 +213,7 @@ export default function VocabAssignBoard() {
                   </tr>
                 </tbody>
               </table>
-              <p className="text-[11px] mt-3" style={{ color: 'var(--muted-foreground)' }}>
+              <p className="text-overline mt-3" style={{ color: 'var(--muted-foreground)' }}>
                 Accuracy over every arcade attempt (n = attempts). <b style={{ color: 'var(--success)' }}>≥80% practice accuracy</b> · <b style={{ color: 'var(--reward-foreground)' }}>50–79 almost</b> · <b style={{ color: 'var(--destructive)' }}>&lt;50 not yet</b>. “Additional support settings” = the Spanish clue was showing or full/partial support was on; “without” = bare. Settings are not a record of supports actually used; these game percentages do not establish mastery.
               </p>
             </div>

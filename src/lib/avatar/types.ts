@@ -62,7 +62,7 @@ export interface AvatarTraits {
 export const KNOB_TRAITS: (keyof AvatarTraits)[] = ['eye_spacing', 'eye_scale', 'eye_tilt', 'brow_height', 'mouth_width']
 
 // Slot enum mirrors the avatar_items.slot check constraint exactly.
-export type ItemSlot = 'eyewear' | 'head' | 'body' | 'pin' | 'background' | 'facial_hair'
+export type ItemSlot = 'eyewear' | 'head' | 'body' | 'pin' | 'background' | 'facial_hair' | 'ears' | 'mouth'
 
 export interface AvatarItem {
   slug: string
@@ -74,7 +74,7 @@ export interface AvatarItem {
   svg_layer: string                  // inner SVG markup (no <svg> wrapper)
   z_order: number // legacy metadata; fixed slot order is authoritative
   enabled?: boolean // false retires from sale; owned artwork still renders
-  render_options?: { hair?: 'preserve' | 'tuck' | 'hide'; fit_head?: boolean; covers_ears?: boolean; covers_neck?: boolean; fit_eyes?: boolean; hair_tint?: boolean }
+  render_options?: { hair?: 'preserve' | 'tuck' | 'hide'; fit_head?: boolean; covers_ears?: boolean; covers_neck?: boolean; fit_eyes?: boolean; hair_tint?: boolean; skin_tint?: boolean }
   target_statement?: string | null
 }
 
@@ -165,8 +165,8 @@ export const TRAIT_OPTIONS: Record<keyof AvatarTraits, string[]> = {
   shirt_color: ['lavender', 'red', 'orange', 'yellow', 'green', 'teal', 'blue', 'navy', 'purple', 'pink', 'charcoal'],
 }
 
-export const ITEM_SLOTS: ItemSlot[] = ['eyewear', 'head', 'body', 'pin', 'background', 'facial_hair']
-export const SLOT_LABELS: Record<ItemSlot, string> = { eyewear: 'Eyewear', head: 'Headwear', body: 'Outfits', pin: 'Pins & necklaces', background: 'Backgrounds', facial_hair: 'Facial hair' }
+export const ITEM_SLOTS: ItemSlot[] = ['eyewear', 'head', 'body', 'pin', 'background', 'facial_hair', 'ears', 'mouth']
+export const SLOT_LABELS: Record<ItemSlot, string> = { eyewear: 'Eyewear', head: 'Headwear', body: 'Outfits', pin: 'Pins & necklaces', background: 'Backgrounds', facial_hair: 'Facial hair', ears: 'Ears', mouth: 'Fangs & mouths' }
 export interface SavedLook { name: string; traits: AvatarTraits; equipped: EquippedItems }
 export type CatalogState = 'owned' | 'affordable' | 'too_expensive' | 'unlock_available' | 'locked_until_mastery' | 'staff_free'
 export interface CatalogEntry extends AvatarItem { state: CatalogState; unlock_progress?: number }

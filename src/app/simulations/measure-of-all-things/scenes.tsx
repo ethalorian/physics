@@ -188,7 +188,7 @@ export function Ch4Scene({ step }: { step: number }) {
       </At>
       {/* pendulum swings inside the case, hinged at its top */}
       <At x={70} bottom={28}>
-        <div style={{ marginLeft: 30, transformOrigin: 'top center', animation: 'moat-sway 1.8s ease-in-out infinite' }}>
+        <div style={{ marginLeft: 30, transformOrigin: 'top center', animation: 'moat-sway 1.8s var(--ease-out-expo) infinite' }}>
           <PixelSprite sprite={PENDULUM} scale={3} />
         </div>
       </At>

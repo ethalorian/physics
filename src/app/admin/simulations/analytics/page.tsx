@@ -1,5 +1,6 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -12,8 +13,7 @@ import {
   Brain,
   CheckCircle,
   XCircle,
-  Loader2
-} from 'lucide-react'
+  } from 'lucide-react'
 import Link from 'next/link'
 
 interface SimulationStats {
@@ -50,10 +50,10 @@ export default function SimulationAnalyticsPage() {
     async function loadAnalytics() {
       try {
         setLoading(true)
-        
+
         // Fetch real analytics from API
         const response = await fetch('/api/simulations/analytics')
-        
+
         if (response.ok) {
           const data = await response.json()
           setSimulationStats(data.stats || [])
@@ -87,7 +87,7 @@ export default function SimulationAnalyticsPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <Spinner size="lg" className="text-primary" />
         </div>
       </div>
     )
@@ -156,7 +156,7 @@ export default function SimulationAnalyticsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-green-600">
+                <div className="text-3xl font-bold text-success">
                   {Math.round(simulationStats.reduce((sum, s) => sum + s.completion_rate, 0) / simulationStats.length)}%
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">Across all simulations</p>
@@ -170,7 +170,7 @@ export default function SimulationAnalyticsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-blue-600">
+                <div className="text-3xl font-bold text-primary">
                   {Math.round(simulationStats.reduce((sum, s) => sum + s.avg_score, 0) / simulationStats.length)}%
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">Overall performance</p>
@@ -194,51 +194,51 @@ export default function SimulationAnalyticsPage() {
                           {stat.total_students} students • {stat.total_completions} completed
                         </p>
                       </div>
-                      <Badge 
+                      <Badge
                         variant={stat.completion_rate >= 75 ? 'default' : 'secondary'}
-                        className={stat.completion_rate >= 75 ? 'bg-green-600' : ''}
+                        className={stat.completion_rate >= 75 ? 'bg-success' : ''}
                       >
                         {stat.completion_rate}% completion
                       </Badge>
                     </div>
 
                     <div className="grid grid-cols-4 gap-4">
-                      <div className="bg-blue-50 p-3 rounded-lg">
-                        <div className="flex items-center gap-2 text-xs text-blue-600 mb-1">
+                      <div className="bg-primary/10 p-3 rounded-lg">
+                        <div className="flex items-center gap-2 text-xs text-primary mb-1">
                           <Clock className="h-3 w-3" />
                           Avg Time
                         </div>
-                        <div className="text-xl font-bold text-blue-900">
+                        <div className="text-xl font-bold text-primary">
                           {formatTime(stat.avg_time_spent)}
                         </div>
                       </div>
 
-                      <div className="bg-green-50 p-3 rounded-lg">
-                        <div className="flex items-center gap-2 text-xs text-green-600 mb-1">
+                      <div className="bg-success/10 p-3 rounded-lg">
+                        <div className="flex items-center gap-2 text-xs text-success mb-1">
                           <CheckCircle className="h-3 w-3" />
                           Avg Score
                         </div>
-                        <div className="text-xl font-bold text-green-900">
+                        <div className="text-xl font-bold text-success">
                           {stat.avg_score}%
                         </div>
                       </div>
 
-                      <div className="bg-purple-50 p-3 rounded-lg">
-                        <div className="flex items-center gap-2 text-xs text-purple-600 mb-1">
+                      <div className="bg-primary/10 p-3 rounded-lg">
+                        <div className="flex items-center gap-2 text-xs text-primary mb-1">
                           <Brain className="h-3 w-3" />
                           AI Hints
                         </div>
-                        <div className="text-xl font-bold text-purple-900">
+                        <div className="text-xl font-bold text-primary">
                           {stat.ai_hints_avg.toFixed(1)}
                         </div>
                       </div>
 
-                      <div className="bg-orange-50 p-3 rounded-lg">
-                        <div className="flex items-center gap-2 text-xs text-orange-600 mb-1">
+                      <div className="bg-primary/10 p-3 rounded-lg">
+                        <div className="flex items-center gap-2 text-xs text-primary mb-1">
                           <TrendingUp className="h-3 w-3" />
                           Completion
                         </div>
-                        <div className="text-xl font-bold text-orange-900">
+                        <div className="text-xl font-bold text-primary">
                           {stat.total_completions}/{stat.total_students}
                         </div>
                       </div>
@@ -260,7 +260,7 @@ export default function SimulationAnalyticsPage() {
               <p className="text-muted-foreground">
                 Future features:
               </p>
-              <ul className="list-disc list-inside mt-3 space-y-2 text-sm text-gray-700">
+              <ul className="list-disc list-inside mt-3 space-y-2 text-sm text-muted-foreground">
                 <li>Time-series graphs of usage over time</li>
                 <li>Breakdown by device/configuration used</li>
                 <li>Common struggle points identification</li>
@@ -287,14 +287,14 @@ export default function SimulationAnalyticsPage() {
               ) : (
                 <div className="space-y-3">
                   {recentActivity.map((activity) => (
-                    <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
+                    <div key={activity.id} className="flex items-center justify-between p-3 bg-muted rounded-lg border">
                       <div>
                         <div className="font-medium">{activity.student_name || activity.student_email}</div>
                         <div className="text-sm text-muted-foreground">{activity.simulation_title}</div>
                       </div>
                       <div className="flex items-center gap-3">
                         {activity.passed ? (
-                          <Badge variant="default" className="bg-green-600">
+                          <Badge variant="default" className="bg-success">
                             <CheckCircle className="h-3 w-3 mr-1" />
                             {activity.score}%
                           </Badge>

@@ -48,7 +48,7 @@ export default function AdminMathSpinePage() {
         </Link>
       </div>
       {loading && <p className="text-sm text-muted-foreground">Loading…</p>}
-      {error && <p className="text-sm text-red-600">Could not load: {error}</p>}
+      {error && <p className="text-sm text-destructive">Could not load: {error}</p>}
       {!loading && !error && <TeacherMathSpineEntry competencies={competencies} students={students} />}
     </div>
   )

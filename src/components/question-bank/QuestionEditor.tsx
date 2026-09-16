@@ -13,7 +13,7 @@ interface QuestionBankQuestionEditorProps {
 
 /**
  * QuestionBankQuestionEditor - Modal wrapper for creating new questions for the question bank.
- * 
+ *
  * This component reuses the main QuestionEditor from assignment-builder to avoid code duplication.
  * It adds a modal wrapper and save-to-bank functionality.
  */
@@ -64,7 +64,7 @@ export default function QuestionBankQuestionEditor({ onClose, onSave }: Question
             <Button
               onClick={handleSaveToBank}
               disabled={!question.question || question.question.trim() === ''}
-              className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white"
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Save className="h-4 w-4 mr-2" />
               Save to Bank
@@ -84,7 +84,7 @@ export default function QuestionBankQuestionEditor({ onClose, onSave }: Question
           />
         </div>
       </div>
-      
+
       {showSaveModal && (
         <AddToQuestionBankModal
           question={question}

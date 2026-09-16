@@ -118,7 +118,7 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
 
   return (
     <div className={styles.spin}
-      style={{ borderColor: result?.jackpot ? '#eab308' : 'var(--border)', background: 'var(--card)' }}>
+      style={{ borderColor: result?.jackpot ? 'var(--reward)' : 'var(--border)', background: 'var(--card)' }}>
       <button onClick={spin} aria-label="Spin the daily reward wheel" disabled={!status || spinning || !!status?.spunToday}
         title={status?.spunToday ? 'Come back tomorrow' : 'Spin!'}
         style={{ background: 'none', border: 'none', cursor: status?.spunToday ? 'default' : 'pointer', lineHeight: 0 }}>
@@ -126,15 +126,15 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
       </button>
       <div className={styles.copy} aria-live="polite">
         <div className="font-semibold flex items-center gap-1.5">
-          <Sparkles size={16} style={{ color: '#eab308' }} /> Daily spin
+          <Sparkles size={16} style={{ color: 'var(--reward)' }} /> Daily spin
         </div>
         {result ? (
           result.jackpot ? (
-            <div className="text-lg font-black mt-1" style={{ color: '#eab308', textShadow: '0 0 14px #eab30888' }}>
+            <div className="text-lg font-semibold mt-1" style={{ color: 'var(--foreground)' }}>
               ★ JACKPOT! +{result.prize} XP ★
             </div>
           ) : (
-            <div className="text-sm mt-1">You won <b style={{ color: 'var(--reward, #f59e0b)' }}>+{result.prize} XP</b>. Added to your balance.</div>
+            <div className="text-sm mt-1">You won <b style={{ color: 'var(--foreground)' }}>+{result.prize} XP</b>. Added to your balance.</div>
           )
         ) : status?.spunToday ? (
           <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
@@ -147,7 +147,7 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
         )}
         {!status?.spunToday && !spinning && (
           <button onClick={spin} disabled={!status} className={styles.button}
-            style={{ background: 'var(--reward, #f59e0b)', color: '#1a1203', border: 'none', cursor: 'pointer' }}>
+            style={{ background: 'var(--reward)', color: 'var(--reward-foreground)', border: 'none', cursor: 'pointer' }}>
             {status ? 'Spin for XP' : error ? 'Spin unavailable' : 'Loading…'}
           </button>
         )}

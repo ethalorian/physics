@@ -42,10 +42,7 @@ async function bundle(entry, name, plugins = []) {
       assert.deepEqual(registry.validateBlockDocument(doc),[],def.type);
     }
   });
-  await check('published edits retain checks; explicit unpublish allows drafts', () => {
-    assert.equal(registry.remainsPublished(true,{}),true);
-    assert.equal(registry.remainsPublished(false,{published:true}),true);
-    assert.equal(registry.remainsPublished(true,{published:false}),false);
+  await check('ordinary saves allow unfinished activities; publication requires complete activities', () => {
     const doc={schemaVersion:1,blocks:[registry.createBlock('question','q')]};
     assert.ok(registry.validateBlockDocument(doc,true).length>0);
     assert.equal(registry.validateBlockDocument(doc,false).length,0);
@@ -116,14 +113,32 @@ async function bundle(entry, name, plugins = []) {
   const validDoc={schemaVersion:1,blocks:[{id:'exit',type:'exit_ticket',capture:true,prompt:'Explain.',targetId:'target'}]};
   const resetRoute=()=>global.__route={current:{updated_at:null,published:true,unit_id:null,content_blocks:validDoc},targets:['target'],sei:[],writes:[]};
   const put=(body, realRole="admin")=>route.PUT(new Request('http://local/api/lessons/lesson',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({expected_updated_at:global.__route.current.updated_at,...body})}),{realRole,params:Promise.resolve({id:'lesson'})});
-  await check('published content-only PUT rejects invalid blocks before writing',async()=>{
-    resetRoute();const r=await put({content_blocks:{schemaVersion:1,blocks:[registry.createBlock('question','q')]}});assert.equal(r.status,422);assert.equal(global.__route.writes.length,0);
+  await check('published content-only PUT saves unfinished activities without changing publication',async()=>{
+    resetRoute();const doc={schemaVersion:1,blocks:[registry.createBlock('question','q')]};const r=await put({content_blocks:doc});assert.equal(r.status,200);assert.deepEqual(global.__route.writes[0].content_blocks,doc);assert.equal('published' in global.__route.writes[0],false);
   });
-  await check('published content-only PUT runs language-support publishing rules',async()=>{
-    resetRoute();global.__route.sei=[{severity:'error',message:'Missing frame'}];assert.equal((await put({content_blocks:validDoc})).status,422);assert.equal(global.__route.writes.length,0);
+  await check('published edits save despite missing visual, frame and target',async()=>{
+    resetRoute();global.__route.sei=[{severity:'error',message:'Missing visual'},{severity:'error',message:'Missing frame'}];global.__route.targets=[];const doc={schemaVersion:1,blocks:[{id:'exit',type:'exit_ticket',capture:true,prompt:'Teacher correction'}]};assert.equal((await put({content_blocks:doc})).status,200);assert.deepEqual(global.__route.writes[0].content_blocks,doc);assert.equal(global.__route.checkedDoc,undefined);
+  });
+  await check('resubmitting unchanged published status is still an ordinary save',async()=>{
+    resetRoute();global.__route.targets=[];assert.equal((await put({published:true,content_blocks:validDoc})).status,200);
+  });
+  await check('settings-only saves do not revalidate existing generated content',async()=>{
+    resetRoute();global.__route.current.content_blocks={schemaVersion:0};global.__route.targets=[];assert.equal((await put({title:'Corrected lesson title'})).status,200);assert.equal(global.__route.writes[0].title,'Corrected lesson title');
+  });
+  await check('manual saves still reject malformed blocks before writing',async()=>{
+    resetRoute();const r=await put({content_blocks:{schemaVersion:1,blocks:[{id:'duplicate',type:'prose'},{id:'duplicate',type:'prose'}]}});assert.equal(r.status,422);assert.equal(global.__route.writes.length,0);
+  });
+  await check('stale edits remain protected from overwrites',async()=>{
+    resetRoute();const r=await put({expected_updated_at:'old',content_blocks:validDoc});assert.equal(r.status,409);assert.equal(global.__route.writes.length,0);
+  });
+  await check('draft-to-published transition still requires complete activities',async()=>{
+    resetRoute();global.__route.current.published=false;const r=await put({published:true,content_blocks:{schemaVersion:1,blocks:[registry.createBlock('question','q')]}});assert.equal(r.status,422);assert.equal(global.__route.writes.length,0);
+  });
+  await check('draft-to-published transition still runs language-support publishing rules',async()=>{
+    resetRoute();global.__route.current.published=false;global.__route.sei=[{severity:'error',message:'Missing frame'}];assert.equal((await put({published:true,content_blocks:validDoc})).status,422);assert.equal(global.__route.writes.length,0);
   });
   await check('publication target check uses replacement document, not old block references',async()=>{
-    resetRoute();global.__route.targets=[];const r=await put({content_blocks:validDoc});assert.equal(r.status,422);assert.deepEqual(global.__route.checkedDoc,validDoc);assert.equal(global.__route.writes.length,0);
+    resetRoute();global.__route.current.published=false;global.__route.targets=[];const r=await put({published:true,content_blocks:validDoc});assert.equal(r.status,422);assert.deepEqual(global.__route.checkedDoc,validDoc);assert.equal(global.__route.writes.length,0);
   });
   await check('unpublishing permits incomplete drafts while keeping structural checks',async()=>{
     resetRoute();assert.equal((await put({published:false,content_blocks:{schemaVersion:1,blocks:[registry.createBlock('question','q')]}})).status,200);assert.equal(global.__route.writes.length,1);
@@ -133,6 +148,6 @@ async function bundle(entry, name, plugins = []) {
     resetRoute();global.__route.current.published=false;assert.equal((await put({published:true},'teacher')).status,403);assert.equal(global.__route.writes.length,0);
     resetRoute();assert.equal((await put({content_blocks:validDoc},'teacher')).status,200);
   });
-  await check('publishing an empty lesson is rejected',async()=>{resetRoute();assert.equal((await put({content_blocks:null})).status,422);assert.equal(global.__route.writes.length,0);});
+  await check('publishing an empty lesson is rejected',async()=>{resetRoute();global.__route.current.published=false;assert.equal((await put({published:true,content_blocks:null})).status,422);assert.equal(global.__route.writes.length,0);});
   console.log(`\n${passed} lesson audit regression scenarios passed.`);
 })().catch((e)=>{console.error(e);process.exitCode=1}).finally(()=>fs.rmSync(temp,{recursive:true,force:true}));

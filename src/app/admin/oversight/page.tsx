@@ -181,7 +181,7 @@ export default function OversightPage() {
         )}
         {/* Grant read-only observer access (principal / coach / district):
             global analytics + lesson plans, no classes, no editing. */}
-        <div className="flex flex-wrap items-center gap-2 mt-3 pt-3" style={{ borderTop: '0.5px solid var(--border)' }}>
+        <div className="flex flex-wrap items-center gap-2 mt-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
           <input
             value={newObserver}
             onChange={(e) => setNewObserver(e.target.value)}
@@ -244,7 +244,7 @@ export default function OversightPage() {
                         />
                         {t.email}
                         {t.email === d.you && <span className="ml-2 text-xs font-bold px-1.5 py-0.5 rounded" style={{ color: 'var(--primary)', border: '1px solid color-mix(in oklch, var(--primary) 50%, var(--border))' }}>YOU</span>}
-                        {t.role === 'admin' && t.email !== d.you && <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ color: 'var(--primary)' }}>ADMIN</span>}
+                        {t.role === 'admin' && t.email !== d.you && <span className="ml-2 text-overline font-bold px-1.5 py-0.5 rounded" style={{ color: 'var(--primary)' }}>ADMIN</span>}
                       </td>
                       {num(t.classes)}{num(t.students)}{num(t.masteryRatings)}{num(t.feedback)}{num(t.mathReviews)}{num(t.rewardsFulfilled)}{num(t.storeItems)}
                       <td className="px-3 py-3 text-sm whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>{fmtDateTime(t.lastLoginAt)}</td>
@@ -259,7 +259,7 @@ export default function OversightPage() {
           {/* WHAT TEACHERS USE MOST — the aggregate that answers "what's valuable" */}
           {d.teacherTools.some((f) => f.count > 0) && (
             <div className="rounded-2xl border p-5 mt-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-              <h3 className="font-bold mb-1" style={{ fontSize: 15 }}>What teachers use most</h3>
+              <h3 className="mb-1 text-title-3" >What teachers use most</h3>
               <p className="text-xs mb-4" style={{ color: 'var(--muted-foreground)' }}>Total teacher actions by tool — the longest bars are what your staff lean on</p>
               <div className="flex flex-col gap-3">
                 {(() => { const max = Math.max(1, ...d.teacherTools.map((f) => f.count)); return d.teacherTools.map((f) => (
@@ -289,7 +289,7 @@ export default function OversightPage() {
                         style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
                         onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'var(--primary)' }}
                         onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border)' }}>
-                        <div className="font-medium truncate" style={{ fontSize: 14 }}>{c.name}</div>
+                        <div className="font-medium truncate text-sm" >{c.name}</div>
                         <div className="text-xs mt-0.5 truncate" style={{ color: 'var(--muted-foreground)' }}>
                           {c.section ? `${c.section} · ` : ''}{c.student_count} student{c.student_count === 1 ? '' : 's'}
                         </div>
@@ -304,7 +304,7 @@ export default function OversightPage() {
           <div className="grid gap-4 mt-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
             {/* ENGAGEMENT */}
             <div className="rounded-2xl border p-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-              <h3 className="font-bold mb-1" style={{ fontSize: 15 }}>Student engagement</h3>
+              <h3 className="mb-1 text-title-3" >Student engagement</h3>
               <p className="text-xs mb-4" style={{ color: 'var(--muted-foreground)' }}>By last activity, across all classes</p>
               {eng && (
                 <>
@@ -314,9 +314,9 @@ export default function OversightPage() {
                     <span style={{ width: `${(eng.atRisk / engTotal) * 100}%`, background: 'var(--destructive)' }} />
                   </div>
                   <div className="flex gap-4 flex-wrap mt-3 text-sm" style={{ color: 'var(--muted-foreground)' }}>
-                    <span className="inline-flex items-center gap-1.5"><span style={{ width: 11, height: 11, borderRadius: 3, background: 'var(--success)' }} /> Active <b style={{ color: 'var(--foreground)' }}>{eng.active7d}</b></span>
-                    <span className="inline-flex items-center gap-1.5"><span style={{ width: 11, height: 11, borderRadius: 3, background: 'var(--reward)' }} /> Idle <b style={{ color: 'var(--foreground)' }}>{eng.idle}</b></span>
-                    <span className="inline-flex items-center gap-1.5"><span style={{ width: 11, height: 11, borderRadius: 3, background: 'var(--destructive)' }} /> At risk <b style={{ color: 'var(--foreground)' }}>{eng.atRisk}</b></span>
+                    <span className="inline-flex items-center gap-1.5"><span style={{ width: 11, height: 11, borderRadius: 'var(--radius-xs)', background: 'var(--success)' }} /> Active <b style={{ color: 'var(--foreground)' }}>{eng.active7d}</b></span>
+                    <span className="inline-flex items-center gap-1.5"><span style={{ width: 11, height: 11, borderRadius: 'var(--radius-xs)', background: 'var(--reward)' }} /> Idle <b style={{ color: 'var(--foreground)' }}>{eng.idle}</b></span>
+                    <span className="inline-flex items-center gap-1.5"><span style={{ width: 11, height: 11, borderRadius: 'var(--radius-xs)', background: 'var(--destructive)' }} /> At risk <b style={{ color: 'var(--foreground)' }}>{eng.atRisk}</b></span>
                   </div>
                 </>
               )}
@@ -324,7 +324,7 @@ export default function OversightPage() {
 
             {/* FEATURE ADOPTION */}
             <div className="rounded-2xl border p-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-              <h3 className="font-bold mb-1" style={{ fontSize: 15 }}>Feature adoption</h3>
+              <h3 className="mb-1 text-title-3" >Feature adoption</h3>
               <p className="text-xs mb-4" style={{ color: 'var(--muted-foreground)' }}>What&apos;s actually getting used</p>
               <div className="flex flex-col gap-3">
                 {d.features.map((f) => (

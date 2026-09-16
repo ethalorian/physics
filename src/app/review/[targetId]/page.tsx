@@ -138,7 +138,7 @@ export default function ReviewPage() {
               <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Skill review</span>
               {queueItem && (
                 <span
-                  className="text-[11px] font-semibold rounded-full px-2 py-0.5"
+                  className="text-overline font-semibold rounded-full px-2 py-0.5"
                   style={{
                     background: queueItem.level === 1 ? 'color-mix(in oklch, var(--destructive) 14%, transparent)' : 'color-mix(in oklch, var(--reward) 20%, transparent)',
                     color: queueItem.level === 1 ? 'var(--destructive)' : 'var(--reward-foreground)',

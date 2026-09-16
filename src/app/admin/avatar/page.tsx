@@ -14,7 +14,7 @@ import type { CatalogRow } from '@/app/api/admin/avatar/catalog/route'
 // surface for add/edit; today it's a viewer + sanity check.
 
 const SLOT_LABEL: Record<ItemSlot, string> = {
-  eyewear: 'Eyewear', head: 'Head & helmets', body: 'Body & coats', pin: 'Pins', background: 'Backgrounds', facial_hair: 'Facial hair',
+  eyewear: 'Eyewear', head: 'Head & helmets', body: 'Body & coats', pin: 'Pins', background: 'Backgrounds', facial_hair: 'Facial hair', ears: 'Ears', mouth: 'Fangs & mouths',
 }
 
 export default function AdminAvatarCatalogPage() {
@@ -100,7 +100,7 @@ function CatalogCard({ item }: { item: CatalogRow }) {
       className="rounded-2xl border p-4"
       style={{ borderColor: 'var(--border)', background: 'var(--card)', opacity: item.enabled ? 1 : 0.55 }}
     >
-      <div className="flex items-center justify-center mb-3" style={{ background: 'color-mix(in oklch, var(--secondary) 50%, transparent)', borderRadius: 12, padding: '8px 0' }}>
+      <div className="flex items-center justify-center mb-3" style={{ background: 'color-mix(in oklch, var(--secondary) 50%, transparent)', borderRadius: 'var(--radius-md)', padding: '8px 0' }}>
         <Avatar traits={DEFAULT_TRAITS} equipped={equipped} items={[item]} size={120} />
       </div>
       <div className="font-semibold text-sm">{item.name}</div>

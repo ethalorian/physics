@@ -201,15 +201,15 @@ export default function RubricBuilder({ rubric, onRubricChange, maxPoints = 100 
 
                     <div className="space-y-3">
                       {criterion.levels.map((level, levelIndex) => (
-                        <div key={levelIndex} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                        <div key={levelIndex} className="flex items-center gap-3 p-3 bg-muted rounded-lg">
                           <div className="w-20">
                             <Input
                               type="number"
                               min="0"
                               max={criterion.maxPoints}
                               value={level.score}
-                              onChange={(e) => updateLevel(criterion.id, levelIndex, { 
-                                score: parseInt(e.target.value) || 0 
+                              onChange={(e) => updateLevel(criterion.id, levelIndex, {
+                                score: parseInt(e.target.value) || 0
                               })}
                               className="text-center"
                             />
@@ -218,8 +218,8 @@ export default function RubricBuilder({ rubric, onRubricChange, maxPoints = 100 
                           <div className="flex-1">
                             <Input
                               value={level.description}
-                              onChange={(e) => updateLevel(criterion.id, levelIndex, { 
-                                description: e.target.value 
+                              onChange={(e) => updateLevel(criterion.id, levelIndex, {
+                                description: e.target.value
                               })}
                               placeholder="Describe this performance level..."
                             />
@@ -245,8 +245,8 @@ export default function RubricBuilder({ rubric, onRubricChange, maxPoints = 100 
       )}
 
       {getTotalPoints() > maxPoints && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-800">
+        <div className="p-3 bg-destructive/10 border border-destructive/40 rounded-lg">
+          <p className="text-sm text-destructive">
             Warning: Total rubric points ({getTotalPoints()}) exceed maximum allowed points ({maxPoints})
           </p>
         </div>

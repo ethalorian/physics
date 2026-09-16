@@ -69,10 +69,10 @@ export default function XpGoalSettings() {
 
   return (
     <div className="rounded-2xl border p-5 h-full" style={{ borderColor: 'color-mix(in oklch, var(--reward) 32%, var(--border))', background: 'color-mix(in oklch, var(--reward) 5%, var(--card))' }}>
-      <div className="grid place-items-center mb-3" style={{ width: 44, height: 44, borderRadius: 12, background: 'color-mix(in oklch, var(--reward) 18%, transparent)', color: 'var(--reward)' }}>
+      <div className="grid place-items-center mb-3" style={{ width: 44, height: 44, borderRadius: 'var(--radius-md)', background: 'color-mix(in oklch, var(--reward) 18%, transparent)', color: 'var(--reward)' }}>
         <Flame size={22} />
       </div>
-      <div className="font-bold" style={{ fontSize: 16 }}>Daily XP goals</div>
+      <div className="text-title-3" >Daily XP goals</div>
       <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
         Your classes only. School days fill a progress ring; weekend and vacation goals pay a bonus when hit.
       </p>

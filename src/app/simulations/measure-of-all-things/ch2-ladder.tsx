@@ -57,9 +57,9 @@ function RungExplorer({ onAllVisited }: { onAllVisited: () => void }) {
             type="button"
             onClick={() => { setIdx(i); setVisited(prev => { const s = new Set(prev).add(i); if (s.size === RUNGS.length && prev.size !== RUNGS.length) onAllVisited(); return s }) }}
             className={`px-2.5 py-1 rounded-md text-sm font-mono border transition
-              ${i === idx ? 'bg-amber-500 text-white border-amber-500' :
-                visited.has(i) ? 'bg-amber-100 dark:bg-amber-900/40 border-amber-300 dark:border-amber-700' :
-                'bg-background border-border hover:border-amber-400'}`}
+              ${i === idx ? 'bg-primary text-primary-foreground border-primary' :
+                visited.has(i) ? 'bg-primary/10  border-primary/40 ' :
+                'bg-background border-border hover:border-primary'}`}
           >
             {rg.symbol}
           </button>
@@ -79,10 +79,10 @@ function RungExplorer({ onAllVisited }: { onAllVisited: () => void }) {
         {/* relative-size bar: current unit vs one rung smaller */}
         {idx < RUNGS.length - 1 && (
           <div className="space-y-1">
-            <div className="h-4 rounded bg-amber-500" style={{ width: '100%' }} />
+            <div className="h-4 rounded bg-primary" style={{ width: '100%' }} />
             <div className="flex gap-[2px]">
               {Array.from({ length: 10 }, (_, i) => (
-                <div key={i} className="h-3 rounded-sm bg-amber-300 dark:bg-amber-700" style={{ width: '9.6%' }} />
+                <div key={i} className="h-3 rounded-sm bg-primary/25" style={{ width: '9.6%' }} />
               ))}
             </div>
             <p className="text-xs text-muted-foreground">
@@ -92,11 +92,11 @@ function RungExplorer({ onAllVisited }: { onAllVisited: () => void }) {
         )}
         <div className="flex gap-2">
           <button type="button" onClick={() => go(-1)} disabled={idx === 0}
-            className="px-3 py-1.5 rounded-lg border border-border hover:border-amber-400 disabled:opacity-40 text-sm">
+            className="px-3 py-1.5 rounded-lg border border-border hover:border-primary disabled:opacity-40 text-sm">
             ↑ bigger ×10
           </button>
           <button type="button" onClick={() => go(1)} disabled={idx === RUNGS.length - 1}
-            className="px-3 py-1.5 rounded-lg border border-border hover:border-amber-400 disabled:opacity-40 text-sm">
+            className="px-3 py-1.5 rounded-lg border border-border hover:border-primary disabled:opacity-40 text-sm">
             ↓ smaller ÷10
           </button>
         </div>
@@ -132,25 +132,25 @@ function LadderConverter({ startValue, fromIdx, toIdx, onDone }: {
       </p>
       <div className="flex items-center gap-3 flex-wrap">
         <span className="text-2xl font-mono font-bold tabular-nums">{fmt(value)}</span>
-        <span className="text-xl font-mono px-2 py-0.5 rounded bg-amber-100 dark:bg-amber-900/40">{RUNGS[pos].symbol}</span>
+        <span className="text-xl font-mono px-2 py-0.5 rounded bg-primary/10">{RUNGS[pos].symbol}</span>
         <span className="text-sm text-muted-foreground">target: {RUNGS[toIdx].symbol}</span>
       </div>
       <div className="flex gap-2">
         <button type="button" disabled={locked || pos === 0} onClick={() => setPos(p => p - 1)}
-          className="px-3 py-1.5 rounded-lg border border-border hover:border-amber-400 disabled:opacity-40 text-sm">
+          className="px-3 py-1.5 rounded-lg border border-border hover:border-primary disabled:opacity-40 text-sm">
           ↑ to {pos > 0 ? RUNGS[pos - 1].symbol : '—'} (÷10)
         </button>
         <button type="button" disabled={locked || pos === RUNGS.length - 1} onClick={() => setPos(p => p + 1)}
-          className="px-3 py-1.5 rounded-lg border border-border hover:border-amber-400 disabled:opacity-40 text-sm">
+          className="px-3 py-1.5 rounded-lg border border-border hover:border-primary disabled:opacity-40 text-sm">
           ↓ to {pos < RUNGS.length - 1 ? RUNGS[pos + 1].symbol : '—'} (×10)
         </button>
         {atTarget && !locked && (
           <button type="button" onClick={() => { setLocked(true); onDone() }}
-            className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700">
+            className="px-3 py-1.5 rounded-lg bg-success text-background text-sm font-medium hover:bg-success">
             Lock it in: {fmt(value)} {RUNGS[toIdx].symbol}
           </button>
         )}
-        {locked && <span className="text-green-600 dark:text-green-400 font-semibold self-center">Recorded</span>}
+        {locked && <span className="text-success font-semibold self-center">Recorded</span>}
       </div>
     </div>
   )

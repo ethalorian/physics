@@ -5,6 +5,7 @@
 // Role-aware: students see their real learning progress; staff see a personal
 // "what's on my plate" cut (distinct from the /admin/home command center).
 
+import { Spinner } from '@/components/ui/spinner'
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
@@ -93,7 +94,7 @@ export default function UserContextSheet({ open, onOpenChange }: { open: boolean
                   referrerPolicy="no-referrer" crossOrigin="anonymous" />
               ) : (
                 <div className="w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl"
-                  style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)' }}>
+                  style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
                   {session?.user?.name?.charAt(0)?.toUpperCase() || 'U'}
                 </div>
               )}
@@ -112,7 +113,7 @@ export default function UserContextSheet({ open, onOpenChange }: { open: boolean
         <div className="p-6">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: 'var(--primary)' }} />
+              <Spinner size="md" className="text-primary" />
             </div>
           ) : isStaff ? (
             <StaffView summary={summary} />

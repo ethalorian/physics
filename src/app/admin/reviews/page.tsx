@@ -1,12 +1,13 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { useEffect, useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import LibraryNav from '@/components/admin/LibraryNav'
 import { useRouter } from 'next/navigation'
 import { useViewAs } from '@/lib/use-view-as'
-import { ArrowLeft, Check, X, BookOpenCheck, Sparkles, Loader2, ArrowUp, ArrowDown, Trash2, Edit3, ChevronDown, ChevronRight, Lock, Unlock } from 'lucide-react'
+import { ArrowLeft, Check, X, BookOpenCheck, Sparkles, ArrowUp, ArrowDown, Trash2, Edit3, ChevronDown, ChevronRight, Lock, Unlock } from 'lucide-react'
 import type { ReviewTargetGroup } from '@/app/api/admin/reviews/route'
 import type { ContentBlock } from '@/data/content-blocks'
 
@@ -255,7 +256,7 @@ export default function ReviewQueuePage() {
             className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-3 py-1.5 disabled:opacity-50"
             style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}
           >
-            {seeding ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
+            {seeding ? <Spinner size="sm" /> : <Sparkles size={15} />}
             {seeding ? 'Generating…' : `Generate a review for each skill`}
           </button>
         </div>
@@ -286,7 +287,7 @@ export default function ReviewQueuePage() {
                       className="inline-flex items-center gap-1 text-xs font-medium rounded-md px-2 py-1 disabled:opacity-50 shrink-0"
                       style={{ background: 'transparent', color: 'var(--primary)', border: '1px solid var(--border)', cursor: 'pointer' }}
                     >
-                      {genOne === t.id ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                      {genOne === t.id ? <Spinner size="sm" /> : <Sparkles size={12} />}
                       {genOne === t.id ? 'Generating' : 'Generate'}
                     </button>
                   </li>
@@ -337,12 +338,12 @@ export default function ReviewQueuePage() {
                 {open ? <ChevronDown size={15} style={{ color: 'var(--muted-foreground)' }} /> : <ChevronRight size={15} style={{ color: 'var(--muted-foreground)' }} />}
                 <div className="min-w-0">
                   <div className="text-sm font-semibold truncate" title={g.statement}>{g.statement}</div>
-                  <div className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
+                  <div className="text-overline" style={{ color: 'var(--muted-foreground)' }}>
                     {[g.unit_name, g.domain].filter(Boolean).join(' · ')}
                   </div>
                 </div>
               </button>
-              <div className="flex items-center gap-1.5 shrink-0 text-[11px] font-semibold tabular-nums">
+              <div className="flex items-center gap-1.5 shrink-0 text-overline font-semibold tabular-nums">
                 <span className="rounded-full px-2 py-0.5" style={{ background: g.counts.pending > 0 ? 'color-mix(in oklch, var(--reward) 22%, transparent)' : 'var(--secondary)', color: g.counts.pending > 0 ? 'var(--reward-foreground)' : 'var(--muted-foreground)' }} title="Drafts waiting for approval">{g.counts.pending} waiting</span>
                 <span className="rounded-full px-2 py-0.5" style={{ background: g.counts.approved > 0 ? 'color-mix(in oklch, var(--success) 18%, transparent)' : 'var(--secondary)', color: g.counts.approved > 0 ? 'var(--success)' : 'var(--muted-foreground)' }} title="Approved and shared">{g.counts.approved} approved</span>
                 {g.counts.rejected > 0 && <span className="rounded-full px-2 py-0.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }} title="Rejected">{g.counts.rejected} rejected</span>}
@@ -351,7 +352,7 @@ export default function ReviewQueuePage() {
                 onClick={() => setCap(g, !g.reviews_capped)}
                 disabled={capBusy === g.target_id}
                 title={g.reviews_capped ? 'Capped: students reuse an existing draft for this skill. Click to allow new generations.' : 'Uncapped: each student without an approved review gets a fresh draft. Click to cap.'}
-                className="inline-flex items-center gap-1 text-[11px] font-semibold rounded-lg px-2 py-1 shrink-0 disabled:opacity-50"
+                className="inline-flex items-center gap-1 text-overline font-semibold rounded-lg px-2 py-1 shrink-0 disabled:opacity-50"
                 style={{ background: g.reviews_capped ? 'var(--primary)' : 'transparent', color: g.reviews_capped ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: '1px solid ' + (g.reviews_capped ? 'var(--primary)' : 'var(--border)'), cursor: 'pointer' }}
               >
                 {g.reviews_capped ? <Lock size={11} /> : <Unlock size={11} />} {g.reviews_capped ? 'Capped' : 'Cap'}
@@ -391,7 +392,7 @@ export default function ReviewQueuePage() {
                       <div key={b.id} className="rounded-lg border" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
                         {/* Per-block toolbar */}
                         <div className="flex items-center gap-1 px-2 py-1 border-b" style={{ borderColor: 'var(--border)' }}>
-                          <span className="text-[10px] uppercase tracking-widest font-semibold" style={{ color: 'var(--muted-foreground)' }}>{labelMap[b.type] ?? b.type}</span>
+                          <span className="text-overline uppercase tracking-widest font-semibold" style={{ color: 'var(--muted-foreground)' }}>{labelMap[b.type] ?? b.type}</span>
                           <div className="ml-auto flex items-center gap-1">
                             <button title="Move up" disabled={bi === 0} onClick={() => moveBlock(rv, bi, -1)} className="p-1 rounded disabled:opacity-30" style={{ background: 'transparent', border: 'none', color: 'var(--muted-foreground)', cursor: bi === 0 ? 'default' : 'pointer' }}><ArrowUp size={13} /></button>
                             <button title="Move down" disabled={bi === list.length - 1} onClick={() => moveBlock(rv, bi, 1)} className="p-1 rounded disabled:opacity-30" style={{ background: 'transparent', border: 'none', color: 'var(--muted-foreground)', cursor: bi === list.length - 1 ? 'default' : 'pointer' }}><ArrowDown size={13} /></button>
@@ -422,7 +423,7 @@ export default function ReviewQueuePage() {
                 </div>
               )}
               {edits[rv.id] && (
-                <p className="text-[11px] mt-2" style={{ color: 'var(--primary)' }}>You&rsquo;ve edited these blocks &mdash; they&rsquo;ll save when you approve.</p>
+                <p className="text-overline mt-2" style={{ color: 'var(--primary)' }}>You&rsquo;ve edited these blocks &mdash; they&rsquo;ll save when you approve.</p>
               )}
             </div>
 

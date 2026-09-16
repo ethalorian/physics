@@ -1,3 +1,4 @@
+import { getPendingSavedTargets } from '@/lib/pending-lesson-work'
 import { pendingLessonSubmissions } from '@/lib/lesson-review'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
@@ -108,12 +109,17 @@ export const GET = withAuth(async (request, ctx) => {
     // A target's work can live on several lessons (MVP day lessons share their
     // week's targets), so map target → every carrier (lib/lesson-targets).
     let targetLessons = new Map<string, string[]>()
+    let unitLessons: { id: string; content_blocks?: { blocks?: unknown[] } | null }[] = []
+    let unitTargets: { id: string; slug: string; lesson_id: string | null }[] = []
+    let allSubmissions: { user_id: string; lesson_id: string }[] = []
     {
       const { data: tl } = await supabaseAdmin
         .from('learning_targets')
         .select('id, slug, lesson_id')
         .eq('unit_id', unitId)
       const { data: ul } = await supabaseAdmin.from('lessons').select('id, content_blocks').eq('unit_id', unitId)
+      unitLessons = ul ?? []
+      unitTargets = tl ?? []
       targetLessons = lessonsByTarget(
         (ul ?? []) as { id: string; content_blocks?: { blocks?: unknown[] } | null }[],
         (tl ?? []) as { id: string; slug: string; lesson_id: string | null }[],
@@ -124,12 +130,14 @@ export const GET = withAuth(async (request, ctx) => {
     if (lessonIdsForPending.length && studentIds.length) {
       const { data: submissions, error } = await supabaseAdmin.from('lesson_submissions').select('id, user_id, lesson_id, submitted_at').in('user_id', studentIds).in('lesson_id', lessonIdsForPending)
       if (error) throw error
+      allSubmissions = submissions ?? []
       const ids = (submissions ?? []).map((s) => s.id)
       const { data: reviews, error: reviewError } = ids.length ? await supabaseAdmin.from('lesson_reviews').select('submission_id').in('submission_id', ids) : { data: [], error: null }
       if (reviewError) throw reviewError
       for (const sub of pendingLessonSubmissions(submissions ?? [], new Set((reviews ?? []).map((r) => r.submission_id)))) pendingKeys.add(`${sub.user_id}|${sub.lesson_id}`)
     }
-    const pending: Record<string, Record<string, boolean>> = {}
+    // Explicit saves are reviewable immediately; autosaved drafts never enter this queue.
+    const pending: Record<string, Record<string, boolean>> = await getPendingSavedTargets(studentIds.filter(id => own.has(id)), unitLessons, unitTargets, targetLessons, allSubmissions)
     for (const s of students) for (const t of targets) {
       if ((targetLessons.get(t.id) ?? []).some((id) => pendingKeys.has(`${s.id}|${id}`))) (pending[s.id] ??= {})[t.id] = true
     }

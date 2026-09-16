@@ -131,7 +131,7 @@ export default function DuplicatesPage() {
                             key={other.id}
                             onClick={() => merge(r, other)}
                             disabled={busy === other.id}
-                            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium disabled:opacity-40"
+                            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-overline font-medium disabled:opacity-40"
                             style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}
                             title={`Keep this row; merge ${other.email ?? 'duplicate'} into it`}
                           >

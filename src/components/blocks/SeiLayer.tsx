@@ -150,7 +150,7 @@ export function SeiTalkFirst({ state }: { state: SeiState }) {
 export function SeiFairnessNote() {
   const projectionSupports = useContext(ProjectionSeiContext)
   if (projectionSupports === false) return null
-  return <p className="text-[11px] mt-1" style={{ color: C.muted }}>Rated on the physics, not the English. · Se evalúa la física, no el inglés.</p>
+  return <p className="text-overline mt-1" style={{ color: C.muted }}>Rated on the physics, not the English. · Se evalúa la física, no el inglés.</p>
 }
 
 /** Sketch-mode answer surface (principle 6): the drawing IS the answer. */

@@ -157,7 +157,7 @@ export default function LobbyActivityPage() {
         key={tick}
         aria-hidden
         style={{
-          width: 7, height: 7, borderRadius: 999, flexShrink: 0,
+          width: 7, height: 7, borderRadius: 'var(--radius-full)', flexShrink: 0,
           background: conn === 'live' ? 'var(--success)' : 'var(--reward)',
           animation: conn === 'live' && tick > 0 ? 'lobby-pulse 300ms cubic-bezier(0.16, 1, 0.3, 1)' : undefined,
         }}
@@ -180,7 +180,7 @@ export default function LobbyActivityPage() {
   // Escape sessions store their room config (JSON) in `prompt`; never show it as a task.
   const taskCallout = st?.prompt && !st.block && st.task_type !== 'escape' ? (
     <div className="mb-4 rounded-xl p-4 text-left" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
-      <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ opacity: 0.85 }}>
+      <div className="flex items-center gap-1.5 text-overline font-semibold uppercase tracking-wider mb-1" style={{ opacity: 0.85 }}>
         <Target size={13} /> Your task
       </div>
       <div className="text-base font-semibold" style={{ lineHeight: 1.35 }}>{st.prompt}</div>
@@ -210,7 +210,7 @@ export default function LobbyActivityPage() {
       {st.block && st.sharedArtifact && <BlockRenderer referenceBlocks={st.referenceBlocks} blocks={[st.block]} lessonId={st.lesson_id ?? ''} responses={{ [st.block.id]: { response: st.sharedArtifact.response, created_at: st.sharedArtifact.updated_at } }} hydrated readOnly />}
       {st.myRole ? (
         <div className="mt-4 rounded-xl p-4 text-left" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
-          <div className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--muted-foreground)' }}>One tap · your role</div>
+          <div className="text-overline font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--muted-foreground)' }}>One tap · your role</div>
           {reflect.done ? (
             <p className="text-sm">Logged: you were the <strong>{st.myRole.label}</strong>.{reflect.xp > 0 ? ` +${reflect.xp} XP` : ''}</p>
           ) : (
@@ -262,8 +262,8 @@ export default function LobbyActivityPage() {
               >
                 <span
                   aria-hidden
-                  className="grid place-items-center rounded-full font-semibold"
-                  style={{ width: 18, height: 18, fontSize: 10, background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}
+                  className="grid place-items-center rounded-full text-overline"
+                  style={{ width: 18, height: 18, background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}
                 >
                   {initialsOf(m.alias)}
                 </span>
@@ -327,13 +327,13 @@ export default function LobbyActivityPage() {
                 <div className="relative">
                   {renderAv(mate, 48)}
                   {mate.completed && (
-                    <CheckCircle2 size={16} style={{ color: 'var(--success)', position: 'absolute', right: -2, bottom: -2, background: 'var(--card)', borderRadius: 999 }} />
+                    <CheckCircle2 size={16} style={{ color: 'var(--success)', position: 'absolute', right: -2, bottom: -2, background: 'var(--card)', borderRadius: 'var(--radius-full)' }} />
                   )}
                 </div>
                 <span className="text-xs truncate w-full text-center" title={mate.alias}>
                   {mate.alias}{mate.isMe ? ' (you)' : ''}
                 </span>
-                {mate.role && <span className="text-[10px] truncate w-full text-center" style={{ color: 'var(--muted-foreground)' }}>{mate.role}</span>}
+                {mate.role && <span className="text-overline truncate w-full text-center" style={{ color: 'var(--muted-foreground)' }}>{mate.role}</span>}
               </div>
             ))}
           </div>

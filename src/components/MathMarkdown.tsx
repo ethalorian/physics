@@ -106,14 +106,14 @@ function normalizeDelimiters(src: string): string {
     .replace(/\\\(([\s\S]*?)\\\)/g, (_m, inner) => `$${String(inner).trim()}$`)
 }
 
-/** Turn the project's ::: callout blocks into styled divs (unchanged behavior). */
+/** Blank lines let Markdown inside the HTML callout render as Markdown. */
 function transformCallouts(src: string): string {
   return src.replace(
-    /:::(\w+)\s*(.*?)\n([\s\S]*?):::/g,
+    /:::(\w+)[ \t]*([^\n]*)\n([\s\S]*?):::/g,
     (_match, type, title, body) => {
       const cleanTitle = String(title).trim()
       const cleanBody = String(body).trim()
-      return `\n<div class="admonition-${type}">\n${cleanTitle ? `**${cleanTitle}**\n\n` : ''}${cleanBody}\n</div>\n`
+      return `\n<div class="admonition-${type}">\n\n${cleanTitle ? `**${cleanTitle}**\n\n` : ''}${cleanBody}\n\n</div>\n`
     },
   )
 }

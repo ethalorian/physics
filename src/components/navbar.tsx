@@ -25,7 +25,7 @@ export default function Navbar() {
   const { data: session, status } = useSession()
   const { viewMode } = useViewMode()
   const pathname = usePathname()
-  
+
   // Use view-aware permissions for navigation decisions
   const {
     isAuthenticated,
@@ -66,7 +66,7 @@ export default function Navbar() {
   // Navigation items based on user role and authentication
   const getNavigationItems = () => {
     if (!isAuthenticated) return []
-    
+
     // Observer (principal / coach): read-only — global analytics + lesson
     // plans. No control room, no admin tools, no student journey.
     if (role === 'observer') {
@@ -132,13 +132,13 @@ export default function Navbar() {
   return (
     <>
     {viewingAs && (
-      <div className="w-full text-sm flex items-center justify-center gap-3 py-1.5 px-4" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)' }}>
+      <div className="w-full text-sm flex items-center justify-center gap-3 py-1.5 px-4" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
         <span>Viewing as teacher{teacherEmail ? ` · ${teacherEmail}` : ''} — admin tools hidden.</span>
         <button onClick={() => { clearViewAs(); window.location.reload() }} className="underline font-medium">Exit</button>
       </div>
     )}
     {studentViewActive && (
-      <div className="w-full text-sm flex items-center justify-center gap-3 py-1.5 px-4" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)' }}>
+      <div className="w-full text-sm flex items-center justify-center gap-3 py-1.5 px-4" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
         <span>Viewing as student — staff tools hidden.</span>
         <button onClick={() => { clearStudentView(); window.location.reload() }} className="underline font-medium">Exit</button>
       </div>
@@ -162,7 +162,7 @@ export default function Navbar() {
               <PhysicsLevelBadge variant="compact" />
             </div>
           </div>
-          
+
           {/* Desktop navigation links */}
           {isAuthenticated && navigationItems.length > 0 && (
             <div className="nav-rail hidden xl:flex items-center gap-0.5 rounded-xl px-1 py-0.5" aria-label="Main">
@@ -214,8 +214,8 @@ export default function Navbar() {
                           <Link
                             href={item.href}
                             className={`flex items-center gap-3 mx-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
-                              isActive 
-                                ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25' 
+                              isActive
+                                ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25'
                                 : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                             }`}
                           >
@@ -225,7 +225,7 @@ export default function Navbar() {
                         </SheetClose>
                       )
                     })}
-                    
+
                     {/* Theme toggle in mobile menu */}
                     <div className="mx-3 px-4 py-4 border-t border-border/50 mt-4">
                       <div className="flex items-center justify-between">
@@ -267,9 +267,9 @@ export default function Navbar() {
                 <div className="hidden md:block">
                   <ThemeToggle />
                 </div>
-                
+
                 {/* Sign In Button - Apple-style pill */}
-                <Button 
+                <Button
                   onClick={() => signIn("google", { callbackUrl: "/home" })}
                   size="sm"
                   className="h-9 px-5 rounded-full text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-xl hover:shadow-primary/30"

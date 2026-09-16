@@ -62,7 +62,7 @@ export default function VocabularyConcentrationGame({
     selectedCards: [],
     isProcessing: false
   })
-  
+
   const [gameCards, setGameCards] = useState<GameCard[]>([])
   const [gameTerms, setGameTerms] = useState<VocabularyTerm[]>([])
   const [streak, setStreak] = useState(0)
@@ -91,22 +91,22 @@ export default function VocabularyConcentrationGame({
     if (vocabularyTerms.length > 0) {
       // Filter by difficulty if specified
       let filteredTerms = vocabularyTerms
-      
+
       if (difficulty === 'easy') {
-        filteredTerms = vocabularyTerms.filter(term => 
+        filteredTerms = vocabularyTerms.filter(term =>
           term.difficulty === 'easy' || !term.difficulty
         )
       } else if (difficulty === 'hard') {
-        filteredTerms = vocabularyTerms.filter(term => 
+        filteredTerms = vocabularyTerms.filter(term =>
           term.difficulty === 'hard' || !term.difficulty
         )
       }
       // For medium difficulty, use all terms (no filtering)
-      
+
       // Shuffle and select terms for the game
       const shuffled = [...filteredTerms].sort(() => Math.random() - 0.5)
       const selectedTerms = shuffled.slice(0, Math.min(numberOfPairs, shuffled.length))
-      
+
       setGameTerms(selectedTerms)
       setGameState(prev => ({
         ...prev,
@@ -119,7 +119,7 @@ export default function VocabularyConcentrationGame({
   useEffect(() => {
     if (gameTerms.length > 0) {
       const cards: GameCard[] = []
-      
+
       // Create pairs of cards (term + definition)
       gameTerms.forEach((term, index) => {
         // Term card
@@ -132,7 +132,7 @@ export default function VocabularyConcentrationGame({
           isMatched: false,
           position: index * 2
         })
-        
+
         // Definition card
         cards.push({
           id: `def-${term.id}`,
@@ -144,15 +144,15 @@ export default function VocabularyConcentrationGame({
           position: index * 2 + 1
         })
       })
-      
+
       // Shuffle the cards
       const shuffledCards = cards.sort(() => Math.random() - 0.5)
-      
+
       // Assign new positions after shuffling
       shuffledCards.forEach((card, index) => {
         card.position = index
       })
-      
+
       setGameCards(shuffledCards)
     }
   }, [gameTerms])
@@ -172,7 +172,7 @@ export default function VocabularyConcentrationGame({
       selectedCards: [],
       isProcessing: false
     }))
-    
+
     // Reset all cards
     setGameCards(prev => prev.map(card => ({
       ...card,
@@ -182,9 +182,9 @@ export default function VocabularyConcentrationGame({
   }, [gameTerms])
 
   const handleCardClick = useCallback((clickedCard: GameCard) => {
-    if (gameState.gameStatus !== 'playing' || 
-        gameState.isProcessing || 
-        clickedCard.isFlipped || 
+    if (gameState.gameStatus !== 'playing' ||
+        gameState.isProcessing ||
+        clickedCard.isFlipped ||
         clickedCard.isMatched ||
         gameState.selectedCards.length >= 2) {
       return
@@ -199,7 +199,7 @@ export default function VocabularyConcentrationGame({
     ))
 
     const newSelectedCards = [...gameState.selectedCards, clickedCard]
-    
+
     setGameState(prev => ({
       ...prev,
       selectedCards: newSelectedCards
@@ -208,7 +208,7 @@ export default function VocabularyConcentrationGame({
     // If this is the second card, check for match
     if (newSelectedCards.length === 2) {
       setGameState(prev => ({ ...prev, isProcessing: true }))
-      
+
       setTimeout(() => {
         checkForMatch(newSelectedCards)
       }, 1000) // Show cards for 1 second before checking
@@ -219,7 +219,7 @@ export default function VocabularyConcentrationGame({
     const [card1, card2] = selectedCards
     const isMatch = card1.termId === card2.termId && card1.type !== card2.type
     // Card flips measure memory. Keep game scores for engagement, not word accuracy.
-    
+
     setGameState(prev => ({
       ...prev,
       moves: prev.moves + 1,
@@ -271,7 +271,7 @@ export default function VocabularyConcentrationGame({
       setShake(true); setTimeout(() => setShake(false), 450)
       // Flip cards back over
       setTimeout(() => {
-        setGameCards(prev => prev.map(card => 
+        setGameCards(prev => prev.map(card =>
           (card.id === card1.id || card.id === card2.id)
             ? { ...card, isFlipped: false }
             : card
@@ -315,7 +315,7 @@ export default function VocabularyConcentrationGame({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="flex items-center justify-center gap-2">
-            <Brain className="h-6 w-6 text-purple-600" />
+            <Brain className="h-6 w-6 text-primary" />
             Concentration Ready
           </CardTitle>
           <CardDescription>
@@ -324,22 +324,22 @@ export default function VocabularyConcentrationGame({
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-4 md:grid-cols-3 text-center">
-            <div className="p-4 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-700">{gameState.totalPairs}</div>
-              <div className="text-sm text-purple-600">Pairs to Match</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{gameState.totalPairs}</div>
+              <div className="text-sm text-muted-foreground">Pairs to Match</div>
             </div>
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <div className="text-2xl font-bold text-blue-700">{gameState.totalPairs * 2}</div>
-              <div className="text-sm text-blue-600">Total Cards</div>
+            <div className="p-4 bg-muted rounded-lg">
+              <div className="text-2xl font-bold text-foreground">{gameState.totalPairs * 2}</div>
+              <div className="text-sm text-muted-foreground">Total Cards</div>
             </div>
-            <div className="p-4 bg-green-50 rounded-lg">
-              <div className="text-2xl font-bold text-green-700">
+            <div className="p-4 bg-reward/10 rounded-lg">
+              <div className="text-2xl font-bold text-foreground">
                 {difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30}
               </div>
-              <div className="text-sm text-green-600">Points per Pair</div>
+              <div className="text-sm text-muted-foreground">Points per Pair</div>
             </div>
           </div>
-          
+
           <div className="text-center">
             <Button onClick={startGame} size="lg">
               <Brain className="h-4 w-4 mr-2" />
@@ -353,35 +353,35 @@ export default function VocabularyConcentrationGame({
 
   if (gameState.gameStatus === 'complete') {
     const accuracy = Math.round((gameState.matches / gameState.moves) * 100)
-    
+
     return (
-      <Card className="border-green-200 bg-green-50">
+      <Card className="border-success/40 bg-success/10">
         <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-2 text-green-800">
+          <CardTitle className="flex items-center justify-center gap-2 text-success">
             <Trophy className="h-6 w-6" />
             Perfect Memory!
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-4 text-center">
-            <div className="p-3 sm:p-4 bg-white rounded-lg">
-              <div className="text-lg sm:text-2xl font-bold text-green-700">{gameState.score}</div>
-              <div className="text-xs sm:text-sm text-green-600">Final Score</div>
+            <div className="p-3 sm:p-4 bg-card rounded-lg">
+              <div className="text-lg sm:text-2xl font-bold text-success">{gameState.score}</div>
+              <div className="text-xs sm:text-sm text-success">Final Score</div>
             </div>
-            <div className="p-3 sm:p-4 bg-white rounded-lg">
-              <div className="text-lg sm:text-2xl font-bold text-green-700">{gameState.matches}/{gameState.totalPairs}</div>
-              <div className="text-xs sm:text-sm text-green-600">Pairs Found</div>
+            <div className="p-3 sm:p-4 bg-card rounded-lg">
+              <div className="text-lg sm:text-2xl font-bold text-success">{gameState.matches}/{gameState.totalPairs}</div>
+              <div className="text-xs sm:text-sm text-success">Pairs Found</div>
             </div>
-            <div className="p-3 sm:p-4 bg-white rounded-lg">
-              <div className="text-lg sm:text-2xl font-bold text-green-700">{gameState.moves}</div>
-              <div className="text-xs sm:text-sm text-green-600">Total Moves</div>
+            <div className="p-3 sm:p-4 bg-card rounded-lg">
+              <div className="text-lg sm:text-2xl font-bold text-success">{gameState.moves}</div>
+              <div className="text-xs sm:text-sm text-success">Total Moves</div>
             </div>
-            <div className="p-3 sm:p-4 bg-white rounded-lg">
-              <div className="text-lg sm:text-2xl font-bold text-green-700">{accuracy}%</div>
-              <div className="text-xs sm:text-sm text-green-600">Efficiency</div>
+            <div className="p-3 sm:p-4 bg-card rounded-lg">
+              <div className="text-lg sm:text-2xl font-bold text-success">{accuracy}%</div>
+              <div className="text-xs sm:text-sm text-success">Efficiency</div>
             </div>
           </div>
-          
+
           <div className="text-center space-y-2">
             <Button onClick={resetGame} variant="outline">
               <RotateCcw className="h-4 w-4 mr-2" />
@@ -398,7 +398,7 @@ export default function VocabularyConcentrationGame({
 
   return (
     <div className={`space-y-6 ${shake ? 'arcade-shake' : ''}`}>
-      <style>{`@keyframes arcadeShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}.arcade-shake{animation:arcadeShake .45s}`}</style>
+
       {/* Game Header */}
       <Card>
         <CardContent className="p-3 sm:p-4">
@@ -445,28 +445,28 @@ export default function VocabularyConcentrationGame({
                 <div className={`
                   w-full h-full rounded-lg border-2 transition-all duration-500 transform-style-preserve-3d
                   ${card.isFlipped || card.isMatched ? 'rotate-y-180' : ''}
-                  ${card.isMatched ? 'border-green-500 bg-green-100' : 'border-gray-300'}
+                  ${card.isMatched ? 'border-success bg-success/10' : 'border-border'}
                 `}>
                   {/* Card Back */}
                   <div className={`
                     absolute inset-0 w-full h-full rounded-lg backface-hidden
-                    ${card.isMatched ? 'bg-green-50' : 'bg-gradient-to-br from-purple-400 to-blue-500'}
+                    ${card.isMatched ? 'bg-success/10' : 'bg-primary'}
                     flex items-center justify-center
                   `}>
-                    <Brain className={`h-8 w-8 ${card.isMatched ? 'text-green-600' : 'text-white'}`} />
+                    <Brain className={`h-8 w-8 ${card.isMatched ? 'text-success' : 'text-primary-foreground'}`} />
                   </div>
-                  
+
                   {/* Card Front */}
                   <div className={`
                     absolute inset-0 w-full h-full rounded-lg backface-hidden rotate-y-180
-                    ${card.isMatched ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}
+                    ${card.isMatched ? 'bg-success/10 border-success/40' : 'bg-card border-border'}
                     border-2 p-2 flex items-center justify-center text-center
                   `}>
                     <div className="w-full">
-                      <div className={`text-xs font-medium mb-1 ${card.isMatched ? 'text-green-600' : 'text-purple-600'}`}>
+                      <div className={`text-xs font-medium mb-1 ${card.isMatched ? 'text-success' : 'text-primary'}`}>
                         {card.type === 'term' ? 'TERM' : 'DEFINITION'}
                       </div>
-                      <div className={`text-sm font-medium leading-tight ${card.isMatched ? 'text-green-800' : 'text-gray-800'}`}>
+                      <div className={`text-sm font-medium leading-tight ${card.isMatched ? 'text-success' : 'text-foreground'}`}>
                         {(() => { const t = gameTerms.find((g) => g.id === card.termId); if (!t) return card.content
                           return card.type === 'term' ? <TermLabel term={t} className="justify-center" /> : <DefinitionLabel term={t} /> })()}
                       </div>

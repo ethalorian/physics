@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { useState, useEffect, type CSSProperties } from 'react'
 import { useSession } from 'next-auth/react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,9 +12,9 @@ import Avatar from '@/components/avatar/Avatar'
 import AvatarGallery from '@/components/avatar/AvatarGallery'
 import ChallengePanel from '@/components/gamification/ChallengePanel'
 import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types'
-import { 
-  Trophy, 
-  Medal, 
+import {
+  Trophy,
+  Medal,
   Target,
   TrendingUp,
   Flame,
@@ -105,7 +106,7 @@ export default function LeaderboardPage() {
   useEffect(() => {
     async function fetchLeaderboard() {
       if (!session) return
-      
+
       setLoading(true)
       try {
         const response = await fetch(`/api/leaderboard?period=${period}&limit=50`)
@@ -165,7 +166,7 @@ export default function LeaderboardPage() {
     return (
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <Spinner size="lg" className="text-primary" />
         </div>
       </div>
     )
@@ -348,7 +349,7 @@ export default function LeaderboardPage() {
             <CardContent>
               {loading ? (
                 <div className="flex items-center justify-center py-12">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <Spinner size="md" className="text-primary" />
                 </div>
               ) : error ? (
                 <div className="text-center py-12 text-muted-foreground">
@@ -381,7 +382,7 @@ export default function LeaderboardPage() {
                       <div className="w-10 flex flex-col items-center gap-0.5">
                         {getRankIcon(entry.rank)}
                         {typeof entry.rank_delta === 'number' && entry.rank_delta !== 0 && (
-                          <span className="text-[11px] font-bold tabular-nums" style={{ color: entry.rank_delta > 0 ? 'var(--success)' : 'var(--destructive)' }}>
+                          <span className="text-overline font-bold tabular-nums" style={{ color: entry.rank_delta > 0 ? 'var(--success)' : 'var(--destructive)' }}>
                             {entry.rank_delta > 0 ? `▲${entry.rank_delta}` : `▼${Math.abs(entry.rank_delta)}`}
                           </span>
                         )}
@@ -427,7 +428,7 @@ export default function LeaderboardPage() {
 
                     {/* Expanded detail — the fun part: where it all came from */}
                     {isOpen && (
-                      <div className="px-4 pb-4 pt-1" style={{ borderTop: '0.5px solid var(--border)', background: 'color-mix(in oklch, var(--secondary) 25%, transparent)' }}>
+                      <div className="px-4 pb-4 pt-1" style={{ borderTop: '1px solid var(--border)', background: 'color-mix(in oklch, var(--secondary) 25%, transparent)' }}>
                         <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1.5 mt-3">
                           {XP_SOURCES.filter((src) => (entry.xp_by_source?.[src.key] ?? 0) > 0).map((src) => (
                             <div key={src.key} className="flex items-center gap-2 text-sm">

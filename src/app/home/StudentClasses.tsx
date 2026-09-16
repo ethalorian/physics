@@ -1,10 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { GraduationCap, Star } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { classLevelLabel, classProgramLabel, type StudentClassIdentity } from '@/lib/class-identity'
-import styles from './home.module.css'
 
 export default function StudentClasses() {
   const [classes, setClasses] = useState<StudentClassIdentity[]>([])
@@ -29,20 +28,13 @@ export default function StudentClasses() {
       .finally(() => { clearTimeout(timeout); if (active) setLoading(false) })
     return () => { active = false; clearTimeout(timeout); controller.abort() }
   }, [retry])
-  return <section className={styles.classIdentity} aria-label="Your enrolled classes">
-    {loading ? <p role="status" className="text-sm text-muted-foreground">Loading your class…</p>
-      : error ? <div role="alert" className="flex flex-wrap items-center gap-2 text-sm">Your class details couldn’t load.<Button variant="ghost" className="min-h-11" onClick={() => setRetry(n => n + 1)}>Retry class details</Button></div>
-      : !classes.length ? <p className="text-sm text-muted-foreground">No active class enrollment. Ask your teacher to check your class.</p>
-      : <ul className="space-y-3">{classes.map(course => {
-        const honors = course.track?.trim().toLowerCase() === 'honors'
-        return <li key={course.id} className="flex flex-wrap items-center gap-x-4 gap-y-2">
-          <span className={`${styles.levelBadge} ${honors ? styles.honorsBadge : ''}`}>
-            {honors ? <Star size={16} aria-hidden="true" fill="currentColor" /> : <GraduationCap size={18} aria-hidden="true" />}
-            {classLevelLabel(course.track)}
-          </span>
-          <div className="min-w-0 flex-1 basis-48"><p className="text-sm font-semibold break-words">{course.name}{course.section ? ` · ${course.section}` : ''}</p><p className="text-xs text-muted-foreground">{classProgramLabel(course.program)}</p></div>
-          <p className="text-sm break-words"><span className="text-muted-foreground">Teacher: </span>{course.teacher ?? 'Not assigned yet'}</p>
-        </li>
-      })}</ul>}
+  return <section className="mt-1 text-sm" aria-label="Your enrolled classes">
+    {loading ? <p role="status" className="text-muted-foreground">Loading your class…</p>
+      : error ? <div role="alert" className="flex flex-wrap items-center gap-2">Your class details couldn’t load.<Button variant="ghost" className="min-h-11" onClick={() => setRetry(n => n + 1)}>Retry class details</Button></div>
+      : !classes.length ? <p className="text-muted-foreground">No active class enrollment. Ask your teacher to check your class.</p>
+      : <details className="group/classes">
+        <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 text-muted-foreground"><span className="min-w-0 break-words">{classes.map(course => `${course.name}${course.section ? ` · ${course.section}` : ''} · ${classLevelLabel(course.track)}`).join(' / ')}</span><ChevronDown size={14} aria-hidden="true" className="shrink-0 group-open/classes:rotate-180" /></summary>
+        <ul className="space-y-2 pt-2">{classes.map(course => <li key={course.id} className="text-xs text-muted-foreground">{classes.length > 1 && <strong className="mr-2 text-foreground">{course.name}</strong>}{classProgramLabel(course.program)} · Teacher: {course.teacher ?? 'Not assigned yet'}</li>)}</ul>
+      </details>}
   </section>
 }

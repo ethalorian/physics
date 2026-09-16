@@ -36,7 +36,7 @@ type Course = { id: string; name: string; section: string | null }
 const btn = (active = false): React.CSSProperties => ({
   border: `1px solid ${active ? 'var(--primary)' : 'var(--border)'}`,
   background: active ? 'color-mix(in oklch, var(--primary) 16%, var(--card))' : 'var(--card)',
-  color: 'var(--foreground)', borderRadius: 10, padding: '8px 10px', fontSize: 12, fontWeight: 600,
+  color: 'var(--foreground)', borderRadius: 'var(--radius-md)', padding: '8px 10px', fontSize: 12, fontWeight: 600,
   display: 'inline-flex', alignItems: 'center', gap: 6, cursor: 'pointer', minHeight: 44,
 })
 
@@ -200,7 +200,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
       {open && typeof document !== 'undefined' && createPortal(
         <div role="dialog" aria-label="Present controls"
           className="fixed z-40 flex flex-col"
-          style={{ right: 12, bottom: 12, width: 380, maxWidth: 'calc(100vw - 24px)', maxHeight: 'calc(100vh - 24px)', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 18, boxShadow: '0 24px 60px -24px rgba(0,0,0,.5)', overflow: 'hidden' }}>
+          style={{ right: 12, bottom: 12, width: 380, maxWidth: 'calc(100vw - 24px)', maxHeight: 'calc(100vh - 24px)', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', boxShadow: '0 24px 60px -24px color-mix(in oklch, var(--primary) 50%, transparent)', overflow: 'hidden' }}>
           <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: '1px solid var(--border)', background: 'color-mix(in oklch, var(--primary) 10%, var(--card))' }}>
             <MonitorPlay size={16} style={{ color: 'var(--primary)' }} />
             <div className="min-w-0 flex-1">

@@ -90,7 +90,7 @@ export default function DistanceDisplacementAssignmentPage() {
   const { data: session } = useSession()
   const router = useRouter()
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  
+
   // Canvas state
   const [bug, setBug] = useState<Point>({ x: 300, y: 300 })
   const [initialPosition, setInitialPosition] = useState<Point>({ x: 300, y: 300 })
@@ -103,33 +103,33 @@ export default function DistanceDisplacementAssignmentPage() {
   const [isShiftPressed, setIsShiftPressed] = useState(false)
   const [dragStartPos, setDragStartPos] = useState<Point | null>(null)
   const [lockedAxis, setLockedAxis] = useState<'x' | 'y' | null>(null)
-  
+
   // Assignment state
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [responses, setResponses] = useState<QuestionResponse[]>([])
   const [currentAnswer, setCurrentAnswer] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [showHint, setShowHint] = useState(false)
-  
+
   const canvasWidth = 700
   const canvasHeight = 600
-  
+
   const progress = ((currentQuestion + 1) / assignmentQuestions.length) * 100
   const totalPoints = assignmentQuestions.reduce((sum, q) => sum + q.points, 0)
   const earnedPoints = responses.reduce((sum, r) => sum + (r.pointsEarned || 0), 0)
-  
+
   // Transform point from canvas to physics coordinates
   const toPhysicsCoords = useCallback((point: Point): Point => {
     const dx = point.x - origin.x
     const dy = origin.y - point.y
-    
+
     const rad = (rotation * Math.PI) / 180
     const rotatedX = dx * Math.cos(rad) - dy * Math.sin(rad)
     const rotatedY = dx * Math.sin(rad) + dy * Math.cos(rad)
-    
+
     return { x: rotatedX / 50, y: rotatedY / 50 }
   }, [origin, rotation])
-  
+
   const totalDistance = useCallback(() => {
     let distance = 0
     for (let i = 1; i < path.length; i++) {
@@ -139,7 +139,7 @@ export default function DistanceDisplacementAssignmentPage() {
     }
     return distance / 50
   }, [path])
-  
+
   const displacement = useCallback(() => {
     const initial = toPhysicsCoords(initialPosition)
     const final = toPhysicsCoords(bug)
@@ -149,39 +149,39 @@ export default function DistanceDisplacementAssignmentPage() {
     const angle = Math.atan2(dy, dx) * (180 / Math.PI)
     return { magnitude, angle, dx, dy }
   }, [bug, initialPosition, toPhysicsCoords])
-  
+
   // Keyboard handlers
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Shift') setIsShiftPressed(true)
     }
-    
+
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.key === 'Shift') {
         setIsShiftPressed(false)
         setLockedAxis(null)
       }
     }
-    
+
     window.addEventListener('keydown', handleKeyDown)
     window.addEventListener('keyup', handleKeyUp)
-    
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
       window.removeEventListener('keyup', handleKeyUp)
     }
   }, [])
-  
+
   // Canvas drawing
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    
+
     const ctx = canvas.getContext('2d')
     if (!ctx) return
-    
+
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
-    
+
     // Grid
     ctx.strokeStyle = '#e5e7eb'
     ctx.lineWidth = 1
@@ -197,11 +197,11 @@ export default function DistanceDisplacementAssignmentPage() {
       ctx.lineTo(canvasWidth, y)
       ctx.stroke()
     }
-    
+
     // Axes
     ctx.strokeStyle = '#374151'
     ctx.lineWidth = 3
-    
+
     const xAxisEnd = {
       x: origin.x + 200 * Math.cos((rotation * Math.PI) / 180),
       y: origin.y - 200 * Math.sin((rotation * Math.PI) / 180)
@@ -210,7 +210,7 @@ export default function DistanceDisplacementAssignmentPage() {
     ctx.moveTo(origin.x, origin.y)
     ctx.lineTo(xAxisEnd.x, xAxisEnd.y)
     ctx.stroke()
-    
+
     const yAngle = ((rotation + 90) * Math.PI) / 180
     const yAxisEnd = {
       x: origin.x + 200 * Math.cos(yAngle),
@@ -220,7 +220,7 @@ export default function DistanceDisplacementAssignmentPage() {
     ctx.moveTo(origin.x, origin.y)
     ctx.lineTo(yAxisEnd.x, yAxisEnd.y)
     ctx.stroke()
-    
+
     // Path
     if (path.length > 1) {
       ctx.strokeStyle = '#6b7280'
@@ -234,21 +234,21 @@ export default function DistanceDisplacementAssignmentPage() {
       ctx.stroke()
       ctx.setLineDash([])
     }
-    
+
     // Vectors with labels
     const drawArrow = (fromX: number, fromY: number, toX: number, toY: number, color: string) => {
       const headLength = 15
       const dx = toX - fromX
       const dy = toY - fromY
       const angle = Math.atan2(dy, dx)
-      
+
       ctx.strokeStyle = color
       ctx.lineWidth = 3
       ctx.beginPath()
       ctx.moveTo(fromX, fromY)
       ctx.lineTo(toX, toY)
       ctx.stroke()
-      
+
       ctx.fillStyle = color
       ctx.beginPath()
       ctx.moveTo(toX, toY)
@@ -257,23 +257,23 @@ export default function DistanceDisplacementAssignmentPage() {
       ctx.closePath()
       ctx.fill()
     }
-    
+
     drawArrow(origin.x, origin.y, initialPosition.x, initialPosition.y, '#8b5cf6')
     drawArrow(origin.x, origin.y, bug.x, bug.y, '#3b82f6')
     drawArrow(initialPosition.x, initialPosition.y, bug.x, bug.y, '#ef4444')
-    
+
     // Origin
     ctx.fillStyle = '#f59e0b'
     ctx.beginPath()
     ctx.arc(origin.x, origin.y, 8, 0, 2 * Math.PI)
     ctx.fill()
-    
+
     // Initial position point
     ctx.fillStyle = '#8b5cf6'
     ctx.beginPath()
     ctx.arc(initialPosition.x, initialPosition.y, 8, 0, 2 * Math.PI)
     ctx.fill()
-    
+
     // Draw bug - detailed sprite
     // Bug body (oval)
     ctx.fillStyle = '#10b981'
@@ -283,7 +283,7 @@ export default function DistanceDisplacementAssignmentPage() {
     ctx.strokeStyle = '#065f46'
     ctx.lineWidth = 2
     ctx.stroke()
-    
+
     // Bug head
     ctx.fillStyle = '#059669'
     ctx.beginPath()
@@ -292,7 +292,7 @@ export default function DistanceDisplacementAssignmentPage() {
     ctx.strokeStyle = '#065f46'
     ctx.lineWidth = 1
     ctx.stroke()
-    
+
     // Antennae
     ctx.strokeStyle = '#065f46'
     ctx.lineWidth = 2
@@ -302,28 +302,28 @@ export default function DistanceDisplacementAssignmentPage() {
     ctx.moveTo(bug.x + 4, bug.y - 15)
     ctx.lineTo(bug.x + 8, bug.y - 22)
     ctx.stroke()
-    
+
     // Antennae tips
     ctx.fillStyle = '#065f46'
     ctx.beginPath()
     ctx.arc(bug.x - 8, bug.y - 22, 2, 0, 2 * Math.PI)
     ctx.arc(bug.x + 8, bug.y - 22, 2, 0, 2 * Math.PI)
     ctx.fill()
-    
+
     // Bug eyes
     ctx.fillStyle = '#ffffff'
     ctx.beginPath()
     ctx.arc(bug.x - 3, bug.y - 13, 3, 0, 2 * Math.PI)
     ctx.arc(bug.x + 3, bug.y - 13, 3, 0, 2 * Math.PI)
     ctx.fill()
-    
+
     // Eye pupils
     ctx.fillStyle = '#000000'
     ctx.beginPath()
     ctx.arc(bug.x - 3, bug.y - 13, 1.5, 0, 2 * Math.PI)
     ctx.arc(bug.x + 3, bug.y - 13, 1.5, 0, 2 * Math.PI)
     ctx.fill()
-    
+
     // Legs (6 legs)
     ctx.strokeStyle = '#065f46'
     ctx.lineWidth = 2
@@ -341,7 +341,7 @@ export default function DistanceDisplacementAssignmentPage() {
     ctx.moveTo(bug.x + 10, bug.y + 5)
     ctx.lineTo(bug.x + 18, bug.y + 8)
     ctx.stroke()
-    
+
     // Spots on back
     ctx.fillStyle = '#047857'
     ctx.beginPath()
@@ -349,18 +349,18 @@ export default function DistanceDisplacementAssignmentPage() {
     ctx.arc(bug.x + 4, bug.y - 2, 2, 0, 2 * Math.PI)
     ctx.arc(bug.x, bug.y + 4, 2, 0, 2 * Math.PI)
     ctx.fill()
-    
+
   }, [bug, initialPosition, path, origin, rotation, canvasWidth, canvasHeight])
-  
+
   // Mouse handlers
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
     if (!canvas) return
-    
+
     const rect = canvas.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
-    
+
     const bugDist = Math.sqrt((x - bug.x) ** 2 + (y - bug.y) ** 2)
     if (bugDist < 15) {
       setIsDraggingBug(true)
@@ -369,52 +369,52 @@ export default function DistanceDisplacementAssignmentPage() {
       setLockedAxis(null)
       return
     }
-    
+
     const originDist = Math.sqrt((x - origin.x) ** 2 + (y - origin.y) ** 2)
     if (originDist < 15) {
       setIsDraggingOrigin(true)
       return
     }
-    
+
     if (isDrawingMode) {
       setBug({ x, y })
       setPath(prev => [...prev, { x, y, timestamp: Date.now() }])
     }
   }
-  
+
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
     if (!canvas) return
-    
+
     const rect = canvas.getBoundingClientRect()
     let x = e.clientX - rect.left
     let y = e.clientY - rect.top
-    
+
     if (isDraggingBug) {
       if (isShiftPressed && dragStartPos) {
         if (lockedAxis === null) {
           const dx = Math.abs(x - dragStartPos.x)
           const dy = Math.abs(y - dragStartPos.y)
-          
+
           if (dx > 5 || dy > 5) {
             setLockedAxis(dx > dy ? 'x' : 'y')
           }
         }
-        
+
         if (lockedAxis === 'x') {
           y = bug.y
         } else if (lockedAxis === 'y') {
           x = bug.x
         }
       }
-      
+
       setBug({ x, y })
       setPath(prev => [...prev, { x, y, timestamp: Date.now() }])
     } else if (isDraggingOrigin) {
       setOrigin({ x, y })
     }
   }
-  
+
   const handleMouseUp = () => {
     setIsDraggingBug(false)
     setIsDraggingOrigin(false)
@@ -423,24 +423,24 @@ export default function DistanceDisplacementAssignmentPage() {
       setLockedAxis(null)
     }
   }
-  
+
   const handleReset = () => {
     const resetPos = { x: 300, y: 300 }
     setBug(resetPos)
     setInitialPosition(resetPos)
     setPath([{ x: resetPos.x, y: resetPos.y, timestamp: Date.now() }])
   }
-  
+
   const handleResetOrigin = () => {
     setOrigin({ x: 50, y: 550 })
     setRotation(0)
   }
-  
+
   const handleSubmitAnswer = () => {
     const question = assignmentQuestions[currentQuestion]
     let isCorrect = false
     let pointsEarned = 0
-    
+
     if (question.type === 'multiple-choice' && question.correctAnswer) {
       isCorrect = currentAnswer === question.correctAnswer
       pointsEarned = isCorrect ? question.points : 0
@@ -453,24 +453,24 @@ export default function DistanceDisplacementAssignmentPage() {
       pointsEarned = question.points
       isCorrect = true
     }
-    
+
     setResponses([...responses, {
       questionId: question.id,
       answer: currentAnswer,
       isCorrect,
       pointsEarned
     }])
-    
+
     setCurrentAnswer('')
     setShowHint(false)
-    
+
     if (currentQuestion < assignmentQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1)
     } else {
       setIsSubmitted(true)
     }
   }
-  
+
   const dist = totalDistance()
   const disp = displacement()
   const question = assignmentQuestions[currentQuestion]
@@ -496,7 +496,7 @@ export default function DistanceDisplacementAssignmentPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <CheckCircle className="h-6 w-6 text-green-600" />
+              <CheckCircle className="h-6 w-6 text-success" />
               Assignment Complete!
             </CardTitle>
           </CardHeader>
@@ -510,7 +510,7 @@ export default function DistanceDisplacementAssignmentPage() {
                 {Math.round((earnedPoints / totalPoints) * 100)}%
               </div>
             </div>
-            
+
             <div className="space-y-3">
               <h3 className="font-semibold text-lg">Your Responses:</h3>
               {assignmentQuestions.map((q, idx) => {
@@ -529,7 +529,7 @@ export default function DistanceDisplacementAssignmentPage() {
                 )
               })}
             </div>
-            
+
             <div className="flex gap-4">
               <Button onClick={() => router.push('/home')} className="flex-1">
                 Back to Dashboard
@@ -562,13 +562,13 @@ export default function DistanceDisplacementAssignmentPage() {
             </div>
           </CardHeader>
         </Card>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Canvas */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Bug className="h-5 w-5 text-green-600" />
+                <Bug className="h-5 w-5 text-success" />
                 Interactive Canvas
               </CardTitle>
             </CardHeader>
@@ -577,34 +577,34 @@ export default function DistanceDisplacementAssignmentPage() {
                 ref={canvasRef}
                 width={canvasWidth}
                 height={canvasHeight}
-                className="border-2 border-border rounded-lg cursor-pointer bg-white w-full"
+                className="border-2 border-border rounded-lg cursor-pointer bg-card w-full"
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
               />
-              
+
               <div className="space-y-3">
-                <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <div className="p-3 bg-primary/10 rounded-lg">
                   <div className="text-xs font-medium text-muted-foreground mb-1">Total Distance</div>
-                  <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
+                  <div className="text-xl font-bold text-primary">
                     {dist.toFixed(2)} m
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
                     Path length traveled
                   </div>
                 </div>
-                
-                <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+
+                <div className="p-3 bg-destructive/10 rounded-lg">
                   <div className="text-xs font-medium text-muted-foreground mb-1">Displacement Vector</div>
-                  <div className="text-xl font-bold text-red-600 dark:text-red-400">
+                  <div className="text-xl font-bold text-destructive">
                     {disp.magnitude.toFixed(2)} m
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
                     {disp.angle.toFixed(1)}° from +x axis
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-2">
                   <div className="p-2 bg-muted rounded">
                     <div className="text-xs text-muted-foreground"><strong>x-component</strong></div>
@@ -616,7 +616,7 @@ export default function DistanceDisplacementAssignmentPage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex gap-2">
                 <Button onClick={handleReset} variant="outline" size="sm" className="flex-1">
                   <RotateCcw className="h-4 w-4 mr-2" />
@@ -627,13 +627,13 @@ export default function DistanceDisplacementAssignmentPage() {
                   Reset Origin
                 </Button>
               </div>
-              
+
               <div className="text-xs text-muted-foreground p-2 bg-muted rounded">
                 <strong>💡 Controls:</strong> Click to move bug | Drag bug or origin | Hold Shift to lock axis
               </div>
             </CardContent>
           </Card>
-          
+
           {/* Question */}
           <Card>
             <CardHeader>
@@ -644,7 +644,7 @@ export default function DistanceDisplacementAssignmentPage() {
               <div className="p-4 bg-muted rounded-lg">
                 <MathMarkdown content={question.text} />
               </div>
-              
+
               {question.type === 'multiple-choice' && question.options && (
                 <div className="space-y-2">
                   {question.options.map((option, idx) => (
@@ -669,7 +669,7 @@ export default function DistanceDisplacementAssignmentPage() {
                   ))}
                 </div>
               )}
-              
+
               {question.type === 'numerical' && (
                 <div className="space-y-2">
                   <Label htmlFor="numerical-answer">Your Answer (numerical value)</Label>
@@ -684,7 +684,7 @@ export default function DistanceDisplacementAssignmentPage() {
                   />
                 </div>
               )}
-              
+
               {question.type === 'short-answer' && (
                 <div className="space-y-2">
                   <Label htmlFor="short-answer">Your Answer</Label>
@@ -697,7 +697,7 @@ export default function DistanceDisplacementAssignmentPage() {
                   />
                 </div>
               )}
-              
+
               {question.hint && (
                 <div>
                   <Button
@@ -708,13 +708,13 @@ export default function DistanceDisplacementAssignmentPage() {
                     {showHint ? 'Hide' : 'Show'} Hint
                   </Button>
                   {showHint && (
-                    <div className="mt-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg text-sm">
+                    <div className="mt-2 p-3 bg-primary/10 border border-primary/40 rounded-lg text-sm">
                       💡 {question.hint}
                     </div>
                   )}
                 </div>
               )}
-              
+
               <Button
                 onClick={handleSubmitAnswer}
                 disabled={!currentAnswer.trim()}

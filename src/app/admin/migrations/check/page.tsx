@@ -1,10 +1,11 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { CheckCircle, XCircle, Loader2, RefreshCw, ArrowLeft } from 'lucide-react'
+import { CheckCircle, XCircle, RefreshCw, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
 export default function MigrationCheckPage() {
@@ -33,7 +34,7 @@ export default function MigrationCheckPage() {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <Spinner size="lg" className="text-primary" />
         </div>
       </div>
     )
@@ -42,9 +43,9 @@ export default function MigrationCheckPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'success':
-        return <Badge className="bg-green-600"><CheckCircle className="h-3 w-3 mr-1" />Migration Successful</Badge>
+        return <Badge className="bg-success"><CheckCircle className="h-3 w-3 mr-1" />Migration Successful</Badge>
       case 'tables-exist-no-data':
-        return <Badge className="bg-yellow-600"><XCircle className="h-3 w-3 mr-1" />Tables Exist, No Data</Badge>
+        return <Badge className="bg-reward/15 text-foreground"><XCircle className="h-3 w-3 mr-1" />Tables Exist, No Data</Badge>
       case 'migration-not-run':
         return <Badge variant="destructive"><XCircle className="h-3 w-3 mr-1" />Migration Not Run</Badge>
       default:
@@ -85,27 +86,27 @@ export default function MigrationCheckPage() {
         </CardHeader>
         <CardContent>
           {results?.overall === 'success' && (
-            <div className="bg-green-50 p-4 rounded-lg">
-              <p className="text-green-900 font-medium">✅ Migration completed successfully!</p>
-              <p className="text-green-700 text-sm mt-2">
+            <div className="bg-success/10 p-4 rounded-lg">
+              <p className="text-success font-medium">✅ Migration completed successfully!</p>
+              <p className="text-success text-sm mt-2">
                 All tables exist and {results.simulations?.length || 0} simulations are seeded.
               </p>
             </div>
           )}
-          
+
           {results?.overall === 'tables-exist-no-data' && (
-            <div className="bg-yellow-50 p-4 rounded-lg">
-              <p className="text-yellow-900 font-medium">⚠️ Tables exist but no simulations found</p>
-              <p className="text-yellow-700 text-sm mt-2">
+            <div className="bg-reward/10 p-4 rounded-lg">
+              <p className="text-foreground font-medium">⚠️ Tables exist but no simulations found</p>
+              <p className="text-foreground text-sm mt-2">
                 The migration may have partially run. Try running it again.
               </p>
             </div>
           )}
-          
+
           {results?.overall === 'migration-not-run' && (
-            <div className="bg-red-50 p-4 rounded-lg">
-              <p className="text-red-900 font-medium">❌ Migration has not been run</p>
-              <p className="text-red-700 text-sm mt-2">
+            <div className="bg-destructive/10 p-4 rounded-lg">
+              <p className="text-destructive font-medium">❌ Migration has not been run</p>
+              <p className="text-destructive text-sm mt-2">
                 Please run the migration SQL in Supabase Dashboard.
               </p>
               <Button asChild className="mt-3">
@@ -126,12 +127,12 @@ export default function MigrationCheckPage() {
         <CardContent>
           <div className="space-y-2">
             {results?.tables && Object.entries(results.tables).map(([table, info]: [string, any]) => (
-              <div key={table} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+              <div key={table} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                 <div className="flex items-center gap-2">
                   {info.exists ? (
-                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <CheckCircle className="h-4 w-4 text-success" />
                   ) : (
-                    <XCircle className="h-4 w-4 text-red-600" />
+                    <XCircle className="h-4 w-4 text-destructive" />
                   )}
                   <code className="text-sm font-mono">{table}</code>
                 </div>
@@ -158,7 +159,7 @@ export default function MigrationCheckPage() {
             <div className="flex items-center justify-between">
               <CardTitle>Seeded Simulations ({results.simulations.length})</CardTitle>
               {results.simulations.length < 4 && (
-                <Button 
+                <Button
                   size="sm"
                   onClick={async () => {
                     const res = await fetch('/api/admin/seed-missing-simulations', { method: 'POST' })
@@ -174,16 +175,16 @@ export default function MigrationCheckPage() {
           </CardHeader>
           <CardContent>
             {results.simulations.length < 4 && (
-              <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-yellow-900">
-                  ⚠️ Expected 4 simulations, found {results.simulations.length}. 
+              <div className="mb-4 p-3 bg-reward/10 border border-reward/40 rounded-lg">
+                <p className="text-sm text-foreground">
+                  ⚠️ Expected 4 simulations, found {results.simulations.length}.
                   Click &quot;Add Missing Sims&quot; to fix.
                 </p>
               </div>
             )}
             <div className="space-y-2">
               {results.simulations.map((sim: any) => (
-                <div key={sim.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                <div key={sim.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                   <div>
                     <div className="font-medium">{sim.title}</div>
                     <code className="text-xs text-muted-foreground">{sim.slug}</code>
@@ -199,11 +200,11 @@ export default function MigrationCheckPage() {
       )}
 
       {/* Next Steps */}
-      <Card className="mt-6 bg-blue-50 dark:bg-blue-950 border-blue-200">
+      <Card className="mt-6 bg-primary/10 border-primary/40">
         <CardHeader>
-          <CardTitle className="text-blue-900 dark:text-blue-100">Next Steps</CardTitle>
+          <CardTitle className="text-primary">Next Steps</CardTitle>
         </CardHeader>
-        <CardContent className="text-blue-800 dark:text-blue-200 space-y-2 text-sm">
+        <CardContent className="text-primary space-y-2 text-sm">
           {results?.overall === 'success' ? (
             <>
               <p>✅ You&apos;re all set! You can now:</p>

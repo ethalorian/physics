@@ -71,12 +71,12 @@ export default function LessonVocabView({ lessonId, termIds, contextKey }: { les
           const meta = TIER_META[t]
           return (
             <div key={t}>
-              <div className="text-[11px] font-bold uppercase tracking-widest mb-2" style={{ color: meta.color }}>{meta.label}</div>
+              <div className="text-overline font-bold uppercase tracking-widest mb-2" style={{ color: meta.color }}>{meta.label}</div>
               <div className="space-y-2">
                 {terms.filter((x) => (x.tier ?? 3) === t).map((x) => (
                   <div key={x.id} className="rounded-md p-2.5" style={{ background: `color-mix(in oklch, ${meta.color} 8%, transparent)`, borderLeft: `3px solid ${meta.color}` }}>
                     <div className="flex items-start gap-3">
-                      {!x.image_url && x.icon && <span aria-hidden className="flex-shrink-0" style={{ fontSize: 30, lineHeight: '48px', width: 40, textAlign: 'center' }}>{x.icon}</span>}
+                      {!x.image_url && x.icon && <span aria-hidden className="flex-shrink-0 text-title-1" style={{ lineHeight: '48px', width: 40, textAlign: 'center' }}>{x.icon}</span>}
                       {x.image_url && (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={x.image_url} alt={x.term} className="rounded-md object-cover flex-shrink-0" style={{ width: 48, height: 48 }} referrerPolicy="no-referrer" />

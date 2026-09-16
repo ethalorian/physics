@@ -38,7 +38,7 @@ interface PracticeItem {
 type Verdict = 'match' | 'mismatch' | 'unknown'
 interface SlipFeedback { tag: string | null; label: string | null; message: string; source: 'slip' | 'fallback' }
 
-const LABEL = 'text-[11px] font-bold uppercase tracking-widest'
+const LABEL = 'text-overline font-bold uppercase tracking-widest'
 
 export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGraph?: boolean; lang?: string }) {
   const t = useTranslator(lang)
@@ -106,7 +106,7 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
         <span className="text-sm font-semibold text-foreground">{t('Practice: new numbers on a fresh board')}</span>
 
       </div>
-      <p className="text-[11px] text-muted-foreground mt-1">
+      <p className="text-overline text-muted-foreground mt-1">
         {t("Instant check. Doesn't move the ladder — your teacher's rating does.")}
       </p>
 

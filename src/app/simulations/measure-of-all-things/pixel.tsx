@@ -108,7 +108,7 @@ export function PixelStage({ mood, height = 150, label, children }: {
       <style>{STAGE_CSS}</style>
       {/* ground strip */}
       <div className="absolute bottom-0 left-0 right-0" style={{ height: 22, background: ground }} />
-      <div className="absolute bottom-[18px] left-0 right-0" style={{ height: 4, background: 'rgba(0,0,0,0.15)' }} />
+      <div className="absolute bottom-[18px] left-0 right-0" style={{ height: 4, background: 'color-mix(in oklch, var(--primary) 15%, transparent)' }} />
       {children}
     </div>
   )
@@ -129,7 +129,7 @@ export function At({ x, y, bottom, anim, dur, delay, children }: {
   children: ReactNode
 }) {
   const animation = anim
-    ? `moat-${anim} ${dur ?? 4}s ${anim === 'drift' || anim === 'ride' ? 'linear' : 'ease-in-out'} ${delay ?? 0}s infinite`
+    ? `moat-${anim} ${dur ?? 4}s ${anim === 'drift' || anim === 'ride' ? 'linear' : 'var(--ease-out-expo)'} ${delay ?? 0}s infinite`
     : undefined
   return (
     <div
@@ -167,7 +167,7 @@ export function Stars({ count = 8 }: { count?: number }) {
   return (
     <>
       {pts.map((p, i) => (
-        <div key={i} className="absolute" style={{ left: `${p.x}%`, top: p.y, animation: `moat-flicker ${2 + p.d}s ease-in-out ${p.d}s infinite` }}>
+        <div key={i} className="absolute" style={{ left: `${p.x}%`, top: p.y, animation: `moat-flicker ${2 + p.d}s var(--ease-out-expo) ${p.d}s infinite` }}>
           <PixelSprite sprite={STAR} scale={2} />
         </div>
       ))}

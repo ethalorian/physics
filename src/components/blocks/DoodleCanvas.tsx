@@ -120,7 +120,7 @@ export default function DoodleCanvas({
       />
 
       {/* drawing surface (background node renders behind a transparent canvas) */}
-      <div style={{ position: 'relative', width: '100%', borderRadius: 8, overflow: 'hidden', border: '1px solid var(--primary)' }}>
+      <div style={{ position: 'relative', width: '100%', borderRadius: 'var(--radius-sm)', overflow: 'hidden', border: '1px solid var(--primary)' }}>
         {backgroundNode && <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>{backgroundNode}</div>}
         <canvas
           ref={canvasRef}

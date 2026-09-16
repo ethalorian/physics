@@ -168,7 +168,7 @@ export default function MeasureOfAllThingsSim() {
       </div>
 
       {resumed && playing !== null && (
-        <div className="rounded-lg border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950/30 px-3 py-2 text-sm">
+        <div className="rounded-lg border border-primary/40 bg-primary/10 px-3 py-2 text-sm">
           Welcome back, citizen — your progress was saved. Continuing at Chapter {playing}: {CHAPTERS[playing].title}.
         </div>
       )}
@@ -186,12 +186,12 @@ export default function MeasureOfAllThingsSim() {
               disabled={!isOpen}
               onClick={() => setPlaying(c.id)}
               className={`text-left rounded-lg border px-3 py-2 transition
-                ${isActive ? 'border-amber-500 ring-2 ring-amber-300 dark:ring-amber-700' : 'border-border'}
-                ${isOpen ? 'hover:border-amber-400 bg-card' : 'opacity-45 cursor-not-allowed bg-muted/40'}`}
+                ${isActive ? 'border-primary ring-2 ring-ring/40 ' : 'border-border'}
+                ${isOpen ? 'hover:border-primary bg-card' : 'opacity-45 cursor-not-allowed bg-muted/40'}`}
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs font-mono text-muted-foreground">{c.year} · Ch. {c.id}</span>
-                {isDone && <CheckCircle2 className="w-4 h-4 text-green-600 dark:text-green-400" />}
+                {isDone && <CheckCircle2 className="w-4 h-4 text-success" />}
               </div>
               <div className="font-semibold text-sm">{c.title}</div>
               <div className="text-xs text-muted-foreground">{c.subtitle}</div>
@@ -202,8 +202,8 @@ export default function MeasureOfAllThingsSim() {
 
       {/* finished banner */}
       {allDone && playing === null && (
-        <div className="rounded-xl border border-green-400 dark:border-green-700 bg-green-50 dark:bg-green-950/30 p-4 space-y-1 text-center">
-          <div className="font-semibold text-green-800 dark:text-green-300">
+        <div className="rounded-xl border border-success bg-success/10 p-4 space-y-1 text-center">
+          <div className="font-semibold text-success">
             Journey complete — your work has been recorded.
           </div>
           <div className="text-sm text-muted-foreground">

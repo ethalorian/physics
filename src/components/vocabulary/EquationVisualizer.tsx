@@ -369,7 +369,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
   })
   const [showInfo, setShowInfo] = useState(false)
 
-  const currentEquation = useMemo(() => 
+  const currentEquation = useMemo(() =>
     physicsEquations.find(eq => eq.id === selectedEquation) || physicsEquations[0],
     [selectedEquation]
   )
@@ -390,7 +390,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
       const currentEquationValues = currentValues
 
       // Check if we need to initialize any missing values
-      const needsInitialization = allTerms.some(term => 
+      const needsInitialization = allTerms.some(term =>
         currentEquationValues[term.id] === undefined
       )
 
@@ -409,7 +409,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
       }
     }
   }, [solveForVariable, currentEquation, selectedEquation, currentValues])
-  
+
   // Calculate result based on what we're solving for
   const solveForConfig = currentEquation.solveFor[solveForVariable] || currentEquation.solveFor[currentEquation.resultTerm.id]
   const resultValue = solveForConfig.calculate(currentValues)
@@ -451,14 +451,14 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
     const baseSize = 1.5 // rem - base size
     const minSize = 0.8  // smaller minimum for more dramatic scaling
     const maxSize = 3.5  // larger maximum for more dramatic scaling
-    
+
     // For the term we're solving for, scale based on the actual result value
     if (termId === solveForVariable) {
       const defaultResult = solveForConfig.calculate(
         Object.fromEntries([...currentEquation.terms, currentEquation.resultTerm].map(t => [t.id, t.defaultValue]))
       )
       const ratio = value / defaultResult
-      
+
       // Use dramatic scaling for the result
       let scaledSize: number
       if (ratio <= 1) {
@@ -466,16 +466,16 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
       } else {
         scaledSize = baseSize * (1 + 0.5 * Math.log(ratio))
       }
-      
+
       return Math.max(minSize, Math.min(maxSize, scaledSize))
     } else {
       // For input terms, scale based on their actual value (show magnitude of input)
       // But also consider their mathematical role in the equation
       const termRatio = value / term.defaultValue
-      
+
       // Determine if this term is in denominator position for the current solve-for variable
       let isInDenominator = false
-      
+
       // Analyze the mathematical relationship
       if (currentEquation.id === 'velocity-equation') {
         if (solveForVariable === 'velocity') {
@@ -518,15 +518,15 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
           isInDenominator = (termId === 'mass')
         }
       }
-      
+
       // Scale the input term based on its magnitude AND its effect on the result
       let scaledSize: number
-      
+
       // First, scale based on the term's own value (magnitude)
-      const magnitudeScale = termRatio >= 1 
+      const magnitudeScale = termRatio >= 1
         ? 1 + 0.4 * Math.sqrt(termRatio - 1)
         : 0.6 + 0.4 * termRatio
-      
+
       // Then adjust based on whether it makes the result bigger or smaller
       if (isInDenominator) {
         // Denominator terms: big values make result small, but we want to show the term is big
@@ -536,7 +536,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
         // Numerator terms: big values make result big, show direct relationship
         scaledSize = baseSize * magnitudeScale
       }
-      
+
       return Math.max(minSize, Math.min(maxSize, scaledSize))
     }
   }, [solveForVariable, solveForConfig, currentEquation, currentValues, resultValue])
@@ -553,18 +553,18 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
     const value = actualValue !== undefined ? actualValue : (currentValues[term.id] || term.defaultValue)
     const size = getTermSize(term.id, value, term)
     const displayText = getDisplayText(term)
-    
+
     return (
       <span
         key={term.id}
-        className={`inline-flex items-center justify-center font-bold transition-all duration-500 ease-out ${
-          isResult ? 'text-green-600' : 'text-blue-600'
+        className={`inline-flex items-center justify-center font-bold transition-all duration-500 ease-out-expo ${
+          isResult ? 'text-success' : 'text-primary'
         }`}
-        style={{ 
+        style={{
           fontSize: `${size}rem`,
           minWidth: `${size * 2}rem`,
           minHeight: `${size * 1.5}rem`,
-          textShadow: size > 2 ? '0 2px 4px rgba(0,0,0,0.3)' : 'none',
+          textShadow: size > 2 ? '0 2px 4px color-mix(in oklch, var(--primary) 30%, transparent)' : 'none',
           transformOrigin: 'center'
         }}
         title={`${term.vocabulary}: ${formatValue(value, term.unit)}`}
@@ -580,7 +580,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
         <div className="flex items-center justify-center pb-1">
           {numerator}
         </div>
-        <div className="w-full h-0.5 bg-gray-600 my-1"></div>
+        <div className="w-full h-0.5 bg-muted-foreground my-1"></div>
         <div className="flex items-center justify-center pt-1">
           {denominator}
         </div>
@@ -592,10 +592,10 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
     // Get all terms including result term
     const allTerms = [...currentEquation.terms, currentEquation.resultTerm]
     const solveForTerm = allTerms.find(t => t.id === solveForVariable) || currentEquation.resultTerm
-    
+
     // Render the term we're solving for (on left side)
     const resultElement = renderTerm(solveForTerm, true, resultValue)
-    
+
     // Render other terms (on right side) - exclude the one we're solving for
     const otherTerms = allTerms.filter(t => t.id !== solveForVariable)
     const otherElements = otherTerms.map(term => {
@@ -606,7 +606,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
     // Create equation based on what we're solving for and the original equation structure
     const equationElements: React.ReactElement[] = [
       resultElement,
-      <span key="equals" className="mx-4 text-3xl font-bold text-gray-600 flex items-center">=</span>
+      <span key="equals" className="mx-4 text-3xl font-bold text-muted-foreground flex items-center">=</span>
     ]
 
     // Add the rearranged formula based on solve-for selection
@@ -614,7 +614,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
       if (solveForVariable === 'force') {
         equationElements.push(
           otherElements[0], // Mass
-          <span key="times" className="mx-4 text-3xl font-bold text-gray-600 flex items-center">×</span>,
+          <span key="times" className="mx-4 text-3xl font-bold text-muted-foreground flex items-center">×</span>,
           otherElements[1]  // Acceleration
         )
       } else if (solveForVariable === 'mass') {
@@ -634,7 +634,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
       } else if (solveForVariable === 'distance') {
         equationElements.push(
           otherElements[0], // Velocity
-          <span key="times" className="mx-4 text-3xl font-bold text-gray-600 flex items-center">×</span>,
+          <span key="times" className="mx-4 text-3xl font-bold text-muted-foreground flex items-center">×</span>,
           otherElements[1]  // Time
         )
       } else if (solveForVariable === 'time') {
@@ -645,13 +645,13 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
     } else if (currentEquation.id === 'kinetic-energy-equation') {
       if (solveForVariable === 'kineticEnergy') {
         equationElements.push(
-          <span key="half" className="mx-2 text-2xl font-bold text-gray-600 flex items-center">½</span>,
-          <span key="times1" className="mx-2 text-3xl font-bold text-gray-600 flex items-center">×</span>,
+          <span key="half" className="mx-2 text-2xl font-bold text-muted-foreground flex items-center">½</span>,
+          <span key="times1" className="mx-2 text-3xl font-bold text-muted-foreground flex items-center">×</span>,
           otherElements[0], // Mass
-          <span key="times2" className="mx-2 text-3xl font-bold text-gray-600 flex items-center">×</span>,
+          <span key="times2" className="mx-2 text-3xl font-bold text-muted-foreground flex items-center">×</span>,
           <div key="velocity-squared" className="inline-flex flex-col items-center">
             {otherElements[1]} {/* Velocity */}
-            <span className="text-lg font-bold text-gray-600 -mt-2">²</span>
+            <span className="text-lg font-bold text-muted-foreground -mt-2">²</span>
           </div>
         )
       } else if (solveForVariable === 'mass') {
@@ -664,15 +664,15 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
             </span>,
             <div key="v-squared" className="inline-flex flex-col items-center">
               {otherElements[1]} {/* Velocity */}
-              <span className="text-lg font-bold text-gray-600 -mt-2">²</span>
+              <span className="text-lg font-bold text-muted-foreground -mt-2">²</span>
             </div>,
             'mass-ke-fraction'
           )
         )
       } else if (solveForVariable === 'velocity') {
         equationElements.push(
-          <span key="sqrt" className="mx-2 text-2xl font-bold text-gray-600 flex items-center">√</span>,
-          <span key="open-paren" className="text-3xl font-bold text-gray-600">(</span>,
+          <span key="sqrt" className="mx-2 text-2xl font-bold text-muted-foreground flex items-center">√</span>,
+          <span key="open-paren" className="text-3xl font-bold text-muted-foreground">(</span>,
           renderFraction(
             <span key="2ke" className="flex items-center gap-2">
               <span className="text-xl">2</span>
@@ -682,14 +682,14 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
             otherElements[1], // Mass
             'velocity-ke-fraction'
           ),
-          <span key="close-paren" className="text-3xl font-bold text-gray-600">)</span>
+          <span key="close-paren" className="text-3xl font-bold text-muted-foreground">)</span>
         )
       }
     } else if (currentEquation.id === 'work-equation') {
       if (solveForVariable === 'work') {
         equationElements.push(
           otherElements[0], // Force
-          <span key="times" className="mx-4 text-3xl font-bold text-gray-600 flex items-center">×</span>,
+          <span key="times" className="mx-4 text-3xl font-bold text-muted-foreground flex items-center">×</span>,
           otherElements[1]  // Distance
         )
       } else {
@@ -705,7 +705,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
       } else {
         equationElements.push(
           otherElements[0], // Power or Work
-          <span key="times" className="mx-4 text-3xl font-bold text-gray-600 flex items-center">×</span>,
+          <span key="times" className="mx-4 text-3xl font-bold text-muted-foreground flex items-center">×</span>,
           otherElements[1]  // Time or remaining term
         )
       }
@@ -718,7 +718,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
     const equationElements = renderDynamicEquation()
 
     return (
-      <div className="flex items-center justify-center min-h-[180px] bg-gradient-to-r from-blue-50 to-green-50 rounded-lg p-8 border-2 border-dashed border-blue-200">
+      <div className="flex items-center justify-center min-h-[180px] bg-gradient-to-r from-primary/10 to-success/10 rounded-lg p-8 border-2 border-dashed border-primary/40">
         <div className="flex items-center justify-center flex-wrap gap-2">
           {equationElements}
         </div>
@@ -729,11 +729,11 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
   const renderDimensionalFraction = useCallback((numeratorDimension: string, denominatorDimension: string, key: string) => {
     return (
       <div key={key} className="inline-flex flex-col items-center mx-2">
-        <div className="text-purple-600 font-mono text-sm pb-1">
+        <div className="text-primary font-mono text-sm pb-1">
           [{numeratorDimension}]
         </div>
-        <div className="w-full h-px bg-purple-600 my-1"></div>
-        <div className="text-purple-600 font-mono text-sm pt-1">
+        <div className="w-full h-px bg-primary my-1"></div>
+        <div className="text-primary font-mono text-sm pt-1">
           [{denominatorDimension}]
         </div>
       </div>
@@ -744,57 +744,57 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
     if (displayMode !== 'units') return null
 
     const dimensionElements = currentEquation.terms.map(term => (
-      <span key={term.id} className="mx-2 text-purple-600 font-mono text-sm">
+      <span key={term.id} className="mx-2 text-primary font-mono text-sm">
         [{term.dimension}]
       </span>
     ))
 
     let analysisElements: React.ReactElement[] = []
-    
+
     if (currentEquation.id === 'force-equation') {
       analysisElements = [
-        <span key="result" className="mx-2 text-purple-600 font-mono text-sm">[{currentEquation.resultTerm.dimension}]</span>,
-        <span key="equals" className="mx-3 text-gray-600 text-sm">=</span>,
+        <span key="result" className="mx-2 text-primary font-mono text-sm">[{currentEquation.resultTerm.dimension}]</span>,
+        <span key="equals" className="mx-3 text-muted-foreground text-sm">=</span>,
         dimensionElements[0], // Mass [M]
-        <span key="times" className="mx-2 text-gray-600 text-sm">×</span>,
+        <span key="times" className="mx-2 text-muted-foreground text-sm">×</span>,
         dimensionElements[1]  // Acceleration [L T⁻²]
       ]
     } else if (currentEquation.id === 'velocity-equation') {
       analysisElements = [
-        <span key="result" className="mx-2 text-purple-600 font-mono text-sm">[{currentEquation.resultTerm.dimension}]</span>,
-        <span key="equals" className="mx-3 text-gray-600 text-sm">=</span>,
+        <span key="result" className="mx-2 text-primary font-mono text-sm">[{currentEquation.resultTerm.dimension}]</span>,
+        <span key="equals" className="mx-3 text-muted-foreground text-sm">=</span>,
         renderDimensionalFraction(currentEquation.terms[0].dimension, currentEquation.terms[1].dimension, 'velocity-dim-fraction') // Distance / Time
       ]
     } else if (currentEquation.id === 'kinetic-energy-equation') {
       analysisElements = [
-        <span key="result" className="mx-2 text-purple-600 font-mono text-sm">[{currentEquation.resultTerm.dimension}]</span>,
-        <span key="equals" className="mx-3 text-gray-600 text-sm">=</span>,
+        <span key="result" className="mx-2 text-primary font-mono text-sm">[{currentEquation.resultTerm.dimension}]</span>,
+        <span key="equals" className="mx-3 text-muted-foreground text-sm">=</span>,
         dimensionElements[0], // Mass [M]
-        <span key="times1" className="mx-2 text-gray-600 text-sm">×</span>,
+        <span key="times1" className="mx-2 text-muted-foreground text-sm">×</span>,
         <div key="velocity-squared" className="inline-flex flex-col items-center">
           {dimensionElements[1]} {/* Velocity [L T⁻¹] */}
-          <span className="text-xs text-gray-600 -mt-1">²</span>
+          <span className="text-xs text-muted-foreground -mt-1">²</span>
         </div>
       ]
     } else if (currentEquation.id === 'work-equation') {
       analysisElements = [
-        <span key="result" className="mx-2 text-purple-600 font-mono text-sm">[{currentEquation.resultTerm.dimension}]</span>,
-        <span key="equals" className="mx-3 text-gray-600 text-sm">=</span>,
+        <span key="result" className="mx-2 text-primary font-mono text-sm">[{currentEquation.resultTerm.dimension}]</span>,
+        <span key="equals" className="mx-3 text-muted-foreground text-sm">=</span>,
         dimensionElements[0], // Force [M L T⁻²]
-        <span key="times" className="mx-2 text-gray-600 text-sm">×</span>,
+        <span key="times" className="mx-2 text-muted-foreground text-sm">×</span>,
         dimensionElements[1]  // Distance [L]
       ]
     } else if (currentEquation.id === 'power-equation') {
       analysisElements = [
-        <span key="result" className="mx-2 text-purple-600 font-mono text-sm">[{currentEquation.resultTerm.dimension}]</span>,
-        <span key="equals" className="mx-3 text-gray-600 text-sm">=</span>,
+        <span key="result" className="mx-2 text-primary font-mono text-sm">[{currentEquation.resultTerm.dimension}]</span>,
+        <span key="equals" className="mx-3 text-muted-foreground text-sm">=</span>,
         renderDimensionalFraction(currentEquation.terms[0].dimension, currentEquation.terms[1].dimension, 'power-dim-fraction') // Work / Time
       ]
     }
 
     return (
-      <div className="mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
-        <div className="text-sm font-medium text-purple-800 mb-3">Dimensional Analysis:</div>
+      <div className="mt-4 p-4 bg-primary/10 rounded-lg border border-primary/40">
+        <div className="text-sm font-medium text-primary mb-3">Dimensional Analysis:</div>
         <div className="flex items-center justify-center flex-wrap gap-1">
           {analysisElements}
         </div>
@@ -819,7 +819,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
               ))}
             </SelectContent>
           </Select>
-          
+
           <Button
             variant="outline"
             size="sm"
@@ -843,7 +843,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
               Info
             </Label>
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <Label htmlFor="solve-for" className="flex items-center gap-2">
               <Calculator className="h-4 w-4" />
@@ -887,19 +887,19 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
 
       {/* Equation Info */}
       {showInfo && (
-        <Card className="border-blue-200 bg-blue-50">
+        <Card className="border-primary/40 bg-primary/10">
           <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-blue-800">
+            <CardTitle className="flex items-center gap-2 text-primary">
               <Calculator className="h-5 w-5" />
               {currentEquation.name}
             </CardTitle>
           </CardHeader>
         <CardContent>
-          <p className="text-blue-700 mb-2">{currentEquation.description}</p>
-          <p className="text-sm text-blue-600 mb-3 font-medium">
+          <p className="text-primary mb-2">{currentEquation.description}</p>
+          <p className="text-sm text-primary mb-3 font-medium">
             Currently solving for: {solveForConfig.description}
           </p>
-          <Badge variant="outline" className="text-blue-600 border-blue-300">
+          <Badge variant="outline" className="text-primary border-primary/40">
             {currentEquation.category}
           </Badge>
         </CardContent>
@@ -907,12 +907,12 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
       )}
 
       {/* Main Equation Display */}
-      <Card className="border-2 border-blue-300">
+      <Card className="border-2 border-primary/40">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl text-blue-800">
+          <CardTitle className="text-xl text-primary">
             Interactive Physics Equation
           </CardTitle>
-          <p className="text-sm text-blue-600">
+          <p className="text-sm text-primary">
             Adjust the sliders below to see how changing one term affects the others
           </p>
         </CardHeader>
@@ -929,13 +929,13 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
           .map(term => {
             const value = currentValues[term.id] || term.defaultValue
             const size = getTermSize(term.id, value, term)
-            
+
             return (
-              <Card key={term.id} className="border-blue-200">
+              <Card key={term.id} className="border-primary/40">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center justify-between text-lg">
-                    <span 
-                      className="text-blue-600 transition-all duration-300"
+                    <span
+                      className="text-primary transition-all duration-300"
                       style={{ fontSize: `${Math.min(size, 1.5)}rem` }}
                     >
                       {getDisplayText(term)}
@@ -954,12 +954,12 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
                     step={term.step}
                     className="w-full"
                   />
-                  <div className="flex justify-between text-sm text-gray-500">
+                  <div className="flex justify-between text-sm text-muted-foreground">
                     <span>{formatValue(term.minValue, term.unit)}</span>
                     <span>{formatValue(term.maxValue, term.unit)}</span>
                   </div>
                   {showInfo && (
-                    <p className="text-sm text-gray-600 mt-2">
+                    <p className="text-sm text-muted-foreground mt-2">
                       {term.description}
                     </p>
                   )}
@@ -970,27 +970,27 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
       </div>
 
       {/* Result Display */}
-      <Card className="border-2 border-green-300 bg-green-50">
+      <Card className="border-2 border-success/40 bg-success/10">
         <CardHeader className="text-center">
-          <CardTitle className="text-xl text-green-800">
+          <CardTitle className="text-xl text-success">
             Calculated Result
           </CardTitle>
         </CardHeader>
         <CardContent className="text-center">
-          <div 
-            className="font-bold text-green-600 transition-all duration-500 ease-out flex items-center justify-center gap-4"
-            style={{ 
-              fontSize: `${Math.min(getTermSize(solveForVariable, resultValue, 
+          <div
+            className="font-bold text-success transition-all duration-500 ease-out-expo flex items-center justify-center gap-4"
+            style={{
+              fontSize: `${Math.min(getTermSize(solveForVariable, resultValue,
                 [...currentEquation.terms, currentEquation.resultTerm].find(t => t.id === solveForVariable) || currentEquation.resultTerm
-              ) * 1.2, 4)}rem` 
+              ) * 1.2, 4)}rem`
             }}
           >
             <span>{getDisplayText([...currentEquation.terms, currentEquation.resultTerm].find(t => t.id === solveForVariable) || currentEquation.resultTerm)}</span>
-            <span className="text-gray-600">=</span>
+            <span className="text-muted-foreground">=</span>
             <span className="font-mono">{formatValue(resultValue, ([...currentEquation.terms, currentEquation.resultTerm].find(t => t.id === solveForVariable) || currentEquation.resultTerm).unit)}</span>
           </div>
           {showInfo && (
-            <p className="text-green-700 mt-4 text-base">
+            <p className="text-success mt-4 text-base">
               {([...currentEquation.terms, currentEquation.resultTerm].find(t => t.id === solveForVariable) || currentEquation.resultTerm).description}
             </p>
           )}

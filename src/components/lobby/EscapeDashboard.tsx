@@ -79,13 +79,13 @@ export default function EscapeDashboard({
   const chip = (bg: string, fg: string, label: string) => (
     <span className="text-xs px-2.5 py-1 rounded-full font-bold" style={{ background: bg, color: fg }}>{label}</span>
   )
-  const moveSelect: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--muted-foreground)', fontSize: 10, borderRadius: 6, padding: '1px 4px', cursor: 'pointer' }
+  const moveSelect: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--muted-foreground)', fontSize: 'var(--type-overline)', borderRadius: 'var(--radius-sm)', padding: '1px 4px', cursor: 'pointer' }
 
   return (
     <div>
       <div className="rounded-2xl px-4 py-3 mb-3 flex items-center justify-between flex-wrap gap-2" style={{ background: `linear-gradient(120deg, color-mix(in oklch, ${accent} 20%, var(--card)), var(--card))`, border: `1px solid color-mix(in oklch, ${accent} 40%, var(--border))` }}>
         <h2 className="text-base font-extrabold inline-flex items-center gap-2">
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.16em] px-2 py-0.5 rounded-full" style={{ background: `color-mix(in oklch, ${accent} 22%, transparent)`, color: accent }}><Radio size={11} /> Live</span>
+          <span className="inline-flex items-center gap-1 text-overline font-bold uppercase tracking-[0.16em] px-2 py-0.5 rounded-full" style={{ background: `color-mix(in oklch, ${accent} 22%, transparent)`, color: accent }}><Radio size={11} /> Live</span>
           {data.room.title}
         </h2>
         <div className="flex items-center gap-2">
@@ -129,7 +129,7 @@ export default function EscapeDashboard({
           <div className="px-3 pb-3 grid gap-1.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))' }}>
             {data.room.locks.map((l, i) => (
               <div key={i} className="rounded-lg px-2.5 py-1.5 flex items-center justify-between gap-2" style={{ background: `color-mix(in oklch, ${accent} 9%, var(--muted))` }}>
-                <span className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>{i + 1}. {short(l.title)}</span>
+                <span className="text-overline truncate" style={{ color: 'var(--muted-foreground)' }}>{i + 1}. {short(l.title)}</span>
                 <span className="font-mono font-bold text-sm" style={{ color: accent }}>{l.code}</span>
               </div>
             ))}
@@ -158,7 +158,7 @@ export default function EscapeDashboard({
                 <div className="relative flex items-center justify-between mb-2">
                   <span className="font-extrabold text-sm inline-flex items-center gap-1.5">
                     {g.label}
-                    {rank && <span className="text-[10px] px-1.5 py-0.5 rounded-full font-bold" style={{ background: rank === 1 ? 'color-mix(in oklch, var(--reward) 22%, transparent)' : 'var(--muted)', color: rank === 1 ? 'var(--reward)' : 'var(--muted-foreground)' }}>{ordinal(rank)}</span>}
+                    {rank && <span className="text-overline px-1.5 py-0.5 rounded-full font-bold" style={{ background: rank === 1 ? 'color-mix(in oklch, var(--reward) 22%, transparent)' : 'var(--muted)', color: rank === 1 ? 'var(--reward)' : 'var(--muted-foreground)' }}>{ordinal(rank)}</span>}
                   </span>
                   {g.finished ? (
                     <span className="text-xs inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold" style={{ background: 'color-mix(in oklch, var(--success) 18%, transparent)', color: 'var(--success)' }}><Trophy size={12} /> Escaped</span>
@@ -175,7 +175,7 @@ export default function EscapeDashboard({
                     return (
                       <div key={i} className="flex-1 flex flex-col items-center gap-1">
                         <div className="w-full rounded-full" style={{ height: 6, background: open ? 'var(--success)' : active ? accent : 'var(--muted)' }} />
-                        <span className="text-[9px] inline-flex items-center gap-0.5 font-semibold" style={{ color: open ? 'var(--success)' : active ? accent : 'var(--muted-foreground)' }}>
+                        <span className="text-overline inline-flex items-center gap-0.5 font-semibold" style={{ color: open ? 'var(--success)' : active ? accent : 'var(--muted-foreground)' }}>
                           {open ? <Unlock size={9} /> : <Lock size={9} />}{short(data.room.lockTitles[i])}
                         </span>
                       </div>
@@ -215,7 +215,7 @@ export default function EscapeDashboard({
                             {mc.solved && <Check size={12} style={{ color: 'var(--success)' }} />}
                           </div>
                           {mc.clue && (
-                            <div className="text-[11px] leading-snug mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+                            <div className="text-overline leading-snug mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
                               <span className="font-semibold" style={{ color: accent }}>holds:</span> {mc.clue}
                             </div>
                           )}

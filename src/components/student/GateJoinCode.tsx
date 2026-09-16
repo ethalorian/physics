@@ -1,7 +1,8 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
 import { useEffect, useRef, useState } from 'react'
-import { ArrowRight, Check, AlertCircle, RefreshCw } from 'lucide-react'
+import { ArrowRight, Check, AlertCircle, } from 'lucide-react'
 
 /**
  * Self-serve class-code join for the enrollment gate, plus the auto-unlock
@@ -109,14 +110,14 @@ export default function GateJoinCode() {
           className="inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-semibold disabled:opacity-40"
           style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}
         >
-          {state === 'joining' ? <RefreshCw size={15} className="animate-spin" /> : null}
+          {state === 'joining' ? <Spinner size="sm" /> : null}
           Join <ArrowRight size={15} />
         </button>
       </div>
 
       {state === 'checking' && (
         <p className="text-xs mt-2 inline-flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}>
-          <RefreshCw size={12} className="animate-spin" /> Checking that code…
+          <Spinner size="sm" /> Checking that code…
         </p>
       )}
       {state === 'valid' && courseName && (

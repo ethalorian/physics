@@ -309,7 +309,7 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-2xl font-semibold tracking-tight">{def.title}</h1>
-                <span className="text-[11px] font-semibold rounded-full px-2.5 py-1" style={{ background: `color-mix(in oklch, ${accent} 16%, var(--card))`, color: `color-mix(in oklch, ${accent} 60%, var(--foreground))` }}>{def.level}</span>
+                <span className="text-overline font-semibold rounded-full px-2.5 py-1" style={{ background: `color-mix(in oklch, ${accent} 16%, var(--card))`, color: `color-mix(in oklch, ${accent} 60%, var(--foreground))` }}>{def.level}</span>
               </div>
               <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>{def.summary}</p>
             </div>
@@ -323,7 +323,7 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
           key={taskDone ? 'sim-task-done' : 'sim-task'}
           className="sim-fade-in rounded-2xl px-4 py-3 mb-4"
           style={{
-            border: `0.5px solid color-mix(in oklch, ${taskDone ? 'var(--success)' : 'var(--primary)'} 35%, var(--border))`,
+            border: `1px solid color-mix(in oklch, ${taskDone ? 'var(--success)' : 'var(--primary)'} 35%, var(--border))`,
             background: `color-mix(in oklch, ${taskDone ? 'var(--success)' : 'var(--primary)'} 8%, var(--card))`,
           }}
           role={taskDone ? 'status' : undefined}
@@ -342,7 +342,7 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
               <div className="space-y-0.5">
                 {goal && (
                   <>
-                    <div className="text-[11px] font-bold uppercase tracking-wider" style={{ color: 'var(--primary)' }}>Your task</div>
+                    <div className="text-overline font-bold uppercase tracking-wider" style={{ color: 'var(--primary)' }}>Your task</div>
                     <div className="text-sm font-medium">{goal}</div>
                   </>
                 )}
@@ -360,13 +360,13 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
       <div className={embedded ? 'flex flex-col gap-4' : 'grid grid-cols-1 lg:grid-cols-3 gap-5'}>
         {/* visualization */}
         <div className={embedded ? '' : 'lg:col-span-2 space-y-4'}>
-          <div className="relative rounded-2xl overflow-hidden" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }} onPointerDown={() => setHasInteracted(true)}>
+          <div className="relative rounded-2xl overflow-hidden" style={{ border: '1px solid var(--border)', background: 'var(--card)' }} onPointerDown={() => setHasInteracted(true)}>
             <canvas ref={canvasRef} aria-label={`${def.title} interactive simulation. Measurements are available below.`} className="w-full block" style={{ height: canvasH }} />
             {/* affordance cue until the first touch */}
             {!hasInteracted && (
               <div
                 className="sim-fade-in pointer-events-none absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
-                style={{ background: 'color-mix(in oklch, var(--card) 90%, transparent)', border: '0.5px solid var(--border)', color: 'var(--muted-foreground)', backdropFilter: 'blur(4px)' }}
+                style={{ background: 'color-mix(in oklch, var(--card) 90%, transparent)', border: '1px solid var(--border)', color: 'var(--muted-foreground)', backdropFilter: 'blur(4px)' }}
                 aria-hidden="true"
               >
                 <Hand size={13} /> {renderTools ? 'Click the maze, then use arrow keys' : 'Drag or adjust a control to explore'}
@@ -382,7 +382,7 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
                 const val = typeof raw === 'number' ? raw.toFixed(r.precision ?? 2) : (raw ?? '—')
                 return (
                   <div key={r.key} className="rounded-xl px-3 py-2" style={{ background: 'var(--secondary)' }}>
-                    <div className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{r.label}</div>
+                    <div className="text-overline" style={{ color: 'var(--muted-foreground)' }}>{r.label}</div>
                     <div className="text-lg font-semibold" style={{ color: r.color ?? 'var(--foreground)' }}>
                       {val}{r.unit ? <span className="text-xs font-normal" style={{ color: 'var(--muted-foreground)' }}> {r.unit}</span> : null}
                     </div>
@@ -396,7 +396,7 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
 
           {/* "what to notice" — optional interpretation prompts beside the numbers */}
           {whatToNotice.length > 0 && (
-            <div className="rounded-2xl px-4 py-3 text-sm" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+            <div className="rounded-2xl px-4 py-3 text-sm" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
               <div className="flex items-center gap-1.5 font-semibold mb-1"><Eye size={15} style={{ color: 'var(--primary)' }} /> What to notice</div>
               <ul className="space-y-1 list-disc list-inside" style={{ color: 'var(--muted-foreground)' }}>
                 {whatToNotice.map((w, i) => <li key={i}>{w}</li>)}
@@ -411,7 +411,7 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
 
           {/* data table */}
           {data && data.rows.length > 0 && (
-            <div className="rounded-2xl overflow-hidden" style={{ border: '0.5px solid var(--border)' }}>
+            <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--border)' }}>
               <div className="max-h-72 overflow-auto">
                 <table className="w-full text-sm">
                   <thead className="sticky top-0" style={{ background: 'var(--muted)' }}>
@@ -419,7 +419,7 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
                   </thead>
                   <tbody>
                     {data.rows.map((row, i) => (
-                      <tr key={i} style={{ borderTop: '0.5px solid var(--border)' }}>
+                      <tr key={i} style={{ borderTop: '1px solid var(--border)' }}>
                         {row.map((cell, j) => <td key={j} className="p-2 font-mono">{typeof cell === 'number' ? cell.toFixed(2) : cell}</td>)}
                       </tr>
                     ))}
@@ -432,7 +432,7 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
 
         {/* controls + completion + about */}
         <div className="space-y-4">
-          <div className="rounded-2xl p-4 space-y-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+          <div className="rounded-2xl p-4 space-y-4" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
             {def.params.map((p) => {
               const locked = started && !p.live
               return (
@@ -494,11 +494,11 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
                 </button>
               )}
               <div className="flex gap-2">
-                <button onClick={handleReset} className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+                <button onClick={handleReset} className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
                   <RotateCcw size={15} /> Reset
                 </button>
                 {showExport && (
-                  <button onClick={handleExport} disabled={!data || data.rows.length === 0} className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold" style={{ border: '0.5px solid var(--border)', background: 'var(--card)', opacity: !data || data.rows.length === 0 ? 0.5 : 1 }}>
+                  <button onClick={handleExport} disabled={!data || data.rows.length === 0} className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold" style={{ border: '1px solid var(--border)', background: 'var(--card)', opacity: !data || data.rows.length === 0 ? 0.5 : 1 }}>
                     <Download size={15} /> Export
                   </button>
                 )}
@@ -508,7 +508,7 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
 
           {/* completion chip — on-brand, replaces the old green/purple bar */}
           {completionConfig && (
-            <div className="rounded-2xl p-3" style={{ border: `0.5px solid color-mix(in oklch, ${completion.isCompleted ? 'var(--success)' : 'var(--primary)'} 30%, var(--border))`, background: `color-mix(in oklch, ${completion.isCompleted ? 'var(--success)' : 'var(--primary)'} 10%, var(--card))` }}>
+            <div className="rounded-2xl p-3" style={{ border: `1px solid color-mix(in oklch, ${completion.isCompleted ? 'var(--success)' : 'var(--primary)'} 30%, var(--border))`, background: `color-mix(in oklch, ${completion.isCompleted ? 'var(--success)' : 'var(--primary)'} 10%, var(--card))` }}>
               <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: completion.isCompleted ? 'var(--success)' : 'var(--foreground)' }}>
                 {completion.isCompleted ? <><CheckCircle2 size={16} /> Explored — nice work</> : <><Sparkles size={16} /> Explore the simulation</>}
               </div>
@@ -521,7 +521,7 @@ export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinit
           )}
 
           {!embedded && def.learning && (
-            <div className="rounded-2xl p-4 text-sm space-y-3" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+            <div className="rounded-2xl p-4 text-sm space-y-3" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
               <div className="flex items-center gap-2 font-semibold"><Info size={16} style={{ color: accent }} /> About this lab</div>
               {def.learning.objectives && (
                 <div>

@@ -45,7 +45,7 @@ export default class SimErrorBoundary extends Component<Props, State> {
           <button
             onClick={() => { if (typeof window !== 'undefined') window.location.reload() }}
             className="mt-4 inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-semibold"
-            style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)' }}
+            style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
           >
             Reload simulation
           </button>

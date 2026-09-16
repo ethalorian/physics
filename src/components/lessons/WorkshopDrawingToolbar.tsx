@@ -2,6 +2,7 @@
 
 import { Pen, Slash, MoveUpRight, Square, Circle, Eraser, Undo2, Redo2, Trash2, Type, SlidersHorizontal, Grid2X2, Magnet } from 'lucide-react'
 import type { PaintToolbarProps } from '@/components/draw/PaintToolbar'
+import { WORKSHOP_INKS } from '@/lib/palette'
 import styles from './WorkshopResponses.module.css'
 
 const tools = [
@@ -10,10 +11,7 @@ const tools = [
   { id: 'ellipse', label: 'Circle', Icon: Circle }, { id: 'text', label: 'Label', Icon: Type },
   { id: 'eraser', label: 'Erase', Icon: Eraser },
 ] as const
-const colors = [
-  ['#000000','Black'],['#5F5E5A','Graphite'],['#3454B4','Blue'],['#3A6FA5','Steel blue'],
-  ['#C0584A','Red'],['#E0843D','Orange'],['#2E7D5B','Green'],['#7B5EC4','Violet'],
-]
+const colors = WORKSHOP_INKS
 interface Props extends PaintToolbarProps {
   canClear?: boolean
   grid?: boolean

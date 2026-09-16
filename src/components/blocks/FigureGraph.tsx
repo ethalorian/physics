@@ -51,7 +51,7 @@ export default function FigureGraph({
   return (
     <figure style={{ margin: 0 }}>
       {title && <figcaption style={{ fontSize: presentation ? 36 : 13, fontWeight: 600, color: 'var(--foreground)', marginBottom: 6 }}>{title}</figcaption>}
-      <div style={{ borderRadius: 12, border: '0.5px solid var(--border)', background: 'var(--card)', padding: '12px 10px 6px', width: '100%', height: presentation ? presentationHeight : 320 }}>
+      <div style={{ borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', background: 'var(--card)', padding: '12px 10px 6px', width: '100%', height: presentation ? presentationHeight : 320 }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 20, right: 40, bottom: presentation ? 50 : 26, left: presentation ? 30 : 6 }}>
             <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
@@ -62,7 +62,7 @@ export default function FigureGraph({
               {yLabel && <Label value={yLabel} angle={-90} position="insideLeft" fill="var(--muted-foreground)" fontSize={labelSize} style={{ textAnchor: 'middle' }} />}
             </YAxis>
             <Tooltip
-              contentStyle={{ background: 'var(--card)', border: '0.5px solid var(--border)', borderRadius: 10, fontSize: 12 }}
+              contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', fontSize: 'var(--type-caption)' }}
               labelStyle={{ color: 'var(--muted-foreground)' }}
             />
             <Legend

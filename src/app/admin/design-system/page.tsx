@@ -100,7 +100,7 @@ export default function DesignSystemPage() {
       {/* ELEVATION + RADIUS */}
       <SectionLabel accent="var(--primary)">Elevation &amp; radius</SectionLabel>
       <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
-        {['apple-shadow-sm', 'apple-shadow', 'apple-shadow-lg', 'card-elevation'].map((s) => (
+        {['card-elevation'].map((s) => (
           <div key={s} className={`rounded-xl bg-card border border-border p-5 ${s}`}>
             <div className="text-sm font-medium">Elevation</div>
             <code className="text-caption">.{s}</code>
@@ -219,7 +219,7 @@ export default function DesignSystemPage() {
               }}
             >
               <span
-                className="grid place-items-center rounded-full text-[11px] font-bold"
+                className="grid place-items-center rounded-full text-overline font-bold"
                 style={{
                   width: 18, height: 18,
                   background: s.status === 'done' ? 'var(--success)' : s.status === 'current' ? 'var(--primary)' : 'var(--secondary)',

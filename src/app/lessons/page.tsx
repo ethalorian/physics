@@ -1,5 +1,6 @@
 'use client'
 
+import { Spinner } from '@/components/ui/spinner'
 import { useEffect } from 'react'
 import LessonBrowser from '@/components/lessons/LessonBrowser'
 import EnrollmentGate from '@/components/EnrollmentGate'
@@ -22,7 +23,7 @@ export default function LessonsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <Spinner size="lg" className="mx-auto text-primary" />
           <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>

@@ -45,8 +45,8 @@ function TabsTrigger({
       className={cn(
         // Apple-style segmented button
         "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium",
-        "transition-all duration-200 ease-out",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "transition-all duration-200 ease-out-expo",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         "disabled:pointer-events-none disabled:opacity-50",
         // Active state - elevated white card
         "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",

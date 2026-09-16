@@ -83,7 +83,7 @@ function GroupTimeline({ group, members, card }: { group: Group; members: Member
                   </span>
                 )}
               </div>
-              <span className="text-[11px] w-9 text-right" style={{ color: done ? 'var(--success)' : 'var(--muted-foreground)' }}>
+              <span className="text-overline w-9 text-right" style={{ color: done ? 'var(--success)' : 'var(--muted-foreground)' }}>
                 {done ? `${Math.round((done - t0) / 1000)}s` : '—'}
               </span>
             </div>
@@ -142,7 +142,7 @@ export default function LobbyDetailPage() {
   // Remove a student from their group (back to the waiting pool) — no target group.
   const removeFromGroup = (user_id: string) =>
     act(() => fetch(`/api/lobby/sessions/${id}/reassign`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id }) }))
-  const moveSelect: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--muted-foreground)', fontSize: 11, borderRadius: 6, padding: '1px 4px' }
+  const moveSelect: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--muted-foreground)', fontSize: 'var(--type-overline)', borderRadius: 'var(--radius-sm)', padding: '1px 4px' }
 
   const card: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--card)' }
   const ungrouped = members.filter((m) => !m.group_id)
@@ -237,7 +237,7 @@ export default function LobbyDetailPage() {
                     </span>
                   </div>
                   <button onClick={() => pickReporter(g.id, gm)} disabled={gm.length === 0}
-                    className="text-[11px] mb-2 rounded px-2 py-0.5 inline-flex items-center gap-1 disabled:opacity-40"
+                    className="text-overline mb-2 rounded px-2 py-0.5 inline-flex items-center gap-1 disabled:opacity-40"
                     style={{ border: '1px solid var(--border)', background: 'transparent', color: 'var(--primary)', cursor: 'pointer' }}>
                     <Megaphone size={12} /> Spotlight a reporter
                   </button>
@@ -257,33 +257,33 @@ export default function LobbyDetailPage() {
                                 : <Clock size={14} style={{ color: 'var(--muted-foreground)' }} />}
                               <span>{m.name}</span>
                               <span className="font-mono text-xs px-1.5 rounded" style={{ background: 'color-mix(in oklch, var(--primary) 12%, transparent)', color: 'var(--primary)' }}>{m.word}</span>
-                              {m.role && <span className="text-[10px] px-1.5 rounded-full" style={{ background: 'color-mix(in oklch, var(--reward) 16%, transparent)', color: 'var(--reward)' }}>{m.role}</span>}
+                              {m.role && <span className="text-overline px-1.5 rounded-full" style={{ background: 'color-mix(in oklch, var(--reward) 16%, transparent)', color: 'var(--reward)' }}>{m.role}</span>}
                               {m.group_id && (
-                                <span className="text-[10px] px-1.5 rounded-full" title="How many groupmates built on this student's idea"
+                                <span className="text-overline px-1.5 rounded-full" title="How many groupmates built on this student's idea"
                                   style={{ background: m.creditedBy > 0 ? 'color-mix(in oklch, var(--success) 16%, transparent)' : 'color-mix(in oklch, var(--destructive) 14%, transparent)', color: m.creditedBy > 0 ? 'var(--success)' : 'var(--destructive)' }}>
                                   credited ×{m.creditedBy}
                                 </span>
                               )}
                               {spotlight[g.id] === m.user_id && (
-                                <span className="text-[10px] px-1.5 rounded-full inline-flex items-center gap-0.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
+                                <span className="text-overline px-1.5 rounded-full inline-flex items-center gap-0.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
                                   <Megaphone size={10} /> on deck
                                 </span>
                               )}
                             </div>
-                            {m.email && <div className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>{m.email}</div>}
-                            {m.piece && <div className="text-[11px] mt-0.5" style={{ color: 'var(--primary)' }}>piece: {m.piece}</div>}
+                            {m.email && <div className="text-overline truncate" style={{ color: 'var(--muted-foreground)' }}>{m.email}</div>}
+                            {m.piece && <div className="text-overline mt-0.5" style={{ color: 'var(--primary)' }}>piece: {m.piece}</div>}
                             {!g.sharedArtifact && m.artifact && (hasStrokes(m.artifact.response) ? (
                               <div className="mt-1"><StrokesSvg strokes={m.artifact.response.strokes} /></div>
                             ) : artifactText(m.artifact.response) ? (
                               <div className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>“{artifactText(m.artifact.response).slice(0, 140)}”</div>
                             ) : null)}
                             {m.builtOn && (m.builtOn.who_alias || m.builtOn.note) && (
-                              <div className="text-[11px] mt-0.5" style={{ color: 'var(--reward)' }}>↳ built on {m.builtOn.who_alias}: {m.builtOn.note.slice(0, 120)}</div>
+                              <div className="text-overline mt-0.5" style={{ color: 'var(--reward)' }}>↳ built on {m.builtOn.who_alias}: {m.builtOn.note.slice(0, 120)}</div>
                             )}
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-1">
-                          <span className="text-[11px] whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>
+                          <span className="text-overline whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>
                             {m.word_entries.length}/{g.passphrase.length} words
                           </span>
                           {groups.length > 1 && (

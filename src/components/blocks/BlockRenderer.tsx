@@ -1,4 +1,5 @@
 "use client"
+import { PEDAGOGY } from '@/lib/palette'
 import responseStyles from '@/components/lessons/WorkshopResponses.module.css'
 
 import BlockGuidance from './BlockGuidance'
@@ -128,11 +129,11 @@ function BlockShell({ meta, done, capture, children, hideHeading = false }: { hi
   return (
     <div
       style={{
-        borderRadius: 16,
+        borderRadius: 'var(--radius-lg)',
         // An unsaved save-block gets a warm amber edge so it reads as "do something here".
         border: hideHeading ? 'none' : needsSaving
           ? '1.5px solid color-mix(in oklch, var(--reward) 55%, var(--border))'
-          : `0.5px solid color-mix(in oklch, ${accent} 28%, var(--border))`,
+          : `1px solid color-mix(in oklch, ${accent} 28%, var(--border))`,
         overflow: 'hidden',
         background: 'var(--card)',
       }}
@@ -141,24 +142,24 @@ function BlockShell({ meta, done, capture, children, hideHeading = false }: { hi
         <span className="flex items-center justify-center shrink-0" style={{ width: 26, height: 26, borderRadius: '50%', background: accent, color: CHIP_FG[meta.domain] }}>
           <Icon size={15} />
         </span>
-        <span style={{ fontSize: 12.5, fontWeight: 600, color: `color-mix(in oklch, ${accent} 55%, var(--foreground))` }}>{meta.label}</span>
+        <span className="text-caption" style={{ color: `color-mix(in oklch, ${accent} 55%, var(--foreground))` }}>{meta.label}</span>
         <span className="ml-auto flex items-center gap-2">
           {capture ? (
             done ? (
-              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5" style={{ fontSize: 11, fontWeight: 600, color: 'var(--success)', background: 'color-mix(in oklch, var(--success) 12%, transparent)' }}>
+              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-overline" style={{ color: 'var(--success)', background: 'color-mix(in oklch, var(--success) 12%, transparent)' }}>
                 <Check size={13} /> Saved
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5" style={{ fontSize: 11, fontWeight: 700, color: 'var(--reward-foreground)', background: 'var(--reward)' }}>
+              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-overline" style={{ color: 'var(--reward-foreground)', background: 'var(--reward)' }}>
                 <Pencil size={12} /> Answer here
               </span>
             )
           ) : (
-            <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '.06em', textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>
+            <span className="text-overline" style={{ letterSpacing: '.06em', textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>
               Reference
             </span>
           )}
-          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', color: `color-mix(in oklch, ${accent} 50%, var(--muted-foreground))` }}>
+          <span className="text-overline" style={{ letterSpacing: '.08em', textTransform: 'uppercase', color: `color-mix(in oklch, ${accent} 50%, var(--muted-foreground))` }}>
             {DOMAIN_WORD[meta.domain]}
           </span>
         </span>
@@ -278,7 +279,7 @@ function SimEmbed({ slug }: { slug: string }) {
     )
   }
   return (
-    <div className="rounded-lg overflow-hidden" style={{ border: `0.5px solid ${C.hairline}` }}>
+    <div className="rounded-lg overflow-hidden" style={{ border: `1px solid ${C.hairline}` }}>
       <iframe
         src={`/embed/sim/${slug}`}
         title={`Simulation: ${slug}`}
@@ -310,7 +311,7 @@ function parseSpec(spec?: string): Record<string, unknown> {
 // is a numbered, color-coded node on a connector rail; math renders via MathMarkdown.
 const GEWA_STEPS = [
   { key: 'given', letter: 'G', label: 'Given', hint: 'pull out what you know', color: 'var(--primary)' },
-  { key: 'equation', letter: 'E', label: 'Equation', hint: 'the relationship', color: '#3A6FA5' },
+  { key: 'equation', letter: 'E', label: 'Equation', hint: 'the relationship', color: PEDAGOGY.equation },
   { key: 'work', letter: 'W', label: 'Work', hint: 'substitute & solve', color: 'var(--reward)' },
   { key: 'answer', letter: 'A', label: 'Answer', hint: 'with units, boxed', color: 'var(--success)' },
 ] as const
@@ -319,7 +320,7 @@ function GewaWorkedExample({ prompt, given, equation, work, answer }: { prompt: 
   const shown = GEWA_STEPS.filter((s) => vals[s.key])
   return (
     <div className="rounded-xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-      <div className="text-[11px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--muted-foreground)' }}>Worked example · GEWA</div>
+      <div className="text-overline font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--muted-foreground)' }}>Worked example · GEWA</div>
       <div className="text-sm font-medium mb-3" style={{ color: 'var(--foreground)' }}><MathMarkdown content={prompt} /></div>
       <ol style={{ listStyle: 'none', margin: 0, padding: 0 }} className="space-y-3">
         {shown.map((s, i) => {
@@ -330,7 +331,7 @@ function GewaWorkedExample({ prompt, given, equation, work, answer }: { prompt: 
               <span className="grid place-items-center rounded-full text-sm font-bold" style={{ position: 'absolute', left: 0, top: 0, width: 34, height: 34, background: `color-mix(in oklch, ${s.color} 18%, var(--card))`, color: s.color, border: `2px solid ${s.color}` }}>{s.letter}</span>
               <div className="flex items-baseline gap-2">
                 <span className="text-sm font-semibold" style={{ color: s.color }}>{s.label}</span>
-                <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{s.hint}</span>
+                <span className="text-overline" style={{ color: 'var(--muted-foreground)' }}>{s.hint}</span>
               </div>
               <div className="text-sm mt-1 rounded-lg px-3 py-2" style={{ background: isAnswer ? 'color-mix(in oklch, var(--success) 12%, var(--card))' : 'var(--secondary)', color: 'var(--foreground)', fontWeight: isAnswer ? 600 : 400 }}>
                 <MathMarkdown content={vals[s.key] as string} />
@@ -504,7 +505,7 @@ function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract
   return (
     <div className={b.workshop ? responseStyles.response : undefined}>
       {isPoll && (
-        <div className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 mb-2 text-[11px] font-semibold" style={{ background: 'color-mix(in oklch, var(--reward) 18%, var(--card))', color: 'var(--reward-foreground)', border: '1px solid color-mix(in oklch, var(--reward) 45%, var(--border))' }}>
+        <div className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 mb-2 text-overline font-semibold" style={{ background: 'color-mix(in oklch, var(--reward) 18%, var(--card))', color: 'var(--reward-foreground)', border: '1px solid color-mix(in oklch, var(--reward) 45%, var(--border))' }}>
           <span aria-hidden>●</span> Live poll{pollLocked ? ' · answers locked' : ' · answer now'}
         </div>
       )}
@@ -695,7 +696,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
             src={b.src}
             alt={b.alt}
             loading="lazy"
-            style={{ display: 'block', width: full ? '100%' : 'auto', maxWidth: '100%', margin: full ? 0 : '0 auto', borderRadius: 12, border: `0.5px solid ${C.hairline}` }}
+            style={{ display: 'block', width: full ? '100%' : 'auto', maxWidth: '100%', margin: full ? 0 : '0 auto', borderRadius: 'var(--radius-md)', border: `1px solid ${C.hairline}` }}
           />
           {b.caption && <figcaption className="text-sm mt-1.5" style={{ color: C.muted }}>{b.caption}</figcaption>}
           {b.credit && <figcaption className="text-xs mt-0.5" style={{ color: C.muted, opacity: 0.8 }}>{b.credit}</figcaption>}
@@ -901,9 +902,9 @@ export default function BlockRenderer({
         const gateColor = gate === 'honors' ? 'var(--reward)' : 'var(--success)'
         const gateFg = gate === 'honors' ? 'var(--reward-foreground)' : 'var(--success)'
         return (
-          <div key={`${b.id}:${hydratedKey}`} id={guided ? answerAnchor(lessonId, b.id) : undefined} tabIndex={guided ? -1 : undefined} className={guided ? answerStyles.responseSurface : undefined} style={gate ? { borderLeft: `4px solid ${gateColor}`, borderRadius: 6, paddingLeft: 12, position: 'relative' } : undefined}>
+          <div key={`${b.id}:${hydratedKey}`} id={guided ? answerAnchor(lessonId, b.id) : undefined} tabIndex={guided ? -1 : undefined} className={guided ? answerStyles.responseSurface : undefined} style={gate ? { borderLeft: `4px solid ${gateColor}`, borderRadius: 'var(--radius-sm)', paddingLeft: 12, position: 'relative' } : undefined}>
             {gate && (
-              <span className="text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5"
+              <span className="text-overline font-bold uppercase tracking-wide rounded px-1.5 py-0.5"
                 style={{ background: `color-mix(in oklch, ${gateColor} 18%, var(--card))`, color: gateFg, border: `1px solid color-mix(in oklch, ${gateColor} 50%, transparent)` }}>
                 {gate === 'honors' ? 'Honors only' : 'CPA only'}
               </span>

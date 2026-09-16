@@ -16,7 +16,7 @@ import type { PointerEvent as RPointerEvent } from 'react'
 import type { Stroke } from '@/components/blocks/DoodleCanvas'
 import { paintStrokes } from '@/lib/draw/strokes'
 import { makeStrokeHandlers, type EditorTool } from '@/lib/draw/input'
-import { PAINT_PALETTE } from '@/components/draw/PaintToolbar'
+import { INK_PALETTE } from '@/lib/palette'
 import { Type, Pen, Slash, MoveUpRight, Square, Circle, SprayCan, PaintBucket, Eraser, Undo2, Redo2, Trash2, LocateFixed } from 'lucide-react'
 import { useTranslator } from '@/lib/math-translate-store'
 import { wrapBoardText, textBox, textWidth, LINE_H } from '@/lib/draw/board-text'
@@ -238,13 +238,13 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
           )}
           <Sep />
           <div className="inline-flex items-center gap-1 flex-wrap" aria-label="ink color" style={{ maxWidth: 300 }}>
-            {PAINT_PALETTE.slice(0, 8).map((c) => (
+            {INK_PALETTE.slice(0, 8).map((c) => (
               <button key={c} type="button" onClick={() => { setColor(c); if (tool === 'eraser' || tool === 'fill' || tool === 'text') setTool('pen') }} aria-label={`color ${c}`}
                 aria-pressed={color === c} className={styles.swatch} style={{ width: 32, height: 32, minHeight: 32, padding: 0, background: c, border: color === c ? '3px solid var(--foreground)' : '1px solid var(--border)' }} />
             ))}
           </div>
           <div className="inline-flex items-center gap-1.5" title="Thickness">
-            <span style={{ display: 'inline-block', width: Math.min(18, width + 2), height: Math.min(18, width + 2), borderRadius: 999, background: 'var(--foreground)' }} />
+            <span style={{ display: 'inline-block', width: Math.min(18, width + 2), height: Math.min(18, width + 2), borderRadius: 'var(--radius-full)', background: 'var(--foreground)' }} />
             <input type="range" min={1} max={24} step={1} value={width} onChange={(e) => setWidth(Number(e.target.value))} style={{ width: 70 }} aria-label="thickness" />
           </div>
           </div></details>
@@ -256,7 +256,7 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
         </div>
       )}
 
-      {!readOnly && <p className="text-[11px] mb-1" style={{ color: 'var(--muted-foreground)' }}>{hint}</p>}
+      {!readOnly && <p className="text-overline mb-1" style={{ color: 'var(--muted-foreground)' }}>{hint}</p>}
 
       <div style={{ position: 'relative', width: '100%' }}>
         <canvas
@@ -268,7 +268,7 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
           onPointerUp={onPointerUp}
           onPointerLeave={onPointerUp}
           role="img" aria-label={gridded ? "Graph work board with centered axes and grid" : "Drawing work board"}
-          style={{ width: '100%', height: 'auto', touchAction: 'none', border: `1px solid ${readOnly ? 'var(--border)' : 'var(--primary)'}`, borderRadius: 8, background: '#fff', cursor: readOnly ? 'default' : tool === 'text' ? 'text' : tool === 'eraser' ? 'cell' : 'crosshair' }}
+          style={{ width: '100%', height: 'auto', touchAction: 'none', border: `1px solid ${readOnly ? 'var(--border)' : 'var(--primary)'}`, borderRadius: 'var(--radius-sm)', background: '#fff', cursor: readOnly ? 'default' : tool === 'text' ? 'text' : tool === 'eraser' ? 'cell' : 'crosshair' }}
         />
         {editor && !readOnly && (
           <div
@@ -276,8 +276,8 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
               position: 'relative',
               marginTop: 8, width: '100%', boxSizing: 'border-box',
               display: 'flex', gap: 4, alignItems: 'center', zIndex: 10,
-              background: '#fff', border: '1px solid var(--primary)', borderRadius: 8, padding: 4,
-              boxShadow: '0 4px 14px rgba(0,0,0,0.18)',
+              background: '#fff', border: '1px solid var(--primary)', borderRadius: 'var(--radius-sm)', padding: 4,
+              boxShadow: '0 4px 14px color-mix(in oklch, var(--primary) 18%, transparent)',
             }}
           >
             <textarea

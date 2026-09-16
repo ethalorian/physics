@@ -1,5 +1,6 @@
 'use client'
 
+import { PEDAGOGY } from '@/lib/palette'
 import { useMemo } from 'react'
 import {
   Radar, Gauge, Wind, Thermometer, Mic, Zap, Activity, Magnet, Sun, LineChart, type LucideIcon,
@@ -12,14 +13,14 @@ import type { SensorKind, SensorSpec, SensorSample } from './contract'
 
 const KIND: Record<SensorKind, { color: string; Icon: LucideIcon }> = {
   motion: { color: 'var(--primary)', Icon: Radar },
-  force: { color: '#D85A30', Icon: Gauge },
-  pressure: { color: '#185FA5', Icon: Wind },
-  temperature: { color: '#BA7517', Icon: Thermometer },
+  force: { color: PEDAGOGY.force, Icon: Gauge },
+  pressure: { color: PEDAGOGY.pressure, Icon: Wind },
+  temperature: { color: PEDAGOGY.temperature, Icon: Thermometer },
   microphone: { color: 'var(--success)', Icon: Mic },
-  voltage: { color: '#BA7517', Icon: Zap },
-  current: { color: '#185FA5', Icon: Activity },
-  'magnetic-field': { color: '#7F77DD', Icon: Magnet },
-  light: { color: 'var(--reward)', Icon: Sun },
+  voltage: { color: PEDAGOGY.voltage, Icon: Zap },
+  current: { color: PEDAGOGY.current, Icon: Activity },
+  'magnetic-field': { color: PEDAGOGY.magneticField, Icon: Magnet },
+  light: { color: PEDAGOGY.light, Icon: Sun },
   generic: { color: 'var(--muted-foreground)', Icon: LineChart },
 }
 
@@ -64,37 +65,37 @@ export default function MockSensor({
   const liveValue = samples.length ? samples[samples.length - 1].y : null
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+    <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
       {/* probe header */}
-      <div className="flex items-center gap-2 px-3 py-2" style={{ background: `color-mix(in oklch, ${color} 12%, var(--card))`, borderBottom: `0.5px solid color-mix(in oklch, ${color} 25%, var(--border))` }}>
-        <span className="flex items-center justify-center shrink-0" style={{ width: 26, height: 26, borderRadius: 7, background: color, color: 'white' }}>
+      <div className="flex items-center gap-2 px-3 py-2" style={{ background: `color-mix(in oklch, ${color} 12%, var(--card))`, borderBottom: `1px solid color-mix(in oklch, ${color} 25%, var(--border))` }}>
+        <span className="flex items-center justify-center shrink-0" style={{ width: 26, height: 26, borderRadius: 'var(--radius-sm)', background: color, color: 'white' }}>
           <Icon size={15} />
         </span>
         <div className="leading-tight">
-          <div style={{ fontSize: 12.5, fontWeight: 600, color: `color-mix(in oklch, ${color} 55%, var(--foreground))` }}>{spec.label}</div>
+          <div className="text-caption" style={{ color: `color-mix(in oklch, ${color} 55%, var(--foreground))` }}>{spec.label}</div>
           {channels.length > 1 ? (
-            <select
+            <select className="text-overline"
               value={selectedKey}
               onChange={(e) => onSelect(e.target.value)}
               aria-label="Choose what to plot"
-              style={{ fontSize: 11, color: 'var(--muted-foreground)', background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit' }}
+              style={{ color: 'var(--muted-foreground)', background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit' }}
             >
               {channels.map((c) => (
                 <option key={c.key ?? c.quantity} value={c.key ?? c.quantity}>{c.quantity} · {c.unit}</option>
               ))}
             </select>
           ) : (
-            <div style={{ fontSize: 11, color: 'var(--muted-foreground)' }}>{spec.quantity} · {spec.unit}</div>
+            <div className="text-overline" style={{ color: 'var(--muted-foreground)' }}>{spec.quantity} · {spec.unit}</div>
           )}
         </div>
         <div className="ml-auto flex items-center gap-2">
           {live && (
-            <span className="inline-flex items-center gap-1" style={{ fontSize: 10.5, fontWeight: 600, color }}>
+            <span className="inline-flex items-center gap-1 text-overline" style={{ color }}>
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: color, display: 'inline-block' }} /> LIVE
             </span>
           )}
-          <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--foreground)', fontVariantNumeric: 'tabular-nums' }}>
-            {liveValue === null ? '—' : liveValue.toFixed(2)}<span style={{ fontSize: 11, color: 'var(--muted-foreground)' }}> {spec.unit}</span>
+          <span className="text-title-3" style={{ color: 'var(--foreground)', fontVariantNumeric: 'tabular-nums' }}>
+            {liveValue === null ? '—' : liveValue.toFixed(2)}<span className="text-overline" style={{ color: 'var(--muted-foreground)' }}> {spec.unit}</span>
           </span>
         </div>
       </div>

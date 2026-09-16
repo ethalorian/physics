@@ -159,13 +159,13 @@ export default function EquationSandbox({ prompt, variables, equationToken, valu
           <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Insert:</span>
           {variables?.map((v, i) => (
             <button key={i} onClick={() => insert(v.value || v.symbol)} draggable onDragStart={(e) => dragToken(e, v.value || v.symbol)}
-              className="rounded-md px-2 py-1 text-xs font-semibold" style={{ border: '0.5px solid color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'color-mix(in oklch, var(--primary) 8%, var(--card))', color: 'var(--foreground)', cursor: 'grab', fontFamily: 'Georgia, serif' }}>
+              className="rounded-md px-2 py-1 text-xs font-semibold" style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'color-mix(in oklch, var(--primary) 8%, var(--card))', color: 'var(--foreground)', cursor: 'grab', fontFamily: 'Georgia, serif' }}>
               {v.symbol}{v.value ? ` = ${v.value}${v.unit ? ` ${v.unit}` : ''}` : ''}
             </button>
           ))}
           {equationToken && (
             <button onClick={() => insert(equationToken)} draggable onDragStart={(e) => dragToken(e, equationToken)}
-              className="rounded-md px-2 py-1 text-xs font-semibold" style={{ border: '0.5px solid color-mix(in oklch, var(--reward) 45%, var(--border))', background: 'color-mix(in oklch, var(--reward) 14%, var(--card))', color: 'var(--reward-foreground)', cursor: 'grab', fontFamily: 'Georgia, serif' }}>
+              className="rounded-md px-2 py-1 text-xs font-semibold" style={{ border: '1px solid color-mix(in oklch, var(--reward) 45%, var(--border))', background: 'color-mix(in oklch, var(--reward) 14%, var(--card))', color: 'var(--reward-foreground)', cursor: 'grab', fontFamily: 'Georgia, serif' }}>
               {equationToken}
             </button>
           )}
@@ -173,7 +173,7 @@ export default function EquationSandbox({ prompt, variables, equationToken, valu
       )}
 
       {/* the paper — one fluid surface */}
-      <div className="rounded-2xl px-3 py-2" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+      <div className="rounded-2xl px-3 py-2" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
         {lines.map((line, i) => {
           const focused = focus === i
           const result = evaluate(line)
@@ -183,13 +183,13 @@ export default function EquationSandbox({ prompt, variables, equationToken, valu
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => { e.preventDefault(); const t = e.dataTransfer.getData('text/plain'); if (t) { setFocus(i); insertAt(i, t) } }}
               className="flex items-center gap-3 py-1.5"
-              style={{ borderBottom: i < lines.length - 1 ? '0.5px solid color-mix(in oklch, var(--border) 60%, transparent)' : 'none', cursor: 'text', minHeight: 34 }}>
+              style={{ borderBottom: i < lines.length - 1 ? '1px solid color-mix(in oklch, var(--border) 60%, transparent)' : 'none', cursor: 'text', minHeight: 34 }}>
               {focused ? (
                 <input autoFocus value={line} onChange={(e) => editLine(i, e.target.value)} onKeyDown={(e) => onKey(e, i)} onBlur={collapseOnBlur}
                   placeholder="write a step…  v = d / t"
                   className="flex-1 bg-transparent outline-none text-base" style={{ color: 'var(--foreground)', fontFamily: 'ui-monospace, monospace' }} />
               ) : (
-                <div className="flex-1" style={{ fontSize: 18 }}>
+                <div className="flex-1 text-lg" >
                   {line.trim() ? <InlineMath math={toLatex(line)} /> : <span className="text-sm" style={{ color: 'var(--muted-foreground)' }}>tap to write a step…</span>}
                 </div>
               )}

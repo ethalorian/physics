@@ -1,4 +1,5 @@
 "use client"
+import { Spinner } from '@/components/ui/spinner'
 import { useState } from 'react'
 import { useVocabulary, VocabularySet } from '@/contexts/VocabularyContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -78,8 +79,8 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Vocabulary Sets</h2>
         <div className="flex gap-2">
-          <Button 
-            onClick={() => setShowUploader(true)} 
+          <Button
+            onClick={() => setShowUploader(true)}
             variant="outline"
             className="flex items-center gap-2"
           >
@@ -108,7 +109,7 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
                 placeholder="e.g., Unit 1 - Motion Vocabulary"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="set-description">Description (Optional)</Label>
               <Textarea
@@ -193,7 +194,7 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
 
       {loading && (
         <div className="flex items-center justify-center p-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <Spinner size="md" className="text-primary" />
         </div>
       )}
 
@@ -218,7 +219,7 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
                         {physicsUnits.find(u => u.id === set.unit)?.name || set.unit}
                       </Badge>
                     )}
-                    <Badge variant={set.published ? "default" : "secondary"} className={set.published ? "bg-green-600" : ""}>
+                    <Badge variant={set.published ? "default" : "secondary"} className={set.published ? "bg-success" : ""}>
                       {set.published ? (
                         <>
                           <Eye className="w-3 h-3 mr-1" />
@@ -238,7 +239,7 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
                     variant={set.published ? "outline" : "default"}
                     size="sm"
                     onClick={() => handlePublishToggle(set.id, set.published)}
-                    className={set.published ? "" : "bg-green-600 hover:bg-green-700"}
+                    className={set.published ? "" : "bg-success hover:bg-success"}
                   >
                     {set.published ? (
                       <>
@@ -277,12 +278,12 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
                 </div>
               </div>
             </CardHeader>
-            
+
             {editingSetId === set.id && (
               <CardContent className="border-t">
                 <div className="space-y-4">
                   <h4 className="font-semibold">Terms ({set.terms.length})</h4>
-                  
+
                   {/* Add new term form */}
                   <div className="bg-muted/50 p-4 rounded-lg space-y-3">
                     <h5 className="font-medium">Add New Term</h5>

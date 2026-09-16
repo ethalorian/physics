@@ -1,16 +1,12 @@
 "use client"
 
 import { Pen, Slash, MoveUpRight, Square, Circle, SprayCan, PaintBucket, Eraser, Undo2, Redo2, Trash2 } from 'lucide-react'
+import { INK_PALETTE } from '@/lib/palette'
 import type { EditorTool } from '@/lib/draw/input'
 
 // Shared drawing toolbar: tools, color palette + custom picker, thickness slider,
 // fill toggle, and undo/redo/clear. Controlled — the editor owns the state.
 
-export const PAINT_PALETTE = [
-  '#000000', '#5F5E5A', '#C0584A', '#E0843D', '#C99A2E', '#5BA152',
-  '#2E7D5B', '#3A6FA5', '#3454B4', '#7B5EC4', '#B5489B', '#8B5E3C',
-  '#FFFFFF', '#9AA0A6',
-]
 
 const TOOLS: { id: EditorTool; label: string; Icon: typeof Pen }[] = [
   { id: 'pen', label: 'Pen', Icon: Pen },
@@ -51,7 +47,7 @@ const tb = (active: boolean) => ({
 })
 
 export default function PaintToolbar(p: PaintToolbarProps) {
-  const palette = p.palette && p.palette.length ? p.palette : PAINT_PALETTE
+  const palette = p.palette && p.palette.length ? p.palette : INK_PALETTE
   const tools = p.hideFill ? TOOLS.filter((t) => t.id !== 'fill') : TOOLS
   const showFill = p.tool === 'rect' || p.tool === 'ellipse'
   return (
@@ -82,7 +78,7 @@ export default function PaintToolbar(p: PaintToolbarProps) {
         </div>
         <span className="w-px h-5" style={{ background: 'var(--border)' }} />
         <div className="flex items-center gap-1.5" title="Thickness">
-          <span style={{ display: 'inline-block', width: Math.min(22, p.size + 2), height: Math.min(22, p.size + 2), borderRadius: 999, background: 'var(--foreground)' }} />
+          <span style={{ display: 'inline-block', width: Math.min(22, p.size + 2), height: Math.min(22, p.size + 2), borderRadius: 'var(--radius-full)', background: 'var(--foreground)' }} />
           <input type="range" min={1} max={32} step={1} value={p.size} onChange={(e) => p.setSize(Number(e.target.value))} style={{ width: 90 }} aria-label="thickness" />
           <span className="text-xs tabular-nums" style={{ color: 'var(--muted-foreground)', width: 18 }}>{p.size}</span>
         </div>

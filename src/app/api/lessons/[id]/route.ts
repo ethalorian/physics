@@ -5,7 +5,7 @@ import { withAuth, withContentEditor } from '@/lib/api-auth'
 import { lessonReadiness } from '@/lib/curriculum-readiness'
 import type { BlockDocument } from '@/data/content-blocks'
 import { targetIdsForLesson } from '@/lib/lesson-targets'
-import { remainsPublished, validateBlockDocument } from '@/data/block-registry'
+import { validateBlockDocument } from '@/data/block-registry'
 import type { ContentBlock } from '@/data/content-blocks'
 import { LESSON_EDIT_FIELDS } from '@/lib/lesson-editing'
 
@@ -55,8 +55,10 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
     if (updateData.title !== undefined && (typeof updateData.title !== 'string' || !updateData.title.trim())) return NextResponse.json({ error: 'Give the lesson a title.' }, { status: 422 })
     for (const field of ['lesson_number', 'estimated_time']) if (updateData[field] !== undefined && !(field === 'estimated_time' && updateData[field] === null) && (!Number.isInteger(updateData[field]) || updateData[field] < (field==='lesson_number' && (updateData.content_blocks??current.content_blocks)?.lessonKind==='week-overview'?0:1))) return NextResponse.json({ error: 'Lesson number and estimated minutes must be positive whole numbers; unknown duration may be blank.' }, { status: 422 })
     const effectiveDoc = updateData.content_blocks !== undefined ? updateData.content_blocks : current.content_blocks
-    const publishing = remainsPublished(Boolean(current.published), updateData)
-    if (effectiveDoc != null) {
+    // Manual edits must remain saveable while a teacher repairs generated content.
+    // Publication readiness applies only when moving a draft into publication.
+    const publishing = updateData.published === true && !current.published
+    if (effectiveDoc != null && (updateData.content_blocks !== undefined || publishing)) {
       const issues = validateBlockDocument(effectiveDoc, publishing)
       if (issues.length) return NextResponse.json({ error: issues.map((i) => i.message).join(' '), block_issues: issues }, { status: 422 })
     }

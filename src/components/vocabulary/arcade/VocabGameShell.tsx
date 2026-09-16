@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { LanguageProfileProvider, LanguageDial } from '@/components/lessons/LanguageProfileProvider'
 import { useState, useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
@@ -141,7 +142,7 @@ export function VocabLoadingBoard({ label = 'Finding your words…' }: { label?:
       className="rounded-xl border p-10 flex flex-col items-center justify-center gap-3"
       style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
     >
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      <Spinner size="md" className="text-primary" />
       <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{label}</p>
     </div>
   )

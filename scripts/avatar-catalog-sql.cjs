@@ -5,7 +5,7 @@ const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),esbu
 const dir=fs.mkdtempSync(path.join(os.tmpdir(),'avatar-catalog-'));const out=path.join(dir,'svg.cjs');
 esbuild.buildSync({entryPoints:['src/lib/avatar/svg.ts'],bundle:true,platform:'node',format:'cjs',outfile:out});
 const {safeSvgLayer}=require(out);const items=JSON.parse(fs.readFileSync('src/data/avatar-catalog.json'));
-const slugs=new Set(),slots=new Set(['head','body','eyewear','facial_hair','pin','background']);
+const slugs=new Set(),slots=new Set(['head','body','eyewear','facial_hair','pin','background','ears','mouth']);
 const quote=s=>"'"+s.replaceAll("'","''")+"'";
 let sql='\n-- Validated versioned avatar artwork; retain established ownership/economics.\n';
 for(const i of items){

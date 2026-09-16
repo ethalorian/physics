@@ -118,7 +118,7 @@ export default function AdminCommand({ tools }: { tools: Tool[] }) {
       >
         <Search size={15} />
         <span className="flex-1 text-left">Search…</span>
-        <kbd className="text-[11px] font-semibold rounded px-1.5 py-0.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>⌘K</kbd>
+        <kbd className="text-overline font-semibold rounded px-1.5 py-0.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>⌘K</kbd>
       </button>
 
       {open && (
@@ -167,14 +167,14 @@ export default function AdminCommand({ tools }: { tools: Tool[] }) {
                       className="flex items-center gap-3 w-full text-left rounded-lg px-3 py-2"
                       style={{ background: isActive ? 'color-mix(in oklch, var(--primary) 10%, transparent)' : 'transparent', border: 'none', cursor: 'pointer' }}
                     >
-                      <span className="grid place-items-center shrink-0" style={{ width: 30, height: 30, borderRadius: 8, background: `color-mix(in oklch, ${it.accent} 16%, transparent)`, color: it.accent }}>
+                      <span className="grid place-items-center shrink-0" style={{ width: 30, height: 30, borderRadius: 'var(--radius-sm)', background: `color-mix(in oklch, ${it.accent} 16%, transparent)`, color: it.accent }}>
                         <Ico size={16} />
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block text-sm font-semibold truncate" style={{ color: 'var(--foreground)' }}>{it.label}</span>
-                        {it.desc && <span className="block text-[12px] truncate" style={{ color: 'var(--muted-foreground)' }}>{it.desc}</span>}
+                        {it.desc && <span className="block text-caption truncate" style={{ color: 'var(--muted-foreground)' }}>{it.desc}</span>}
                       </span>
-                      <span className="text-[10px] font-semibold uppercase tracking-wider shrink-0" style={{ color: 'var(--muted-foreground)' }}>{it.group}</span>
+                      <span className="text-overline font-semibold uppercase tracking-wider shrink-0" style={{ color: 'var(--muted-foreground)' }}>{it.group}</span>
                     </button>
                   </li>
                 )

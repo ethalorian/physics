@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import {
@@ -7,8 +8,7 @@ import {
 } from 'recharts'
 import {
   BarChart3, Sparkles, Users, BookOpen, AlertTriangle,
-  Lightbulb, GitCompare, ClipboardList, Loader2,
-} from 'lucide-react'
+  Lightbulb, GitCompare, ClipboardList, } from 'lucide-react'
 import LessonSystemSignals from '@/components/admin/LessonSystemSignals'
 import { decayingAverage } from '@/data/curriculum-types'
 import { useClassScope } from '@/lib/use-class-scope'
@@ -369,9 +369,9 @@ export default function AnalyticsPage() {
             <ResponsiveContainer>
               <LineChart data={slice.trend} margin={{ top: 8, right: 16, bottom: 4, left: -16 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-                <XAxis dataKey="week" tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
-                <YAxis domain={[1, 3]} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
-                <Tooltip contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }} />
+                <XAxis dataKey="week" tick={{ fontSize: 'var(--type-overline)', fill: 'var(--muted-foreground)' }} />
+                <YAxis domain={[1, 3]} tick={{ fontSize: 'var(--type-overline)', fill: 'var(--muted-foreground)' }} />
+                <Tooltip contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', fontSize: 'var(--type-caption)' }} />
                 <Line type="monotone" dataKey="avg" stroke="var(--primary)" strokeWidth={2} dot={{ r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
@@ -465,7 +465,7 @@ export default function AnalyticsPage() {
           <div className="flex items-center gap-2">
             <Sparkles size={18} style={{ color: 'var(--primary)' }} />
             <div>
-              <div className="font-bold" style={{ fontSize: 15 }}>Learn from this slice</div>
+              <div className="text-title-3" >Learn from this slice</div>
               <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Claude reads the numbers in view ({scopeLabel}) and reports patterns, reteach moves, who to watch, and class comparisons.</div>
             </div>
           </div>
@@ -473,9 +473,9 @@ export default function AnalyticsPage() {
             onClick={askClaude}
             disabled={asking || !slice || slice.studentsInView === 0}
             className="inline-flex items-center gap-1.5 text-sm rounded-lg px-3.5 py-2 font-medium"
-            style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: asking || !slice || slice.studentsInView === 0 ? 0.6 : 1 }}
+            style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', opacity: asking || !slice || slice.studentsInView === 0 ? 0.6 : 1 }}
           >
-            {asking ? <><Loader2 size={15} className="animate-spin" /> Analyzing…</> : <><Sparkles size={15} /> Ask Claude</>}
+            {asking ? <><Spinner size="sm" /> Analyzing…</> : <><Sparkles size={15} /> Ask Claude</>}
           </button>
         </div>
 
@@ -506,7 +506,7 @@ function Tile({ icon, value, label, accent }: { icon: React.ReactNode; value: st
         <span className="opacity-70">{icon}</span>
       </div>
       <div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>{label}</div>
-      <div style={{ height: 3, borderRadius: 2, marginTop: 8, background: accent, opacity: 0.85 }} />
+      <div style={{ height: 3, borderRadius: 'var(--radius-xs)', marginTop: 8, background: accent, opacity: 0.85 }} />
     </div>
   )
 }
@@ -523,7 +523,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 function InsightCard({ icon, title, items, accent }: { icon: React.ReactNode; title: string; items: string[]; accent: string }) {
   return (
     <div className="rounded-xl border p-4" style={{ borderColor: 'var(--border)' }}>
-      <div className="flex items-center gap-1.5 mb-2 font-medium" style={{ color: accent, fontSize: 13 }}>{icon}{title}</div>
+      <div className="flex items-center gap-1.5 mb-2 text-caption" style={{ color: accent }}>{icon}{title}</div>
       {items.length === 0 ? (
         <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>—</div>
       ) : (

@@ -46,7 +46,7 @@ export default function TeacherDailyMathTask() {
   const allCaughtUp = data.awaitingRating === 0
 
   return (
-    <Card className="apple-card overflow-hidden">
+    <Card className="overflow-hidden">
       <CardHeader>
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-muted/80">
@@ -75,7 +75,7 @@ export default function TeacherDailyMathTask() {
           {data.leastCovered && (
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums">
+                <span className="text-overline font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums">
                   {data.leastCovered.code}
                 </span>
                 <span className="text-sm font-semibold text-foreground tabular-nums">

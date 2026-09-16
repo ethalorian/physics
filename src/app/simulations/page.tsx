@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -84,19 +85,19 @@ function SimTile({ topic, difficulty, tried }: { topic: string; difficulty: Diff
       className="relative flex h-24 items-center justify-center"
       style={{
         background: `linear-gradient(135deg, color-mix(in oklch, ${a} 14%, var(--card)), color-mix(in oklch, ${b} 26%, var(--card)))`,
-        borderBottom: '0.5px solid var(--border)',
+        borderBottom: '1px solid var(--border)',
       }}
     >
       <Icon aria-hidden="true" className="h-9 w-9" strokeWidth={1.5} style={{ color: `color-mix(in oklch, ${a} 55%, var(--foreground))` }} />
       <span
-        className="absolute top-2 left-2 rounded-full px-2 py-0.5 text-[11px] font-semibold"
+        className="absolute top-2 left-2 rounded-full px-2 py-0.5 text-overline font-semibold"
         style={{ background: `color-mix(in oklch, ${meta.tint} 16%, var(--card))`, color: `color-mix(in oklch, ${meta.tint} 60%, var(--foreground))` }}
       >
         {meta.label}
       </span>
       {tried && (
         <span
-          className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
+          className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-overline font-semibold"
           style={{ background: 'color-mix(in oklch, var(--success) 14%, var(--card))', color: 'var(--success)' }}
         >
           <CheckCircle2 className="h-3 w-3" /> Tried
@@ -261,7 +262,7 @@ export default function SimulationsPage() {
 
       {loading ? (
         <div className="flex items-center justify-center py-16">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary" />
+          <Spinner size="lg" className="text-primary" />
         </div>
       ) : grouped.length === 0 ? (
         <Card><CardContent className="p-12 text-center text-muted-foreground">No simulations match your filters.</CardContent></Card>
@@ -275,7 +276,7 @@ export default function SimulationsPage() {
                 <Badge variant="outline" className="ml-1">{topics.reduce((n, t) => n + t.sims.length, 0)} labs</Badge>
                 {unit === currentUnitId && (
                   <span
-                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
+                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-overline font-semibold"
                     style={{ background: 'color-mix(in oklch, var(--reward) 16%, var(--card))', color: 'color-mix(in oklch, var(--reward) 60%, var(--foreground))' }}
                   >
                     <MapPin className="h-3 w-3" /> Your unit

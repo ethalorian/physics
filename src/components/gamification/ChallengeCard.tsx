@@ -50,7 +50,7 @@ export default function ChallengeCard({ compact = false }: { compact?: boolean }
               </div>
               <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>{PERIOD_LABELS[c.period]} · {c.window.start} → {c.window.end} (Eastern)</p>
               <div role="progressbar" aria-label={c.title} aria-valuemin={0} aria-valuemax={c.target} aria-valuenow={Math.min(c.progress, c.target)} className="rounded-full overflow-hidden" style={{ height: 8, background: 'var(--secondary)' }}>
-                <span style={{ display: 'block', height: '100%', width: `${pct * 100}%`, background: c.done ? 'var(--success)' : 'var(--reward)', transition: 'width 500ms ease', borderRadius: 9999 }} />
+                <span style={{ display: 'block', height: '100%', width: `${pct * 100}%`, background: c.done ? 'var(--success)' : 'var(--reward)', transition: 'width 500ms ease', borderRadius: 'var(--radius-full)' }} />
               </div>
               <div className="flex items-center gap-1 text-xs mt-1 font-semibold" style={{ color: c.bonusAwarded ? 'var(--success)' : 'var(--muted-foreground)' }}>
                 {c.bonusAwarded ? <><PartyPopper className="h-3.5 w-3.5" /> +{c.bonusXp} XP bonus earned!</>

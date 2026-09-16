@@ -46,7 +46,7 @@ function DivisionLadder() {
   return (
     <div className="rounded-lg border border-border overflow-hidden text-sm">
       {rows.map(([v, note], i) => (
-        <div key={i} className={`flex justify-between px-3 py-1.5 ${i % 2 ? 'bg-muted/50' : ''} ${i === rows.length - 1 ? 'font-semibold text-amber-700 dark:text-amber-400' : ''}`}>
+        <div key={i} className={`flex justify-between px-3 py-1.5 ${i % 2 ? 'bg-muted/50' : ''} ${i === rows.length - 1 ? 'font-semibold text-primary ' : ''}`}>
           <span className="tabular-nums">{v}</span>
           <span className="text-muted-foreground">{note}</span>
         </div>

@@ -127,7 +127,7 @@ export default function MasteryGrowth({
               <div className="flex items-center gap-2 text-sm font-medium" style={{ color: empty ? "var(--muted-foreground)" : "var(--foreground)" }}>
                 <span
                   aria-hidden
-                  style={{ width: 8, height: 8, borderRadius: 2, background: empty ? PALETTE.periwinkle : PALETTE.lavender }}
+                  style={{ width: 8, height: 8, borderRadius: 'var(--radius-xs)', background: empty ? PALETTE.periwinkle : PALETTE.lavender }}
                 />
                 {DOMAIN_LABEL[domain]}
               </div>
@@ -175,10 +175,10 @@ export default function MasteryGrowth({
               <div
                 key={t.id}
                 className="flex items-center gap-3 py-2.5"
-                style={{ borderTop: i === 0 ? "none" : `0.5px solid var(--secondary)` }}
+                style={{ borderTop: i === 0 ? "none" : `1px solid var(--secondary)` }}
               >
                 <span
-                  className="text-[11px] font-medium rounded px-2 py-0.5"
+                  className="text-overline font-medium rounded px-2 py-0.5"
                   style={{ background: "var(--secondary)", color: "var(--foreground)" }}
                   title={DOMAIN_LABEL[t.domain]}
                 >
@@ -199,7 +199,7 @@ export default function MasteryGrowth({
         <>
           <div className="flex items-center gap-2 mt-6 mb-1">
             <div className="flex-1" style={{ height: "0.5px", background: "var(--border)" }} />
-            <span className="text-[11px]" style={{ color: "var(--muted-foreground)", letterSpacing: "0.3px" }}>
+            <span className="text-overline" style={{ color: "var(--muted-foreground)", letterSpacing: "0.3px" }}>
               scored separately · not part of your growth lines
             </span>
             <div className="flex-1" style={{ height: "0.5px", background: "var(--border)" }} />
@@ -222,7 +222,7 @@ export default function MasteryGrowth({
                         style={{ width: `${Math.round((score / 4) * 100)}%`, background: score >= 3 ? PALETTE.sage : PALETTE.lavender }}
                       />
                     </div>
-                    <div className="text-[11px] mt-0.5" style={{ color: PALETTE.indigoMuted }}>
+                    <div className="text-overline mt-0.5" style={{ color: PALETTE.indigoMuted }}>
                       {score} of 4
                     </div>
                   </div>
@@ -230,7 +230,7 @@ export default function MasteryGrowth({
               })}
             </div>
             {taskResult.overall !== undefined && (
-              <div className="text-xs mt-3 pt-2.5" style={{ color: PALETTE.indigoMuted, borderTop: "0.5px solid var(--border)" }}>
+              <div className="text-xs mt-3 pt-2.5" style={{ color: PALETTE.indigoMuted, borderTop: "1px solid var(--border)" }}>
                 Lowest dimension sets the overall:{" "}
                 <span className="font-medium" style={{ color: PALETTE.indigo }}>
                   {taskResult.overall} of 4

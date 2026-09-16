@@ -1,4 +1,5 @@
 "use client"
+import { Spinner } from '@/components/ui/spinner'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { usePermissions } from '@/hooks/usePermissions'
@@ -11,18 +12,18 @@ import VocabularySetManager from '@/components/vocabulary/VocabularySetManager'
 export default function VocabularyManagementPage() {
   const { status } = useSession()
   const { userRole } = usePermissions()
-  
+
   // Wait for session to load before checking permissions
   if (status === 'loading') {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <Spinner size="md" className="text-primary" />
         </div>
       </div>
     )
   }
-  
+
   // Check if user has admin access
   if (userRole !== 'admin' && userRole !== 'teacher') {
     redirect('/home')
@@ -101,7 +102,7 @@ export default function VocabularyManagementPage() {
               </div>
             </div>
             <div className="relative">
-              <div className="absolute -top-1 -left-1 w-6 h-6 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">✓</div>
+              <div className="absolute -top-1 -left-1 w-6 h-6 rounded-full bg-success text-background flex items-center justify-center text-xs font-bold">✓</div>
               <div className="pl-6">
                 <p className="font-medium mb-1">Students check their words</p>
                 <p className="text-muted-foreground text-xs">Students open their task on Home; saved checks update your tracker</p>

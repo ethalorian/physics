@@ -36,7 +36,7 @@ export interface DailyMathStatus {
   submitted: boolean
 }
 
-export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathStatus) => void } = {}) {
+export default function DailyMathTask({ onStatus, compact = false }: { onStatus?: (s: DailyMathStatus) => void; compact?: boolean } = {}) {
   const [item, setItem] = useState<DailyItem | null>(null)
   const [snapshot, setSnapshot] = useState<DailySnapshot | null>(null)
   const [alreadySubmitted, setAlreadySubmitted] = useState(false)
@@ -74,11 +74,20 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
     return () => { active = false; clearTimeout(timeout); controller.abort() }
   }, [retry])
 
+  if (compact) return <Card density="compact">
+    <div className="flex flex-wrap items-center justify-between gap-2"><h4 className="text-sm font-semibold">Math warm-up</h4>{!loading && !error && <PracticeCompletionBadge state={alreadySubmitted ? 'done' : item ? 'todo' : 'empty'} label={alreadySubmitted ? 'Done' : item ? 'To do' : 'Unassigned'} />}</div>
+    {loading ? <p role="status" className="text-sm text-muted-foreground">Loading today’s math question…</p>
+      : error ? <><p role="alert" className="text-sm">{error}</p><Button variant="outline" onClick={() => setRetry(n => n + 1)} className="min-h-11 self-start">Retry warm-up</Button></>
+      : alreadySubmitted ? <><p className="text-sm text-muted-foreground">Submitted — waiting for your teacher to review.</p><Link href="/dashboard/math-spine/warmup" className="inline-flex min-h-11 items-center gap-2 self-start text-sm font-medium text-primary">View warm-up<ArrowRight size={16} aria-hidden="true" /></Link></>
+      : item ? <><p className="text-sm text-muted-foreground">{item.competencyStatement}</p><Button asChild variant="outline" className="min-h-11 self-start"><Link href="/dashboard/math-spine/warmup">Start warm-up<ArrowRight aria-hidden="true" /></Link></Button></>
+      : <><p className="text-sm text-muted-foreground">No warm-up assigned yet.</p><Link href="/dashboard/math-spine" className="inline-flex min-h-11 items-center gap-2 self-start text-sm font-medium text-primary">Browse math practice<ArrowRight size={16} aria-hidden="true" /></Link></>}
+  </Card>
+
   if (loading) return <div role="status" className="rounded-lg border bg-card p-4 text-sm">Loading today’s math question…</div>
   if (error) return <div className="space-y-3 rounded-lg border bg-card p-4"><p role="alert" className="text-sm">{error}</p><div className="flex flex-wrap gap-3"><Button onClick={() => setRetry(n => n + 1)}>Retry warm-up</Button><Link className="inline-flex min-h-11 items-center text-sm underline" href="/dashboard/math-spine/warmup">Open warm-up page</Link></div></div>
 
   return (
-    <Card className="apple-card overflow-hidden py-4">
+    <Card className="overflow-hidden py-4">
       <CardHeader className="px-4">
         <div className="flex items-start justify-between gap-3">
           <CardTitle className="min-w-0 text-foreground">Today&apos;s Math Warm-Up</CardTitle>
@@ -90,7 +99,7 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
           {snapshot && <div className="hidden sm:flex items-center gap-3 text-right">
             <div>
               <div className="text-lg font-bold tracking-tight text-foreground tabular-nums">{snapshot.mathPointsEarned}</div>
-              <p className="text-[11px] font-medium text-muted-foreground">XP earned</p>
+              <p className="text-overline font-medium text-muted-foreground">XP earned</p>
             </div>
             <div className="flex items-center gap-1">
               <Star className="h-4 w-4 text-reward" />
@@ -104,7 +113,7 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
         {item ? (
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums">
+              <span className="text-overline font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums">
                 {item.competencyCode}
               </span>
               <span className="text-xs text-muted-foreground">{item.competencyStatement}</span>

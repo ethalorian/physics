@@ -1,5 +1,6 @@
 "use client"
 
+import { Spinner } from '@/components/ui/spinner'
 import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -33,12 +34,10 @@ import {
   Image as ImageIcon,
   Video,
   Wand2,
-  Loader2,
   Download,
   Check,
   AlertCircle,
   Sparkles,
-  RefreshCw,
   X,
   Copy,
   Atom,
@@ -137,7 +136,7 @@ export default function MediaGenerator({
 }: MediaGeneratorProps) {
   const [open, setOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<'image' | 'video'>(mode === 'video' ? 'video' : 'image')
-  
+
   // Image generation state
   const [imagePrompt, setImagePrompt] = useState(defaultPrompt)
   const [imageType, setImageType] = useState('scenario')
@@ -217,7 +216,7 @@ export default function MediaGenerator({
   // Generate image
   const handleGenerateImage = async () => {
     if (!imagePrompt.trim()) return
-    
+
     setGeneratingImage(true)
     setImageError(null)
     setGeneratedImages([])
@@ -256,7 +255,7 @@ export default function MediaGenerator({
   // Generate video
   const handleGenerateVideo = async () => {
     if (!videoPrompt.trim()) return
-    
+
     setGeneratingVideo(true)
     setVideoError(null)
     setGeneratedVideos([])
@@ -556,7 +555,7 @@ export default function MediaGenerator({
                               >
                                 <Checkbox checked={selectedStandards.includes(standard.id)} />
                                 <span className="font-medium text-primary">{standard.code}</span>
-                                <Badge variant="outline" className="text-[10px] px-1 py-0">{set?.shortName}</Badge>
+                                <Badge variant="outline" className="text-overline px-1 py-0">{set?.shortName}</Badge>
                                 <span className="text-muted-foreground truncate flex-1">{standard.title}</span>
                               </div>
                             )
@@ -579,11 +578,11 @@ export default function MediaGenerator({
               <Button
                 onClick={handleGenerateImage}
                 disabled={!imagePrompt.trim() || generatingImage}
-                className="w-full bg-gradient-to-r from-primary/15 to-fuchsia-600 hover:from-primary/15 hover:to-fuchsia-700"
+                className="w-full -600 -700 bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {generatingImage ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Spinner size="sm" className="mr-2" />
                     Generating Image...
                   </>
                 ) : (
@@ -807,7 +806,7 @@ export default function MediaGenerator({
                               >
                                 <Checkbox checked={selectedStandards.includes(standard.id)} />
                                 <span className="font-medium text-primary">{standard.code}</span>
-                                <Badge variant="outline" className="text-[10px] px-1 py-0">{set?.shortName}</Badge>
+                                <Badge variant="outline" className="text-overline px-1 py-0">{set?.shortName}</Badge>
                                 <span className="text-muted-foreground truncate flex-1">{standard.title}</span>
                               </div>
                             )
@@ -830,11 +829,11 @@ export default function MediaGenerator({
               <Button
                 onClick={handleGenerateVideo}
                 disabled={!videoPrompt.trim() || generatingVideo}
-                className="w-full bg-gradient-to-r from-primary/15 to-cyan-600 hover:from-primary/15 hover:to-cyan-700"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {generatingVideo ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Spinner size="sm" className="mr-2" />
                     Generating Video... ({Math.round(videoProgress)}%)
                   </>
                 ) : (
@@ -857,7 +856,7 @@ export default function MediaGenerator({
                   </div>
                   <div className="h-2 bg-secondary rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-primary/15 to-cyan-500 transition-all duration-500"
+                      className="h-full transition-all duration-500 bg-primary text-primary-foreground hover:bg-primary/90"
                       style={{ width: `${videoProgress}%` }}
                     />
                   </div>
@@ -984,7 +983,7 @@ export function QuickMediaButton({
       className={cn("gap-1", className)}
     >
       {generating ? (
-        <Loader2 className="h-3 w-3 animate-spin" />
+        <Spinner size="sm" />
       ) : (
         <Wand2 className="h-3 w-3" />
       )}

@@ -248,11 +248,11 @@ export default function RosterPage() {
       <div className="rounded-2xl border p-5 mb-6" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div className="flex items-start gap-3">
-            <div className="grid place-items-center" style={{ width: 40, height: 40, borderRadius: 10, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
+            <div className="grid place-items-center" style={{ width: 40, height: 40, borderRadius: 'var(--radius-md)', background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
               <Link2 size={20} />
             </div>
             <div>
-              <div className="font-bold" style={{ fontSize: 15 }}>Google Classroom</div>
+              <div className="text-title-3" >Google Classroom</div>
               <div className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
                 {hasClassroom
                   ? 'Connected. This only reads your course list and student rosters — no coursework or grades.'
@@ -273,7 +273,7 @@ export default function RosterPage() {
             <button
               onClick={connect}
               className="inline-flex items-center gap-1.5 text-sm rounded-lg px-3 py-2 font-medium"
-              style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)' }}
+              style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
             >
               <Link2 size={14} /> {hasClassroom ? 'Reconnect' : 'Connect Google Classroom'}
             </button>
@@ -300,7 +300,7 @@ export default function RosterPage() {
                 return (
                   <div key={c.id} className="rounded-xl border p-3 flex flex-col gap-2.5 min-w-0" style={{ borderColor: 'var(--border)' }}>
                     <div className="min-w-0">
-                      <div className="font-medium truncate" style={{ fontSize: 14 }} title={c.name}>{c.name}</div>
+                      <div className="font-medium truncate text-sm"  title={c.name}>{c.name}</div>
                       {c.section && <div className="text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>{c.section}</div>}
                     </div>
                     <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -314,7 +314,7 @@ export default function RosterPage() {
                               type="button"
                               onClick={() => setCourseType(c.id, t.id)}
                               title={t.hint}
-                              className="text-[11px] font-semibold px-2 py-1"
+                              className="text-overline font-semibold px-2 py-1"
                               style={{ background: on ? (t.id === 'trades' ? 'var(--reward)' : 'var(--primary)') : 'var(--card)', color: on ? (t.id === 'trades' ? 'var(--reward-foreground)' : 'var(--primary-foreground)') : 'var(--muted-foreground)' }}
                             >
                               {t.label}
@@ -361,7 +361,7 @@ export default function RosterPage() {
                   style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
                   onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'var(--primary)' }}
                   onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border)' }}>
-                  <div className="font-bold" style={{ fontSize: 15 }}>{c.name}</div>
+                  <div className="text-title-3" >{c.name}</div>
                   {c.section && <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{c.section}</div>}
                   <div className="flex items-center gap-1.5 mt-3 text-sm" style={{ color: 'var(--muted-foreground)' }}>
                     <Users size={15} /> {c.student_count} student{c.student_count === 1 ? '' : 's'}
@@ -377,7 +377,7 @@ export default function RosterPage() {
       <div className="rounded-2xl border p-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
         <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
           <div>
-            <div className="font-bold" style={{ fontSize: 15 }}>How they&apos;re performing</div>
+            <div className="text-title-3" >How they&apos;re performing</div>
             <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Rolled-up mastery per learning target. Tap a row to grade in the Control Room.</div>
           </div>
           <div className="flex items-center gap-2">
@@ -470,7 +470,7 @@ export default function RosterPage() {
       {/* name editor — fix how a name splits so the Aspen grade-copy sorts it right */}
       {roster.length > 0 && (
         <div className="rounded-2xl border p-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-          <div className="mb-1 font-bold" style={{ fontSize: 15 }}>Student names — Aspen sort order</div>
+          <div className="mb-1 text-title-3" >Student names — Aspen sort order</div>
           <div className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
             Rows are ordered by last name, the way Aspen X2 lists them — so the Control Room&apos;s grade-copy lines up. If a name split the wrong way, fix the first/last split here. (This doesn&apos;t change the student&apos;s Google name.)
           </div>

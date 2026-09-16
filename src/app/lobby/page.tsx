@@ -27,7 +27,7 @@ export default function LobbyJoinPage() {
   return (
     <div className="max-w-sm mx-auto p-5 mt-10" style={{ color: 'var(--foreground)' }}>
       <div className="rounded-2xl border p-6 text-center" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-        <div className="grid place-items-center mx-auto mb-3" style={{ width: 48, height: 48, borderRadius: 12, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
+        <div className="grid place-items-center mx-auto mb-3" style={{ width: 48, height: 48, borderRadius: 'var(--radius-md)', background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
           <KeyRound size={24} />
         </div>
         <h1 className="text-xl font-semibold tracking-tight">Join a lobby</h1>

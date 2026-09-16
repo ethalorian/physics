@@ -257,8 +257,3 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
 export function blockingDrafts(blocks: ContentBlock[], responses: Record<string, { draft?: boolean }>): ContentBlock[] {
   return blocks.filter((b) => Boolean(RESPONSE_RULES[b.type]) && (b.type !== 'sentence_frame' || b.capture === true) && responses[b.id]?.draft)
 }
-
-/** Whether the resulting lesson, rather than just the request, is published. */
-export function remainsPublished(current: boolean, patch: { published?: boolean }): boolean {
-  return patch.published ?? current
-}

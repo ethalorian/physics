@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en"><head><title>Project Physics · Week 1 Day 3 · Slope and area</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="19f8413f-9bc0-431b-9ff0-b250191a2418"></script>
+</head>
+<body>
+<deck-stage hidden aria-hidden="true">
+<section data-label="0–25 · Slope / Pendiente" data-section-anchor="w01d3-sim1" data-speaker-notes="Start with two measurements in the room. Drag the points. Compare the high shallow line with the low steep line; ask students to point to both rise and run."></section>
+<section data-label="25–50 · GEWA 1 · Velocity" data-section-anchor="w01d3-gewa1" data-speaker-notes="Students save Given, Equation, Work and Answer in the lesson. The velocity is (3−2)/(5−1) = 0.25 m/s. Press the 0.60 misconception: where is the other reading?"></section>
+<section data-label="50–75 · Area / Área" data-section-anchor="w01d3-sim2" data-speaker-notes="Shade velocity × elapsed time. The signed area is displacement. This cart moves only forward, so its distance is the same: 2.4 m."></section>
+<section data-label="50–75 · GEWA 2 · Displacement" data-section-anchor="w01d3-gewa2" data-speaker-notes="Students save their second GEWA in the lesson: 0.40 m/s × 6.0 s = 2.4 m. Tool checks are rehearsal, not saved evidence."></section>
+<section data-label="75–110 · Talk, write and exit" data-section-anchor="w01d3-talk" data-speaker-notes="75–100: partner rehearsal, then save the comparison in the lesson. 100–110: save the individual graph exit and self-rating. Tomorrow: predict a real cart’s graph."></section>
+</deck-stage>
+<!-- CLASSROOM_BRIDGE -->
+<x-dc>
+<helmet>
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("332e6e21-ce9d-4d99-be49-26480420e747") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("7364e06a-73b4-4337-945b-2b211718cf76") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("6a1b7e46-7c4b-4644-891d-58cdbf4c69d0") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("5efbb619-baca-4546-83be-a622d2079802") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("b62e5728-669c-45e8-b077-2aed9e3df5f0") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("332e6e21-ce9d-4d99-be49-26480420e747") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("7364e06a-73b4-4337-945b-2b211718cf76") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("6a1b7e46-7c4b-4644-891d-58cdbf4c69d0") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("5efbb619-baca-4546-83be-a622d2079802") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("b62e5728-669c-45e8-b077-2aed9e3df5f0") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("332e6e21-ce9d-4d99-be49-26480420e747") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("7364e06a-73b4-4337-945b-2b211718cf76") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("6a1b7e46-7c4b-4644-891d-58cdbf4c69d0") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("5efbb619-baca-4546-83be-a622d2079802") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("b62e5728-669c-45e8-b077-2aed9e3df5f0") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+html,body{margin:0;background:#F5EDE0;color:#33291F;font-family:'Nunito',system-ui,sans-serif;}
+a{color:#C9673F;} a:hover{color:#A24E2B;}
+button,input{font-family:inherit;} button{cursor:pointer;}
+input[type=range]{accent-color:#3D8B96;}
+</style>
+<style>button,a,input{min-height:44px}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #3D8B96;outline-offset:3px}@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}</style>
+</helmet>
+<div data-screen-label="Day 3 Slope and Area" style="min-height:100vh;padding:20px 24px 28px;box-sizing:border-box;display:flex;flex-direction:column;gap:16px;">
+  <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+    <div>
+      <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">Week 1 · Day 3 · Read the track</div>
+      <h1 style="margin:2px 0 0;font-size:clamp(22px,2.6vw,32px);font-weight:900;line-height:1.1;">A number out of a graph <span style="color:#7D6E5E;font-weight:700;">/ Un número de la gráfica</span></h1>
+      <p style="margin:4px 0 0;font-size:16px;color:#7D6E5E;">Slope gives velocity. Area gives displacement. <i>La pendiente da velocidad. El área da desplazamiento.</i></p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="/lessons/pp-w01-d2" target="_blank" rel="noopener" style="text-decoration:none;font-weight:700;font-size:15px;padding:10px 16px;border-radius:999px;background:#FFFCF7;border:2px solid #E5D9C6;color:#33291F;">Previous lesson / Lección anterior</a>
+      <a href="/lessons/pp-w01-d3" target="_blank" rel="noopener" style="text-decoration:none;font-weight:700;font-size:15px;padding:10px 16px;border-radius:999px;background:#FFFCF7;border:2px solid #E5D9C6;color:#33291F;">Save work in lesson / Guarda en la lección</a>
+    </div>
+  </header>
+
+  <p style="margin:0;color:#7D6E5E;font-size:14px;">Practice here, then save both GEWAs, your explanation and exit in the lesson. <i>Practica aquí; guarda tus respuestas en la lección.</i></p>
+  <nav aria-label="Lesson activities" style="display:flex;gap:8px;flex-wrap:wrap;">
+    <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="5">
+      <button sc-camel-on-click="{{ tb.pick }}" aria-current="{{ tb.current }}" style="border-radius:999px;padding:10px 18px;border:2px solid {{ tb.border }};background:{{ tb.bg }};color:{{ tb.color }};display:flex;align-items:center;gap:10px;">
+        <span style="font-size:12px;font-weight:900;opacity:.7;">{{ tb.time }}</span>
+        <span style="font-weight:900;font-size:16px;">{{ tb.en }}</span>
+        <span style="font-size:14px;font-style:italic;opacity:.75;">{{ tb.es }}</span>
+      </button>
+    </sc-for>
+  </nav>
+
+  <sc-if value="{{ isSlope }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">
+      <section style="flex:4 1 480px;min-width:0;background:#FFFCF7;border-radius:24px;padding:16px 18px 10px;border:2px solid #E5D9C6;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px;">
+          <div style="font-weight:900;font-size:18px;color:#C9673F;">Position vs. Time <span style="color:#7D6E5E;font-weight:700;">/ Posición vs. Tiempo</span></div>
+          <div style="display:flex;gap:8px;">
+            <button sc-camel-on-click="{{ modeDrag }}" style="border:2px solid {{ dragBorder }};background:{{ dragBg }};border-radius:999px;padding:8px 14px;font-weight:700;font-size:15px;color:#33291F;">Drag two points / Arrastra</button>
+            <button sc-camel-on-click="{{ modeTwo }}" style="border:2px solid {{ twoBorder }};background:{{ twoBg }};border-radius:999px;padding:8px 14px;font-weight:700;font-size:15px;color:#33291F;">Two lines / Dos líneas</button>
+          </div>
+        </div>
+        <svg ref="{{ svgRef }}" sc-camel-view-box="0 0 560 300" sc-camel-on-pointer-move="{{ onMove }}" sc-camel-on-pointer-up="{{ onUp }}" style="width:100%;height:auto;display:block;touch-action:none;user-select:none;">
+          <sc-for list="{{ tGrid }}" as="g" hint-placeholder-count="11">
+            <line x1="{{ g.x }}" x2="{{ g.x }}" y1="16" y2="260" stroke="#EFE6D8"></line>
+          </sc-for>
+          <sc-for list="{{ xGrid }}" as="g" hint-placeholder-count="6">
+            <line x1="50" x2="544" y1="{{ g.y }}" y2="{{ g.y }}" stroke="#EFE6D8"></line>
+          </sc-for>
+          <line x1="50" x2="544" y1="260" y2="260" stroke="#B9AA95" stroke-width="2"></line>
+          <line x1="50" x2="50" y1="16" y2="260" stroke="#B9AA95" stroke-width="2"></line>
+          <text x="297" y="297" text-anchor="middle" font-size="13" font-weight="900" fill="#7D6E5E">time / tiempo (s)</text>
+          <text x="14" y="138" text-anchor="middle" font-size="13" font-weight="900" fill="#C9673F" transform="rotate(-90 14 138)">position / posición (m)</text>{{ slopeTexts }}
+
+          <sc-if value="{{ isDrag }}" hint-placeholder-val="{{ true }}">
+            <sc-if value="{{ showWrong }}" hint-placeholder-val="{{ false }}">
+              <line x1="{{ bx }}" x2="{{ bx }}" y1="{{ by }}" y2="260" stroke="#33291F" stroke-width="3" stroke-dasharray="6 5"></line>
+              <line x1="50" x2="{{ bx }}" y1="260" y2="260" stroke="#33291F" stroke-width="5"></line>
+            </sc-if>
+            <line x1="{{ ax }}" x2="{{ bx }}" y1="{{ ay }}" y2="{{ ay }}" stroke="#3D8B96" stroke-width="4"></line>
+            <line x1="{{ bx }}" x2="{{ bx }}" y1="{{ ay }}" y2="{{ by }}" stroke="#C9673F" stroke-width="4"></line>
+            <line x1="{{ ax }}" x2="{{ bx }}" y1="{{ ay }}" y2="{{ by }}" stroke="#C9673F" stroke-width="5" stroke-linecap="round"></line>
+            <circle cx="{{ ax }}" cy="{{ ay }}" r="13" fill="#C9673F" stroke="#FFFCF7" stroke-width="4" sc-camel-on-pointer-down="{{ downA }}" style="cursor:grab;"></circle>
+            <circle cx="{{ bx }}" cy="{{ by }}" r="13" fill="#C9673F" stroke="#FFFCF7" stroke-width="4" sc-camel-on-pointer-down="{{ downB }}" style="cursor:grab;"></circle>
+          </sc-if>
+
+          <sc-if value="{{ isTwo }}" hint-placeholder-val="{{ false }}">
+            <line x1="{{ l1x1 }}" y1="{{ l1y1 }}" x2="{{ l1x2 }}" y2="{{ l1y2 }}" stroke="#C9673F" stroke-width="6" stroke-linecap="round"></line>
+            <line x1="{{ l2x1 }}" y1="{{ l2y1 }}" x2="{{ l2x2 }}" y2="{{ l2y2 }}" stroke="#3D8B96" stroke-width="6" stroke-linecap="round"></line>
+            <text x="{{ l1x2 }}" y="{{ l1LabelY }}" font-size="18" font-weight="900" fill="#C9673F" dx="10">A</text>
+            <text x="{{ l2x2 }}" y="{{ l2LabelY }}" font-size="18" font-weight="900" fill="#3D8B96" dx="10">B</text>
+            <sc-if value="{{ twoRevealed }}" hint-placeholder-val="{{ false }}">
+              <line x1="{{ l1x1 }}" x2="{{ l1x2 }}" y1="{{ l1y1 }}" y2="{{ l1y1 }}" stroke="#C9673F" stroke-width="2" stroke-dasharray="5 4"></line>
+              <line x1="{{ l1x2 }}" x2="{{ l1x2 }}" y1="{{ l1y1 }}" y2="{{ l1y2 }}" stroke="#C9673F" stroke-width="2" stroke-dasharray="5 4"></line>
+              <line x1="{{ l2x1 }}" x2="{{ l2x2 }}" y1="{{ l2y1 }}" y2="{{ l2y1 }}" stroke="#3D8B96" stroke-width="2" stroke-dasharray="5 4"></line>
+              <line x1="{{ l2x2 }}" x2="{{ l2x2 }}" y1="{{ l2y1 }}" y2="{{ l2y2 }}" stroke="#3D8B96" stroke-width="2" stroke-dasharray="5 4"></line>
+            </sc-if>
+          </sc-if>
+        </svg>
+      </section>
+
+      <aside style="flex:1 1 280px;max-width:360px;display:flex;flex-direction:column;gap:14px;">
+        <sc-if value="{{ isDrag }}" hint-placeholder-val="{{ true }}">
+          <section style="background:#33291F;color:#FFFCF7;border-radius:24px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+            <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#B9AA95;">Slope = rise ÷ run <span style="font-style:italic;text-transform:none;letter-spacing:0;">/ pendiente</span></div>
+            <div style="font-size:22px;font-weight:900;line-height:1.3;">v = <span style="color:#F0B59A;">Δx</span> ÷ <span style="color:#9FD3DA;">Δt</span></div>
+            <div style="font-size:22px;font-weight:700;line-height:1.3;">v = <span style="color:#F0B59A;">{{ dxText }} m</span> ÷ <span style="color:#9FD3DA;">{{ dtText }} s</span></div>
+            <div style="font-size:34px;font-weight:900;">v = {{ vText }} <span style="font-size:18px;color:#B9AA95;">m/s</span></div>
+            <div style="font-size:15px;color:#E5D9C6;">{{ vWords }}</div>
+          </section>
+          <section style="background:#FFFCF7;border-radius:24px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:10px;">
+            <div style="font-size:15px;line-height:1.5;">Two measurements, two dots. <i style="color:#7D6E5E;">Dos medidas, dos puntos.</i><br>Δ means "the change" — end minus start. <i style="color:#7D6E5E;">Δ es "el cambio" — final menos inicial.</i></div>
+            <button sc-camel-on-click="{{ toggleWrong }}" style="border:2px solid {{ wrongBorder }};background:{{ wrongBg }};border-radius:999px;padding:10px 16px;font-weight:700;font-size:15px;color:#33291F;text-align:left;">The wrong move: x ÷ t = {{ wrongText }} m/s <span style="color:#7D6E5E;font-style:italic;">/ el error</span></button>
+            <div style="font-size:14px;color:#7D6E5E;line-height:1.5;">Press: "Which number did you use — and where is the other one?" <i>¿Qué número usaste? ¿Dónde está el otro?</i></div>
+          </section>
+        </sc-if>
+        <sc-if value="{{ isTwo }}" hint-placeholder-val="{{ false }}">
+          <section style="background:#33291F;color:#FFFCF7;border-radius:24px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;">
+            <div style="font-size:24px;font-weight:900;line-height:1.2;">Which is faster?</div>
+            <div style="font-size:18px;font-style:italic;color:#E5D9C6;">¿Cuál es más rápido?</div>
+            <div style="display:flex;gap:8px;">
+              <button sc-camel-on-click="{{ voteA }}" style="flex:1;border:none;border-radius:14px;padding:12px;font-size:18px;font-weight:900;background:#C9673F;color:#FFFCF7;">A</button>
+              <button sc-camel-on-click="{{ voteB }}" style="flex:1;border:none;border-radius:14px;padding:12px;font-size:18px;font-weight:900;background:#3D8B96;color:#FFFCF7;">B</button>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:15px;color:#E5D9C6;"><span>A: {{ votesA }} votes / votos</span><span>B: {{ votesB }}</span></div>
+            <button sc-camel-on-click="{{ revealTwo }}" style="border:2px solid #B9AA95;background:transparent;color:#FFFCF7;border-radius:999px;padding:10px 16px;font-weight:700;font-size:15px;">{{ twoBtn }}</button>
+          </section>
+          <sc-if value="{{ twoRevealed }}" hint-placeholder-val="{{ false }}">
+            <section style="background:#FFFCF7;border-radius:24px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:10px;">
+              <div style="font-size:17px;"><b style="color:#C9673F;">A:</b> Δx = 2.0 m, Δt = 2.0 s → <b>v = 1.0 m/s</b></div>
+              <div style="font-size:17px;"><b style="color:#3D8B96;">B:</b> Δx = 0.5 m, Δt = 2.0 s → <b>v = 0.25 m/s</b></div>
+              <div style="font-size:15px;line-height:1.5;color:#7D6E5E;">B is <b style="color:#33291F;">higher</b> but <b style="color:#33291F;">slower</b>. Slope is steepness, not height. <i>B está más alto pero va más lento. La pendiente es la inclinación, no la altura.</i></div>
+              <div style="font-size:15px;font-weight:700;">Point at the rise AND the run before you answer. <i style="color:#7D6E5E;font-weight:400;">Señala la subida Y el recorrido antes de responder.</i></div>
+            </section>
+          </sc-if>
+        </sc-if>
+      </aside>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isGewa1 }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">
+      <section style="flex:1 1 300px;max-width:380px;background:#FFFCF7;border-radius:24px;padding:18px 20px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">Problem / Problema</div>
+        <p style="margin:0;font-size:20px;line-height:1.45;font-weight:700;">A cart is at <b style="color:#C9673F;">2.0 m</b> at <b style="color:#3D8B96;">t = 1.0 s</b>. It is at <b style="color:#C9673F;">3.0 m</b> at <b style="color:#3D8B96;">t = 5.0 s</b>. What is its velocity?</p>
+        <p style="margin:0;font-size:17px;line-height:1.45;font-style:italic;color:#7D6E5E;">Un carrito está en 2.0 m a t = 1.0 s. Está en 3.0 m a t = 5.0 s. ¿Cuál es su velocidad?</p>
+        <div style="font-size:15px;color:#7D6E5E;line-height:1.5;"><b style="color:#33291F;">Primero esto.</b> Given → Equation → Work → Answer. One finger on each box.</div>
+      </section>
+      <section style="flex:2 1 420px;min-width:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;">
+        <div style="background:#FFFCF7;border-radius:20px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-weight:900;font-size:17px;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:#33291F;color:#FFFCF7;align-items:center;justify-content:center;margin-right:8px;">G</span>Given <i style="color:#7D6E5E;font-weight:400;">/ Datos</i></div>
+          <div style="font-size:18px;line-height:1.6;">x₁ = 2.0 m &nbsp; t₁ = 1.0 s<br>x₂ = 3.0 m &nbsp; t₂ = 5.0 s</div>
+        </div>
+        <div style="background:#FFFCF7;border-radius:20px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-weight:900;font-size:17px;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:#33291F;color:#FFFCF7;align-items:center;justify-content:center;margin-right:8px;">E</span>Equation <i style="color:#7D6E5E;font-weight:400;">/ Ecuación</i></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <sc-for list="{{ eq1 }}" as="e" hint-placeholder-count="4">
+              <button sc-camel-on-click="{{ e.pick }}" style="border:2px solid {{ e.border }};background:{{ e.bg }};border-radius:12px;padding:10px;font-size:17px;font-weight:900;color:#33291F;">{{ e.label }}</button>
+            </sc-for>
+          </div>
+          <div style="font-size:14px;line-height:1.45;color:#7D6E5E;min-height:40px;">{{ eq1Fb }}</div>
+        </div>
+        <div style="background:#FFFCF7;border-radius:20px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-weight:900;font-size:17px;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:#33291F;color:#FFFCF7;align-items:center;justify-content:center;margin-right:8px;">W</span>Work <i style="color:#7D6E5E;font-weight:400;">/ Trabajo</i></div>
+          <div style="font-size:20px;line-height:1.6;font-weight:700;">{{ work1 }}</div>
+        </div>
+        <div style="background:#FFFCF7;border-radius:20px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-weight:900;font-size:17px;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:#33291F;color:#FFFCF7;align-items:center;justify-content:center;margin-right:8px;">A</span>Answer <i style="color:#7D6E5E;font-weight:400;">/ Respuesta</i></div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="number" step="0.01" aria-label="Velocity answer in m/s" value="{{ ans1 }}" sc-camel-on-change="{{ setAns1 }}" placeholder="v = ?" style="flex:1;min-width:0;font-size:22px;font-weight:900;padding:8px 12px;border:2px solid #E5D9C6;border-radius:12px;background:#F5EDE0;color:#33291F;">
+            <span style="font-weight:700;color:#7D6E5E;">m/s</span>
+            <button sc-camel-on-click="{{ check1 }}" style="border:none;border-radius:999px;padding:10px 16px;font-weight:900;font-size:15px;background:#33291F;color:#FFFCF7;">Check / Revisar</button>
+          </div>
+          <div style="font-size:15px;line-height:1.45;font-weight:700;min-height:40px;"><span role="status">{{ ans1Fb }}</span></div>
+        </div>
+      </section>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isArea }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">
+      <section style="flex:4 1 480px;min-width:0;background:#FFFCF7;border-radius:24px;padding:16px 18px 10px;border:2px solid #E5D9C6;">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px;">
+          <div style="font-weight:900;font-size:18px;color:#3D8B96;">Velocity vs. Time <span style="color:#7D6E5E;font-weight:700;">/ Velocidad vs. Tiempo</span></div>
+          <button sc-camel-on-click="{{ toggleShade }}" style="border:2px solid {{ shadeBorder }};background:{{ shadeBg }};border-radius:999px;padding:8px 14px;font-weight:700;font-size:15px;color:#33291F;">{{ shadeLabel }}</button>
+        </div>
+        <svg sc-camel-view-box="0 0 560 300" style="width:100%;height:auto;display:block;">
+          <sc-for list="{{ tGrid }}" as="g" hint-placeholder-count="11">
+            <line x1="{{ g.x }}" x2="{{ g.x }}" y1="16" y2="260" stroke="#EFE6D8"></line>
+          </sc-for>
+          <sc-for list="{{ vGrid }}" as="g" hint-placeholder-count="6">
+            <line x1="50" x2="544" y1="{{ g.y }}" y2="{{ g.y }}" stroke="#EFE6D8"></line>
+          </sc-for>
+          <line x1="50" x2="544" y1="260" y2="260" stroke="#B9AA95" stroke-width="2"></line>
+          <line x1="50" x2="50" y1="16" y2="260" stroke="#B9AA95" stroke-width="2"></line>
+          <text x="297" y="297" text-anchor="middle" font-size="13" font-weight="900" fill="#7D6E5E">time / tiempo (s)</text>
+          <text x="14" y="138" text-anchor="middle" font-size="13" font-weight="900" fill="#3D8B96" transform="rotate(-90 14 138)">velocity / velocidad (m/s)</text>{{ areaTexts }}
+          <rect x="50" y="{{ rectY }}" width="{{ shadeW }}" height="{{ rectH }}" fill="#3D8B96" opacity="0.28" style="transition:width 1.2s ease;"></rect>
+          <rect x="50" y="{{ rectY }}" width="{{ rectW }}" height="{{ rectH }}" fill="none" stroke="#3D8B96" stroke-width="3" stroke-dasharray="6 5"></rect>
+          <line x1="50" x2="{{ rectRight }}" y1="{{ rectY }}" y2="{{ rectY }}" stroke="#3D8B96" stroke-width="6" stroke-linecap="round"></line>
+        </svg>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:8px 4px 6px;">
+          <label style="display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:15px;">Velocity / Velocidad: <b style="color:#3D8B96;">{{ avText }} m/s</b>
+            <input type="range" min="0.1" max="1" step="0.1" value="{{ av }}" sc-camel-on-change="{{ setAv }}">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:15px;">Time / Tiempo: <b style="color:#3D8B96;">{{ atText }} s</b>
+            <input type="range" min="1" max="10" step="0.5" value="{{ at }}" sc-camel-on-change="{{ setAt }}">
+          </label>
+        </div>
+      </section>
+      <aside style="flex:1 1 280px;max-width:360px;display:flex;flex-direction:column;gap:14px;">
+        <section style="background:#33291F;color:#FFFCF7;border-radius:24px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#B9AA95;">Area = tall × wide <span style="font-style:italic;text-transform:none;letter-spacing:0;">/ área</span></div>
+          <div style="font-size:22px;font-weight:900;">Δx = v × Δt</div>
+          <div style="font-size:22px;font-weight:700;">Δx = <span style="color:#9FD3DA;">{{ avText }} m/s</span> × <span style="color:#9FD3DA;">{{ atText }} s</span></div>
+          <div style="font-size:34px;font-weight:900;">Δx = {{ areaNum }} <span style="font-size:18px;color:#B9AA95;">m</span></div>
+          <div style="font-size:15px;color:#E5D9C6;">Signed area gives displacement. Here the cart moves only forward, so distance is the same. <i>El área con signo da desplazamiento. Aquí solo avanza: la distancia es igual.</i></div>
+        </section>
+        <section style="background:#FFFCF7;border-radius:24px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:10px;">
+          <div style="font-weight:900;font-size:16px;">How far did the cart go? <i style="color:#7D6E5E;font-weight:400;">¿Qué tan lejos fue?</i></div>
+          <div style="position:relative;height:56px;margin:0 8px;">
+            <div style="position:absolute;left:0;right:0;top:34px;height:10px;border-radius:999px;background:#E5D9C6;"></div>
+            <div style="position:absolute;left:0;top:34px;height:10px;border-radius:999px;background:#3D8B96;width:{{ cartPct }}%;transition:width 1.2s ease;"></div>
+            <div style="position:absolute;top:6px;transform:translateX(-50%);left:{{ cartPct }}%;transition:left 1.2s ease;">
+              <div style="width:36px;height:26px;border-radius:10px 10px 6px 6px;background:#C9673F;box-shadow:0 2px 0 #A24E2B;"></div>
+            </div>
+            <div style="position:absolute;left:0;top:46px;font-size:12px;font-weight:700;color:#7D6E5E;">0 m</div>
+            <div style="position:absolute;right:0;top:46px;font-size:12px;font-weight:700;color:#7D6E5E;">10 m</div>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isGewa2 }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">
+      <section style="flex:1 1 300px;max-width:380px;background:#FFFCF7;border-radius:24px;padding:18px 20px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:12px;">
+        <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">Problem / Problema</div>
+        <p style="margin:0;font-size:20px;line-height:1.45;font-weight:700;">A cart moves at <b style="color:#3D8B96;">0.40 m/s</b> for <b style="color:#3D8B96;">6.0 s</b>. How far does it go?</p>
+        <p style="margin:0;font-size:17px;line-height:1.45;font-style:italic;color:#7D6E5E;">Un carrito se mueve a 0.40 m/s durante 6.0 s. ¿Qué tan lejos llega?</p>
+        <div style="font-size:15px;color:#7D6E5E;line-height:1.5;"><b style="color:#33291F;">Escribe el número.</b> A number in the right box is evidence.</div>
+      </section>
+      <section style="flex:2 1 420px;min-width:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px;">
+        <div style="background:#FFFCF7;border-radius:20px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-weight:900;font-size:17px;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:#33291F;color:#FFFCF7;align-items:center;justify-content:center;margin-right:8px;">G</span>Given <i style="color:#7D6E5E;font-weight:400;">/ Datos</i></div>
+          <div style="font-size:18px;line-height:1.6;">v = 0.40 m/s<br>Δt = 6.0 s</div>
+        </div>
+        <div style="background:#FFFCF7;border-radius:20px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-weight:900;font-size:17px;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:#33291F;color:#FFFCF7;align-items:center;justify-content:center;margin-right:8px;">E</span>Equation <i style="color:#7D6E5E;font-weight:400;">/ Ecuación</i></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <sc-for list="{{ eq2 }}" as="e" hint-placeholder-count="4">
+              <button sc-camel-on-click="{{ e.pick }}" style="border:2px solid {{ e.border }};background:{{ e.bg }};border-radius:12px;padding:10px;font-size:17px;font-weight:900;color:#33291F;">{{ e.label }}</button>
+            </sc-for>
+          </div>
+          <div style="font-size:14px;line-height:1.45;color:#7D6E5E;min-height:40px;">{{ eq2Fb }}</div>
+        </div>
+        <div style="background:#FFFCF7;border-radius:20px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-weight:900;font-size:17px;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:#33291F;color:#FFFCF7;align-items:center;justify-content:center;margin-right:8px;">W</span>Work <i style="color:#7D6E5E;font-weight:400;">/ Trabajo</i></div>
+          <div style="font-size:20px;line-height:1.6;font-weight:700;">{{ work2 }}</div>
+        </div>
+        <div style="background:#FFFCF7;border-radius:20px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:8px;">
+          <div style="font-weight:900;font-size:17px;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:#33291F;color:#FFFCF7;align-items:center;justify-content:center;margin-right:8px;">A</span>Answer <i style="color:#7D6E5E;font-weight:400;">/ Respuesta</i></div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="number" step="0.1" aria-label="Displacement answer in m" value="{{ ans2 }}" sc-camel-on-change="{{ setAns2 }}" placeholder="Δx = ?" style="flex:1;min-width:0;font-size:22px;font-weight:900;padding:8px 12px;border:2px solid #E5D9C6;border-radius:12px;background:#F5EDE0;color:#33291F;">
+            <span style="font-weight:700;color:#7D6E5E;">m</span>
+            <button sc-camel-on-click="{{ check2 }}" style="border:none;border-radius:999px;padding:10px 16px;font-weight:900;font-size:15px;background:#33291F;color:#FFFCF7;">Check / Revisar</button>
+          </div>
+          <div style="font-size:15px;line-height:1.45;font-weight:700;min-height:40px;"><span role="status">{{ ans2Fb }}</span></div>
+        </div>
+      </section>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isTalk }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;">
+      <section style="flex:3 1 420px;min-width:0;display:flex;flex-direction:column;gap:14px;">
+        <div style="background:#33291F;color:#FFFCF7;border-radius:24px;padding:22px 26px;display:flex;flex-direction:column;gap:10px;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#B9AA95;">Talk in pairs / Habla en parejas</div>
+          <div style="font-size:26px;font-weight:900;line-height:1.3;">Which move gives a <span style="color:#F0B59A;">velocity</span>? Which move gives a <span style="color:#9FD3DA;">distance</span>? Why does that make sense?</div>
+          <div style="font-size:19px;font-style:italic;color:#E5D9C6;line-height:1.35;">¿Cuál da una velocidad? ¿Cuál da una distancia? ¿Por qué tiene sentido?</div>
+        </div>
+        <div style="background:#FFFCF7;border-radius:24px;padding:22px 26px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:14px;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">Write / Escribe — En español está bien.</div>
+          <p style="margin:0;font-size:22px;line-height:1.6;">The <b style="color:#C9673F;">slope</b> of x–t tells me <b style="border-bottom:3px solid #33291F;padding:0 60px;"></b>.</p>
+          <p style="margin:0;font-size:22px;line-height:1.6;">The <b style="color:#3D8B96;">area</b> under v–t tells me <b style="border-bottom:3px solid #33291F;padding:0 60px;"></b>.</p>
+          <p style="margin:0;font-size:18px;line-height:1.6;font-style:italic;color:#7D6E5E;">La <b>pendiente</b> de x–t me dice ______. El <b>área</b> bajo v–t me dice ______.</p>
+        </div>
+      </section>
+      <aside style="flex:1 1 280px;max-width:380px;display:flex;flex-direction:column;gap:14px;">
+        <section style="background:#FFFCF7;border-radius:24px;padding:16px 18px;border:2px solid #E5D9C6;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;margin-bottom:10px;">Word bank / Banco de palabras</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <sc-for list="{{ words }}" as="w" hint-placeholder-count="6">
+              <div style="border-radius:12px;padding:8px 10px;background:{{ w.bg }};display:flex;flex-direction:column;">
+                <span style="font-weight:900;font-size:15px;">{{ w.en }}</span>
+                <span style="font-size:13px;font-style:italic;color:#7D6E5E;">{{ w.es }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+        <section style="background:#FFFCF7;border-radius:24px;padding:16px 18px;border:2px solid #E5D9C6;display:flex;flex-direction:column;gap:6px;">
+          <div style="font-size:13px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#7D6E5E;">Level 1 check / Nivel 1</div>
+          <div style="font-size:17px;font-weight:700;">¿Más grande o más pequeño? <span style="color:#7D6E5E;font-weight:400;">Bigger or smaller? — compare two slopes.</span></div>
+          <div style="font-size:15px;color:#7D6E5E;">Met / not yet. Never in the physics grade.</div>
+        </section>
+      </aside>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{}">
+const L = 50, PW = 494, TOP = 16, PH = 244, VBW = 560;
+const EQS = [
+  { id: 'v-dx-dt', label: 'v = Δx ÷ Δt' }, { id: 'v-x-t', label: 'v = x ÷ t' },
+  { id: 'dx-v-dt', label: 'Δx = v × Δt' }, { id: 'v-dt-dx', label: 'v = Δt ÷ Δx' },
+];
+const FB1 = {
+  'v-dx-dt': 'Yes — change in position over change in time. This has the target. / Sí — cambio de posición entre cambio de tiempo.',
+  'v-x-t': 'This uses the LAST position over the LAST time → 3.0 ÷ 5.0 = 0.60. Where is the other number? / ¿Dónde está el otro número?',
+  'dx-v-dt': 'This finds a distance, not a velocity. Look at the question again. / Esto da una distancia, no una velocidad.',
+  'v-dt-dx': 'Flipped. Rise over run: Δx goes on top. / Al revés: Δx va arriba.',
+};
+const FB2 = {
+  'dx-v-dt': 'Yes — tall × wide. Velocity times time is a distance. / Sí — alto × ancho.',
+  'v-dx-dt': 'This finds a velocity — but we already have the velocity. We want how far. / Ya tenemos la velocidad. Queremos la distancia.',
+  'v-x-t': 'Same problem: this gives a velocity, and the velocity is already given. / Esto da velocidad; ya la tenemos.',
+  'v-dt-dx': 'Time divided by displacement has units s/m. We need meters: velocity × time. / Tiempo entre desplazamiento da s/m. Necesitamos metros: velocidad × tiempo.',
+};
+const snap = (v, s) => Math.round(v / s) * s;
+const T = (key, x, y, txt, o = {}) => React.createElement('text', { key, x, y, textAnchor: o.anchor || 'middle', fontSize: o.size || 13, fontWeight: o.w || 700, fill: o.fill || '#7D6E5E', dx: o.dx }, txt);
+class Component extends DCLogic {
+  state = { tab: 0, mode: 'drag', a: { t: 1, x: 2 }, b: { t: 5, x: 3 }, drag: null, wrong: false, votesA: 0, votesB: 0, twoRevealed: false,
+    av: 0.4, at: 6, shaded: false, eq1: null, ans1: '', ans1Fb: '', eq2: null, ans2: '', ans2Fb: '' };
+  componentDidMount() { document.querySelector("deck-stage").connect(tab => this.setState({ tab })); }
+  componentWillUnmount() { document.querySelector("deck-stage").selectTab = null; }
+  svgRef = React.createRef();
+  toSvg(e) {
+    const r = this.svgRef.current.getBoundingClientRect();
+    return { px: (e.clientX - r.left) / r.width * VBW, py: (e.clientY - r.top) / r.height * 300 };
+  }
+  renderVals() {
+    const s = this.state;
+    const two = s.mode === 'two';
+    const tMax = two ? 4 : 10, xMax = two ? 4 : 10;
+    const tx = t => L + t / tMax * PW, xy = x => TOP + (1 - x / xMax) * PH, vy = v => TOP + (1 - v) * PH;
+    const { a, b } = s;
+    const dt = b.t - a.t, dx = b.x - a.x;
+    const v = dt !== 0 ? dx / dt : NaN;
+    const ax = tx(a.t), ay = xy(a.x), bx = tx(b.t), by = xy(b.x);
+    const vWords = isNaN(v) ? 'Same time — no run. Move a point. / Mismo tiempo — mueve un punto.' : Math.abs(v) < 0.005 ? 'Flat line: at rest. / Línea plana: en reposo.' : v > 0 ? `Forward, ${Math.abs(v) >= 0.75 ? 'fast' : 'slow'}. / Hacia adelante, ${Math.abs(v) >= 0.75 ? 'rápido' : 'lento'}.` : 'Backward. / Hacia atrás.';
+    const rectY = vy(s.av), rectH = 260 - rectY, rectW = s.at / 10 * PW;
+    const area = s.av * s.at;
+    const tabs = [
+      { en: 'Slope', es: 'Pendiente', time: '0–25' }, { en: 'GEWA 1', es: 'velocidad', time: '25–50' },
+      { en: 'Area', es: 'Área', time: '50–75' }, { en: 'GEWA 2', es: 'distancia', time: '50–75' }, { en: 'Talk & Write', es: 'Habla y escribe', time: '75–110' },
+    ].map((t, i) => ({ ...t, current: i === s.tab ? "step" : undefined, pick: () => document.querySelector("deck-stage").navigate(i), bg: i === s.tab ? '#33291F' : '#FFFCF7', border: i === s.tab ? '#33291F' : '#E5D9C6', color: i === s.tab ? '#FFFCF7' : '#33291F' }));
+    const eqBtns = (sel, correct, key) => EQS.map(e => ({ label: e.label, pick: () => this.setState({ [key]: e.id }), bg: sel === e.id ? (e.id === correct ? '#D9ECEE' : '#F6E1D6') : '#FFFCF7', border: sel === e.id ? (e.id === correct ? '#3D8B96' : '#C9673F') : '#E5D9C6' }));
+    const on = (c) => ({ bg: c ? '#F6E1D6' : '#FFFCF7', border: c ? '#C9673F' : '#E5D9C6' });
+    const ticksT = Array.from({ length: tMax + 1 }, (_, i) => T('t' + i, tx(i), 280, i));
+    const slopeTexts = [...ticksT, ...Array.from({ length: xMax / 2 + 1 }, (_, i) => T('x' + i, 40, xy(i * 2) + 4, i * 2, { anchor: 'end' }))];
+    if (!two) {
+      const up = by < ay;
+      slopeTexts.push(
+        T('dt', (ax + bx) / 2, ay + (up ? 20 : -10), `Δt = ${dt.toFixed(1)} s`, { size: 15, w: 900, fill: '#3D8B96' }),
+        T('dx', bx + 12, (ay + by) / 2 + 5, `Δx = ${dx.toFixed(1)} m`, { size: 15, w: 900, fill: '#C9673F', anchor: 'start' }),
+        T('la', ax, ay + (up ? 30 : -20), `A (${a.t.toFixed(1)} s, ${a.x.toFixed(1)} m)`, { size: 14, w: 900, fill: '#33291F' }),
+        T('lb', bx, by + (up ? -20 : 30), `B (${b.t.toFixed(1)} s, ${b.x.toFixed(1)} m)`, { size: 14, w: 900, fill: '#33291F' }),
+      );
+      if (s.wrong) slopeTexts.push(
+        T('wx', bx + 12, (by + 260) / 2 + 5, `${b.x.toFixed(1)} m ?`, { size: 14, w: 900, fill: '#33291F', anchor: 'start' }),
+        T('wt', (L + bx) / 2, 252, `${b.t.toFixed(1)} s ?`, { size: 14, w: 900, fill: '#33291F' }),
+      );
+    }
+    const areaTexts = [
+      ...Array.from({ length: 11 }, (_, i) => T('t' + i, L + i / 10 * PW, 280, i)),
+      ...[0, 0.2, 0.4, 0.6, 0.8, 1].map(x => T('v' + x, 40, vy(x) + 4, x.toFixed(1), { anchor: 'end' })),
+      T('area', L + rectW / 2, rectY + rectH / 2 + 8, `${area.toFixed(2)} m`, { size: 22, w: 900, fill: '#33291F' }),
+      T('wide', L + rectW / 2, 250, `${s.at.toFixed(1)} s wide / de ancho`, { size: 15, w: 900, fill: '#3D8B96' }),
+      T('tall', L + rectW + 10, rectY + rectH / 2 + 5, `${s.av.toFixed(2)} m/s tall / de alto`, { size: 15, w: 900, fill: '#3D8B96', anchor: 'start' }),
+    ];
+    return {
+      tabs, isSlope: s.tab === 0, isGewa1: s.tab === 1, isArea: s.tab === 2, isGewa2: s.tab === 3, isTalk: s.tab === 4,
+      svgRef: this.svgRef, isDrag: !two, isTwo: two, slopeTexts, areaTexts,
+      modeDrag: () => this.setState({ mode: 'drag' }), modeTwo: () => this.setState({ mode: 'two' }),
+      dragBg: on(!two).bg, dragBorder: on(!two).border, twoBg: on(two).bg, twoBorder: on(two).border,
+      tGrid: Array.from({ length: tMax + 1 }, (_, i) => ({ x: tx(i), label: i })),
+      xGrid: Array.from({ length: xMax / 2 + 1 }, (_, i) => ({ y: xy(i * 2), ty: xy(i * 2) + 4, label: i * 2 })),
+      vGrid: [0, 0.2, 0.4, 0.6, 0.8, 1].map(x => ({ y: vy(x), ty: vy(x) + 4, label: x.toFixed(1) })),
+      ax, ay, bx, by, midX: (ax + bx) / 2, midY: (ay + by) / 2 + 5, runLabelY: ay + (by < ay ? 20 : -10), riseLabelX: bx + 12,
+      aLabelY: ay + (by < ay ? 30 : -20), bLabelY: by + (by < ay ? -20 : 30),
+      taText: a.t.toFixed(1), xaText: a.x.toFixed(1), tbText: b.t.toFixed(1), xbText: b.x.toFixed(1),
+      dtText: dt.toFixed(1), dxText: dx.toFixed(1), vText: isNaN(v) ? '—' : v.toFixed(2), vWords,
+      showWrong: s.wrong, toggleWrong: () => this.setState({ wrong: !s.wrong }), wrongBg: on(s.wrong).bg, wrongBorder: on(s.wrong).border,
+      wrongText: b.t ? (b.x / b.t).toFixed(2) : '—', bxLabel: bx + 12, bMidY: (by + 260) / 2 + 5, bMidX0: (L + bx) / 2,
+      downA: e => { e.target.setPointerCapture?.(e.pointerId); this.setState({ drag: 'a' }); },
+      downB: e => { e.target.setPointerCapture?.(e.pointerId); this.setState({ drag: 'b' }); },
+      onMove: e => { if (!s.drag || !this.svgRef.current) return; const { px, py } = this.toSvg(e);
+        const t = Math.max(0, Math.min(tMax, snap((px - L) / PW * tMax, 0.5))), x = Math.max(0, Math.min(xMax, snap((1 - (py - TOP) / PH) * xMax, 0.5)));
+        this.setState({ [s.drag]: { t, x } }); },
+      onUp: () => this.setState({ drag: null }),
+      l1x1: tx(0), l1y1: xy(0), l1x2: tx(2), l1y2: xy(2), l1LabelY: xy(2) + 6,
+      l2x1: tx(0), l2y1: xy(3), l2x2: tx(2), l2y2: xy(3.5), l2LabelY: xy(3.5) + 6,
+      votesA: s.votesA, votesB: s.votesB, voteA: () => this.setState({ votesA: s.votesA + 1 }), voteB: () => this.setState({ votesB: s.votesB + 1 }),
+      twoRevealed: s.twoRevealed, revealTwo: () => this.setState({ twoRevealed: !s.twoRevealed }), twoBtn: s.twoRevealed ? 'Hide / Ocultar' : 'Show the triangles / Mostrar',
+      eq1: eqBtns(s.eq1, 'v-dx-dt', 'eq1'), eq1Fb: s.eq1 ? FB1[s.eq1] : 'Pick one. Choosing wrong is information, not a fail. / Elige una.',
+      work1: s.eq1 === 'v-dx-dt' ? 'v = (3.0 − 2.0) ÷ (5.0 − 1.0) = 1.0 ÷ 4.0' : s.eq1 === 'v-x-t' ? 'v = 3.0 ÷ 5.0 — but where did 2.0 and 1.0 go?' : '— pick the equation first / elige la ecuación —',
+      ans1: s.ans1, ans1Fb: s.ans1Fb, setAns1: e => this.setState({ ans1: e.target.value, ans1Fb: '' }),
+      check1: () => { const n = parseFloat(s.ans1); this.setState({ ans1Fb: Math.abs(n - 0.25) < 0.011 ? '0.25 m/s — has the target. / Tiene el objetivo.' : Math.abs(n - 0.6) < 0.05 ? '0.60 is last position ÷ last time. Slope needs BOTH points. / Necesita los DOS puntos.' : Math.abs(n - 0.5) < 0.05 ? '0.5? Check the subtraction: 3.0 − 2.0 = 1.0 and 5.0 − 1.0 = 4.0. / Revisa la resta.' : 'Not yet. Point at Δx and Δt on the graph. / Todavía no. Señala Δx y Δt.' }); },
+      av: s.av, at: s.at, avText: s.av.toFixed(2), atText: s.at.toFixed(1), setAv: e => this.setState({ av: parseFloat(e.target.value) }), setAt: e => this.setState({ at: parseFloat(e.target.value) }),
+      rectY, rectH, rectW, shadeW: s.shaded ? rectW : 0, rectRight: L + rectW, rectRightLabel: L + rectW + 10, rectMidX: L + rectW / 2, rectMidY: rectY + rectH / 2 + 8, rectLabelY: 250,
+      areaText: `${area.toFixed(2)} m`, areaNum: area.toFixed(2), cartPct: Math.min(100, area * 10),
+      shaded: s.shaded, toggleShade: () => this.setState({ shaded: !s.shaded }), shadeLabel: s.shaded ? 'Clear / Borrar' : 'Shade it / Sombrear', shadeBg: s.shaded ? '#D9ECEE' : '#FFFCF7', shadeBorder: s.shaded ? '#3D8B96' : '#E5D9C6',
+      eq2: eqBtns(s.eq2, 'dx-v-dt', 'eq2'), eq2Fb: s.eq2 ? FB2[s.eq2] : 'Pick one. / Elige una.',
+      work2: s.eq2 === 'dx-v-dt' ? 'Δx = 0.40 m/s × 6.0 s' : '— pick the equation first / elige la ecuación —',
+      ans2: s.ans2, ans2Fb: s.ans2Fb, setAns2: e => this.setState({ ans2: e.target.value, ans2Fb: '' }),
+      check2: () => { const n = parseFloat(s.ans2); this.setState({ ans2Fb: Math.abs(n - 2.4) < 0.06 ? '2.4 m — the area of the rectangle. / El área del rectángulo.' : Math.abs(n - 15) < 0.5 ? '15? That divided 6.0 by 0.40. Tall × wide, not tall ÷ wide. / Multiplica, no dividas.' : 'Not yet. Shade the rectangle: 0.40 tall, 6.0 wide. / Todavía no. Sombrea el rectángulo.' }); },
+      words: [
+        { en: 'slope', es: 'pendiente', bg: '#F6E1D6' }, { en: 'area', es: 'área', bg: '#D9ECEE' },
+        { en: 'rise Δx', es: 'subida', bg: '#F5EDE0' }, { en: 'run Δt', es: 'recorrido', bg: '#F5EDE0' },
+        { en: 'velocity', es: 'velocidad', bg: '#F5EDE0' }, { en: 'displacement', es: 'desplazamiento', bg: '#F5EDE0' },
+        { en: 'steep', es: 'inclinada', bg: '#F5EDE0' }, { en: 'high', es: 'alta', bg: '#F5EDE0' },
+      ],
+    };
+  }
+}
+</script>
+
+
+<div id="__claude_design_branding"><style>#__claude_design_branding{position:fixed;right:16px;bottom:16px;z-index:2147483646;display:flex;align-items:center;gap:7px;height:30px;padding:0 5px 0 10px;border-radius:999px;font-family:"Anthropic Sans",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;font-size:12.5px;font-weight:400;line-height:1;letter-spacing:normal;text-transform:none;color:#141413;background:rgba(255,255,255,.86);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);box-shadow:0 0 0 .5px rgba(31,30,29,.14),0 2px 10px rgba(0,0,0,.09)}
+#__claude_design_branding *{box-sizing:border-box;margin:0}
+#__claude_design_branding a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+#__claude_design_branding a:hover span{text-decoration:underline}
+#__claude_design_branding svg{flex:none}
+#__claude_design_branding a svg{color:#D97757}
+#__claude_design_branding button{width:20px;height:20px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:currentColor;opacity:.55;border:0;background:none;cursor:pointer;flex:none;font:inherit;transition:opacity .14s}
+#__claude_design_branding button:hover{opacity:1;background:rgba(127,127,127,.22)}
+@media print{#__claude_design_branding{display:none}}</style><a href="https://claude.com/product/design" target="_blank" rel="noopener noreferrer"><svg width="14" height="14" viewBox="0 0 20 21" fill="none" aria-hidden="true"><path fill="currentColor" d="M9.99902 0C15.5258 0.000170936 19.999 4.50643 19.999 10.0547C19.999 11.7656 19.5863 12.9976 18.7861 13.8203C17.9924 14.6362 16.9465 14.9138 15.9854 15.0078C15.05 15.0993 14.0097 15.0262 13.2549 15.0186C12.8524 15.0145 12.5177 15.0267 12.2441 15.0703C11.9682 15.1144 11.8143 15.1813 11.7305 15.2432C11.4745 15.4322 11.3353 15.7121 11.2656 16.1602C11.2303 16.3875 11.2168 16.6362 11.209 16.9131C11.2017 17.1715 11.1986 17.4893 11.1807 17.7705C11.1469 18.2975 11.0495 19.0865 10.4199 19.5908C9.7846 20.0996 8.88652 20.1057 7.85449 19.877C7.36399 19.7682 6.88652 19.6232 6.42578 19.4453C2.66989 17.9949 0.000187748 14.3414 0 10.0547C0 4.50643 4.47223 0.000171048 9.99902 0ZM9.99902 1.60547C5.36781 1.60564 1.60547 5.38391 1.60547 10.0547C1.60566 13.6582 3.84823 16.7296 7.00391 17.9482C7.39027 18.0974 7.79085 18.2184 8.20215 18.3096C9.1375 18.5169 9.384 18.3633 9.41602 18.3379C9.4524 18.3087 9.54558 18.1915 9.5791 17.668C9.5947 17.4239 9.59473 17.1786 9.60352 16.8672C9.61179 16.5742 9.62831 16.2435 9.67969 15.9131C9.78359 15.2455 10.0474 14.4906 10.7764 13.9521C11.1479 13.6778 11.5842 13.5493 11.9912 13.4844C12.4007 13.4191 12.8434 13.4088 13.2705 13.4131C14.1753 13.4222 15.0071 13.4905 15.8291 13.4102C16.6257 13.3322 17.2249 13.1235 17.6357 12.7012C18.0401 12.2855 18.3935 11.5261 18.3936 10.0547C18.3936 5.38391 14.6302 1.60564 9.99902 1.60547ZM5.11621 9.86719C5.86386 9.91468 6.45486 10.5348 6.45508 11.2939C6.45506 12.0838 5.81519 12.7245 5.02539 12.7246C4.28481 12.7246 3.67573 12.1617 3.60254 11.4404L3.59473 11.2939L3.60156 11.1533C3.66942 10.4596 4.23282 9.91186 4.93359 9.86719H5.11621ZM14.9814 7.19141C15.729 7.23889 16.3199 7.85919 16.3203 8.61816C16.3203 9.40801 15.6804 10.0487 14.8906 10.0488C14.1501 10.0487 13.5409 9.48586 13.4678 8.76465L13.46 8.61816L13.4668 8.47754C13.5348 7.78403 14.0983 7.23618 14.7988 7.19141H14.9814ZM6.4541 4.93457C7.20161 4.9822 7.79275 5.60231 7.79297 6.36133C7.79288 7.151 7.15291 7.7917 6.36328 7.79199C5.62274 7.79199 5.01369 7.22903 4.94043 6.50781L4.93262 6.36133L4.93945 6.2207C5.00731 5.52698 5.5707 4.97922 6.27148 4.93457H6.4541ZM11.3867 3.59668C12.1343 3.64419 12.7253 4.26436 12.7256 5.02344C12.7256 5.81326 12.0857 6.45393 11.2959 6.4541C10.5553 6.4541 9.94622 5.89123 9.87305 5.16992L9.86523 5.02344L9.87207 4.88281C9.93996 4.18912 10.5033 3.64133 11.2041 3.59668H11.3867Z"></path></svg><span>Made with Claude Design</span></a><button type="button" aria-label="Dismiss" onclick="this.parentElement.remove()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg></button></div></body></html>

@@ -1,4 +1,5 @@
 "use client"
+import { Spinner } from '@/components/ui/spinner'
 import { useState, useEffect } from 'react'
 import { wordTranslation } from '@/lib/vocab-language'
 import { useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
@@ -40,12 +41,12 @@ interface VocabularyCrosswordGameProps {
   disabled?: boolean
 }
 
-export default function VocabularyCrosswordGame({ 
-  question, 
-  onAnswer, 
-  showResults = false, 
+export default function VocabularyCrosswordGame({
+  question,
+  onAnswer,
+  showResults = false,
   initialAnswer,
-  disabled = false 
+  disabled = false
 }: VocabularyCrosswordGameProps) {
   const [answers, setAnswers] = useState<Record<string, string>>(initialAnswer?.answers || {})
   const [selectedClue, setSelectedClue] = useState<string | null>(null)
@@ -60,7 +61,7 @@ export default function VocabularyCrosswordGame({
     const generateCrossword = () => {
       const gridSize = question.gridSize || 15
       const terms = question.vocabularyTerms.slice(0, 8) // Limit for better placement
-      
+
       // Initialize empty grid
       const grid: CrosswordCell[][] = Array(gridSize).fill(null).map((_, row) =>
         Array(gridSize).fill(null).map((_, col) => ({
@@ -100,50 +101,50 @@ export default function VocabularyCrosswordGame({
       const canPlaceWord = (word: string, row: number, col: number, direction: 'across' | 'down'): boolean => {
         if (direction === 'across') {
           if (col + word.length > gridSize || row < 0 || row >= gridSize) return false
-          
+
           // Check if placement conflicts with existing letters or creates invalid adjacencies
           for (let i = 0; i < word.length; i++) {
             const currentCell = grid[row][col + i]
-            
+
             // If there's already a letter, it must match
             if (currentCell.letter && currentCell.letter !== word[i]) {
               return false
             }
-            
+
             // Check for invalid adjacent letters (above/below)
             if (!currentCell.letter) { // Only check if we're placing a new letter
-              if (row > 0 && grid[row - 1][col + i].letter && 
+              if (row > 0 && grid[row - 1][col + i].letter &&
                   grid[row - 1][col + i].clueIds.length === 0) return false
-              if (row < gridSize - 1 && grid[row + 1][col + i].letter && 
+              if (row < gridSize - 1 && grid[row + 1][col + i].letter &&
                   grid[row + 1][col + i].clueIds.length === 0) return false
             }
           }
-          
+
           // Check word boundaries (no adjacent words at start/end)
           if (col > 0 && grid[row][col - 1].letter) return false
           if (col + word.length < gridSize && grid[row][col + word.length].letter) return false
-          
+
         } else { // down
           if (row + word.length > gridSize || col < 0 || col >= gridSize) return false
-          
+
           // Check if placement conflicts with existing letters or creates invalid adjacencies
           for (let i = 0; i < word.length; i++) {
             const currentCell = grid[row + i][col]
-            
+
             // If there's already a letter, it must match
             if (currentCell.letter && currentCell.letter !== word[i]) {
               return false
             }
-            
+
             // Check for invalid adjacent letters (left/right)
             if (!currentCell.letter) { // Only check if we're placing a new letter
-              if (col > 0 && grid[row + i][col - 1].letter && 
+              if (col > 0 && grid[row + i][col - 1].letter &&
                   grid[row + i][col - 1].clueIds.length === 0) return false
-              if (col < gridSize - 1 && grid[row + i][col + 1].letter && 
+              if (col < gridSize - 1 && grid[row + i][col + 1].letter &&
                   grid[row + i][col + 1].clueIds.length === 0) return false
             }
           }
-          
+
           // Check word boundaries (no adjacent words at start/end)
           if (row > 0 && grid[row - 1][col].letter) return false
           if (row + word.length < gridSize && grid[row + word.length][col].letter) return false
@@ -154,16 +155,16 @@ export default function VocabularyCrosswordGame({
       // Helper function to place a word on the grid
       const placeWord = (term: { id: string; definition: string }, word: string, row: number, col: number, direction: 'across' | 'down') => {
         const clueId = `clue-${term.id}`
-        
+
         for (let i = 0; i < word.length; i++) {
           const cellRow = direction === 'across' ? row : row + i
           const cellCol = direction === 'across' ? col + i : col
-          
+
           // Safety check to ensure we're within grid bounds
           if (cellRow >= 0 && cellRow < gridSize && cellCol >= 0 && cellCol < gridSize) {
             grid[cellRow][cellCol].letter = word[i]
             grid[cellRow][cellCol].clueIds.push(clueId)
-            
+
             if (i === 0) {
               grid[cellRow][cellCol].isStart = true
               grid[cellRow][cellCol].number = clueNumber
@@ -195,7 +196,7 @@ export default function VocabularyCrosswordGame({
       }
 
       // Start with the longest word in the center
-      const sortedTerms = [...terms].sort((a, b) => 
+      const sortedTerms = [...terms].sort((a, b) =>
         b.term.replace(/\s+/g, '').length - a.term.replace(/\s+/g, '').length
       )
 
@@ -204,7 +205,7 @@ export default function VocabularyCrosswordGame({
         const firstWord = firstTerm.term.toUpperCase().replace(/\s+/g, '')
         const centerRow = Math.floor(gridSize / 2)
         const centerCol = Math.floor((gridSize - firstWord.length) / 2)
-        
+
         placeWord(firstTerm, firstWord, centerRow, centerCol, 'across')
 
         // Try to place remaining words by finding intersections
@@ -218,7 +219,7 @@ export default function VocabularyCrosswordGame({
             if (placed) break
 
             const intersections = findIntersections(placedWord.word, currentWord)
-            
+
             for (const intersection of intersections) {
               if (placed) break
 
@@ -238,7 +239,7 @@ export default function VocabularyCrosswordGame({
               }
 
               // Check bounds and conflicts - ensure all coordinates are valid
-              if (newRow >= 0 && newCol >= 0 && 
+              if (newRow >= 0 && newCol >= 0 &&
                   newRow < gridSize && newCol < gridSize &&
                   (newDirection === 'across' ? newCol + currentWord.length <= gridSize : newRow + currentWord.length <= gridSize) &&
                   canPlaceWord(currentWord, newRow, newCol, newDirection)) {
@@ -253,15 +254,15 @@ export default function VocabularyCrosswordGame({
             const attempts = 20
             for (let attempt = 0; attempt < attempts && !placed; attempt++) {
               const randomDirection = Math.random() > 0.5 ? 'across' : 'down'
-              
+
               // Calculate valid ranges based on direction and word length
               const maxRow = randomDirection === 'across' ? gridSize - 1 : gridSize - currentWord.length
               const maxCol = randomDirection === 'across' ? gridSize - currentWord.length : gridSize - 1
-              
+
               if (maxRow > 0 && maxCol > 0) {
                 const randomRow = Math.floor(Math.random() * maxRow)
                 const randomCol = Math.floor(Math.random() * maxCol)
-                
+
                 if (canPlaceWord(currentWord, randomRow, randomCol, randomDirection)) {
                   placeWord(currentTerm, currentWord, randomRow, randomCol, randomDirection)
                   placed = true
@@ -285,19 +286,19 @@ export default function VocabularyCrosswordGame({
 
   const handleCellChange = (clueId: string, position: number, value: string) => {
     if (disabled) return
-    
+
     const newAnswers = { ...answers }
     const currentAnswer = newAnswers[clueId] || ''
     const answerArray = currentAnswer.split('')
-    
+
     // Ensure array is long enough
     while (answerArray.length <= position) {
       answerArray.push('')
     }
-    
+
     answerArray[position] = value.toUpperCase()
     newAnswers[clueId] = answerArray.join('')
-    
+
     setAnswers(newAnswers)
 
     // Auto-advance to next input if a letter was entered and there's a next position
@@ -305,7 +306,7 @@ export default function VocabularyCrosswordGame({
       const nextInput = document.querySelector(
         `input[data-clue-id="${clueId}"][data-position="${position + 1}"]`
       ) as HTMLInputElement
-      
+
       if (nextInput) {
         setTimeout(() => {
           nextInput.focus()
@@ -325,7 +326,7 @@ export default function VocabularyCrosswordGame({
         const prevInput = document.querySelector(
           `input[data-clue-id="${clueId}"][data-position="${position - 1}"]`
         ) as HTMLInputElement
-        
+
         if (prevInput) {
           setTimeout(() => {
             prevInput.focus()
@@ -344,9 +345,9 @@ export default function VocabularyCrosswordGame({
     if (!showResults) return null
     const userAnswer = answers[clueId] || ''
     const clue = crosswordData?.clues.find(c => c.id === clueId)
-    
+
     if (!clue) return null
-    
+
     return userAnswer.toUpperCase() === clue.answer ? 'correct' : 'incorrect'
   }
 
@@ -354,14 +355,14 @@ export default function VocabularyCrosswordGame({
     return (
       <div className="flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <Spinner size="md" className="mx-auto mb-4 text-primary" />
           <p>Generating crossword puzzle...</p>
         </div>
       </div>
     )
   }
 
-  const correctAnswers = showResults ? 
+  const correctAnswers = showResults ?
     crosswordData.clues.filter(clue => {
       const userAnswer = answers[clue.id] || ''
       return userAnswer.toUpperCase() === clue.answer
@@ -400,20 +401,20 @@ export default function VocabularyCrosswordGame({
                 {row.map((cell) => {
                   const hasLetter = cell.letter !== ''
                   const cellAnswers: Record<string, { answer: string, position: number }> = {}
-                  
+
                   // Get user answers for this cell
                   cell.clueIds.forEach(clueId => {
                     const clue = crosswordData.clues.find(c => c.id === clueId)
                     if (clue) {
                       const userAnswer = answers[clueId] || ''
-                      const position = clue.direction === 'across' ? 
-                        cell.col - clue.startCol : 
+                      const position = clue.direction === 'across' ?
+                        cell.col - clue.startCol :
                         cell.row - clue.startRow
                       cellAnswers[clueId] = { answer: userAnswer, position }
                     }
                   })
 
-                  const displayLetter = hasLetter ? 
+                  const displayLetter = hasLetter ?
                     Object.values(cellAnswers)[0]?.answer[Object.values(cellAnswers)[0]?.position] || '' :
                     ''
 
@@ -422,12 +423,12 @@ export default function VocabularyCrosswordGame({
                       key={cell.id}
                       className={cn(
                         "w-8 h-8 border border-muted-foreground/20 relative flex items-center justify-center text-xs font-mono",
-                        hasLetter ? "bg-white" : "bg-muted/20",
+                        hasLetter ? "bg-card" : "bg-muted/20",
                         !hasLetter && "cursor-not-allowed"
                       )}
                     >
                       {cell.number && (
-                        <span className="absolute top-0 left-0 text-[8px] font-bold leading-none p-0.5">
+                        <span className="absolute top-0 left-0 text-overline font-bold leading-none p-0.5">
                           {cell.number}
                         </span>
                       )}
@@ -459,12 +460,12 @@ export default function VocabularyCrosswordGame({
                   .map((clue) => {
                     const userAnswer = answers[clue.id] || ''
                     const status = getClueStatus(clue.id)
-                    
+
                     return (
                       <Card key={clue.id} className={cn(
                         selectedClue === clue.id && "ring-2 ring-primary",
-                        status === 'correct' && showResults && "bg-green-50 border-green-200",
-                        status === 'incorrect' && showResults && "bg-red-50 border-red-200"
+                        status === 'correct' && showResults && "bg-success/10 border-success/40",
+                        status === 'incorrect' && showResults && "bg-destructive/10 border-destructive/40"
                       )}>
                         <CardContent className="p-2 sm:p-3">
                           <div className="flex items-start gap-2 mb-2">
@@ -472,9 +473,9 @@ export default function VocabularyCrosswordGame({
                             <span className="text-xs sm:text-sm break-words flex-1"><ClueText clue={clue} terms={question.vocabularyTerms} /></span>
                             {showResults && status && (
                               <div className="flex-shrink-0">
-                                {status === 'correct' ? 
-                                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" /> :
-                                  <XCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
+                                {status === 'correct' ?
+                                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-success" /> :
+                                  <XCircle className="w-3 h-3 sm:w-4 sm:h-4 text-destructive" />
                                 }
                               </div>
                             )}
@@ -517,12 +518,12 @@ export default function VocabularyCrosswordGame({
                   .map((clue) => {
                     const userAnswer = answers[clue.id] || ''
                     const status = getClueStatus(clue.id)
-                    
+
                     return (
                       <Card key={clue.id} className={cn(
                         selectedClue === clue.id && "ring-2 ring-primary",
-                        status === 'correct' && showResults && "bg-green-50 border-green-200",
-                        status === 'incorrect' && showResults && "bg-red-50 border-red-200"
+                        status === 'correct' && showResults && "bg-success/10 border-success/40",
+                        status === 'incorrect' && showResults && "bg-destructive/10 border-destructive/40"
                       )}>
                         <CardContent className="p-2 sm:p-3">
                           <div className="flex items-start gap-2 mb-2">
@@ -530,9 +531,9 @@ export default function VocabularyCrosswordGame({
                             <span className="text-xs sm:text-sm break-words flex-1"><ClueText clue={clue} terms={question.vocabularyTerms} /></span>
                             {showResults && status && (
                               <div className="flex-shrink-0">
-                                {status === 'correct' ? 
-                                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" /> :
-                                  <XCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
+                                {status === 'correct' ?
+                                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-success" /> :
+                                  <XCircle className="w-3 h-3 sm:w-4 sm:h-4 text-destructive" />
                                 }
                               </div>
                             )}
@@ -583,17 +584,17 @@ export default function VocabularyCrosswordGame({
             {crosswordData.clues.map((clue) => {
               const userAnswer = answers[clue.id] || ''
               const isCorrect = userAnswer.toUpperCase() === clue.answer
-              
+
               return (
                 <div key={clue.id} className={cn(
                   "flex items-center gap-2 p-2 rounded",
-                  isCorrect ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                  isCorrect ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
                 )}>
                   {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
                   <span className="font-bold">{clue.number}{clue.direction === 'across' ? 'A' : 'D'}.</span>
                   <span className="flex-1"><ClueText clue={clue} terms={question.vocabularyTerms} /></span>
                   <span className="font-mono font-bold">
-                    {userAnswer || '___'} 
+                    {userAnswer || '___'}
                     {!isCorrect && ` → ${clue.answer}`}
                   </span>
                 </div>

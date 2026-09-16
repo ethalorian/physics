@@ -334,8 +334,8 @@ export default function PhysicsDiagram({
 }) {
   return (
     <figure style={{ margin: 0 }}>
-      {title && <figcaption style={{ fontSize: 13, fontWeight: 600, color: INK, marginBottom: 6 }}>{title}</figcaption>}
-      <div style={{ borderRadius: 12, border: `0.5px solid ${HAIR}`, background: 'var(--card)', padding: 6 }}>
+      {title && <figcaption className="text-caption" style={{ color: INK, marginBottom: 6 }}>{title}</figcaption>}
+      <div style={{ borderRadius: 'var(--radius-md)', border: `1px solid ${HAIR}`, background: 'var(--card)', padding: 6 }}>
         <svg viewBox="0 0 400 280" style={{ width: '100%', height: 'auto' }} role="img"
           aria-label={title || `${kind.replace('_', ' ')} diagram`}>
           {kind === 'free_body' && <FreeBody forces={forces ?? []} />}
@@ -350,7 +350,7 @@ export default function PhysicsDiagram({
           {kind === 'friction_asymmetry' && <FrictionAsymmetry leftMag={leftMag} rightMag={rightMag} veerDir={veerDir} />}
         </svg>
       </div>
-      {caption && <figcaption style={{ fontSize: 12.5, color: MUTE, marginTop: 6 }}>{caption}</figcaption>}
+      {caption && <figcaption className="text-caption" style={{ color: MUTE, marginTop: 6 }}>{caption}</figcaption>}
     </figure>
   )
 }

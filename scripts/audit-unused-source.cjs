@@ -3,6 +3,11 @@ const fs = require('node:fs')
 const path = require('node:path')
 const ts = require('typescript')
 
+if (process.argv.includes('--css')) {
+  process.exitCode = require('./audit-styles.cjs').auditCss() ? 1 : 0
+  return
+}
+
 const config = ts.parseJsonConfigFileContent(
   ts.readConfigFile('tsconfig.json', ts.sys.readFile).config, ts.sys, '.',
 )

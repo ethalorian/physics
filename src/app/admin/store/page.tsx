@@ -81,7 +81,7 @@ export default function StoreManagerPage() {
   }
 
   const rewardCard = (r: Reward, withHide: boolean, withPlacement: boolean) => (
-    <div key={r.id} className="py-2.5" style={{ borderTop: '0.5px solid var(--border)' }}>
+    <div key={r.id} className="py-2.5" style={{ borderTop: '1px solid var(--border)' }}>
       <div className="flex items-center gap-3">
         <span className="flex-1 text-sm" style={{ color: r.active ? C.fg : C.muted }}>
           {r.name}{r.category && <span style={{ color: C.muted }}> · {r.category}</span>}{!r.active && <span style={{ color: C.muted }}> · hidden</span>}
@@ -123,7 +123,7 @@ export default function StoreManagerPage() {
       ) : (
         <div className="rounded-lg border bg-card px-4 mb-5" style={{ borderColor: C.line }}>
           {pending.map((r, i) => (
-            <div key={r.id} className="flex flex-wrap items-center gap-3 py-2.5" style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--border)' }}>
+            <div key={r.id} className="flex flex-wrap items-center gap-3 py-2.5" style={{ borderTop: i === 0 ? 'none' : '1px solid var(--border)' }}>
               <span className="flex-1 min-w-[10rem] text-sm"><span style={{ color: C.fg }}>{r.reward_name}</span><span style={{ color: C.muted }}> · {r.user_email}</span></span>
               <span className="text-sm" style={{ color: C.muted }}>{r.cost_points} pts</span>
               <button onClick={() => setStatus(r.id, 'fulfilled')} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: C.line, background: C.sage, color: '#fff' }}>Fulfill</button>

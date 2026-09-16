@@ -31,7 +31,7 @@ export default function EnrollmentGateScreen({ firstName }: { firstName?: string
           background: 'radial-gradient(80% 120% at 90% -10%, color-mix(in oklch, var(--primary) 14%, transparent), transparent 60%), var(--card)',
         }}
       >
-        <div className="grid place-items-center mb-4" style={{ width: 52, height: 52, borderRadius: 14, background: 'color-mix(in oklch, var(--primary) 18%, transparent)', color: 'var(--primary)' }}>
+        <div className="grid place-items-center mb-4" style={{ width: 52, height: 52, borderRadius: 'var(--radius-md)', background: 'color-mix(in oklch, var(--primary) 18%, transparent)', color: 'var(--primary)' }}>
           <GraduationCap size={26} />
         </div>
         <h1 className="text-2xl font-semibold tracking-tight">

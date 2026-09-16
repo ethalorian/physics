@@ -71,7 +71,7 @@ interface WorkValue {
 }
 
 
-const LABEL = 'text-[11px] font-bold uppercase tracking-widest'
+const LABEL = 'text-overline font-bold uppercase tracking-widest'
 
 export default function WarmupPage() {
   const [item, setItem] = useState<DailyItem | null>(null)
@@ -224,7 +224,7 @@ export default function WarmupPage() {
                 <span id="problem-label" className={styles.eyebrow}>{t("Today's challenge")}</span>
 
               </div>
-              
+
               <p className="mt-2 text-xl font-semibold text-foreground leading-relaxed whitespace-pre-wrap">{displayPrompt}</p>
               <ProblemReward lang={activeLang} />
 
@@ -243,7 +243,7 @@ export default function WarmupPage() {
             </section>
 
             <section className={styles.answer}>
-              
+
               <label htmlFor="final-answer" className={LABEL} style={{ color: 'var(--foreground)' }}>{answerLabel}</label>
               {teacherOnly ? (
                 <textarea id="final-answer" rows={3} value={work.answer}
@@ -255,7 +255,7 @@ export default function WarmupPage() {
                   onChange={(e) => setWork((w) => ({ ...w, answer: e.target.value }))}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.nativeEvent.isComposing) submit() }}
                   placeholder={answerPlaceholder} inputMode="text" autoComplete="off"
-                  className={styles.input} style={{ fontSize: 18, height: 48 }} />
+                  className={[styles.input, 'text-lg'].filter(Boolean).join(' ')} style={{ height: 48 }} />
               )}
               <div className={styles.submitArea}>
                 <div className={styles.readiness} aria-live="polite">
@@ -338,8 +338,8 @@ export default function WarmupPage() {
                 <span className={LABEL} style={{ color: 'var(--muted-foreground)' }}>{t('What happens next')}</span>
                 <ol className="mt-2 space-y-1.5 text-sm">
                   <li className="flex items-center gap-2 text-foreground"><CheckCircle2 className="h-4 w-4" style={{ color: 'var(--viz-up)' }} /> {t('Submitted — work and answer')}</li>
-                  <li className="flex items-center gap-2 text-foreground"><span className="grid place-items-center h-4 w-4 rounded-full bg-muted text-[10px] font-bold">2</span> {t('Your teacher reviews the thinking and any next step')}</li>
-                  <li className="flex items-center gap-2 text-foreground"><span className="grid place-items-center h-4 w-4 rounded-full bg-muted text-[10px] font-bold">3</span> {item.competencyCode} {t('moves on the ladder — the rating decides, not the check')}</li>
+                  <li className="flex items-center gap-2 text-foreground"><span className="grid place-items-center h-4 w-4 rounded-full bg-muted text-overline font-bold">2</span> {t('Your teacher reviews the thinking and any next step')}</li>
+                  <li className="flex items-center gap-2 text-foreground"><span className="grid place-items-center h-4 w-4 rounded-full bg-muted text-overline font-bold">3</span> {item.competencyCode} {t('moves on the ladder — the rating decides, not the check')}</li>
                 </ol>
               </div>
 
@@ -356,7 +356,7 @@ export default function WarmupPage() {
               <section className={`${card} p-4`} style={cardStyle}>
                 <div className="flex items-baseline gap-2 mb-2">
                   <span className={LABEL} style={{ color: 'var(--muted-foreground)' }}>{t('Your submitted board · read-only')}</span>
-                  {submittedAt && <span className="ml-auto text-[11px] text-muted-foreground tabular-nums">{t('Submitted')} {submittedAt}</span>}
+                  {submittedAt && <span className="ml-auto text-overline text-muted-foreground tabular-nums">{t('Submitted')} {submittedAt}</span>}
                 </div>
                 {work.work && <p className="mb-3 whitespace-pre-wrap">{work.work}</p>}
                 {work.sandbox.lines.map((line,i) => <p key={i}>{line}</p>)}
@@ -369,7 +369,7 @@ export default function WarmupPage() {
                 <div className="mt-3 flex items-baseline gap-3">
                   <span className={LABEL} style={{ color: 'var(--muted-foreground)' }}>{answerLabel}</span>
                   <span className="text-lg font-semibold text-foreground tabular-nums">{work.answer.trim() || '—'}</span>
-                  <span className="ml-auto text-[11px] text-muted-foreground">{t('Locked — one rated submission per day')}</span>
+                  <span className="ml-auto text-overline text-muted-foreground">{t('Locked — one rated submission per day')}</span>
                 </div>
               </section>
             )}

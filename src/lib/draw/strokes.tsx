@@ -163,7 +163,7 @@ export function StrokesSvg({
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
-      style={{ width: '100%', maxWidth, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff', ...style }}
+      style={{ width: '100%', maxWidth, height: 'auto', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', background: '#fff', ...style }}
       role="img"
       aria-label={ariaLabel}
     >
