@@ -1,0 +1,2656 @@
+diff --git a/src/app/api/arcade/payout/route.ts b/src/app/api/arcade/payout/route.ts
+--- a/src/app/api/arcade/payout/route.ts
++++ b/src/app/api/arcade/payout/route.ts
+@@ -65,11 +65,12 @@
+   // A protocol-2 cabinet final save can be retried after its payout response was lost.
+   // Return the original receipt before evaluating today's cap again.
+   if (['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle'].includes(play.game_slug)) {
+-    const { data: prior } = await supabaseAdmin.from('economy_point_grants')
++    const { data: prior, error: priorError } = await supabaseAdmin.from('economy_point_grants')
+       .select('points').eq('dedupe_key', SOURCE + ':' + play.id).maybeSingle()
++    if (priorError) return NextResponse.json({ error: 'Could not verify XP receipt' }, { status: 503 })
+     if (prior) {
+       const { balance } = await getBalance(ctx.userId)
+-      return NextResponse.json({ xp: prior.points, alreadyPaid: true, balance })
++      return NextResponse.json({ xp: prior.points, capped: prior.points < computeXp((play.meta as { stats?: RunStats } | null)?.stats ?? { solved: 0, right: 0, wrong: 0, bestStreak: 0, startLv: 1, mode: 'algebra' }), alreadyPaid: true, balance })
+     }
+   }
+ 
+@@ -87,22 +88,20 @@
+ 
+   const DAILY_CAP = await getStudentTrack(ctx.userId) === 'honors' ? 15 : 10
+   const earned = computeXp(stats)
+-  if (earned === 0) return NextResponse.json({ xp: 0, capped: false })
+ 
+   // Daily cap across all free-cabinet payouts (UTC day, matching points.ts).
+   const dayStart = new Date().toISOString().slice(0, 10) + 'T00:00:00Z'
+-  const { data: todays } = await supabaseAdmin
++  const { data: todays, error: totalsError } = await supabaseAdmin
+     .from('economy_point_grants')
+     .select('points')
+     .eq('user_id', ctx.userId)
+     .eq('source', SOURCE)
+     .gte('awarded_at', dayStart)
++  if (totalsError) return NextResponse.json({ error: 'Could not verify daily XP' }, { status: 503 })
+   const todayTotal = (todays ?? []).reduce((s, g) => s + (g.points || 0), 0)
+   const xp = Math.max(0, Math.min(earned, DAILY_CAP - todayTotal))
+-  if (xp === 0) {
+-    const { balance } = await getBalance(ctx.userId)
+-    return NextResponse.json({ xp: 0, capped: true, balance })
+-  }
++  // Keep a zero-point receipt too: a capped run retried tomorrow must still award zero.
++  // The existing database trigger enforces the shared cap under concurrent claims.
+ 
+   const { data: receipt, error } = await supabaseAdmin.from('economy_point_grants').insert({
+     user_id: ctx.userId,
+@@ -116,8 +115,11 @@
+   if (error) {
+     // 23505 = unique violation on dedupe_key → already paid; report idempotently.
+     if ((error as { code?: string }).code === '23505') {
++      const { data: prior, error: priorError } = await supabaseAdmin.from('economy_point_grants')
++        .select('points').eq('dedupe_key', `${SOURCE}:${play.id}`).maybeSingle()
++      if (priorError || !prior) return NextResponse.json({ error: 'Could not verify XP receipt' }, { status: 503 })
+       const { balance } = await getBalance(ctx.userId)
+-      return NextResponse.json({ xp: 0, alreadyPaid: true, balance })
++      return NextResponse.json({ xp: prior.points, capped: prior.points < earned, alreadyPaid: true, balance })
+     }
+     console.error('[arcade/payout] grant insert failed:', error)
+     return NextResponse.json({ error: 'Could not bank XP' }, { status: 500 })
+diff --git a/src/app/api/arcade/score/route.ts b/src/app/api/arcade/score/route.ts
+--- a/src/app/api/arcade/score/route.ts
++++ b/src/app/api/arcade/score/route.ts
+@@ -37,8 +37,8 @@
+ 
+ export const POST = withAuth(async (request, ctx) => {
+   const body = await request.json().catch(() => ({}))
+-  const { playId, score, act, final, stats } = body as {
+-    playId?: string; score?: number; act?: number; final?: boolean; stats?: unknown
++  const { playId, slug, score, act, final, stats } = body as {
++    playId?: string; slug?: string; score?: number; act?: number; final?: boolean; stats?: unknown
+   }
+   if (!playId || typeof score !== 'number' || !Number.isFinite(score)) {
+     return NextResponse.json({ error: 'Missing playId or score' }, { status: 400 })
+@@ -53,9 +53,13 @@
+   if (!play || play.user_id !== ctx.userId) {
+     return NextResponse.json({ error: 'Unknown play' }, { status: 404 })
+   }
++  if (slug !== undefined && slug !== play.game_slug) {
++    return NextResponse.json({ error: 'Run belongs to another cabinet' }, { status: 403 })
++  }
+   // Protocol-2 cabinets can retry after a response is lost or payout fails. Ownership was
+   // checked above; an already finished run is immutable and grants no new XP here.
+-  if (['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle', 'pulse', 'mic-check'].includes(play.game_slug) && play.status === 'finished' && final === true) {
++  const acknowledgedSave = ['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle', 'pulse', 'mic-check'].includes(play.game_slug)
++  if (acknowledgedSave && play.status === 'finished' && final === true) {
+     return NextResponse.json({ ok: true, score: play.score, finished: true, alreadySaved: true })
+   }
+   if (play.status !== 'active') {
+@@ -98,7 +102,7 @@
+     ...(spamGuard ? { spam_guard: true } : {}),
+   }
+ 
+-  const { error } = await supabaseAdmin
++  let update = supabaseAdmin
+     .from('arcade_plays')
+     .update({
+       score: newScore,
+@@ -106,10 +110,18 @@
+       ...(final ? { status: 'finished', finished_at: new Date().toISOString() } : {}),
+     })
+     .eq('id', play.id)
++  // These clients acknowledge conflicts and retain the run for retry. Preserve
++  // legacy clients' existing save contract until they support acknowledgements.
++  if (acknowledgedSave) update = update.eq('status', 'active').eq('score', play.score)
++  const { data: updated, error } = await update
++    .select('id')
++    .maybeSingle()
+   if (error) {
+     console.error('[arcade/score] update failed:', error)
+     return NextResponse.json({ error: 'Could not record score' }, { status: 500 })
+   }
+ 
++  if (!updated) return NextResponse.json({ error: 'Run changed while saving. Retry save.' }, { status: 409 })
++
+   return NextResponse.json({ ok: true, score: newScore, finished: !!final })
+ })
+diff --git a/src/lib/tether-bridge.ts b/src/lib/tether-bridge.ts
+--- a/src/lib/tether-bridge.ts
++++ b/src/lib/tether-bridge.ts
+@@ -1,6 +1,9 @@
+ /** Versioned bridge for cabinets with acknowledged saves. Serial requests prevent a late checkpoint from
+  * overwriting a finished run. Final retries repeat the idempotent score/payout
+  * operations and retain the play ID until both are confirmed. */
++const MATH_CABINETS = new Set(['inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle'])
++class SaveError extends Error { constructor(message: string, readonly status: number) { super(message) } }
++
+ interface BridgeOptions {
+   slug: string
+   fetcher: typeof fetch
+@@ -23,7 +26,7 @@
+     try {
+       const response = await fetcher(path, { method: 'POST', signal: controller.signal, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+       const data = await response.json().catch(() => ({}))
+-      if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Could not save. Please retry.')
++      if (!response.ok) throw new SaveError(typeof data.error === 'string' ? data.error : 'Could not save. Please retry.', response.status)
+       return data
+     } catch (error) {
+       if (controller.signal.aborted) throw new Error('Connection timed out. Try again or choose practice.')
+@@ -45,14 +48,19 @@
+         coins.clear(); coins.set(requestId, accepted); reply(accepted)
+       } catch (error) { reply({ type: 'arcade:coinDenied', requestId, reason: error instanceof Error ? error.message : 'Connection failed.' }) }
+     }
+-    if (message.type === 'arcade:score') {
++    const recovering = message.type === 'arcade:recover' && MATH_CABINETS.has(options.slug)
++    if (recovering && !activePlay && message.final === true && typeof message.playId === 'string' && message.playId.length <= 120) {
++      // The route validates ownership AND cabinet before accepting the retained final.
++      activePlay = message.playId
++    }
++    if (message.type === 'arcade:score' || recovering) {
+       if (finals.has(requestId)) { reply(finals.get(requestId)!); return }
+       if (!activePlay || message.playId !== activePlay || closed) return
+       const playId = activePlay
+       try {
+-        const saved = await post('/api/arcade/score', { playId, score: message.score, act: message.act, final: message.final === true, stats: message.stats })
++        const saved = await post('/api/arcade/score', { playId, slug: options.slug, score: message.score, act: message.act, final: message.final === true, stats: message.stats })
+         if (message.final === true) {
+-          // Paid rhythm cabinets save scores without requesting learning XP.
++          // Preserve the deployed rhythm cabinets: their paid runs do not earn learning XP.
+           const payout: Record<string, unknown> = ['pulse', 'mic-check'].includes(options.slug) ? { xp: 0 } : await post('/api/arcade/payout', { playId })
+           if (typeof payout.balance === 'number') options.onBalance(payout.balance)
+           closed = true
+@@ -60,7 +68,11 @@
+           finals.set(requestId, receipt); if (finals.size > 20) finals.delete(finals.keys().next().value!)
+           reply(receipt); options.onFinished()
+         } else reply({ type: 'arcade:scoreSaved', playId, requestId, score: saved.score, final: false })
+-      } catch (error) { reply({ type: 'arcade:saveFailed', playId, requestId, reason: error instanceof Error ? error.message : 'Connection failed. Retry save.' }) }
++      } catch (error) {
++        const permanent = error instanceof SaveError && [403, 404, 410].includes(error.status)
++        if (recovering && permanent) { activePlay = null; closed = false }
++        reply({ type: 'arcade:saveFailed', playId, requestId, permanent, reason: error instanceof Error ? error.message : 'Connection failed. Retry save.' })
++      }
+     }
+   }
+   return { handle(message: Record<string, unknown>): Promise<void> { queue = queue.then(() => handle(message)); return queue } }
+diff --git a/public/games/math-cabinet.js b/public/games/math-cabinet.js
+--- a/public/games/math-cabinet.js
++++ b/public/games/math-cabinet.js
+@@ -1,32 +1,43 @@
+-/* Acknowledged ranked starts/saves for the math cabinets. */
++/* Acknowledged saves plus a tab-local recovery envelope; no student identity is cached.
++ * A reload can bank the latest captured progress, never mint a new ranked credit. */
+ function createMathCabinet({slug,read,onReceipt}) {
+-  let finalMessage=null,timer=null,startTimer=null;
++  let finalMessage=null,timer=null,startTimer=null,recovering=false;
++  const storageKey='math-run-v1:'+slug;
+   const bar=document.createElement('div');bar.id='mathConnection';bar.setAttribute('role','status');bar.hidden=true;
+-  bar.style.cssText='position:fixed;bottom:8px;left:50%;transform:translateX(-50%);z-index:1000;max-width:90vw;padding:12px;background:#10182a;color:#fff;border:1px solid #ffc83d;border-radius:10px;font:14px system-ui;text-align:center';document.body.append(bar);
++  bar.style.cssText='position:fixed;bottom:8px;left:50%;transform:translateX(-50%);z-index:1000;max-width:94vw;padding:12px 16px;background:#102331;color:#fff;border:1px solid #ffd183;border-radius:12px;font:14px/1.5 system-ui;text-align:center';document.body.append(bar);
++  function remember(message){try{sessionStorage.setItem(storageKey,JSON.stringify(message));}catch{/* In-memory retries still work when storage is unavailable. */}}
++  function forget(){try{sessionStorage.removeItem(storageKey);}catch{}}
++  function snapshot(final){
++    const run=read();if(!run)return null;
++    return {requestId:crypto.randomUUID(),playId:api.playId,score:run.score,act:run.level,final:!!final,
++      stats:{solved:run.solved,right:run.right,wrong:run.wrong,bestStreak:run.bestStreak,startLv:run.startLvNum,mode:run.mode}};
++  }
+   const api={embedded:parent!==window,playId:null,pendingCoin:null,savedText:'',
+     canStart(){return !this.pendingCoin&&!finalMessage&&!this.playId;},
+     emit(type,data){if(this.embedded)parent.postMessage({protocol:2,source:slug+'-arcade',type,...data},location.origin);},
+     requestCoin(cb,practice){
+       this.savedText='';
+       if(!this.embedded||practice){bar.hidden=true;cb({ok:true,practice:true});return;}
+-      if(this.pendingCoin)return;
++      if(!this.canStart())return;
+       this.pendingCoin={cb,requestId:crypto.randomUUID()};status('Starting ranked run…');
+       const failStart=()=>{if(!this.pendingCoin)return;const {cb}=this.pendingCoin;this.pendingCoin=null;clearTimeout(startTimer);status('Start not confirmed. Try again or choose practice.');bar.style.top='8px';bar.style.bottom='auto';cb({ok:false});};
+       startTimer=setTimeout(failStart,10000);
+       try{this.emit('arcade:coinRequest',{requestId:this.pendingCoin.requestId});}catch{failStart();}
+     },
++    // Local capture includes mistakes and unfinished work, not only successful clears.
++    checkpoint(){if(this.playId&&!finalMessage){const msg=snapshot(false);if(msg)remember(msg);}},
+     reportScore(final){
+       if(!this.playId||finalMessage)return;
+-      const run=read();const msg={requestId:crypto.randomUUID(),playId:this.playId,score:run.score,act:run.level,final:!!final,
+-        stats:{solved:run.solved,right:run.right,wrong:run.wrong,bestStreak:run.bestStreak,startLv:run.startLvNum,mode:run.mode}};
++      const msg=snapshot(final);if(!msg)return;
++      remember(msg);
+       if(final){finalMessage=msg;lock(true);status('Saving score and XP…');arm();}
+       this.emit('arcade:score',msg);
+     },
+-    retry(){if(!finalMessage)return;status('Retrying save…');this.emit('arcade:score',finalMessage);arm();}
++    retry(){if(!finalMessage)return;status('Retrying save…');this.emit(recovering?'arcade:recover':'arcade:score',finalMessage);arm();}
+   };
+-  function lock(value){for(const id of ['againBtn','menuBtn'])document.getElementById(id).disabled=value;}
+-  function status(text,retry=false){bar.hidden=false;bar.style.pointerEvents=retry?"auto":"none";bar.style.top="auto";bar.style.bottom="8px";bar.textContent=text;if(retry){const b=document.createElement('button');b.textContent='Retry save';b.style.cssText='padding:10px;margin-left:10px;cursor:pointer';b.onclick=()=>api.retry();bar.append(b);}}
+-  function failed(){clearTimeout(timer);status('Save not confirmed. Keep this page open; your run is retained.',true);}
++  function lock(value){for(const id of ['againBtn','menuBtn']){const b=document.getElementById(id);if(b)b.disabled=value;}}
++  function status(text,retry=false){bar.hidden=false;bar.style.pointerEvents=retry?'auto':'none';bar.style.top='auto';bar.style.bottom='8px';bar.textContent=text;if(retry){const b=document.createElement('button');b.textContent='Retry save';b.className='studioContinue';b.style.marginLeft='12px';b.onclick=()=>api.retry();bar.append(b);}}
++  function failed(reason){clearTimeout(timer);status(reason||'Save not confirmed. Your run is retained in this tab; retry when connected.',true);}
+   function arm(){clearTimeout(timer);timer=setTimeout(()=>{if(finalMessage)failed()},10000);}
+   window.addEventListener('message',event=>{
+     if(event.source!==parent||event.origin!==location.origin)return;
+@@ -34,17 +45,35 @@
+     if(api.pendingCoin&&m.requestId===api.pendingCoin.requestId){
+       if(m.type==='arcade:coinAccepted'||m.type==='arcade:coinDenied')clearTimeout(startTimer);
+       if(m.type==='arcade:coinAccepted'&&typeof m.playId==='string'){
+-        const {cb}=api.pendingCoin;api.pendingCoin=null;api.playId=m.playId;bar.hidden=true;cb({ok:true});
++        const {cb}=api.pendingCoin;api.pendingCoin=null;api.playId=m.playId;bar.hidden=true;cb({ok:true});api.checkpoint();
+       }else if(m.type==='arcade:coinDenied'){
+-        const {cb}=api.pendingCoin;api.pendingCoin=null;status(typeof m.reason==='string'?m.reason:'Could not start a ranked run. Try again or select practice.');bar.style.top="8px";bar.style.bottom="auto";cb({ok:false});
++        const {cb}=api.pendingCoin;api.pendingCoin=null;status(typeof m.reason==='string'?m.reason:'Could not start a ranked run. Try again or select practice.');bar.style.top='8px';bar.style.bottom='auto';cb({ok:false});
+       }
+     }
+     if(!finalMessage||m.requestId!==finalMessage.requestId||m.playId!==api.playId)return;
+-    if(m.type==='arcade:saveFailed')failed();
++    if(m.type==='arcade:saveFailed'){
++      failed(m.reason);
++      if(recovering&&m.permanent){
++        const b=document.createElement('button');b.textContent='Dismiss unavailable run';b.className='studioContinue';
++        b.onclick=()=>{clearTimeout(timer);finalMessage=null;api.playId=null;recovering=false;forget();lock(false);bar.hidden=true;};bar.append(b);
++      }
++    }
+     if(m.type==='arcade:scoreSaved'&&m.final){
+-      clearTimeout(timer);finalMessage=null;api.playId=null;lock(false);bar.hidden=true;
++      clearTimeout(timer);finalMessage=null;api.playId=null;lock(false);forget();
+       api.savedText=`Saved · ${Number(m.xp)||0} XP banked${m.capped?' · daily cap reached':''}.`;onReceipt(api.savedText);
++      if(recovering){status('Interrupted run '+api.savedText.toLowerCase()+' You can start a new run.');recovering=false;}else bar.hidden=true;
+     }
+   });
++  // pagehide handles navigation, visibilitychange handles a Chromebook lid/tab switch.
++  window.addEventListener('pagehide',()=>api.checkpoint());
++  document.addEventListener('visibilitychange',()=>{if(document.hidden)api.checkpoint();});
++  for(const event of ['keydown','click','pointerup'])document.addEventListener(event,()=>queueMicrotask(()=>api.checkpoint()));
++  if(api.embedded){try{
++    const saved=JSON.parse(sessionStorage.getItem(storageKey)||'null');
++    if(saved&&typeof saved.playId==='string'&&typeof saved.requestId==='string'&&Number.isFinite(saved.score)&&saved.stats&&typeof saved.stats==='object'){
++      api.playId=saved.playId;finalMessage={...saved,final:true};recovering=true;remember(finalMessage);lock(true);
++      status('An interrupted run is ready to bank. Retry save before starting another run.',true);
++    }else if(saved)forget();
++  }catch{forget();}}
+   return api;
+ }
+diff --git a/public/games/math-studio.css b/public/games/math-studio.css
+new file mode 100644
+--- /dev/null
++++ b/public/games/math-studio.css
+@@ -0,0 +1,29 @@
++/* Shared, asset-free math cabinet presentation. Native layout preserves zoom and touch size. */
++:root{--bg:#07131e;--panel:#102331;--panel2:#162f40;--dim:#aec3d3;--text:#f1f7fc;--accent:#7be3cf;--cyan:#7be3cf;--mag:#c1b1ff;--lime:#aee891;--red:#ff829a;--amber:#ffd183;--uiscale:1}
++body[data-game="inverse-blitz"]{--accent:#c1b1ff}body[data-game="scale-storm"]{--accent:#ffd183}body[data-game="powers-of-ten"]{--accent:#9bcaff}body[data-game="slope-sniper"]{--accent:#f3acc6}body[data-game="fusion"]{--accent:#99ead7}body[data-game="expression-crush"]{--accent:#c6e79b}body[data-game="mathle"]{--accent:#c1b1ff}
++body{background:radial-gradient(ellipse at 12% 0,#19394b 0,transparent 55%),var(--bg);overflow:auto;overscroll-behavior:contain;line-height:1.4}
++#wrap{width:min(1040px,calc(100% - 24px));padding:14px 0;gap:12px;transform:none!important;margin-top:0!important}
++.studioBrand{grid-area:brand;display:flex;align-items:center;gap:12px;min-width:0;text-align:left}.studioMark{display:grid;place-items:center;width:48px;height:48px;border:1px solid var(--accent);border-radius:14px;color:var(--accent);font-size:26px;font-weight:800;background:#112a38}.studioEyebrow{font-size:10px;color:var(--accent);font-weight:800;letter-spacing:1.8px}.studioBrand h2{font-size:23px;letter-spacing:-.5px;margin:0;color:var(--text)}.studioBadge{margin-left:auto;font-size:9px;letter-spacing:2px;color:var(--dim)}
++#hud{padding:0;gap:6px;flex-wrap:wrap}.stat{background:#102634;border:1px solid #35505e;border-radius:12px;min-width:65px;flex:1;padding:7px 10px}.stat .lab{font-size:10px;color:#bdd0dc;letter-spacing:1px}.stat .val{font-size:20px}.iconbtn{width:44px;height:44px;flex-shrink:0;color:var(--text);border-color:#35505e;background:#102634}#practiceTag{font-size:10px}
++#board{background:linear-gradient(150deg,#112c3b,#0a1c2a);border-color:#365867;border-radius:20px;box-shadow:inset 0 1px #ffffff0a,0 14px 30px #0003}#grid{opacity:.2;background-size:32px 32px}#dangerline{color:#ffc0cb;font-size:10px;border-color:#ff829a99}#card{background:linear-gradient(150deg,#23495b,#153747);border:1px solid #639cae;box-shadow:0 12px 28px #0004;padding:16px 12px;border-radius:16px}#card .eq{white-space:normal;overflow-wrap:anywhere;font-size:clamp(20px,2.4vw,29px)!important;line-height:1.45;letter-spacing:0}#fname{color:#d1e2ec;font-size:12px;letter-spacing:0}#banner{color:var(--accent);font-size:11px;letter-spacing:1.4px}#fig svg{width:min(100%,300px);height:auto}#nextbar{height:auto;min-height:22px}#nextEq{color:#bdcfd9}#chips{gap:10px}.chip{min-height:72px;background:linear-gradient(145deg,#193b4d,#102938);border:1px solid #4c7587;border-radius:14px;box-shadow:inset 0 1px #ffffff0c}.chip:hover:not(:disabled){border-color:var(--accent);background:#204556}.chip .sym{text-shadow:none}.chip .key{font-size:11px;color:#cfdee8}.chip .val{overflow-wrap:anywhere}.chip.good::after{content:'✓';position:absolute;right:8px;top:6px}.chip.bad::after{content:'✕';position:absolute;right:8px;top:6px}
++button,input,summary,[role="button"]{touch-action:manipulation}button:focus-visible,input:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:3px solid #fff;outline-offset:3px}input[type="checkbox"]{width:20px;height:20px;vertical-align:middle;margin-right:6px;accent-color:var(--accent)}
++.overlay{background:#06121df2;backdrop-filter:none;overflow:auto;padding:16px}.panel{width:min(510px,100%);max-height:calc(100dvh - 32px);transform:none!important;padding:24px;border:1px solid #3b6474;border-radius:22px;background:linear-gradient(145deg,#142e3f,#102331);box-shadow:0 24px 70px #0005}h1{font-size:30px;letter-spacing:-.8px;background:none;color:var(--accent)}.tag{color:#cad9e3;line-height:1.5}.howto,#legend{background:#091d2a;color:#d7e6ee;border:1px solid #284958}.howto b{color:var(--accent)}.bigbtn{min-height:48px;border-radius:12px;font-size:16px;letter-spacing:.3px}.bigbtn.easy{background:#a6e4c8;color:#071c20}.bigbtn.med{background:#a7d2fa;color:#092130}.bigbtn.hard{background:#cdbaf6;color:#241539}.bigbtn small{opacity:1;font-size:12px}.bigbtn:disabled{opacity:.55;cursor:wait}#pausePanel p{color:#ccdae3}#toast{white-space:normal;overflow:visible;width:max-content;max-width:95%;font-size:14px;background:#172b3b;color:#fff;text-overflow:clip}.opfloat{font-size:13px}
++.studioCoach{grid-area:learn;text-align:left;background:#0c2230;border:1px solid #426472;border-left:3px solid var(--accent);border-radius:12px;padding:12px 14px;font-size:14px;line-height:1.5;min-width:0}.studioCoach strong{display:block;color:var(--accent);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}.studioCoach p{color:#e0edf4;overflow-wrap:anywhere}.studioCoach button,.studioContinue{background:var(--accent);color:#0b202b;font:700 14px/1.3 system-ui;border:0;border-radius:8px;min-height:44px;padding:10px 16px;margin-top:10px;cursor:pointer}.studioCoach[data-correct="false"]{border-left-color:var(--amber)}.studioReview{margin:16px 0;text-align:left;font-size:14px;line-height:1.5;border-top:1px solid #35505e;padding-top:12px}.studioReview summary{padding:8px 0;cursor:pointer;color:var(--accent);font-weight:700}.studioReview li{margin:12px 0 12px 20px;color:#dce8ef}.studioReview li b{display:block}.studioReview li small{display:block;color:#bfced9}
++.studioSR{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.cell.green::after{content:'✓'}.cell.gold::after{content:'↔'}.cell.gray::after{content:'·'}.cell{position:relative}.cell::after{position:absolute;bottom:0;right:3px;font:700 11px system-ui}.pkey{min-height:44px}.pkey.green{border-bottom:3px solid #b8ffe1}.pkey.gold{border-bottom:3px dashed #ffe295}#auditOv .panel{width:min(480px,calc(100% - 24px))}.tile{text-shadow:none!important}.tile:focus-visible{z-index:20}
++body.falling #wrap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,1fr);grid-template-rows:auto auto auto minmax(145px,1fr) auto;grid-template-areas:'brand brand' 'board hud' 'board next' 'board chips' 'board learn';align-items:start;column-gap:20px}
++body.falling #board{grid-area:board;height:clamp(335px,calc(100dvh - 94px),650px)}body.falling #hud{grid-area:hud}body.falling #chips{grid-area:chips;align-self:stretch;grid-auto-rows:1fr}body.falling #nextbar{grid-area:next}
++body.puzzle #wrap{max-width:560px}body.puzzle .studioBrand{margin-bottom:4px}body.puzzle #boardWrap{max-width:480px;width:100%;margin:auto}
++@media(min-width:860px){body.puzzle #wrap{max-width:1050px;display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.8fr);align-items:start;gap:14px 24px}body.puzzle .studioBrand{grid-column:1/-1}body.puzzle #boardWrap,body.puzzle #grid{grid-column:1;grid-row:3/8}body.puzzle #hud{grid-column:1;grid-row:2}body.puzzle #modeBar,body.puzzle #targetBar,body.puzzle #puzzleTag{grid-column:2;grid-row:2}body.puzzle #pad,body.puzzle #controls,body.puzzle .studioCoach,body.puzzle #evaluationTrace,body.puzzle #puzzleSub{grid-column:2}body.puzzle #boardWrap{width:min(100%,calc(100dvh - 190px));min-width:300px}body.puzzle #grid{width:100%;max-width:490px}}
++@media(max-width:759px){#wrap{width:calc(100% - 20px);padding:10px 0}.studioBadge{display:none}.studioBrand h2{font-size:21px}.studioMark{width:42px;height:42px;font-size:23px}body.falling #wrap{display:flex;gap:10px}body.falling #board{width:100%;height:clamp(235px,35dvh,340px);flex-shrink:0}.chip{min-height:64px}#card{padding:10px}#card .eq{font-size:21px!important}#fig svg{max-height:155px;width:auto;max-width:100%}.panel{padding:20px}.studioCoach{font-size:13px}.stat{padding:5px 6px;min-width:55px}.stat .val{font-size:18px}}
++@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.particle,.ring,.opfloat,#vig{display:none!important}}
++#finishBtn{min-height:44px}.studioDirections{display:flex;justify-content:center;gap:8px;margin-top:10px}.studioDirections button{min-width:48px;min-height:44px;background:#193c4e;border:1px solid #64909f;border-radius:10px;font-size:23px;color:#fff;cursor:pointer}#auditPanel{background:#112b3b;border-color:#5d899b;padding:22px;max-height:calc(100dvh - 24px);overflow:auto;border-radius:18px;width:min(460px,94vw)}#auditNote{font-size:15px;line-height:1.6;color:#e0edf4}#auditQ{font-size:24px}.achip{min-height:52px}#auditOv{background:#06121def;backdrop-filter:none}#gridWrap{min-width:0}
++@media(min-width:860px){body[data-game="fusion"] #board{grid-column:1;grid-row:3/8}body[data-game="mathle"] #gridWrap{grid-column:1;grid-row:3/8}body[data-game="mathle"] #puzzleBar{grid-column:2;grid-row:2}body.puzzle .studioCoach{grid-row:3/6;align-self:start}body[data-game="mathle"] .studioCoach{grid-row:5}body[data-game="mathle"] #pad{grid-row:3;grid-column:2}body[data-game="mathle"] #toast{grid-column:2}body[data-game="fusion"] #board{max-width:480px;max-height:480px}}
++/* Explicit placements avoid implicit named grid tracks on puzzle cabinets. */
++body.puzzle #grid{opacity:1;background-image:none}body.puzzle #modeBar,body.puzzle #targetBar,body.puzzle #puzzleBar{background:#163546;border:1px solid #4a7283;border-radius:14px;padding:14px}
++@media(min-width:860px){body.puzzle #wrap{grid-template-rows:auto auto auto auto 1fr}body.puzzle .studioBrand{grid-area:1/1/2/3}body.puzzle #hud{grid-area:2/1/3/2}body.puzzle #modeBar,body.puzzle #targetBar,body.puzzle #puzzleBar{grid-area:2/2/3/3}body.puzzle #boardWrap,body[data-game="fusion"] #board,body[data-game="mathle"] #gridWrap{grid-area:3/1/6/2}body.puzzle .studioCoach{grid-area:3/2/5/3}body[data-game="mathle"] #pad{grid-area:3/2/4/3}body[data-game="mathle"] .studioCoach{grid-area:4/2/5/3}}
++body.falling #fig svg{max-height:158px;width:auto;max-width:100%}body[data-game="slope-sniper"] #card .eq{font-size:24px!important}body[data-game="slope-sniper"] #card{padding:12px}body[data-game="slope-sniper"] #fname{font-size:12px;line-height:1.35}
++@media(max-width:759px){body.falling #board{min-height:280px}body.falling #fig svg{max-height:125px}body[data-game="slope-sniper"] #card .eq{font-size:20px!important}}
++.studioModel{display:block;width:100%;height:90px;margin-top:10px;border-top:1px solid #315362;padding-top:6px}body.falling #chips{max-height:340px}body.falling #wrap{grid-template-rows:auto auto auto minmax(140px,1fr) auto}body.falling #board{min-height:380px}
++@media(max-width:759px){body.falling #board{min-height:280px}.studioModel{height:82px}body.falling #chips{max-height:none}}
++/* One composited card per timed game; untimed practice does not run an animation loop. */
++body.falling #card{top:0;will-change:transform}
+diff --git a/public/games/math-studio.js b/public/games/math-studio.js
+new file mode 100644
+--- /dev/null
++++ b/public/games/math-studio.js
+@@ -0,0 +1,58 @@
++/* Shared learning feedback and access helpers. No framework, images, network or telemetry. */
++const MathStudio=(()=>{
++  const $=id=>document.getElementById(id), wrap=$('wrap');
++  const coach=document.createElement('section');coach.className='studioCoach';coach.setAttribute('aria-label','Strategy desk');
++  coach.innerHTML='<strong>Strategy desk</strong><p>Take a breath. Look for the relationship before choosing.</p>';
++  wrap.append(coach);
++  const live=document.createElement('div');live.className='studioSR';live.setAttribute('role','status');live.setAttribute('aria-live','polite');live.setAttribute('aria-atomic','true');document.body.append(live);
++  const history=[];
++  function say(text){live.textContent=text;}
++  function tell(text,correct){coach.querySelector('.studioModel')?.remove();coach.querySelector('p').textContent=text;if(correct!==undefined)coach.dataset.correct=String(correct);say(text);}
++  function isMuted(){try{return localStorage.getItem('math-muted')==='true';}catch{return false;}}
++  function setMuted(value){try{localStorage.setItem('math-muted',String(value));}catch{}const b=$('muteBtn');if(b){b.textContent=value?'🔇':'🔊';b.setAttribute('aria-label',value?'Turn sound on':'Mute sound');b.setAttribute('aria-pressed',String(value));}}
++  setMuted(isMuted());
++  if($('pauseBtn'))$('pauseBtn').setAttribute('aria-label','Pause game');
++  if($('toast')){$('toast').setAttribute('role','status');$('toast').setAttribute('aria-atomic','true');}
++  // Restrict keyboard focus to the visible modal; preserve normal Tab/Shift+Tab order.
++  function activeModal(){const save=$('mathConnection');if(save&&!save.hidden&&save.querySelector('button'))return save;return [...document.querySelectorAll('.overlay')].find(el=>!el.classList.contains('hidden')&&getComputedStyle(el).display!=='none')||($('auditOv')?.classList.contains('show')?$('auditOv'):null);}
++  const syncModal=()=>{
++    const modal=activeModal();
++    for(const other of document.querySelectorAll('.overlay,#auditOv')){other.inert=!!modal&&other!==modal;if(other!==modal)other.removeAttribute('aria-modal');}
++    const save=$('mathConnection');if(save&&save!==modal){save.setAttribute('role','status');save.removeAttribute('aria-modal');}
++    if(modal){modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label',modal.id==='mathConnection'?'Save score and XP':modal.querySelector('h1,h2')?.textContent||'Equivalence check');wrap.inert=true;if(!modal.contains(document.activeElement))modal.querySelector('button:not(:disabled),input')?.focus({preventScroll:true});}
++    else wrap.inert=false;
++  };
++  const observer=new MutationObserver(syncModal);document.addEventListener('DOMContentLoaded',syncModal,{once:true});
++  observer.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','hidden']});
++  document.addEventListener('keydown',e=>{const m=activeModal();if(!m||e.key!=='Tab')return;const items=[...m.querySelectorAll('button:not(:disabled),input,summary,[tabindex="0"]')].filter(el=>el.getClientRects().length);if(!items.length)return;const first=items[0],last=items.at(-1);if(e.shiftKey&&(document.activeElement===first||!m.contains(document.activeElement))){e.preventDefault();last.focus();}else if(!e.shiftKey&&(document.activeElement===last||!m.contains(document.activeElement))){e.preventDefault();first.focus();}});
++  return {
++    model(g,i=0){
++      coach.querySelector('.studioModel')?.remove();
++      const ns='http://www.w3.org/2000/svg';const svg=document.createElementNS(ns,'svg');svg.classList.add('studioModel');svg.setAttribute('viewBox','0 0 360 104');svg.setAttribute('role','img');
++      function node(tag,attrs,text){const e=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;svg.append(e);return e;}
++      function label(x,y,text,fill='#d8e9f2',size=12){node('text',{x,y,fill,'font-size':size,'font-family':'system-ui'},text);}
++      const slug=document.body.dataset.game;
++      if(slug==='magnitude'&&g._items){
++        svg.setAttribute('aria-label','Comparison of the four values on a common scale');
++        const max=Math.max(...g._items.map(v=>v.v));g._items.forEach((v,k)=>{label(0,18+k*24,v.l);node('rect',{x:100,y:6+k*24,width:Math.max(1,210*v.v/max),height:12,rx:4,fill:v.v===max?'#aee891':'#72bbd2'});label(320,18+k*24,v.v===max?'max':'');});
++      }else if(slug==='scale-storm'&&g._k){
++        const result=g._k**g._pow,max=Math.max(g._k,result,1);svg.setAttribute('aria-label','Compare input and output scale factors: '+g._k+' becomes '+result);
++        label(0,14,'INPUT FACTOR');label(0,58,'OUTPUT FACTOR');
++        for(const [v,y] of [[g._k,22],[result,66]]){node('rect',{x:0,y,width:280*v/max,height:14,rx:4,fill:y===22?'#72bbd2':'#ffd183'});label(292,y+12,'× '+(Number(v.toPrecision(4))===v?'':'≈ ')+Number(v.toPrecision(4)));}
++      }else if(slug==='inverse-blitz'){
++        svg.setAttribute('aria-label','The operation '+g.steps[i].c+' is applied to both sides to preserve equality');
++        node('path',{d:'M 50 30 H 310 M 180 30 L 160 90 H 200 Z M 75 30 V 65 M 285 30 V 65 M 35 65 Q 75 97 115 65 M 245 65 Q 285 97 325 65',fill:'none',stroke:'#85b4c9','stroke-width':2});
++        label(32,18,'LEFT SIDE');label(244,18,'RIGHT SIDE');label(42,57,g.steps[i].c,'#cdbaf6',18);label(252,57,g.steps[i].c,'#cdbaf6',18);
++      }else if(slug==='powers-of-ten'&&g._val!==undefined){
++        const answer=g.steps[0].c;svg.setAttribute('aria-label',answer+' represents '+g._val);label(4,25,answer,'#a7d2fa',23);node('path',{d:'M 8 48 H 336 M 328 42 L 336 48 L 328 54',fill:'none',stroke:'#85b4c9','stroke-width':2});label(4,80,g._val.toLocaleString('en-US',{maximumFractionDigits:8}),'#eaf4fa',23);
++      }else return;
++      coach.append(svg);
++    },
++    reducedMotion:()=>matchMedia('(prefers-reduced-motion: reduce)').matches,isMuted,setMuted,say,tell,
++    reset(){history.length=0;document.querySelector('.studioReview')?.remove();$('practiceReview')?.remove();tell('Look for the relationship. Feedback stays here while you play.');},
++    question(g){const prompt=[g.banner,g.name,g.states?.[g.i||0]].filter(Boolean).join('. ');if($('card')){$('card').setAttribute('role','group');$('card').setAttribute('aria-label',prompt);}say(prompt);},
++    record(prompt,answer,explanation,correct){history.push({prompt,answer,explanation,correct});if(history.length>30)history.shift();tell((correct?'✓ ':'Try this: ')+explanation,correct);},
++    review(message,label,done){$('practiceReview')?.remove();tell(message);const b=document.createElement('button');b.id='practiceReview';b.textContent=label;b.onclick=()=>{b.remove();done();};coach.append(b);b.focus({preventScroll:true});},
++    summary(){document.querySelector('.studioReview')?.remove();const panel=$('overOv')?.querySelector('.panel');if(!panel)return;const review=document.createElement('details');review.className='studioReview';const title=document.createElement('summary');title.textContent='Your strategy recap';review.append(title);const list=document.createElement('ol');const mistakes=history.filter(h=>!h.correct);const rows=(mistakes.length?mistakes:history).slice(-4);if(!rows.length){const p=document.createElement('p');p.textContent='Try a practice round to build a strategy before your next ranked run.';review.append(p);}for(const h of rows){const li=document.createElement('li'),b=document.createElement('b'),small=document.createElement('small'),p=document.createElement('p');b.textContent=h.prompt;small.textContent='Your choice: '+h.answer;p.textContent=h.explanation;li.append(b,small,p);list.append(li);}review.append(list);panel.querySelector('.statgrid')?.after(review);}
++  };
++})();
+diff --git a/public/games/algebra-inverse-blitz.html b/public/games/algebra-inverse-blitz.html
+--- a/public/games/algebra-inverse-blitz.html
++++ b/public/games/algebra-inverse-blitz.html
+@@ -2,7 +2,7 @@
+ <html lang="en">
+ <head>
+ <meta charset="UTF-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
++<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>INVERSE BLITZ — solve or be buried</title>
+ <style>
+   :root{
+@@ -230,10 +230,12 @@
+   }
+ @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+ </style>
++<link rel="stylesheet" href="math-studio.css">
+ </head>
+-<body>
++<body data-game="inverse-blitz" class="falling">
+ 
+ <div id="wrap">
++  <header class="studioBrand"><span class="studioMark" aria-hidden="true">↔</span><div><span class="studioEyebrow">SM · EQUATION LAB</span><h2>Inverse Blitz</h2></div><span class="studioBadge">MATH ARCADE</span></header>
+   <div id="hud">
+     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
+     <div class="stat"><div class="lab">Level</div><div class="val" id="levelV">1</div></div>
+@@ -319,6 +321,7 @@
+   </div>
+ </div>
+ 
++<script src="math-studio.js"></script>
+ <script src="math-cabinet.js"></script>
+ <script>
+ "use strict";
+@@ -345,9 +348,9 @@
+ }
+ function op(sym,val){ return sym+" "+val; }
+ 
+-const TIP_FLIP  = "Same operation ≠ inverse. Do the OPPOSITE.";
+-const TIP_ORDER = "Reverse PEMDAS: undo + and − before × and ÷.";
+-const TIP_NUM   = "Right move, wrong number — undo what's attached to x.";
++const TIP_FLIP  = "To undo this term in one step, use its inverse on both sides.";
++const TIP_ORDER = "Undo the outer operation first. Use the same operation on both sides.";
++const TIP_NUM   = "For this step, undo the factor or term attached to the target.";
+ const TIP_X     = "Get the x-terms together first.";
+ 
+ function W(l,tip){ return {l,tip}; }
+@@ -540,10 +543,10 @@
+     ["v = v₀ + at", "v₀ = v − at"],
+     [ {c:op(M,"at"), w:[W(op("+","at"),TIP_FLIP), W(op("÷","at"),TIP_FLIP), W(op(M,"v"),TIP_NUM)]} ], 1),
+   PF("Gravitational PE", "h",
+-    ["PE = mgh", "h = PE/mg"],
++    ["PE = mgh", "h = PE/(mg)"],
+     [ {c:op("÷","mg"), w:[W(op("×","mg"),TIP_PHY_MUL), W(op("÷","m"),TIP_NUM), W(op(M,"mg"),TIP_FLIP)]} ], 1),
+   PF("Gravitational PE", "m",
+-    ["PE = mgh", "m = PE/gh"],
++    ["PE = mgh", "m = PE/(gh)"],
+     [ {c:op("÷","gh"), w:[W(op("×","gh"),TIP_PHY_MUL), W(op("÷","g"),TIP_NUM), W(op(M,"gh"),TIP_FLIP)]} ], 1),
+   PF("Kinetic Energy", "v",
+     ["KE = ½mv²", "2KE = mv²", "2KE/m = v²", "v = √(2KE/m)"],
+@@ -623,6 +626,10 @@
+     default: return pick([genBoth,genBoth,()=>genDist(true),()=>genTwo(true),()=>genDivTwo(true)])();
+   }
+ }
++function explainGame(g,i=0){
++  return "Apply "+g.steps[i].c+" to BOTH sides: "+g.states[i]+" → "+g.states[i+1]+". "+(g.physics?"Keep any denominators nonzero; speed and other magnitudes use the nonnegative root.":"The equality stays balanced at every step.");
++}
++
+ /* ================================================================
+    PURE-LOGIC-END
+    ================================================================ */
+@@ -640,7 +647,7 @@
+   const MAXJUNK=8, JUNKH=28;
+   const SYM_COLOR = { "+":"#7dff4a", [M]:"#ff5d7e", "×":"#2ee6ff", "÷":"#ffc83d", "√":"#c792ff" };
+ 
+-  let S=null, raf=null, lastT=0, muted=false, locked=false, practice=false, untimed=false;
++  let S=null, raf=null, lastT=0, muted=MathStudio.isMuted(), locked=false, practice=false, untimed=false;
+ 
+   /* ---------- arcade bridge (see docs/ARCADE_PATTERN.md) ---------- */
+   const normalEndTitle=document.querySelector("#overOv h1").textContent;
+@@ -650,7 +657,7 @@
+   let AC=null;
+   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+   function beep(f,dur,type,vol,when){
+-    if(muted) return; const ctx=ac(); if(!ctx) return;
++    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
+     const t=ctx.currentTime+(when||0);
+     const o=ctx.createOscillator(), g=ctx.createGain();
+     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
+@@ -679,7 +686,8 @@
+   }
+   function mult(){ return Math.min(4, 1+Math.floor(S.streak/4)); }
+   function speed(){ return Math.min(95, 26 + (S.level-1)*9); }
+-  function landY(){ return boardEl.clientHeight - S.junk*JUNKH - cardEl.offsetHeight - 4; }
++  function junkHeight(){return Math.max(8,Math.min(JUNKH,(boardEl.clientHeight-cardEl.offsetHeight-80)/MAXJUNK));}
++  function landY(){ return boardEl.clientHeight - S.junk*junkHeight() - cardEl.offsetHeight - 4; }
+ 
+   function hud(){
+     $("scoreV").textContent=S.score;
+@@ -695,7 +703,8 @@
+   function renderCard(){
+     const st=S.cur, txt=st.states[st.i];
+     sizeEq(txt); eqEl.textContent=txt;
+-    if(st.physics){ solveForEl.textContent=st.solveFor; fnameEl.textContent=st.name; }
++    if(st.physics) solveForEl.textContent=st.solveFor;
++    fnameEl.style.display="block";fnameEl.textContent="Next goal: "+st.states[Math.min(st.i+1,st.states.length-1)];
+     dotsEl.innerHTML = st.steps.map((_,k)=>`<span class="dot${k<st.i?" done":""}"></span>`).join("");
+   }
+ 
+@@ -709,22 +718,19 @@
+       val.textContent = p.sym && p.val.startsWith(M) ? "("+p.val+")" : p.val;
+       val.style.fontSize = p.val.length>5 ? "17px" : "25px";
+       b.classList.remove("good","bad"); b.disabled=false;
++      b.setAttribute("aria-label", "Answer "+(i+1)+": "+c[i].l);
+     });
+   }
+ 
+   function renderStack(){
+     stackEl.innerHTML="";
+-    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d); }
++    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d); }
+   }
+ 
+   function practiceReview(message,label,done){
+     locked=true;
+-    let panel=document.getElementById("practiceReview");if(panel)panel.remove();
+-    panel=document.createElement("div");panel.id="practiceReview";panel.setAttribute("role","status");
+-    panel.style.cssText="position:absolute;left:5%;right:5%;bottom:16px;z-index:10;background:#10283b;color:white;padding:18px;border:1px solid #78ffcf;border-radius:14px;font:18px/1.5 system-ui";
+-    const text=document.createElement("p");text.textContent=message;panel.append(text);
+-    const button=document.createElement("button");button.textContent=label;button.style.cssText="padding:12px 18px;margin-top:12px;background:#78ffcf;color:#102030;border:0;border-radius:9px;font:700 17px system-ui";
+-    button.onclick=()=>{panel.remove();done();};panel.append(button);boardEl.append(panel);button.focus();
++    MathStudio.review(message,label,()=>{done();chips[0].focus();});
++    if(S.cur.i>=S.cur.steps.length)MathStudio.model(S.cur,S.cur.steps.length-1);
+   }
+   function spawn(){
+     S.needsSpawn=false;
+@@ -734,9 +740,13 @@
+     S.cur.chips = buildChips(S.cur.steps[0]);
+     S.y = untimed ? 24 : -cardEl.offsetHeight - 10;
+     nextEqEl.textContent = (S.next.physics? "["+S.next.solveFor+"]  " : "") + S.next.states[0];
+-    renderCard(); renderChips(); place();
+-  }
+-  function place(){ cardEl.style.top = S.y+"px"; }
++    renderCard(); renderChips();
++    if(untimed)S.y=12;
++    place();
++    renderStack();
++    MathStudio.question(S.cur);
++  }
++  function place(){ cardEl.style.transform="translate3d(-50%,"+S.y+"px,0)"; }
+ 
+   function toast(msg){
+     toastEl.textContent=msg; toastEl.classList.add("show");
+@@ -766,6 +776,7 @@
+     boardEl.appendChild(ring); setTimeout(()=>ring.remove(),520);
+   }
+   function particles(){
++    if(MathStudio.reducedMotion())return;
+     const r=cardEl.getBoundingClientRect(), br=boardEl.getBoundingClientRect(), sc=boardScale();
+     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
+     for(let i=0;i<16;i++){
+@@ -789,6 +800,9 @@
+     if(!S || !S.running || locked) return;
+     const run=S;
+     const chip = S.cur.chips[i], btn=chips[i];
++    const explanation=explainGame(S.cur,S.cur.i);
++    MathStudio.record(S.cur.states[S.cur.i],chip.l,chip.ok?explanation:chip.tip,chip.ok);
++    if(chip.ok)MathStudio.model(S.cur,S.cur.i);
+     if(untimed && !chip.ok){ S.wrong++; practiceReview(chip.tip,"Try again",()=>{locked=false;renderChips();}); hud(); return; }
+     if(chip.ok){
+       S.right++; S.streak++; S.bestStreak=Math.max(S.bestStreak,S.streak);
+@@ -805,12 +819,13 @@
+     }else{
+       S.wrong++; S.streak=0;
+       S.score=Math.max(0,S.score-15*S.level);locked=true;
+-      setTimeout(()=>{if(S!==run)return;locked=false;S.cur.chips=buildChips(S.cur.steps[S.cur.i]);renderChips();},900);
++      practiceReview(chip.tip,"Try again",()=>{if(S!==run)return;S.cur.chips=buildChips(S.cur.steps[S.cur.i]);renderChips();locked=false;});
+       btn.classList.add("bad"); sBad(); shake();
+       cardEl.classList.add("hurt"); setTimeout(()=>cardEl.classList.remove("hurt"),200);
+       if(!untimed)S.y += Math.max(20,(landY()-S.y)*0.28); place();
+       toast("❌ "+chip.tip);
+     }
++    ARCADE.checkpoint();
+     hud();
+   }
+ 
+@@ -839,17 +854,23 @@
+     ARCADE.reportScore(false); // checkpoint — protects the run if a lid closes
+ 
+     locked=true;
+-    if(untimed)practiceReview("Answer: "+S.cur.states[S.cur.states.length-1],"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
++    if(untimed)practiceReview(explainGame(S.cur,S.cur.steps.length-1),"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
+     else setTimeout(()=>{ if(S!==run)return;locked=false; if(S.running&&S.needsSpawn) spawn(); },330);
+     hud();
+   }
+ 
+   function land(){
++    if(locked || !S.running)return;
+     sLand(); shake(true);
+     S.junk++; S.wrong++; S.streak=0; renderStack(); hud();
+-    if(S.junk>=MAXJUNK){ gameOver(); return; }
+-    toast("🧱 Buried! Answer was "+S.cur.states[S.cur.states.length-1]);
+-    spawn();
++    const message="Answer: "+S.cur.steps[S.cur.i].c+". "+explainGame(S.cur,S.cur.i);
++    MathStudio.record(S.cur.states[S.cur.i],"Time ran out",message,false);
++    ARCADE.checkpoint();
++    practiceReview(message,S.junk>=MAXJUNK?"See my results":"Next problem",()=>{
++      locked=false;
++      if(S.junk>=MAXJUNK){gameOver();return;}
++      if(S.running)spawn();else S.needsSpawn=true;
++    });
+   }
+ 
+   /* ---------- loop ---------- */
+@@ -865,6 +886,7 @@
+ 
+   function start(lv){
+     if(!ARCADE.canStart())return;
++    MathStudio.reset();
+     document.getElementById("practiceReview")?.remove();
+     untimed=$("untimedPractice").checked;locked=false;
+     S=freshState(lv);
+@@ -880,7 +902,7 @@
+     const begin=()=>{
+       renderStack(); hud(); spawn();
+       S.running=true; lastT=performance.now();
+-      cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
++      cancelAnimationFrame(raf); if(!untimed)raf=requestAnimationFrame(tick);
+     };
+     ARCADE.requestCoin(res=>{
+       if(!res.ok){ $("startOv").classList.remove("hidden"); return; }
+@@ -906,7 +928,7 @@
+     if(S.pausedAt&&S.cur)S.cur.born+=performance.now()-S.pausedAt;S.pausedAt=0;
+     S.running=true; lastT=performance.now();
+     if(S.needsSpawn&&!locked)spawn();
+-    raf=requestAnimationFrame(tick);
++    if(!untimed)raf=requestAnimationFrame(tick);
+   }
+ 
+   /* ---------- high score ---------- */
+@@ -930,13 +952,14 @@
+   function gameOver(){
+     S.running=false; cancelAnimationFrame(raf);
+     ARCADE.reportScore(true); // final: closes the run, triggers the XP payout
++    if(MathStudio.reducedMotion()){showOverPanel();return;}
+     boardEl.classList.add("doom");
+     cardEl.style.display="none";
+ 
+     const totalRows = Math.ceil(boardEl.clientHeight/JUNKH);
+     let i = S.junk, n = 0;
+     const iv = setInterval(()=>{
+-      const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d);
++      const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d);
+       sThud(150 - i*4);
+       if(n%2===0) shake(n%4===0);
+       i++; n++;
+@@ -961,7 +984,8 @@
+     $("fSolved").textContent=S.solved;
+     $("fAcc").textContent=acc+"%";
+     $("fStreak").textContent=S.bestStreak;
+-    $("overQuip").textContent=S.finishedByChoice?"Return for another challenge whenever you are ready.":pick(QUIPS);
++    $("overQuip").textContent="Keep equality balanced. Review your next move before another run.";
++    MathStudio.summary();
+     const k=hsKey(), nh = S.score>getHS(k);
+     if(nh) setHS(k,S.score);
+     $("newHS").classList.toggle("hidden",!nh);
+@@ -986,6 +1010,7 @@
+   /* ---------- wiring ---------- */
+   chips.forEach(b=>b.addEventListener("click",()=>choose(+b.dataset.i)));
+   document.addEventListener("keydown",e=>{
++    if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;
+     if(e.key>="1"&&e.key<="4") choose(+e.key-1);
+     else if(e.key==="p"||e.key==="P"||e.key==="Escape"){
+       if(S && S.running) pause();
+@@ -999,8 +1024,9 @@
+   $("pauseBtn").addEventListener("click",pause);
+   $("resumeBtn").addEventListener("click",resume);
+   $("quitBtn").addEventListener("click",finishRun);
+-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
++  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
+   window.addEventListener("blur",()=>{ if(S&&S.running) pause(); });
++  document.addEventListener("visibilitychange",()=>{if(document.hidden&&S&&S.running)pause();});
+ 
+   /* ---------- how to read the chips ---------- */
+   (function(){
+@@ -1025,25 +1051,6 @@
+   hsLine();
+ })();
+ </script>
+-<script>
+-/* ---------- native-display autoscale: fill the frame on big screens,
+-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
+-(function(){
+-  const wrap=document.getElementById("wrap");
+-  if(!wrap) return;
+-  function fit(){
+-    wrap.style.transform="none"; wrap.style.marginTop="0px";
+-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
+-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
+-    wrap.style.transformOrigin="top center";
+-    wrap.style.transform="scale("+k+")";
+-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
+-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
+-  }
+-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
+-  window.addEventListener("resize",fit);
+-  setTimeout(fit,60); fit();
+-})();
+-</script>
++
+ </body>
+ </html>
+diff --git a/public/games/numbersense-magnitude.html b/public/games/numbersense-magnitude.html
+--- a/public/games/numbersense-magnitude.html
++++ b/public/games/numbersense-magnitude.html
+@@ -2,7 +2,7 @@
+ <html lang="en">
+ <head>
+ <meta charset="UTF-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
++<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>MAGNITUDE — math spine arcade</title>
+ <style>
+   :root{
+@@ -216,10 +216,12 @@
+   }
+ @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+ </style>
++<link rel="stylesheet" href="math-studio.css">
+ </head>
+-<body>
++<body data-game="magnitude" class="falling">
+ 
+ <div id="wrap">
++  <header class="studioBrand"><span class="studioMark" aria-hidden="true">≋</span><div><span class="studioEyebrow">NS · NUMBER SENSE</span><h2>Magnitude</h2></div><span class="studioBadge">MATH ARCADE</span></header>
+   <div id="hud">
+     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
+     <div class="stat"><div class="lab">Level</div><div class="val" id="levelV">1</div></div>
+@@ -298,6 +300,7 @@
+   </div>
+ </div>
+ 
++<script src="math-studio.js"></script>
+ <script src="math-cabinet.js"></script>
+ <script>
+ "use strict";
+@@ -323,16 +326,33 @@
+ 
+ const PAD_GENERIC = ["42","7","13","99","256","3.5","1/2","10"+sup(2)];
+ 
++// Compare numerical meanings, not just typography, when excluding duplicate answers.
++function choiceValue(label){
++  let s=label.replaceAll(",", "").replaceAll("−","-").trim();
++  const unit=s.match(/ (m\/s|km\/h|cm²|m²|mL|kg|min|mm|cm|km|m|g|L|s)$/)?.[0]||"";
++  if(unit)s=s.slice(0,-unit.length);
++  if(s.startsWith("× "))s=s.slice(2);
++  let factor=1;if(s.endsWith("%")){factor=.01;s=s.slice(0,-1);}
++  const scientific=s.match(/^([0-9.]+)×10([⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)$/);
++  let v;
++  if(scientific){const chars={"⁻":"-","⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9"};v=+scientific[1]*10**Number([...scientific[2]].map(c=>chars[c]).join(""));}
++  else if(/^-?\d+(?:\.\d+)?\/\d+$/.test(s)){const [a,b]=s.split("/").map(Number);v=a/b;}
++  else if(/^-?\d+(?:\.\d+)?$/.test(s))v=Number(s);
++  else return null;
++  return {v:v*factor,unit};
++}
++function sameChoice(a,b){const x=choiceValue(a),y=choiceValue(b);return x&&y&&x.unit===y.unit&&Math.abs(x.v-y.v)<=1e-12*Math.max(Math.abs(x.v),Math.abs(y.v),1e-12);}
++
+ function buildChips(step){
+   const seen = {}; seen[step.c]=1;
+   const out = [{ l:step.c, ok:true, tip:"" }];
+   for(const wr of step.w){
+     if(out.length>=4) break;
+-    if(!seen[wr.l]){ seen[wr.l]=1; out.push({ l:wr.l, ok:false, tip:wr.tip }); }
++    if(!seen[wr.l] && (step.normalized || !sameChoice(wr.l,step.c))){ seen[wr.l]=1; out.push({ l:wr.l, ok:false, tip:wr.tip }); }
+   }
+   for(const p of PAD_GENERIC){
+     if(out.length>=4) break;
+-    if(!seen[p]){ seen[p]=1; out.push({ l:p, ok:false, tip:"Not this one." }); }
++    if(!seen[p] && !sameChoice(p,step.c)){ seen[p]=1; out.push({ l:p, ok:false, tip:"Not this one." }); }
+   }
+   return shuffle(out);
+ }
+@@ -503,6 +523,11 @@
+   }
+ }
+ 
++function explainGame(g){
++  if(g._items)return g._items.map(it=>it.l+(Number(it.v.toPrecision(6))===it.v?" = ":" ≈ ")+Number(it.v.toPrecision(6))).join("; ")+". Compare the values in the same form; "+g.steps[0].c+" is greatest.";
++  return g.states.at(-1)+". A fraction means numerator ÷ denominator; percent means ÷ 100.";
++}
++
+ /* ================================================================
+    PURE-LOGIC-END
+    ================================================================ */
+@@ -520,7 +545,7 @@
+   const MAXJUNK=8, JUNKH=28;
+   const SYM_COLOR = { "+":"#7dff4a", [M]:"#ff5d7e", "×":"#2ee6ff", "÷":"#ffc83d", "√":"#c792ff" };
+ 
+-  let S=null, raf=null, lastT=0, muted=false, locked=false, practice=false, untimed=false;
++  let S=null, raf=null, lastT=0, muted=MathStudio.isMuted(), locked=false, practice=false, untimed=false;
+ 
+   /* ---------- arcade bridge (see docs/ARCADE_PATTERN.md) ---------- */
+   const normalEndTitle=document.querySelector("#overOv h1").textContent;
+@@ -530,7 +555,7 @@
+   let AC=null;
+   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+   function beep(f,dur,type,vol,when){
+-    if(muted) return; const ctx=ac(); if(!ctx) return;
++    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
+     const t=ctx.currentTime+(when||0);
+     const o=ctx.createOscillator(), g=ctx.createGain();
+     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
+@@ -557,7 +582,8 @@
+   }
+   function mult(){ return Math.min(4, 1+Math.floor(S.streak/4)); }
+   function speed(){ return Math.min(95, 26 + (S.level-1)*9); }
+-  function landY(){ return boardEl.clientHeight - S.junk*JUNKH - cardEl.offsetHeight - 4; }
++  function junkHeight(){return Math.max(8,Math.min(JUNKH,(boardEl.clientHeight-cardEl.offsetHeight-80)/MAXJUNK));}
++  function landY(){ return boardEl.clientHeight - S.junk*junkHeight() - cardEl.offsetHeight - 4; }
+ 
+   function hud(){
+     $("scoreV").textContent=S.score;
+@@ -593,22 +619,19 @@
+       val.textContent = p.sym && p.val.startsWith(M) ? "("+p.val+")" : p.val;
+       val.style.fontSize = p.val.length>9 ? "15px" : p.val.length>5 ? "18px" : "24px";
+       b.classList.remove("good","bad"); b.disabled=false;
++      b.setAttribute("aria-label", "Answer "+(i+1)+": "+c[i].l);
+     });
+   }
+ 
+   function renderStack(){
+     stackEl.innerHTML="";
+-    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d); }
++    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d); }
+   }
+ 
+   function practiceReview(message,label,done){
+     locked=true;
+-    let panel=document.getElementById("practiceReview");if(panel)panel.remove();
+-    panel=document.createElement("div");panel.id="practiceReview";panel.setAttribute("role","status");
+-    panel.style.cssText="position:absolute;left:5%;right:5%;bottom:16px;z-index:10;background:#10283b;color:white;padding:18px;border:1px solid #78ffcf;border-radius:14px;font:18px/1.5 system-ui";
+-    const text=document.createElement("p");text.textContent=message;panel.append(text);
+-    const button=document.createElement("button");button.textContent=label;button.style.cssText="padding:12px 18px;margin-top:12px;background:#78ffcf;color:#102030;border:0;border-radius:9px;font:700 17px system-ui";
+-    button.onclick=()=>{panel.remove();done();};panel.append(button);boardEl.append(panel);button.focus();
++    MathStudio.review(message,label,()=>{done();chips[0].focus();});
++    if(S.cur.i>=S.cur.steps.length)MathStudio.model(S.cur,S.cur.steps.length-1);
+   }
+   function spawn(){
+     S.needsSpawn=false;
+@@ -618,9 +641,13 @@
+     S.cur.chips = buildChips(S.cur.steps[0]);
+     S.y = untimed ? 24 : -cardEl.offsetHeight - 10;
+     nextEqEl.textContent = (S.next.banner? S.next.banner+" · ":"") + S.next.states[0];
+-    renderCard(); renderChips(); place();
+-  }
+-  function place(){ cardEl.style.top = S.y+"px"; }
++    renderCard(); renderChips();
++    if(untimed)S.y=12;
++    place();
++    renderStack();
++    MathStudio.question(S.cur);
++  }
++  function place(){ cardEl.style.transform="translate3d(-50%,"+S.y+"px,0)"; }
+ 
+   function toast(msg){
+     toastEl.textContent=msg; toastEl.classList.add("show");
+@@ -650,6 +677,7 @@
+     boardEl.appendChild(ring); setTimeout(()=>ring.remove(),520);
+   }
+   function particles(){
++    if(MathStudio.reducedMotion())return;
+     const r=cardEl.getBoundingClientRect(), br=boardEl.getBoundingClientRect(), sc=boardScale();
+     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
+     for(let i=0;i<16;i++){
+@@ -673,6 +701,9 @@
+     if(!S || !S.running || locked) return;
+     const run=S;
+     const chip = S.cur.chips[i], btn=chips[i];
++    const explanation=explainGame(S.cur,S.cur.i);
++    MathStudio.record(S.cur.states[S.cur.i],chip.l,chip.ok?explanation:chip.tip,chip.ok);
++    if(chip.ok)MathStudio.model(S.cur,S.cur.i);
+     if(untimed && !chip.ok){ S.wrong++; practiceReview(chip.tip,"Try again",()=>{locked=false;renderChips();}); hud(); return; }
+     if(chip.ok){
+       S.right++; S.streak++; S.bestStreak=Math.max(S.bestStreak,S.streak);
+@@ -692,12 +723,13 @@
+          rapid guessing is slower and net-negative (right pays 10·level). */
+       S.score = Math.max(0, S.score - 15*S.level);
+       locked = true;
+-      setTimeout(()=>{ if(S!==run)return; if(S && S.cur && S.cur.i < S.cur.steps.length){ S.cur.chips = buildChips(S.cur.steps[S.cur.i]); renderChips(); } locked = false; }, 900);
++      practiceReview(chip.tip,"Try again",()=>{if(S!==run)return;S.cur.chips=buildChips(S.cur.steps[S.cur.i]);renderChips();locked=false;});
+       btn.classList.add("bad"); sBad(); shake();
+       cardEl.classList.add("hurt"); setTimeout(()=>cardEl.classList.remove("hurt"),200);
+       if(!untimed)S.y += Math.max(20,(landY()-S.y)*0.28); place();
+       toast("❌ "+chip.tip);
+     }
++    ARCADE.checkpoint();
+     hud();
+   }
+ 
+@@ -726,17 +758,23 @@
+     ARCADE.reportScore(false);
+ 
+     locked=true;
+-    if(untimed)practiceReview("Answer: "+S.cur.states[S.cur.states.length-1],"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
++    if(untimed)practiceReview(explainGame(S.cur,S.cur.steps.length-1),"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
+     else setTimeout(()=>{ if(S!==run)return;locked=false; if(S.running&&S.needsSpawn) spawn(); },330);
+     hud();
+   }
+ 
+   function land(){
++    if(locked || !S.running)return;
+     sLand(); shake(true);
+     S.junk++; S.wrong++; S.streak=0; renderStack(); hud();
+-    if(S.junk>=MAXJUNK){ gameOver(); return; }
+-    toast("🧱 Buried! Answer: "+S.cur.steps[S.cur.i].c);
+-    spawn();
++    const message="Answer: "+S.cur.steps[S.cur.i].c+". "+explainGame(S.cur,S.cur.i);
++    MathStudio.record(S.cur.states[S.cur.i],"Time ran out",message,false);
++    ARCADE.checkpoint();
++    practiceReview(message,S.junk>=MAXJUNK?"See my results":"Next problem",()=>{
++      locked=false;
++      if(S.junk>=MAXJUNK){gameOver();return;}
++      if(S.running)spawn();else S.needsSpawn=true;
++    });
+   }
+ 
+   /* ---------- loop ---------- */
+@@ -752,6 +790,7 @@
+ 
+   function start(lv){
+     if(!ARCADE.canStart())return;
++    MathStudio.reset();
+     document.getElementById("practiceReview")?.remove();
+     untimed=$("untimedPractice").checked;locked=false;
+     S=freshState(lv);
+@@ -766,7 +805,7 @@
+     const begin=()=>{
+       renderStack(); hud(); spawn();
+       S.running=true; lastT=performance.now();
+-      cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
++      cancelAnimationFrame(raf); if(!untimed)raf=requestAnimationFrame(tick);
+     };
+     ARCADE.requestCoin(res=>{
+       if(!res.ok){ $("startOv").classList.remove("hidden"); return; }
+@@ -792,7 +831,7 @@
+     if(S.pausedAt&&S.cur)S.cur.born+=performance.now()-S.pausedAt;S.pausedAt=0;
+     S.running=true; lastT=performance.now();
+     if(S.needsSpawn&&!locked)spawn();
+-    raf=requestAnimationFrame(tick);
++    if(!untimed)raf=requestAnimationFrame(tick);
+   }
+ 
+   /* ---------- high score ---------- */
+@@ -808,13 +847,14 @@
+   function gameOver(){
+     S.running=false; cancelAnimationFrame(raf);
+     ARCADE.reportScore(true);
++    if(MathStudio.reducedMotion()){showOverPanel();return;}
+     boardEl.classList.add("doom");
+     cardEl.style.display="none";
+ 
+     const totalRows = Math.ceil(boardEl.clientHeight/JUNKH);
+     let i = S.junk, n = 0;
+     const iv = setInterval(()=>{
+-      const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d);
++      const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d);
+       sThud(150 - i*4);
+       if(n%2===0) shake(n%4===0);
+       i++; n++;
+@@ -838,7 +878,8 @@
+     $("fSolved").textContent=S.solved;
+     $("fAcc").textContent=acc+"%";
+     $("fStreak").textContent=S.bestStreak;
+-    $("overQuip").textContent=S.finishedByChoice?"Return for another challenge whenever you are ready.":pick(CONFIG.quips);
++    $("overQuip").textContent="Every attempt is information. Review a strategy, then try it again.";
++    MathStudio.summary();
+     const nh = S.score>getHS();
+     if(nh) setHS(S.score);
+     $("newHS").classList.toggle("hidden",!nh);
+@@ -891,6 +932,7 @@
+   start=(lv)=>{ lastLv=lv; realStart(lv); };
+   chips.forEach(b=>b.addEventListener("click",()=>choose(+b.dataset.i)));
+   document.addEventListener("keydown",e=>{
++    if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;
+     if(e.key>="1"&&e.key<="4") choose(+e.key-1);
+     else if(e.key==="p"||e.key==="P"||e.key==="Escape"){
+       if(S && S.running) pause();
+@@ -902,31 +944,13 @@
+   $("pauseBtn").addEventListener("click",pause);
+   $("resumeBtn").addEventListener("click",resume);
+   $("quitBtn").addEventListener("click",finishRun);
+-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
++  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
+   window.addEventListener("blur",()=>{ if(S&&S.running) pause(); });
++  document.addEventListener("visibilitychange",()=>{if(document.hidden&&S&&S.running)pause();});
+ 
+   hsLine();
+ })();
+ </script>
+-<script>
+-/* ---------- native-display autoscale: fill the frame on big screens,
+-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
+-(function(){
+-  const wrap=document.getElementById("wrap");
+-  if(!wrap) return;
+-  function fit(){
+-    wrap.style.transform="none"; wrap.style.marginTop="0px";
+-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
+-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
+-    wrap.style.transformOrigin="top center";
+-    wrap.style.transform="scale("+k+")";
+-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
+-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
+-  }
+-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
+-  window.addEventListener("resize",fit);
+-  setTimeout(fit,60); fit();
+-})();
+-</script>
++
+ </body>
+ </html>
+diff --git a/public/games/proportion-scale-storm.html b/public/games/proportion-scale-storm.html
+--- a/public/games/proportion-scale-storm.html
++++ b/public/games/proportion-scale-storm.html
+@@ -2,7 +2,7 @@
+ <html lang="en">
+ <head>
+ <meta charset="UTF-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
++<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>SCALE STORM — math spine arcade</title>
+ <style>
+   :root{
+@@ -216,10 +216,12 @@
+   }
+ @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+ </style>
++<link rel="stylesheet" href="math-studio.css">
+ </head>
+-<body>
++<body data-game="scale-storm" class="falling">
+ 
+ <div id="wrap">
++  <header class="studioBrand"><span class="studioMark" aria-hidden="true">∝</span><div><span class="studioEyebrow">PR · RELATIONSHIPS</span><h2>Scale Storm</h2></div><span class="studioBadge">MATH ARCADE</span></header>
+   <div id="hud">
+     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
+     <div class="stat"><div class="lab">Level</div><div class="val" id="levelV">1</div></div>
+@@ -298,6 +300,7 @@
+   </div>
+ </div>
+ 
++<script src="math-studio.js"></script>
+ <script src="math-cabinet.js"></script>
+ <script>
+ "use strict";
+@@ -323,16 +326,33 @@
+ 
+ const PAD_GENERIC = ["42","7","13","99","256","3.5","1/2","10"+sup(2)];
+ 
++// Compare numerical meanings, not just typography, when excluding duplicate answers.
++function choiceValue(label){
++  let s=label.replaceAll(",", "").replaceAll("−","-").trim();
++  const unit=s.match(/ (m\/s|km\/h|cm²|m²|mL|kg|min|mm|cm|km|m|g|L|s)$/)?.[0]||"";
++  if(unit)s=s.slice(0,-unit.length);
++  if(s.startsWith("× "))s=s.slice(2);
++  let factor=1;if(s.endsWith("%")){factor=.01;s=s.slice(0,-1);}
++  const scientific=s.match(/^([0-9.]+)×10([⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)$/);
++  let v;
++  if(scientific){const chars={"⁻":"-","⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9"};v=+scientific[1]*10**Number([...scientific[2]].map(c=>chars[c]).join(""));}
++  else if(/^-?\d+(?:\.\d+)?\/\d+$/.test(s)){const [a,b]=s.split("/").map(Number);v=a/b;}
++  else if(/^-?\d+(?:\.\d+)?$/.test(s))v=Number(s);
++  else return null;
++  return {v:v*factor,unit};
++}
++function sameChoice(a,b){const x=choiceValue(a),y=choiceValue(b);return x&&y&&x.unit===y.unit&&Math.abs(x.v-y.v)<=1e-12*Math.max(Math.abs(x.v),Math.abs(y.v),1e-12);}
++
+ function buildChips(step){
+   const seen = {}; seen[step.c]=1;
+   const out = [{ l:step.c, ok:true, tip:"" }];
+   for(const wr of step.w){
+     if(out.length>=4) break;
+-    if(!seen[wr.l]){ seen[wr.l]=1; out.push({ l:wr.l, ok:false, tip:wr.tip }); }
++    if(!seen[wr.l] && (step.normalized || !sameChoice(wr.l,step.c))){ seen[wr.l]=1; out.push({ l:wr.l, ok:false, tip:wr.tip }); }
+   }
+   for(const p of PAD_GENERIC){
+     if(out.length>=4) break;
+-    if(!seen[p]){ seen[p]=1; out.push({ l:p, ok:false, tip:"Not this one." }); }
++    if(!seen[p] && !sameChoice(p,step.c)){ seen[p]=1; out.push({ l:p, ok:false, tip:"Not this one." }); }
+   }
+   return shuffle(out);
+ }
+@@ -503,6 +523,11 @@
+   }
+ }
+ 
++function explainGame(g){
++  if(g._pow!==undefined)return "Input factor "+g._k+" raised to "+g._pow+" gives "+(Number(Math.pow(g._k,g._pow).toPrecision(6))===Math.pow(g._k,g._pow)?"":"approximately ")+Number(Math.pow(g._k,g._pow).toPrecision(6))+". "+g.states.at(-1)+". "+(g._pow<0?"A negative power takes the reciprocal.":"Scale the factor, not the starting value.");
++  return g.states[0]+" → "+g.states.at(-1)+". Multiply both parts of a ratio by the same factor; cross-products stay equal.";
++}
++
+ /* ================================================================
+    PURE-LOGIC-END
+    ================================================================ */
+@@ -520,7 +545,7 @@
+   const MAXJUNK=8, JUNKH=28;
+   const SYM_COLOR = { "+":"#7dff4a", [M]:"#ff5d7e", "×":"#2ee6ff", "÷":"#ffc83d", "√":"#c792ff" };
+ 
+-  let S=null, raf=null, lastT=0, muted=false, locked=false, practice=false, untimed=false;
++  let S=null, raf=null, lastT=0, muted=MathStudio.isMuted(), locked=false, practice=false, untimed=false;
+ 
+   /* ---------- arcade bridge (see docs/ARCADE_PATTERN.md) ---------- */
+   const normalEndTitle=document.querySelector("#overOv h1").textContent;
+@@ -530,7 +555,7 @@
+   let AC=null;
+   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+   function beep(f,dur,type,vol,when){
+-    if(muted) return; const ctx=ac(); if(!ctx) return;
++    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
+     const t=ctx.currentTime+(when||0);
+     const o=ctx.createOscillator(), g=ctx.createGain();
+     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
+@@ -557,7 +582,8 @@
+   }
+   function mult(){ return Math.min(4, 1+Math.floor(S.streak/4)); }
+   function speed(){ return Math.min(95, 26 + (S.level-1)*9); }
+-  function landY(){ return boardEl.clientHeight - S.junk*JUNKH - cardEl.offsetHeight - 4; }
++  function junkHeight(){return Math.max(8,Math.min(JUNKH,(boardEl.clientHeight-cardEl.offsetHeight-80)/MAXJUNK));}
++  function landY(){ return boardEl.clientHeight - S.junk*junkHeight() - cardEl.offsetHeight - 4; }
+ 
+   function hud(){
+     $("scoreV").textContent=S.score;
+@@ -593,22 +619,19 @@
+       val.textContent = p.sym && p.val.startsWith(M) ? "("+p.val+")" : p.val;
+       val.style.fontSize = p.val.length>9 ? "15px" : p.val.length>5 ? "18px" : "24px";
+       b.classList.remove("good","bad"); b.disabled=false;
++      b.setAttribute("aria-label", "Answer "+(i+1)+": "+c[i].l);
+     });
+   }
+ 
+   function renderStack(){
+     stackEl.innerHTML="";
+-    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d); }
++    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d); }
+   }
+ 
+   function practiceReview(message,label,done){
+     locked=true;
+-    let panel=document.getElementById("practiceReview");if(panel)panel.remove();
+-    panel=document.createElement("div");panel.id="practiceReview";panel.setAttribute("role","status");
+-    panel.style.cssText="position:absolute;left:5%;right:5%;bottom:16px;z-index:10;background:#10283b;color:white;padding:18px;border:1px solid #78ffcf;border-radius:14px;font:18px/1.5 system-ui";
+-    const text=document.createElement("p");text.textContent=message;panel.append(text);
+-    const button=document.createElement("button");button.textContent=label;button.style.cssText="padding:12px 18px;margin-top:12px;background:#78ffcf;color:#102030;border:0;border-radius:9px;font:700 17px system-ui";
+-    button.onclick=()=>{panel.remove();done();};panel.append(button);boardEl.append(panel);button.focus();
++    MathStudio.review(message,label,()=>{done();chips[0].focus();});
++    if(S.cur.i>=S.cur.steps.length)MathStudio.model(S.cur,S.cur.steps.length-1);
+   }
+   function spawn(){
+     S.needsSpawn=false;
+@@ -618,9 +641,13 @@
+     S.cur.chips = buildChips(S.cur.steps[0]);
+     S.y = untimed ? 24 : -cardEl.offsetHeight - 10;
+     nextEqEl.textContent = (S.next.banner? S.next.banner+" · ":"") + S.next.states[0];
+-    renderCard(); renderChips(); place();
+-  }
+-  function place(){ cardEl.style.top = S.y+"px"; }
++    renderCard(); renderChips();
++    if(untimed)S.y=12;
++    place();
++    renderStack();
++    MathStudio.question(S.cur);
++  }
++  function place(){ cardEl.style.transform="translate3d(-50%,"+S.y+"px,0)"; }
+ 
+   function toast(msg){
+     toastEl.textContent=msg; toastEl.classList.add("show");
+@@ -650,6 +677,7 @@
+     boardEl.appendChild(ring); setTimeout(()=>ring.remove(),520);
+   }
+   function particles(){
++    if(MathStudio.reducedMotion())return;
+     const r=cardEl.getBoundingClientRect(), br=boardEl.getBoundingClientRect(), sc=boardScale();
+     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
+     for(let i=0;i<16;i++){
+@@ -673,6 +701,9 @@
+     if(!S || !S.running || locked) return;
+     const run=S;
+     const chip = S.cur.chips[i], btn=chips[i];
++    const explanation=explainGame(S.cur,S.cur.i);
++    MathStudio.record(S.cur.states[S.cur.i],chip.l,chip.ok?explanation:chip.tip,chip.ok);
++    if(chip.ok)MathStudio.model(S.cur,S.cur.i);
+     if(untimed && !chip.ok){ S.wrong++; practiceReview(chip.tip,"Try again",()=>{locked=false;renderChips();}); hud(); return; }
+     if(chip.ok){
+       S.right++; S.streak++; S.bestStreak=Math.max(S.bestStreak,S.streak);
+@@ -692,12 +723,13 @@
+          rapid guessing is slower and net-negative (right pays 10·level). */
+       S.score = Math.max(0, S.score - 15*S.level);
+       locked = true;
+-      setTimeout(()=>{ if(S!==run)return; if(S && S.cur && S.cur.i < S.cur.steps.length){ S.cur.chips = buildChips(S.cur.steps[S.cur.i]); renderChips(); } locked = false; }, 900);
++      practiceReview(chip.tip,"Try again",()=>{if(S!==run)return;S.cur.chips=buildChips(S.cur.steps[S.cur.i]);renderChips();locked=false;});
+       btn.classList.add("bad"); sBad(); shake();
+       cardEl.classList.add("hurt"); setTimeout(()=>cardEl.classList.remove("hurt"),200);
+       if(!untimed)S.y += Math.max(20,(landY()-S.y)*0.28); place();
+       toast("❌ "+chip.tip);
+     }
++    ARCADE.checkpoint();
+     hud();
+   }
+ 
+@@ -726,17 +758,23 @@
+     ARCADE.reportScore(false);
+ 
+     locked=true;
+-    if(untimed)practiceReview("Answer: "+S.cur.states[S.cur.states.length-1],"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
++    if(untimed)practiceReview(explainGame(S.cur,S.cur.steps.length-1),"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
+     else setTimeout(()=>{ if(S!==run)return;locked=false; if(S.running&&S.needsSpawn) spawn(); },330);
+     hud();
+   }
+ 
+   function land(){
++    if(locked || !S.running)return;
+     sLand(); shake(true);
+     S.junk++; S.wrong++; S.streak=0; renderStack(); hud();
+-    if(S.junk>=MAXJUNK){ gameOver(); return; }
+-    toast("🧱 Buried! Answer: "+S.cur.steps[S.cur.i].c);
+-    spawn();
++    const message="Answer: "+S.cur.steps[S.cur.i].c+". "+explainGame(S.cur,S.cur.i);
++    MathStudio.record(S.cur.states[S.cur.i],"Time ran out",message,false);
++    ARCADE.checkpoint();
++    practiceReview(message,S.junk>=MAXJUNK?"See my results":"Next problem",()=>{
++      locked=false;
++      if(S.junk>=MAXJUNK){gameOver();return;}
++      if(S.running)spawn();else S.needsSpawn=true;
++    });
+   }
+ 
+   /* ---------- loop ---------- */
+@@ -752,6 +790,7 @@
+ 
+   function start(lv){
+     if(!ARCADE.canStart())return;
++    MathStudio.reset();
+     document.getElementById("practiceReview")?.remove();
+     untimed=$("untimedPractice").checked;locked=false;
+     S=freshState(lv);
+@@ -766,7 +805,7 @@
+     const begin=()=>{
+       renderStack(); hud(); spawn();
+       S.running=true; lastT=performance.now();
+-      cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
++      cancelAnimationFrame(raf); if(!untimed)raf=requestAnimationFrame(tick);
+     };
+     ARCADE.requestCoin(res=>{
+       if(!res.ok){ $("startOv").classList.remove("hidden"); return; }
+@@ -792,7 +831,7 @@
+     if(S.pausedAt&&S.cur)S.cur.born+=performance.now()-S.pausedAt;S.pausedAt=0;
+     S.running=true; lastT=performance.now();
+     if(S.needsSpawn&&!locked)spawn();
+-    raf=requestAnimationFrame(tick);
++    if(!untimed)raf=requestAnimationFrame(tick);
+   }
+ 
+   /* ---------- high score ---------- */
+@@ -808,13 +847,14 @@
+   function gameOver(){
+     S.running=false; cancelAnimationFrame(raf);
+     ARCADE.reportScore(true);
++    if(MathStudio.reducedMotion()){showOverPanel();return;}
+     boardEl.classList.add("doom");
+     cardEl.style.display="none";
+ 
+     const totalRows = Math.ceil(boardEl.clientHeight/JUNKH);
+     let i = S.junk, n = 0;
+     const iv = setInterval(()=>{
+-      const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d);
++      const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d);
+       sThud(150 - i*4);
+       if(n%2===0) shake(n%4===0);
+       i++; n++;
+@@ -838,7 +878,8 @@
+     $("fSolved").textContent=S.solved;
+     $("fAcc").textContent=acc+"%";
+     $("fStreak").textContent=S.bestStreak;
+-    $("overQuip").textContent=S.finishedByChoice?"Return for another challenge whenever you are ready.":pick(CONFIG.quips);
++    $("overQuip").textContent="Every attempt is information. Review a strategy, then try it again.";
++    MathStudio.summary();
+     const nh = S.score>getHS();
+     if(nh) setHS(S.score);
+     $("newHS").classList.toggle("hidden",!nh);
+@@ -891,6 +932,7 @@
+   start=(lv)=>{ lastLv=lv; realStart(lv); };
+   chips.forEach(b=>b.addEventListener("click",()=>choose(+b.dataset.i)));
+   document.addEventListener("keydown",e=>{
++    if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;
+     if(e.key>="1"&&e.key<="4") choose(+e.key-1);
+     else if(e.key==="p"||e.key==="P"||e.key==="Escape"){
+       if(S && S.running) pause();
+@@ -902,31 +944,13 @@
+   $("pauseBtn").addEventListener("click",pause);
+   $("resumeBtn").addEventListener("click",resume);
+   $("quitBtn").addEventListener("click",finishRun);
+-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
++  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
+   window.addEventListener("blur",()=>{ if(S&&S.running) pause(); });
++  document.addEventListener("visibilitychange",()=>{if(document.hidden&&S&&S.running)pause();});
+ 
+   hsLine();
+ })();
+ </script>
+-<script>
+-/* ---------- native-display autoscale: fill the frame on big screens,
+-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
+-(function(){
+-  const wrap=document.getElementById("wrap");
+-  if(!wrap) return;
+-  function fit(){
+-    wrap.style.transform="none"; wrap.style.marginTop="0px";
+-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
+-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
+-    wrap.style.transformOrigin="top center";
+-    wrap.style.transform="scale("+k+")";
+-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
+-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
+-  }
+-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
+-  window.addEventListener("resize",fit);
+-  setTimeout(fit,60); fit();
+-})();
+-</script>
++
+ </body>
+ </html>
+diff --git a/public/games/quantities-powers-of-ten.html b/public/games/quantities-powers-of-ten.html
+--- a/public/games/quantities-powers-of-ten.html
++++ b/public/games/quantities-powers-of-ten.html
+@@ -2,7 +2,7 @@
+ <html lang="en">
+ <head>
+ <meta charset="UTF-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
++<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>POWERS OF TEN — math spine arcade</title>
+ <style>
+   :root{
+@@ -216,10 +216,12 @@
+   }
+ @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+ </style>
++<link rel="stylesheet" href="math-studio.css">
+ </head>
+-<body>
++<body data-game="powers-of-ten" class="falling">
+ 
+ <div id="wrap">
++  <header class="studioBrand"><span class="studioMark" aria-hidden="true">10ⁿ</span><div><span class="studioEyebrow">QE · SCALE & PRECISION</span><h2>Powers of Ten</h2></div><span class="studioBadge">MATH ARCADE</span></header>
+   <div id="hud">
+     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
+     <div class="stat"><div class="lab">Level</div><div class="val" id="levelV">1</div></div>
+@@ -298,6 +300,7 @@
+   </div>
+ </div>
+ 
++<script src="math-studio.js"></script>
+ <script src="math-cabinet.js"></script>
+ <script>
+ "use strict";
+@@ -323,16 +326,33 @@
+ 
+ const PAD_GENERIC = ["42","7","13","99","256","3.5","1/2","10"+sup(2)];
+ 
++// Compare numerical meanings, not just typography, when excluding duplicate answers.
++function choiceValue(label){
++  let s=label.replaceAll(",", "").replaceAll("−","-").trim();
++  const unit=s.match(/ (m\/s|km\/h|cm²|m²|mL|kg|min|mm|cm|km|m|g|L|s)$/)?.[0]||"";
++  if(unit)s=s.slice(0,-unit.length);
++  if(s.startsWith("× "))s=s.slice(2);
++  let factor=1;if(s.endsWith("%")){factor=.01;s=s.slice(0,-1);}
++  const scientific=s.match(/^([0-9.]+)×10([⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)$/);
++  let v;
++  if(scientific){const chars={"⁻":"-","⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9"};v=+scientific[1]*10**Number([...scientific[2]].map(c=>chars[c]).join(""));}
++  else if(/^-?\d+(?:\.\d+)?\/\d+$/.test(s)){const [a,b]=s.split("/").map(Number);v=a/b;}
++  else if(/^-?\d+(?:\.\d+)?$/.test(s))v=Number(s);
++  else return null;
++  return {v:v*factor,unit};
++}
++function sameChoice(a,b){const x=choiceValue(a),y=choiceValue(b);return x&&y&&x.unit===y.unit&&Math.abs(x.v-y.v)<=1e-12*Math.max(Math.abs(x.v),Math.abs(y.v),1e-12);}
++
+ function buildChips(step){
+   const seen = {}; seen[step.c]=1;
+   const out = [{ l:step.c, ok:true, tip:"" }];
+   for(const wr of step.w){
+     if(out.length>=4) break;
+-    if(!seen[wr.l]){ seen[wr.l]=1; out.push({ l:wr.l, ok:false, tip:wr.tip }); }
++    if(!seen[wr.l] && (step.normalized || !sameChoice(wr.l,step.c))){ seen[wr.l]=1; out.push({ l:wr.l, ok:false, tip:wr.tip }); }
+   }
+   for(const p of PAD_GENERIC){
+     if(out.length>=4) break;
+-    if(!seen[p]){ seen[p]=1; out.push({ l:p, ok:false, tip:"Not this one." }); }
++    if(!seen[p] && !sameChoice(p,step.c)){ seen[p]=1; out.push({ l:p, ok:false, tip:"Not this one." }); }
+   }
+   return shuffle(out);
+ }
+@@ -372,13 +392,13 @@
+   ],
+ };
+ 
+-const TIP_MANT = "Mantissa must be between 1 and 10.";
++const TIP_MANT = "This is an equal value, but not normalized scientific notation: use 1 ≤ coefficient < 10.";
+ const TIP_ADD  = "Multiplying powers? ADD the exponents.";
+ const TIP_SUB  = "Dividing powers? SUBTRACT the exponents.";
+ const TIP_SIGN = "Small number → NEGATIVE exponent.";
+ const TIP_UNIT = "Write the conversion factor and let units cancel.";
+ const TIP_SIG  = "Leading zeros never count; trapped & trailing-after-decimal do.";
+-const TIP_FERMI= "Round everything to the nearest power of ten first.";
++const TIP_FERMI= "Compare ratios to the neighboring powers of ten; choose the smaller factor.";
+ 
+ /* L1 — big number → scientific notation */
+ function genToSci(){
+@@ -386,11 +406,11 @@
+   const N=m*Math.pow(10,e);
+   return {
+     states:[ commas(N), commas(N)+" = "+sci(m,e) ],
+-    steps:[ { c:sci(m,e),
++    steps:[ { c:sci(m,e), normalized:true,
+               w:[ W(sci(m,e+1),"Count the decimal hops again."),
+                   W(sci(m*10,e-1),TIP_MANT),
+                   W(sci(m,e-1),"Count the decimal hops again.") ] } ],
+-    banner:"IN SCIENTIFIC NOTATION", _val:N,
++    banner:"NORMALIZED SCIENTIFIC NOTATION", _val:N,
+   };
+ }
+ 
+@@ -400,11 +420,11 @@
+   const N=+(m*Math.pow(10,-e)).toFixed(e+1);
+   return {
+     states:[ String(N), N+" = "+sci(m,-e) ],
+-    steps:[ { c:sci(m,-e),
++    steps:[ { c:sci(m,-e), normalized:true,
+               w:[ W(sci(m,e),TIP_SIGN),
+                   W(sci(m,-(e+1)),"Count the decimal hops again."),
+                   W(sci(m*10,-e),TIP_MANT) ] } ],
+-    banner:"IN SCIENTIFIC NOTATION", _val:N,
++    banner:"NORMALIZED SCIENTIFIC NOTATION", _val:N,
+   };
+ }
+ 
+@@ -497,7 +517,8 @@
+   return {
+     states:[ q+" ≈ ?", q+" ≈ "+c+"  ("+why+")" ],
+     steps:[ { c, w:wrongs } ],
+-    banner:"ORDER OF MAGNITUDE",
++    banner:"ORDER OF MAGNITUDE", name:"Use this estimate: "+why+" · choose the closest power by a multiplicative factor",
++    explanation:why+" is closest to "+c+" by a multiplicative factor. Powers of ten are a factor of 10 apart, not 10 units apart.",
+   };
+ }
+ 
+@@ -514,6 +535,12 @@
+   }
+ }
+ 
++function explainGame(g){
++  if(g.explanation)return g.explanation;
++  const rule={"NORMALIZED SCIENTIFIC NOTATION":"Move the decimal; the coefficient must be at least 1 and less than 10.",MULTIPLY:"Multiply coefficients and add exponents.",DIVIDE:"Divide coefficients and subtract the denominator's exponent.",CONVERT:"Use an equivalent conversion factor so the old units cancel.","HOW MANY SIG FIGS?":"Leading zeros locate the decimal; interior zeros and trailing decimal zeros count.","ORDER OF MAGNITUDE":"Choose the power of ten closest by a multiplicative factor, using the stated estimate."}[g.banner];
++  return g.states.at(-1)+". "+rule;
++}
++
+ /* ================================================================
+    PURE-LOGIC-END
+    ================================================================ */
+@@ -531,7 +558,7 @@
+   const MAXJUNK=8, JUNKH=28;
+   const SYM_COLOR = { "+":"#7dff4a", [M]:"#ff5d7e", "×":"#2ee6ff", "÷":"#ffc83d", "√":"#c792ff" };
+ 
+-  let S=null, raf=null, lastT=0, muted=false, locked=false, practice=false, untimed=false;
++  let S=null, raf=null, lastT=0, muted=MathStudio.isMuted(), locked=false, practice=false, untimed=false;
+ 
+   /* ---------- arcade bridge (see docs/ARCADE_PATTERN.md) ---------- */
+   const normalEndTitle=document.querySelector("#overOv h1").textContent;
+@@ -541,7 +568,7 @@
+   let AC=null;
+   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+   function beep(f,dur,type,vol,when){
+-    if(muted) return; const ctx=ac(); if(!ctx) return;
++    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
+     const t=ctx.currentTime+(when||0);
+     const o=ctx.createOscillator(), g=ctx.createGain();
+     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
+@@ -568,7 +595,8 @@
+   }
+   function mult(){ return Math.min(4, 1+Math.floor(S.streak/4)); }
+   function speed(){ return Math.min(95, 26 + (S.level-1)*9); }
+-  function landY(){ return boardEl.clientHeight - S.junk*JUNKH - cardEl.offsetHeight - 4; }
++  function junkHeight(){return Math.max(8,Math.min(JUNKH,(boardEl.clientHeight-cardEl.offsetHeight-80)/MAXJUNK));}
++  function landY(){ return boardEl.clientHeight - S.junk*junkHeight() - cardEl.offsetHeight - 4; }
+ 
+   function hud(){
+     $("scoreV").textContent=S.score;
+@@ -604,22 +632,19 @@
+       val.textContent = p.sym && p.val.startsWith(M) ? "("+p.val+")" : p.val;
+       val.style.fontSize = p.val.length>9 ? "15px" : p.val.length>5 ? "18px" : "24px";
+       b.classList.remove("good","bad"); b.disabled=false;
++      b.setAttribute("aria-label", "Answer "+(i+1)+": "+c[i].l);
+     });
+   }
+ 
+   function renderStack(){
+     stackEl.innerHTML="";
+-    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d); }
++    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d); }
+   }
+ 
+   function practiceReview(message,label,done){
+     locked=true;
+-    let panel=document.getElementById("practiceReview");if(panel)panel.remove();
+-    panel=document.createElement("div");panel.id="practiceReview";panel.setAttribute("role","status");
+-    panel.style.cssText="position:absolute;left:5%;right:5%;bottom:16px;z-index:10;background:#10283b;color:white;padding:18px;border:1px solid #78ffcf;border-radius:14px;font:18px/1.5 system-ui";
+-    const text=document.createElement("p");text.textContent=message;panel.append(text);
+-    const button=document.createElement("button");button.textContent=label;button.style.cssText="padding:12px 18px;margin-top:12px;background:#78ffcf;color:#102030;border:0;border-radius:9px;font:700 17px system-ui";
+-    button.onclick=()=>{panel.remove();done();};panel.append(button);boardEl.append(panel);button.focus();
++    MathStudio.review(message,label,()=>{done();chips[0].focus();});
++    if(S.cur.i>=S.cur.steps.length)MathStudio.model(S.cur,S.cur.steps.length-1);
+   }
+   function spawn(){
+     S.needsSpawn=false;
+@@ -629,9 +654,13 @@
+     S.cur.chips = buildChips(S.cur.steps[0]);
+     S.y = untimed ? 24 : -cardEl.offsetHeight - 10;
+     nextEqEl.textContent = (S.next.banner? S.next.banner+" · ":"") + S.next.states[0];
+-    renderCard(); renderChips(); place();
+-  }
+-  function place(){ cardEl.style.top = S.y+"px"; }
++    renderCard(); renderChips();
++    if(untimed)S.y=12;
++    place();
++    renderStack();
++    MathStudio.question(S.cur);
++  }
++  function place(){ cardEl.style.transform="translate3d(-50%,"+S.y+"px,0)"; }
+ 
+   function toast(msg){
+     toastEl.textContent=msg; toastEl.classList.add("show");
+@@ -661,6 +690,7 @@
+     boardEl.appendChild(ring); setTimeout(()=>ring.remove(),520);
+   }
+   function particles(){
++    if(MathStudio.reducedMotion())return;
+     const r=cardEl.getBoundingClientRect(), br=boardEl.getBoundingClientRect(), sc=boardScale();
+     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
+     for(let i=0;i<16;i++){
+@@ -684,6 +714,9 @@
+     if(!S || !S.running || locked) return;
+     const run=S;
+     const chip = S.cur.chips[i], btn=chips[i];
++    const explanation=explainGame(S.cur,S.cur.i);
++    MathStudio.record(S.cur.states[S.cur.i],chip.l,chip.ok?explanation:chip.tip,chip.ok);
++    if(chip.ok)MathStudio.model(S.cur,S.cur.i);
+     if(untimed && !chip.ok){ S.wrong++; practiceReview(chip.tip,"Try again",()=>{locked=false;renderChips();}); hud(); return; }
+     if(chip.ok){
+       S.right++; S.streak++; S.bestStreak=Math.max(S.bestStreak,S.streak);
+@@ -703,12 +736,13 @@
+          rapid guessing is slower and net-negative (right pays 10·level). */
+       S.score = Math.max(0, S.score - 15*S.level);
+       locked = true;
+-      setTimeout(()=>{ if(S!==run)return; if(S && S.cur && S.cur.i < S.cur.steps.length){ S.cur.chips = buildChips(S.cur.steps[S.cur.i]); renderChips(); } locked = false; }, 900);
++      practiceReview(chip.tip,"Try again",()=>{if(S!==run)return;S.cur.chips=buildChips(S.cur.steps[S.cur.i]);renderChips();locked=false;});
+       btn.classList.add("bad"); sBad(); shake();
+       cardEl.classList.add("hurt"); setTimeout(()=>cardEl.classList.remove("hurt"),200);
+       if(!untimed)S.y += Math.max(20,(landY()-S.y)*0.28); place();
+       toast("❌ "+chip.tip);
+     }
++    ARCADE.checkpoint();
+     hud();
+   }
+ 
+@@ -737,17 +771,23 @@
+     ARCADE.reportScore(false);
+ 
+     locked=true;
+-    if(untimed)practiceReview("Answer: "+S.cur.states[S.cur.states.length-1],"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
++    if(untimed)practiceReview(explainGame(S.cur,S.cur.steps.length-1),"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
+     else setTimeout(()=>{ if(S!==run)return;locked=false; if(S.running&&S.needsSpawn) spawn(); },330);
+     hud();
+   }
+ 
+   function land(){
++    if(locked || !S.running)return;
+     sLand(); shake(true);
+     S.junk++; S.wrong++; S.streak=0; renderStack(); hud();
+-    if(S.junk>=MAXJUNK){ gameOver(); return; }
+-    toast("🧱 Buried! Answer: "+S.cur.steps[S.cur.i].c);
+-    spawn();
++    const message="Answer: "+S.cur.steps[S.cur.i].c+". "+explainGame(S.cur,S.cur.i);
++    MathStudio.record(S.cur.states[S.cur.i],"Time ran out",message,false);
++    ARCADE.checkpoint();
++    practiceReview(message,S.junk>=MAXJUNK?"See my results":"Next problem",()=>{
++      locked=false;
++      if(S.junk>=MAXJUNK){gameOver();return;}
++      if(S.running)spawn();else S.needsSpawn=true;
++    });
+   }
+ 
+   /* ---------- loop ---------- */
+@@ -763,6 +803,7 @@
+ 
+   function start(lv){
+     if(!ARCADE.canStart())return;
++    MathStudio.reset();
+     document.getElementById("practiceReview")?.remove();
+     untimed=$("untimedPractice").checked;locked=false;
+     S=freshState(lv);
+@@ -777,7 +818,7 @@
+     const begin=()=>{
+       renderStack(); hud(); spawn();
+       S.running=true; lastT=performance.now();
+-      cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
++      cancelAnimationFrame(raf); if(!untimed)raf=requestAnimationFrame(tick);
+     };
+     ARCADE.requestCoin(res=>{
+       if(!res.ok){ $("startOv").classList.remove("hidden"); return; }
+@@ -803,7 +844,7 @@
+     if(S.pausedAt&&S.cur)S.cur.born+=performance.now()-S.pausedAt;S.pausedAt=0;
+     S.running=true; lastT=performance.now();
+     if(S.needsSpawn&&!locked)spawn();
+-    raf=requestAnimationFrame(tick);
++    if(!untimed)raf=requestAnimationFrame(tick);
+   }
+ 
+   /* ---------- high score ---------- */
+@@ -819,13 +860,14 @@
+   function gameOver(){
+     S.running=false; cancelAnimationFrame(raf);
+     ARCADE.reportScore(true);
++    if(MathStudio.reducedMotion()){showOverPanel();return;}
+     boardEl.classList.add("doom");
+     cardEl.style.display="none";
+ 
+     const totalRows = Math.ceil(boardEl.clientHeight/JUNKH);
+     let i = S.junk, n = 0;
+     const iv = setInterval(()=>{
+-      const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d);
++      const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d);
+       sThud(150 - i*4);
+       if(n%2===0) shake(n%4===0);
+       i++; n++;
+@@ -849,7 +891,8 @@
+     $("fSolved").textContent=S.solved;
+     $("fAcc").textContent=acc+"%";
+     $("fStreak").textContent=S.bestStreak;
+-    $("overQuip").textContent=S.finishedByChoice?"Return for another challenge whenever you are ready.":pick(CONFIG.quips);
++    $("overQuip").textContent="Every attempt is information. Review a strategy, then try it again.";
++    MathStudio.summary();
+     const nh = S.score>getHS();
+     if(nh) setHS(S.score);
+     $("newHS").classList.toggle("hidden",!nh);
+@@ -902,6 +945,7 @@
+   start=(lv)=>{ lastLv=lv; realStart(lv); };
+   chips.forEach(b=>b.addEventListener("click",()=>choose(+b.dataset.i)));
+   document.addEventListener("keydown",e=>{
++    if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;
+     if(e.key>="1"&&e.key<="4") choose(+e.key-1);
+     else if(e.key==="p"||e.key==="P"||e.key==="Escape"){
+       if(S && S.running) pause();
+@@ -913,31 +957,13 @@
+   $("pauseBtn").addEventListener("click",pause);
+   $("resumeBtn").addEventListener("click",resume);
+   $("quitBtn").addEventListener("click",finishRun);
+-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
++  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
+   window.addEventListener("blur",()=>{ if(S&&S.running) pause(); });
++  document.addEventListener("visibilitychange",()=>{if(document.hidden&&S&&S.running)pause();});
+ 
+   hsLine();
+ })();
+ </script>
+-<script>
+-/* ---------- native-display autoscale: fill the frame on big screens,
+-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
+-(function(){
+-  const wrap=document.getElementById("wrap");
+-  if(!wrap) return;
+-  function fit(){
+-    wrap.style.transform="none"; wrap.style.marginTop="0px";
+-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
+-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
+-    wrap.style.transformOrigin="top center";
+-    wrap.style.transform="scale("+k+")";
+-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
+-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
+-  }
+-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
+-  window.addEventListener("resize",fit);
+-  setTimeout(fit,60); fit();
+-})();
+-</script>
++
+ </body>
+ </html>
+diff --git a/public/games/graphs-slope-sniper.html b/public/games/graphs-slope-sniper.html
+--- a/public/games/graphs-slope-sniper.html
++++ b/public/games/graphs-slope-sniper.html
+@@ -2,7 +2,7 @@
+ <html lang="en">
+ <head>
+ <meta charset="UTF-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
++<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>SLOPE SNIPER — math spine arcade</title>
+ <style>
+   :root{
+@@ -216,10 +216,12 @@
+   }
+ @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+ </style>
++<link rel="stylesheet" href="math-studio.css">
+ </head>
+-<body>
++<body data-game="slope-sniper" class="falling">
+ 
+ <div id="wrap">
++  <header class="studioBrand"><span class="studioMark" aria-hidden="true">↗</span><div><span class="studioEyebrow">GV · GRAPH LAB</span><h2>Slope Sniper</h2></div><span class="studioBadge">MATH ARCADE</span></header>
+   <div id="hud">
+     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
+     <div class="stat"><div class="lab">Level</div><div class="val" id="levelV">1</div></div>
+@@ -298,6 +300,7 @@
+   </div>
+ </div>
+ 
++<script src="math-studio.js"></script>
+ <script src="math-cabinet.js"></script>
+ <script>
+ "use strict";
+@@ -321,18 +324,35 @@
+ function sci(m,e){ return m+"×10"+sup(e); }
+ function commas(n){ return n.toLocaleString("en-US"); }
+ 
+-const PAD_GENERIC = ["42","7","13","99","256","3.5","1/2","10"+sup(2)];
++const PAD_GENERIC = ["0","1","−1","2","−2","3","−3","4","−4"];
++
++// Compare numerical meanings, not just typography, when excluding duplicate answers.
++function choiceValue(label){
++  let s=label.replaceAll(",", "").replaceAll("−","-").trim();
++  const unit=s.match(/ (m\/s|km\/h|cm²|m²|mL|kg|min|mm|cm|km|m|g|L|s)$/)?.[0]||"";
++  if(unit)s=s.slice(0,-unit.length);
++  if(s.startsWith("× "))s=s.slice(2);
++  let factor=1;if(s.endsWith("%")){factor=.01;s=s.slice(0,-1);}
++  const scientific=s.match(/^([0-9.]+)×10([⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)$/);
++  let v;
++  if(scientific){const chars={"⁻":"-","⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9"};v=+scientific[1]*10**Number([...scientific[2]].map(c=>chars[c]).join(""));}
++  else if(/^-?\d+(?:\.\d+)?\/\d+$/.test(s)){const [a,b]=s.split("/").map(Number);v=a/b;}
++  else if(/^-?\d+(?:\.\d+)?$/.test(s))v=Number(s);
++  else return null;
++  return {v:v*factor,unit};
++}
++function sameChoice(a,b){const x=choiceValue(a),y=choiceValue(b);return x&&y&&x.unit===y.unit&&Math.abs(x.v-y.v)<=1e-12*Math.max(Math.abs(x.v),Math.abs(y.v),1e-12);}
+ 
+ function buildChips(step){
+   const seen = {}; seen[step.c]=1;
+   const out = [{ l:step.c, ok:true, tip:"" }];
+   for(const wr of step.w){
+     if(out.length>=4) break;
+-    if(!seen[wr.l]){ seen[wr.l]=1; out.push({ l:wr.l, ok:false, tip:wr.tip }); }
++    if(!seen[wr.l] && (step.normalized || !sameChoice(wr.l,step.c))){ seen[wr.l]=1; out.push({ l:wr.l, ok:false, tip:wr.tip }); }
+   }
+   for(const p of PAD_GENERIC){
+     if(out.length>=4) break;
+-    if(!seen[p]){ seen[p]=1; out.push({ l:p, ok:false, tip:"Not this one." }); }
++    if(!seen[p] && !sameChoice(p,step.c)){ seen[p]=1; out.push({ l:p, ok:false, tip:"Use the changes shown by the axes, and check the units." }); }
+   }
+   return shuffle(out);
+ }
+@@ -377,7 +397,7 @@
+ const TIP_MEAN = "Ask what rise÷run gives you — check the units.";
+ const TIP_HALF = "A triangle's area is ½ × base × height.";
+ const TIP_COS  = "x-component uses cos θ; y uses sin θ.";
+-const TIP_LINZ = "Whatever you plotted to get a LINE is the relationship.";
++const TIP_LINZ = "A line through the origin means proportionality; use the variables on those axes.";
+ 
+ /* ---- tiny SVG graph builders (data coords 0..6 × 0..6) ---- */
+ const GX0=38, GY0=114, GW=156, GH=90;
+@@ -401,6 +421,12 @@
+ }
+ function lineOn(x1,y1,x2,y2,marks){
+   let s='<line x1="'+px(x1)+'" y1="'+py(y1)+'" x2="'+px(x2)+'" y2="'+py(y2)+'" stroke="#2ee6ff" stroke-width="2.5"/>';
++  if(marks?.length===2){
++    const [a,b]=marks;
++    s+='<path d="M '+px(a[0])+' '+py(a[1])+' H '+px(b[0])+' V '+py(b[1])+'" fill="none" stroke="#ffd183" stroke-width="1.5" stroke-dasharray="4 3"/>';
++    s+='<text x="'+((px(a[0])+px(b[0]))/2)+'" y="'+(py(a[1])-5)+'" text-anchor="middle" fill="#ffd183" font-size="10">Δx</text>';
++    s+='<text x="'+(px(b[0])+4)+'" y="'+((py(a[1])+py(b[1]))/2)+'" fill="#ffd183" font-size="10">Δy</text>';
++  }
+   for(const m of (marks||[])){
+     s+='<circle cx="'+px(m[0])+'" cy="'+py(m[1])+'" r="3.5" fill="#ffc83d"/>';
+     if(m[2]) s+='<text x="'+(px(m[0])+5)+'" y="'+(py(m[1])-6)+'" fill="#ffc83d" font-size="9">'+m[2]+'</text>';
+@@ -413,7 +439,7 @@
+ }
+ function arrowSvg(dx,dy,thetaLabel,magLabel){
+   // vector from origin, components dx,dy in 0..6 space
+-  const x2=px(dx), y2=py(dy), x1=px(0), y1=py(0);
++  const x1=px(0), y1=py(0), x2=x1+dx*18, y2=y1-dy*18;
+   const ang=Math.atan2(y2-y1,x2-x1);
+   const ah=8;
+   const a1x=x2-ah*Math.cos(ang-0.45), a1y=y2-ah*Math.sin(ang-0.45);
+@@ -449,6 +475,8 @@
+     steps:[ { c:m, w:[ W(flip,TIP_RISE), W(negM,"Check the direction — falling means negative."),
+                        W(String(Math.abs(rise)),"That's just the rise — divide by the run.") ] } ],
+     banner:"READ THE SLOPE", fig,
++    name:"Marked points: (0, "+y0+") and ("+x2+", "+(y0+y2v)+")",
++    explanation:"Slope = Δy/Δx = ("+(y0+y2v)+" − "+y0+") / ("+x2+" − 0) = "+m+".",
+   };
+ }
+ 
+@@ -488,6 +516,8 @@
+                     W((d2-d1)+" m/s","That's Δd — divide by Δt."),
+                     W(b+" m/s","That's the intercept, not the slope.") ] } ],
+       banner:"SLOPE, WITH UNITS", fig,
++      name:"Marked points: ("+t1+" s, "+d1+" m) and ("+t2+" s, "+d2+" m)",
++      explanation:"Slope = ("+d2+" − "+d1+") m ÷ ("+t2+" − "+t1+") s = "+m+" m/s.",
+     };
+   }
+   const m=pick([2,3]), t1=1, t2=(m===2?3:2);
+@@ -501,6 +531,8 @@
+                   W((m*2)+" m/s","Rise over run — nothing gets doubled."),
+                   W((d2+t2)+" m/s","Divide the changes, don't add them.") ] } ],
+     banner:"SLOPE, WITH UNITS", fig,
++      name:"Marked points: ("+t1+" s, "+d1+" m) and ("+t2+" s, "+d2+" m)",
++      explanation:"Slope = ("+d2+" − "+d1+") m ÷ ("+t2+" − "+t1+") s = "+m+" m/s.",
+   };
+ }
+ 
+@@ -520,6 +552,8 @@
+                   W((v+T)+" m","Area means multiply, not add."),
+                   W((tri? v*T*2 : v+T*2)+" m",TIP_HALF) ] } ],
+     banner:"AREA UNDER v–t", fig,
++    name:(tri?"Triangle":"Rectangle")+": time 0 to "+T+" s; "+(tri?"velocity rises from 0 to ":"constant velocity ")+v+" m/s",
++    explanation:(tri?"Triangle: ½ × ":"Rectangle: ")+T+" s × "+v+" m/s = "+aLab+". The units multiply to metres.",
+   };
+ }
+ 
+@@ -529,18 +563,22 @@
+   [10,"30°",8.7,5],[10,"60°",5,8.7],[10,"45°",7.1,7.1],[20,"37°",16,12],
+ ];
+ function genVector(){
+-  const [mag,th,vx,vy]=pick(VECS);
++  const [mag,th]=pick(VECS);
++  const angle=parseFloat(th)*Math.PI/180;
++  const vx=+(mag*Math.cos(angle)).toFixed(1),vy=+(mag*Math.sin(angle)).toFixed(1);
+   const wantX=Math.random()<.5;
+   const ans=wantX? vx : vy;
+   const other=wantX? vy : vx;
+   const sc=4.8/Math.max(vx,vy);
+-  const fig=arrowSvg(vx*sc, vy*sc, th, String(mag));
++  const fig=arrowSvg(mag*Math.cos(angle)*sc, mag*Math.sin(angle)*sc, th, String(mag));
+   const aL=String(ans), oL=String(other);
+   return {
+     states:[ (wantX?"x":"y")+"-component ≈ ?", (wantX?"x":"y")+" = "+aL ],
+     steps:[ { c:aL, w:[ W(oL,TIP_COS), W(String(mag),"The magnitude isn't a component."),
+                         W(String(+(ans/2).toFixed(1)),TIP_COS) ] } ],
+-    banner:"BREAK THE VECTOR", name:"|v| = "+mag+" at "+th+" above horizontal · round to 1 decimal · diagram not to scale", fig,
++    explanation:(wantX?"vx = |v| cos θ = ":"vy = |v| sin θ = ")+mag+" × "+(wantX?"cos":"sin")+"("+th+") ≈ "+ans+". Keep full precision until the final rounding.",
++    _vector:{mag,theta:parseFloat(th),wantX},
++    banner:"BREAK THE VECTOR", name:"|v| = "+mag+" at "+th+" above +x · round to 1 decimal", fig,
+   };
+ }
+ 
+@@ -549,7 +587,7 @@
+   ["y vs x curves UP; y vs x² is a LINE through the origin","y ∝ x²",["y ∝ x","y ∝ 1/x","y ∝ √x"]],
+   ["y vs x curves DOWN; y vs 1/x is a LINE through the origin","y ∝ 1/x",["y ∝ x","y ∝ x²","y ∝ −x"]],
+   ["y vs x bends; y vs √x is a LINE through the origin","y ∝ √x",["y ∝ x²","y ∝ x","y ∝ 1/x²"]],
+-  ["y² vs x is a LINE through the origin","y ∝ √x",["y ∝ x²","y ∝ x","y ∝ 2x"]],
++  ["y ≥ 0; y² vs x is a LINE through the origin","y ∝ √x",["y ∝ x²","y ∝ x","y ∝ 2x"]],
+ ];
+ function genLinz(){
+   const [desc,ans,wr]=pick(LINZ);
+@@ -573,6 +611,11 @@
+   }
+ }
+ 
++function explainGame(g){
++  if(g.explanation)return g.explanation;
++  return g.states.at(-1)+". "+(g.banner==="FIND THE RELATIONSHIP"?TIP_LINZ: "For slope, divide vertical units by horizontal units. For area, multiply them.");
++}
++
+ /* ================================================================
+    PURE-LOGIC-END
+    ================================================================ */
+@@ -590,7 +633,7 @@
+   const MAXJUNK=8, JUNKH=28;
+   const SYM_COLOR = { "+":"#7dff4a", [M]:"#ff5d7e", "×":"#2ee6ff", "÷":"#ffc83d", "√":"#c792ff" };
+ 
+-  let S=null, raf=null, lastT=0, muted=false, locked=false, practice=false, untimed=false;
++  let S=null, raf=null, lastT=0, muted=MathStudio.isMuted(), locked=false, practice=false, untimed=false;
+ 
+   /* ---------- arcade bridge (see docs/ARCADE_PATTERN.md) ---------- */
+   const normalEndTitle=document.querySelector("#overOv h1").textContent;
+@@ -600,7 +643,7 @@
+   let AC=null;
+   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+   function beep(f,dur,type,vol,when){
+-    if(muted) return; const ctx=ac(); if(!ctx) return;
++    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
+     const t=ctx.currentTime+(when||0);
+     const o=ctx.createOscillator(), g=ctx.createGain();
+     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
+@@ -627,7 +670,8 @@
+   }
+   function mult(){ return Math.min(4, 1+Math.floor(S.streak/4)); }
+   function speed(){ return Math.min(95, 26 + (S.level-1)*9); }
+-  function landY(){ return boardEl.clientHeight - S.junk*JUNKH - cardEl.offsetHeight - 4; }
++  function junkHeight(){return Math.max(8,Math.min(JUNKH,(boardEl.clientHeight-cardEl.offsetHeight-80)/MAXJUNK));}
++  function landY(){ return boardEl.clientHeight - S.junk*junkHeight() - cardEl.offsetHeight - 4; }
+ 
+   function hud(){
+     $("scoreV").textContent=S.score;
+@@ -663,22 +707,19 @@
+       val.textContent = p.sym && p.val.startsWith(M) ? "("+p.val+")" : p.val;
+       val.style.fontSize = p.val.length>9 ? "15px" : p.val.length>5 ? "18px" : "24px";
+       b.classList.remove("good","bad"); b.disabled=false;
++      b.setAttribute("aria-label", "Answer "+(i+1)+": "+c[i].l);
+     });
+   }
+ 
+   function renderStack(){
+     stackEl.innerHTML="";
+-    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d); }
++    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d); }
+   }
+ 
+   function practiceReview(message,label,done){
+     locked=true;
+-    let panel=document.getElementById("practiceReview");if(panel)panel.remove();
+-    panel=document.createElement("div");panel.id="practiceReview";panel.setAttribute("role","status");
+-    panel.style.cssText="position:absolute;left:5%;right:5%;bottom:16px;z-index:10;background:#10283b;color:white;padding:18px;border:1px solid #78ffcf;border-radius:14px;font:18px/1.5 system-ui";
+-    const text=document.createElement("p");text.textContent=message;panel.append(text);
+-    const button=document.createElement("button");button.textContent=label;button.style.cssText="padding:12px 18px;margin-top:12px;background:#78ffcf;color:#102030;border:0;border-radius:9px;font:700 17px system-ui";
+-    button.onclick=()=>{panel.remove();done();};panel.append(button);boardEl.append(panel);button.focus();
++    MathStudio.review(message,label,()=>{done();chips[0].focus();});
++    if(S.cur.i>=S.cur.steps.length)MathStudio.model(S.cur,S.cur.steps.length-1);
+   }
+   function spawn(){
+     S.needsSpawn=false;
+@@ -688,9 +729,13 @@
+     S.cur.chips = buildChips(S.cur.steps[0]);
+     S.y = untimed ? 24 : -cardEl.offsetHeight - 10;
+     nextEqEl.textContent = (S.next.banner? S.next.banner+" · ":"") + S.next.states[0];
+-    renderCard(); renderChips(); place();
+-  }
+-  function place(){ cardEl.style.top = S.y+"px"; }
++    renderCard(); renderChips();
++    if(untimed)S.y=12;
++    place();
++    renderStack();
++    MathStudio.question(S.cur);
++  }
++  function place(){ cardEl.style.transform="translate3d(-50%,"+S.y+"px,0)"; }
+ 
+   function toast(msg){
+     toastEl.textContent=msg; toastEl.classList.add("show");
+@@ -720,6 +765,7 @@
+     boardEl.appendChild(ring); setTimeout(()=>ring.remove(),520);
+   }
+   function particles(){
++    if(MathStudio.reducedMotion())return;
+     const r=cardEl.getBoundingClientRect(), br=boardEl.getBoundingClientRect(), sc=boardScale();
+     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
+     for(let i=0;i<16;i++){
+@@ -743,6 +789,9 @@
+     if(!S || !S.running || locked) return;
+     const run=S;
+     const chip = S.cur.chips[i], btn=chips[i];
++    const explanation=explainGame(S.cur,S.cur.i);
++    MathStudio.record(S.cur.states[S.cur.i],chip.l,chip.ok?explanation:chip.tip,chip.ok);
++    if(chip.ok)MathStudio.model(S.cur,S.cur.i);
+     if(untimed && !chip.ok){ S.wrong++; practiceReview(chip.tip,"Try again",()=>{locked=false;renderChips();}); hud(); return; }
+     if(chip.ok){
+       S.right++; S.streak++; S.bestStreak=Math.max(S.bestStreak,S.streak);
+@@ -762,12 +811,13 @@
+          rapid guessing is slower and net-negative (right pays 10·level). */
+       S.score = Math.max(0, S.score - 15*S.level);
+       locked = true;
+-      setTimeout(()=>{ if(S!==run)return; if(S && S.cur && S.cur.i < S.cur.steps.length){ S.cur.chips = buildChips(S.cur.steps[S.cur.i]); renderChips(); } locked = false; }, 900);
++      practiceReview(chip.tip,"Try again",()=>{if(S!==run)return;S.cur.chips=buildChips(S.cur.steps[S.cur.i]);renderChips();locked=false;});
+       btn.classList.add("bad"); sBad(); shake();
+       cardEl.classList.add("hurt"); setTimeout(()=>cardEl.classList.remove("hurt"),200);
+       if(!untimed)S.y += Math.max(20,(landY()-S.y)*0.28); place();
+       toast("❌ "+chip.tip);
+     }
++    ARCADE.checkpoint();
+     hud();
+   }
+ 
+@@ -796,17 +846,23 @@
+     ARCADE.reportScore(false);
+ 
+     locked=true;
+-    if(untimed)practiceReview("Answer: "+S.cur.states[S.cur.states.length-1],"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
++    if(untimed)practiceReview(explainGame(S.cur,S.cur.steps.length-1),"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
+     else setTimeout(()=>{ if(S!==run)return;locked=false; if(S.running&&S.needsSpawn) spawn(); },330);
+     hud();
+   }
+ 
+   function land(){
++    if(locked || !S.running)return;
+     sLand(); shake(true);
+     S.junk++; S.wrong++; S.streak=0; renderStack(); hud();
+-    if(S.junk>=MAXJUNK){ gameOver(); return; }
+-    toast("🧱 Buried! Answer: "+S.cur.steps[S.cur.i].c);
+-    spawn();
++    const message="Answer: "+S.cur.steps[S.cur.i].c+". "+explainGame(S.cur,S.cur.i);
++    MathStudio.record(S.cur.states[S.cur.i],"Time ran out",message,false);
++    ARCADE.checkpoint();
++    practiceReview(message,S.junk>=MAXJUNK?"See my results":"Next problem",()=>{
++      locked=false;
++      if(S.junk>=MAXJUNK){gameOver();return;}
++      if(S.running)spawn();else S.needsSpawn=true;
++    });
+   }
+ 
+   /* ---------- loop ---------- */
+@@ -822,6 +878,7 @@
+ 
+   function start(lv){
+     if(!ARCADE.canStart())return;
++    MathStudio.reset();
+     document.getElementById("practiceReview")?.remove();
+     untimed=$("untimedPractice").checked;locked=false;
+     S=freshState(lv);
+@@ -836,7 +893,7 @@
+     const begin=()=>{
+       renderStack(); hud(); spawn();
+       S.running=true; lastT=performance.now();
+-      cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
++      cancelAnimationFrame(raf); if(!untimed)raf=requestAnimationFrame(tick);
+     };
+     ARCADE.requestCoin(res=>{
+       if(!res.ok){ $("startOv").classList.remove("hidden"); return; }
+@@ -862,7 +919,7 @@
+     if(S.pausedAt&&S.cur)S.cur.born+=performance.now()-S.pausedAt;S.pausedAt=0;
+     S.running=true; lastT=performance.now();
+     if(S.needsSpawn&&!locked)spawn();
+-    raf=requestAnimationFrame(tick);
++    if(!untimed)raf=requestAnimationFrame(tick);
+   }
+ 
+   /* ---------- high score ---------- */
+@@ -878,13 +935,14 @@
+   function gameOver(){
+     S.running=false; cancelAnimationFrame(raf);
+     ARCADE.reportScore(true);
++    if(MathStudio.reducedMotion()){showOverPanel();return;}
+     boardEl.classList.add("doom");
+     cardEl.style.display="none";
+ 
+     const totalRows = Math.ceil(boardEl.clientHeight/JUNKH);
+     let i = S.junk, n = 0;
+     const iv = setInterval(()=>{
+-      const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d);
++      const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d);
+       sThud(150 - i*4);
+       if(n%2===0) shake(n%4===0);
+       i++; n++;
+@@ -908,7 +966,8 @@
+     $("fSolved").textContent=S.solved;
+     $("fAcc").textContent=acc+"%";
+     $("fStreak").textContent=S.bestStreak;
+-    $("overQuip").textContent=S.finishedByChoice?"Return for another challenge whenever you are ready.":pick(CONFIG.quips);
++    $("overQuip").textContent="Every attempt is information. Review a strategy, then try it again.";
++    MathStudio.summary();
+     const nh = S.score>getHS();
+     if(nh) setHS(S.score);
+     $("newHS").classList.toggle("hidden",!nh);
+@@ -961,6 +1020,7 @@
+   start=(lv)=>{ lastLv=lv; realStart(lv); };
+   chips.forEach(b=>b.addEventListener("click",()=>choose(+b.dataset.i)));
+   document.addEventListener("keydown",e=>{
++    if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;
+     if(e.key>="1"&&e.key<="4") choose(+e.key-1);
+     else if(e.key==="p"||e.key==="P"||e.key==="Escape"){
+       if(S && S.running) pause();
+@@ -972,31 +1032,13 @@
+   $("pauseBtn").addEventListener("click",pause);
+   $("resumeBtn").addEventListener("click",resume);
+   $("quitBtn").addEventListener("click",finishRun);
+-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
++  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
+   window.addEventListener("blur",()=>{ if(S&&S.running) pause(); });
++  document.addEventListener("visibilitychange",()=>{if(document.hidden&&S&&S.running)pause();});
+ 
+   hsLine();
+ })();
+ </script>
+-<script>
+-/* ---------- native-display autoscale: fill the frame on big screens,
+-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
+-(function(){
+-  const wrap=document.getElementById("wrap");
+-  if(!wrap) return;
+-  function fit(){
+-    wrap.style.transform="none"; wrap.style.marginTop="0px";
+-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
+-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
+-    wrap.style.transformOrigin="top center";
+-    wrap.style.transform="scale("+k+")";
+-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
+-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
+-  }
+-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
+-  window.addEventListener("resize",fit);
+-  setTimeout(fit,60); fit();
+-})();
+-</script>
++
+ </body>
+ </html>
+diff --git a/public/games/equivalence-fusion.html b/public/games/equivalence-fusion.html
+--- a/public/games/equivalence-fusion.html
++++ b/public/games/equivalence-fusion.html
+@@ -2,7 +2,7 @@
+ <html lang="en">
+ <head>
+ <meta charset="UTF-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
++<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>FUSION — merge what's equal, every disguise counts</title>
+ <style>
+   :root{
+@@ -154,10 +154,12 @@
+     #board{grid-area:board;}
+   }
+ </style>
++<link rel="stylesheet" href="math-studio.css">
+ </head>
+-<body>
++<body data-game="fusion" class="puzzle">
+ 
+ <div id="wrap">
++  <header class="studioBrand"><span class="studioMark" aria-hidden="true">≡</span><div><span class="studioEyebrow">NS · EQUIVALENCE</span><h2>Fusion</h2></div><span class="studioBadge">MATH ARCADE</span></header>
+   <div id="hud">
+     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
+     <div class="stat"><div class="lab">Merges</div><div class="val" id="mergesV">0</div></div>
+@@ -183,10 +185,10 @@
+ <!-- AUDIT -->
+ <div id="auditOv">
+   <div id="auditPanel">
+-    <div class="at">⚡ MERGE AUDIT — prove you SEE it</div>
++    <div class="at">EQUIVALENCE CHECK</div>
+     <div id="auditQ"></div>
+     <div id="auditChips"></div>
+-    <div id="auditNote">correct → score bonus · wrong → junk tile lands on your board</div>
++    <div id="auditNote">Compare the values before choosing. Take your time.</div>
+   </div>
+ </div>
+ 
+@@ -198,7 +200,7 @@
+     <div class="howto">
+       Slide the board (<b>arrows / WASD / swipe</b>). Tiles merge only when their <b>values are equal</b> —
+       but values wear disguises: <b>1/2 merges with 50%</b>, <b>0.25 m merges with 25 cm</b>.
+-      See through the costume or the board fills up. Every 25 merges, a <b>MERGE AUDIT</b> checks
++      See through the costume or the board fills up. Every 25 merges, an <b>equivalence check</b> checks
+       you're reading, not pattern-matching. Board full → OVERLOAD.
+     </div>
+     <div id="legend">
+@@ -233,6 +235,7 @@
+   </div>
+ </div>
+ 
++<script src="math-studio.js"></script>
+ <script src="math-cabinet.js"></script>
+ <script>
+ "use strict";
+@@ -393,7 +396,7 @@
+   let TS=78, PAD=6;
+   const nodes=new Map();
+ 
+-  let S=null, muted=false, busy=false, practice=false, lastDoor="1";
++  let S=null, muted=MathStudio.isMuted(), busy=false, practice=false, lastDoor="1";
+ 
+   /* ---------- arcade bridge ---------- */
+   const ARCADE=createMathCabinet({slug:"fusion",read:()=>({...S,level:S.bestTier,solved:S.merges,bestStreak:S.bestTier,mode:"fusion"}),onReceipt:text=>showXPText(text,false)});
+@@ -402,7 +405,7 @@
+   let AC=null;
+   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+   function beep(f,dur,type,vol,when){
+-    if(muted) return; const ctx=ac(); if(!ctx) return;
++    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
+     const t=ctx.currentTime+(when||0);
+     const o=ctx.createOscillator(), g=ctx.createGain();
+     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
+@@ -472,6 +475,7 @@
+       (S.mode==="fractions"?"FRACTIONS · DECIMALS · PERCENTS":
+        S.mode==="powers"?"POWERS OF TEN · DECIMALS · PERCENTS":
+        S.mode.toUpperCase()+" UNITS") + (S.junkActive? " · ⛔ junk on board":"");
++    boardEl.setAttribute("role","group");boardEl.setAttribute("aria-label",S.board.map((t,i)=>"Row "+(Math.floor(i/4)+1)+", column "+(i%4+1)+": "+(t?(t.junk?"temporary blocked tile":t.label):"empty")).join("; "));
+     $("modeSub").textContent="equal values merge — whatever the costume · audit every 25 merges";
+   }
+   function toast(msg){ toastEl.textContent=msg; toastEl.classList.add("show");
+@@ -479,6 +483,7 @@
+   function comboPop(msg){ comboEl.textContent=msg; comboEl.classList.remove("show");
+     void comboEl.offsetWidth; comboEl.classList.add("show"); }
+   function particlesAt(i){
++    if(MathStudio.reducedMotion())return;
+     const x=xOf(i%4)+TS/2, y=yOf(Math.floor(i/4))+TS/2;
+     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
+     for(let k=0;k<7;k++){
+@@ -498,6 +503,7 @@
+   async function doMove(dir){
+     if(busy || !S || !S.running || S.auditing) return;
+     const before=S.board;
++    const lessons=[];
+     const posOf=new Map(); before.forEach((t,i)=>{ if(t) posOf.set(t.id,i); });
+     const {board, moved, merges}=slide(before, dir);
+     if(!moved) return;
+@@ -523,6 +529,7 @@
+       for(const srcId of t.from){
+         const n=nodes.get(srcId); if(n){ n.remove(); nodes.delete(srcId); }
+       }
++      lessons.push(t.from.map(id=>before.find(v=>v?.id===id)?.label).join(" + ")+" = "+t.label);
+       delete t.from;
+       posNode(t,i,true);
+       tileNode(t).classList.add("merged");
+@@ -537,6 +544,7 @@
+       }
+     }
+     S.score+=Math.round(bigGain);
++    if(lessons.length)MathStudio.record("Equal values combine",lessons.join("; "),lessons.join("; ")+". Each merge adds two equal quantities, so the value doubles.",true);
+     // junk decay
+     S.board.forEach(t=>{ if(t&&t.junk){ t.ttl--; } });
+     const expired=S.board.map((t,i)=>t&&t.junk&&t.ttl<=0? i:-1).filter(i=>i>=0);
+@@ -576,6 +584,7 @@
+         box.appendChild(b);
+       });
+       $("auditOv").classList.add("show");
++      $("auditNote").textContent="Compare the values before choosing. Take your time.";
+       const onKey=e=>{ if(e.key>="1"&&e.key<="4") answer(+e.key-1); };
+       document.addEventListener("keydown",onKey);
+       let done=false;
+@@ -600,12 +609,13 @@
+             S.junkActive=true;
+           }
+         }
+-        setTimeout(()=>{
+-          $("auditOv").classList.remove("show");
+-          S.auditing=false; hud();
+-          if(S.running && !canMove(S.board)){ gameOver(); res(); return; }
+-          res();
+-        },800);
++        const explanation="Answer: "+a.chips.find(x=>x.ok).l+". "+a.tip;
++        MathStudio.record(a.q,c.l,explanation,c.ok);
++        $("auditNote").textContent=(c.ok?"✓ ":"Try this: ")+explanation;
++        btns.forEach(b=>b.disabled=true);
++        const next=document.createElement("button");next.className="studioContinue";next.textContent="Continue";
++        next.onclick=()=>{next.remove();$("auditOv").classList.remove("show");S.auditing=false;hud();ARCADE.checkpoint();res();};
++        $("auditPanel").append(next);next.focus();
+       }
+     });
+   }
+@@ -619,6 +629,7 @@
+   }
+   function start(door){
+     if(!ARCADE.canStart()) return;
++    MathStudio.reset();
+     busy=false;
+     lastDoor=door;
+     S=freshState(door);
+@@ -692,6 +703,7 @@
+     $("newHS").classList.toggle("hidden",!nh);
+     if(practice) showXPText("Practice complete — no XP or leaderboard score saved.", false);
+     else if(ARCADE.embedded) showXPText(ARCADE.savedText || "Banking XP…", false);
++    MathStudio.summary();
+     $("overOv").classList.remove("hidden");
+     busy=false;
+   }
+@@ -713,6 +725,9 @@
+     const dir=map[e.key];
+     if(dir){ e.preventDefault(); doMove(dir); }
+   });
++  const directions=document.createElement("div");directions.className="studioDirections";directions.setAttribute("aria-label","Slide tiles");
++  for(const [dir,name,symbol] of [["L","left","←"],["U","up","↑"],["D","down","↓"],["R","right","→"]]){const b=document.createElement("button");b.textContent=symbol;b.setAttribute("aria-label","Slide "+name);b.onclick=()=>doMove(dir);directions.append(b);}
++  $("modeBar").append(directions);
+   let swipeStart=null;
+   boardEl.addEventListener("pointerdown",e=>{ swipeStart=[e.clientX,e.clientY]; });
+   boardEl.addEventListener("pointerup",e=>{
+@@ -732,31 +747,12 @@
+   });
+   $("againBtn").addEventListener("click",()=>start(lastDoor));
+   $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
+-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
++  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
+   window.addEventListener("resize",()=>{ if(S){ sizeBoard(); S.board.forEach((t,i)=>{ if(t) posNode(t,i,true); }); } });
+ 
+   sizeBoard(); hsLine();
+ })();
+ </script>
+-<script>
+-/* ---------- native-display autoscale: fill the frame on big screens,
+-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
+-(function(){
+-  const wrap=document.getElementById("wrap");
+-  if(!wrap) return;
+-  function fit(){
+-    wrap.style.transform="none"; wrap.style.marginTop="0px";
+-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
+-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
+-    wrap.style.transformOrigin="top center";
+-    wrap.style.transform="scale("+k+")";
+-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
+-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
+-  }
+-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
+-  window.addEventListener("resize",fit);
+-  setTimeout(fit,60); fit();
+-})();
+-</script>
++
+ </body>
+ </html>
+diff --git a/public/games/logic-expression-crush.html b/public/games/logic-expression-crush.html
+--- a/public/games/logic-expression-crush.html
++++ b/public/games/logic-expression-crush.html
+@@ -2,7 +2,7 @@
+ <html lang="en">
+ <head>
+ <meta charset="UTF-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
++<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>EXPRESSION CRUSH — build it right or gridlock</title>
+ <style>
+   :root{
+@@ -163,10 +163,12 @@
+ .tile:focus-visible{outline:4px solid white;outline-offset:2px;z-index:4}
+ @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+ </style>
++<link rel="stylesheet" href="math-studio.css">
+ </head>
+-<body>
++<body data-game="expression-crush" class="puzzle">
+ 
+ <div id="wrap">
++  <header class="studioBrand"><span class="studioMark" aria-hidden="true">×</span><div><span class="studioEyebrow">SM · ORDER OF OPERATIONS</span><h2>Expression Crush</h2></div><span class="studioBadge">MATH ARCADE</span></header>
+   <div id="hud">
+     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
+     <div class="stat"><div class="lab">Moves</div><div class="val" id="movesV">0</div></div>
+@@ -239,6 +241,7 @@
+   </div>
+ </div>
+ 
++<script src="math-studio.js"></script>
+ <script src="math-cabinet.js"></script>
+ <script>
+ "use strict";
+@@ -507,7 +510,7 @@
+   const R=6, C=6;
+   let TS=56, PAD=4;                          // tile size, gap — set responsive below
+ 
+-  let S=null, muted=false, busy=false, practice=false, lastDoor="1";
++  let S=null, muted=MathStudio.isMuted(), busy=false, practice=false, lastDoor="1";
+   const nodes=new Map();                     // tile id → DOM node
+ 
+   /* ---------- arcade bridge ---------- */
+@@ -517,7 +520,7 @@
+   let AC=null;
+   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+   function beep(f,dur,type,vol,when){
+-    if(muted) return; const ctx=ac(); if(!ctx) return;
++    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
+     const t=ctx.currentTime+(when||0);
+     const o=ctx.createOscillator(), g=ctx.createGain();
+     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
+@@ -548,7 +551,7 @@
+     n=document.createElement("div");
+     n.className="tile"+(t.k==="o"?" op":t.k==="g"?" given":t.k==="s"?" sym":"");
+     n.textContent=t.l;
+-    n.tabIndex=0;n.setAttribute("role","button");n.setAttribute("aria-label","Tile "+t.l+". Enter to select; arrows to move; Escape to deselect.");
++    n.tabIndex=-1;n.setAttribute("role","button");n.setAttribute("aria-label","Tile "+t.l+". Enter to select; arrows to move; Escape to deselect.");
+     n.addEventListener("keydown",ev=>{
+       if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();onTilePress(t.id);}
+       if(ev.key==="Escape"){if(selId!==null)nodes.get(selId)?.classList.remove("sel");selId=null;}
+@@ -567,6 +570,8 @@
+       const t=S.round.grid[i];
+       if(!t) continue;
+       const n=tileNode(t);
++      n.tabIndex=i===0?0:-1;
++      n.setAttribute("aria-label","Row "+(Math.floor(i/C)+1)+", column "+(i%C+1)+", tile "+t.l+". Enter to select, then arrows and Enter to swap.");
+       if(immediate) n.style.transition="none";
+       n.style.left=xOf(i%C)+"px";
+       n.style.top =yOf(Math.floor(i/C))+"px";
+@@ -606,6 +611,7 @@
+     void comboEl.offsetWidth; comboEl.classList.add("show");
+   }
+   function particlesAt(i){
++    if(MathStudio.reducedMotion())return;
+     const x=xOf(i%C)+TS/2, y=yOf(Math.floor(i/C))+TS/2;
+     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
+     for(let k=0;k<6;k++){
+@@ -648,6 +654,7 @@
+       const {traps}=findClears(g,R,C,S.round);
+       if(traps.length){
+         S.wrong++;
++        MathStudio.record("Order of operations",evaluationTrace(traps[0].cells.map(i=>g[i])),"Multiply and divide before adding and subtracting. "+evaluationTrace(traps[0].cells.map(i=>g[i])),false);
+         $("evaluationTrace").textContent="Multiply and divide first: "+evaluationTrace(traps[0].cells.map(i=>g[i]));
+         traps[0].cells.forEach(ci=>{ const t=g[ci]; if(t){ const n=nodes.get(t.id); n.classList.remove("trap"); void n.offsetWidth; n.classList.add("trap"); } });
+         sBad();
+@@ -656,7 +663,8 @@
+     }
+     if(S.moves<=0 && S.cleared<S.round.quota && S.running){ await failRound(); }
+     else if(S.running && S.round.phase==="A"){ ensureSolvableA(); }
+-    busy=false; hud();
++    busy=false; hud();ARCADE.checkpoint();
++    nodes.get(S.round.grid[0]?.id)?.focus({preventScroll:true});
+   }
+ 
+   const wait=ms=>new Promise(r=>setTimeout(r,ms));
+@@ -666,12 +674,15 @@
+     const g=S.round.grid;
+     const {hits}=findClears(g,R,C,S.round);
+     if(hits.length===0) return false;
+-    $("evaluationTrace").textContent="Valid expression: "+evaluationTrace(hits[0].map(i=>g[i]));
++    const trace=evaluationTrace(hits[0].map(i=>g[i]));
++    $("evaluationTrace").textContent="Valid expression: "+trace;
++    MathStudio.record("Build the target",trace,trace+". Multiply and divide left to right, then add and subtract left to right.",true);
+     const cells=new Set(); hits.forEach(w=>w.forEach(i=>cells.add(i)));
+     // score & fx
+     const gain=(40 + depth*25) * (S.round.phase==="A"?1:S.round.phase==="B"?2:3) * multNow();
+     S.score+=Math.round(gain);
+-    S.solved+=hits.length; S.right+=hits.length;
++    // Cascades add arcade score, but only the deliberate swap supplies accuracy evidence.
++    if(depth===0){S.solved++;S.right++;}
+     S.cleared=Math.min(S.round.quota, S.cleared+hits.length);
+     sPop(depth);
+     if(depth>0) comboPop("CASCADE ×"+(depth+1)+"!");
+@@ -763,6 +774,7 @@
+   }
+   function start(door){
+     if(!ARCADE.canStart()) return;
++    MathStudio.reset();
+     busy=false;
+     lastDoor=door;
+     S=freshState(door);
+@@ -835,6 +847,7 @@
+     $("newHS").classList.toggle("hidden",!nh);
+     if(practice) showXPText("Practice complete — no XP or leaderboard score saved.", false);
+     else if(ARCADE.embedded) showXPText(ARCADE.savedText || "Banking XP…", false);
++    MathStudio.summary();
+     $("overOv").classList.remove("hidden");
+   }
+   function showXPText(txt,capped){
+@@ -858,31 +871,12 @@
+   });
+   $("againBtn").addEventListener("click",()=>start(lastDoor));
+   $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
+-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
++  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
+   window.addEventListener("resize",()=>{ if(S){ sizeBoard(); placeAll(true); } });
+ 
+   sizeBoard(); hsLine();
+ })();
+ </script>
+-<script>
+-/* ---------- native-display autoscale: fill the frame on big screens,
+-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
+-(function(){
+-  const wrap=document.getElementById("wrap");
+-  if(!wrap) return;
+-  function fit(){
+-    wrap.style.transform="none"; wrap.style.marginTop="0px";
+-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
+-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
+-    wrap.style.transformOrigin="top center";
+-    wrap.style.transform="scale("+k+")";
+-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
+-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
+-  }
+-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
+-  window.addEventListener("resize",fit);
+-  setTimeout(fit,60); fit();
+-})();
+-</script>
++
+ </body>
+ </html>
+diff --git a/public/games/daily-mathle.html b/public/games/daily-mathle.html
+--- a/public/games/daily-mathle.html
++++ b/public/games/daily-mathle.html
+@@ -2,7 +2,7 @@
+ <html lang="en">
+ <head>
+ <meta charset="UTF-8">
+-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
++<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>MATHLE — crack the equation</title>
+ <style>
+   :root{
+@@ -146,10 +146,12 @@
+     #pad{grid-area:pad; align-self:end;}
+   }
+ </style>
++<link rel="stylesheet" href="math-studio.css">
+ </head>
+-<body>
++<body data-game="mathle" class="puzzle">
+ 
+ <div id="wrap">
++  <header class="studioBrand"><span class="studioMark" aria-hidden="true">=</span><div><span class="studioEyebrow">NS · EQUATION DETECTIVE</span><h2>Daily Mathle</h2></div><span class="studioBadge">MATH ARCADE</span></header>
+   <div id="hud">
+     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
+     <div class="stat"><div class="lab">Solved</div><div class="val" id="solvedV">0</div></div>
+@@ -177,7 +179,7 @@
+     <div class="tag">crack the equation 🔢 free to play · completed puzzles earn XP</div>
+     <div class="howto">
+       A hidden <b>8-character equation</b>. Six guesses. Every guess must be a
+-      <b>true equation</b> (PEMDAS counts: 3+4×2=11). Colors tell you what's right.
++      <b>true equation</b> (PEMDAS counts: 3+4×2=11). Colors and symbols tell you what's right: ✓ exact, ↔ elsewhere, · no remaining copy.
+       Today's first puzzle is <b>THE DAILY</b> — same for the whole class.
+       Crack it and bonus rounds keep your run alive… until one stumps you.
+     </div>
+@@ -185,7 +187,7 @@
+       <div class="lt">HOW TO READ THE COLORS</div>
+       <div class="legendrow"><span class="minicell" style="background:var(--green); border:1px solid #2eb854;">7</span><span class="lx">right character, right spot</span></div>
+       <div class="legendrow"><span class="minicell" style="background:var(--gold); border:1px solid #e0b133;">×</span><span class="lx">in the equation, wrong spot</span></div>
+-      <div class="legendrow"><span class="minicell" style="background:var(--gray); border:1px solid #343b6b; color:#7a82b8;">9</span><span class="lx">not in the equation at all</span></div>
++      <div class="legendrow"><span class="minicell" style="background:var(--gray); border:1px solid #343b6b; color:#7a82b8;">9</span><span class="lx">no remaining copy of this character (duplicates count)</span></div>
+     </div>
+     <button class="bigbtn easy" data-lv="1">APPRENTICE<small>bonus rounds: one-operation equations</small></button>
+     <button class="bigbtn med" data-lv="4">CRACKER<small>bonus rounds: mixed</small></button>
+@@ -216,6 +218,7 @@
+   </div>
+ </div>
+ 
++<script src="math-studio.js"></script>
+ <script src="math-cabinet.js"></script>
+ <script>
+ "use strict";
+@@ -362,16 +365,16 @@
+ if (typeof document !== "undefined") (function(){
+ 
+   const $=id=>document.getElementById(id);
+-  let S=null, muted=false, busy=false, practice=false, lastDoor="4";
++  let S=null, muted=MathStudio.isMuted(), busy=false, practice=false, lastDoor="4";
+ 
+   /* ---------- arcade bridge ---------- */
+-  const ARCADE=createMathCabinet({slug:"mathle",read:()=>({...S,level:S.puzzleNum,solved:S.solvedCt,right:S.solvedCt,wrong:S.failedCt,bestStreak:S.solvedCt,mode:"mathle"}),onReceipt:text=>showXPText(text,false)});
++  const ARCADE=createMathCabinet({slug:"mathle",read:()=>({...S,level:S.puzzleNum,solved:S.solvedCt,right:S.solvedCt,wrong:S.failedCt+(!S.ending&&(S.row>0||S.cur.length>0)?1:0),bestStreak:S.solvedCt,startLvNum:1,mode:"mathle"}),onReceipt:text=>showXPText(text,false)});
+ 
+   /* ---------- audio ---------- */
+   let AC=null;
+   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+   function beep(f,dur,type,vol,when){
+-    if(muted) return; const ctx=ac(); if(!ctx) return;
++    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
+     const t=ctx.currentTime+(when||0);
+     const o=ctx.createOscillator(), g=ctx.createGain();
+     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
+@@ -391,7 +394,7 @@
+     gridEl.innerHTML="";
+     for(let r=0;r<ROWS;r++){
+       const row=document.createElement("div"); row.className="grow";
+-      for(let c=0;c<LEN;c++){ const d=document.createElement("div"); d.className="cell"; row.appendChild(d); }
++      for(let c=0;c<LEN;c++){ const d=document.createElement("div"); d.className="cell";d.setAttribute("role","img");d.setAttribute("aria-label","Row "+(r+1)+", position "+(c+1)+": empty"); row.appendChild(d); }
+       gridEl.appendChild(row);
+     }
+   }
+@@ -428,6 +431,7 @@
+     for(let c=0;c<LEN;c++){
+       const cell=row.children[c];
+       cell.textContent=S.cur[c]||"";
++      cell.setAttribute("aria-label","Position "+(c+1)+": "+(S.cur[c]||"empty"));
+       cell.classList.toggle("filled", !!S.cur[c]);
+     }
+   }
+@@ -445,13 +449,13 @@
+   function newPuzzle(){
+     S.puzzleNum++;
+     S.isDaily = S.puzzleNum===1;
+-    S.target = S.isDaily ? dailyEquation(localDateStr())
++    S.target = S.isDaily ? dailyEquation(S.dailyDate)
+                          : genEquation(mulberry32((Math.random()*2**31)|0), S.startLvNum>=7?3:S.startLvNum>=4?2:1);
+     S.row=0; S.cur=[];
+     buildGrid(); padReset();
+     $("puzzleV").textContent = S.isDaily? "DAILY" : "#"+S.puzzleNum;
+     $("puzzleTag").textContent = S.isDaily
+-      ? "🗓 THE DAILY · #"+dailyNumber(localDateStr())+" · same for the whole class"
++      ? "🗓 THE DAILY · #"+dailyNumber(S.dailyDate)+" · same for the whole class"
+       : "BONUS ROUND "+(S.puzzleNum-1)+" · "+(S.startLvNum>=7?"two ops, pure PEMDAS":S.startLvNum>=4?"mixed":"one op");
+     $("puzzleSub").textContent = "guess a TRUE 8-character equation · 6 tries";
+     hud();
+@@ -478,6 +482,7 @@
+       const row=rowEl(S.row);
+       row.classList.remove("shake"); void row.offsetWidth; row.classList.add("shake");
+       toast("❌ "+v.why, true);
++      MathStudio.tell(v.why+". Invalid equations do not use a guess.",false);
+       return;                                  // invalid guesses don't burn a row
+     }
+     busy=true;
+@@ -487,10 +492,13 @@
+       const cell=row.children[c];
+       await new Promise(r=>setTimeout(r,70));
+       cell.classList.add("flip"); sFlip(c);
+-      setTimeout(((cell,cls,ch)=>()=>{ cell.classList.add(cls); padColor(ch,cls); })(cell,res[c],g[c]),200);
++      setTimeout(((cell,cls,ch)=>()=>{ cell.classList.add(cls);cell.setAttribute("aria-label",ch+": "+({green:"correct position",gold:"present elsewhere",gray:"no remaining copy"}[cls])); padColor(ch,cls); })(cell,res[c],g[c]),200);
+     }
+     await new Promise(r=>setTimeout(r,420));
+     if(S.isDaily) S.guessRecords.push(res);
++    const feedback=res.map((color,i)=>g[i]+": "+({green:"exact",gold:"elsewhere",gray:"no remaining copy"}[color])).join("; ");
++    MathStudio.record(g,"True equation",feedback,g===S.target);
++    ARCADE.checkpoint();
+     if(g===S.target){
+       row.classList.add("win"); sWin();
+       S.solvedCt++;
+@@ -522,11 +530,12 @@
+   /* ---------- flow ---------- */
+   function freshState(door){
+     return { score:0, solvedCt:0, failedCt:0, puzzleNum:0, row:0, cur:[],
+-             target:"", isDaily:true, dailyResult:"—", guessRecords:[],
++             target:"", dailyDate:localDateStr(), isDaily:true, dailyResult:"—", guessRecords:[],
+              startLvNum:+door, running:false };
+   }
+   function start(door){
+     if(!ARCADE.canStart()) return;
++    MathStudio.reset();
+     busy=false;
+     lastDoor=door;
+     S=freshState(door);
+@@ -566,6 +575,7 @@
+     $("newHS").classList.toggle("hidden",!nh);
+     if(practice) showXPText("Practice complete — no XP or leaderboard score saved.", false);
+     else if(ARCADE.embedded) showXPText(ARCADE.savedText || "Banking XP…", false);
++    MathStudio.summary();
+     $("overOv").classList.remove("hidden");
+   }
+   function pickQuip(){
+@@ -577,7 +587,7 @@
+   $("shareBtn").addEventListener("click",async()=>{
+     const map={green:"🟩",gold:"🟨",gray:"⬛"};
+     const lines=S.guessRecords.map(r=>r.map(x=>map[x]).join(""));
+-    const txt="MATHLE #"+dailyNumber(localDateStr())+" · daily "+S.dailyResult+" · cracked "+S.solvedCt+"\n"+lines.slice(0,6).join("\n");
++    const txt="MATHLE #"+dailyNumber(S.dailyDate)+" · daily "+S.dailyResult+" · cracked "+S.solvedCt+"\n"+lines.slice(0,6).join("\n");
+     try{ await navigator.clipboard.writeText(txt); toast("copied! 📋"); }catch(e){ toast("couldn't copy",true); }
+   });
+ 
+@@ -594,7 +604,8 @@
+ 
+   /* ---------- wiring ---------- */
+   document.addEventListener("keydown",e=>{
+-    if(!S || !S.running) return;
++    if(!S || !S.running || e.ctrlKey || e.metaKey || e.altKey) return;
++    if(e.target.closest("button")&&(e.key==="Enter"||e.key===" "))return;
+     if(e.key>="0"&&e.key<="9") press(e.key);
+     else if(e.key==="+") press("+");
+     else if(e.key==="-") press(M);
+@@ -602,7 +613,7 @@
+     else if(e.key==="/"){ e.preventDefault(); press("÷"); }
+     else if(e.key==="=") press("=");
+     else if(e.key==="Enter") press("ENTER");
+-    else if(e.key==="Backspace") press("⌫");
++    else if(e.key==="Backspace"){e.preventDefault();press("⌫");}
+   });
+   document.querySelectorAll("#startOv .bigbtn").forEach(b=>
+     b.addEventListener("click",()=>{ ac(); start(b.dataset.lv); }));
+@@ -613,30 +624,11 @@
+   });
+   $("againBtn").addEventListener("click",()=>start(lastDoor));
+   $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
+-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
++  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
+ 
+   buildGrid(); buildPad(); hsLine();
+ })();
+ </script>
+-<script>
+-/* ---------- native-display autoscale: fill the frame on big screens,
+-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
+-(function(){
+-  const wrap=document.getElementById("wrap");
+-  if(!wrap) return;
+-  function fit(){
+-    wrap.style.transform="none"; wrap.style.marginTop="0px";
+-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
+-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
+-    wrap.style.transformOrigin="top center";
+-    wrap.style.transform="scale("+k+")";
+-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
+-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
+-  }
+-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
+-  window.addEventListener("resize",fit);
+-  setTimeout(fit,60); fit();
+-})();
+-</script>
++
+ </body>
+ </html>

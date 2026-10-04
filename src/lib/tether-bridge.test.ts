@@ -97,3 +97,30 @@ for (const slug of ['inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten'
     assert.equal(replies.at(-1)?.final, true)
   })
 }
+
+test('interrupted math run uses the old credit, retries payout, and validates cabinet on the server', async () => {
+  const replies: Record<string, unknown>[] = [], bodies: Record<string, unknown>[] = []
+  let payouts = 0
+  const bridge = createTetherBridge({ slug: 'magnitude', onBalance: () => {}, onFinished: () => {}, reply: m => replies.push(m), fetcher: (async (url: string, init: RequestInit) => {
+    assert(!url.endsWith('/coin'))
+    const body = JSON.parse(init.body as string); bodies.push(body)
+    if (url.endsWith('/score')) { assert.equal(body.slug, 'magnitude'); return Response.json({ score: 120 }) }
+    if (++payouts === 1) return Response.json({ error: 'offline' }, { status: 503 })
+    return Response.json({ xp: 2 })
+  }) as typeof fetch })
+  const message = { protocol: 2, source: 'magnitude-arcade', type: 'arcade:recover', requestId: 'retained-final', playId: 'retained-credit', final: true, score: 120 }
+  await bridge.handle(message); assert.equal(replies.at(-1)?.type, 'arcade:saveFailed')
+  await bridge.handle(message); assert.equal(replies.at(-1)?.xp, 2)
+  const count = bodies.length; await bridge.handle(message); assert.equal(bodies.length, count)
+})
+
+test('recovery rejects other cabinet sources, checkpoints, and unavailable ownership without paying', async () => {
+  let calls = 0
+  const replies: Record<string, unknown>[] = []
+  const bridge = createTetherBridge({ slug: 'fusion', onBalance: () => {}, onFinished: () => {}, reply: m => replies.push(m), fetcher: (async (url: string) => {
+    calls++; assert(url.endsWith('/score')); return Response.json({ error: 'Unknown play' }, { status: 404 })
+  }) as typeof fetch })
+  const m = { protocol: 2, source: 'fusion-arcade', type: 'arcade:recover', requestId: 'r', playId: 'lost', final: true, score: 20 }
+  await bridge.handle({ ...m, source: 'mathle-arcade' }); await bridge.handle({ ...m, final: false }); assert.equal(calls, 0)
+  await bridge.handle(m); assert.equal(calls, 1); assert.equal(replies.at(-1)?.permanent, true)
+})

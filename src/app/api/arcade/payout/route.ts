@@ -65,11 +65,12 @@ export const POST = withAuth(async (request, ctx) => {
   // A protocol-2 cabinet final save can be retried after its payout response was lost.
   // Return the original receipt before evaluating today's cap again.
   if (['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle'].includes(play.game_slug)) {
-    const { data: prior } = await supabaseAdmin.from('economy_point_grants')
+    const { data: prior, error: priorError } = await supabaseAdmin.from('economy_point_grants')
       .select('points').eq('dedupe_key', SOURCE + ':' + play.id).maybeSingle()
+    if (priorError) return NextResponse.json({ error: 'Could not verify XP receipt' }, { status: 503 })
     if (prior) {
       const { balance } = await getBalance(ctx.userId)
-      return NextResponse.json({ xp: prior.points, alreadyPaid: true, balance })
+      return NextResponse.json({ xp: prior.points, capped: prior.points < computeXp((play.meta as { stats?: RunStats } | null)?.stats ?? { solved: 0, right: 0, wrong: 0, bestStreak: 0, startLv: 1, mode: 'algebra' }), alreadyPaid: true, balance })
     }
   }
 
@@ -87,22 +88,20 @@ export const POST = withAuth(async (request, ctx) => {
 
   const DAILY_CAP = await getStudentTrack(ctx.userId) === 'honors' ? 15 : 10
   const earned = computeXp(stats)
-  if (earned === 0) return NextResponse.json({ xp: 0, capped: false })
 
   // Daily cap across all free-cabinet payouts (UTC day, matching points.ts).
   const dayStart = new Date().toISOString().slice(0, 10) + 'T00:00:00Z'
-  const { data: todays } = await supabaseAdmin
+  const { data: todays, error: totalsError } = await supabaseAdmin
     .from('economy_point_grants')
     .select('points')
     .eq('user_id', ctx.userId)
     .eq('source', SOURCE)
     .gte('awarded_at', dayStart)
+  if (totalsError) return NextResponse.json({ error: 'Could not verify daily XP' }, { status: 503 })
   const todayTotal = (todays ?? []).reduce((s, g) => s + (g.points || 0), 0)
   const xp = Math.max(0, Math.min(earned, DAILY_CAP - todayTotal))
-  if (xp === 0) {
-    const { balance } = await getBalance(ctx.userId)
-    return NextResponse.json({ xp: 0, capped: true, balance })
-  }
+  // Keep a zero-point receipt too: a capped run retried tomorrow must still award zero.
+  // The existing database trigger enforces the shared cap under concurrent claims.
 
   const { data: receipt, error } = await supabaseAdmin.from('economy_point_grants').insert({
     user_id: ctx.userId,
@@ -116,8 +115,11 @@ export const POST = withAuth(async (request, ctx) => {
   if (error) {
     // 23505 = unique violation on dedupe_key → already paid; report idempotently.
     if ((error as { code?: string }).code === '23505') {
+      const { data: prior, error: priorError } = await supabaseAdmin.from('economy_point_grants')
+        .select('points').eq('dedupe_key', `${SOURCE}:${play.id}`).maybeSingle()
+      if (priorError || !prior) return NextResponse.json({ error: 'Could not verify XP receipt' }, { status: 503 })
       const { balance } = await getBalance(ctx.userId)
-      return NextResponse.json({ xp: 0, alreadyPaid: true, balance })
+      return NextResponse.json({ xp: prior.points, capped: prior.points < earned, alreadyPaid: true, balance })
     }
     console.error('[arcade/payout] grant insert failed:', error)
     return NextResponse.json({ error: 'Could not bank XP' }, { status: 500 })

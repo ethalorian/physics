@@ -1,0 +1,4 @@
+PASS practice, settings persistence, four viewport widths, touch chords, cancellation, pause/resume, and partial results
+Playing the full 81-second ranked track against the real bridge; original audio is running.
+Real-time timing evidence {"finalScore":1000000,"maxInputDelay":0.011480035492461127,"delayedInputs":0,"perfect":"1034","great":"0","good":"0","miss":"0 / 0"}
+PASS full ranked chart, music output, selected six-key difficulty, credit denial, delayed acceptance, acknowledged save/retry, no XP payout, no browser errors {"finalScore":1000000,"audio":{"samples":1604,"peak":0.15569619719403108,"audible":1053}}

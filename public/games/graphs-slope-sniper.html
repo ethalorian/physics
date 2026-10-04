@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SLOPE SNIPER — math spine arcade</title>
 <style>
   :root{
@@ -216,10 +216,12 @@
   }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
+<link rel="stylesheet" href="math-studio.css">
 </head>
-<body>
+<body data-game="slope-sniper" class="falling">
 
 <div id="wrap">
+  <header class="studioBrand"><span class="studioMark" aria-hidden="true">↗</span><div><span class="studioEyebrow">GV · GRAPH LAB</span><h2>Slope Sniper</h2></div><span class="studioBadge">MATH ARCADE</span></header>
   <div id="hud">
     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
     <div class="stat"><div class="lab">Level</div><div class="val" id="levelV">1</div></div>
@@ -298,6 +300,7 @@
   </div>
 </div>
 
+<script src="math-studio.js"></script>
 <script src="math-cabinet.js"></script>
 <script>
 "use strict";
@@ -321,18 +324,35 @@ function sup(n){ return String(n).split("").map(c=>SUP[c]||c).join(""); }
 function sci(m,e){ return m+"×10"+sup(e); }
 function commas(n){ return n.toLocaleString("en-US"); }
 
-const PAD_GENERIC = ["42","7","13","99","256","3.5","1/2","10"+sup(2)];
+const PAD_GENERIC = ["0","1","−1","2","−2","3","−3","4","−4"];
+
+// Compare numerical meanings, not just typography, when excluding duplicate answers.
+function choiceValue(label){
+  let s=label.replaceAll(",", "").replaceAll("−","-").trim();
+  const unit=s.match(/ (m\/s|km\/h|cm²|m²|mL|kg|min|mm|cm|km|m|g|L|s)$/)?.[0]||"";
+  if(unit)s=s.slice(0,-unit.length);
+  if(s.startsWith("× "))s=s.slice(2);
+  let factor=1;if(s.endsWith("%")){factor=.01;s=s.slice(0,-1);}
+  const scientific=s.match(/^([0-9.]+)×10([⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)$/);
+  let v;
+  if(scientific){const chars={"⁻":"-","⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9"};v=+scientific[1]*10**Number([...scientific[2]].map(c=>chars[c]).join(""));}
+  else if(/^-?\d+(?:\.\d+)?\/\d+$/.test(s)){const [a,b]=s.split("/").map(Number);v=a/b;}
+  else if(/^-?\d+(?:\.\d+)?$/.test(s))v=Number(s);
+  else return null;
+  return {v:v*factor,unit};
+}
+function sameChoice(a,b){const x=choiceValue(a),y=choiceValue(b);return x&&y&&x.unit===y.unit&&Math.abs(x.v-y.v)<=1e-12*Math.max(Math.abs(x.v),Math.abs(y.v),1e-12);}
 
 function buildChips(step){
   const seen = {}; seen[step.c]=1;
   const out = [{ l:step.c, ok:true, tip:"" }];
   for(const wr of step.w){
     if(out.length>=4) break;
-    if(!seen[wr.l]){ seen[wr.l]=1; out.push({ l:wr.l, ok:false, tip:wr.tip }); }
+    if(!seen[wr.l] && (step.normalized || !sameChoice(wr.l,step.c))){ seen[wr.l]=1; out.push({ l:wr.l, ok:false, tip:wr.tip }); }
   }
   for(const p of PAD_GENERIC){
     if(out.length>=4) break;
-    if(!seen[p]){ seen[p]=1; out.push({ l:p, ok:false, tip:"Not this one." }); }
+    if(!seen[p] && !sameChoice(p,step.c)){ seen[p]=1; out.push({ l:p, ok:false, tip:"Use the changes shown by the axes, and check the units." }); }
   }
   return shuffle(out);
 }
@@ -377,7 +397,7 @@ const TIP_DELTA= "Use the CHANGES (Δ), not the raw values.";
 const TIP_MEAN = "Ask what rise÷run gives you — check the units.";
 const TIP_HALF = "A triangle's area is ½ × base × height.";
 const TIP_COS  = "x-component uses cos θ; y uses sin θ.";
-const TIP_LINZ = "Whatever you plotted to get a LINE is the relationship.";
+const TIP_LINZ = "A line through the origin means proportionality; use the variables on those axes.";
 
 /* ---- tiny SVG graph builders (data coords 0..6 × 0..6) ---- */
 const GX0=38, GY0=114, GW=156, GH=90;
@@ -401,6 +421,12 @@ function gridSvg(inner, xlab, ylab, numbered=true){
 }
 function lineOn(x1,y1,x2,y2,marks){
   let s='<line x1="'+px(x1)+'" y1="'+py(y1)+'" x2="'+px(x2)+'" y2="'+py(y2)+'" stroke="#2ee6ff" stroke-width="2.5"/>';
+  if(marks?.length===2){
+    const [a,b]=marks;
+    s+='<path d="M '+px(a[0])+' '+py(a[1])+' H '+px(b[0])+' V '+py(b[1])+'" fill="none" stroke="#ffd183" stroke-width="1.5" stroke-dasharray="4 3"/>';
+    s+='<text x="'+((px(a[0])+px(b[0]))/2)+'" y="'+(py(a[1])-5)+'" text-anchor="middle" fill="#ffd183" font-size="10">Δx</text>';
+    s+='<text x="'+(px(b[0])+4)+'" y="'+((py(a[1])+py(b[1]))/2)+'" fill="#ffd183" font-size="10">Δy</text>';
+  }
   for(const m of (marks||[])){
     s+='<circle cx="'+px(m[0])+'" cy="'+py(m[1])+'" r="3.5" fill="#ffc83d"/>';
     if(m[2]) s+='<text x="'+(px(m[0])+5)+'" y="'+(py(m[1])-6)+'" fill="#ffc83d" font-size="9">'+m[2]+'</text>';
@@ -413,7 +439,7 @@ function shadeUnder(x1,x2,yTopFn){
 }
 function arrowSvg(dx,dy,thetaLabel,magLabel){
   // vector from origin, components dx,dy in 0..6 space
-  const x2=px(dx), y2=py(dy), x1=px(0), y1=py(0);
+  const x1=px(0), y1=py(0), x2=x1+dx*18, y2=y1-dy*18;
   const ang=Math.atan2(y2-y1,x2-x1);
   const ah=8;
   const a1x=x2-ah*Math.cos(ang-0.45), a1y=y2-ah*Math.sin(ang-0.45);
@@ -449,6 +475,8 @@ function genSlopeRead(){
     steps:[ { c:m, w:[ W(flip,TIP_RISE), W(negM,"Check the direction — falling means negative."),
                        W(String(Math.abs(rise)),"That's just the rise — divide by the run.") ] } ],
     banner:"READ THE SLOPE", fig,
+    name:"Marked points: (0, "+y0+") and ("+x2+", "+(y0+y2v)+")",
+    explanation:"Slope = Δy/Δx = ("+(y0+y2v)+" − "+y0+") / ("+x2+" − 0) = "+m+".",
   };
 }
 
@@ -488,6 +516,8 @@ function genSlopeUnits(){
                     W((d2-d1)+" m/s","That's Δd — divide by Δt."),
                     W(b+" m/s","That's the intercept, not the slope.") ] } ],
       banner:"SLOPE, WITH UNITS", fig,
+      name:"Marked points: ("+t1+" s, "+d1+" m) and ("+t2+" s, "+d2+" m)",
+      explanation:"Slope = ("+d2+" − "+d1+") m ÷ ("+t2+" − "+t1+") s = "+m+" m/s.",
     };
   }
   const m=pick([2,3]), t1=1, t2=(m===2?3:2);
@@ -501,6 +531,8 @@ function genSlopeUnits(){
                   W((m*2)+" m/s","Rise over run — nothing gets doubled."),
                   W((d2+t2)+" m/s","Divide the changes, don't add them.") ] } ],
     banner:"SLOPE, WITH UNITS", fig,
+      name:"Marked points: ("+t1+" s, "+d1+" m) and ("+t2+" s, "+d2+" m)",
+      explanation:"Slope = ("+d2+" − "+d1+") m ÷ ("+t2+" − "+t1+") s = "+m+" m/s.",
   };
 }
 
@@ -520,6 +552,8 @@ function genArea(){
                   W((v+T)+" m","Area means multiply, not add."),
                   W((tri? v*T*2 : v+T*2)+" m",TIP_HALF) ] } ],
     banner:"AREA UNDER v–t", fig,
+    name:(tri?"Triangle":"Rectangle")+": time 0 to "+T+" s; "+(tri?"velocity rises from 0 to ":"constant velocity ")+v+" m/s",
+    explanation:(tri?"Triangle: ½ × ":"Rectangle: ")+T+" s × "+v+" m/s = "+aLab+". The units multiply to metres.",
   };
 }
 
@@ -529,18 +563,22 @@ const VECS = [
   [10,"30°",8.7,5],[10,"60°",5,8.7],[10,"45°",7.1,7.1],[20,"37°",16,12],
 ];
 function genVector(){
-  const [mag,th,vx,vy]=pick(VECS);
+  const [mag,th]=pick(VECS);
+  const angle=parseFloat(th)*Math.PI/180;
+  const vx=+(mag*Math.cos(angle)).toFixed(1),vy=+(mag*Math.sin(angle)).toFixed(1);
   const wantX=Math.random()<.5;
   const ans=wantX? vx : vy;
   const other=wantX? vy : vx;
   const sc=4.8/Math.max(vx,vy);
-  const fig=arrowSvg(vx*sc, vy*sc, th, String(mag));
+  const fig=arrowSvg(mag*Math.cos(angle)*sc, mag*Math.sin(angle)*sc, th, String(mag));
   const aL=String(ans), oL=String(other);
   return {
     states:[ (wantX?"x":"y")+"-component ≈ ?", (wantX?"x":"y")+" = "+aL ],
     steps:[ { c:aL, w:[ W(oL,TIP_COS), W(String(mag),"The magnitude isn't a component."),
                         W(String(+(ans/2).toFixed(1)),TIP_COS) ] } ],
-    banner:"BREAK THE VECTOR", name:"|v| = "+mag+" at "+th+" above horizontal · round to 1 decimal · diagram not to scale", fig,
+    explanation:(wantX?"vx = |v| cos θ = ":"vy = |v| sin θ = ")+mag+" × "+(wantX?"cos":"sin")+"("+th+") ≈ "+ans+". Keep full precision until the final rounding.",
+    _vector:{mag,theta:parseFloat(th),wantX},
+    banner:"BREAK THE VECTOR", name:"|v| = "+mag+" at "+th+" above +x · round to 1 decimal", fig,
   };
 }
 
@@ -549,7 +587,7 @@ const LINZ = [
   ["y vs x curves UP; y vs x² is a LINE through the origin","y ∝ x²",["y ∝ x","y ∝ 1/x","y ∝ √x"]],
   ["y vs x curves DOWN; y vs 1/x is a LINE through the origin","y ∝ 1/x",["y ∝ x","y ∝ x²","y ∝ −x"]],
   ["y vs x bends; y vs √x is a LINE through the origin","y ∝ √x",["y ∝ x²","y ∝ x","y ∝ 1/x²"]],
-  ["y² vs x is a LINE through the origin","y ∝ √x",["y ∝ x²","y ∝ x","y ∝ 2x"]],
+  ["y ≥ 0; y² vs x is a LINE through the origin","y ∝ √x",["y ∝ x²","y ∝ x","y ∝ 2x"]],
 ];
 function genLinz(){
   const [desc,ans,wr]=pick(LINZ);
@@ -573,6 +611,11 @@ function genGame(lv){
   }
 }
 
+function explainGame(g){
+  if(g.explanation)return g.explanation;
+  return g.states.at(-1)+". "+(g.banner==="FIND THE RELATIONSHIP"?TIP_LINZ: "For slope, divide vertical units by horizontal units. For area, multiply them.");
+}
+
 /* ================================================================
    PURE-LOGIC-END
    ================================================================ */
@@ -590,7 +633,7 @@ if (typeof document !== "undefined") (function(){
   const MAXJUNK=8, JUNKH=28;
   const SYM_COLOR = { "+":"#7dff4a", [M]:"#ff5d7e", "×":"#2ee6ff", "÷":"#ffc83d", "√":"#c792ff" };
 
-  let S=null, raf=null, lastT=0, muted=false, locked=false, practice=false, untimed=false;
+  let S=null, raf=null, lastT=0, muted=MathStudio.isMuted(), locked=false, practice=false, untimed=false;
 
   /* ---------- arcade bridge (see docs/ARCADE_PATTERN.md) ---------- */
   const normalEndTitle=document.querySelector("#overOv h1").textContent;
@@ -600,7 +643,7 @@ if (typeof document !== "undefined") (function(){
   let AC=null;
   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
   function beep(f,dur,type,vol,when){
-    if(muted) return; const ctx=ac(); if(!ctx) return;
+    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
     const t=ctx.currentTime+(when||0);
     const o=ctx.createOscillator(), g=ctx.createGain();
     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
@@ -627,7 +670,8 @@ if (typeof document !== "undefined") (function(){
   }
   function mult(){ return Math.min(4, 1+Math.floor(S.streak/4)); }
   function speed(){ return Math.min(95, 26 + (S.level-1)*9); }
-  function landY(){ return boardEl.clientHeight - S.junk*JUNKH - cardEl.offsetHeight - 4; }
+  function junkHeight(){return Math.max(8,Math.min(JUNKH,(boardEl.clientHeight-cardEl.offsetHeight-80)/MAXJUNK));}
+  function landY(){ return boardEl.clientHeight - S.junk*junkHeight() - cardEl.offsetHeight - 4; }
 
   function hud(){
     $("scoreV").textContent=S.score;
@@ -663,22 +707,19 @@ if (typeof document !== "undefined") (function(){
       val.textContent = p.sym && p.val.startsWith(M) ? "("+p.val+")" : p.val;
       val.style.fontSize = p.val.length>9 ? "15px" : p.val.length>5 ? "18px" : "24px";
       b.classList.remove("good","bad"); b.disabled=false;
+      b.setAttribute("aria-label", "Answer "+(i+1)+": "+c[i].l);
     });
   }
 
   function renderStack(){
     stackEl.innerHTML="";
-    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d); }
+    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d); }
   }
 
   function practiceReview(message,label,done){
     locked=true;
-    let panel=document.getElementById("practiceReview");if(panel)panel.remove();
-    panel=document.createElement("div");panel.id="practiceReview";panel.setAttribute("role","status");
-    panel.style.cssText="position:absolute;left:5%;right:5%;bottom:16px;z-index:10;background:#10283b;color:white;padding:18px;border:1px solid #78ffcf;border-radius:14px;font:18px/1.5 system-ui";
-    const text=document.createElement("p");text.textContent=message;panel.append(text);
-    const button=document.createElement("button");button.textContent=label;button.style.cssText="padding:12px 18px;margin-top:12px;background:#78ffcf;color:#102030;border:0;border-radius:9px;font:700 17px system-ui";
-    button.onclick=()=>{panel.remove();done();};panel.append(button);boardEl.append(panel);button.focus();
+    MathStudio.review(message,label,()=>{done();chips[0].focus();});
+    if(S.cur.i>=S.cur.steps.length)MathStudio.model(S.cur,S.cur.steps.length-1);
   }
   function spawn(){
     S.needsSpawn=false;
@@ -688,9 +729,13 @@ if (typeof document !== "undefined") (function(){
     S.cur.chips = buildChips(S.cur.steps[0]);
     S.y = untimed ? 24 : -cardEl.offsetHeight - 10;
     nextEqEl.textContent = (S.next.banner? S.next.banner+" · ":"") + S.next.states[0];
-    renderCard(); renderChips(); place();
+    renderCard(); renderChips();
+    if(untimed)S.y=12;
+    place();
+    renderStack();
+    MathStudio.question(S.cur);
   }
-  function place(){ cardEl.style.top = S.y+"px"; }
+  function place(){ cardEl.style.transform="translate3d(-50%,"+S.y+"px,0)"; }
 
   function toast(msg){
     toastEl.textContent=msg; toastEl.classList.add("show");
@@ -720,6 +765,7 @@ if (typeof document !== "undefined") (function(){
     boardEl.appendChild(ring); setTimeout(()=>ring.remove(),520);
   }
   function particles(){
+    if(MathStudio.reducedMotion())return;
     const r=cardEl.getBoundingClientRect(), br=boardEl.getBoundingClientRect(), sc=boardScale();
     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
     for(let i=0;i<16;i++){
@@ -743,6 +789,9 @@ if (typeof document !== "undefined") (function(){
     if(!S || !S.running || locked) return;
     const run=S;
     const chip = S.cur.chips[i], btn=chips[i];
+    const explanation=explainGame(S.cur,S.cur.i);
+    MathStudio.record(S.cur.states[S.cur.i],chip.l,chip.ok?explanation:chip.tip,chip.ok);
+    if(chip.ok)MathStudio.model(S.cur,S.cur.i);
     if(untimed && !chip.ok){ S.wrong++; practiceReview(chip.tip,"Try again",()=>{locked=false;renderChips();}); hud(); return; }
     if(chip.ok){
       S.right++; S.streak++; S.bestStreak=Math.max(S.bestStreak,S.streak);
@@ -762,12 +811,13 @@ if (typeof document !== "undefined") (function(){
          rapid guessing is slower and net-negative (right pays 10·level). */
       S.score = Math.max(0, S.score - 15*S.level);
       locked = true;
-      setTimeout(()=>{ if(S!==run)return; if(S && S.cur && S.cur.i < S.cur.steps.length){ S.cur.chips = buildChips(S.cur.steps[S.cur.i]); renderChips(); } locked = false; }, 900);
+      practiceReview(chip.tip,"Try again",()=>{if(S!==run)return;S.cur.chips=buildChips(S.cur.steps[S.cur.i]);renderChips();locked=false;});
       btn.classList.add("bad"); sBad(); shake();
       cardEl.classList.add("hurt"); setTimeout(()=>cardEl.classList.remove("hurt"),200);
       if(!untimed)S.y += Math.max(20,(landY()-S.y)*0.28); place();
       toast("❌ "+chip.tip);
     }
+    ARCADE.checkpoint();
     hud();
   }
 
@@ -796,17 +846,23 @@ if (typeof document !== "undefined") (function(){
     ARCADE.reportScore(false);
 
     locked=true;
-    if(untimed)practiceReview("Answer: "+S.cur.states[S.cur.states.length-1],"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
+    if(untimed)practiceReview(explainGame(S.cur,S.cur.steps.length-1),"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
     else setTimeout(()=>{ if(S!==run)return;locked=false; if(S.running&&S.needsSpawn) spawn(); },330);
     hud();
   }
 
   function land(){
+    if(locked || !S.running)return;
     sLand(); shake(true);
     S.junk++; S.wrong++; S.streak=0; renderStack(); hud();
-    if(S.junk>=MAXJUNK){ gameOver(); return; }
-    toast("🧱 Buried! Answer: "+S.cur.steps[S.cur.i].c);
-    spawn();
+    const message="Answer: "+S.cur.steps[S.cur.i].c+". "+explainGame(S.cur,S.cur.i);
+    MathStudio.record(S.cur.states[S.cur.i],"Time ran out",message,false);
+    ARCADE.checkpoint();
+    practiceReview(message,S.junk>=MAXJUNK?"See my results":"Next problem",()=>{
+      locked=false;
+      if(S.junk>=MAXJUNK){gameOver();return;}
+      if(S.running)spawn();else S.needsSpawn=true;
+    });
   }
 
   /* ---------- loop ---------- */
@@ -822,6 +878,7 @@ if (typeof document !== "undefined") (function(){
 
   function start(lv){
     if(!ARCADE.canStart())return;
+    MathStudio.reset();
     document.getElementById("practiceReview")?.remove();
     untimed=$("untimedPractice").checked;locked=false;
     S=freshState(lv);
@@ -836,7 +893,7 @@ if (typeof document !== "undefined") (function(){
     const begin=()=>{
       renderStack(); hud(); spawn();
       S.running=true; lastT=performance.now();
-      cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
+      cancelAnimationFrame(raf); if(!untimed)raf=requestAnimationFrame(tick);
     };
     ARCADE.requestCoin(res=>{
       if(!res.ok){ $("startOv").classList.remove("hidden"); return; }
@@ -862,7 +919,7 @@ if (typeof document !== "undefined") (function(){
     if(S.pausedAt&&S.cur)S.cur.born+=performance.now()-S.pausedAt;S.pausedAt=0;
     S.running=true; lastT=performance.now();
     if(S.needsSpawn&&!locked)spawn();
-    raf=requestAnimationFrame(tick);
+    if(!untimed)raf=requestAnimationFrame(tick);
   }
 
   /* ---------- high score ---------- */
@@ -878,13 +935,14 @@ if (typeof document !== "undefined") (function(){
   function gameOver(){
     S.running=false; cancelAnimationFrame(raf);
     ARCADE.reportScore(true);
+    if(MathStudio.reducedMotion()){showOverPanel();return;}
     boardEl.classList.add("doom");
     cardEl.style.display="none";
 
     const totalRows = Math.ceil(boardEl.clientHeight/JUNKH);
     let i = S.junk, n = 0;
     const iv = setInterval(()=>{
-      const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d);
+      const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d);
       sThud(150 - i*4);
       if(n%2===0) shake(n%4===0);
       i++; n++;
@@ -908,7 +966,8 @@ if (typeof document !== "undefined") (function(){
     $("fSolved").textContent=S.solved;
     $("fAcc").textContent=acc+"%";
     $("fStreak").textContent=S.bestStreak;
-    $("overQuip").textContent=S.finishedByChoice?"Return for another challenge whenever you are ready.":pick(CONFIG.quips);
+    $("overQuip").textContent="Every attempt is information. Review a strategy, then try it again.";
+    MathStudio.summary();
     const nh = S.score>getHS();
     if(nh) setHS(S.score);
     $("newHS").classList.toggle("hidden",!nh);
@@ -961,6 +1020,7 @@ if (typeof document !== "undefined") (function(){
   start=(lv)=>{ lastLv=lv; realStart(lv); };
   chips.forEach(b=>b.addEventListener("click",()=>choose(+b.dataset.i)));
   document.addEventListener("keydown",e=>{
+    if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;
     if(e.key>="1"&&e.key<="4") choose(+e.key-1);
     else if(e.key==="p"||e.key==="P"||e.key==="Escape"){
       if(S && S.running) pause();
@@ -972,31 +1032,13 @@ if (typeof document !== "undefined") (function(){
   $("pauseBtn").addEventListener("click",pause);
   $("resumeBtn").addEventListener("click",resume);
   $("quitBtn").addEventListener("click",finishRun);
-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
+  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
   window.addEventListener("blur",()=>{ if(S&&S.running) pause(); });
+  document.addEventListener("visibilitychange",()=>{if(document.hidden&&S&&S.running)pause();});
 
   hsLine();
 })();
 </script>
-<script>
-/* ---------- native-display autoscale: fill the frame on big screens,
-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
-(function(){
-  const wrap=document.getElementById("wrap");
-  if(!wrap) return;
-  function fit(){
-    wrap.style.transform="none"; wrap.style.marginTop="0px";
-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
-    wrap.style.transformOrigin="top center";
-    wrap.style.transform="scale("+k+")";
-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
-  }
-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
-  window.addEventListener("resize",fit);
-  setTimeout(fit,60); fit();
-})();
-</script>
+
 </body>
 </html>

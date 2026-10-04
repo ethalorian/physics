@@ -1,0 +1,16 @@
+PASS retried Tether final preserves stored score without writes
+PASS lost payout response returns original XP receipt
+PASS Flywheel final retries preserve score and original XP
+PASS Descent retries preserve stored score and XP
+PASS push retries preserve stored score and XP
+PASS cascade retries preserve stored score and XP
+PASS inverse-blitz retries preserve stored score and XP
+PASS magnitude retries preserve stored score and XP
+PASS scale-storm retries preserve stored score and XP
+PASS powers-of-ten retries preserve stored score and XP
+PASS slope-sniper retries preserve stored score and XP
+PASS fusion retries preserve stored score and XP
+PASS expression-crush retries preserve stored score and XP
+PASS mathle retries preserve stored score and XP
+PASS ownership enforced on both retry paths
+PASS existing cabinets retain closed-run behavior

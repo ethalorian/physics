@@ -1,0 +1,2 @@
+[math-missions] { message: 'Injected save failure' }
+PASS actual routes: invalid skills, no answer-key leak, idempotent start/save, ownership, delayed-check gate, server reward, failed-save retry, daily eligibility, teacher roster scope, assignments, feedback, and guided support only in practice

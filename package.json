@@ -37,7 +37,10 @@
     "test:flywheel": "node scripts/test-flywheel-physics.cjs && tsx --test src/lib/tether-bridge.test.ts && node scripts/test-tether-routes.cjs",
     "test:flywheel-browser": "node scripts/test-flywheel-browser.cjs",
     "preview:flywheel": "node scripts/preview-flywheel.cjs",
-    "test:styles-browser": "node scripts/test-styling-browser.cjs"
+    "test:styles-browser": "node scripts/test-styling-browser.cjs",
+    "test:math-arcade": "node scripts/test-math-arcade-logic.cjs && node scripts/test-math-upgrade-logic.cjs && node scripts/test-math-save-routes.cjs && node --import tsx --test src/lib/tether-bridge.test.ts",
+    "test:math-arcade-browser": "node scripts/test-math-arcade-browser.cjs",
+    "preview:math-arcade": "node scripts/preview-math-arcade.cjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.3",

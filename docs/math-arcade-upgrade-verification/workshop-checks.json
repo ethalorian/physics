@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-10-04T13:41:23.884Z",
+  "results": [
+    {
+      "command": "node scripts/test-unit-lab.cjs",
+      "exitCode": 0,
+      "tests": 12
+    },
+    {
+      "command": "node scripts/test-conversion-workshop.cjs",
+      "exitCode": 0,
+      "tests": 17
+    },
+    {
+      "command": "node scripts/test-tape-workshop.cjs",
+      "exitCode": 0,
+      "result": "Exact parsing, tick hierarchy, all seven instrument families, metric conversion, nonzero-start subtraction"
+    }
+  ]
+}

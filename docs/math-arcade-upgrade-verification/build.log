@@ -1,0 +1,768 @@
+
+> physics-classroom@0.1.0 prebuild
+> npm run audit:styles && npm run audit:brand
+
+
+> physics-classroom@0.1.0 audit:styles
+> node scripts/audit-styles.cjs
+
+CSS usage: 36 global classes checked; 0 unreferenced.
+Style audit: passed.
+
+> physics-classroom@0.1.0 audit:brand
+> node scripts/audit-brand.cjs
+
+Brand audit passed: approved artwork, six app surfaces, browser icons, and teaching decks.
+
+> physics-classroom@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.19
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 55s
+   Linting and checking validity of types ...
+
+./src/app/admin/migrations/check/page.tsx
+13:42  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+129:93  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+186:46  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/admin/reviews/page.tsx
+40:99  Warning: Expected an assignment or function call and instead saw an expression.  @typescript-eslint/no-unused-expressions
+
+./src/app/admin/simulations/assignments/page.tsx
+60:14  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/admin/simulations/page.tsx
+60:63  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/admin/check-migration/route.ts
+10:34  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+11:24  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+33:21  Warning: 'error' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+41:68  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+54:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/admin/list-simulations/route.ts
+27:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/analytics/insights/route.ts
+1:10  Warning: 'NextRequest' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/assignment-submissions/route.ts
+130:20  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/assignments/route.ts
+86:24  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+122:67  Warning: 'ctx' is defined but never used.  @typescript-eslint/no-unused-vars
+133:26  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+162:70  Warning: 'ctx' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/assignments/simulations/route.ts
+13:11  Warning: 'studentId' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/blocks/generate-visual/route.ts
+1:10  Warning: 'NextRequest' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/courses/join-code/route.ts
+156:23  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/courses/route.ts
+150:67  Warning: 'ctx' is defined but never used.  @typescript-eslint/no-unused-vars
+159:23  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+187:57  Warning: 'ctx' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/duel/join/route.ts
+47:24  Warning: '_drop' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/enrollment/status/route.ts
+2:10  Warning: 'NextRequest' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/mastery/dashboard/route.ts
+13:11  Warning: 'isStaff' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/question-bank/units/route.ts
+50:14  Warning: 'fallbackError' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/risc/webhook/route.ts
+95:27  Warning: 'request' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/roster/courses/route.ts
+6:58  Warning: 'request' is defined but never used.  @typescript-eslint/no-unused-vars
+6:67  Warning: 'ctx' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/roster/import/route.ts
+256:67  Warning: 'ctx' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/roster/test/route.ts
+6:58  Warning: 'request' is defined but never used.  @typescript-eslint/no-unused-vars
+6:67  Warning: 'ctx' is defined but never used.  @typescript-eslint/no-unused-vars
+20:15  Warning: 'data' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/rubrics/route.ts
+40:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/simulations/[slug]/route.ts
+44:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/simulations/assignments/route.ts
+98:64  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+157:72  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/simulations/assignments/submit/route.ts
+47:25  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+49:47  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+53:36  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/simulations/route.ts
+76:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/students/unassigned/route.ts
+6:58  Warning: 'request' is defined but never used.  @typescript-eslint/no-unused-vars
+6:67  Warning: 'ctx' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/submissions/route.ts
+8:10  Warning: 'Submission' is defined but never used.  @typescript-eslint/no-unused-vars
+80:27  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/vocabulary/route.ts
+75:105  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+128:38  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/vocabulary/upload/route.ts
+44:54  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/leaderboard/page.tsx
+9:10  Warning: 'Tabs' is defined but never used.  @typescript-eslint/no-unused-vars
+9:16  Warning: 'TabsContent' is defined but never used.  @typescript-eslint/no-unused-vars
+9:29  Warning: 'TabsList' is defined but never used.  @typescript-eslint/no-unused-vars
+9:39  Warning: 'TabsTrigger' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/simulations/measurement-precision/engine.ts
+230:9  Warning: 'device' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/simulations/riverboat-crossing/engine.ts
+342:15  Warning: 'boatVx' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+342:23  Warning: 'boatVy' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/simulations/riverboat-crossing-3d/engine3d.ts
+60:3  Warning: '_opts' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/simulations/slope-calculator/engine.ts
+1:39  Warning: 'SimData' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/QuickTestAccountSwitcher.tsx
+15:3  Warning: 'ChevronRight' is defined but never used.  @typescript-eslint/no-unused-vars
+63:26  Warning: 'status' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+125:6  Warning: React Hook useEffect has a missing dependency: 'handleQuickSwitch'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/admin/LessonVideoManager.tsx
+17:3  Warning: 'ExternalLink' is defined but never used.  @typescript-eslint/no-unused-vars
+21:38  Warning: 'Question' is defined but never used.  @typescript-eslint/no-unused-vars
+192:3  Warning: 'lessonId' is defined but never used.  @typescript-eslint/no-unused-vars
+233:9  Warning: 'moveVideo' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/admin/ManageUnits.tsx
+24:108  Warning: Expected an assignment or function call and instead saw an expression.  @typescript-eslint/no-unused-expressions
+
+./src/components/admin/MediaGenerator.tsx
+6:10  Warning: 'Input' is defined but never used.  @typescript-eslint/no-unused-vars
+8:29  Warning: 'CardDescription' is defined but never used.  @typescript-eslint/no-unused-vars
+8:46  Warning: 'CardHeader' is defined but never used.  @typescript-eslint/no-unused-vars
+8:58  Warning: 'CardTitle' is defined but never used.  @typescript-eslint/no-unused-vars
+41:3  Warning: 'X' is defined but never used.  @typescript-eslint/no-unused-vars
+42:3  Warning: 'Copy' is defined but never used.  @typescript-eslint/no-unused-vars
+43:3  Warning: 'Atom' is defined but never used.  @typescript-eslint/no-unused-vars
+44:3  Warning: 'Zap' is defined but never used.  @typescript-eslint/no-unused-vars
+52:3  Warning: 'getStandardsBySet' is defined but never used.  @typescript-eslint/no-unused-vars
+53:3  Warning: 'getStandardsByTopic' is defined but never used.  @typescript-eslint/no-unused-vars
+54:8  Warning: 'Standard' is defined but never used.  @typescript-eslint/no-unused-vars
+55:8  Warning: 'StandardSet' is defined but never used.  @typescript-eslint/no-unused-vars
+145:22  Warning: 'setImageCount' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+157:10  Warning: 'videoOperationName' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+612:27  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/admin/VideoQuestionEditor.tsx
+33:9  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+82:28  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+87:33  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+148:6  Warning: React Hook useEffect has a missing dependency: 'initializePlayer'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+181:30  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+199:36  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+210:30  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+232:18  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+488:3  Warning: 'videoId' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/admin/WorkshopStudio.tsx
+25:149  Warning: Expected an assignment or function call and instead saw an expression.  @typescript-eslint/no-unused-expressions
+
+./src/components/animations/AnimationStage.tsx
+84:5  Warning: Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps').
+
+./src/components/assignment-builder/VocabularyQuestionEditor.tsx
+13:43  Warning: 'Target' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/assignment-builder/question-editor.tsx
+16:8  Warning: 'MathMarkdown' is defined but never used.  @typescript-eslint/no-unused-vars
+35:10  Warning: 'unitOptions' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+570:15  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/blocks/BlockGuidance.tsx
+11:237  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/blocks/SeiLayer.tsx
+80:31  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/gamification/StreakTracker.tsx
+5:17  Warning: 'Calendar' is defined but never used.  @typescript-eslint/no-unused-vars
+5:27  Warning: 'TrendingUp' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/lessons/CaseBoard.tsx
+19:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/question-bank/AddToQuestionBankModal.tsx
+7:10  Warning: 'Textarea' is defined but never used.  @typescript-eslint/no-unused-vars
+171:91  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+184:99  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/question-bank/QuestionBankBrowser.tsx
+8:10  Warning: 'Select' is defined but never used.  @typescript-eslint/no-unused-vars
+8:18  Warning: 'SelectContent' is defined but never used.  @typescript-eslint/no-unused-vars
+8:33  Warning: 'SelectItem' is defined but never used.  @typescript-eslint/no-unused-vars
+8:45  Warning: 'SelectTrigger' is defined but never used.  @typescript-eslint/no-unused-vars
+8:60  Warning: 'SelectValue' is defined but never used.  @typescript-eslint/no-unused-vars
+17:3  Warning: 'Target' is defined but never used.  @typescript-eslint/no-unused-vars
+18:3  Warning: 'Brain' is defined but never used.  @typescript-eslint/no-unused-vars
+260:73  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+262:73  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+454:63  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/simulations/SimulationAssignmentEditor.tsx
+14:10  Warning: 'Alert' is defined but never used.  @typescript-eslint/no-unused-vars
+14:17  Warning: 'AlertDescription' is defined but never used.  @typescript-eslint/no-unused-vars
+18:3  Warning: 'Trash2' is defined but never used.  @typescript-eslint/no-unused-vars
+22:3  Warning: 'AlertCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+28:20  Warning: 'QuestionType' is defined but never used.  @typescript-eslint/no-unused-vars
+28:58  Warning: 'NumericalQuestion' is defined but never used.  @typescript-eslint/no-unused-vars
+102:6  Warning: React Hook useEffect has a missing dependency: 'formData'. Either include it or remove the dependency array. You can also do a functional update 'setFormData(f => ...)' if you only need 'formData' in the 'setFormData' call.  react-hooks/exhaustive-deps
+
+./src/components/vocabulary/EquationVisualizer.tsx
+10:8  Warning: 'MathMarkdown' is defined but never used.  @typescript-eslint/no-unused-vars
+12:10  Warning: 'PHYSICS_LEVEL' is defined but never used.  @typescript-eslint/no-unused-vars
+377:9  Warning: The 'currentValues' logical expression could make the dependencies of useEffect Hook (at line 411) change on every render. To fix this, wrap the initialization of 'currentValues' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+377:9  Warning: The 'currentValues' logical expression could make the dependencies of useCallback Hook (at line 575) change on every render. To fix this, wrap the initialization of 'currentValues' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+377:9  Warning: The 'currentValues' logical expression could make the dependencies of useCallback Hook (at line 715) change on every render. To fix this, wrap the initialization of 'currentValues' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+542:6  Warning: React Hook useCallback has unnecessary dependencies: 'currentValues' and 'resultValue'. Either exclude them or remove the dependency array.  react-hooks/exhaustive-deps
+857:73  Warning: 'config' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/vocabulary/games/VocabularyBalderdashGame.tsx
+74:6  Warning: React Hook useCallback has a missing dependency: 'roomId'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/vocabulary/games/VocabularyConcentrationGame.tsx
+13:3  Warning: 'CheckCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+216:6  Warning: React Hook useCallback has a missing dependency: 'checkForMatch'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/vocabulary/games/VocabularyCrosswordGameWrapper.tsx
+16:3  Warning: 'difficulty' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/vocabulary/games/VocabularyHangmanGame.tsx
+16:3  Warning: 'CheckCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+20:3  Warning: 'Clock' is defined but never used.  @typescript-eslint/no-unused-vars
+233:6  Warning: React Hook useCallback has a missing dependency: 'gameState.wrongGuesses'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+326:9  Warning: 'getScoreColor' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/vocabulary/games/VocabularyLetterCatchGame.tsx
+159:6  Warning: React Hook useCallback has a missing dependency: 'sei.homeLang'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/vocabulary/games/VocabularyMatchingGameWrapper.tsx
+12:3  Warning: 'CheckCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/vocabulary/games/VocabularyQuizBowlGame.tsx
+12:3  Warning: 'Clock' is defined but never used.  @typescript-eslint/no-unused-vars
+79:10  Warning: 'questionResults' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+150:6  Warning: React Hook useEffect has a missing dependency: 'handleAnswer'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+254:6  Warning: React Hook useCallback has a missing dependency: 'multiplier'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+339:11  Warning: 'totalTime' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/contexts/SimulationContext.tsx
+76:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+98:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+138:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+158:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+183:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+201:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/contexts/StudentActivityContext.tsx
+35:20  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+47:21  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+162:6  Warning: React Hook useEffect has a missing dependency: 'initializeData'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+164:9  Warning: The 'initializeData' function makes the dependencies of useCallback Hook (at line 454) change on every render. To fix this, wrap the definition of 'initializeData' in its own useCallback() Hook.  react-hooks/exhaustive-deps
+254:6  Warning: React Hook useCallback has a missing dependency: 'fetchAssignmentSubmissions'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+376:60  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+378:31  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+379:28  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+562:21  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/data/deck-sources/unit-1-teaching/runtime.js
+38:29  Warning: 'id' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/hooks/useSimulationCompletion.ts
+46:38  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+147:79  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+206:59  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/lib/oauth-security.ts
+144:54  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/lib/risc-handler.ts
+184:14  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/lib/secret-manager.ts
+10:33  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+35:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+108:21  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+138:23  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+183:35  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+207:19  Warning: '_secretName' is defined but never used.  @typescript-eslint/no-unused-vars
+207:40  Warning: '_value' is defined but never used.  @typescript-eslint/no-unused-vars
+213:22  Warning: '_secretName' is defined but never used.  @typescript-eslint/no-unused-vars
+268:39  Warning: '_value' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/student-management.ts
+262:68  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/lib/supabase.ts
+56:12  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/types/assignment.ts
+10:19  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/types/interactive-content.ts
+92:38  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+93:39  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+176:39  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+182:32  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+211:28  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+238:32  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+258:24  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+305:38  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+311:40  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+326:24  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+333:33  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+342:27  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+347:30  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+348:40  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+395:40  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/342) ...
+   Generating static pages (85/342) 
+   Generating static pages (170/342) 
+   Generating static pages (256/342) 
+ ✓ Generating static pages (342/342)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                   Size  First Load JS
+┌ ○ /                                                      4.68 kB         119 kB
+├ ○ /_not-found                                               1 kB         106 kB
+├ ƒ /admin                                                   801 B         106 kB
+├ ƒ /admin/analytics                                       9.38 kB         223 kB
+├ ƒ /admin/arcade                                          2.89 kB         111 kB
+├ ƒ /admin/avatar                                          3.78 kB         123 kB
+├ ƒ /admin/challenges                                        13 kB         126 kB
+├ ƒ /admin/check-lab                                       3.18 kB         108 kB
+├ ƒ /admin/classes                                         3.14 kB         112 kB
+├ ƒ /admin/classes/[courseId]                              5.38 kB         146 kB
+├ ƒ /admin/collaborators                                   1.98 kB         110 kB
+├ ƒ /admin/command-center                                  47.2 kB         662 kB
+├ ƒ /admin/command-center/recap                            7.56 kB         184 kB
+├ ƒ /admin/control-room                                    38.3 kB         399 kB
+├ ƒ /admin/dashboard                                       4.77 kB         337 kB
+├ ƒ /admin/design-system                                   6.99 kB         120 kB
+├ ƒ /admin/duplicates                                      3.92 kB         116 kB
+├ ƒ /admin/home                                            14.4 kB         146 kB
+├ ƒ /admin/lesson-access                                     191 B         141 kB
+├ ƒ /admin/lessons/[id]                                    1.95 kB         119 kB
+├ ƒ /admin/lessons/[id]/build                              40.7 kB         632 kB
+├ ƒ /admin/lessons/[id]/edit                               13.3 kB         400 kB
+├ ƒ /admin/lessons/[id]/preview                            5.05 kB         514 kB
+├ ƒ /admin/lessons/new                                     17.3 kB         149 kB
+├ ƒ /admin/lessons/roadmap                                   206 B         109 kB
+├ ƒ /admin/lobby                                           9.58 kB         118 kB
+├ ƒ /admin/lobby/[id]                                      16.3 kB         435 kB
+├ ƒ /admin/lobby/[id]/present                              2.17 kB         111 kB
+├ ƒ /admin/mastery                                           801 B         106 kB
+├ ƒ /admin/math-spine                                      6.11 kB         122 kB
+├ ƒ /admin/math-spine/bank                                 8.59 kB         138 kB
+├ ƒ /admin/math-spine/missions                             4.83 kB         113 kB
+├ ƒ /admin/media                                           1.55 kB         107 kB
+├ ƒ /admin/media-generator                                   206 B         109 kB
+├ ƒ /admin/migrations                                        206 B         109 kB
+├ ƒ /admin/migrations/check                                5.47 kB         122 kB
+├ ƒ /admin/observe                                           13 kB         315 kB
+├ ƒ /admin/orphans                                         4.24 kB         116 kB
+├ ƒ /admin/oversight                                       4.84 kB         116 kB
+├ ƒ /admin/pacing                                          12.1 kB         124 kB
+├ ƒ /admin/pacing/overview                                 2.89 kB         108 kB
+├ ƒ /admin/projector                                       2.24 kB         585 kB
+├ ƒ /admin/question-bank                                   7.41 kB         370 kB
+├ ƒ /admin/quizzes                                           25 kB         264 kB
+├ ƒ /admin/readings                                        16.3 kB         162 kB
+├ ƒ /admin/resources                                         206 B         109 kB
+├ ƒ /admin/reviews                                         10.8 kB         130 kB
+├ ƒ /admin/roster                                          7.21 kB         119 kB
+├ ƒ /admin/simulations                                     9.53 kB         126 kB
+├ ƒ /admin/simulations/activities                          11.3 kB         120 kB
+├ ƒ /admin/simulations/analytics                           10.3 kB         129 kB
+├ ƒ /admin/simulations/assignments                         8.25 kB         374 kB
+├ ƒ /admin/store                                           2.44 kB         107 kB
+├ ƒ /admin/student-preview                                 4.65 kB         509 kB
+├ ƒ /admin/teacher                                         9.45 kB         141 kB
+├ ƒ /admin/teacher/plans                                   17.9 kB         133 kB
+├ ƒ /admin/textbook                                        3.46 kB         108 kB
+├ ƒ /admin/trades                                          1.17 kB         106 kB
+├ ƒ /admin/vocabulary                                      17.5 kB         165 kB
+├ ƒ /admin/vocabulary/assign                                 734 B         139 kB
+├ ƒ /admin/vocabulary/concentration                          801 B         106 kB
+├ ƒ /admin/vocabulary/crossword                              801 B         106 kB
+├ ƒ /admin/vocabulary/hangman                                801 B         106 kB
+├ ƒ /admin/vocabulary/letter-catch                           801 B         106 kB
+├ ƒ /admin/vocabulary/matching                               801 B         106 kB
+├ ƒ /admin/vocabulary/quiz-bowl                              801 B         106 kB
+├ ƒ /admin/vocabulary/tasks                                  431 B         138 kB
+├ ƒ /admin/vocabulary/word-shoot                             801 B         106 kB
+├ ƒ /admin/workshop                                         5.1 kB         114 kB
+├ ƒ /admin/xp-terms                                        1.62 kB         110 kB
+├ ƒ /api/admin/arcade                                        801 B         106 kB
+├ ƒ /api/admin/avatar/catalog                                801 B         106 kB
+├ ƒ /api/admin/check-migration                               801 B         106 kB
+├ ƒ /api/admin/check-misses                                  801 B         106 kB
+├ ƒ /api/admin/collaborators                                 801 B         106 kB
+├ ƒ /api/admin/duplicates                                    801 B         106 kB
+├ ƒ /api/admin/duplicates/merge                              801 B         106 kB
+├ ƒ /api/admin/engagement                                    801 B         106 kB
+├ ƒ /api/admin/experience                                    801 B         106 kB
+├ ƒ /api/admin/lesson-plan-links                             801 B         106 kB
+├ ƒ /api/admin/lessons                                       801 B         106 kB
+├ ƒ /api/admin/lifecycle                                     801 B         106 kB
+├ ƒ /api/admin/lifecycle/archive                             801 B         106 kB
+├ ƒ /api/admin/lifecycle/purge                               801 B         106 kB
+├ ƒ /api/admin/lifecycle/reactivate                          801 B         106 kB
+├ ƒ /api/admin/list-simulations                              801 B         106 kB
+├ ƒ /api/admin/orphans                                       801 B         106 kB
+├ ƒ /api/admin/orphans/enroll                                801 B         106 kB
+├ ƒ /api/admin/oversight                                     801 B         106 kB
+├ ƒ /api/admin/overview                                      801 B         106 kB
+├ ƒ /api/admin/reviews                                       801 B         106 kB
+├ ƒ /api/admin/reviews/generate                              801 B         106 kB
+├ ƒ /api/admin/search                                        801 B         106 kB
+├ ƒ /api/admin/seed-missing-simulations                      801 B         106 kB
+├ ƒ /api/admin/stats                                         801 B         106 kB
+├ ƒ /api/admin/teacher-access                                801 B         106 kB
+├ ƒ /api/admin/teacher-requests                              801 B         106 kB
+├ ƒ /api/admin/workshop                                      801 B         106 kB
+├ ƒ /api/analytics/insights                                  801 B         106 kB
+├ ƒ /api/analytics/mastery                                   801 B         106 kB
+├ ƒ /api/analytics/signals                                   801 B         106 kB
+├ ƒ /api/arcade/cabinet                                      801 B         106 kB
+├ ƒ /api/arcade/coin                                         801 B         106 kB
+├ ƒ /api/arcade/focus                                        801 B         106 kB
+├ ƒ /api/arcade/hub                                          801 B         106 kB
+├ ƒ /api/arcade/leaderboard                                  801 B         106 kB
+├ ƒ /api/arcade/mic-check/context                            801 B         106 kB
+├ ƒ /api/arcade/payout                                       801 B         106 kB
+├ ƒ /api/arcade/score                                        801 B         106 kB
+├ ƒ /api/arcade/spin                                         801 B         106 kB
+├ ƒ /api/assignment-submissions                              801 B         106 kB
+├ ƒ /api/assignments                                         801 B         106 kB
+├ ƒ /api/assignments/[id]                                    801 B         106 kB
+├ ƒ /api/assignments/analytics                               801 B         106 kB
+├ ƒ /api/assignments/simulations                             801 B         106 kB
+├ ƒ /api/auth/[...nextauth]                                  801 B         106 kB
+├ ƒ /api/avatar                                              801 B         106 kB
+├ ƒ /api/avatar/equip                                        801 B         106 kB
+├ ƒ /api/avatar/gallery                                      801 B         106 kB
+├ ƒ /api/avatar/like                                         801 B         106 kB
+├ ƒ /api/avatar/me                                           801 B         106 kB
+├ ƒ /api/avatar/profile                                      801 B         106 kB
+├ ƒ /api/avatar/purchase                                     801 B         106 kB
+├ ƒ /api/avatar/spotlight                                    801 B         106 kB
+├ ƒ /api/avatar/traits                                       801 B         106 kB
+├ ƒ /api/balderdash                                          801 B         106 kB
+├ ƒ /api/balderdash/[id]                                     801 B         106 kB
+├ ƒ /api/balderdash/join                                     801 B         106 kB
+├ ƒ /api/blocks/generate-visual                              801 B         106 kB
+├ ƒ /api/challenges                                          801 B         106 kB
+├ ƒ /api/classes/[courseId]                                  801 B         106 kB
+├ ƒ /api/classes/[courseId]/windows                          801 B         106 kB
+├ ƒ /api/concept-exercises/[chapter]                         801 B         106 kB
+├ ƒ /api/concept-exercises/[chapter]/grade                   801 B         106 kB
+├ ƒ /api/courses                                             801 B         106 kB
+├ ƒ /api/courses/enroll                                      801 B         106 kB
+├ ƒ /api/courses/join-code                                   801 B         106 kB
+├ ƒ /api/duel                                                801 B         106 kB
+├ ƒ /api/duel/[id]                                           801 B         106 kB
+├ ƒ /api/duel/join                                           801 B         106 kB
+├ ƒ /api/enrollment/status                                   801 B         106 kB
+├ ƒ /api/feedback                                            801 B         106 kB
+├ ƒ /api/generate-cat-reactions                              801 B         106 kB
+├ ƒ /api/generate-media/image                                801 B         106 kB
+├ ƒ /api/generate-media/video                                801 B         106 kB
+├ ƒ /api/generate-media/video/status                         801 B         106 kB
+├ ƒ /api/google-classroom                                    801 B         106 kB
+├ ƒ /api/home                                                801 B         106 kB
+├ ƒ /api/language-profile                                    801 B         106 kB
+├ ƒ /api/leaderboard                                         801 B         106 kB
+├ ƒ /api/lesson-access                                       801 B         106 kB
+├ ƒ /api/lessons/[id]                                        801 B         106 kB
+├ ƒ /api/lessons/[id]/open-all                               801 B         106 kB
+├ ƒ /api/lessons/[id]/videos                                 801 B         106 kB
+├ ƒ /api/lessons/[id]/vocab                                  801 B         106 kB
+├ ƒ /api/lessons/blocks                                      801 B         106 kB
+├ ƒ /api/lessons/drafts                                      801 B         106 kB
+├ ƒ /api/lessons/experience                                  801 B         106 kB
+├ ƒ /api/lessons/published                                   801 B         106 kB
+├ ƒ /api/lessons/sections                                    801 B         106 kB
+├ ƒ /api/lessons/submit                                      801 B         106 kB
+├ ƒ /api/lessons/video-progress                              801 B         106 kB
+├ ƒ /api/lobby/escape                                        801 B         106 kB
+├ ƒ /api/lobby/join                                          801 B         106 kB
+├ ƒ /api/lobby/progress                                      801 B         106 kB
+├ ƒ /api/lobby/reflect                                       801 B         106 kB
+├ ƒ /api/lobby/sessions                                      801 B         106 kB
+├ ƒ /api/lobby/sessions/[id]                                 801 B         106 kB
+├ ƒ /api/lobby/sessions/[id]/escape                          801 B         106 kB
+├ ƒ /api/lobby/sessions/[id]/group                           801 B         106 kB
+├ ƒ /api/lobby/sessions/[id]/reassign                        801 B         106 kB
+├ ƒ /api/lobby/submit                                        801 B         106 kB
+├ ƒ /api/lobby/targets                                       801 B         106 kB
+├ ƒ /api/mastery/dashboard                                   801 B         106 kB
+├ ƒ /api/mastery/evidence-review                             801 B         106 kB
+├ ƒ /api/mastery/grid                                        801 B         106 kB
+├ ƒ /api/mastery/lesson-comparison                           801 B         106 kB
+├ ƒ /api/mastery/lesson-review                               801 B         106 kB
+├ ƒ /api/mastery/queue                                       801 B         106 kB
+├ ƒ /api/mastery/records                                     801 B         106 kB
+├ ƒ /api/mastery/roster                                      801 B         106 kB
+├ ƒ /api/mastery/student-work                                801 B         106 kB
+├ ƒ /api/mastery/suggest-rating                              801 B         106 kB
+├ ƒ /api/math-missions                                       801 B         106 kB
+├ ƒ /api/math-missions/teacher                               801 B         106 kB
+├ ƒ /api/math-spine/bank                                     801 B         106 kB
+├ ƒ /api/math-spine/competency-lesson                        801 B         106 kB
+├ ƒ /api/math-spine/daily                                    801 B         106 kB
+├ ƒ /api/math-spine/dashboard                                801 B         106 kB
+├ ƒ /api/math-spine/math-grid                                801 B         106 kB
+├ ƒ /api/math-spine/practice                                 801 B         106 kB
+├ ƒ /api/math-spine/records                                  801 B         106 kB
+├ ƒ /api/math-spine/revision                                 801 B         106 kB
+├ ƒ /api/math-spine/spotlight                                801 B         106 kB
+├ ƒ /api/math-spine/student-warmups                          801 B         106 kB
+├ ƒ /api/math-spine/teacher-daily                            801 B         106 kB
+├ ƒ /api/math-spine/translate                                801 B         106 kB
+├ ƒ /api/math-spine/translate-backfill                       801 B         106 kB
+├ ƒ /api/math-spine/warmup-queue                             801 B         106 kB
+├ ƒ /api/math-spine/warmup-review                            801 B         106 kB
+├ ƒ /api/math-spine/warmup-submit                            801 B         106 kB
+├ ƒ /api/me/classes                                          801 B         106 kB
+├ ƒ /api/me/enrollment                                       801 B         106 kB
+├ ƒ /api/media/upload                                        801 B         106 kB
+├ ƒ /api/notifications                                       801 B         106 kB
+├ ƒ /api/pacing/calendar                                     801 B         106 kB
+├ ƒ /api/pacing/overview                                     801 B         106 kB
+├ ƒ /api/pacing/plan                                         801 B         106 kB
+├ ƒ /api/pacing/rotation                                     801 B         106 kB
+├ ƒ /api/pacing/section                                      801 B         106 kB
+├ ƒ /api/presence/ping                                       801 B         106 kB
+├ ƒ /api/present/document                                    801 B         106 kB
+├ ƒ /api/present/invitations                                 801 B         106 kB
+├ ƒ /api/present/live                                        801 B         106 kB
+├ ƒ /api/present/plans                                       801 B         106 kB
+├ ƒ /api/present/respond                                     801 B         106 kB
+├ ƒ /api/present/sessions                                    801 B         106 kB
+├ ƒ /api/present/sessions/[id]                               801 B         106 kB
+├ ƒ /api/present/sessions/[id]/realtime                      801 B         106 kB
+├ ƒ /api/present/sessions/[id]/tools                         801 B         106 kB
+├ ƒ /api/present/textbook-activities                         801 B         106 kB
+├ ƒ /api/question-bank                                       801 B         106 kB
+├ ƒ /api/question-bank/units                                 801 B         106 kB
+├ ƒ /api/question-bank/usage                                 801 B         106 kB
+├ ƒ /api/quizzes                                             801 B         106 kB
+├ ƒ /api/quizzes/[id]                                        801 B         106 kB
+├ ƒ /api/quizzes/[id]/draft                                  801 B         106 kB
+├ ƒ /api/quizzes/[id]/due-date                               801 B         106 kB
+├ ƒ /api/quizzes/catalog                                     801 B         106 kB
+├ ƒ /api/quizzes/generate                                    801 B         106 kB
+├ ƒ /api/quizzes/results                                     801 B         106 kB
+├ ƒ /api/quizzes/reuse                                       801 B         106 kB
+├ ƒ /api/quizzes/vocabulary                                  801 B         106 kB
+├ ƒ /api/readings                                            801 B         106 kB
+├ ƒ /api/readings/[id]                                       801 B         106 kB
+├ ƒ /api/readings/catalog                                    801 B         106 kB
+├ ƒ /api/readings/from-lesson                                801 B         106 kB
+├ ƒ /api/reviews/complete                                    801 B         106 kB
+├ ƒ /api/reviews/serve                                       801 B         106 kB
+├ ƒ /api/rewards/manage                                      801 B         106 kB
+├ ƒ /api/rewards/redeem                                      801 B         106 kB
+├ ƒ /api/rewards/store                                       801 B         106 kB
+├ ƒ /api/risc/webhook                                        801 B         106 kB
+├ ƒ /api/roster/courses                                      801 B         106 kB
+├ ƒ /api/roster/import                                       801 B         106 kB
+├ ƒ /api/roster/last-login                                   801 B         106 kB
+├ ƒ /api/roster/students                                     801 B         106 kB
+├ ƒ /api/roster/test                                         801 B         106 kB
+├ ƒ /api/rubrics                                             801 B         106 kB
+├ ƒ /api/rubrics/assessments                                 801 B         106 kB
+├ ƒ /api/sections                                            801 B         106 kB
+├ ƒ /api/sections/students                                   801 B         106 kB
+├ ƒ /api/simulations                                         801 B         106 kB
+├ ƒ /api/simulations/[slug]                                  801 B         106 kB
+├ ƒ /api/simulations/access                                  801 B         106 kB
+├ ƒ /api/simulations/activity                                801 B         106 kB
+├ ƒ /api/simulations/activity/complete                       801 B         106 kB
+├ ƒ /api/simulations/activity/interaction                    801 B         106 kB
+├ ƒ /api/simulations/analytics                               801 B         106 kB
+├ ƒ /api/simulations/assignments                             801 B         106 kB
+├ ƒ /api/simulations/assignments/submit                      801 B         106 kB
+├ ƒ /api/student-activity                                    801 B         106 kB
+├ ƒ /api/student-activity/summary                            801 B         106 kB
+├ ƒ /api/student-progress/game-scores                        801 B         106 kB
+├ ƒ /api/student-progress/lessons                            801 B         106 kB
+├ ƒ /api/student-progress/video-questions                    801 B         106 kB
+├ ƒ /api/students/unassigned                                 801 B         106 kB
+├ ƒ /api/submissions                                         801 B         106 kB
+├ ƒ /api/teacher/access-request                              801 B         106 kB
+├ ƒ /api/teacher/challenges                                  801 B         106 kB
+├ ƒ /api/teacher/cockpit                                     801 B         106 kB
+├ ƒ /api/teacher/cockpit/roster                              801 B         106 kB
+├ ƒ /api/teacher/courses                                     801 B         106 kB
+├ ƒ /api/teacher/lesson-plans                                801 B         106 kB
+├ ƒ /api/teacher/lesson-plans/[unit_id]/[day]/docx           801 B         106 kB
+├ ƒ /api/teacher/lesson-plans/[unit_id]/[day]/honors         801 B         106 kB
+├ ƒ /api/teacher/lesson-plans/[unit_id]/[day]/honors-docx    801 B         106 kB
+├ ƒ /api/teacher/lesson-plans/[unit_id]/[day]/pdf            801 B         106 kB
+├ ƒ /api/teacher/lesson-plans/[unit_id]/[day]/print          801 B         106 kB
+├ ƒ /api/teacher/onboarding                                  801 B         106 kB
+├ ƒ /api/teacher/student-preview                             801 B         106 kB
+├ ƒ /api/teacher/summary                                     801 B         106 kB
+├ ƒ /api/teacher/video-progress                              801 B         106 kB
+├ ƒ /api/teacher/worksheets/[unit]/[day]/key                 801 B         106 kB
+├ ƒ /api/teacher/xp-goals                                    801 B         106 kB
+├ ƒ /api/teacher/xp-terms                                    801 B         106 kB
+├ ƒ /api/textbook/[chapter]                                  801 B         106 kB
+├ ƒ /api/textbook/admin                                      801 B         106 kB
+├ ƒ /api/trade-profile                                       801 B         106 kB
+├ ƒ /api/vocab/assignments                                   801 B         106 kB
+├ ƒ /api/vocab/attempts                                      801 B         106 kB
+├ ƒ /api/vocab/catalog                                       801 B         106 kB
+├ ƒ /api/vocab/checkpoints                                   801 B         106 kB
+├ ƒ /api/vocab/checks                                        801 B         106 kB
+├ ƒ /api/vocab/competency                                    801 B         106 kB
+├ ƒ /api/vocab/mastery                                       801 B         106 kB
+├ ƒ /api/vocab/play                                          801 B         106 kB
+├ ƒ /api/vocab/sources                                       801 B         106 kB
+├ ƒ /api/vocab/tasks                                         801 B         106 kB
+├ ƒ /api/vocab/teaching-sources                              801 B         106 kB
+├ ƒ /api/vocab/terms                                         801 B         106 kB
+├ ƒ /api/vocab/xp                                            801 B         106 kB
+├ ƒ /api/vocabulary                                          801 B         106 kB
+├ ƒ /api/vocabulary/upload                                   801 B         106 kB
+├ ƒ /api/xp-challenges                                       801 B         106 kB
+├ ƒ /api/xp-goal                                             801 B         106 kB
+├ ƒ /api/xp-policy                                           801 B         106 kB
+├ ○ /apple-icon.png                                            0 B            0 B
+├ ○ /arcade                                                11.5 kB         130 kB
+├ ƒ /arcade/[slug]                                         7.15 kB         116 kB
+├ ○ /arcade/centerpoint                                      206 B         109 kB
+├ ○ /arcade/conversion-workshop                              206 B         109 kB
+├ ○ /arcade/cut-and-fit                                      206 B         109 kB
+├ ○ /arcade/missions                                       1.26 kB         120 kB
+├ ƒ /arcade/missions/[slug]                                13.7 kB         128 kB
+├ ○ /arcade/tape-measure                                     206 B         109 kB
+├ ○ /arcade/unit-lab                                         206 B         109 kB
+├ ○ /auth/dev-login                                        5.11 kB         121 kB
+├ ○ /auth/error                                            5.14 kB         121 kB
+├ ○ /auth/signin                                           4.85 kB         130 kB
+├ ○ /avatar                                                8.98 kB         133 kB
+├ ○ /avatar/gallery                                        6.93 kB         134 kB
+├ ○ /dashboard                                               801 B         106 kB
+├ ○ /dashboard/growth                                      12.1 kB         340 kB
+├ ○ /dashboard/math-spine                                  2.21 kB         332 kB
+├ ○ /dashboard/math-spine/warmup                           17.3 kB         359 kB
+├ ƒ /embed/present-block/[sessionId]                       3.42 kB         578 kB
+├ ƒ /embed/present/[lessonId]                              4.21 kB         579 kB
+├ ƒ /embed/sim/[slug]                                      2.69 kB         108 kB
+├ ○ /experience                                            6.28 kB         126 kB
+├ ○ /home                                                    18 kB         300 kB
+├ ○ /icon.png                                                  0 B            0 B
+├ ○ /leaderboard                                           12.4 kB         144 kB
+├ ○ /lessons                                               22.5 kB         401 kB
+├ ƒ /lessons/[slug]                                        4.17 kB         510 kB
+├ ○ /lobby                                                    2 kB         110 kB
+├ ƒ /lobby/[code]                                          18.6 kB         437 kB
+├ ƒ /quizzes                                               2.75 kB         258 kB
+├ ƒ /quizzes/[id]                                          10.5 kB         260 kB
+├ ○ /readings                                              6.57 kB         140 kB
+├ ƒ /readings/[id]                                         9.13 kB         159 kB
+├ ○ /reference                                             6.15 kB         294 kB
+├ ƒ /review/[targetId]                                     9.85 kB         312 kB
+├ ƒ /simulations                                           8.57 kB         121 kB
+├ ƒ /simulations/area-under-curve                          5.11 kB         132 kB
+├ ƒ /simulations/asteroid-trajectory                         281 B         131 kB
+├ ƒ /simulations/astronaut-thrust                          3.44 kB         130 kB
+├ ƒ /simulations/atwood-machine                            3.82 kB         130 kB
+├ ƒ /simulations/car-race                                  4.04 kB         131 kB
+├ ƒ /simulations/cart-collisions                           4.69 kB         131 kB
+├ ƒ /simulations/carts-third-law                           3.77 kB         130 kB
+├ ƒ /simulations/closing-speed                             3.73 kB         130 kB
+├ ƒ /simulations/constant-velocity                         3.87 kB         130 kB
+├ ƒ /simulations/dart-deflection                           4.67 kB         131 kB
+├ ƒ /simulations/distance-displacement                     4.56 kB         131 kB
+├ ƒ /simulations/distance-displacement/assignment          11.9 kB         311 kB
+├ ƒ /simulations/free-body-diagram                         5.22 kB         132 kB
+├ ƒ /simulations/freefall-cliff                            3.59 kB         130 kB
+├ ƒ /simulations/impulse-momentum                          4.32 kB         131 kB
+├ ƒ /simulations/maze-vectors                              7.08 kB         134 kB
+├ ƒ /simulations/measure-of-all-things                     22.5 kB         134 kB
+├ ƒ /simulations/measurement-precision                     6.79 kB         133 kB
+├ ƒ /simulations/monkey-hunter                             4.56 kB         131 kB
+├ ƒ /simulations/picket-fence-g                               4 kB         130 kB
+├ ƒ /simulations/predicting-2026-xj                        1.03 kB         132 kB
+├ ƒ /simulations/projectile-motion                         5.18 kB         132 kB
+├ ƒ /simulations/race-track                                3.26 kB         130 kB
+├ ƒ /simulations/riverboat-crossing                        3.89 kB         130 kB
+├ ƒ /simulations/riverboat-crossing-3d                      127 kB         253 kB
+├ ƒ /simulations/slope-calculator                          4.95 kB         131 kB
+├ ƒ /simulations/sumo-forces                               3.63 kB         130 kB
+├ ƒ /simulations/uniformly-accelerated-motion              3.89 kB         130 kB
+├ ƒ /simulations/vacuum-chamber                             3.8 kB         130 kB
+├ ○ /store                                                 5.79 kB         125 kB
+├ ○ /teacher-access                                        2.33 kB         111 kB
+├ ○ /textbook                                              7.45 kB         133 kB
+├ ○ /vocabulary                                              801 B         106 kB
+├ ○ /vocabulary/balderdash                                 6.75 kB         139 kB
+├ ○ /vocabulary/concentration                              8.09 kB         168 kB
+├ ○ /vocabulary/crossword                                  7.82 kB         167 kB
+├ ○ /vocabulary/duel                                       7.49 kB         139 kB
+├ ○ /vocabulary/equation-visualizer                        11.3 kB         166 kB
+├ ○ /vocabulary/hangman                                    8.67 kB         168 kB
+├ ○ /vocabulary/letter-catch                               11.4 kB         171 kB
+├ ○ /vocabulary/matching                                   10.3 kB         170 kB
+├ ○ /vocabulary/quiz-bowl                                  9.42 kB         169 kB
+├ ○ /vocabulary/word-shoot                                  8.9 kB         168 kB
+├ ○ /vocabulary/work                                       20.6 kB         137 kB
+└ ○ /xp                                                    3.98 kB         112 kB
++ First Load JS shared by all                               105 kB
+  ├ chunks/5d885ad4-6ca1588ec27ff130.js                    54.3 kB
+  ├ chunks/78144-d47acd0160710273.js                       46.4 kB
+  └ other shared chunks (total)                            4.37 kB
+
+
+ƒ Middleware                                               34.9 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

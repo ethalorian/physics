@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>INVERSE BLITZ — solve or be buried</title>
 <style>
   :root{
@@ -230,10 +230,12 @@
   }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
+<link rel="stylesheet" href="math-studio.css">
 </head>
-<body>
+<body data-game="inverse-blitz" class="falling">
 
 <div id="wrap">
+  <header class="studioBrand"><span class="studioMark" aria-hidden="true">↔</span><div><span class="studioEyebrow">SM · EQUATION LAB</span><h2>Inverse Blitz</h2></div><span class="studioBadge">MATH ARCADE</span></header>
   <div id="hud">
     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
     <div class="stat"><div class="lab">Level</div><div class="val" id="levelV">1</div></div>
@@ -319,6 +321,7 @@
   </div>
 </div>
 
+<script src="math-studio.js"></script>
 <script src="math-cabinet.js"></script>
 <script>
 "use strict";
@@ -345,9 +348,9 @@ function exprStr(p,q){
 }
 function op(sym,val){ return sym+" "+val; }
 
-const TIP_FLIP  = "Same operation ≠ inverse. Do the OPPOSITE.";
-const TIP_ORDER = "Reverse PEMDAS: undo + and − before × and ÷.";
-const TIP_NUM   = "Right move, wrong number — undo what's attached to x.";
+const TIP_FLIP  = "To undo this term in one step, use its inverse on both sides.";
+const TIP_ORDER = "Undo the outer operation first. Use the same operation on both sides.";
+const TIP_NUM   = "For this step, undo the factor or term attached to the target.";
 const TIP_X     = "Get the x-terms together first.";
 
 function W(l,tip){ return {l,tip}; }
@@ -540,10 +543,10 @@ const PHYS_BANK = [
     ["v = v₀ + at", "v₀ = v − at"],
     [ {c:op(M,"at"), w:[W(op("+","at"),TIP_FLIP), W(op("÷","at"),TIP_FLIP), W(op(M,"v"),TIP_NUM)]} ], 1),
   PF("Gravitational PE", "h",
-    ["PE = mgh", "h = PE/mg"],
+    ["PE = mgh", "h = PE/(mg)"],
     [ {c:op("÷","mg"), w:[W(op("×","mg"),TIP_PHY_MUL), W(op("÷","m"),TIP_NUM), W(op(M,"mg"),TIP_FLIP)]} ], 1),
   PF("Gravitational PE", "m",
-    ["PE = mgh", "m = PE/gh"],
+    ["PE = mgh", "m = PE/(gh)"],
     [ {c:op("÷","gh"), w:[W(op("×","gh"),TIP_PHY_MUL), W(op("÷","g"),TIP_NUM), W(op(M,"gh"),TIP_FLIP)]} ], 1),
   PF("Kinetic Energy", "v",
     ["KE = ½mv²", "2KE = mv²", "2KE/m = v²", "v = √(2KE/m)"],
@@ -623,6 +626,10 @@ function genForLevel(lv){
     default: return pick([genBoth,genBoth,()=>genDist(true),()=>genTwo(true),()=>genDivTwo(true)])();
   }
 }
+function explainGame(g,i=0){
+  return "Apply "+g.steps[i].c+" to BOTH sides: "+g.states[i]+" → "+g.states[i+1]+". "+(g.physics?"Keep any denominators nonzero; speed and other magnitudes use the nonnegative root.":"The equality stays balanced at every step.");
+}
+
 /* ================================================================
    PURE-LOGIC-END
    ================================================================ */
@@ -640,7 +647,7 @@ if (typeof document !== "undefined") (function(){
   const MAXJUNK=8, JUNKH=28;
   const SYM_COLOR = { "+":"#7dff4a", [M]:"#ff5d7e", "×":"#2ee6ff", "÷":"#ffc83d", "√":"#c792ff" };
 
-  let S=null, raf=null, lastT=0, muted=false, locked=false, practice=false, untimed=false;
+  let S=null, raf=null, lastT=0, muted=MathStudio.isMuted(), locked=false, practice=false, untimed=false;
 
   /* ---------- arcade bridge (see docs/ARCADE_PATTERN.md) ---------- */
   const normalEndTitle=document.querySelector("#overOv h1").textContent;
@@ -650,7 +657,7 @@ if (typeof document !== "undefined") (function(){
   let AC=null;
   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
   function beep(f,dur,type,vol,when){
-    if(muted) return; const ctx=ac(); if(!ctx) return;
+    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
     const t=ctx.currentTime+(when||0);
     const o=ctx.createOscillator(), g=ctx.createGain();
     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
@@ -679,7 +686,8 @@ if (typeof document !== "undefined") (function(){
   }
   function mult(){ return Math.min(4, 1+Math.floor(S.streak/4)); }
   function speed(){ return Math.min(95, 26 + (S.level-1)*9); }
-  function landY(){ return boardEl.clientHeight - S.junk*JUNKH - cardEl.offsetHeight - 4; }
+  function junkHeight(){return Math.max(8,Math.min(JUNKH,(boardEl.clientHeight-cardEl.offsetHeight-80)/MAXJUNK));}
+  function landY(){ return boardEl.clientHeight - S.junk*junkHeight() - cardEl.offsetHeight - 4; }
 
   function hud(){
     $("scoreV").textContent=S.score;
@@ -695,7 +703,8 @@ if (typeof document !== "undefined") (function(){
   function renderCard(){
     const st=S.cur, txt=st.states[st.i];
     sizeEq(txt); eqEl.textContent=txt;
-    if(st.physics){ solveForEl.textContent=st.solveFor; fnameEl.textContent=st.name; }
+    if(st.physics) solveForEl.textContent=st.solveFor;
+    fnameEl.style.display="block";fnameEl.textContent="Next goal: "+st.states[Math.min(st.i+1,st.states.length-1)];
     dotsEl.innerHTML = st.steps.map((_,k)=>`<span class="dot${k<st.i?" done":""}"></span>`).join("");
   }
 
@@ -709,22 +718,19 @@ if (typeof document !== "undefined") (function(){
       val.textContent = p.sym && p.val.startsWith(M) ? "("+p.val+")" : p.val;
       val.style.fontSize = p.val.length>5 ? "17px" : "25px";
       b.classList.remove("good","bad"); b.disabled=false;
+      b.setAttribute("aria-label", "Answer "+(i+1)+": "+c[i].l);
     });
   }
 
   function renderStack(){
     stackEl.innerHTML="";
-    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d); }
+    for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d); }
   }
 
   function practiceReview(message,label,done){
     locked=true;
-    let panel=document.getElementById("practiceReview");if(panel)panel.remove();
-    panel=document.createElement("div");panel.id="practiceReview";panel.setAttribute("role","status");
-    panel.style.cssText="position:absolute;left:5%;right:5%;bottom:16px;z-index:10;background:#10283b;color:white;padding:18px;border:1px solid #78ffcf;border-radius:14px;font:18px/1.5 system-ui";
-    const text=document.createElement("p");text.textContent=message;panel.append(text);
-    const button=document.createElement("button");button.textContent=label;button.style.cssText="padding:12px 18px;margin-top:12px;background:#78ffcf;color:#102030;border:0;border-radius:9px;font:700 17px system-ui";
-    button.onclick=()=>{panel.remove();done();};panel.append(button);boardEl.append(panel);button.focus();
+    MathStudio.review(message,label,()=>{done();chips[0].focus();});
+    if(S.cur.i>=S.cur.steps.length)MathStudio.model(S.cur,S.cur.steps.length-1);
   }
   function spawn(){
     S.needsSpawn=false;
@@ -734,9 +740,13 @@ if (typeof document !== "undefined") (function(){
     S.cur.chips = buildChips(S.cur.steps[0]);
     S.y = untimed ? 24 : -cardEl.offsetHeight - 10;
     nextEqEl.textContent = (S.next.physics? "["+S.next.solveFor+"]  " : "") + S.next.states[0];
-    renderCard(); renderChips(); place();
+    renderCard(); renderChips();
+    if(untimed)S.y=12;
+    place();
+    renderStack();
+    MathStudio.question(S.cur);
   }
-  function place(){ cardEl.style.top = S.y+"px"; }
+  function place(){ cardEl.style.transform="translate3d(-50%,"+S.y+"px,0)"; }
 
   function toast(msg){
     toastEl.textContent=msg; toastEl.classList.add("show");
@@ -766,6 +776,7 @@ if (typeof document !== "undefined") (function(){
     boardEl.appendChild(ring); setTimeout(()=>ring.remove(),520);
   }
   function particles(){
+    if(MathStudio.reducedMotion())return;
     const r=cardEl.getBoundingClientRect(), br=boardEl.getBoundingClientRect(), sc=boardScale();
     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
     for(let i=0;i<16;i++){
@@ -789,6 +800,9 @@ if (typeof document !== "undefined") (function(){
     if(!S || !S.running || locked) return;
     const run=S;
     const chip = S.cur.chips[i], btn=chips[i];
+    const explanation=explainGame(S.cur,S.cur.i);
+    MathStudio.record(S.cur.states[S.cur.i],chip.l,chip.ok?explanation:chip.tip,chip.ok);
+    if(chip.ok)MathStudio.model(S.cur,S.cur.i);
     if(untimed && !chip.ok){ S.wrong++; practiceReview(chip.tip,"Try again",()=>{locked=false;renderChips();}); hud(); return; }
     if(chip.ok){
       S.right++; S.streak++; S.bestStreak=Math.max(S.bestStreak,S.streak);
@@ -805,12 +819,13 @@ if (typeof document !== "undefined") (function(){
     }else{
       S.wrong++; S.streak=0;
       S.score=Math.max(0,S.score-15*S.level);locked=true;
-      setTimeout(()=>{if(S!==run)return;locked=false;S.cur.chips=buildChips(S.cur.steps[S.cur.i]);renderChips();},900);
+      practiceReview(chip.tip,"Try again",()=>{if(S!==run)return;S.cur.chips=buildChips(S.cur.steps[S.cur.i]);renderChips();locked=false;});
       btn.classList.add("bad"); sBad(); shake();
       cardEl.classList.add("hurt"); setTimeout(()=>cardEl.classList.remove("hurt"),200);
       if(!untimed)S.y += Math.max(20,(landY()-S.y)*0.28); place();
       toast("❌ "+chip.tip);
     }
+    ARCADE.checkpoint();
     hud();
   }
 
@@ -839,17 +854,23 @@ if (typeof document !== "undefined") (function(){
     ARCADE.reportScore(false); // checkpoint — protects the run if a lid closes
 
     locked=true;
-    if(untimed)practiceReview("Answer: "+S.cur.states[S.cur.states.length-1],"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
+    if(untimed)practiceReview(explainGame(S.cur,S.cur.steps.length-1),"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
     else setTimeout(()=>{ if(S!==run)return;locked=false; if(S.running&&S.needsSpawn) spawn(); },330);
     hud();
   }
 
   function land(){
+    if(locked || !S.running)return;
     sLand(); shake(true);
     S.junk++; S.wrong++; S.streak=0; renderStack(); hud();
-    if(S.junk>=MAXJUNK){ gameOver(); return; }
-    toast("🧱 Buried! Answer was "+S.cur.states[S.cur.states.length-1]);
-    spawn();
+    const message="Answer: "+S.cur.steps[S.cur.i].c+". "+explainGame(S.cur,S.cur.i);
+    MathStudio.record(S.cur.states[S.cur.i],"Time ran out",message,false);
+    ARCADE.checkpoint();
+    practiceReview(message,S.junk>=MAXJUNK?"See my results":"Next problem",()=>{
+      locked=false;
+      if(S.junk>=MAXJUNK){gameOver();return;}
+      if(S.running)spawn();else S.needsSpawn=true;
+    });
   }
 
   /* ---------- loop ---------- */
@@ -865,6 +886,7 @@ if (typeof document !== "undefined") (function(){
 
   function start(lv){
     if(!ARCADE.canStart())return;
+    MathStudio.reset();
     document.getElementById("practiceReview")?.remove();
     untimed=$("untimedPractice").checked;locked=false;
     S=freshState(lv);
@@ -880,7 +902,7 @@ if (typeof document !== "undefined") (function(){
     const begin=()=>{
       renderStack(); hud(); spawn();
       S.running=true; lastT=performance.now();
-      cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
+      cancelAnimationFrame(raf); if(!untimed)raf=requestAnimationFrame(tick);
     };
     ARCADE.requestCoin(res=>{
       if(!res.ok){ $("startOv").classList.remove("hidden"); return; }
@@ -906,7 +928,7 @@ if (typeof document !== "undefined") (function(){
     if(S.pausedAt&&S.cur)S.cur.born+=performance.now()-S.pausedAt;S.pausedAt=0;
     S.running=true; lastT=performance.now();
     if(S.needsSpawn&&!locked)spawn();
-    raf=requestAnimationFrame(tick);
+    if(!untimed)raf=requestAnimationFrame(tick);
   }
 
   /* ---------- high score ---------- */
@@ -930,13 +952,14 @@ if (typeof document !== "undefined") (function(){
   function gameOver(){
     S.running=false; cancelAnimationFrame(raf);
     ARCADE.reportScore(true); // final: closes the run, triggers the XP payout
+    if(MathStudio.reducedMotion()){showOverPanel();return;}
     boardEl.classList.add("doom");
     cardEl.style.display="none";
 
     const totalRows = Math.ceil(boardEl.clientHeight/JUNKH);
     let i = S.junk, n = 0;
     const iv = setInterval(()=>{
-      const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d);
+      const d=document.createElement("div"); d.className="junkrow";d.style.height=Math.max(4,junkHeight()-2)+"px";stackEl.appendChild(d);
       sThud(150 - i*4);
       if(n%2===0) shake(n%4===0);
       i++; n++;
@@ -961,7 +984,8 @@ if (typeof document !== "undefined") (function(){
     $("fSolved").textContent=S.solved;
     $("fAcc").textContent=acc+"%";
     $("fStreak").textContent=S.bestStreak;
-    $("overQuip").textContent=S.finishedByChoice?"Return for another challenge whenever you are ready.":pick(QUIPS);
+    $("overQuip").textContent="Keep equality balanced. Review your next move before another run.";
+    MathStudio.summary();
     const k=hsKey(), nh = S.score>getHS(k);
     if(nh) setHS(k,S.score);
     $("newHS").classList.toggle("hidden",!nh);
@@ -986,6 +1010,7 @@ if (typeof document !== "undefined") (function(){
   /* ---------- wiring ---------- */
   chips.forEach(b=>b.addEventListener("click",()=>choose(+b.dataset.i)));
   document.addEventListener("keydown",e=>{
+    if(e.repeat||e.ctrlKey||e.metaKey||e.altKey)return;
     if(e.key>="1"&&e.key<="4") choose(+e.key-1);
     else if(e.key==="p"||e.key==="P"||e.key==="Escape"){
       if(S && S.running) pause();
@@ -999,8 +1024,9 @@ if (typeof document !== "undefined") (function(){
   $("pauseBtn").addEventListener("click",pause);
   $("resumeBtn").addEventListener("click",resume);
   $("quitBtn").addEventListener("click",finishRun);
-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
+  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
   window.addEventListener("blur",()=>{ if(S&&S.running) pause(); });
+  document.addEventListener("visibilitychange",()=>{if(document.hidden&&S&&S.running)pause();});
 
   /* ---------- how to read the chips ---------- */
   (function(){
@@ -1025,25 +1051,6 @@ if (typeof document !== "undefined") (function(){
   hsLine();
 })();
 </script>
-<script>
-/* ---------- native-display autoscale: fill the frame on big screens,
-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
-(function(){
-  const wrap=document.getElementById("wrap");
-  if(!wrap) return;
-  function fit(){
-    wrap.style.transform="none"; wrap.style.marginTop="0px";
-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
-    wrap.style.transformOrigin="top center";
-    wrap.style.transform="scale("+k+")";
-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
-  }
-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
-  window.addEventListener("resize",fit);
-  setTimeout(fit,60); fit();
-})();
-</script>
+
 </body>
 </html>

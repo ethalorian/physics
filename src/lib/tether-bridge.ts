@@ -1,6 +1,9 @@
 /** Versioned bridge for cabinets with acknowledged saves. Serial requests prevent a late checkpoint from
  * overwriting a finished run. Final retries repeat the idempotent score/payout
  * operations and retain the play ID until both are confirmed. */
+const MATH_CABINETS = new Set(['inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle'])
+class SaveError extends Error { constructor(message: string, readonly status: number) { super(message) } }
+
 interface BridgeOptions {
   slug: string
   fetcher: typeof fetch
@@ -23,7 +26,7 @@ export function createTetherBridge(options: BridgeOptions) {
     try {
       const response = await fetcher(path, { method: 'POST', signal: controller.signal, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
       const data = await response.json().catch(() => ({}))
-      if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Could not save. Please retry.')
+      if (!response.ok) throw new SaveError(typeof data.error === 'string' ? data.error : 'Could not save. Please retry.', response.status)
       return data
     } catch (error) {
       if (controller.signal.aborted) throw new Error('Connection timed out. Try again or choose practice.')
@@ -45,12 +48,17 @@ export function createTetherBridge(options: BridgeOptions) {
         coins.clear(); coins.set(requestId, accepted); reply(accepted)
       } catch (error) { reply({ type: 'arcade:coinDenied', requestId, reason: error instanceof Error ? error.message : 'Connection failed.' }) }
     }
-    if (message.type === 'arcade:score') {
+    const recovering = message.type === 'arcade:recover' && MATH_CABINETS.has(options.slug)
+    if (recovering && !activePlay && message.final === true && typeof message.playId === 'string' && message.playId.length <= 120) {
+      // The route validates ownership AND cabinet before accepting the retained final.
+      activePlay = message.playId
+    }
+    if (message.type === 'arcade:score' || recovering) {
       if (finals.has(requestId)) { reply(finals.get(requestId)!); return }
       if (!activePlay || message.playId !== activePlay || closed) return
       const playId = activePlay
       try {
-        const saved = await post('/api/arcade/score', { playId, score: message.score, act: message.act, final: message.final === true, stats: message.stats })
+        const saved = await post('/api/arcade/score', { playId, slug: options.slug, score: message.score, act: message.act, final: message.final === true, stats: message.stats })
         if (message.final === true) {
           const payout = await post('/api/arcade/payout', { playId })
           if (typeof payout.balance === 'number') options.onBalance(payout.balance)
@@ -59,7 +67,11 @@ export function createTetherBridge(options: BridgeOptions) {
           finals.set(requestId, receipt); if (finals.size > 20) finals.delete(finals.keys().next().value!)
           reply(receipt); options.onFinished()
         } else reply({ type: 'arcade:scoreSaved', playId, requestId, score: saved.score, final: false })
-      } catch (error) { reply({ type: 'arcade:saveFailed', playId, requestId, reason: error instanceof Error ? error.message : 'Connection failed. Retry save.' }) }
+      } catch (error) {
+        const permanent = error instanceof SaveError && [403, 404, 410].includes(error.status)
+        if (recovering && permanent) { activePlay = null; closed = false }
+        reply({ type: 'arcade:saveFailed', playId, requestId, permanent, reason: error instanceof Error ? error.message : 'Connection failed. Retry save.' })
+      }
     }
   }
   return { handle(message: Record<string, unknown>): Promise<void> { queue = queue.then(() => handle(message)); return queue } }

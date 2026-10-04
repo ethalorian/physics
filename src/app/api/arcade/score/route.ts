@@ -37,8 +37,8 @@ function safeStats(s: unknown): Record<string, number | string> | null {
 
 export const POST = withAuth(async (request, ctx) => {
   const body = await request.json().catch(() => ({}))
-  const { playId, score, act, final, stats } = body as {
-    playId?: string; score?: number; act?: number; final?: boolean; stats?: unknown
+  const { playId, slug, score, act, final, stats } = body as {
+    playId?: string; slug?: string; score?: number; act?: number; final?: boolean; stats?: unknown
   }
   if (!playId || typeof score !== 'number' || !Number.isFinite(score)) {
     return NextResponse.json({ error: 'Missing playId or score' }, { status: 400 })
@@ -53,9 +53,13 @@ export const POST = withAuth(async (request, ctx) => {
   if (!play || play.user_id !== ctx.userId) {
     return NextResponse.json({ error: 'Unknown play' }, { status: 404 })
   }
+  if (slug !== undefined && slug !== play.game_slug) {
+    return NextResponse.json({ error: 'Run belongs to another cabinet' }, { status: 403 })
+  }
   // Protocol-2 cabinets can retry after a response is lost or payout fails. Ownership was
   // checked above; an already finished run is immutable and grants no new XP here.
-  if (['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle'].includes(play.game_slug) && play.status === 'finished' && final === true) {
+  const acknowledgedSave = ['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle'].includes(play.game_slug)
+  if (acknowledgedSave && play.status === 'finished' && final === true) {
     return NextResponse.json({ ok: true, score: play.score, finished: true, alreadySaved: true })
   }
   if (play.status !== 'active') {
@@ -98,7 +102,7 @@ export const POST = withAuth(async (request, ctx) => {
     ...(spamGuard ? { spam_guard: true } : {}),
   }
 
-  const { error } = await supabaseAdmin
+  let update = supabaseAdmin
     .from('arcade_plays')
     .update({
       score: newScore,
@@ -106,10 +110,18 @@ export const POST = withAuth(async (request, ctx) => {
       ...(final ? { status: 'finished', finished_at: new Date().toISOString() } : {}),
     })
     .eq('id', play.id)
+  // These clients acknowledge conflicts and retain the run for retry. Preserve
+  // legacy clients' existing save contract until they support acknowledgements.
+  if (acknowledgedSave) update = update.eq('status', 'active').eq('score', play.score)
+  const { data: updated, error } = await update
+    .select('id')
+    .maybeSingle()
   if (error) {
     console.error('[arcade/score] update failed:', error)
     return NextResponse.json({ error: 'Could not record score' }, { status: 500 })
   }
+
+  if (!updated) return NextResponse.json({ error: 'Run changed while saving. Retry save.' }, { status: 409 })
 
   return NextResponse.json({ ok: true, score: newScore, finished: !!final })
 })

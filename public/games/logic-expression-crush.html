@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EXPRESSION CRUSH — build it right or gridlock</title>
 <style>
   :root{
@@ -163,10 +163,12 @@
 .tile:focus-visible{outline:4px solid white;outline-offset:2px;z-index:4}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
+<link rel="stylesheet" href="math-studio.css">
 </head>
-<body>
+<body data-game="expression-crush" class="puzzle">
 
 <div id="wrap">
+  <header class="studioBrand"><span class="studioMark" aria-hidden="true">×</span><div><span class="studioEyebrow">SM · ORDER OF OPERATIONS</span><h2>Expression Crush</h2></div><span class="studioBadge">MATH ARCADE</span></header>
   <div id="hud">
     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
     <div class="stat"><div class="lab">Moves</div><div class="val" id="movesV">0</div></div>
@@ -239,6 +241,7 @@
   </div>
 </div>
 
+<script src="math-studio.js"></script>
 <script src="math-cabinet.js"></script>
 <script>
 "use strict";
@@ -507,7 +510,7 @@ if (typeof document !== "undefined") (function(){
   const R=6, C=6;
   let TS=56, PAD=4;                          // tile size, gap — set responsive below
 
-  let S=null, muted=false, busy=false, practice=false, lastDoor="1";
+  let S=null, muted=MathStudio.isMuted(), busy=false, practice=false, lastDoor="1";
   const nodes=new Map();                     // tile id → DOM node
 
   /* ---------- arcade bridge ---------- */
@@ -517,7 +520,7 @@ if (typeof document !== "undefined") (function(){
   let AC=null;
   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
   function beep(f,dur,type,vol,when){
-    if(muted) return; const ctx=ac(); if(!ctx) return;
+    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
     const t=ctx.currentTime+(when||0);
     const o=ctx.createOscillator(), g=ctx.createGain();
     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
@@ -548,7 +551,7 @@ if (typeof document !== "undefined") (function(){
     n=document.createElement("div");
     n.className="tile"+(t.k==="o"?" op":t.k==="g"?" given":t.k==="s"?" sym":"");
     n.textContent=t.l;
-    n.tabIndex=0;n.setAttribute("role","button");n.setAttribute("aria-label","Tile "+t.l+". Enter to select; arrows to move; Escape to deselect.");
+    n.tabIndex=-1;n.setAttribute("role","button");n.setAttribute("aria-label","Tile "+t.l+". Enter to select; arrows to move; Escape to deselect.");
     n.addEventListener("keydown",ev=>{
       if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();onTilePress(t.id);}
       if(ev.key==="Escape"){if(selId!==null)nodes.get(selId)?.classList.remove("sel");selId=null;}
@@ -567,6 +570,8 @@ if (typeof document !== "undefined") (function(){
       const t=S.round.grid[i];
       if(!t) continue;
       const n=tileNode(t);
+      n.tabIndex=i===0?0:-1;
+      n.setAttribute("aria-label","Row "+(Math.floor(i/C)+1)+", column "+(i%C+1)+", tile "+t.l+". Enter to select, then arrows and Enter to swap.");
       if(immediate) n.style.transition="none";
       n.style.left=xOf(i%C)+"px";
       n.style.top =yOf(Math.floor(i/C))+"px";
@@ -606,6 +611,7 @@ if (typeof document !== "undefined") (function(){
     void comboEl.offsetWidth; comboEl.classList.add("show");
   }
   function particlesAt(i){
+    if(MathStudio.reducedMotion())return;
     const x=xOf(i%C)+TS/2, y=yOf(Math.floor(i/C))+TS/2;
     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
     for(let k=0;k<6;k++){
@@ -648,6 +654,7 @@ if (typeof document !== "undefined") (function(){
       const {traps}=findClears(g,R,C,S.round);
       if(traps.length){
         S.wrong++;
+        MathStudio.record("Order of operations",evaluationTrace(traps[0].cells.map(i=>g[i])),"Multiply and divide before adding and subtracting. "+evaluationTrace(traps[0].cells.map(i=>g[i])),false);
         $("evaluationTrace").textContent="Multiply and divide first: "+evaluationTrace(traps[0].cells.map(i=>g[i]));
         traps[0].cells.forEach(ci=>{ const t=g[ci]; if(t){ const n=nodes.get(t.id); n.classList.remove("trap"); void n.offsetWidth; n.classList.add("trap"); } });
         sBad();
@@ -656,7 +663,8 @@ if (typeof document !== "undefined") (function(){
     }
     if(S.moves<=0 && S.cleared<S.round.quota && S.running){ await failRound(); }
     else if(S.running && S.round.phase==="A"){ ensureSolvableA(); }
-    busy=false; hud();
+    busy=false; hud();ARCADE.checkpoint();
+    nodes.get(S.round.grid[0]?.id)?.focus({preventScroll:true});
   }
 
   const wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -666,12 +674,15 @@ if (typeof document !== "undefined") (function(){
     const g=S.round.grid;
     const {hits}=findClears(g,R,C,S.round);
     if(hits.length===0) return false;
-    $("evaluationTrace").textContent="Valid expression: "+evaluationTrace(hits[0].map(i=>g[i]));
+    const trace=evaluationTrace(hits[0].map(i=>g[i]));
+    $("evaluationTrace").textContent="Valid expression: "+trace;
+    MathStudio.record("Build the target",trace,trace+". Multiply and divide left to right, then add and subtract left to right.",true);
     const cells=new Set(); hits.forEach(w=>w.forEach(i=>cells.add(i)));
     // score & fx
     const gain=(40 + depth*25) * (S.round.phase==="A"?1:S.round.phase==="B"?2:3) * multNow();
     S.score+=Math.round(gain);
-    S.solved+=hits.length; S.right+=hits.length;
+    // Cascades add arcade score, but only the deliberate swap supplies accuracy evidence.
+    if(depth===0){S.solved++;S.right++;}
     S.cleared=Math.min(S.round.quota, S.cleared+hits.length);
     sPop(depth);
     if(depth>0) comboPop("CASCADE ×"+(depth+1)+"!");
@@ -763,6 +774,7 @@ if (typeof document !== "undefined") (function(){
   }
   function start(door){
     if(!ARCADE.canStart()) return;
+    MathStudio.reset();
     busy=false;
     lastDoor=door;
     S=freshState(door);
@@ -835,6 +847,7 @@ if (typeof document !== "undefined") (function(){
     $("newHS").classList.toggle("hidden",!nh);
     if(practice) showXPText("Practice complete — no XP or leaderboard score saved.", false);
     else if(ARCADE.embedded) showXPText(ARCADE.savedText || "Banking XP…", false);
+    MathStudio.summary();
     $("overOv").classList.remove("hidden");
   }
   function showXPText(txt,capped){
@@ -858,31 +871,12 @@ if (typeof document !== "undefined") (function(){
   });
   $("againBtn").addEventListener("click",()=>start(lastDoor));
   $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
+  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
   window.addEventListener("resize",()=>{ if(S){ sizeBoard(); placeAll(true); } });
 
   sizeBoard(); hsLine();
 })();
 </script>
-<script>
-/* ---------- native-display autoscale: fill the frame on big screens,
-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
-(function(){
-  const wrap=document.getElementById("wrap");
-  if(!wrap) return;
-  function fit(){
-    wrap.style.transform="none"; wrap.style.marginTop="0px";
-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
-    wrap.style.transformOrigin="top center";
-    wrap.style.transform="scale("+k+")";
-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
-  }
-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
-  window.addEventListener("resize",fit);
-  setTimeout(fit,60); fit();
-})();
-</script>
+
 </body>
 </html>

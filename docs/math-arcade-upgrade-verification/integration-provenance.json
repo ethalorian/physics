@@ -1,0 +1,61 @@
+{
+  "verifiedAt": "2026-10-04T13:41:24.031Z",
+  "sourcePath": "/Users/craigantocci/Desktop/Physics/physics-classroom",
+  "sourceHead": "43cb7193738c62a6b980f7094c8c1384bdc89e6b",
+  "integrationPath": "/Users/craigantocci/Documents/Codex/2026-10-03/task/math-arcade-integrated",
+  "branch": "codex/math-arcade-current-integration",
+  "snapshotCommit": "8ad0b2b17c3bfc4ade56e3afbacf894da847758a",
+  "capturedAt": "2026-10-04T13:31:24.167Z",
+  "fileCount": 3308,
+  "sourceStatusCount": 695,
+  "sourceStatusUnchanged": true,
+  "sourceFilesChangedSinceSnapshot": [],
+  "preserved": [
+    {
+      "path": "src/app/arcade/[slug]/page.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "src/app/arcade/page.tsx",
+      "unchanged": true
+    },
+    {
+      "path": "src/app/api/arcade/coin/route.ts",
+      "unchanged": true
+    }
+  ],
+  "modifiedTrackedFiles": [
+    "package.json",
+    "public/games/algebra-inverse-blitz.html",
+    "public/games/daily-mathle.html",
+    "public/games/equivalence-fusion.html",
+    "public/games/graphs-slope-sniper.html",
+    "public/games/logic-expression-crush.html",
+    "public/games/math-cabinet.js",
+    "public/games/numbersense-magnitude.html",
+    "public/games/proportion-scale-storm.html",
+    "public/games/quantities-powers-of-ten.html",
+    "scripts/test-math-arcade-browser.cjs",
+    "scripts/test-math-remaining-browser.cjs",
+    "scripts/test-mic-check-api.cjs",
+    "scripts/test-pulse-api.cjs",
+    "scripts/test-tether-routes.cjs",
+    "src/app/api/arcade/payout/route.ts",
+    "src/app/api/arcade/score/route.ts",
+    "src/lib/tether-bridge.test.ts",
+    "src/lib/tether-bridge.ts"
+  ],
+  "generatedMissionAssetsRestored": [
+    "docs/math-missions-verification/balance-bay-desktop.png",
+    "docs/math-missions-verification/mission-library.png",
+    "docs/math-missions-verification/teacher-missions.png",
+    "docs/math-missions-verification/vector-rescue-mobile.png",
+    "public/arcade/previews/mission-balance-bay.webp",
+    "public/arcade/previews/mission-motion-mapper.webp",
+    "public/arcade/previews/mission-numberline-navigator.webp",
+    "public/arcade/previews/mission-precision-observatory.webp",
+    "public/arcade/previews/mission-ratio-reactor.webp",
+    "public/arcade/previews/mission-unit-courier.webp",
+    "public/arcade/previews/mission-vector-rescue.webp"
+  ]
+}

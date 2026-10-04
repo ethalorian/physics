@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MATHLE — crack the equation</title>
 <style>
   :root{
@@ -146,10 +146,12 @@
     #pad{grid-area:pad; align-self:end;}
   }
 </style>
+<link rel="stylesheet" href="math-studio.css">
 </head>
-<body>
+<body data-game="mathle" class="puzzle">
 
 <div id="wrap">
+  <header class="studioBrand"><span class="studioMark" aria-hidden="true">=</span><div><span class="studioEyebrow">NS · EQUATION DETECTIVE</span><h2>Daily Mathle</h2></div><span class="studioBadge">MATH ARCADE</span></header>
   <div id="hud">
     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
     <div class="stat"><div class="lab">Solved</div><div class="val" id="solvedV">0</div></div>
@@ -177,7 +179,7 @@
     <div class="tag">crack the equation 🔢 free to play · completed puzzles earn XP</div>
     <div class="howto">
       A hidden <b>8-character equation</b>. Six guesses. Every guess must be a
-      <b>true equation</b> (PEMDAS counts: 3+4×2=11). Colors tell you what's right.
+      <b>true equation</b> (PEMDAS counts: 3+4×2=11). Colors and symbols tell you what's right: ✓ exact, ↔ elsewhere, · no remaining copy.
       Today's first puzzle is <b>THE DAILY</b> — same for the whole class.
       Crack it and bonus rounds keep your run alive… until one stumps you.
     </div>
@@ -185,7 +187,7 @@
       <div class="lt">HOW TO READ THE COLORS</div>
       <div class="legendrow"><span class="minicell" style="background:var(--green); border:1px solid #2eb854;">7</span><span class="lx">right character, right spot</span></div>
       <div class="legendrow"><span class="minicell" style="background:var(--gold); border:1px solid #e0b133;">×</span><span class="lx">in the equation, wrong spot</span></div>
-      <div class="legendrow"><span class="minicell" style="background:var(--gray); border:1px solid #343b6b; color:#7a82b8;">9</span><span class="lx">not in the equation at all</span></div>
+      <div class="legendrow"><span class="minicell" style="background:var(--gray); border:1px solid #343b6b; color:#7a82b8;">9</span><span class="lx">no remaining copy of this character (duplicates count)</span></div>
     </div>
     <button class="bigbtn easy" data-lv="1">APPRENTICE<small>bonus rounds: one-operation equations</small></button>
     <button class="bigbtn med" data-lv="4">CRACKER<small>bonus rounds: mixed</small></button>
@@ -216,6 +218,7 @@
   </div>
 </div>
 
+<script src="math-studio.js"></script>
 <script src="math-cabinet.js"></script>
 <script>
 "use strict";
@@ -362,16 +365,16 @@ function scoreGuess(guess, target){
 if (typeof document !== "undefined") (function(){
 
   const $=id=>document.getElementById(id);
-  let S=null, muted=false, busy=false, practice=false, lastDoor="4";
+  let S=null, muted=MathStudio.isMuted(), busy=false, practice=false, lastDoor="4";
 
   /* ---------- arcade bridge ---------- */
-  const ARCADE=createMathCabinet({slug:"mathle",read:()=>({...S,level:S.puzzleNum,solved:S.solvedCt,right:S.solvedCt,wrong:S.failedCt,bestStreak:S.solvedCt,mode:"mathle"}),onReceipt:text=>showXPText(text,false)});
+  const ARCADE=createMathCabinet({slug:"mathle",read:()=>({...S,level:S.puzzleNum,solved:S.solvedCt,right:S.solvedCt,wrong:S.failedCt+(!S.ending&&(S.row>0||S.cur.length>0)?1:0),bestStreak:S.solvedCt,startLvNum:1,mode:"mathle"}),onReceipt:text=>showXPText(text,false)});
 
   /* ---------- audio ---------- */
   let AC=null;
   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
   function beep(f,dur,type,vol,when){
-    if(muted) return; const ctx=ac(); if(!ctx) return;
+    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
     const t=ctx.currentTime+(when||0);
     const o=ctx.createOscillator(), g=ctx.createGain();
     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
@@ -391,7 +394,7 @@ if (typeof document !== "undefined") (function(){
     gridEl.innerHTML="";
     for(let r=0;r<ROWS;r++){
       const row=document.createElement("div"); row.className="grow";
-      for(let c=0;c<LEN;c++){ const d=document.createElement("div"); d.className="cell"; row.appendChild(d); }
+      for(let c=0;c<LEN;c++){ const d=document.createElement("div"); d.className="cell";d.setAttribute("role","img");d.setAttribute("aria-label","Row "+(r+1)+", position "+(c+1)+": empty"); row.appendChild(d); }
       gridEl.appendChild(row);
     }
   }
@@ -428,6 +431,7 @@ if (typeof document !== "undefined") (function(){
     for(let c=0;c<LEN;c++){
       const cell=row.children[c];
       cell.textContent=S.cur[c]||"";
+      cell.setAttribute("aria-label","Position "+(c+1)+": "+(S.cur[c]||"empty"));
       cell.classList.toggle("filled", !!S.cur[c]);
     }
   }
@@ -445,13 +449,13 @@ if (typeof document !== "undefined") (function(){
   function newPuzzle(){
     S.puzzleNum++;
     S.isDaily = S.puzzleNum===1;
-    S.target = S.isDaily ? dailyEquation(localDateStr())
+    S.target = S.isDaily ? dailyEquation(S.dailyDate)
                          : genEquation(mulberry32((Math.random()*2**31)|0), S.startLvNum>=7?3:S.startLvNum>=4?2:1);
     S.row=0; S.cur=[];
     buildGrid(); padReset();
     $("puzzleV").textContent = S.isDaily? "DAILY" : "#"+S.puzzleNum;
     $("puzzleTag").textContent = S.isDaily
-      ? "🗓 THE DAILY · #"+dailyNumber(localDateStr())+" · same for the whole class"
+      ? "🗓 THE DAILY · #"+dailyNumber(S.dailyDate)+" · same for the whole class"
       : "BONUS ROUND "+(S.puzzleNum-1)+" · "+(S.startLvNum>=7?"two ops, pure PEMDAS":S.startLvNum>=4?"mixed":"one op");
     $("puzzleSub").textContent = "guess a TRUE 8-character equation · 6 tries";
     hud();
@@ -478,6 +482,7 @@ if (typeof document !== "undefined") (function(){
       const row=rowEl(S.row);
       row.classList.remove("shake"); void row.offsetWidth; row.classList.add("shake");
       toast("❌ "+v.why, true);
+      MathStudio.tell(v.why+". Invalid equations do not use a guess.",false);
       return;                                  // invalid guesses don't burn a row
     }
     busy=true;
@@ -487,10 +492,13 @@ if (typeof document !== "undefined") (function(){
       const cell=row.children[c];
       await new Promise(r=>setTimeout(r,70));
       cell.classList.add("flip"); sFlip(c);
-      setTimeout(((cell,cls,ch)=>()=>{ cell.classList.add(cls); padColor(ch,cls); })(cell,res[c],g[c]),200);
+      setTimeout(((cell,cls,ch)=>()=>{ cell.classList.add(cls);cell.setAttribute("aria-label",ch+": "+({green:"correct position",gold:"present elsewhere",gray:"no remaining copy"}[cls])); padColor(ch,cls); })(cell,res[c],g[c]),200);
     }
     await new Promise(r=>setTimeout(r,420));
     if(S.isDaily) S.guessRecords.push(res);
+    const feedback=res.map((color,i)=>g[i]+": "+({green:"exact",gold:"elsewhere",gray:"no remaining copy"}[color])).join("; ");
+    MathStudio.record(g,"True equation",feedback,g===S.target);
+    ARCADE.checkpoint();
     if(g===S.target){
       row.classList.add("win"); sWin();
       S.solvedCt++;
@@ -522,11 +530,12 @@ if (typeof document !== "undefined") (function(){
   /* ---------- flow ---------- */
   function freshState(door){
     return { score:0, solvedCt:0, failedCt:0, puzzleNum:0, row:0, cur:[],
-             target:"", isDaily:true, dailyResult:"—", guessRecords:[],
+             target:"", dailyDate:localDateStr(), isDaily:true, dailyResult:"—", guessRecords:[],
              startLvNum:+door, running:false };
   }
   function start(door){
     if(!ARCADE.canStart()) return;
+    MathStudio.reset();
     busy=false;
     lastDoor=door;
     S=freshState(door);
@@ -566,6 +575,7 @@ if (typeof document !== "undefined") (function(){
     $("newHS").classList.toggle("hidden",!nh);
     if(practice) showXPText("Practice complete — no XP or leaderboard score saved.", false);
     else if(ARCADE.embedded) showXPText(ARCADE.savedText || "Banking XP…", false);
+    MathStudio.summary();
     $("overOv").classList.remove("hidden");
   }
   function pickQuip(){
@@ -577,7 +587,7 @@ if (typeof document !== "undefined") (function(){
   $("shareBtn").addEventListener("click",async()=>{
     const map={green:"🟩",gold:"🟨",gray:"⬛"};
     const lines=S.guessRecords.map(r=>r.map(x=>map[x]).join(""));
-    const txt="MATHLE #"+dailyNumber(localDateStr())+" · daily "+S.dailyResult+" · cracked "+S.solvedCt+"\n"+lines.slice(0,6).join("\n");
+    const txt="MATHLE #"+dailyNumber(S.dailyDate)+" · daily "+S.dailyResult+" · cracked "+S.solvedCt+"\n"+lines.slice(0,6).join("\n");
     try{ await navigator.clipboard.writeText(txt); toast("copied! 📋"); }catch(e){ toast("couldn't copy",true); }
   });
 
@@ -594,7 +604,8 @@ if (typeof document !== "undefined") (function(){
 
   /* ---------- wiring ---------- */
   document.addEventListener("keydown",e=>{
-    if(!S || !S.running) return;
+    if(!S || !S.running || e.ctrlKey || e.metaKey || e.altKey) return;
+    if(e.target.closest("button")&&(e.key==="Enter"||e.key===" "))return;
     if(e.key>="0"&&e.key<="9") press(e.key);
     else if(e.key==="+") press("+");
     else if(e.key==="-") press(M);
@@ -602,7 +613,7 @@ if (typeof document !== "undefined") (function(){
     else if(e.key==="/"){ e.preventDefault(); press("÷"); }
     else if(e.key==="=") press("=");
     else if(e.key==="Enter") press("ENTER");
-    else if(e.key==="Backspace") press("⌫");
+    else if(e.key==="Backspace"){e.preventDefault();press("⌫");}
   });
   document.querySelectorAll("#startOv .bigbtn").forEach(b=>
     b.addEventListener("click",()=>{ ac(); start(b.dataset.lv); }));
@@ -613,30 +624,11 @@ if (typeof document !== "undefined") (function(){
   });
   $("againBtn").addEventListener("click",()=>start(lastDoor));
   $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
+  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
 
   buildGrid(); buildPad(); hsLine();
 })();
 </script>
-<script>
-/* ---------- native-display autoscale: fill the frame on big screens,
-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
-(function(){
-  const wrap=document.getElementById("wrap");
-  if(!wrap) return;
-  function fit(){
-    wrap.style.transform="none"; wrap.style.marginTop="0px";
-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
-    wrap.style.transformOrigin="top center";
-    wrap.style.transform="scale("+k+")";
-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
-  }
-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
-  window.addEventListener("resize",fit);
-  setTimeout(fit,60); fit();
-})();
-</script>
+
 </body>
 </html>

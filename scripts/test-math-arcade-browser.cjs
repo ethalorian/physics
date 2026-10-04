@@ -2,7 +2,7 @@
 // into served HTML to observe state and exercise timeout boundaries; never shipped.
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict'),esbuild=require('esbuild');
 const {chromium}=require('/Users/craigantocci/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const root=path.resolve(__dirname,'..'),out=process.env.MATH_TEST_OUT||path.join(root,'docs/math-arcade-verification');fs.mkdirSync(out,{recursive:true});
+const root=path.resolve(__dirname,'..'),out=process.env.MATH_TEST_OUT||path.join(root,'docs/math-arcade-upgrade-verification');fs.mkdirSync(out,{recursive:true});
 const games={'inverse-blitz':'algebra-inverse-blitz','magnitude':'numbersense-magnitude','scale-storm':'proportion-scale-storm','powers-of-ten':'quantities-powers-of-ten','slope-sniper':'graphs-slope-sniper'};
 const remaining={'fusion':'equivalence-fusion','expression-crush':'logic-expression-crush','mathle':'daily-mathle'};
 let browser,server;
@@ -23,11 +23,11 @@ let browser,server;
  content=content.replace(/(  (?:sizeBoard\(\); |buildGrid\(\); buildPad\(\); )hsLine\(\);)/,'  window.__mathTest={state:()=>S,bridge:ARCADE,busy:()=>busy,'+hook+'};\n$1');
  content=content.replace('const a=genAudit(S.mode);','const a=genAudit(S.mode);window.__audit=a;');
  }
- res.setHeader('Content-Type',pathname.endsWith('.js')?'text/javascript':'text/html');return res.end(content)}
- res.setHeader('Content-Type','text/html');res.end('<!doctype html><style>body{margin:0;background:#071421;color:white}iframe{width:100%;height:900px!important;border:0}</style><div id="root"></div><script src="/bundle.js"></script>');
+ res.setHeader('Content-Type',pathname.endsWith('.js')?'text/javascript':pathname.endsWith('.css')?'text/css':'text/html');return res.end(content)}
+ res.setHeader('Content-Type','text/html');res.end('<!doctype html><style>body{margin:0;background:#071421;color:white}iframe{width:100%;height:568px!important;border:0}</style><div id="root"></div><script src="/bundle.js"></script>');
  });await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}`;
- browser=await chromium.launch({headless:true,channel:'chrome'});const page=await browser.newPage({viewport:{width:1366,height:1050}});await page.route('https://fonts.googleapis.com/**',r=>r.abort());const errors=[];page.on('pageerror',e=>errors.push(e.message));
- if(!process.env.MATH_REMAINING_ONLY) for(const [slug,file] of Object.entries(games)){
+ browser=await chromium.launch({headless:true,channel:'chrome'});const page=await browser.newPage({viewport:{width:1366,height:768}});await page.route('https://fonts.googleapis.com/**',r=>r.abort());const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ if(!process.env.MATH_REMAINING_ONLY&&!process.env.MATH_UPGRADE_ONLY) for(const [slug,file] of Object.entries(games)){
   await page.goto(base+'/arcade/'+slug);const frame=page.frameLocator('iframe');await frame.locator('#startOv .bigbtn').first().click();
   const game=page.frames().find(f=>f.url().endsWith(file+'.html'));await game.waitForFunction(()=>window.__mathTest?.state()?.running);
   assert(await game.evaluate(()=>!!window.__mathTest.bridge.playId));
@@ -35,7 +35,7 @@ let browser,server;
   await page.waitForTimeout(450);await frame.locator('#resumeBtn').click();
   assert.equal(await game.evaluate(()=>window.__mathTest.state().cur.i),0);assert.equal(await game.evaluate(()=>window.__mathTest.state().solved),1);
   const wrong=await game.evaluate(()=>window.__mathTest.state().cur.chips.findIndex(c=>!c.ok));await page.keyboard.press(String(wrong+1));await page.keyboard.press(String(wrong+1));assert.equal(await game.evaluate(()=>window.__mathTest.state().wrong),1);
-  await page.waitForTimeout(950);await game.evaluate(()=>window.__mathTest.land());assert.equal(await game.evaluate(()=>window.__mathTest.state().wrong),2);
+  await frame.getByRole('button',{name:'Try again',exact:true}).click();await game.evaluate(()=>window.__mathTest.land());assert.equal(await game.evaluate(()=>window.__mathTest.state().wrong),2);await frame.getByRole('button',{name:'Next problem',exact:true}).click();
   failPayout=true;await frame.locator('#pauseBtn').click();await frame.locator('#quitBtn').click();
   await frame.getByRole('button',{name:'Retry save',exact:true}).waitFor();assert(await frame.locator('#againBtn').isDisabled());
   const playId=await game.evaluate(()=>window.__mathTest.bridge.playId);await frame.getByRole('button',{name:'Retry save',exact:true}).click();await game.waitForFunction(()=>window.__mathTest.bridge.playId===null);
@@ -51,11 +51,11 @@ let browser,server;
   await page.goto(base+'/games/'+file+'.html');await page.setViewportSize({width:390,height:844});await page.locator('#untimedPractice').check();await page.locator('#startOv .bigbtn').first().click();await page.waitForTimeout(100);
   const chips=page.locator('.chip');for(let i=0;i<4;i++){const box=await chips.nth(i).boundingBox();assert(box&&box.x>=0&&box.x+box.width<=391&&box.y+box.height<=845,slug+' mobile answer fit')}
   await page.screenshot({path:path.join(out,slug+'-mobile.png')});await page.locator('#pauseBtn').click();await page.locator('#quitBtn').click();
-  await page.setViewportSize({width:1366,height:1050});console.log('PASS',slug,'ranked delay, solve/pause/resume, wrong-answer guard, missed problem, final retry, fresh untimed run, mobile controls');
+  await page.setViewportSize({width:1366,height:768});console.log('PASS',slug,'ranked delay, solve/pause/resume, wrong-answer guard, missed problem, final retry, fresh untimed run, mobile controls');
  }
  deny=true;await page.goto(base+'/arcade/magnitude');const deniedFrame=page.frameLocator('iframe');await deniedFrame.locator('#startOv .bigbtn').first().click();await deniedFrame.locator('#mathConnection').filter({hasText:'Try again'}).waitFor();
  const deniedGame=page.frames().find(f=>f.url().endsWith('numbersense-magnitude.html'));assert.equal(await deniedGame.evaluate(()=>window.__mathTest.state().running),false);assert.equal(await deniedGame.evaluate(()=>window.__mathTest.bridge.playId),null);
  await deniedFrame.locator('#untimedPractice').check();await deniedFrame.locator('#startOv .bigbtn').first().click();await deniedGame.waitForFunction(()=>window.__mathTest.state().running);console.log('PASS denied ranked start does not silently start practice; deliberate practice remains available');
- await require('./test-math-remaining-browser.cjs')({page,base,out,remaining,scores,fail:()=>{failPayout=true},deny:()=>{deny=true},plays:()=>plays});
- assert.deepEqual(errors,[]);console.log('All math browser checks passed; API transport mocked', {plays,payouts});
+ if(!process.env.MATH_UPGRADE_ONLY) await require('./test-math-remaining-browser.cjs')({page,base,out,remaining,scores,fail:()=>{failPayout=true},deny:()=>{deny=true},plays:()=>plays});
+ await require('./test-math-upgrade-browser.cjs')({page,base,out,scores,plays:()=>plays,fail:()=>{failPayout=true}});assert.deepEqual(errors,[]);console.log('All math browser checks passed; API transport mocked', {plays,payouts});
 }finally{await browser?.close();if(server)await new Promise(r=>server.close(r));}})().catch(e=>{console.error(e);process.exitCode=1});

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FUSION — merge what's equal, every disguise counts</title>
 <style>
   :root{
@@ -154,10 +154,12 @@
     #board{grid-area:board;}
   }
 </style>
+<link rel="stylesheet" href="math-studio.css">
 </head>
-<body>
+<body data-game="fusion" class="puzzle">
 
 <div id="wrap">
+  <header class="studioBrand"><span class="studioMark" aria-hidden="true">≡</span><div><span class="studioEyebrow">NS · EQUIVALENCE</span><h2>Fusion</h2></div><span class="studioBadge">MATH ARCADE</span></header>
   <div id="hud">
     <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
     <div class="stat"><div class="lab">Merges</div><div class="val" id="mergesV">0</div></div>
@@ -183,10 +185,10 @@
 <!-- AUDIT -->
 <div id="auditOv">
   <div id="auditPanel">
-    <div class="at">⚡ MERGE AUDIT — prove you SEE it</div>
+    <div class="at">EQUIVALENCE CHECK</div>
     <div id="auditQ"></div>
     <div id="auditChips"></div>
-    <div id="auditNote">correct → score bonus · wrong → junk tile lands on your board</div>
+    <div id="auditNote">Compare the values before choosing. Take your time.</div>
   </div>
 </div>
 
@@ -198,7 +200,7 @@
     <div class="howto">
       Slide the board (<b>arrows / WASD / swipe</b>). Tiles merge only when their <b>values are equal</b> —
       but values wear disguises: <b>1/2 merges with 50%</b>, <b>0.25 m merges with 25 cm</b>.
-      See through the costume or the board fills up. Every 25 merges, a <b>MERGE AUDIT</b> checks
+      See through the costume or the board fills up. Every 25 merges, an <b>equivalence check</b> checks
       you're reading, not pattern-matching. Board full → OVERLOAD.
     </div>
     <div id="legend">
@@ -233,6 +235,7 @@
   </div>
 </div>
 
+<script src="math-studio.js"></script>
 <script src="math-cabinet.js"></script>
 <script>
 "use strict";
@@ -393,7 +396,7 @@ if (typeof document !== "undefined") (function(){
   let TS=78, PAD=6;
   const nodes=new Map();
 
-  let S=null, muted=false, busy=false, practice=false, lastDoor="1";
+  let S=null, muted=MathStudio.isMuted(), busy=false, practice=false, lastDoor="1";
 
   /* ---------- arcade bridge ---------- */
   const ARCADE=createMathCabinet({slug:"fusion",read:()=>({...S,level:S.bestTier,solved:S.merges,bestStreak:S.bestTier,mode:"fusion"}),onReceipt:text=>showXPText(text,false)});
@@ -402,7 +405,7 @@ if (typeof document !== "undefined") (function(){
   let AC=null;
   function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
   function beep(f,dur,type,vol,when){
-    if(muted) return; const ctx=ac(); if(!ctx) return;
+    if(muted || document.hidden) return; const ctx=ac(); if(!ctx) return;
     const t=ctx.currentTime+(when||0);
     const o=ctx.createOscillator(), g=ctx.createGain();
     o.type=type||"square"; o.frequency.setValueAtTime(f,t);
@@ -472,6 +475,7 @@ if (typeof document !== "undefined") (function(){
       (S.mode==="fractions"?"FRACTIONS · DECIMALS · PERCENTS":
        S.mode==="powers"?"POWERS OF TEN · DECIMALS · PERCENTS":
        S.mode.toUpperCase()+" UNITS") + (S.junkActive? " · ⛔ junk on board":"");
+    boardEl.setAttribute("role","group");boardEl.setAttribute("aria-label",S.board.map((t,i)=>"Row "+(Math.floor(i/4)+1)+", column "+(i%4+1)+": "+(t?(t.junk?"temporary blocked tile":t.label):"empty")).join("; "));
     $("modeSub").textContent="equal values merge — whatever the costume · audit every 25 merges";
   }
   function toast(msg){ toastEl.textContent=msg; toastEl.classList.add("show");
@@ -479,6 +483,7 @@ if (typeof document !== "undefined") (function(){
   function comboPop(msg){ comboEl.textContent=msg; comboEl.classList.remove("show");
     void comboEl.offsetWidth; comboEl.classList.add("show"); }
   function particlesAt(i){
+    if(MathStudio.reducedMotion())return;
     const x=xOf(i%4)+TS/2, y=yOf(Math.floor(i/4))+TS/2;
     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
     for(let k=0;k<7;k++){
@@ -498,6 +503,7 @@ if (typeof document !== "undefined") (function(){
   async function doMove(dir){
     if(busy || !S || !S.running || S.auditing) return;
     const before=S.board;
+    const lessons=[];
     const posOf=new Map(); before.forEach((t,i)=>{ if(t) posOf.set(t.id,i); });
     const {board, moved, merges}=slide(before, dir);
     if(!moved) return;
@@ -523,6 +529,7 @@ if (typeof document !== "undefined") (function(){
       for(const srcId of t.from){
         const n=nodes.get(srcId); if(n){ n.remove(); nodes.delete(srcId); }
       }
+      lessons.push(t.from.map(id=>before.find(v=>v?.id===id)?.label).join(" + ")+" = "+t.label);
       delete t.from;
       posNode(t,i,true);
       tileNode(t).classList.add("merged");
@@ -537,6 +544,7 @@ if (typeof document !== "undefined") (function(){
       }
     }
     S.score+=Math.round(bigGain);
+    if(lessons.length)MathStudio.record("Equal values combine",lessons.join("; "),lessons.join("; ")+". Each merge adds two equal quantities, so the value doubles.",true);
     // junk decay
     S.board.forEach(t=>{ if(t&&t.junk){ t.ttl--; } });
     const expired=S.board.map((t,i)=>t&&t.junk&&t.ttl<=0? i:-1).filter(i=>i>=0);
@@ -576,6 +584,7 @@ if (typeof document !== "undefined") (function(){
         box.appendChild(b);
       });
       $("auditOv").classList.add("show");
+      $("auditNote").textContent="Compare the values before choosing. Take your time.";
       const onKey=e=>{ if(e.key>="1"&&e.key<="4") answer(+e.key-1); };
       document.addEventListener("keydown",onKey);
       let done=false;
@@ -600,12 +609,13 @@ if (typeof document !== "undefined") (function(){
             S.junkActive=true;
           }
         }
-        setTimeout(()=>{
-          $("auditOv").classList.remove("show");
-          S.auditing=false; hud();
-          if(S.running && !canMove(S.board)){ gameOver(); res(); return; }
-          res();
-        },800);
+        const explanation="Answer: "+a.chips.find(x=>x.ok).l+". "+a.tip;
+        MathStudio.record(a.q,c.l,explanation,c.ok);
+        $("auditNote").textContent=(c.ok?"✓ ":"Try this: ")+explanation;
+        btns.forEach(b=>b.disabled=true);
+        const next=document.createElement("button");next.className="studioContinue";next.textContent="Continue";
+        next.onclick=()=>{next.remove();$("auditOv").classList.remove("show");S.auditing=false;hud();ARCADE.checkpoint();res();};
+        $("auditPanel").append(next);next.focus();
       }
     });
   }
@@ -619,6 +629,7 @@ if (typeof document !== "undefined") (function(){
   }
   function start(door){
     if(!ARCADE.canStart()) return;
+    MathStudio.reset();
     busy=false;
     lastDoor=door;
     S=freshState(door);
@@ -692,6 +703,7 @@ if (typeof document !== "undefined") (function(){
     $("newHS").classList.toggle("hidden",!nh);
     if(practice) showXPText("Practice complete — no XP or leaderboard score saved.", false);
     else if(ARCADE.embedded) showXPText(ARCADE.savedText || "Banking XP…", false);
+    MathStudio.summary();
     $("overOv").classList.remove("hidden");
     busy=false;
   }
@@ -713,6 +725,9 @@ if (typeof document !== "undefined") (function(){
     const dir=map[e.key];
     if(dir){ e.preventDefault(); doMove(dir); }
   });
+  const directions=document.createElement("div");directions.className="studioDirections";directions.setAttribute("aria-label","Slide tiles");
+  for(const [dir,name,symbol] of [["L","left","←"],["U","up","↑"],["D","down","↓"],["R","right","→"]]){const b=document.createElement("button");b.textContent=symbol;b.setAttribute("aria-label","Slide "+name);b.onclick=()=>doMove(dir);directions.append(b);}
+  $("modeBar").append(directions);
   let swipeStart=null;
   boardEl.addEventListener("pointerdown",e=>{ swipeStart=[e.clientX,e.clientY]; });
   boardEl.addEventListener("pointerup",e=>{
@@ -732,31 +747,12 @@ if (typeof document !== "undefined") (function(){
   });
   $("againBtn").addEventListener("click",()=>start(lastDoor));
   $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
-  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
+  $("muteBtn").addEventListener("click",()=>{ muted=!muted; MathStudio.setMuted(muted); $("muteBtn").textContent=muted?"🔇":"🔊"; });
   window.addEventListener("resize",()=>{ if(S){ sizeBoard(); S.board.forEach((t,i)=>{ if(t) posNode(t,i,true); }); } });
 
   sizeBoard(); hsLine();
 })();
 </script>
-<script>
-/* ---------- native-display autoscale: fill the frame on big screens,
-   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
-(function(){
-  const wrap=document.getElementById("wrap");
-  if(!wrap) return;
-  function fit(){
-    wrap.style.transform="none"; wrap.style.marginTop="0px";
-    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
-    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
-    wrap.style.transformOrigin="top center";
-    wrap.style.transform="scale("+k+")";
-    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
-    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
-  }
-  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
-  window.addEventListener("resize",fit);
-  setTimeout(fit,60); fit();
-})();
-</script>
+
 </body>
 </html>

@@ -1,0 +1,80 @@
+TAP version 13
+# Subtest: all 13 competencies have a game; 2600 generated answer keys pass semantic graders
+ok 1 - all 13 competencies have a game; 2600 generated answer keys pass semantic graders
+  ---
+  duration_ms: 110.183541
+  ...
+# Subtest: specific mathematical errors get correct feedback and equivalent algebra routes are accepted
+ok 2 - specific mathematical errors get correct feedback and equivalent algebra routes are accepted
+  ---
+  duration_ms: 0.863083
+  ...
+# Subtest: parser accepts only arithmetic, rejects code and nonfinite values
+ok 3 - parser accepts only arithmetic, rejects code and nonfinite values
+  ---
+  duration_ms: 0.208917
+  ...
+# Subtest: public tasks never expose keys or hidden worked examples
+ok 4 - public tasks never expose keys or hidden worked examples
+  ---
+  duration_ms: 1.142208
+  ...
+# Subtest: a missed practice answer opens matching teaching and a corrected answer remains assisted
+ok 5 - a missed practice answer opens matching teaching and a corrected answer remains assisted
+  ---
+  duration_ms: 0.55975
+  ...
+# Subtest: guided arrivals record support and let the next task be a fresh independent attempt
+ok 6 - guided arrivals record support and let the next task be a fresh independent attempt
+  ---
+  duration_ms: 0.245792
+  ...
+# Subtest: challenges do not automatically reveal teaching after a wrong answer
+ok 7 - challenges do not automatically reveal teaching after a wrong answer
+  ---
+  duration_ms: 0.147417
+  ...
+# Subtest: help persists drafts and disqualifies challenge ranking; assistance remains attached to evidence
+ok 8 - help persists drafts and disqualifies challenge ranking; assistance remains attached to evidence
+  ---
+  duration_ms: 0.251458
+  ...
+# Subtest: six completed tasks retain first attempts, assistance and transfer; no client XP or score accepted
+ok 9 - six completed tasks retain first attempts, assistance and transfer; no client XP or score accepted
+  ---
+  duration_ms: 1.399458
+  ...
+# Subtest: pause prevents answering and retains the draft; next requires evidence
+ok 10 - pause prevents answering and retains the draft; next requires evidence
+  ---
+  duration_ms: 0.386417
+  ...
+# Subtest: wrong answers can be corrected, but are not relabeled as first-attempt success
+ok 11 - wrong answers can be corrected, but are not relabeled as first-attempt success
+  ---
+  duration_ms: 0.290125
+  ...
+# Subtest: independent misses remain in first-attempt evidence after a supported repair
+ok 12 - independent misses remain in first-attempt evidence after a supported repair
+  ---
+  duration_ms: 0.192042
+  ...
+# Subtest: challenge task distribution covers both graph families and excludes subjective estimation from score maximum
+ok 13 - challenge task distribution covers both graph families and excludes subjective estimation from score maximum
+  ---
+  duration_ms: 0.216916
+  ...
+# Subtest: graph fitting and signed areas agree with independent numerical calculations
+ok 14 - graph fitting and signed areas agree with independent numerical calculations
+  ---
+  duration_ms: 0.907416
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 561.781334

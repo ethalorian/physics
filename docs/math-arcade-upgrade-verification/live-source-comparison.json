@@ -1,0 +1,134 @@
+{
+  "deployment": "dpl_Df3zEmqGoE5V6FhVzihtquF887UB",
+  "checkedAt": "2026-10-04T13:18:21.494Z",
+  "files": [
+    {
+      "path": "src/app/api/arcade/payout/route.ts",
+      "sourceUid": "ec583900a42aec9792d5650ae9f67d54486123e2",
+      "bytes": 5573,
+      "sha256": "ad7075c811478f83062592bcb6aa5e3388d4579671b08375f46363c2db72816d",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "src/app/api/arcade/score/route.ts",
+      "sourceUid": "8f74037ac937eed6817a1308f861e92be454499c",
+      "bytes": 4833,
+      "sha256": "bd8858e7e187f38afc123966b045b423250ac2396cdff75e692ce4d7de91c48e",
+      "matchesCheckoutBase": false,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "src/app/api/arcade/coin/route.ts",
+      "sourceUid": "a43927dd214aa66056f79f7eabb4d9afde0cdec7",
+      "bytes": 1734,
+      "sha256": "1a9857688c4621015285e1db181913556166b7f0bc23ad5e5731b8c23ea2bf30",
+      "matchesCheckoutBase": false,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "src/app/arcade/[slug]/page.tsx",
+      "sourceUid": "f34f67353426cd0d483a204590dd94cfe0934a5e",
+      "bytes": 12252,
+      "sha256": "82a69496833e26afc5e560406e7fe543551e59a0c66532bd5196b0657c3eeea3",
+      "matchesCheckoutBase": false,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "src/lib/tether-bridge.ts",
+      "sourceUid": "9c6d86f3b64f00a4bd6c4186e24d6774c1702eac",
+      "bytes": 4682,
+      "sha256": "c438cd148ff5c679825229cc5cc1877a04399df11a683286d42d2d4da591dd63",
+      "matchesCheckoutBase": false,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "src/lib/points.ts",
+      "sourceUid": "898da15e0d218d5d31f89442cf2cbd0d59f82cb2",
+      "bytes": 1033,
+      "sha256": "ca918cfb9c3b971229f687fa9200bd6e5d11d489aed2ebfb7d06bcec86999324",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": true
+    },
+    {
+      "path": "src/lib/student-enrollment.ts",
+      "sourceUid": "a0c134fa272659831f936fbdc00fae03567dad87",
+      "bytes": 2963,
+      "sha256": "b11ceb764bd53b05c8f0df37561f0c14e93dd6cbe85c530328594ac5e8622050",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": true
+    },
+    {
+      "path": "public/games/math-cabinet.js",
+      "sourceUid": "2f0b041eefa02d2a746615ef1fc2121e060e35df",
+      "bytes": 3952,
+      "sha256": "3b0edc4f8c9c5d15c0b5a14938f473a38910f881b1a7017b8e051d94b49f0fb4",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "public/games/algebra-inverse-blitz.html",
+      "sourceUid": "a4a3d73fe6f1132e3185df30213ebd9bf7a67646",
+      "bytes": 48883,
+      "sha256": "9d9d8698483208d35544c4c396e3bd1ff00a84723fd13fdd417525abfb1c0c86",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "public/games/numbersense-magnitude.html",
+      "sourceUid": "9861455a797a6cb7523a0ac7ac058125c3e0723d",
+      "bytes": 42702,
+      "sha256": "6deee4158674a0cc40a96b91fa61ba18f8bba1eb11011fb6c87186b75a495e34",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "public/games/proportion-scale-storm.html",
+      "sourceUid": "b3cb1eed06e457ed3c3d7f33653d93491a48dad2",
+      "bytes": 42744,
+      "sha256": "8841ebcd9b955f8bcbf373704261766d7b2e1759c95c0fe3504c04876842f63f",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "public/games/quantities-powers-of-ten.html",
+      "sourceUid": "7995a31614ea082718488335cd7687b9b9fff052",
+      "bytes": 43925,
+      "sha256": "50b7c2f525ca27ac186ff7e82a464a9e115454bb708f246f5fa0a9eca430ffae",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "public/games/graphs-slope-sniper.html",
+      "sourceUid": "c8d3b02c70a3a4eb1fdd4c72a3d5976bd727fdd0",
+      "bytes": 47525,
+      "sha256": "3e7d22e93bc38a568a4398fd7f603d3857ac0fabd94fec2cbe444f0b33bcc4a4",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "public/games/equivalence-fusion.html",
+      "sourceUid": "df624f768aab87d131176dc758b3043a2ba66842",
+      "bytes": 35689,
+      "sha256": "1a0a4299f1af5c53e947309ab8c99558cc0dab9681725c791484b35ed921c57d",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "public/games/logic-expression-crush.html",
+      "sourceUid": "2f2091995ee6378265486eed54004c998acc8e1d",
+      "bytes": 41550,
+      "sha256": "544f0d6b8f1996759a28df4b26e7b53445e7d3d6b2e3b1fb917d4b2cffd5ef5f",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": false
+    },
+    {
+      "path": "public/games/daily-mathle.html",
+      "sourceUid": "8812a0e198cb5fc0b52d4518343ecc1046ec977a",
+      "bytes": 29340,
+      "sha256": "429627abc20729f24f8a48db1e98063aca20c8a6a9d112e885b4e10de58df204",
+      "matchesCheckoutBase": true,
+      "matchesWorkingTree": false
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+
+> physics-classroom@0.1.0 test:math-arcade
+> node scripts/test-math-arcade-logic.cjs && node scripts/test-math-upgrade-logic.cjs && node scripts/test-math-save-routes.cjs && node --import tsx --test src/lib/tether-bridge.test.ts
+
+CHECK numbersense-magnitude 1200 generated questions
+CHECK proportion-scale-storm 1200 generated questions
+CHECK graphs-slope-sniper 1200 generated questions
+CHECK quantities-powers-of-ten 1200 generated questions
+CHECK algebra-inverse-blitz 1200 generated questions
+PASS Fusion equivalence/doubling, 200 deterministic Mathle puzzles, Expression Crush order of operations and evaluation traces
+All sampled math logic checks passed
+PASS 12000 seeded problems + worked explanations; 1000 independently computed vectors; formula path coverage; 500 daily equations and arithmetic edge cases
+PASS accuracy weighting and repeated receipts
+PASS below threshold and empty attempts award zero
+PASS capped zero receipt stays zero on next day retry
+PASS duplicate insert returns the original award, not zero
+PASS unavailable receipt lookup fails without a grant
+PASS unavailable daily totals fail without a grant
+PASS shared practice cap returns the database-clamped receipt
+PASS ownership and cabinet identity prevent recovery of another run
+PASS final retry cannot replace stored score or stats
+PASS deployed rhythm cabinet final retries remain immutable
+PASS finite scores capped and stats sanitized
+PASS a late checkpoint cannot overwrite a concurrently finished run
+12 actual math score/payout route checks passed
+TAP version 13
+# Subtest: late coin approval, serialized checkpoints, failed payout retry, and duplicate final receipt
+ok 1 - late coin approval, serialized checkpoints, failed payout retry, and duplicate final receipt
+  ---
+  duration_ms: 34.183583
+  ...
+# Subtest: wrong source, wrong game, and stale play IDs cannot submit a score
+ok 2 - wrong source, wrong game, and stale play IDs cannot submit a score
+  ---
+  duration_ms: 0.3015
+  ...
+# Subtest: Flywheel accepts its own source and rejects cross-cabinet messages
+ok 3 - Flywheel accepts its own source and rejects cross-cabinet messages
+  ---
+  duration_ms: 0.987875
+  ...
+# Subtest: Descent accepts its own source and rejects cross-cabinet messages
+ok 4 - Descent accepts its own source and rejects cross-cabinet messages
+  ---
+  duration_ms: 0.746208
+  ...
+# Subtest: Push accepts its own source and rejects cross-cabinet messages
+ok 5 - Push accepts its own source and rejects cross-cabinet messages
+  ---
+  duration_ms: 1.115417
+  ...
+# Subtest: Cascade accepts its own source and rejects cross-cabinet messages
+ok 6 - Cascade accepts its own source and rejects cross-cabinet messages
+  ---
+  duration_ms: 0.496666
+  ...
+# Subtest: inverse-blitz accepts its own messages and banks a completed math run
+ok 7 - inverse-blitz accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.440625
+  ...
+# Subtest: magnitude accepts its own messages and banks a completed math run
+ok 8 - magnitude accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.505334
+  ...
+# Subtest: scale-storm accepts its own messages and banks a completed math run
+ok 9 - scale-storm accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.461208
+  ...
+# Subtest: powers-of-ten accepts its own messages and banks a completed math run
+ok 10 - powers-of-ten accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.360666
+  ...
+# Subtest: slope-sniper accepts its own messages and banks a completed math run
+ok 11 - slope-sniper accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.535667
+  ...
+# Subtest: fusion accepts its own messages and banks a completed math run
+ok 12 - fusion accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.232625
+  ...
+# Subtest: expression-crush accepts its own messages and banks a completed math run
+ok 13 - expression-crush accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.17475
+  ...
+# Subtest: mathle accepts its own messages and banks a completed math run
+ok 14 - mathle accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.243958
+  ...
+# Subtest: interrupted math run uses the old credit, retries payout, and validates cabinet on the server
+ok 15 - interrupted math run uses the old credit, retries payout, and validates cabinet on the server
+  ---
+  duration_ms: 0.388167
+  ...
+# Subtest: recovery rejects other cabinet sources, checkpoints, and unavailable ownership without paying
+ok 16 - recovery rejects other cabinet sources, checkpoints, and unavailable ownership without paying
+  ---
+  duration_ms: 0.183542
+  ...
+# Subtest: pulse preserves deployed paid-cabinet saves without requesting math XP
+ok 17 - pulse preserves deployed paid-cabinet saves without requesting math XP
+  ---
+  duration_ms: 0.545125
+  ...
+# Subtest: mic-check preserves deployed paid-cabinet saves without requesting math XP
+ok 18 - mic-check preserves deployed paid-cabinet saves without requesting math XP
+  ---
+  duration_ms: 0.909917
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 293.742666
