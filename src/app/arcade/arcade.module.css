@@ -107,3 +107,41 @@
   .weeklyLeader { padding: 9px; }
   .weeklyLeader dd { font-size: 12px; }
 }
+
+/* Compact library: rewards and records stay visible without oversized panels. */
+.hero { min-height: 270px; }
+.heroCopy { padding: 30px 36px; }
+.hero h1 { margin: 14px 0 12px; font-size: clamp(32px,3.4vw,46px); }
+.heroButton { margin-top: 18px; }
+.heroArt { transform: scale(.8); }
+.libraryLayout { margin-top: 28px; }
+.cardBody { padding: 14px; }
+.cardBody > p { font-size: 12px; line-height: 1.55; margin: 7px 0 12px; flex: 0 0 auto; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.cardBody h3 { font-size: 16px; line-height: 1.3; }
+.rewardPanel,.costPanel { padding: 10px 12px; margin-bottom: 12px; display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; align-items: center; }
+.economyLabel { font-size: 10px; text-transform: none; letter-spacing: 0; }
+.economyAmount { font-size: 20px; margin: 0; letter-spacing: -.5px; white-space: nowrap; }
+.economyAmount span { font-size: 11px; }
+.economyDetail,.economyNote { grid-column: 1/-1; font-size: 10px; line-height: 1.5; }
+.economyNote { margin-top: 0; }
+.leaderPanel { margin-bottom: 12px; }
+.leaderPanel h4 { font-size: 11px; margin-bottom: 6px; }
+.weeklyLeader,.recordRow,.personalRecord { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,1.2fr); gap: 8px; padding: 7px 0; background: none; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; align-items: baseline; }
+.weeklyLeader dt,.recordRow dt,.personalRecord dt { font-size: 10px; margin: 0; }
+.weeklyLeader dd,.recordRow dd { font-size: 11px; justify-content: flex-end; gap: 3px 6px; text-align: right; }
+.weeklyLeader strong,.personalRecord dd { font-size: 12px; letter-spacing: 0; text-align: right; }
+.personalRecord dt span { font-size: 10px; margin-top: 2px; }
+.playAction { font-size: 12px; }
+@media(max-width:620px) {
+  .gameGrid { grid-template-columns: 1fr; }
+  .heroCopy { padding: 25px; }
+  .hero { min-height: 0; }
+  .cardBody { padding: 16px; }
+  .rewardPanel,.costPanel { padding: 10px 12px; }
+  .economyAmount { font-size: 20px; }
+  .cardBody .eyebrow { font-size: 10px; }
+}
+.allowanceNote { color: var(--muted-foreground); font-size: 12px; line-height: 1.6; margin: -2px 0 16px; max-width: 720px; }
+.rewardPanel,.costPanel { padding: 8px 10px; }
+.weeklyLeader,.recordRow,.personalRecord { padding: 5px 0; }
+.personalRecord dt span { display: inline; margin-left: 5px; }

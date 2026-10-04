@@ -1,0 +1,11 @@
+PASS inverse-blitz ranked delay, solve/pause/resume, wrong-answer guard, missed problem, final retry, fresh untimed run, mobile controls
+PASS magnitude ranked delay, solve/pause/resume, wrong-answer guard, missed problem, final retry, fresh untimed run, mobile controls
+PASS scale-storm ranked delay, solve/pause/resume, wrong-answer guard, missed problem, final retry, fresh untimed run, mobile controls
+PASS powers-of-ten ranked delay, solve/pause/resume, wrong-answer guard, missed problem, final retry, fresh untimed run, mobile controls
+PASS slope-sniper ranked delay, solve/pause/resume, wrong-answer guard, missed problem, final retry, fresh untimed run, mobile controls
+PASS denied ranked start does not silently start practice; deliberate practice remains available
+PASS fusion ranked end state, retry, voluntary finish, restart, denied start, practice, mobile modes
+PASS expression-crush ranked end state, retry, voluntary finish, restart, denied start, practice, mobile modes
+PASS mathle ranked end state, retry, voluntary finish, restart, denied start, practice, mobile modes
+PASS all 8 cabinets at 4 viewport sizes; persistent feedback, reload recovery, failed recovery retry, single credit, keyboard swap, reduced motion
+All math browser checks passed; API transport mocked { plays: 12, payouts: 21 }

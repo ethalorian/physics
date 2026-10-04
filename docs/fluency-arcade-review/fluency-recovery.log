@@ -1,0 +1,4 @@
+[math-missions] { message: 'Injected save failure' }
+PASS browser save failure, double submit, byte-identical retry, lost next response, lost finish response, one XP grant
+PASS fractions displayed, keyboard slider, axis-change clears fit, guided practice and independent ranked challenge
+PASS all seven Chromebook layouts at 4x CPU throttle, reduced motion, image fallback; no browser errors

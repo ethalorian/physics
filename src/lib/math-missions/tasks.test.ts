@@ -40,3 +40,14 @@ test('wrong answers can be corrected, but are not relabeled as first-attempt suc
 test('independent misses remain in first-attempt evidence after a supported repair',()=>{let s=session('NS2');const t=currentTask(s);s={...s,state:transition(s,'answer',{...t.expected,percent:'999'}).state};s={...s,state:transition(s,'hint',t.expected).state};s={...s,state:transition(s,'answer',t.expected).state};s={...s,state:transition(s,'next',{}).state};assert(!s.state.evidence[0].firstAssisted);assert(!s.state.evidence[0].firstCorrect);assert(s.state.evidence[0].assisted)})
 test('challenge task distribution covers both graph families and excludes subjective estimation from score maximum',()=>{const s=session('GV1','challenge');const tasks=Array.from({length:6},(_,i)=>currentTask({...s,state:{...s.state,index:i}}));assert(tasks.some(t=>t.data.slopeTask));assert(tasks.some(t=>t.code==='GV2'&&t.data.power===2));assert(tasks.some(t=>t.code==='GV2'&&t.data.power===-1));assert.equal(viewSession(session('QE3','challenge')).maxScore,300)})
 test('graph fitting and signed areas agree with independent numerical calculations',()=>{for(let seed=1;seed<40;seed++){const t=makeTask('GV2',seed,seed%6,2),xs=(t.data.xs as number[]).map(x=>x**Number(t.data.power)),ys=t.data.ys as number[],xm=xs.reduce((a,b)=>a+b)/4,ym=ys.reduce((a,b)=>a+b)/4,m=xs.reduce((s,x,i)=>s+(x-xm)*(ys[i]-ym),0)/xs.reduce((s,x)=>s+(x-xm)**2,0);assert(Math.abs(m-Number(t.expected.slope))<.0001);assert(Math.abs(ym-m*xm-Number(t.expected.intercept))<.0001);const area=makeTask('GV1',seed,0,2);assert(Math.abs(Number(area.data.v)*Number(area.data.duration)+Number(area.expected.returnVelocity)*Number(area.data.returnTime))<.00001)}})
+
+test('verified success explains the solution without changing independent evidence',()=>{
+ let s=session('NS2');const task=currentTask(s)
+ s={...s,state:transition(s,'answer',task.expected).state}
+ assert.deepEqual(viewSession(s).worked,task.worked)
+ assert.equal(s.state.hintCount,0)
+ assert.equal(s.state.revealed,false)
+ s={...s,state:transition(s,'next',{}).state}
+ assert.equal(s.state.evidence[0].firstAssisted,false)
+ assert.deepEqual(viewSession(s).worked,[])
+})

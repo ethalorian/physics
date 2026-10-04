@@ -1,7 +1,7 @@
 .preview {
   position: relative;
   width: 100%;
-  aspect-ratio: 8 / 5;
+  aspect-ratio: 16 / 9;
   background: #0b1420;
   overflow: hidden;
 }
@@ -28,3 +28,4 @@ a:hover .image {
   .image { transition: none; }
   a:hover .image { transform: none; }
 }
+.fallback { display: block; width: 100%; height: 100%; }

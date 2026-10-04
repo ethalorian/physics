@@ -1,0 +1,185 @@
+TAP version 13
+# Subtest: plain numbers, tolerance, commas
+ok 1 - plain numbers, tolerance, commas
+  ---
+  duration_ms: 2.198584
+  ...
+# Subtest: units and synonyms
+ok 2 - units and synonyms
+  ---
+  duration_ms: 0.32975
+  ...
+# Subtest: scientific notation in every spelling
+ok 3 - scientific notation in every spelling
+  ---
+  duration_ms: 0.249625
+  ...
+# Subtest: fractions and percentages are the same number
+ok 4 - fractions and percentages are the same number
+  ---
+  duration_ms: 0.088375
+  ...
+# Subtest: percent vs proportion — templated keys compute bare numbers
+ok 5 - percent vs proportion — templated keys compute bare numbers
+  ---
+  duration_ms: 0.248292
+  ...
+# Subtest: factor of 100 without a percent marker is a teacher call, not a ✗ or a ✓
+ok 6 - factor of 100 without a percent marker is a teacher call, not a ✗ or a ✓
+  ---
+  duration_ms: 0.102791
+  ...
+# Subtest: word multipliers — "7 thousand" means 7000
+ok 7 - word multipliers — "7 thousand" means 7000
+  ---
+  duration_ms: 0.531
+  ...
+# Subtest: currency prefixes and dash-tail keys
+ok 8 - currency prefixes and dash-tail keys
+  ---
+  duration_ms: 0.752875
+  ...
+# Subtest: student lead-ins and author noise
+ok 9 - student lead-ins and author noise
+  ---
+  duration_ms: 0.205083
+  ...
+# Subtest: multipart keys need every part
+ok 10 - multipart keys need every part
+  ---
+  duration_ms: 0.599916
+  ...
+# Subtest: form lists with different numbers do NOT trip the multipart guard
+ok 11 - form lists with different numbers do NOT trip the multipart guard
+  ---
+  duration_ms: 0.0935
+  ...
+# Subtest: short-answer word keys with forms
+ok 12 - short-answer word keys with forms
+  ---
+  duration_ms: 0.15975
+  ...
+# Subtest: NEVER a false ✗ — unparseable or free-text goes unknown
+ok 13 - NEVER a false ✗ — unparseable or free-text goes unknown
+  ---
+  duration_ms: 0.140083
+  ...
+# Subtest: parseQuantity unit handling
+ok 14 - parseQuantity unit handling
+  ---
+  duration_ms: 0.463708
+  ...
+# Subtest: exact-form: sig figs as written
+ok 15 - exact-form: sig figs as written
+  ---
+  duration_ms: 0.443625
+  ...
+# Subtest: estimate: order-of-magnitude tolerance
+ok 16 - estimate: order-of-magnitude tolerance
+  ---
+  duration_ms: 0.926792
+  ...
+# Subtest: audit: percentages, required parts, dimensions and symbol case
+ok 17 - audit: percentages, required parts, dimensions and symbol case
+  ---
+  duration_ms: 0.131958
+  ...
+# Subtest: late coin approval, serialized checkpoints, failed payout retry, and duplicate final receipt
+ok 18 - late coin approval, serialized checkpoints, failed payout retry, and duplicate final receipt
+  ---
+  duration_ms: 33.124834
+  ...
+# Subtest: wrong source, wrong game, and stale play IDs cannot submit a score
+ok 19 - wrong source, wrong game, and stale play IDs cannot submit a score
+  ---
+  duration_ms: 0.388875
+  ...
+# Subtest: Flywheel accepts its own source and rejects cross-cabinet messages
+ok 20 - Flywheel accepts its own source and rejects cross-cabinet messages
+  ---
+  duration_ms: 1.0645
+  ...
+# Subtest: Descent accepts its own source and rejects cross-cabinet messages
+ok 21 - Descent accepts its own source and rejects cross-cabinet messages
+  ---
+  duration_ms: 0.751666
+  ...
+# Subtest: Push accepts its own source and rejects cross-cabinet messages
+ok 22 - Push accepts its own source and rejects cross-cabinet messages
+  ---
+  duration_ms: 0.607084
+  ...
+# Subtest: Cascade accepts its own source and rejects cross-cabinet messages
+ok 23 - Cascade accepts its own source and rejects cross-cabinet messages
+  ---
+  duration_ms: 0.763333
+  ...
+# Subtest: inverse-blitz accepts its own messages and banks a completed math run
+ok 24 - inverse-blitz accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.559625
+  ...
+# Subtest: magnitude accepts its own messages and banks a completed math run
+ok 25 - magnitude accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.47875
+  ...
+# Subtest: scale-storm accepts its own messages and banks a completed math run
+ok 26 - scale-storm accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.609958
+  ...
+# Subtest: powers-of-ten accepts its own messages and banks a completed math run
+ok 27 - powers-of-ten accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 1.793167
+  ...
+# Subtest: slope-sniper accepts its own messages and banks a completed math run
+ok 28 - slope-sniper accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.543417
+  ...
+# Subtest: fusion accepts its own messages and banks a completed math run
+ok 29 - fusion accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.248209
+  ...
+# Subtest: expression-crush accepts its own messages and banks a completed math run
+ok 30 - expression-crush accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.194875
+  ...
+# Subtest: mathle accepts its own messages and banks a completed math run
+ok 31 - mathle accepts its own messages and banks a completed math run
+  ---
+  duration_ms: 0.326667
+  ...
+# Subtest: interrupted math run uses the old credit, retries payout, and validates cabinet on the server
+ok 32 - interrupted math run uses the old credit, retries payout, and validates cabinet on the server
+  ---
+  duration_ms: 0.473334
+  ...
+# Subtest: recovery rejects other cabinet sources, checkpoints, and unavailable ownership without paying
+ok 33 - recovery rejects other cabinet sources, checkpoints, and unavailable ownership without paying
+  ---
+  duration_ms: 0.208958
+  ...
+# Subtest: pulse preserves deployed paid-cabinet saves without requesting math XP
+ok 34 - pulse preserves deployed paid-cabinet saves without requesting math XP
+  ---
+  duration_ms: 0.719916
+  ...
+# Subtest: mic-check preserves deployed paid-cabinet saves without requesting math XP
+ok 35 - mic-check preserves deployed paid-cabinet saves without requesting math XP
+  ---
+  duration_ms: 0.198417
+  ...
+1..35
+# tests 35
+# suites 0
+# pass 35
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 308.275792

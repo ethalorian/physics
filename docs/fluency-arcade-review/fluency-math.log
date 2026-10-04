@@ -1,0 +1,110 @@
+TAP version 13
+# Subtest: board values preserve exact fractions, signed expressions and safe fallbacks
+ok 1 - board values preserve exact fractions, signed expressions and safe fallbacks
+  ---
+  duration_ms: 0.745291
+  ...
+# Subtest: scientific notation can report equivalent values and precision
+ok 2 - scientific notation can report equivalent values and precision
+  ---
+  duration_ms: 0.339959
+  ...
+# Subtest: substitution retains supplied signed values, grouping and multiplication
+ok 3 - substitution retains supplied signed values, grouping and multiplication
+  ---
+  duration_ms: 1.939459
+  ...
+# Subtest: advanced incoming quantity includes both factors and matches the prompt
+ok 4 - advanced incoming quantity includes both factors and matches the prompt
+  ---
+  duration_ms: 3.849458
+  ...
+# Subtest: estimation inputs use the same fraction parser as the floor model
+ok 5 - estimation inputs use the same fraction parser as the floor model
+  ---
+  duration_ms: 0.181709
+  ...
+# Subtest: all 13 competencies have a game; 2600 generated answer keys pass semantic graders
+ok 6 - all 13 competencies have a game; 2600 generated answer keys pass semantic graders
+  ---
+  duration_ms: 88.523459
+  ...
+# Subtest: specific mathematical errors get correct feedback and equivalent algebra routes are accepted
+ok 7 - specific mathematical errors get correct feedback and equivalent algebra routes are accepted
+  ---
+  duration_ms: 0.538917
+  ...
+# Subtest: parser accepts only arithmetic, rejects code and nonfinite values
+ok 8 - parser accepts only arithmetic, rejects code and nonfinite values
+  ---
+  duration_ms: 0.114084
+  ...
+# Subtest: public tasks never expose keys or hidden worked examples
+ok 9 - public tasks never expose keys or hidden worked examples
+  ---
+  duration_ms: 4.547834
+  ...
+# Subtest: a missed practice answer opens matching teaching and a corrected answer remains assisted
+ok 10 - a missed practice answer opens matching teaching and a corrected answer remains assisted
+  ---
+  duration_ms: 0.526167
+  ...
+# Subtest: guided arrivals record support and let the next task be a fresh independent attempt
+ok 11 - guided arrivals record support and let the next task be a fresh independent attempt
+  ---
+  duration_ms: 0.376167
+  ...
+# Subtest: challenges do not automatically reveal teaching after a wrong answer
+ok 12 - challenges do not automatically reveal teaching after a wrong answer
+  ---
+  duration_ms: 0.196541
+  ...
+# Subtest: help persists drafts and disqualifies challenge ranking; assistance remains attached to evidence
+ok 13 - help persists drafts and disqualifies challenge ranking; assistance remains attached to evidence
+  ---
+  duration_ms: 0.181834
+  ...
+# Subtest: six completed tasks retain first attempts, assistance and transfer; no client XP or score accepted
+ok 14 - six completed tasks retain first attempts, assistance and transfer; no client XP or score accepted
+  ---
+  duration_ms: 0.966834
+  ...
+# Subtest: pause prevents answering and retains the draft; next requires evidence
+ok 15 - pause prevents answering and retains the draft; next requires evidence
+  ---
+  duration_ms: 0.302958
+  ...
+# Subtest: wrong answers can be corrected, but are not relabeled as first-attempt success
+ok 16 - wrong answers can be corrected, but are not relabeled as first-attempt success
+  ---
+  duration_ms: 0.208083
+  ...
+# Subtest: independent misses remain in first-attempt evidence after a supported repair
+ok 17 - independent misses remain in first-attempt evidence after a supported repair
+  ---
+  duration_ms: 0.161875
+  ...
+# Subtest: challenge task distribution covers both graph families and excludes subjective estimation from score maximum
+ok 18 - challenge task distribution covers both graph families and excludes subjective estimation from score maximum
+  ---
+  duration_ms: 0.176125
+  ...
+# Subtest: graph fitting and signed areas agree with independent numerical calculations
+ok 19 - graph fitting and signed areas agree with independent numerical calculations
+  ---
+  duration_ms: 0.71525
+  ...
+# Subtest: verified success explains the solution without changing independent evidence
+ok 20 - verified success explains the solution without changing independent evidence
+  ---
+  duration_ms: 0.244958
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 350.96025

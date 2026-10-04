@@ -1,0 +1,21 @@
+PASS full mission numberline-navigator
+PASS full mission ratio-reactor
+PASS full mission unit-courier
+PASS full mission precision-observatory
+PASS full mission balance-bay
+PASS full mission motion-mapper
+PASS full mission vector-rescue
+PASS mobile pause/resume, draft and hint NS1
+PASS mobile pause/resume, draft and hint NS2
+PASS mobile pause/resume, draft and hint PR1
+PASS mobile pause/resume, draft and hint PR2
+PASS mobile pause/resume, draft and hint QE1
+PASS mobile pause/resume, draft and hint QE2
+PASS mobile pause/resume, draft and hint QE3
+PASS mobile pause/resume, draft and hint QE4
+PASS mobile pause/resume, draft and hint SM1
+PASS mobile pause/resume, draft and hint SM2
+PASS mobile pause/resume, draft and hint GV1
+PASS mobile pause/resume, draft and hint GV2
+PASS mobile pause/resume, draft and hint GV3
+PASS all seven previews, teacher assignment UI, and no browser exceptions

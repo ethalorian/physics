@@ -1,0 +1,19 @@
+{
+  "source_head": "d6ca84d9b1667ef87c1e004d71efe78b0a6ed028",
+  "snapshot_files": 3379,
+  "concurrent_changed_files": 418,
+  "concurrent_source_code_changes": [
+    "src/components/present/StudentLiveInvitations.tsx",
+    "src/components/present/TeachingPoll.tsx",
+    "src/lib/presentation-evidence-server.ts",
+    "src/app/admin/command-center/page.tsx",
+    "src/app/api/present/sessions/[id]/tools/route.ts",
+    "src/components/present/CommandLobby.tsx",
+    "src/components/present/TeachingActivity.tsx",
+    "src/lib/presentation-tools-server.ts",
+    "src/lib/presentation-tools.ts"
+  ],
+  "overlap_with_fluency_changes": [],
+  "current_status_entries": 1784,
+  "snapshot_status_entries": 697
+}
