@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { experienceDatabaseFetch } from './experience-db-fetch'
 
 // Check if environment variables are set
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -13,7 +14,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Client for browser/client-side use (subject to RLS)
 export const supabase = createClient(
   supabaseUrl || '',
-  supabaseAnonKey || ''
+  supabaseAnonKey || '',
+  { global: { fetch: experienceDatabaseFetch } }
 )
 
 // Server-side client for API routes (bypasses RLS with the service role key).
@@ -34,6 +36,7 @@ export const supabaseAdmin = createClient(
   supabaseUrl || '',
   supabaseServiceRoleKey || '',
   {
+    global: { fetch: experienceDatabaseFetch },
     auth: {
       autoRefreshToken: false,
       persistSession: false

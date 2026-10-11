@@ -19,13 +19,15 @@
  * (plus "Needs a refresh"). Bonus points are reward, never evidence; the ladder
  * moves only on the teacher's rating.
  */
+import type { MathXpStatus } from '@/lib/xp-policy'
 import ProblemReward from '@/components/math-spine/ProblemReward'
 import MathStudioHeader from '@/components/math-spine/MathStudioHeader'
 import StandardFocus from '@/components/math-spine/StandardFocus'
 import ReasoningWorkspace from '@/components/math-spine/ReasoningWorkspace'
 import styles from '@/components/math-spine/StudentMathInput.module.css'
 import MathFeedbackLoop from '@/components/math-spine/MathFeedbackLoop'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, CheckCircle2, XCircle, HelpCircle, Languages, ArrowRight } from 'lucide-react'
@@ -34,6 +36,8 @@ import { type SandboxValue } from '@/components/blocks/EquationSandbox'
 import type { Stroke } from '@/components/blocks/DoodleCanvas'
 import MathTutor from '@/components/math-spine/MathTutor'
 import PracticeRep from '@/components/math-spine/PracticeRep'
+import MathGameRecommendation from '@/components/math-spine/MathGameRecommendation'
+import { isMathSkill, mathRemediation, type MathRemediation } from '@/lib/math-remediation'
 import { pickTier, type MiniLesson } from '@/lib/math-spine-lessons'
 import { type PickKind } from '@/lib/math-spine-picker'
 import { MATH_LANGUAGES } from '@/lib/math-languages'
@@ -74,14 +78,24 @@ interface WorkValue {
 const LABEL = 'text-overline font-bold uppercase tracking-widest'
 
 export default function WarmupPage() {
+  return <Suspense fallback={<p>Loading your warm-up…</p>}><WarmupContent /></Suspense>
+}
+
+function WarmupContent() {
+  const params = useSearchParams()
+  const requestedPractice = params.get('practice_skill')
+  const practiceSkill = isMathSkill(requestedPractice) ? requestedPractice : undefined
+  const practiceSection = useRef<HTMLElement>(null)
   const [item, setItem] = useState<DailyItem | null>(null)
+  const [savedRemediation, setSavedRemediation] = useState<MathRemediation | null>(null)
   const [pickKind, setPickKind] = useState<PickKind>('climb')
   const [loading, setLoading] = useState(true)
   const [alreadySubmitted, setAlreadySubmitted] = useState(false)
   const [work, setWork] = useState<WorkValue>({ answer: '', workStrokes: [], workTexts: [], sandbox: { lines: [] } })
   const [resumedDraft, setResumedDraft] = useState(false)
   const [draftSaved, setDraftSaved] = useState(false)
-  const [xpEarned, setXpEarned] = useState(0)
+  const [xpEarned, setXpEarned] = useState<number | null>(null)
+  const [xpStatus, setXpStatus] = useState<MathXpStatus | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [submittedAt, setSubmittedAt] = useState<string | null>(null)
@@ -103,6 +117,9 @@ export default function WarmupPage() {
         if (d.item?.instanceId && !d.alreadySubmitted) { try { const draft = sessionStorage.getItem('math-draft:' + d.item.instanceId); if (draft) { setWork(JSON.parse(draft)); setResumedDraft(true) } } catch {} }
         setPickKind((d.pickKind as PickKind) ?? 'climb')
         setAlreadySubmitted(Boolean(d.alreadySubmitted))
+        setSavedRemediation(d.remediation ?? null)
+        setXpEarned(d.submissionXp ?? null)
+        setXpStatus(d.xpStatus ?? null)
         setTranslationEnabled(Boolean(d.translationEnabled))
         setLoading(false)
       })
@@ -114,6 +131,14 @@ export default function WarmupPage() {
     if (!item?.instanceId || alreadySubmitted || submitted) return
     try { sessionStorage.setItem('math-draft:' + item.instanceId, JSON.stringify(work)); setDraftSaved(true) } catch { setDraftSaved(false) }
   }, [item?.instanceId, work, alreadySubmitted, submitted])
+
+  // The section arrives after the daily request, so a URL fragment alone can
+  // miss it. Bring students returning from a game directly to their fresh check.
+  useEffect(() => {
+    if (loading || !practiceSkill) return
+    practiceSection.current?.scrollIntoView({ block: 'start' })
+    practiceSection.current?.focus({ preventScroll: true })
+  }, [loading, practiceSkill])
 
   // Two named checks (decision 3). Work = anything on the board or in the
   // equation builder; answer = the final box. Teacher-only prompts need either.
@@ -149,6 +174,8 @@ export default function WarmupPage() {
       setFeedback(j.feedback ?? null)
       setSubmittedAt(new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }))
       setXpEarned(j.xpEarned ?? 0)
+      setXpStatus(j.xpStatus ?? null)
+      if (j.xpAwarded > 0) window.dispatchEvent(new CustomEvent('xp-updated'))
       setSubmitted(true)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (e) {
@@ -160,6 +187,7 @@ export default function WarmupPage() {
 
   const tierIdx = pickTier(item?.competencyValue)
   const done = submitted || alreadySubmitted
+  const recommendation = submitted && item ? mathRemediation(item.competencyCode, selfCheck) : savedRemediation
   // Help drawer default follows the tier: open for "Not yet" and "Needs a
   // refresh", collapsed for re-checks and "Got it" — tiering governs disclosure.
   const helpDefaultOpen = tierIdx === 0 || pickKind === 'refresh'
@@ -226,7 +254,7 @@ export default function WarmupPage() {
               </div>
 
               <p className="mt-2 text-xl font-semibold text-foreground leading-relaxed whitespace-pre-wrap">{displayPrompt}</p>
-              <ProblemReward lang={activeLang} />
+              <ProblemReward status={xpStatus} lang={activeLang} />
 
 
             <div className={styles.inlineHelp}><MathTutor key={item.instanceId ?? item.spiralItemId} code={item.competencyCode} customTiers={item.miniLessonTiers} lang={activeLang} initiallyOpen={helpDefaultOpen} onReturnToWork={()=>document.getElementById('math-reasoning')?.focus()} /></div>
@@ -279,7 +307,8 @@ export default function WarmupPage() {
         </div>
       )}
 
-      {submitted && xpEarned > 0 && <p role="status" className={styles.problemReward}>+{xpEarned} XP · {t('Added to your XP balance')}</p>}
+      {done && xpEarned !== null && <div role="status"><ProblemReward earned={xpEarned} status={xpStatus} lang={activeLang} /></div>}
+      {done && <MathGameRecommendation recommendation={recommendation} lang={activeLang} />}
       {done && <MathFeedbackLoop refreshKey={submitted ? 1 : 0} />}
       {/* ============================================================ after submit */}
       {!loading && item && done && (
@@ -344,7 +373,7 @@ export default function WarmupPage() {
               </div>
 
               <div className="mt-4 flex items-center gap-2 flex-wrap">
-                <a href="#practice" className="inline-flex items-center h-10 px-4 rounded-full text-sm font-semibold" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>{t('Try one more · +1 XP')}</a>
+                <a href="#practice" className="inline-flex items-center h-10 px-4 rounded-full text-sm font-semibold" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>{t('Try another practice problem')}</a>
                 <Link href="/dashboard/math-spine" className="inline-flex items-center h-10 px-4 rounded-full text-sm font-semibold border" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>{t('See my ladder')}</Link>
                 <Link href="/home" className="inline-flex items-center h-10 px-3 text-sm text-muted-foreground">{t('Done for today')}</Link>
               </div>
@@ -373,12 +402,13 @@ export default function WarmupPage() {
                 </div>
               </section>
             )}
-            <div id="practice">
-              <PracticeRep needsGraph={!!item.needsGraph} lang={activeLang} />
-            </div>
           </div>
         </div>
       )}
+      {!loading && (done || practiceSkill) && <section id="practice" ref={practiceSection} tabIndex={-1} className="scroll-mt-24 space-y-3" aria-label={t('Fresh math practice')}>
+        {practiceSkill && <div className="rounded-xl border bg-card p-4"><h2 className="font-semibold">{t('Try this skill on a fresh problem')}</h2><p className="mt-1 text-sm text-muted-foreground">{t('Use the strategy you practiced in the game. Try the new problem on your own first; help is still available. This practice check does not change your teacher-rated fluency.')}</p></div>}
+        <PracticeRep key={practiceSkill ?? item?.competencyCode ?? 'next'} skill={practiceSkill ?? recommendation?.code ?? item?.competencyCode} needsGraph={!!item?.needsGraph} lang={activeLang} />
+      </section>}
     </div>
   )
 }

@@ -1,0 +1,816 @@
+{
+  "lessons": [
+    {
+      "id": "fc67d63d-a011-426b-b9f3-fd8f1ea7f501",
+      "slug": "position-and-displacement",
+      "title": "Position & displacement",
+      "unit_id": "unit-1",
+      "unit": "Unit 1: Motion & Forces (Asteroid 2026-XJ)",
+      "lesson_number": 102,
+      "estimated_time": 16,
+      "published": true,
+      "lesson_type": "video",
+      "description": "Choose a reference point, compare distance and displacement, and explain the sign of a change in position.",
+      "objectives": [
+        "u1.vocab-position-distance-displacement"
+      ],
+      "videos": [
+        {
+          "id": "position-video",
+          "title": "1D Position & Displacement on a Number Line",
+          "youtubeId": "u0V8uJ5KTvo"
+        }
+      ],
+      "content_blocks": {
+        "schemaVersion": 1,
+        "presentation": "physics-path",
+        "dayType": "STANDARD",
+        "learningPath": {
+          "version": 1,
+          "kind": "lesson",
+          "focus": "Describe where an object is and how its position changes. Compare distance and displacement, and distinguish scalars from vectors.",
+          "targetSlugs": [
+            "u1.vocab-position-distance-displacement"
+          ],
+          "sourceLessonId": "fe529665-a1df-4f80-a5cc-df0d09b95210"
+        },
+        "blocks": [
+          {
+            "id": "position-video",
+            "type": "instruction_video",
+            "title": "Position & displacement on a number line",
+            "youtubeId": "u0V8uJ5KTvo",
+            "summary": "Position is a location relative to a chosen origin. In this lesson, right is positive. Displacement is final position minus initial position: $\\Delta x=x_f-x_i$. Distance adds the lengths of all parts of a journey. A negative displacement tells you a direction; it is not a negative distance.",
+            "workshop": {
+              "stage": "Learn",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-language",
+            "type": "prose",
+            "markdown": "**Position** describes a location. **Displacement** describes a change in location.\n\nA **scalar** has magnitude only: distance is a scalar. A **vector** has magnitude and direction: displacement is a vector. In one dimension, the sign tells you the direction."
+          },
+          {
+            "id": "position-check",
+            "type": "question",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "evidenceRole": "practice",
+            "question": {
+              "prompt": "A cart returns to where it started. Which statement must be true?",
+              "options": [
+                {
+                  "id": "zero-displacement",
+                  "text": "Its displacement is zero.",
+                  "feedback": "Displacement compares final and initial position. The path can still have a nonzero length."
+                },
+                {
+                  "id": "zero-distance",
+                  "text": "Its distance traveled is zero.",
+                  "feedback": "Distance adds the lengths traveled. Returning does not erase the outward trip."
+                },
+                {
+                  "id": "negative-distance",
+                  "text": "Its distance is negative on the return trip.",
+                  "feedback": "Distance is a nonnegative length. A direction can make displacement negative, not distance."
+                }
+              ],
+              "correctOptionId": "zero-displacement"
+            },
+            "workshop": {
+              "stage": "Check your thinking",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-model-title",
+            "type": "prose",
+            "markdown": "Choose right as positive. A cart starts at −2 m, travels to +4 m, then returns to +1 m.",
+            "workshop": {
+              "stage": "See it worked",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-worked",
+            "type": "worked_example",
+            "prompt": "Find the total distance and the displacement for the trip.",
+            "given": "Initial: −2 m. Turn: +4 m. Final: +1 m. Model the trip on one straight number line, with right positive.",
+            "equation": "$\\Delta x=x_f-x_i$; distance = sum of segment lengths. Use the endpoints for displacement and add each segment length for distance, because the cart changes direction.",
+            "work": "First segment: $|4-(-2)|=6$ m. Return segment: $|1-4|=3$ m.\n\nDistance: $6+3=9$ m.\n\nDisplacement: $1-(-2)=+3$ m.",
+            "answer": "Distance = 9 m. Displacement = +3 m: 3 m to the right. The return trip increases distance while reducing the final displacement.",
+            "format": "problem-workspace",
+            "sei": {
+              "visual": {
+                "src": "/learning/position-worked-model.svg",
+                "alt": "Reference: start minus 2 meters, turn at plus 4 meters, finish at plus 1 meter."
+              }
+            }
+          },
+          {
+            "id": "position-explore-title",
+            "type": "prose",
+            "markdown": "Change one position at a time. Try an out-and-back trip, then try moving only to the left.",
+            "workshop": {
+              "stage": "Explore",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-explorer",
+            "type": "position_explorer",
+            "title": "Distance and displacement explorer"
+          },
+          {
+            "id": "position-practice-title",
+            "type": "prose",
+            "markdown": "Use a new trip. Show your reasoning; the example above uses different numbers.",
+            "workshop": {
+              "stage": "Try it",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-practice",
+            "type": "gewa",
+            "targetId": "u1.vocab-position-distance-displacement",
+            "prompt": "A cart moves directly from +6 m to −2 m. Find its displacement and distance traveled. State the direction of its displacement.",
+            "givenHint": "Record the initial and final positions with their signs.",
+            "equationHint": "Displacement = final position − initial position. Distance is the length traveled.",
+            "sei": {
+              "visual": {
+                "src": "/learning/position-model.svg",
+                "alt": "Reference number line: start at plus 6 meters, finish at minus 2 meters; right is positive."
+              },
+              "frames": [
+                {
+                  "level": 1,
+                  "text": "The displacement is ___ m because ___. The distance is ___ m."
+                },
+                {
+                  "level": 2,
+                  "text": "The displacement is ___ m because ___. The distance is ___ m."
+                },
+                {
+                  "level": 3,
+                  "text": "My evidence is ___, which means ___."
+                }
+              ],
+              "wordBank": [
+                "initial",
+                "final",
+                "negative",
+                "left",
+                "distance",
+                "displacement"
+              ],
+              "modes": [
+                "text",
+                "sketch"
+              ]
+            },
+            "responseFormat": "problem-workspace",
+            "requireCompleteWork": true,
+            "capture": true,
+            "stageHints": {
+              "model": "Mark +6 m and −2 m relative to the origin. State which direction you chose as positive.",
+              "plan": "Displacement compares the endpoints. Distance adds the lengths traveled. This trip has one direct segment.",
+              "work": "Write (final position) − (initial position) before combining the signed numbers. Keep the unit with your calculation.",
+              "answer": "Explain what the sign tells you. Report distance and displacement separately."
+            }
+          },
+          {
+            "id": "position-explain-title",
+            "type": "prose",
+            "markdown": "Explain the idea without another calculation.",
+            "workshop": {
+              "stage": "Explain",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-explain",
+            "type": "exit_ticket",
+            "targetId": "u1.vocab-position-distance-displacement",
+            "prompt": "An object travels away from its starting point and comes back. Explain why its displacement can be zero while its distance is not. Identify which quantity is a scalar and which is a vector.",
+            "sei": {
+              "visual": {
+                "src": "/learning/position-line.svg",
+                "alt": "A labeled diagram supporting this physics question."
+              },
+              "frames": [
+                {
+                  "level": 1,
+                  "text": "The displacement is ___ because ___. The distance is ___ because ___."
+                },
+                {
+                  "level": 2,
+                  "text": "The displacement is ___ because ___. The distance is ___ because ___."
+                },
+                {
+                  "level": 3,
+                  "text": "My evidence is ___, which means ___."
+                }
+              ],
+              "wordBank": [
+                "start",
+                "finish",
+                "path",
+                "scalar",
+                "vector"
+              ],
+              "modes": [
+                "text",
+                "sketch"
+              ]
+            }
+          },
+          {
+            "id": "position-reading",
+            "type": "reading",
+            "chapter": 5,
+            "sectionIds": [
+              "5.1"
+            ],
+            "focus": "Read section 5.1 on page 69. Use the distinction between scalars and vectors to explain distance and displacement. Answer the three checks in your own words, then submit for teacher review.",
+            "essential": true,
+            "workshop": {
+              "stage": "Read & respond",
+              "pageBreakBefore": true
+            },
+            "assignmentChecks": [
+              {
+                "reference": "1 · Explain the distinction",
+                "prompt": "What information does a vector include that a scalar does not? Use distance and displacement as your examples.",
+                "targetId": "u1.vocab-position-distance-displacement"
+              },
+              {
+                "reference": "2 · Apply the idea",
+                "prompt": "A student walks 3 m east, then 3 m west. Find the total distance and displacement. Explain why the two answers differ, and identify which quantity is a scalar and which is a vector.",
+                "targetId": "u1.vocab-position-distance-displacement"
+              },
+              {
+                "reference": "3 · Evaluate a claim",
+                "prompt": "A classmate says, “If displacement is zero, the object could not have moved.” Do you agree? Use a possible trip to support your reasoning.",
+                "targetId": "u1.vocab-position-distance-displacement"
+              }
+            ]
+          },
+          {
+            "id": "position-transfer-title",
+            "type": "prose",
+            "markdown": "**Fictional training data for 2026-XJ.** This is a one-dimensional coordinate model, not a claim about the asteroid’s real orbit.",
+            "workshop": {
+              "stage": "Apply to 2026-XJ",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-mission-diagram",
+            "type": "figure",
+            "src": "/learning/asteroid-position.svg",
+            "alt": "Earth at the origin. Two fictional asteroid positions on the same axis: plus 12 million kilometers and plus 9 million kilometers."
+          },
+          {
+            "id": "position-transfer",
+            "type": "exit_ticket",
+            "targetId": "u1.vocab-position-distance-displacement",
+            "prompt": "Along a chosen axis, Earth is at 0. The asteroid’s position changes from +12 million km to +9 million km. Report its displacement and explain the sign. Can those two positions alone tell you its total distance traveled? Explain.",
+            "evidenceRole": "exit",
+            "sei": {
+              "visual": {
+                "src": "/learning/asteroid-position.svg",
+                "alt": "A labeled diagram supporting this physics question."
+              },
+              "frames": [
+                {
+                  "level": 1,
+                  "text": "Its displacement is ___ million km. The sign means ___. The two positions [do / do not] determine distance because ___."
+                },
+                {
+                  "level": 2,
+                  "text": "Its displacement is ___ million km. The sign means ___. The two positions [do / do not] determine distance because ___."
+                },
+                {
+                  "level": 3,
+                  "text": "My evidence is ___, which means ___."
+                }
+              ],
+              "wordBank": [
+                "reference",
+                "toward",
+                "initial",
+                "final",
+                "path"
+              ],
+              "modes": [
+                "text",
+                "sketch"
+              ]
+            }
+          },
+          {
+            "id": "position-vocabulary",
+            "type": "vocab",
+            "terms": [
+              {
+                "term": "position",
+                "definition": "Location relative to a chosen origin.",
+                "cognate": "ES posición · PT posição"
+              },
+              {
+                "term": "displacement",
+                "definition": "Final position minus initial position; a vector.",
+                "cognate": "ES desplazamiento · PT deslocamento"
+              },
+              {
+                "term": "distance",
+                "definition": "Total length traveled; a scalar.",
+                "cognate": "ES distancia · PT distância"
+              },
+              {
+                "term": "vector",
+                "definition": "A quantity with magnitude and direction.",
+                "cognate": "ES vector · PT vetor"
+              }
+            ],
+            "referencePanel": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "af2fb3d2-bd76-4afd-aac5-a0c9eecb0802",
+      "slug": "units-quantities-and-precision",
+      "title": "Units, quantities & precision",
+      "unit_id": "unit-1",
+      "unit": "Unit 1: Motion & Forces (Asteroid 2026-XJ)",
+      "lesson_number": 100,
+      "estimated_time": 14,
+      "published": true,
+      "lesson_type": "video",
+      "description": "Give measurements meaning with quantities and units, then report only the precision your measurements support.",
+      "objectives": [
+        "foundations.units-quantities",
+        "foundations.measurement-precision"
+      ],
+      "videos": [
+        {
+          "id": "foundations-video",
+          "title": "Units, Physical Quantities & Significant Figures",
+          "youtubeId": "Z1qFlfqlS_E"
+        }
+      ],
+      "content_blocks": {
+        "schemaVersion": 1,
+        "presentation": "physics-path",
+        "dayType": "STANDARD",
+        "learningPath": {
+          "version": 1,
+          "kind": "lesson",
+          "focus": "Report a physical quantity with a useful unit and precision supported by the measurement.",
+          "targetSlugs": [
+            "foundations.units-quantities",
+            "foundations.measurement-precision"
+          ],
+          "sourceLessonId": "fe529665-a1df-4f80-a5cc-df0d09b95210"
+        },
+        "blocks": [
+          {
+            "id": "foundations-video",
+            "type": "instruction_video",
+            "title": "Units, quantities & significant figures",
+            "youtubeId": "Z1qFlfqlS_E",
+            "summary": "A physical quantity is something measurable, such as length or time. A unit is the agreed reference used to express it, such as the meter or second. A useful measurement includes a numerical value and unit. Significant figures communicate measurement precision. Keep extra digits during a calculation and round the reported result at the end.",
+            "workshop": {
+              "stage": "Learn",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "foundations-check",
+            "type": "question",
+            "capture": true,
+            "targetId": "foundations.units-quantities",
+            "evidenceRole": "practice",
+            "question": {
+              "prompt": "In the measurement “2.40 s,” which is the physical quantity?",
+              "options": [
+                {
+                  "id": "time",
+                  "text": "Time",
+                  "feedback": "Time is the property being measured; seconds are the unit."
+                },
+                {
+                  "id": "seconds",
+                  "text": "Seconds",
+                  "feedback": "Seconds are the unit used to express the measured quantity, time."
+                },
+                {
+                  "id": "number",
+                  "text": "2.40",
+                  "feedback": "2.40 is the numerical value. The quantity names what was measured."
+                }
+              ],
+              "correctOptionId": "time"
+            },
+            "workshop": {
+              "stage": "Check your thinking",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "foundations-model",
+            "type": "prose",
+            "markdown": "A rectangular card measures 12.4 cm by 3.2 cm. We want its area.",
+            "workshop": {
+              "stage": "See it worked",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "foundations-worked",
+            "type": "worked_example",
+            "prompt": "Calculate and report the area of the card.",
+            "given": "Length = 12.4 cm; width = 3.2 cm. Model the card as a rectangle. The given lengths are measurements, not exact counts.",
+            "equation": "$A=lw$ Multiply length by width because the card is rectangular. Report the result to the precision allowed by the measurements.",
+            "work": "$A=(12.4\\,\\mathrm{cm})(3.2\\,\\mathrm{cm})=39.68\\,\\mathrm{cm^2}$.\n\nThe measured width has two significant figures. For this multiplication, report two significant figures.",
+            "answer": "$A=4.0\\times10^1\\,\\mathrm{cm^2}$. Writing 4.0 × 10¹ makes the two significant figures clear.",
+            "format": "problem-workspace",
+            "sei": {
+              "visual": {
+                "src": "/learning/measurement-worked-model.svg",
+                "alt": "Rectangle with measured sides 12.4 cm and 3.2 cm."
+              }
+            }
+          },
+          {
+            "id": "foundations-try",
+            "type": "prose",
+            "markdown": "Name the quantity, the numerical value, and the unit separately.",
+            "workshop": {
+              "stage": "Try it",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "foundations-quantity",
+            "type": "exit_ticket",
+            "targetId": "foundations.units-quantities",
+            "prompt": "A sensor reports a travel time of 2.40 s. Identify the physical quantity, numerical value, and unit. Explain why “2.40” alone is incomplete.",
+            "sei": {
+              "visual": {
+                "src": "/learning/measurement.svg",
+                "alt": "A labeled diagram supporting this physics question."
+              },
+              "frames": [
+                {
+                  "level": 1,
+                  "text": "The quantity is ___. The value is ___. The unit is ___."
+                },
+                {
+                  "level": 2,
+                  "text": "The quantity is ___. The value is ___. The unit is ___."
+                },
+                {
+                  "level": 3,
+                  "text": "My evidence is ___, which means ___."
+                }
+              ],
+              "wordBank": [
+                "time",
+                "second",
+                "value",
+                "measurement"
+              ],
+              "modes": [
+                "text",
+                "sketch"
+              ]
+            }
+          },
+          {
+            "id": "foundations-precision-title",
+            "type": "prose",
+            "markdown": "Calculate first, then decide how to report the result.",
+            "workshop": {
+              "stage": "Use the precision",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "foundations-practice",
+            "type": "gewa",
+            "requireCompleteWork": true,
+            "targetId": "foundations.measurement-precision",
+            "prompt": "A different card measures 8.6 cm by 2.3 cm. Calculate its area, report it with appropriate significant figures, and explain your rounding.",
+            "givenHint": "Both lengths are measured values.",
+            "equationHint": "Area = length × width.",
+            "sei": {
+              "visual": {
+                "src": "/learning/measurement-model.svg",
+                "alt": "Rectangle with measured sides 8.6 cm and 2.3 cm."
+              },
+              "frames": [
+                {
+                  "level": 1,
+                  "text": "The unrounded area is ___. I report ___ because ___."
+                },
+                {
+                  "level": 2,
+                  "text": "The unrounded area is ___. I report ___ because ___."
+                },
+                {
+                  "level": 3,
+                  "text": "My evidence is ___, which means ___."
+                }
+              ],
+              "wordBank": [
+                "area",
+                "square centimeters",
+                "two",
+                "significant figures"
+              ],
+              "modes": [
+                "text",
+                "sketch"
+              ]
+            },
+            "responseFormat": "problem-workspace",
+            "capture": true,
+            "stageHints": {
+              "model": "Identify the two measured lengths and their unit. State what the rectangle represents.",
+              "plan": "Area combines two perpendicular lengths. What relationship connects them, and what happens to the units?",
+              "work": "Keep the unrounded product while you work. Decide the reporting precision after the calculation.",
+              "answer": "Count the significant figures in each measured length. Scientific notation can make the precision of your final result clear."
+            }
+          },
+          {
+            "id": "foundations-report-title",
+            "type": "prose",
+            "markdown": "A calculator can display more digits than a measurement supports.",
+            "workshop": {
+              "stage": "Explain",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "foundations-exit",
+            "type": "exit_ticket",
+            "targetId": "foundations.measurement-precision",
+            "prompt": "A classmate reports the first card’s area as 39.680000 cm². Explain what is misleading about that report and how you would fix it.",
+            "sei": {
+              "visual": {
+                "src": "/learning/measurement.svg",
+                "alt": "A labeled diagram supporting this physics question."
+              },
+              "frames": [
+                {
+                  "level": 1,
+                  "text": "The extra digits suggest ___. I would report ___ because ___."
+                },
+                {
+                  "level": 2,
+                  "text": "The extra digits suggest ___. I would report ___ because ___."
+                },
+                {
+                  "level": 3,
+                  "text": "My evidence is ___, which means ___."
+                }
+              ],
+              "wordBank": [
+                "precision",
+                "measurement",
+                "calculated",
+                "round"
+              ],
+              "modes": [
+                "text",
+                "sketch"
+              ]
+            }
+          },
+          {
+            "id": "foundations-vocab",
+            "type": "vocab",
+            "terms": [
+              {
+                "term": "quantity",
+                "definition": "A measurable property.",
+                "cognate": "ES cantidad · PT quantidade"
+              },
+              {
+                "term": "unit",
+                "definition": "An agreed reference for expressing a quantity.",
+                "cognate": "ES unidad · PT unidade"
+              },
+              {
+                "term": "precision",
+                "definition": "The detail supported by a measurement.",
+                "cognate": "ES precisión · PT precisão"
+              }
+            ],
+            "referencePanel": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "eaa95227-1bc7-41e8-af7c-192bdedc8303",
+      "slug": "kinematics-the-language-of-motion",
+      "title": "Kinematics: the language of motion",
+      "unit_id": "unit-1",
+      "unit": "Unit 1: Motion & Forces (Asteroid 2026-XJ)",
+      "lesson_number": 101,
+      "estimated_time": 8,
+      "published": true,
+      "lesson_type": "video",
+      "description": "Meet position, velocity, and acceleration—and see why describing motion comes before explaining it.",
+      "objectives": [
+        "u1.kinematics-language"
+      ],
+      "videos": [
+        {
+          "id": "kinematics-video",
+          "title": "What Is Kinematics? The Language of Motion",
+          "youtubeId": "vf7X7mmJfsE"
+        }
+      ],
+      "content_blocks": {
+        "schemaVersion": 1,
+        "presentation": "physics-path",
+        "dayType": "STANDARD",
+        "learningPath": {
+          "version": 1,
+          "kind": "lesson",
+          "focus": "Explain what kinematics describes. Recognize that changing direction is acceleration even at constant speed.",
+          "targetSlugs": [
+            "u1.kinematics-language"
+          ],
+          "sourceLessonId": "fe529665-a1df-4f80-a5cc-df0d09b95210"
+        },
+        "blocks": [
+          {
+            "id": "kinematics-video",
+            "type": "instruction_video",
+            "title": "What is kinematics?",
+            "youtubeId": "vf7X7mmJfsE",
+            "summary": "Kinematics describes motion without explaining its causes. Position tells us where something is relative to a reference. Velocity tells us how fast position changes and in what direction. Acceleration means velocity is changing: speeding up, slowing down, or changing direction—even at a constant speed.",
+            "workshop": {
+              "stage": "Learn",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "kinematics-check",
+            "type": "question",
+            "capture": true,
+            "targetId": "u1.kinematics-language",
+            "evidenceRole": "practice",
+            "question": {
+              "prompt": "A bicycle turns along a curved path at constant speed. Is it accelerating?",
+              "options": [
+                {
+                  "id": "yes",
+                  "text": "Yes, because its direction changes.",
+                  "feedback": "Velocity includes direction. Changing direction is acceleration even with constant speed."
+                },
+                {
+                  "id": "no",
+                  "text": "No, because its speed stays constant.",
+                  "feedback": "Constant speed is only part of constant velocity. The direction is changing."
+                },
+                {
+                  "id": "only-faster",
+                  "text": "Only if it starts moving faster.",
+                  "feedback": "Acceleration includes speeding up, slowing down, and changing direction."
+                }
+              ],
+              "correctOptionId": "yes"
+            },
+            "workshop": {
+              "stage": "Check your thinking",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "kinematics-model",
+            "type": "prose",
+            "markdown": "A runner moves around a circular track at steady speed. At two different points, the runner is moving in different directions. The speed is unchanged, but the velocity has changed: the runner is accelerating.",
+            "workshop": {
+              "stage": "See the idea",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "kinematics-figure",
+            "type": "figure",
+            "src": "/learning/acceleration.svg",
+            "alt": "Two equal-length tangent velocity arrows at different positions around a circular track. The speed is the same but the directions differ."
+          },
+          {
+            "id": "kinematics-try",
+            "type": "prose",
+            "markdown": "Compare a straight path with a turning path.",
+            "workshop": {
+              "stage": "Explain",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "kinematics-exit",
+            "type": "exit_ticket",
+            "targetId": "u1.kinematics-language",
+            "prompt": "A cart moves straight at constant speed. Another cart turns a corner at the same constant speed. Which cart is accelerating? Explain using velocity and direction.",
+            "sei": {
+              "visual": {
+                "src": "/learning/acceleration.svg",
+                "alt": "A labeled diagram supporting this physics question."
+              },
+              "frames": [
+                {
+                  "level": 1,
+                  "text": "The ___ cart is accelerating because its ___ changes, even though its ___ stays the same."
+                },
+                {
+                  "level": 2,
+                  "text": "The ___ cart is accelerating because its ___ changes, even though its ___ stays the same."
+                },
+                {
+                  "level": 3,
+                  "text": "My evidence is ___, which means ___."
+                }
+              ],
+              "wordBank": [
+                "velocity",
+                "direction",
+                "speed",
+                "turning",
+                "straight"
+              ],
+              "modes": [
+                "text",
+                "sketch"
+              ]
+            }
+          },
+          {
+            "id": "kinematics-connection",
+            "type": "prose",
+            "markdown": "To describe 2026-XJ, we need a reference for its position and information about how its velocity changes. Later lessons will build those tools. This introduction does not yet let us predict an orbit or an impact.",
+            "workshop": {
+              "stage": "Connect",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "kinematics-vocab",
+            "type": "vocab",
+            "terms": [
+              {
+                "term": "kinematics",
+                "definition": "The description of motion.",
+                "cognate": "ES cinemática · PT cinemática"
+              },
+              {
+                "term": "velocity",
+                "definition": "Rate of change of position, including direction.",
+                "cognate": "ES velocidad · PT velocidade"
+              },
+              {
+                "term": "acceleration",
+                "definition": "Rate of change of velocity; speed, direction, or both can change.",
+                "cognate": "ES aceleración · PT aceleração"
+              }
+            ],
+            "referencePanel": true
+          }
+        ]
+      }
+    }
+  ],
+  "targets": [
+    {
+      "slug": "foundations.units-quantities",
+      "statement": "I can distinguish a physical quantity from its unit and report a measurement with a number and an appropriate unit.",
+      "domain": "knowledge",
+      "content_strand": "foundations",
+      "order_index": 0
+    },
+    {
+      "slug": "foundations.measurement-precision",
+      "statement": "I can report measured and calculated quantities with precision supported by the measurements.",
+      "domain": "skill",
+      "content_strand": "foundations",
+      "order_index": 0
+    },
+    {
+      "slug": "u1.kinematics-language",
+      "statement": "I can explain how position, velocity, and acceleration describe motion, including changes in direction.",
+      "domain": "knowledge",
+      "content_strand": "motion-kinematics",
+      "order_index": 0
+    }
+  ]
+}

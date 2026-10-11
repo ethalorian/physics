@@ -122,14 +122,16 @@ export default function ArcadePage() {
     midway: (data?.games ?? []).filter(g => g.costXp > 0),
   }
   const matches = (...values: (string | null)[]) => values.some(v => v?.toLowerCase().includes(query.trim().toLowerCase()))
-  const counts = { all: (data?.games.length ?? 0) + 3 + MISSIONS.length, physics: groups.physics.length + 2, math: groups.math.length + MISSIONS.length, workshop: 1, midway: groups.midway.length }
+  const counts = { all: (data?.games.length ?? 0) + 5 + MISSIONS.length, physics: groups.physics.length + 2, math: groups.math.length + MISSIONS.length, workshop: 3, midway: groups.midway.length }
   const visible = CATEGORIES.filter(c => c.id !== 'all' && (category === 'all' || c.id === category)).map(c => {
     const id = c.id as Exclude<Category, 'all'>
     const cabinets = id === 'physics' || id === 'math' || id === 'midway' ? groups[id].filter(g => matches(g.name, g.blurb, g.unit)) : []
     const workshop = id === 'workshop' && matches('Tape Workshop', 'measure ruler fractions inches metric trades')
+    const cutAndFit = id === 'workshop' && matches('Cut & Fit', 'cut and fit carpentry plumbing electrical wood pipe conduit clearance insertion stock trades')
+    const centerpoint = id === 'workshop' && matches('Dead Center', 'centerpoint center point midpoint mark material layout halve fractions rectangle carpentry plumbing electrical wood pipe conduit trades')
     const unitLab = id === 'physics' && matches('Unit Lab', 'units dimensional analysis conversion factors speed acceleration force density')
     const conversions = id === 'physics' && matches('Conversion Workshop', 'unit conversions metric length mass time speed area learn practice')
-    return { ...c, id, cabinets, workshop, unitLab, conversions, count: cabinets.length + (workshop ? 1 : 0) + (id === "math" ? MISSIONS.filter(m => matches(m.name, m.description, ...m.codes)).length : 0) + (unitLab ? 1 : 0) + (conversions ? 1 : 0) }
+    return { ...c, id, cabinets, workshop, cutAndFit, centerpoint, unitLab, conversions, count: cabinets.length + (workshop ? 1 : 0) + (cutAndFit ? 1 : 0) + (centerpoint ? 1 : 0) + (id === "math" ? MISSIONS.filter(m => matches(m.name, m.description, ...m.codes)).length : 0) + (unitLab ? 1 : 0) + (conversions ? 1 : 0) }
   }).filter(c => c.count > 0)
   const resultCount = visible.reduce((sum, c) => sum + c.count, 0)
 
@@ -142,7 +144,7 @@ export default function ArcadePage() {
 
     <div className={styles.playerBar} aria-label="Your arcade progress">
       <div><span className={styles.statIcon}><Coins size={19} /></span><span><small>Ready to spend</small><strong>{data ? `${data.balance.balance.toLocaleString()} XP` : '—'}</strong></span></div>
-      <div><span className={styles.statIcon}><Zap size={19} /></span><span><small>Free to play</small><strong>{data ? groups.physics.length + groups.math.length + 3 + MISSIONS.length : '—'} activities</strong></span></div>
+      <div><span className={styles.statIcon}><Zap size={19} /></span><span><small>Free to play</small><strong>{data ? groups.physics.length + groups.math.length + 5 + MISSIONS.length : '—'} activities</strong></span></div>
       <div><span className={styles.statIcon}><Gamepad2 size={19} /></span><span><small>Your collection</small><strong>{data ? data.games.filter(g => g.myBest > 0).length : '—'} personal bests</strong></span></div>
       <div><span className={styles.statIcon}><Trophy size={19} /></span><span><small>This week</small><strong>{data ? data.games.filter(g => g.myWeeklyRank !== null).length : '—'} ranked cabinets</strong></span></div>
     </div>
@@ -167,6 +169,38 @@ export default function ArcadePage() {
             {section.conversions && <article className={styles.gameCard} style={{ '--game-color': FLOORS.physics.color } as CSSProperties}><Link href="/arcade/conversion-workshop" className={styles.gameLink}><div className={styles.artWrap}><GamePreview srcPath="/games/conversion-workshop/index.html" name="Conversion Workshop" /></div><div className={styles.cardBody}><span className={styles.eyebrow}>Learn, then practice</span><h3>Conversion Workshop<ArrowUpRight size={18} /></h3><p>Learn why conversion factors work, then practice length, mass, time, speed, and area.</p><div className={styles.rewardPanel}><span className={styles.economyLabel}><Ruler size={15} /> Guided lesson + 12 conversions</span><strong className={styles.economyAmount}>Free <span>practice</span></strong><span className={styles.economyNote}>Hints, worked examples, and new practice sets. No XP or ranked leaderboard.</span></div><div className={styles.playAction}><strong>Start converting</strong><ArrowRight size={16} /></div></div></Link></article>}
             {section.unitLab && <article className={styles.gameCard} style={{ '--game-color': FLOORS.physics.color } as CSSProperties}><Link href="/arcade/unit-lab" className={styles.gameLink}><div className={styles.artWrap}><GamePreview srcPath="/games/unit-lab/index.html" name="Unit Lab" /></div><div className={styles.cardBody}><span className={styles.eyebrow}>Units & dimensional analysis</span><h3>Unit Lab<ArrowUpRight size={18} /></h3><p>Build a conversion chain, flip factors, and watch units cancel. From meters to net force.</p><div className={styles.rewardPanel}><span className={styles.economyLabel}><Atom size={15} /> Eight physics challenges</span><strong className={styles.economyAmount}>Free <span>practice</span></strong><span className={styles.economyNote}>Unlimited retries and hints. No XP or ranked leaderboard.</span></div><div className={styles.playAction}><strong>Enter Unit Lab</strong><ArrowRight size={16} /></div></div></Link></article>}
             {section.workshop && <article className={styles.gameCard} style={{ '--game-color': FLOORS.workshop.color } as CSSProperties}><Link href="/arcade/tape-measure" className={styles.gameLink}><div className={styles.artWrap}><GamePreview srcPath="/games/tape-workshop/index.html" name="Tape Workshop" /></div><div className={styles.cardBody}><span className={styles.eyebrow}>Trades workshop</span><h3>Tape Workshop<ArrowUpRight size={18} /></h3><p>Read the marks, align zero, and measure with confidence. Inch fractions, decimals, and metric.</p><div className={styles.rewardPanel}><span className={styles.economyLabel}><Ruler size={15} /> Hands-on workshop</span><strong className={styles.economyAmount}>Free <span>practice</span></strong><span className={styles.economyNote}>Practice your measuring skills. No XP or ranked leaderboard.</span></div><div className={styles.playAction}><strong>Enter workshop</strong><ArrowRight size={16} /></div></div></Link></article>}
+            {section.cutAndFit && <article className={styles.gameCard} style={{ '--game-color': FLOORS.workshop.color } as CSSProperties}>
+              <Link href="/arcade/cut-and-fit" className={styles.gameLink}>
+                <div className={styles.artWrap}><GamePreview srcPath="/games/cut-and-fit/index.html" name="Cut & Fit" /></div>
+                <div className={styles.cardBody}>
+                  <span className={styles.eyebrow}>Carpentry · Plumbing · Electrical</span>
+                  <h3>Cut &amp; Fit<ArrowUpRight size={18} /></h3>
+                  <p>Read the drawing, cut your stock, and test the fit. Make every allowance count.</p>
+                  <div className={styles.rewardPanel}>
+                    <span className={styles.economyLabel}><Ruler size={15} /> 12 hands-on work orders</span>
+                    <strong className={styles.economyAmount}>Free <span>practice</span></strong>
+                    <span className={styles.economyNote}>Hints, repairs, and three trade benches. No XP or ranked leaderboard.</span>
+                  </div>
+                  <div className={styles.playAction}><strong>Start building</strong><ArrowRight size={16} /></div>
+                </div>
+              </Link>
+            </article>}
+            {section.centerpoint && <article className={styles.gameCard} style={{ '--game-color': FLOORS.workshop.color } as CSSProperties}>
+              <Link href="/arcade/centerpoint" className={styles.gameLink}>
+                <div className={styles.artWrap}><GamePreview srcPath="/games/centerpoint/index.html" name="Dead Center" /></div>
+                <div className={styles.cardBody}>
+                  <span className={styles.eyebrow}>Measure · Halve · Mark · Verify</span>
+                  <h3>Dead Center<ArrowUpRight size={18} /></h3>
+                  <p>Find the exact center of your material. Place your mark and prove it with equal distances.</p>
+                  <div className={styles.rewardPanel}>
+                    <span className={styles.economyLabel}><Ruler size={15} /> 12 layout challenges</span>
+                    <strong className={styles.economyAmount}>Free <span>practice</span></strong>
+                    <span className={styles.economyNote}>Lengths, rectangular faces, and midpoints between marks. No XP or ranked leaderboard.</span>
+                  </div>
+                  <div className={styles.playAction}><strong>Find the center</strong><ArrowRight size={16} /></div>
+                </div>
+              </Link>
+            </article>}
           </div>
         </section>)}
         {visible.length === 0 && (data || query || category === 'workshop') && <div className={styles.empty}><Search size={26} /><h3>{query ? 'No games found' : 'No cabinets here yet'}</h3><p>{query ? 'Try a different topic or explore the other categories.' : 'Explore another category while this floor gets ready.'}</p><button onClick={() => { setQuery(''); setCategory('all') }}>Show all games</button></div>}

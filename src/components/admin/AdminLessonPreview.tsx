@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { TradeContext } from '@/components/lessons/TradeContext'
 import { TRADE_LABELS, type AssignedTrade } from '@/lib/vocational'
 import BlockLessonViewer from '@/components/lessons/BlockLessonViewer'
-import LessonEditorNav from './LessonEditorNav'
+import LessonWorkspaceNav from './LessonWorkspaceNav'
+import { referencedLessonTargets } from '@/lib/lesson-target-references'
 import { filterDocumentForViewer } from '@/lib/track-visibility'
 import type { BlockDocument } from '@/data/content-blocks'
 import type { GlossaryEntry } from '@/components/MathMarkdown'
@@ -27,21 +28,17 @@ export interface PreviewLesson {
 }
 export default function AdminLessonPreview({
   lesson,
-  canEdit = true,
 }: {
   lesson: PreviewLesson
   canEdit?: boolean
 }) {
   return (
     <div className="mx-auto max-w-6xl p-4 sm:p-5">
-      <LessonEditorNav
+      <LessonWorkspaceNav
         lessonId={lesson.id}
         title={lesson.title}
-        unitId={lesson.unit_id}
-        day={lesson.lesson_number}
         published={lesson.published}
         active="preview"
-        canEdit={canEdit}
       />
       <LessonStudentPreview lesson={lesson} />
     </div>
@@ -53,10 +50,13 @@ export function LessonStudentPreview({ lesson }: { lesson: PreviewLesson }) {
   const [reset, setReset] = useState(0)
   const [size, setSize] = useState('full')
   const [course, setCourse] = useState<ReleaseClass | null>(null)
+  const [classId,setClassId] = useState('')
+  useEffect(()=>{const sync=()=>setClassId(new URLSearchParams(window.location.search).get('class')??'');sync();window.addEventListener('popstate',sync);return()=>window.removeEventListener('popstate',sync)},[])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   useEffect(() => {
-    const id = new URLSearchParams(window.location.search).get('class')
+    const id = classId
+    setLoading(true);setCourse(null);setError('')
     if (!id) {
       setLoading(false)
       return
@@ -82,7 +82,7 @@ export function LessonStudentPreview({ lesson }: { lesson: PreviewLesson }) {
         if (!controller.signal.aborted) setLoading(false)
       })
     return () => controller.abort()
-  }, [])
+  }, [classId])
   const doc = useMemo(
     () => {
       if (!lesson.content_blocks) return undefined
@@ -149,8 +149,8 @@ export function LessonStudentPreview({ lesson }: { lesson: PreviewLesson }) {
           Reset preview answers
         </button>
       </div>
-      <p className="text-sm text-muted-foreground">
-        {mode === 'teacher'
+      <p role="status" className="sticky top-0 z-20 rounded-lg border bg-card p-3 text-sm">
+        <strong>Try lesson as a student · </strong>{mode === 'teacher'
           ? 'Teacher view can open every section.'
           : 'Try checkpoints and submission with temporary answers.'}{' '}
         Preview never saves student work or changes class access.
@@ -180,9 +180,10 @@ export function LessonStudentPreview({ lesson }: { lesson: PreviewLesson }) {
           <BlockLessonViewer
             key={`${mode}:${reset}:${course?.id ?? ''}`}
             preview
+            previewReturnHref={`/admin/lessons/${lesson.id}${classId?'?class='+encodeURIComponent(classId):''}`}
             staffView={mode === 'teacher'}
             previewAnswerKeys={keys}
-            previewTargets={lesson.targets?.map((t) => ({
+            previewTargets={referencedLessonTargets(doc, lesson.targets ?? []).map((t) => ({
               slug: t.slug,
               statement: t.statement,
               self: null,

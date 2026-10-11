@@ -1,0 +1,17 @@
+{
+  "questions": 886,
+  "openResponse": 99,
+  "presets": 3,
+  "checks": [
+    "search and filters",
+    "source contexts and images",
+    "student key redaction",
+    "unverified key publication gate",
+    "source ID validation",
+    "lossless checkpoint insertion",
+    "duplicate prevention",
+    "lesson response compatibility",
+    "all presets validate",
+    "886 question HTML and image dependencies"
+  ]
+}

@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers'
+import { readExperience } from './experience-server'
 import { getUserRole, type UserRole } from '@/lib/permissions'
 import { getGrantedRole } from '@/lib/roles'
 import { VIEW_AS_COOKIE } from '@/lib/view-as-shared'
@@ -19,6 +20,13 @@ export interface EffectiveContext {
 }
 
 export async function getEffectiveContext(realEmail: string): Promise<EffectiveContext> {
+  const experience = await readExperience()
+  const actorRole = experience ? (getUserRole(experience.actor.email) === 'admin' ? 'admin' : await getGrantedRole(experience.actor.email)) : null
+  if (experience && actorRole === 'admin' && experience.user.email.toLowerCase() === realEmail.toLowerCase()) {
+    // Auth has already bound the projection to the real admin’s session. The
+    // preview must not inherit that admin’s permission or enrollment bypass.
+    return { realEmail, realRole: experience.user.role, role: experience.user.role, scopeEmail: realEmail, viewingAsTeacher: false }
+  }
   // Hardcoded admin/teacher allowlist first (owner can never be locked out),
   // then a DB grant can raise a student → teacher (earned via Classroom or an
   // admin approval). Purely additive — a grant never lowers a role.

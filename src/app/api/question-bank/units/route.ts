@@ -1,3 +1,4 @@
+import { isCatalogUnit } from '@/lib/retired-curriculum'
 import { NextResponse } from 'next/server'
 import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -29,11 +30,11 @@ export const GET = withAuth(async () => {
     if (lessonsError) {
       console.error('Error fetching lessons:', lessonsError)
       // Return units without lessons
-      return NextResponse.json(unitsData || [])
+      return NextResponse.json((unitsData || []).filter(isCatalogUnit))
     }
 
     // Combine units with their lessons
-    const unitsWithLessons = (unitsData || []).map(unit => ({
+    const unitsWithLessons = (unitsData || []).filter(isCatalogUnit).map(unit => ({
       ...unit,
       lessons: (lessonsData || []).filter(lesson => lesson.unit === unit.id)
     }))

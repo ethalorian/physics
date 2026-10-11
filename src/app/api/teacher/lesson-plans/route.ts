@@ -1,3 +1,6 @@
+import { CURRENT_LESSON_FIELDS, isCurrentClassroomLesson } from '@/lib/current-lesson-catalog'
+import { linkedTeachingPlans } from '@/lib/lesson-workspace'
+import type { BlockDocument } from '@/data/content-blocks'
 import { NextResponse } from 'next/server'
 import { canEditArea } from '@/lib/content-access'
 import { withAuth } from '@/lib/api-auth'
@@ -26,12 +29,14 @@ export const GET = withAuth(async (request, ctx) => {
     // their physics courses, plus 'trades' if any course follows that program.
     // Admins (no courses) see every available class type.
     let tracks: string[]
+    let presentationTrack = 'cpa'
     const courseId = new URL(request.url).searchParams.get('course_id')
     if (courseId) {
       const { data: course, error } = await supabaseAdmin.from('courses').select('track, program, teacher_email').eq('id', courseId).maybeSingle()
       if (error) throw error
       if (!course) return NextResponse.json({ error: 'Class not found' }, { status: 404 })
       if (ctx.role === 'teacher' && course.teacher_email !== ctx.scopeEmail) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      presentationTrack = course.track === 'honors' ? 'honors' : 'cpa'
       const track = trackForCourse(course)
       tracks = track ? [track] : []
     } else if (ctx.role === 'admin' || ctx.role === 'observer') {
@@ -42,6 +47,9 @@ export const GET = withAuth(async (request, ctx) => {
       const rows = (data ?? []) as { track: string | null; program: string | null }[]
       tracks = [...new Set(rows.map(trackForCourse).filter((t): t is string => Boolean(t)))]
     }
+
+    // Project Physics is retained only as historical source material.
+    tracks = tracks.filter(track => track !== 'projects')
 
     // Union the plans across the teacher's tracks (only CPA exists today).
     const seen = new Set<number>()
@@ -70,7 +78,27 @@ export const GET = withAuth(async (request, ctx) => {
 
     const [lr, ar] = await Promise.all([supabaseAdmin.from('lesson_catalog_summary').select('id,title,unit_id,lesson_number,published,estimated_time,content_fingerprint').eq('unit_id',unitId),supabaseAdmin.from('lesson_plan_links').select('*').eq('unit_id',unitId)])
     if(lr.error)throw lr.error; if(ar.error)throw ar.error
-    const linkedDays=days.map(day=>{const matches=(lr.data??[]).filter(l=>l.lesson_number===day.day);const lesson=matches.length===1?matches[0]:null;return {...day,kind:day.kind??'daily',plan_fingerprint:planFingerprint(day),lesson:lesson?{...lesson,revision:lessonPlanRevision(lesson)}:null,alignment:lesson?planAlignment(lesson,ar.data as PlanLink[]):{status:'missing',message:matches.length?'Several lessons share this day. Choose the intended lesson.':'No student lesson matches this plan.'}}})
+    const documents=await supabaseAdmin.from('lessons').select(`id,title,lesson_number,lesson_type,slug,teaching_plans:content_blocks->teachingPlans,${CURRENT_LESSON_FIELDS}`)
+    if(documents.error)throw documents.error
+    const currentDocuments=(documents.data??[]).filter(isCurrentClassroomLesson)
+    const linkedDays = days.map(day => {
+      // Explicit classroom links are separate from reusable video support.
+      const linked = currentDocuments.filter(l => linkedTeachingPlans(l, {
+        schemaVersion: 1, blocks: [], teachingPlans: l.teaching_plans, learningPath: l.learning_path,
+      } as unknown as BlockDocument).some(ref => ref.unitId === unitId && ref.day === day.day))
+      const ids = new Set(linked.map(l => l.id))
+      const matches = (lr.data ?? []).filter(l => ids.has(l.id) && l.lesson_number === day.day)
+      const lesson = matches.length === 1 ? matches[0] : null
+      const message = linked.length ? 'Linked classroom activities are listed above. Video preparation is listed in the plan.'
+        : unitId.startsWith('unit-') ? 'This course plan is ready to use. No separate classroom activity is linked.'
+        : 'No student lesson matches this plan.'
+      return {
+        ...day, lessons: linked.map(l => ({ id: l.id, title: l.title })), kind: day.kind ?? 'daily',
+        plan_fingerprint: planFingerprint(day),
+        lesson: lesson ? { ...lesson, revision: lessonPlanRevision(lesson) } : null,
+        alignment: lesson ? planAlignment(lesson, ar.data as PlanLink[]) : { status: 'missing', message },
+      }
+    })
     const canConfirm=ctx.role!=='observer' && await canEditArea(ctx.email,'lessons',ctx.realRole==='admin')
-    return NextResponse.json({ canConfirm, track: tracks[0] ?? null, tracks, unitId, days: linkedDays, availableUnits, honorsDays: honorsDaysFor(unitId) })
+    return NextResponse.json({ canConfirm, presentationTrack, track: tracks[0] ?? null, tracks, unitId, days: linkedDays, availableUnits, honorsDays: honorsDaysFor(unitId) })
 })

@@ -1,0 +1,48 @@
+[
+  {
+    "youtubeId": "E0CpXzmViwQ",
+    "sequence": 13,
+    "lessonId": "4f6755eb-601b-43ca-ae8b-6469e86fc277",
+    "existingTarget": true,
+    "target": {
+      "id": "bfc9af19-f1ee-4bdd-9102-1d07d45dcb53",
+      "slug": "u1.vectors-tip-to-tail",
+      "statement": "I can add two vectors tip-to-tail and break a vector into components with simple trig.",
+      "domain": "skill",
+      "unit_id": "unit-1",
+      "program": "physics",
+      "content_strand": "motion-kinematics"
+    }
+  },
+  {
+    "youtubeId": "uH-NE-LlybM",
+    "sequence": 14,
+    "lessonId": "ce8c5bd3-aea1-4c31-b817-2107c0390ca2",
+    "existingTarget": true,
+    "target": {
+      "id": "bfc9af19-f1ee-4bdd-9102-1d07d45dcb53",
+      "slug": "u1.vectors-tip-to-tail",
+      "statement": "I can add two vectors tip-to-tail and break a vector into components with simple trig.",
+      "domain": "skill",
+      "unit_id": "unit-1",
+      "program": "physics",
+      "content_strand": "motion-kinematics"
+    }
+  },
+  {
+    "youtubeId": "pwbD3H8R0BU",
+    "sequence": 15,
+    "lessonId": "3392a816-8f39-4ff0-aa76-58dae632c0a3",
+    "existingTarget": false,
+    "target": {
+      "id": "7526a98b-18e2-43c1-852e-149077bbaeae",
+      "slug": "u1.vector-products",
+      "statement": "I can distinguish and calculate dot and cross products for vectors in a plane, explain their directions and units, and connect them to work and torque.",
+      "domain": "reasoning",
+      "unit_id": "unit-1",
+      "program": "physics",
+      "content_strand": "motion-kinematics",
+      "order_index": 13
+    }
+  }
+]

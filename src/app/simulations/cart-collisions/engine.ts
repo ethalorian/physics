@@ -67,7 +67,11 @@ export function createCartCollisionsEngine(
   function drawCart(cx: number, topY: number, m: number, vel: number, fill: string, stroke: string, name: string) {
     const cw = 50 + m * 12, ch = 36
     groundShadow(ctx, cx, topY + ch + 9, cw / 2, (cw / 2) * 0.3)
-    ctx.fillStyle = fill; ctx.fillRect(cx - cw / 2, topY, cw, ch)
+    const body=ctx.createLinearGradient(0,topY,0,topY+ch);body.addColorStop(0,fill);body.addColorStop(1,stroke)
+    ctx.fillStyle = body; ctx.beginPath();ctx.roundRect(cx-cw/2,topY,cw,ch,6);ctx.fill()
+    ctx.fillStyle='rgba(255,255,255,.22)';ctx.fillRect(cx-cw/2+6,topY+5,cw-12,3)
+    ctx.fillStyle='#364551';ctx.fillRect(cx-cw/2-6,topY+ch-13,8,9);ctx.fillRect(cx+cw/2-2,topY+ch-13,8,9)
+    for(let stack=0;stack<Math.min(5,Math.floor(m));stack++){ctx.fillStyle='#596975';ctx.fillRect(cx-16,topY-5-stack*4,32,3)}
     ctx.strokeStyle = stroke; ctx.lineWidth = 3; ctx.strokeRect(cx - cw / 2, topY, cw, ch)
     ctx.fillStyle = PAL.onAccent; ctx.font = `bold 14px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
     ctx.fillText(`${m.toFixed(1)} kg`, cx, topY + ch / 2)
@@ -114,7 +118,8 @@ export function createCartCollisionsEngine(
     const floorY = trackY + 36 + 8
 
     // track + centre line
-    ctx.fillStyle = COL.floor; ctx.fillRect(left - 6, floorY, right - left + 12, 4)
+    ctx.fillStyle = COL.floor; ctx.fillRect(left - 6, floorY, right - left + 12, 6)
+    ctx.fillStyle=PAL.gridStrong;ctx.fillRect(left-6,floorY+8,right-left+12,2);for(let marker=left;marker<right;marker+=20){ctx.fillRect(marker,floorY+12,1,marker%40===0?8:4)}
     ctx.strokeStyle = COL.center; ctx.lineWidth = 1.5; ctx.setLineDash([8, 8])
     ctx.beginPath(); ctx.moveTo((left + right) / 2, trackY - 30); ctx.lineTo((left + right) / 2, floorY); ctx.stroke()
     ctx.setLineDash([])
@@ -140,7 +145,7 @@ export function createCartCollisionsEngine(
     const keOk = Math.abs(kinetic() - keBefore()) < 1e-3
     if (collided || done) {
       label(ctx, pOk ? 'momentum: CONSERVED ✓' : 'momentum changed?!', left + 30, barY + 30, { color: PAL.velocity, weight: 'bold', size: 12 })
-      label(ctx, keOk ? 'energy: conserved (elastic)' : `energy: ${(100 * (1 - kinetic() / Math.max(1e-9, keBefore()))).toFixed(0)}% lost to heat`, (left + right) / 2 + 40, barY + 30, { color: keOk ? PAL.velocity : COL.mute, weight: 'bold', size: 12 })
+      label(ctx, keOk ? 'energy: conserved (elastic)' : `energy: ${(100 * (1 - kinetic() / Math.max(1e-9, keBefore()))).toFixed(0)}% transferred from motion`, (left + right) / 2 + 40, barY + 30, { color: keOk ? PAL.velocity : COL.mute, weight: 'bold', size: 12 })
     }
 
     label(ctx, 'Two carts, your masses + velocities. Watch which quantity survives the crash.', left, 22, { color: COL.mute, size: 12 })
@@ -168,9 +173,9 @@ export function createCartCollisionsEngine(
       x2 += v2 * PPM * dt
       // collision when the carts touch and are approaching
       if (!collided && x2 - x1 <= halfW(m1) + halfW(m2) && v1 > v2) applyCollision()
-      // keep carts on the track (stop at the ends; readouts are latched at impact)
-      if (x1 - halfW(m1) < left) { x1 = left + halfW(m1); if (v1 < 0) v1 = 0 }
-      if (x2 + halfW(m2) > right) { x2 = right - halfW(m2); if (v2 > 0) v2 = 0 }
+      // Stop observation at the track edge; do not invent an external impulse
+      // that changes the post-collision momentum and kinetic-energy readings.
+      if (x1-halfW(m1)<left || x2+halfW(m2)>right || x1+halfW(m1)>right || x2-halfW(m2)<left) {running=false;done=true}
       if (time - lastSample >= 0.05) {
         samples.push({ t: time, v1, v2, p: momentum(), ke: kinetic() }); lastSample = time
       }
@@ -216,7 +221,7 @@ export function createCartCollisionsEngine(
     getSensorTrace(key?: string): SensorSample[] {
       return samples.map((s) => ({ x: s.t, y: key === 'vB' ? s.v2 : s.v1 }))
     },
-    isComplete() { return done && collided },
+    isComplete() { return done },
     destroy() { void started },
   }
   return engine

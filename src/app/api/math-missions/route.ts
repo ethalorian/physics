@@ -40,7 +40,7 @@ export const POST=withAuth(async(request,ctx)=>{
   const day=new Date().toISOString().slice(0,10),staff=isStaff(ctx);let ranked=mode==='challenge'&&!staff;
   if(ranked){const {count,error}=await supabaseAdmin.from('math_mission_sessions').select('id',{count:'exact',head:true}).eq('user_id',ctx.userId).eq('mission',mission.slug).eq('mode','challenge').eq('challenge_day',day);if(error)return fail(error);ranked=!count;}
   const seed=mode==='challenge'?Number(day.replaceAll('-','')):randomInt(1,2147483647);
-  const {data,error}=await supabaseAdmin.from('math_mission_sessions').insert({id:body.id,user_id:ctx.userId,user_email:ctx.email,mission:mission.slug,code:body.code as CompetencyCode,mode,seed,version:MISSION_VERSION,state:initialState(),assignment_id:assignmentId,staff,ranked,challenge_day:mode==='challenge'?day:null}).select().single();
+  const {data,error}=await supabaseAdmin.from('math_mission_sessions').insert({id:body.id,user_id:ctx.userId,user_email:ctx.email,mission:mission.slug,code:body.code as CompetencyCode,mode,seed,version:MISSION_VERSION,state:{...initialState(),hintCount:mode==='practice'&&body.guided===true?1:0},assignment_id:assignmentId,staff,ranked,challenge_day:mode==='challenge'?day:null}).select().single();
   if(error)return error.code==='23505'?NextResponse.json({error:'A session was started in another tab. Retry to resume it.'},{status:409}):fail(error);
   return NextResponse.json({session:viewSession(data as Session)});
  }

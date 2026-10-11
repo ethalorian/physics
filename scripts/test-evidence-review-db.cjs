@@ -35,10 +35,30 @@ if has_table_privilege('anon','public.mastery_evidence_reviews','SELECT') or has
 end $$;
 rollback;
 `;
+const fastTests = `
+do $$ declare result jsonb; begin
+insert into lesson_submissions values('00000000-0000-0000-0000-000000000099','00000000-0000-0000-0000-000000000001','00000000-0000-0000-0000-000000000004');
+result:=public.submit_mastery_review('00000000-0000-0000-0000-000000000020','00000000-0000-0000-0000-000000000001','teacher@test','00000000-0000-0000-0000-000000000002','00000000-0000-0000-0000-000000000004','[{"key":"new","submissionId":"00000000-0000-0000-0000-000000000099"}]','Overall 2. Teacher judgment.','target',2::smallint,'A specific gap.');
+if result->>'level'<>'2' or result->'mean'<>'null'::jsonb or result->'review'->>'rating_mode'<>'target' then raise exception 'Target judgment incorrectly averaged'; end if;
+if (result->'review'->'evidence'->0) ? 'level' then raise exception 'Invented response score'; end if;
+if result->'review'->>'note'<>'A specific gap.' then raise exception 'Teacher note lost'; end if;
+if (select count(*) from mastery_records)<>3 or (select count(*) from teacher_feedback)<>3 then raise exception 'Direct save incomplete'; end if;
+if (select count(*) from lesson_reviews)<>1 then raise exception 'Saving mastery returned the lesson'; end if;
+perform public.submit_mastery_review('00000000-0000-0000-0000-000000000020','00000000-0000-0000-0000-000000000001','teacher@test','00000000-0000-0000-0000-000000000002','00000000-0000-0000-0000-000000000004','[]','retry','target',3::smallint,'');
+if (select count(*) from mastery_records)<>3 then raise exception 'Duplicate direct rating on retry'; end if;
+begin
+perform public.submit_mastery_review('00000000-0000-0000-0000-000000000021','00000000-0000-0000-0000-000000000001','teacher@test','00000000-0000-0000-0000-000000000002','00000000-0000-0000-0000-000000000004','[{"key":"b"}]',repeat('x',2001),'target',3::smallint,'');
+raise exception 'Expected feedback failure'; exception when check_violation then null; end;
+if (select count(*) from mastery_records)<>3 then raise exception 'Partial manual save escaped rollback'; end if;
+result:=public.submit_mastery_review('00000000-0000-0000-0000-000000000022','00000000-0000-0000-0000-000000000001','teacher@test','00000000-0000-0000-0000-000000000002','00000000-0000-0000-0000-000000000004','[{"key":"a","level":2},{"key":"b","level":3}]','Overall 3.','evidence',null,'');
+if result->>'level'<>'3' or (result->>'mean')::numeric<>2.5 then raise exception 'Detailed scoring changed'; end if;
+if has_function_privilege('authenticated','public.submit_mastery_review(uuid,uuid,text,uuid,uuid,jsonb,text,text,smallint,text)','EXECUTE') or has_function_privilege('anon','public.submit_mastery_review(uuid,uuid,text,uuid,uuid,jsonb,text,text,smallint,text)','EXECUTE') then raise exception 'Exposed review function'; end if;
+end $$;
+`;
 execFileSync(
   "/opt/homebrew/bin/psql",
   [
-    "postgresql://craigantocci@127.0.0.1:55439/review_desk_test",
+    process.env.REVIEW_TEST_DATABASE_URL || "postgresql://craigantocci@127.0.0.1:55439/review_desk_test",
     "-X",
     "-v",
     "ON_ERROR_STOP=1",
@@ -53,7 +73,8 @@ execFileSync(
         ),
         "utf8",
       ) +
-      tests,
+      fs.readFileSync(path.join(root, 'supabase/migrations/20260917012344_mastery_review_fast_flow.sql'), 'utf8') +
+      tests.replace('rollback;', () => fastTests + 'rollback;'),
     stdio: ["pipe", "inherit", "inherit"],
   },
 );

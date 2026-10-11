@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<style>html,body{margin:0;height:100%;background:#22233a;overflow:hidden;font-variant-numeric:lining-nums}a{color:#4b4ba8}a:hover{color:#c9573f}</style>
+<script>window.OM_SCENES = '[{"name":"Title","dur":7,"desc":"Mission 2026-XJ · In class: Where will it be in six months? Key hints for the teacher."},{"name":"Recap","dur":16,"desc":"v = Δx/Δt → Δx = vΔt; asteroid moves at constant speed with equal Δx each second. STOP 1 (warm-up)."},{"name":"Setup","dur":18,"desc":"Plane with Earth at the origin; asteroid at (1.2 × 10⁸ km, 0) with vₓ and v_y arrows. Pan to the Given panel. STOP 2 (prep check)."},{"name":"Units","dur":14,"desc":"Convert to km/s; interpret 1.6 × 10⁷ s; km vs m warning. STOP 3 (calculate)."},{"name":"Solve","dur":26,"desc":"Δx, Δy, new x and y in the panel; pan to the plane: asteroid travels, legs, predicted point, d ≈ 3.70 × 10⁷ km; not an orbit. STOP 4 (discuss)."},{"name":"HowSure","dur":12,"desc":"How sure are we? ±50,000 km position, ±200 m/s velocity. STOP 5 (calculate the window)."},{"name":"Window","dur":26,"desc":"Zoomed view: position uncertainty smaller than the dot; window grows over 6 months to ±3.25 × 10⁶ km; ranges. STOP 6 (discuss)."},{"name":"Reality","dur":14,"desc":"Straight-line model vs bending paths under the Sun’s gravity; the real window is bigger. STOP 7 (discuss)."},{"name":"Reflect","dur":16,"desc":"Fictional scenario, real methods; better model + more observations; Days 21–22 transfer. STOP 8 (exit ticket)."},{"name":"Hold","dur":4,"desc":"Hold on the exit ticket."}]';
+window.OM_PLAYBACK = '{"mode":"times","count":1}';
+window.TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "stops": true,
+  "grid": true
+}/*EDITMODE-END*/;</script>
+</helmet>
+<div style="position:fixed;inset:0">
+<x-import component-from-global-scope="AsteroidPredictApp" from="./animations-v3.jsx ./tweaks-panel.jsx ./asteroid-predict.jsx" hint-size="100%,100%"></x-import>
+</div>
+</x-dc>
+</body>
+</html>

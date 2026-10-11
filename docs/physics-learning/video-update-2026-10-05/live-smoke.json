@@ -1,0 +1,47 @@
+[
+  {
+    "path": "/reference",
+    "status": 200,
+    "location": null,
+    "newLessonLinks": 3
+  },
+  {
+    "path": "/learning/video-vector-addition.svg",
+    "status": 200,
+    "location": null,
+    "matchesSource": true
+  },
+  {
+    "path": "/learning/video-vector-components.svg",
+    "status": 200,
+    "location": null,
+    "matchesSource": true
+  },
+  {
+    "path": "/learning/video-vector-products.svg",
+    "status": 200,
+    "location": null,
+    "matchesSource": true
+  },
+  {
+    "path": "/lessons",
+    "status": 200,
+    "location": null,
+    "clientAuthenticationGate": true
+  },
+  {
+    "path": "/lessons/video-13-adding-vectors-graphically-the-tip-to-tail-method",
+    "status": 307,
+    "location": "/api/auth/signin"
+  },
+  {
+    "path": "/lessons/video-14-vector-components-breaking-vectors-into-x-and-y",
+    "status": 307,
+    "location": "/api/auth/signin"
+  },
+  {
+    "path": "/lessons/video-15-dot-product-vs-cross-product-what-they-mean",
+    "status": 307,
+    "location": "/api/auth/signin"
+  }
+]

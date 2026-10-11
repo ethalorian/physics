@@ -1,6 +1,11 @@
 'use client'
 
+import LessonConceptMap from './LessonConceptMap'
+import type { LessonConceptMapData } from '@/lib/lesson-concept-map'
+import mapStyles from './LessonConceptMap.module.css'
+import { Network, List } from 'lucide-react'
 import { Spinner } from '@/components/ui/spinner'
+import PhysicsLearningLibrary, { hasPhysicsLearning } from './PhysicsLearningLibrary'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -50,10 +55,11 @@ interface Lesson {
 
 // Mirrors LessonWindowStatus from @/lib/lesson-windows (server-only module —
 // it imports supabaseAdmin, so the shape is re-declared here for the client).
-type LessonWindowInfo =
+type LessonWindowInfo = { due_at?: string | null } & (
   | { state: 'open'; opened_at: string | null; closes_at: string | null }
   | { state: 'scheduled'; opens_at: string }
   | { state: 'closed'; closed_at: string | null }
+)
 
 // "Closes today 11:59 PM" / "Opens Mon 8:00 AM" / "Closed Jun 8" — relative
 // day words near today, weekday inside a week, short date beyond.
@@ -79,22 +85,25 @@ const closesSoon = (iso: string) => {
 }
 
 interface LessonBrowserProps {
+  observer?: boolean
   initialLessons?: Lesson[]
   initialProgress?: Record<string, number>
 }
 
-export default function LessonBrowser({ initialLessons = [], initialProgress = {} }: LessonBrowserProps) {
+export default function LessonBrowser({ initialLessons = [], initialProgress = {}, observer = false }: LessonBrowserProps) {
   const [lessons, setLessons] = useState<Lesson[]>(initialLessons)
   const [progress, setProgress] = useState<Record<string, number>>(initialProgress)
   const [loading, setLoading] = useState(!initialLessons.length)
   const [loadError, setLoadError] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterUnit, setFilterUnit] = useState('all')
-  const [filterType, setFilterType] = useState('all')
+  const [showAllCourses, setShowAllCourses] = useState(false)
+  const [conceptMap,setConceptMap]=useState<LessonConceptMapData|null>(null)
+  const [mapView,setMapView]=useState(true)
 
-  const fetchLessons = useCallback(async () => {
+  const fetchLessons = useCallback(async (quiet = false) => {
     try {
-      setLoading(true)
+      if(!quiet)setLoading(true)
       setLoadError(false)
       const response = await fetch('/api/lessons/published')
       if (!response.ok) throw new Error('Failed to fetch lessons')
@@ -102,6 +111,7 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
       const data = await response.json()
       setLessons(data.lessons || [])
       setProgress(data.progress || {})
+      setConceptMap(data.conceptMap ?? null)
     } catch (error) {
       console.error('Error fetching lessons:', error)
       setLoadError(true)
@@ -116,12 +126,20 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
     if (!initialLessons.length) void fetchLessons()
   }, [initialLessons.length, fetchLessons])
 
+  const hasConceptMap = Boolean(conceptMap?.nodes.length)
+  useEffect(()=>{
+    if(!hasConceptMap)return
+    const refresh=()=>{if(document.visibilityState==='visible')void fetchLessons(true)}
+    window.addEventListener('focus',refresh)
+    const interval=setInterval(refresh,60000)
+    return()=>{window.removeEventListener('focus',refresh);clearInterval(interval)}
+  },[hasConceptMap,fetchLessons])
+
   // Get unique units
   const units = Array.from(new Set(lessons.map(l => l.unit).filter((u): u is string => Boolean(u)))).sort()
 
   const filteredLessons = lessons.filter(lesson => {
     if (filterUnit !== 'all' && lesson.unit !== filterUnit) return false
-    if (filterType !== 'all' && lesson.lesson_type !== filterType) return false
     if (searchTerm && !lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
         !lesson.description?.toLowerCase().includes(searchTerm.toLowerCase())) {
       return false
@@ -141,7 +159,12 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
   const totalLessons = lessons.length
   const completedCount = Object.values(progress).filter(p => p === 100).length
   const inProgressCount = Object.values(progress).filter(p => p > 0 && p < 100).length
-  const simulationCount = lessons.filter(l => l.lesson_type === 'simulation').length
+
+  if (!loading && !loadError && !showAllCourses && conceptMap?.nodes.length) return <>
+    <nav className={mapStyles.viewTabs} aria-label="Lesson view"><button type="button" aria-pressed={mapView} onClick={()=>setMapView(true)}><Network size={17}/>Concept map</button><button type="button" aria-pressed={!mapView} onClick={()=>setMapView(false)}><List size={17}/>Lesson list</button></nav>
+    {mapView?<LessonConceptMap data={conceptMap} onRefresh={()=>void fetchLessons(true)} observer={observer}/>:<PhysicsLearningLibrary lessons={lessons} onOtherCourses={()=>setShowAllCourses(true)} staff={false} observer={observer}/>}
+  </>
+  if (!loading && !loadError && !showAllCourses && hasPhysicsLearning(lessons)) return <PhysicsLearningLibrary lessons={lessons} onOtherCourses={()=>setShowAllCourses(true)} staff={!observer && lessons.some(l=>!l.window)} observer={observer}/>
 
   if (loading) {
     return (
@@ -154,10 +177,13 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
     )
   }
 
+  if (loadError) return <section role="alert" className="rounded-xl border p-8"><h2 className="text-xl font-semibold">Your lessons could not be loaded.</h2><p className="my-3 text-muted-foreground">Your work is still saved. Try loading your class lessons again.</p><Button onClick={()=>void fetchLessons()}>Try again</Button></section>
+  if (!lessons.length) return <section className="rounded-xl border bg-card p-8 sm:p-12"><p className="text-sm font-medium text-primary">YOUR LEARNING PATH</p><h2 className="mt-4 font-serif text-3xl">Your next lesson will appear here.</h2><p className="my-4 max-w-xl text-muted-foreground">There are no released lessons available for your class and course track yet. When your teacher opens one, you can watch, investigate, and save your thinking here.</p><a className="inline-flex min-h-11 items-center text-primary underline" href="/home">Return to your class home →</a></section>
   return (
     <div className="space-y-6">
+      {showAllCourses && hasPhysicsLearning(lessons) && <Button variant="outline" onClick={()=>setShowAllCourses(false)}>Back to physics learning</Button>}
       {/* Header with Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
@@ -194,17 +220,7 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-2xl font-bold text-primary">{simulationCount}</div>
-                <div className="text-xs text-muted-foreground">Simulations</div>
-              </div>
-              <Microscope className="h-8 w-8 text-primary opacity-50" />
-            </div>
-          </CardContent>
-        </Card>
+
       </div>
 
       {/* Filters */}
@@ -235,25 +251,14 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
               </SelectContent>
             </Select>
 
-            {/* Type Filter */}
-            <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="All Types" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="simulation">🔬 Simulations</SelectItem>
-                <SelectItem value="video">📹 Videos</SelectItem>
-                <SelectItem value="markdown">📖 Reading</SelectItem>
-              </SelectContent>
-            </Select>
+
 
           </div>
         </CardContent>
       </Card>
 
       {loadError && <div role="alert" className="rounded-xl border p-4">
-        Couldn’t load lessons. <Button variant="outline" onClick={fetchLessons}>Retry</Button>
+        Couldn’t load lessons. <Button variant="outline" onClick={()=>void fetchLessons()}>Retry</Button>
       </div>}
       {/* Lessons by Unit */}
       <div className="space-y-8">
@@ -286,13 +291,12 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
             <Filter className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>{searchTerm || filterUnit !== 'all' || filterType !== 'all' ? 'No lessons match your filters.' : 'No lessons are available yet.'}</p>
+            <p>{searchTerm || filterUnit !== 'all' ? 'No lessons match your filters.' : 'No lessons are available yet.'}</p>
             <Button
               variant="link"
               onClick={() => {
                 setSearchTerm('')
                 setFilterUnit('all')
-                setFilterType('all')
               }}
             >
               Clear filters
@@ -408,6 +412,7 @@ function LessonCard({
           )}
         </div>
 
+        {win?.due_at && <p className="text-sm font-semibold">Due {fmtWhen(win.due_at)}</p>}
         {/* Release window — opened / closes / opens / closed, at a glance */}
         {win && (
           <div

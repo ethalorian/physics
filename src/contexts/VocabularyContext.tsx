@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useCa
 import { usePathname } from 'next/navigation'
 import { VocabularyTerm } from '@/types/assignment'
 import { useSession } from 'next-auth/react'
+import type {VocabularyTeachingSource,VocabularyTeachingChoice} from '@/lib/vocab-teaching-source'
 import { getUserRole } from '@/lib/permissions'
 
 // ============================================================================
@@ -14,6 +15,8 @@ interface VocabularySet {
   name: string
   description?: string
   unit?: string
+  teachingSource?: VocabularyTeachingSource | null
+  teachingConnection?: VocabularyTeachingChoice | null
   lesson?: string
   terms: VocabularyTerm[]
   published: boolean
@@ -67,7 +70,7 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
   const vocabularySetsRef = useRef(vocabularySets)
   vocabularySetsRef.current = vocabularySets
 
-  const userRole = getUserRole(session?.user?.email)
+  const userRole = (session?.user?.role ?? getUserRole(session?.user?.email))
   const canAccessVocabulary = userRole === 'admin' || userRole === 'teacher'
 
   // ========================================
@@ -102,7 +105,7 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
   ): Promise<boolean> => {
     try {
       const response = await apiCall()
-      if (!response.ok) throw new Error('Vocabulary could not save. Please retry before leaving this page.')
+      if (!response.ok) { const data=await response.json().catch(()=>({})); throw new Error(data.error??'Vocabulary could not save. Please retry before leaving this page.') }
       return true
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Vocabulary could not save'
@@ -191,11 +194,12 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({
           id,
           expected_updated_at: currentSet.updated_at,
+          ...('teachingSource' in updates?{teachingSource:updates.teachingSource}:{}),
           name: updates.name ?? currentSet.name,
           description: updates.description ?? currentSet.description,
           unit: updates.unit ?? currentSet.unit,
           lesson: updates.lesson ?? currentSet.lesson,
-          terms: updates.terms ?? currentSet.terms,
+          ...('teachingSource' in updates && !('terms' in updates)?{}:{terms:updates.terms??currentSet.terms}),
           published: updates.published ?? currentSet.published
         })
       })

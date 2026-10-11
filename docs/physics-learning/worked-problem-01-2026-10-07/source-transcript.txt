@@ -1,0 +1,45 @@
+YouTube transcript
+Video ID: B51oRJa9MSM
+Language: en-US
+Captions: authored or unspecified
+
+[0:10] Here is our problem.
+[0:11] A student is standing in a straight hallway at x equals positive 2 meters.
+[0:16] She walks to the water fountain at positive 8 meters,
+[0:20] then turns around and walks to her locker at negative 3 meters.
+[0:25] We want two things: the total distance she walks, and her displacement.
+[0:31] Let us use the x-axis as a number line, with positive to the right.
+[0:35] She starts at positive 2.
+[0:37] First she walks right to the fountain at positive 8.
+[0:40] Then she turns around and walks left, past where she started and past zero,
+[0:45] to her locker at negative 3.
+[0:48] Here is what we know.
+[0:49] Her starting position is positive 2 meters.
+[0:52] She turns around at positive 8 meters.
+[0:55] Her final position is negative 3 meters.
+[0:58] We need the distance d and the displacement delta x.
+[1:02] Right is the positive direction.
+[1:05] Let us replay the trip and track two numbers.
+[1:08] Distance only ever goes up, every step counts.
+[1:12] Displacement is the arrow from her start to where she is now.
+[1:16] On the way back it shrinks, hits zero as she passes her start,
+[1:21] then points the other way.
+[1:24] So these really are different quantities.
+[1:27] Distance counts every meter she walks, so we add up the length of each leg.
+[1:32] Displacement only compares where she ends to where she started,
+[1:37] so we use final position minus initial position.
+[1:41] Part a.
+[1:41] Distance is the size of leg one plus the size of leg two.
+[1:46] Leg one goes from 2 to 8, that is 6 meters.
+[1:50] Leg two goes from 8 to negative 3, that is 11 meters.
+[1:55] We use the size of each leg, so no negatives.
+[1:59] Six plus eleven is 17 meters.
+[2:02] Part b.
+[2:02] Displacement is final position minus initial position.
+[2:07] Final is negative 3, initial is positive 2.
+[2:10] Negative 3 minus 2 is negative 5 meters.
+[2:14] The minus sign tells us the direction: 5 meters in the negative x direction.
+[2:21] So she walks a total distance of 17 meters,
+[2:24] but her displacement is negative 5 meters.
+[2:28] She covered a lot of ground, but she ends up just 5 meters from where she started,
+[2:34] on the negative side.

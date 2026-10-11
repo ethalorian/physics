@@ -1,0 +1,210 @@
+TAP version 13
+# Subtest: every authored physics plan carries one support section without changing its source or identity
+ok 1 - every authored physics plan carries one support section without changing its source or identity
+  ---
+  duration_ms: 6.21725
+  ...
+# Subtest: all curated video uses resolve to actual days and recordings, and all twelve videos have a classroom connection
+ok 2 - all curated video uses resolve to actual days and recordings, and all twelve videos have a classroom connection
+  ---
+  duration_ms: 0.911084
+  ...
+# Subtest: prediction preparation addresses notation and conversion without replacing uncertainty instruction or lab evidence
+ok 3 - prediction preparation addresses notation and conversion without replacing uncertainty instruction or lab evidence
+  ---
+  duration_ms: 0.204834
+  ...
+# Subtest: transfer assessment days keep assessment conditions and do not add viewing or coached answers
+ok 4 - transfer assessment days keep assessment conditions and do not add viewing or coached answers
+  ---
+  duration_ms: 0.084583
+  ...
+# Subtest: video concept lessons cannot become classroom session links; investigations and Trades remain available
+ok 5 - video concept lessons cannot become classroom session links; investigations and Trades remain available
+  ---
+  duration_ms: 0.178709
+  ...
+# Subtest: a video embedded in an open investigation does not release or replace its closed standalone video lesson
+ok 6 - a video embedded in an open investigation does not release or replace its closed standalone video lesson
+  ---
+  duration_ms: 0.164584
+  ...
+# Subtest: no transfer-task plan adds a new video assignment
+ok 7 - no transfer-task plan adds a new video assignment
+  ---
+  duration_ms: 0.213375
+  ...
+# Subtest: watch telemetry excludes nonfinite, negative and out-of-range positions
+ok 8 - watch telemetry excludes nonfinite, negative and out-of-range positions
+  ---
+  duration_ms: 0.623458
+  ...
+# Subtest: a delayed answer response cannot erase a video reward from the visible total
+ok 9 - a delayed answer response cannot erase a video reward from the visible total
+  ---
+  duration_ms: 0.40075
+  ...
+# Subtest: page opening and partial playback are not viewed
+ok 10 - page opening and partial playback are not viewed
+  ---
+  duration_ms: 1.186458
+  ...
+# Subtest: counts only unique seconds inside the assigned video interval
+ok 11 - counts only unique seconds inside the assigned video interval
+  ---
+  duration_ms: 0.385417
+  ...
+# Subtest: changed video duration, clip start or identity cannot reuse stale credit
+ok 12 - changed video duration, clip start or identity cannot reuse stale credit
+  ---
+  duration_ms: 0.623
+  ...
+# Subtest: unknown duration is unavailable, never zero viewed or complete
+ok 13 - unknown duration is unavailable, never zero viewed or complete
+  ---
+  duration_ms: 0.513917
+  ...
+# Subtest: each video must reach its own threshold, not just an aggregate 90%
+ok 14 - each video must reach its own threshold, not just an aggregate 90%
+  ---
+  duration_ms: 0.358792
+  ...
+# Subtest: unknown clip prevents a complete lesson claim and last activity uses latest record
+ok 15 - unknown clip prevents a complete lesson claim and last activity uses latest record
+  ---
+  duration_ms: 0.163875
+  ...
+# Subtest: new videos have verified lengths that support watch credit and the teacher report
+ok 16 - new videos have verified lengths that support watch credit and the teacher report
+  ---
+  duration_ms: 0.957792
+  ...
+# Subtest: new captures feed the exact target without sending answer keys to students
+ok 17 - new captures feed the exact target without sending answer keys to students
+  ---
+  duration_ms: 1.4375
+  ...
+# Subtest: new concepts remain locked and reveal no video IDs or content until released
+ok 18 - new concepts remain locked and reveal no video IDs or content until released
+  ---
+  duration_ms: 1.34075
+  ...
+# Subtest: expanded concept map has room for every lesson and subsequent practice
+ok 19 - expanded concept map has room for every lesson and subsequent practice
+  ---
+  duration_ms: 0.604584
+  ...
+# Subtest: published sequence contains fifteen unique verified links and real target references
+ok 20 - published sequence contains fifteen unique verified links and real target references
+  ---
+  duration_ms: 1.06925
+  ...
+# Subtest: practice links require server-provided open access, not a shared or preparatory target alone
+ok 21 - practice links require server-provided open access, not a shared or preparatory target alone
+  ---
+  duration_ms: 0.154791
+  ...
+# Subtest: only explicitly linked current lessons release the video, never shared-target practice
+ok 22 - only explicitly linked current lessons release the video, never shared-target practice
+  ---
+  duration_ms: 0.0955
+  ...
+# Subtest: roadmap does not promote prerequisite videos into full graph or vector instruction
+ok 23 - roadmap does not promote prerequisite videos into full graph or vector instruction
+  ---
+  duration_ms: 0.197667
+  ...
+# Subtest: video 1 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 24 - video 1 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 1.403292
+  ...
+# Subtest: video 2 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 25 - video 2 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.4295
+  ...
+# Subtest: video 3 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 26 - video 3 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.329875
+  ...
+# Subtest: video 4 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 27 - video 4 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.314084
+  ...
+# Subtest: video 5 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 28 - video 5 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 1.070125
+  ...
+# Subtest: video 6 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 29 - video 6 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.678209
+  ...
+# Subtest: video 7 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 30 - video 7 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.328459
+  ...
+# Subtest: video 8 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 31 - video 8 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.198917
+  ...
+# Subtest: video 9 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 32 - video 9 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.30775
+  ...
+# Subtest: video 10 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 33 - video 10 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.30075
+  ...
+# Subtest: video 11 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 34 - video 11 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.181083
+  ...
+# Subtest: video 12 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 35 - video 12 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.170083
+  ...
+# Subtest: video 13 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 36 - video 13 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.229291
+  ...
+# Subtest: video 14 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 37 - video 14 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.240125
+  ...
+# Subtest: video 15 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+ok 38 - video 15 draft uses canonical evidence, feedback, pagination and teacher-only mastery
+  ---
+  duration_ms: 0.290542
+  ...
+# Subtest: day prefixes disappear only from display titles; lesson identity remains stable
+ok 39 - day prefixes disappear only from display titles; lesson identity remains stable
+  ---
+  duration_ms: 0.232333
+  ...
+# Subtest: opening one position video does not open the other videos sharing its target
+ok 40 - opening one position video does not open the other videos sharing its target
+  ---
+  duration_ms: 0.20075
+  ...
+1..40
+# tests 40
+# suites 0
+# pass 40
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 305.329208

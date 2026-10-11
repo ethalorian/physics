@@ -3,6 +3,7 @@
 import { Spinner } from '@/components/ui/spinner'
 import { LanguageProfileProvider, LanguageDial } from '@/components/lessons/LanguageProfileProvider'
 import { useState, useEffect, type ReactNode } from 'react'
+import { useVocabAssignmentLink } from '@/components/vocabulary/useVocabAssignmentLink'
 import Link from 'next/link'
 import { ArrowLeft, HelpCircle, Settings2, X } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -43,6 +44,7 @@ export default function VocabGameShell({
   sourceLabel,
   children,
 }: Props) {
+  const { assignmentHref, assigned } = useVocabAssignmentLink()
   const [saveStatus,setSaveStatus] = useState('')
   useEffect(() => { const handler = (e: Event) => setSaveStatus((e as CustomEvent<string>).detail); window.addEventListener('vocab-save-status',handler); return () => window.removeEventListener('vocab-save-status',handler) }, [])
   const [helpOpen, setHelpOpen] = useState(false)
@@ -56,9 +58,9 @@ export default function VocabGameShell({
     <div className="container mx-auto px-4 py-6 space-y-4">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Button variant="outline" size="sm" asChild>
-          <Link href="/vocabulary/work">
+          <Link href={assignmentHref}>
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Assignments
+            {assigned ? 'Return to assignment & check' : 'Assignments'}
           </Link>
         </Button>
         <Icon className="h-7 w-7 shrink-0" style={{ color: 'var(--primary)' }} aria-hidden />

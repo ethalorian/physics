@@ -13,6 +13,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import PracticeCompletionBadge from '@/components/PracticeCompletionBadge'
 import { ArrowRight, Star, CheckCircle2 } from 'lucide-react'
+import MathGameRecommendation from './MathGameRecommendation'
+import type { MathRemediation } from '@/lib/math-remediation'
 
 interface DailyItem {
   spiralItemId: string
@@ -40,6 +42,7 @@ export default function DailyMathTask({ onStatus, compact = false }: { onStatus?
   const [item, setItem] = useState<DailyItem | null>(null)
   const [snapshot, setSnapshot] = useState<DailySnapshot | null>(null)
   const [alreadySubmitted, setAlreadySubmitted] = useState(false)
+  const [remediation, setRemediation] = useState<MathRemediation | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [retry, setRetry] = useState(0)
@@ -64,6 +67,7 @@ export default function DailyMathTask({ onStatus, compact = false }: { onStatus?
         setItem(d.item ?? null)
         setSnapshot(d.snapshot ?? null)
         setAlreadySubmitted(Boolean(d.alreadySubmitted))
+        setRemediation(d.remediation ?? null)
         onStatusRef.current?.({ hasItem: Boolean(d.item), submitted: Boolean(d.alreadySubmitted) })
       })
       .catch(e => {
@@ -78,7 +82,7 @@ export default function DailyMathTask({ onStatus, compact = false }: { onStatus?
     <div className="flex flex-wrap items-center justify-between gap-2"><h4 className="text-sm font-semibold">Math warm-up</h4>{!loading && !error && <PracticeCompletionBadge state={alreadySubmitted ? 'done' : item ? 'todo' : 'empty'} label={alreadySubmitted ? 'Done' : item ? 'To do' : 'Unassigned'} />}</div>
     {loading ? <p role="status" className="text-sm text-muted-foreground">Loading today’s math question…</p>
       : error ? <><p role="alert" className="text-sm">{error}</p><Button variant="outline" onClick={() => setRetry(n => n + 1)} className="min-h-11 self-start">Retry warm-up</Button></>
-      : alreadySubmitted ? <><p className="text-sm text-muted-foreground">Submitted — waiting for your teacher to review.</p><Link href="/dashboard/math-spine/warmup" className="inline-flex min-h-11 items-center gap-2 self-start text-sm font-medium text-primary">View warm-up<ArrowRight size={16} aria-hidden="true" /></Link></>
+      : alreadySubmitted ? <><p className="text-sm text-muted-foreground">Warm-up submitted. You can keep practicing.</p><MathGameRecommendation recommendation={remediation} compact /><Link href="/dashboard/math-spine/warmup" className="inline-flex min-h-11 items-center gap-2 self-start text-sm font-medium text-primary">View warm-up<ArrowRight size={16} aria-hidden="true" /></Link></>
       : item ? <><p className="text-sm text-muted-foreground">{item.competencyStatement}</p><Button asChild variant="outline" className="min-h-11 self-start"><Link href="/dashboard/math-spine/warmup">Start warm-up<ArrowRight aria-hidden="true" /></Link></Button></>
       : <><p className="text-sm text-muted-foreground">No warm-up assigned yet.</p><Link href="/dashboard/math-spine" className="inline-flex min-h-11 items-center gap-2 self-start text-sm font-medium text-primary">Browse math practice<ArrowRight size={16} aria-hidden="true" /></Link></>}
   </Card>
@@ -110,6 +114,7 @@ export default function DailyMathTask({ onStatus, compact = false }: { onStatus?
           </div>}
       </CardHeader>
       <CardContent className="px-4">
+        <MathGameRecommendation recommendation={remediation} />
         {item ? (
           <div className="space-y-3">
             <div className="flex items-center gap-2">

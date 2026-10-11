@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<style>html,body{margin:0;height:100%;background:#22233a;overflow:hidden;font-variant-numeric:lining-nums}a{color:#4b4ba8}a:hover{color:#c9573f}</style>
+<script>window.OM_SCENES = '[{"name":"Title","dur":7,"desc":"Day 7 · Building the tools: Acceleration, when velocity changes. Target R4."},{"name":"Warmup","dur":16,"desc":"A car accelerates from 0 to 60 mph in 6 s along a road. STOP 1 (predict its acceleration)."},{"name":"Define","dur":26,"desc":"Answer: +10 mph each second. a = Δv/Δt, units m/s². 60 mph ≈ 27 m/s → 4.5 m/s²; bars compare with g = 9.8 m/s². STOP 2 (is braking accelerating?)."},{"name":"Direction","dur":20,"desc":"Answer: yes. Speeding up: a with v. Slowing down: a opposite v, negative if forward is +."},{"name":"Graphs","dur":18,"desc":"Three v–t graphs A (rising), B (flat), C (falling). STOP 3 (identify each)."},{"name":"Slope","dur":26,"desc":"Answers. Slope of v–t = acceleration: 12 m/s ÷ 4 s = +3 m/s²; −20 m/s ÷ 5 s = −4 m/s². STOP 4 (practice graphs)."},{"name":"Equations","dur":20,"desc":"Reference card: v = v₀ + at, x = x₀ + v₀t + ½at². Worked: the car reaches 27 m/s in 81 m. STOP 5 (cart problem)."},{"name":"Asteroid","dur":30,"desc":"STOP 5 answer, then Earth’s pull on 2026-XJ: g = GM/r² ≈ 2.8 × 10⁻⁸ m/s²; Δv ≈ 0.4 m/s in 6 months. Asteroid moves closer: inverse-square. STOP 6."},{"name":"Exit","dur":12,"desc":"A car slows 30 → 0 m/s in 5 s; blank v–t axes. STOP 7 (exit ticket)."},{"name":"Hold","dur":4,"desc":"Hold on the exit ticket."}]';
+window.OM_PLAYBACK = '{"mode":"times","count":1}';
+window.TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "stops": true,
+  "grid": true
+}/*EDITMODE-END*/;</script>
+</helmet>
+<div style="position:fixed;inset:0">
+<x-import component-from-global-scope="AccelDay7App" from="./animations-v3.jsx ./tweaks-panel.jsx ./accel-day7.jsx" hint-size="100%,100%"></x-import>
+</div>
+</x-dc>
+</body>
+</html>

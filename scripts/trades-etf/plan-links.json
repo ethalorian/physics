@@ -1,0 +1,218 @@
+[
+  {
+    "lesson_id": "5020385b-020f-5887-84d0-e6b591241e8f",
+    "unit_id": "trades-etf-1",
+    "plan_day": 1,
+    "plan_fingerprint": "6bf3eef13b0ccca924aeff0c7f9061c78dee81518a18a4f4c352dd79adce7acd"
+  },
+  {
+    "lesson_id": "949c7fc6-a33a-5120-a2a4-6f37f8ae4f43",
+    "unit_id": "trades-etf-1",
+    "plan_day": 2,
+    "plan_fingerprint": "61315dcc8ff173529429313af2c48b49479b1e7f0d51c2cfc40b225f9ec63e11"
+  },
+  {
+    "lesson_id": "72423444-4bbf-5aa1-834a-a69bd852072c",
+    "unit_id": "trades-etf-1",
+    "plan_day": 3,
+    "plan_fingerprint": "325a2a4bdaaa03d44044470e1ad88af9277dc50b9ef9a324eb62120cde976427"
+  },
+  {
+    "lesson_id": "84c374fe-da07-5e6f-b298-e0ee6a3c7b08",
+    "unit_id": "trades-etf-1",
+    "plan_day": 4,
+    "plan_fingerprint": "c85408d9de46aeb83235dee87d0c47de11e60dfec4e885866c76ce2b62410032"
+  },
+  {
+    "lesson_id": "edb5feb9-2032-5469-9fa5-a81247d9c728",
+    "unit_id": "trades-etf-1",
+    "plan_day": 5,
+    "plan_fingerprint": "b5d0cd47cb56715058e3f34828918edb629f43de212c926d837637d15cab9851"
+  },
+  {
+    "lesson_id": "42f20a3a-960d-556a-a10f-7858a5a1ceaf",
+    "unit_id": "trades-etf-1",
+    "plan_day": 6,
+    "plan_fingerprint": "6329e8ac0276cbe106f6e2ca8a09d7bd6ae94b637a72b756b54d030d89c5d434"
+  },
+  {
+    "lesson_id": "7423bc8c-233c-5a33-bdfc-7dd34e537801",
+    "unit_id": "trades-etf-2",
+    "plan_day": 1,
+    "plan_fingerprint": "3414c508549b53931d66a539936171faaa83d9e8a090424dd872d08fda534bee"
+  },
+  {
+    "lesson_id": "fdb04055-26be-5e28-95ba-767db31acfac",
+    "unit_id": "trades-etf-2",
+    "plan_day": 2,
+    "plan_fingerprint": "c25594fc44b866f0d2a2215f10316acd9698f941032ee198665d661592ab0917"
+  },
+  {
+    "lesson_id": "8c8c7873-a69e-50ba-81bd-1c3b6a05300a",
+    "unit_id": "trades-etf-2",
+    "plan_day": 3,
+    "plan_fingerprint": "ffcd1f02776bf1bc1f9c00a97865c9ffb13ad0884d7d05d323fb83fa7307b726"
+  },
+  {
+    "lesson_id": "09594a2d-c603-5acf-89e8-21ef11952a74",
+    "unit_id": "trades-etf-2",
+    "plan_day": 4,
+    "plan_fingerprint": "89bdecf190c9d3530c08edda0ddcf9629a94d4c59d8c52ca99354fe36166d39d"
+  },
+  {
+    "lesson_id": "2f91683d-aeac-5a46-9296-1e2a91fa6b82",
+    "unit_id": "trades-etf-2",
+    "plan_day": 5,
+    "plan_fingerprint": "ca9b0f1e2e1f9625abaf16995d8daad43aa64870c0c449e163e0dfc7947d9978"
+  },
+  {
+    "lesson_id": "56dbaefc-15bc-5d1d-a0bf-2cb04b4986d3",
+    "unit_id": "trades-etf-2",
+    "plan_day": 6,
+    "plan_fingerprint": "2cd4ad79908a70d314a4319637fafa81983f6df6e1903e804e025cc8336ca29a"
+  },
+  {
+    "lesson_id": "cacdc7c7-c90f-5378-a594-a9e49f28cf85",
+    "unit_id": "trades-etf-2",
+    "plan_day": 7,
+    "plan_fingerprint": "3edf8f23e9e85280d406f7ae2d690f78295d8a150fa50ce9260f4e0bb3a06d1c"
+  },
+  {
+    "lesson_id": "be35d203-e56d-5279-9a65-eae23c5d528a",
+    "unit_id": "trades-etf-2",
+    "plan_day": 8,
+    "plan_fingerprint": "b8fc97e31dbd8e699d0b150d1983dfbc6784793014980846dc41dcd8a4168fae"
+  },
+  {
+    "lesson_id": "c9138847-2637-52f2-842e-06bcf1884ff6",
+    "unit_id": "trades-etf-2",
+    "plan_day": 9,
+    "plan_fingerprint": "4382fb0b1d3241589fadd1d060babd9431b7cd5e4f9c0e537ae14b4ddbe76edd"
+  },
+  {
+    "lesson_id": "e1bfd2e6-7789-5eb4-a6a2-44fadf241a58",
+    "unit_id": "trades-etf-2",
+    "plan_day": 10,
+    "plan_fingerprint": "81aa67110bbc61c7f15fca7e94dafb0377f59fb1fd9947c470bb5ff2cc05ebe3"
+  },
+  {
+    "lesson_id": "1cf44326-a99f-5518-b92b-025ef63afd98",
+    "unit_id": "trades-etf-3",
+    "plan_day": 1,
+    "plan_fingerprint": "e1097b262bc7e0e7aede83eca51692937d3b47338aff7650f9c20ac958087792"
+  },
+  {
+    "lesson_id": "07a41f8e-1bf4-5efe-8026-23bfdbcdab27",
+    "unit_id": "trades-etf-3",
+    "plan_day": 2,
+    "plan_fingerprint": "a9e009eb7e74e5ca0dc4b8e41695adf0fff01b32c25a6a5f6a67f25847e2d3cb"
+  },
+  {
+    "lesson_id": "e893f81c-ca62-548f-9114-51493721e7cc",
+    "unit_id": "trades-etf-3",
+    "plan_day": 3,
+    "plan_fingerprint": "2988d5554e3ec749567c16d838f98b6971b360e02adac390c7f0b5fef540af73"
+  },
+  {
+    "lesson_id": "174d2b00-f2db-5b6d-9afb-a3125f931f76",
+    "unit_id": "trades-etf-3",
+    "plan_day": 4,
+    "plan_fingerprint": "5fee6ef73be4b7b61d08ef99a9debed53562a4c18d3f85512438ffed35fd74df"
+  },
+  {
+    "lesson_id": "c443cea2-ab16-581e-9dbb-6e2a15bc748d",
+    "unit_id": "trades-etf-3",
+    "plan_day": 5,
+    "plan_fingerprint": "72d155cfc54ed769591123d8125bf922774622b2109ba986005698faeb8af571"
+  },
+  {
+    "lesson_id": "b80ba8ae-94d9-51c0-82ef-a5299242253b",
+    "unit_id": "trades-etf-3",
+    "plan_day": 6,
+    "plan_fingerprint": "3bc0bfd3f6d476d44d4653f4daaf6ea28634080e256dc1d7566e7fe0d1a620bd"
+  },
+  {
+    "lesson_id": "bf678ee6-8eee-5c65-b871-f36f9fa2f8ec",
+    "unit_id": "trades-etf-3",
+    "plan_day": 7,
+    "plan_fingerprint": "dff5cdefcd7cd732d613ae0436d1e044543a1ec7a17d177d822cb69a60471b60"
+  },
+  {
+    "lesson_id": "ca3689a7-16a9-52de-bfde-d39082b317e2",
+    "unit_id": "trades-etf-3",
+    "plan_day": 8,
+    "plan_fingerprint": "8638e7380ed91017fff266d03033a9616d68a119adb88b0978b92524fb8b84a4"
+  },
+  {
+    "lesson_id": "70daddfa-7ba1-5990-b891-dcee213ccd66",
+    "unit_id": "trades-etf-3",
+    "plan_day": 9,
+    "plan_fingerprint": "d4ac1e593f123c40c5cfbc964d84f2fd3d868edfbd35d8b7f623eb8a0bd2abfd"
+  },
+  {
+    "lesson_id": "b5d5d2c4-0492-5dfb-8c49-7575e99abd24",
+    "unit_id": "trades-etf-4",
+    "plan_day": 1,
+    "plan_fingerprint": "4c329e64a4bd96e4c11b324cead30772e8502fb94564edcaa85fda842867888a"
+  },
+  {
+    "lesson_id": "8e65aedf-96f5-5583-87f1-44bb30f707d5",
+    "unit_id": "trades-etf-4",
+    "plan_day": 2,
+    "plan_fingerprint": "5d6b98abae053fe026602621e9f7171313cb612a5fe99387eb2c613195eb9b6d"
+  },
+  {
+    "lesson_id": "c368f58a-21b0-598a-a4fa-ba846df69404",
+    "unit_id": "trades-etf-4",
+    "plan_day": 3,
+    "plan_fingerprint": "0c6c807961970db7f0b89c00972190c8aea60604d175727cb5cd8097b5273a15"
+  },
+  {
+    "lesson_id": "0b7ff29a-a638-5630-b720-cb889cdf244c",
+    "unit_id": "trades-etf-4",
+    "plan_day": 4,
+    "plan_fingerprint": "a8178cf88b0c5f0fe9b03a60f3ea46dac3766a3a8835310f555c0012de584bbc"
+  },
+  {
+    "lesson_id": "bd1d6573-8d2a-532e-82ad-7aac0e05ecad",
+    "unit_id": "trades-etf-4",
+    "plan_day": 5,
+    "plan_fingerprint": "acc1656078f308e8b466c9d33f3e978657a59a708f1b4ef16e686de15ae0fac1"
+  },
+  {
+    "lesson_id": "39950b2c-7d82-51e9-9398-6f7fc4b9c347",
+    "unit_id": "trades-etf-4",
+    "plan_day": 6,
+    "plan_fingerprint": "2b23ca504c7f8a73dd23228da935a614e06fdbfea1394919413c279048b869f4"
+  },
+  {
+    "lesson_id": "8a541873-1c64-5d12-8024-183d316f3061",
+    "unit_id": "trades-etf-4",
+    "plan_day": 7,
+    "plan_fingerprint": "960399611857fdf82ae480ef52a7e97af2c2013c563ae4cc9d0b998833bad65f"
+  },
+  {
+    "lesson_id": "c4b154ba-d452-5d7a-bec5-989605a6f5ce",
+    "unit_id": "trades-etf-4",
+    "plan_day": 8,
+    "plan_fingerprint": "cfb69ff67cedb41fafed6537cc22a610f428daeaa5e3ed765b68fca3fec0082a"
+  },
+  {
+    "lesson_id": "e3587b82-9554-516d-bfd3-00fb16d3b2ca",
+    "unit_id": "trades-etf-4",
+    "plan_day": 9,
+    "plan_fingerprint": "f524e4685a855871fe01995d6f451b6c1addd88516c642b46cad1fa4114fea89"
+  },
+  {
+    "lesson_id": "41eff721-a5d9-5cb2-ba98-6ff96b1b9fbd",
+    "unit_id": "trades-etf-4",
+    "plan_day": 10,
+    "plan_fingerprint": "accc11fccff845afb3113ce2c5d420f5b1c1317580a3d3e73e574d98ee1c288e"
+  },
+  {
+    "lesson_id": "51872d9f-aacb-5725-90e3-11e079952d44",
+    "unit_id": "trades-etf-4",
+    "plan_day": 11,
+    "plan_fingerprint": "44c8918a3de386658be9cfb3e5d62038a793c5b462e56df548a39e583d030a73"
+  }
+]

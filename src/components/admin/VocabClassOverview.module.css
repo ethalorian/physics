@@ -1,0 +1,38 @@
+.overview { min-width:0; }
+.stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.75rem; margin:.5rem 0 1.25rem; }
+.stat { min-height:96px; padding:1rem 1.1rem; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); text-align:left; display:grid; gap:.15rem; cursor:pointer; }
+.stat strong { font-size:1.9rem; font-weight:750; letter-spacing:-.04em; line-height:1.15; }
+.stat span { font-size:.8rem; color:var(--muted-foreground); }
+.stat[aria-pressed=true] { border-color:var(--primary); background:color-mix(in oklch,var(--primary) 8%,var(--card)); box-shadow:inset 0 0 0 1px var(--primary); }
+.controls { display:flex; flex-wrap:wrap; align-items:flex-end; gap:.8rem; margin-bottom:1.2rem; }
+.controls label { font-size:.75rem; font-weight:650; min-width:145px; }
+.controls .assignment { flex:1; min-width:210px; }
+.switcher { display:flex; gap:.3rem; padding:.25rem; border:1px solid var(--border); border-radius:var(--radius); background:var(--muted); }
+.switcher button { min-height:44px; padding:.55rem .85rem; border-radius:calc(var(--radius) - 2px); font-size:.85rem; font-weight:650; cursor:pointer; }
+.switcher button[aria-pressed=true] { background:var(--card); color:var(--primary); box-shadow:0 1px 3px color-mix(in oklch,var(--foreground) 12%,transparent); }
+.gridHeading { display:flex; flex-wrap:wrap; justify-content:space-between; gap:.5rem 1rem; align-items:flex-start; }
+.gridHeading h3 { font-size:1.15rem; font-weight:700; letter-spacing:-.02em; }
+.gridHeading p { max-width:800px; font-size:.85rem; color:var(--muted-foreground); margin-top:.3rem; }
+.gridHeading>span { white-space:nowrap; color:var(--muted-foreground); font-size:.8rem; padding-top:.25rem; }
+.key { color:var(--muted-foreground); font-size:.75rem; line-height:1.5; margin:.65rem 0 1rem; }
+.scroll { max-width:100%; overflow:auto; max-height:70vh; border:1px solid var(--border); border-radius:var(--radius); background:var(--card); }
+.table { width:100%; border-collapse:separate; border-spacing:0; font-size:.85rem; }
+.table th,.table td { padding:.5rem; border-right:1px solid var(--border); border-bottom:1px solid var(--border); vertical-align:middle; text-align:left; }
+.table thead th { min-width:160px; max-width:240px; position:sticky; top:0; z-index:2; background:var(--muted); padding:.8rem; }
+.table th strong { display:block; font-weight:650; overflow-wrap:anywhere; }
+.table th span,.table th small { display:block; color:var(--muted-foreground); font-size:.72rem; font-weight:400; margin-top:.3rem; }
+.table .name { position:sticky; left:0; z-index:1; width:210px; min-width:185px; max-width:240px; background:var(--card); padding:.85rem; border-right:2px solid var(--border); }
+.table thead .name { z-index:3; background:var(--muted); }
+.table tbody tr:hover .name { background:var(--muted); }
+.cell { width:100%; min-width:138px; min-height:76px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:.3rem; padding:.75rem; border:1px solid var(--border); border-radius:calc(var(--radius) - 2px); background:var(--muted); text-align:left; cursor:pointer; }
+.cell strong { font-size:.95rem; font-weight:700; }
+.cell span,.cell small { font-size:.7rem; line-height:1.35; color:var(--muted-foreground); }
+.cell[data-tone=review] { background:color-mix(in oklch,var(--primary) 10%,var(--card)); border-color:color-mix(in oklch,var(--primary) 42%,var(--border)); }
+.cell[data-tone=level-3] { background:color-mix(in oklch,var(--success) 13%,var(--card)); border-color:color-mix(in oklch,var(--success) 40%,var(--border)); }
+.cell[data-tone=level-2],.cell[data-tone=building] { background:color-mix(in oklch,var(--primary) 5%,var(--card)); }
+.cell[data-tone=level-1] { background:color-mix(in oklch,var(--destructive) 7%,var(--card)); border-color:color-mix(in oklch,var(--destructive) 35%,var(--border)); }
+.cell:hover:not(:disabled) { outline:2px solid var(--primary); outline-offset:-2px; }
+.unassigned { display:block; color:var(--muted-foreground); text-align:center; padding:.7rem; }
+.unassigned small { display:block; font-size:.7rem; margin-top:.2rem; }
+.empty { padding:2rem; text-align:center; border:1px dashed var(--border); border-radius:var(--radius); color:var(--muted-foreground); }
+@media(max-width:700px) { .stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .controls label { flex:1; min-width:140px; } .switcher { flex-basis:100%; } .switcher button { flex:1; } .table .name { width:135px; min-width:135px; max-width:150px; padding:.6rem; } .table thead th { min-width:145px; } .stat { min-height:88px; } }

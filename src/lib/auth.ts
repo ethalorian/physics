@@ -1,4 +1,7 @@
 import NextAuth from "next-auth"
+import "./experience-server-guard"
+import { readExperience } from "./experience-server"
+import { experienceActorMatches, type RoleExperience } from "./experience"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { 
@@ -27,6 +30,7 @@ declare module "next-auth" {
       image?: string | null
       role?: 'admin' | 'teacher' | 'observer' | 'student'
     }
+    experience?: RoleExperience
     accessToken?: string
     tokenError?: string
     requiresReauth?: boolean
@@ -202,6 +206,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             session.requiresReauth = true;
           }
         }
+      }
+      const experience = await readExperience()
+      const actorStillAdmin = experience && experienceActorMatches(experience, session.user) && await resolveUserRole(session.user.email) === 'admin'
+      if (experience && actorStillAdmin) {
+        session.experience = experience
+        session.user = { ...session.user, ...experience.user, image: null }
+        // Never expose the real admin’s Google credential to a projected role.
+        delete session.accessToken
       }
       return session;
     },

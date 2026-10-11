@@ -3,6 +3,8 @@
 import { createContext, useContext, useState } from 'react'
 import type { ContentBlock } from '@/data/content-blocks'
 import { initialTeachingTool, type MeasurementState, type TeachingToolCommand, type TeachingToolStates } from '@/lib/teaching-tool-spec'
+import PhysicsExplainer from './PhysicsExplainer'
+import ClaudeExplainer from './ClaudeExplainer'
 import CaseBoard from '@/components/lessons/CaseBoard'
 import WorkshopScene from '@/components/lessons/WorkshopScene'
 import { usePresentLive } from '@/components/lessons/PresentLiveProvider'
@@ -16,21 +18,22 @@ export default function TeachingToolRenderer({ block }: {block:ContentBlock}) {
   const [own,setOwn] = useState<MeasurementState>(initialTeachingTool(block).state)
   const [independent,setIndependent] = useState(false)
   if (!block.teachingTool) return null
-  if (!['measurement-bench','case-board'].includes(block.teachingTool.kind)||block.teachingTool.version!==1) return <p role="alert">This teaching tool version is unavailable. Use the written steps while your teacher checks the lesson.</p>
-  const shared = host?.states[block.id] ?? live.session?.teachingTools?.[block.id] ?? (!host && live.session ? initialTeachingTool() : undefined)
+  if (!['measurement-bench','case-board','physics-explainer'].includes(block.teachingTool.kind)||block.teachingTool.version!==1) return <p role="alert">This teaching tool version is unavailable. Use the written steps while your teacher checks the lesson.</p>
+  const shared = host?.states[block.id] ?? live.session?.teachingTools?.[block.id] ?? (!host && live.session ? initialTeachingTool(block) : undefined)
   const studentFollowing = !host && live.follow && !independent && shared?.mode!=='practice' && Boolean(shared)
-  const value = host ? shared?.state??initialTeachingTool().state : studentFollowing ? shared!.state : own
+  const value = host ? shared?.state??initialTeachingTool(block).state : studentFollowing ? shared!.state : own
   const projector = host?.role==='projector'
   const controls = !projector && (!host || Boolean(host.command)) && !studentFollowing
   const update = (patch:Partial<MeasurementState>) => {
-    if (host?.command) void host.command({block_id:block.id,state:patch})
+    if (host?.command) return host.command({block_id:block.id,state:patch})
     else if (!host && !studentFollowing) setOwn(v=>({...v,...patch}))
   }
-  return <div data-teaching-tool={block.teachingTool.kind} data-tool-mode={host?.role??(studentFollowing?'following':'practice')}>
+  if(block.teachingTool.kind==='physics-explainer'&&block.teachingTool.source&&!host)return <a className="inline-flex min-h-12 items-center underline" href={encodeURI(block.teachingTool.source.src)} target="_blank" rel="noopener noreferrer">Open {block.teachingMoment?.title??'the original interactive explainer'}</a>
+  return <div style={block.teachingTool.kind==='physics-explainer'&&block.teachingTool.source&&projector?{height:'100%'}:undefined} data-teaching-tool={block.teachingTool.kind} data-tool-mode={host?.role??(studentFollowing?'following':'practice')}>
     {!host && shared && <div className="flex flex-wrap items-center gap-3 text-sm py-2">
       <span>{studentFollowing?'Following the classroom demonstration':shared.mode==='practice'?'Your teacher has opened practice':'Your own practice — kept separately'}</span>
       {shared.mode!=='practice' && <button type="button" className="min-h-11 rounded-lg border px-4" onClick={()=>{if(independent)live.setFollow(true);setIndependent(v=>!v)}}>{independent?'Rejoin demonstration':'Try on my own'}</button>}
     </div>}
-    {block.teachingTool.kind==='case-board'?<CaseBoard block={block} state={value} onChange={update} disabled={Boolean(host?.busy)} showControls={controls}/>:<WorkshopScene block={block} state={value} onChange={update} disabled={Boolean(host?.busy)} showControls={controls}/>}
+    {block.teachingTool.kind==='physics-explainer'&&block.teachingTool.source?<ClaudeExplainer key={block.id} block={block} state={value} onChange={update} disabled={Boolean(host?.busy)} showControls={controls} interactive={controls||Boolean(projector&&host?.command)}/>:block.teachingTool.kind==='physics-explainer'?<PhysicsExplainer controlsOnly={host?.role==='teacher'} block={block} state={value} onChange={update} disabled={Boolean(host?.busy)} showControls={controls}/>:block.teachingTool.kind==='case-board'?<CaseBoard block={block} state={value} onChange={update} disabled={Boolean(host?.busy)} showControls={controls}/>:<WorkshopScene block={block} state={value} onChange={update} disabled={Boolean(host?.busy)} showControls={controls}/>}
   </div>
 }

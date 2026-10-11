@@ -1,8 +1,9 @@
 "use client"
 import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Atom } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { getUserRole } from "@/lib/permissions";
+import BrandLogo from "@/components/BrandLogo";
 
 /**
  * Pre-auth landing. Rebuilt on the calm system (see docs/DESIGN_SYSTEM.md):
@@ -33,16 +34,7 @@ export default function Home() {
     >
       <div className="landing-enter text-center" style={{ maxWidth: 560 }}>
         {/* wordmark */}
-        <div
-          className="mx-auto grid place-items-center mb-6"
-          style={{
-            width: 64, height: 64, borderRadius: 'var(--radius-lg)',
-            background: 'color-mix(in oklch, var(--primary) 12%, transparent)',
-            color: 'var(--primary)',
-          }}
-        >
-          <Atom size={34} strokeWidth={1.75} />
-        </div>
+        <BrandLogo size={64} className="mx-auto mb-6" decorative priority />
 
         <h1 className="text-display">Antocci Physics</h1>
 

@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { withAuth } from '@/lib/api-auth'
+import { canExploreSimulations } from '@/lib/simulation-access'
+import { authorizeLesson } from '@/lib/lesson-access'
+import { resolveTargetStudent } from '@/lib/teacher-scope'
+import { supabaseAdmin } from '@/lib/supabase'
 
 /**
  * Simulation Activity Tracking
@@ -14,6 +18,17 @@ export const POST = withAuth(async (request, ctx) => {
 
     if (!simulation_id) {
       return NextResponse.json({ error: 'simulation_id required' }, { status: 400 })
+    }
+
+    if (ctx.role === 'student') {
+      let assigned = false
+      if (typeof lesson_id === 'string' && /^[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}$/i.test(lesson_id)) {
+        const access = await authorizeLesson(ctx, lesson_id)
+        const sim = await supabaseAdmin.from('simulations').select('slug').eq('id', simulation_id).maybeSingle()
+        if (sim.error) throw sim.error
+        assigned = access.ok && Boolean(access.document?.blocks.some(block => block.type === 'sim_embed' && block.simulationSlug === sim.data?.slug))
+      }
+      if ((lesson_id && !assigned) || (!assigned && !await canExploreSimulations(ctx.userId, ctx.role))) return NextResponse.json({error: 'Open this experiment from an available lesson.'}, {status:403})
     }
 
     // Create new activity record
@@ -46,6 +61,8 @@ export const POST = withAuth(async (request, ctx) => {
 export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const student_id = searchParams.get('student_id') || ctx.userId
+    const scope = await resolveTargetStudent({role:ctx.role,selfId:ctx.userId,scopeEmail:ctx.scopeEmail,requestedUserId:student_id})
+    if(!scope.ok) return NextResponse.json({error:'Student activity is outside your roster.'},{status:403})
     const simulation_id = searchParams.get('simulation_id')
     const lesson_id = searchParams.get('lesson_id')
 
@@ -53,7 +70,7 @@ export const GET = withAuth(async (request, ctx) => {
     let query = supabase
       .from('simulation_activity')
       .select('*')
-      .eq('student_id', student_id)
+      .eq('student_id', scope.userId)
       .order('created_at', { ascending: false })
 
     if (simulation_id) {

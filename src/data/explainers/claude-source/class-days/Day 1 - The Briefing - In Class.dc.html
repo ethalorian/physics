@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<style>html,body{margin:0;height:100%;background:#22233a;overflow:hidden;font-variant-numeric:lining-nums}a{color:#4b4ba8}a:hover{color:#c9573f}</style>
+<script>window.OM_SCENES = '[{"name":"Title","dur":7,"desc":"Day 1 · Setting up the question: The briefing, something is coming. Target R1."},{"name":"Welcome","dur":14,"desc":"This class will be different; a year-long puzzle; today is the briefing. The NASA Day 1 Briefing page slides in. STOP 1 (silent reading)."},{"name":"Fiction","dur":16,"desc":"Tracking view: Earth and 2026-XJ inside a wobbling uncertainty ellipse. This is fiction; the physics is real. STOP 2 (notice and wonder)."},{"name":"Wonders","dur":14,"desc":"Student-style wonder bubbles float in. STOP 3 (share and capture)."},{"name":"Sort","dur":18,"desc":"Bubbles sort into six buckets: How fast? Where? When? How big? What’s it made of? Can we stop it? These questions organize the year."},{"name":"Units","dur":18,"desc":"Seven unit cards appear; Unit 1 lights up. Each unit answers one piece."},{"name":"Anchor","dur":16,"desc":"Anchor question for Unit 1; the language of motion: position, velocity, acceleration; we start tomorrow. STOP 4 (exit ticket)."},{"name":"Hold","dur":4,"desc":"Hold on the exit ticket."}]';
+window.OM_PLAYBACK = '{"mode":"times","count":1}';
+window.TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "stops": true,
+  "grid": true,
+  "u1": "How fast, and where will it arrive?",
+  "u2": "What forces will steer it?",
+  "u3": "How much energy does it carry?",
+  "u4": "What happens in a collision?",
+  "u5": "How does it move through space?",
+  "u6": "What is it made of?",
+  "u7": "Can we stop it?"
+}/*EDITMODE-END*/;</script>
+</helmet>
+<div style="position:fixed;inset:0">
+<x-import component-from-global-scope="BriefingDay1App" from="./animations-v3.jsx ./tweaks-panel.jsx ./briefing-day1.jsx" hint-size="100%,100%"></x-import>
+</div>
+</x-dc>
+</body>
+</html>

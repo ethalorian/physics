@@ -1,246 +1,98 @@
-/**
- * MasteryGrowth — the student's growth view.
- *
- * Headline axis: the four kinds of thinking (Knowledge / Reasoning / Skill / Product),
- * each a decaying weighted average (w = 0.60) of the student's target-level records.
- * Below: this unit's targets (the zoomed-in view). Walled off at the bottom: the
- * transfer-task readiness panel, which is scored on the separate 4-D rubric and is
- * NEVER blended into the growth lines.
- *
- * Presentational + pure: feed it the student's records; it computes via the
- * source-of-truth rollup functions. Wire a data loader (API over the new tables)
- * around it.
- */
-import {
-  LearningTarget,
-  MasteryRecord,
-  RubricDimension,
-  targetValue,
-  domainScore,
-  DEFAULT_RECENCY_WEIGHT,
-} from "@/data/curriculum-types";
-import {
-  DOMAIN_ORDER,
-  DOMAIN_LABEL,
-  PALETTE,
-  levelWord,
-  levelColor,
-  buildRecordsByTarget,
-  trendFor,
-  domainSeries,
-  Trend,
-} from "./mastery-display";
+'use client'
 
-const RUBRIC_ORDER: RubricDimension[] = ["science", "reasoning", "communication", "transfer"];
-const RUBRIC_LABEL: Record<RubricDimension, string> = {
-  science: "Science",
-  reasoning: "Reasoning",
-  communication: "Communication",
-  transfer: "Transfer",
-};
+import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
+import { ArrowRight, Check, ChevronDown, Compass, TrendingUp } from 'lucide-react'
+import { DEFAULT_RECENCY_WEIGHT, domainScore, decayingAverage, type Domain, type LearningTarget, type MasteryRecord, type RubricDimension } from '@/data/curriculum-types'
+import { DOMAIN_ORDER, DOMAIN_LABEL, buildRecordsByTarget, levelWord } from './mastery-display'
+import { growthSnapshot, growthNextStep, growthDate, type GrowthTarget } from '@/components/growth/growth-model'
+import s from '@/components/growth/growth.module.css'
 
 export interface MasteryGrowthProps {
-  studentName?: string;
-  unitName?: string;
-  /** This unit's targets (source of truth). */
-  targets: LearningTarget[];
-  /** This student's mastery records. */
-  records: MasteryRecord[];
-  /** Optional standalone transfer-task result (0–4 per dimension). */
-  taskResult?: { scores: Record<RubricDimension, number>; overall?: number };
-  recencyWeight?: number;
+  studentName?: string
+  unitName?: string
+  targets: LearningTarget[]
+  records: MasteryRecord[]
+  taskResult?: { scores: Record<RubricDimension, number>; overall?: number }
+  recencyWeight?: number
 }
+const DOMAIN_HINT: Record<Domain, string> = { knowledge: 'Know the ideas', reasoning: 'Explain the why', skill: 'Put it into practice', product: 'Bring it together' }
+const DOMAINS: Record<Domain, string> = { knowledge: 'K', reasoning: 'R', skill: 'S', product: 'P' }
 
-function TrendIcon({ trend }: { trend: Trend }) {
-  if (trend === "none") return null;
-  const color = trend === "up" ? PALETTE.sage : trend === "down" ? "var(--viz-down)" : PALETTE.indigoMuted;
-  const d =
-    trend === "up"
-      ? "M3 13l5-5 4 4 6-7"
-      : trend === "down"
-      ? "M3 6l5 5 4-4 6 7"
-      : "M3 10h15";
-  return (
-    <svg width={18} height={18} viewBox="0 0 21 21" aria-label={`trend ${trend}`} role="img">
-      <path d={d} fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function Sparkline({ series }: { series: number[] }) {
-  if (series.length < 2) return null;
-  const w = 80;
-  const h = 24;
-  const pts = series
-    .map((v, i) => {
-      const x = (i / (series.length - 1)) * w;
-      const y = h - (Math.max(0, Math.min(3, v)) / 3) * h;
-      return `${x.toFixed(0)},${y.toFixed(0)}`;
-    })
-    .join(" ");
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} role="img" aria-label="growth trend">
-      <polyline points={pts} fill="none" stroke={PALETTE.lavender} strokeWidth={2} />
-    </svg>
-  );
-}
-
-export default function MasteryGrowth({
-  studentName,
-  unitName,
-  targets,
-  records,
-  taskResult,
-  recencyWeight = DEFAULT_RECENCY_WEIGHT,
-}: MasteryGrowthProps) {
-  const byTarget = buildRecordsByTarget(records);
-
-  return (
-    <div
-      style={{ background: "var(--card)", color: PALETTE.indigo }}
-      className="rounded-xl border p-5 sm:p-6"
-    >
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 className="text-xl font-medium" style={{ color: PALETTE.indigo }}>
-          Your growth
-        </h2>
-        <span className="text-sm" style={{ color: PALETTE.indigoMuted }}>
-          {[studentName, unitName].filter(Boolean).join(" · ")}
-        </span>
-      </div>
-      <p className="text-sm mt-1 mb-4" style={{ color: PALETTE.indigoMuted }}>
-        By kind of thinking. Recent work counts more, but earlier work still counts.
-      </p>
-
-      {/* Domain cards */}
-      <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))" }}>
-        {DOMAIN_ORDER.map((domain) => {
-          const value = domainScore(domain, targets, byTarget, recencyWeight);
-          const series = domainSeries(domain, targets, records, recencyWeight);
-          const empty = value === null;
-          return (
-            <div
-              key={domain}
-              className="rounded-lg border bg-card p-3.5"
-              style={{ borderColor: PALETTE.hairline, borderStyle: empty ? "dashed" : "solid" }}
-            >
-              <div className="flex items-center gap-2 text-sm font-medium" style={{ color: empty ? "var(--muted-foreground)" : "var(--foreground)" }}>
-                <span
-                  aria-hidden
-                  style={{ width: 8, height: 8, borderRadius: 'var(--radius-xs)', background: empty ? PALETTE.periwinkle : PALETTE.lavender }}
-                />
-                {DOMAIN_LABEL[domain]}
-              </div>
-              {empty ? (
-                <p className="text-sm mt-2.5 leading-snug" style={{ color: "var(--muted-foreground)" }}>
-                  {domain === "product"
-                    ? "Shows up in your transfer task — no growth-line data yet."
-                    : "No evidence recorded yet."}
-                </p>
-              ) : (
-                <>
-                  <div className="flex items-baseline gap-2 mt-2 mb-0.5">
-                    <span className="text-2xl font-medium">{value!.toFixed(1)}</span>
-                    <span className="text-xs font-medium" style={{ color: levelColor(value) }}>
-                      {levelWord(value)}
-                    </span>
-                  </div>
-                  <div className="h-1.5 rounded my-1.5" style={{ background: "var(--secondary)" }}>
-                    <div
-                      className="h-full rounded"
-                      style={{ width: `${Math.round((value! / 3) * 100)}%`, background: levelColor(value) }}
-                    />
-                  </div>
-                  <Sparkline series={series} />
-                </>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* This unit's targets */}
-      <p className="text-sm font-medium mt-5 mb-1" style={{ color: "var(--foreground)" }}>
-        This unit&apos;s targets
-      </p>
-      <div className="rounded-lg border bg-card px-4" style={{ borderColor: PALETTE.hairline }}>
-        {targets
-          .filter((t) => !t.excludeFromGrowth)
-          .map((t, i) => {
-            const recs = byTarget.get(t.id);
-            const value = recs ? targetValue(recs, recencyWeight) : null;
-            const trend = trendFor(recs, recencyWeight);
-            const tag = t.domain.charAt(0).toUpperCase();
-            return (
-              <div
-                key={t.id}
-                className="flex items-center gap-3 py-2.5"
-                style={{ borderTop: i === 0 ? "none" : `1px solid var(--secondary)` }}
-              >
-                <span
-                  className="text-overline font-medium rounded px-2 py-0.5"
-                  style={{ background: "var(--secondary)", color: "var(--foreground)" }}
-                  title={DOMAIN_LABEL[t.domain]}
-                >
-                  {tag}
-                </span>
-                <span className="flex-1 text-[13px] leading-snug">{t.statement}</span>
-                <span className="text-[13px] font-medium" style={{ color: PALETTE.indigo }}>
-                  {value === null ? "—" : value.toFixed(1)}
-                </span>
-                <TrendIcon trend={trend} />
-              </div>
-            );
-          })}
-      </div>
-
-      {/* Transfer task — walled off; never blended into the growth lines */}
-      {taskResult && (
-        <>
-          <div className="flex items-center gap-2 mt-6 mb-1">
-            <div className="flex-1" style={{ height: "0.5px", background: "var(--border)" }} />
-            <span className="text-overline" style={{ color: "var(--muted-foreground)", letterSpacing: "0.3px" }}>
-              scored separately · not part of your growth lines
-            </span>
-            <div className="flex-1" style={{ height: "0.5px", background: "var(--border)" }} />
-          </div>
-          <div className="rounded-lg border p-4" style={{ background: "var(--muted)", borderColor: PALETTE.hairline }}>
-            <div className="text-sm font-medium mb-2.5" style={{ color: "var(--foreground)" }}>
-              Transfer task — readiness
-            </div>
-            <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))" }}>
-              {RUBRIC_ORDER.map((dim) => {
-                const score = taskResult.scores[dim] ?? 0;
-                return (
-                  <div key={dim}>
-                    <div className="text-xs mb-1" style={{ color: PALETTE.indigoMuted }}>
-                      {RUBRIC_LABEL[dim]}
-                    </div>
-                    <div className="h-1.5 rounded" style={{ background: "var(--border)" }}>
-                      <div
-                        className="h-full rounded"
-                        style={{ width: `${Math.round((score / 4) * 100)}%`, background: score >= 3 ? PALETTE.sage : PALETTE.lavender }}
-                      />
-                    </div>
-                    <div className="text-overline mt-0.5" style={{ color: PALETTE.indigoMuted }}>
-                      {score} of 4
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            {taskResult.overall !== undefined && (
-              <div className="text-xs mt-3 pt-2.5" style={{ color: PALETTE.indigoMuted, borderTop: "1px solid var(--border)" }}>
-                Lowest dimension sets the overall:{" "}
-                <span className="font-medium" style={{ color: PALETTE.indigo }}>
-                  {taskResult.overall} of 4
-                </span>
-                .
-              </div>
-            )}
-          </div>
-        </>
-      )}
+export default function MasteryGrowth({ targets, records, taskResult, recencyWeight = DEFAULT_RECENCY_WEIGHT }: MasteryGrowthProps) {
+  const snapshot = growthSnapshot(targets, records, recencyWeight)
+  const byTarget = buildRecordsByTarget(records)
+  const [filter, setFilter] = useState<Domain | 'all'>('all')
+  const [selected, setSelected] = useState<string | null>(null)
+  const detailRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (selected && window.matchMedia('(max-width: 700px)').matches) detailRef.current?.focus()
+  }, [selected])
+  const visible = snapshot.items.filter(i => filter === 'all' || i.target.domain === filter)
+  const item = visible.find(i => i.target.id === selected) ?? visible.find(i => i.target.id === snapshot.recent[0]?.target.id) ?? visible[0]
+  function chooseDomain(domain: Domain | 'all') { setFilter(domain); setSelected(null) }
+  return <div>
+    <div className={s.domainMap} role="group" aria-label="Filter targets by kind of thinking">
+      {DOMAIN_ORDER.map(domain => {
+        const domainTargets = snapshot.items.filter(i => i.target.domain === domain)
+        const value = domainScore(domain, targets, byTarget, recencyWeight)
+        return <button type="button" key={domain} aria-pressed={filter === domain} onClick={() => chooseDomain(filter === domain ? 'all' : domain)} className={s.domainCard} data-selected={filter === domain}>
+          <span className={s.domainBadge}>{DOMAINS[domain]}</span><span className={s.domainTitle}>{DOMAIN_LABEL[domain]}</span><span className={s.domainHint}>{DOMAIN_HINT[domain]}</span>
+          <span className={s.domainValue}>{value === null ? '—' : value.toFixed(1)}<small>{value === null ? 'Awaiting evidence' : `${levelWord(value)} · out of 3`}</small></span>
+          <span className={s.domainTrack} aria-hidden="true"><span style={{ width: `${value === null ? 0 : value / 3 * 100}%` }}/></span>
+          <span className={s.domainCount}>{domainTargets.filter(t => t.value !== null).length} of {domainTargets.length} targets rated</span>
+        </button>
+      })}
     </div>
-  );
+    <div className={s.targetToolbar}><h3>{filter === 'all' ? 'All learning targets' : `${DOMAIN_LABEL[filter]} targets`} <span>({visible.length})</span></h3>{filter !== 'all' && <button type="button" className={s.textButton} onClick={() => chooseDomain('all')}>Show all targets</button>}<p>Newer evidence counts more. Earlier work still matters.</p></div>
+    {visible.length === 0 ? <div className={s.state}><Compass size={28} aria-hidden="true"/><h3>Your story starts with one target.</h3><p>Learning targets will appear here when they’re available. Continue with the lessons your teacher has opened.</p><Link className={s.primaryLink} href="/lessons">Go to lessons <ArrowRight size={16} aria-hidden="true"/></Link></div> : <div className={s.targetExplorer}>
+      <div className={s.targetList} role="group" aria-label="Choose a learning target">{visible.map((t, index) => <button key={t.target.id} type="button" className={s.targetButton} aria-pressed={item?.target.id === t.target.id} aria-controls="growth-target-detail" data-selected={item?.target.id === t.target.id} onClick={() => setSelected(t.target.id)}>
+        <span className={s.targetNode} data-rated={t.value !== null}>{t.value !== null && t.value >= 2.5 ? <Check size={17} aria-label="Got it"/> : String(index + 1).padStart(2, '0')}</span>
+        <span><span className={s.targetType}>{DOMAIN_LABEL[t.target.domain]}</span><span className={s.targetStatement}>{t.target.statement}</span><span className={s.targetStatus}>{t.value === null ? 'Awaiting evidence' : `${levelWord(t.value)} · ${t.value.toFixed(1)} / 3`}{t.trend === 'up' && <span className={s.improving}><TrendingUp size={13} aria-hidden="true"/>Moving forward</span>}</span></span><ArrowRight className={s.targetArrow} size={16} aria-hidden="true"/>
+      </button>)}</div>
+      <div id="growth-target-detail" className={s.detailWrapper} ref={detailRef} tabIndex={-1}>{item && <TargetDetail key={item.target.id} item={item} weight={recencyWeight}/>}</div>
+    </div>}
+    {taskResult && <section className={s.transfer}><div><p className={s.eyebrow}>A different lens</p><h3>Your transfer task</h3><p>Scored separately from your mastery ratings, on a 0–4 scale.</p></div><dl>{(['science','reasoning','communication','transfer'] as RubricDimension[]).map(d => <div key={d}><dt>{d}</dt><dd>{taskResult.scores[d] ?? 0}<span> / 4</span></dd></div>)}</dl>{taskResult.overall !== undefined && <p>Overall: {taskResult.overall} / 4. Your lowest dimension sets this result.</p>}</section>}
+  </div>
+}
+
+function TargetDetail({ item, weight }: { item: GrowthTarget; weight: number }) {
+  const [allHistory, setAllHistory] = useState(false)
+  const shown = [...item.history].reverse().slice(0, allHistory ? undefined : 3)
+  return <article className={s.detail} aria-label="Selected target evidence">
+    <div className={s.detailTop}><p className={s.eyebrow}>Your evidence, up close</p>{item.latest && <span>Updated {growthDate(item.latest.observedAt)}</span>}</div>
+    <h3>{item.target.statement}</h3>
+    <div className={s.rating}><strong>{item.value === null ? '—' : item.value.toFixed(1)}</strong><div><b>{item.value === null ? 'Awaiting evidence' : levelWord(item.value)}</b><span>{item.value === null ? 'No teacher rating yet' : 'Current weighted rating · out of 3'}</span></div></div>
+    {item.history.length > 1 ? <EvidenceChart item={item} weight={weight}/> : <div className={s.firstEvidence}>{item.history.length === 1 ? 'Your first point is on the map. Another teacher rating will start your growth line.' : 'Your work matters before it has a rating. Once your teacher reviews it, you’ll see that evidence here.'}</div>}
+    <div className={s.nextStep}><span className={s.nextIcon}><Compass size={19} aria-hidden="true"/></span><div><h4>One next step</h4><p>{growthNextStep(item)}</p><a href="#growth-feedback">Read my teacher’s feedback <ArrowRight size={15} aria-hidden="true"/></a></div></div>
+    <div className={s.historyHeading}><h4>Teacher ratings</h4><span>{item.history.length} recorded</span></div>
+    {shown.length ? <ol className={s.history}>{shown.map((r, i) => <li key={`${r.observedAt}-${i}`}><span className={s.historyDot} aria-hidden="true"/><div><b>{growthDate(r.observedAt)}</b><span>{evidenceLabel(r.evidenceSource)}</span></div><span className={s.historyScore}>{r.level} / 3<span>{levelWord(r.level)}</span></span></li>)}</ol> : <p className={s.help}>No rated evidence yet. This is not a zero or a missing assignment.</p>}
+    {item.history.length > 3 && <button type="button" className={s.historyButton} onClick={() => setAllHistory(v => !v)} aria-expanded={allHistory}>{allHistory ? 'Show recent ratings' : `See all ${item.history.length} ratings`}<ChevronDown size={15} aria-hidden="true"/></button>}
+    <p className={s.help}>Each new rating contributes {Math.round(weight * 100)}% to your updated score. Earlier evidence contributes the rest. This is a mastery rating, not a percentage grade.</p>
+  </article>
+}
+// Some evidence_source strings are machine references. Expose the activity,
+// not a database UUID; the feedback card carries the detailed review.
+function evidenceLabel(source?: string) {
+  if (!source) return 'Teacher observation'
+  if (source.toLowerCase().includes('lesson')) return 'Lesson evidence'
+  if (source.toLowerCase().includes('quiz')) return 'Quiz evidence'
+  if (source.toLowerCase().includes('reading')) return 'Reading evidence'
+  if (source.toLowerCase().includes('simulation')) return 'Investigation evidence'
+  if (/[a-f0-9]{8}-[a-f0-9-]{27}/i.test(source)) return 'Reviewed work'
+  return source.replaceAll('_', ' ')
+}
+function EvidenceChart({ item, weight }: { item: GrowthTarget; weight: number }) {
+  const history = item.history
+  const series = history.map((_, i) => decayingAverage(history.slice(0, i + 1).map(r => r.level), weight)!)
+  const x = (i: number) => 35 + i / (series.length - 1) * 345
+  const y = (v: number) => 132 - (v - 1) * 53
+  const points = series.map((v, i) => `${x(i)},${y(v)}`).join(' ')
+  return <figure className={s.chart}>
+    <figcaption>How this target is growing <span>Weighted rating after each review</span></figcaption>
+    <svg viewBox="0 0 400 160" role="img" aria-label={`Weighted rating from ${series[0].toFixed(1)} to ${series.at(-1)!.toFixed(1)} across ${series.length} teacher ratings. Individual ratings are listed below.`}>
+      {[1,2,3].map(v => <g key={v}><line className={s.chartGrid} x1="35" x2="380" y1={y(v)} y2={y(v)}/><text x="12" y={y(v) + 4}>{v}</text></g>)}
+      <polyline className={s.chartLine} points={points}/>{series.map((v,i) => <circle className={s.chartDot} key={i} cx={x(i)} cy={y(v)} r={i === series.length - 1 ? 5 : 3}/>)}
+    </svg><div className={s.chartDates}><span>{growthDate(history[0].observedAt)}</span><span>{growthDate(history.at(-1)!.observedAt)}</span></div>
+  </figure>
 }

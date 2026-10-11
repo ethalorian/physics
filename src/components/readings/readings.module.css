@@ -1,0 +1,36 @@
+.page { max-width: 1180px; margin: 0 auto; padding: 24px; color: var(--foreground); }
+.hero { border: 1px solid var(--border); border-left: 5px solid var(--primary); border-radius: var(--radius-lg); background: linear-gradient(110deg, color-mix(in oklch, var(--primary) 11%, var(--card)), var(--card)); padding: 28px; margin-bottom: 24px; }
+.row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.spread { justify-content:space-between; }
+.stack { display:grid; gap:16px; min-width:0; }
+.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+.field { display:grid; gap:6px; font-size:14px; font-weight:600; min-width:0; }
+.field :is(input,select,textarea), .control { width:100%; border:1px solid var(--input); background:var(--background); color:var(--foreground); border-radius:var(--radius-md); padding:10px 12px; min-height:44px; font:inherit; font-weight:400; }
+.field textarea { resize:vertical; line-height:1.6; }
+.field :is(input,select,textarea):focus-visible, .control:focus-visible { outline:2px solid var(--primary); outline-offset:3px; }
+.field small { font-weight:400; color:var(--muted-foreground); }
+.question { border:1px solid var(--border); border-radius:var(--radius-lg); background:var(--card); padding:20px; display:grid; gap:14px; min-width:0; overflow-wrap:anywhere; }
+.number { display:inline-grid; place-items:center; width:32px; height:32px; flex-shrink:0; border-radius:var(--radius-sm); background:color-mix(in oklch,var(--primary) 12%,var(--card)); color:var(--primary); font-weight:700; }
+.badge { display:inline-flex; align-items:center; border-radius:var(--radius-full,999px); padding:5px 10px; background:var(--secondary); color:var(--foreground); font-size:13px; font-weight:600; }
+.badge[data-state="submitted"], .badge[data-state="in_progress"] { background:color-mix(in oklch,var(--primary) 13%,var(--card)); color:var(--primary); }
+.badge[data-state="rated"] { background:color-mix(in oklch,var(--success) 15%,var(--card)); }
+.badge[data-state="returned"] { border:1px solid var(--primary); }
+.error { padding:14px; border-radius:var(--radius-md); border:1px solid var(--destructive); color:var(--destructive); background:var(--card); }
+.muted { color:var(--muted-foreground); font-size:14px; }
+.sections { display:grid; grid-template-columns:repeat(auto-fit,minmax(225px,1fr)); gap:8px; max-height:260px; overflow:auto; padding:4px; }
+.check { display:flex; align-items:center; gap:9px; font-size:14px; min-height:44px; border-radius:var(--radius-sm); padding:8px; border:1px solid var(--border); cursor:pointer; }
+.check input { width:18px; height:18px; accent-color:var(--primary); }
+.workGrid { display:grid; grid-template-columns:minmax(250px,0.75fr) minmax(0,2fr); gap:24px; align-items:start; }
+.roster { display:grid; gap:8px; max-height:70vh; overflow:auto; }
+.student { display:grid; gap:6px; text-align:left; padding:14px; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-md); color:var(--foreground); }
+.student[aria-pressed="true"] { border:2px solid var(--primary); background:color-mix(in oklch,var(--primary) 7%,var(--card)); }
+.answer { white-space:pre-wrap; overflow-wrap:anywhere; font-size:16px; line-height:1.65; border-left:3px solid var(--primary); padding:8px 16px; }
+.footer { display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; align-items:center; background:var(--card); padding:18px; border:1px solid var(--border); border-radius:var(--radius-lg); }
+.ratings { display:flex; flex-wrap:wrap; gap:8px; }
+.ratings button { min-height:44px; padding:9px 14px; border:1px solid var(--border); border-radius:var(--radius-md); background:var(--card); color:var(--foreground); }
+.ratings button[aria-pressed="true"] { background:var(--primary); color:var(--primary-foreground); border-color:var(--primary); }
+.actions { display:flex; gap:10px; flex-wrap:wrap; }
+.pdf { width:100%; height:68vh; min-height:420px; border:1px solid var(--border); border-radius:var(--radius-md); }
+@media(max-width:760px) { .page { padding:16px; } .hero { padding:20px; } .grid,.workGrid { grid-template-columns:1fr; } .roster { max-height:280px; } .question { padding:16px; } }
+
+.assignmentBook { min-width:0; border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; background:var(--muted); }

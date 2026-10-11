@@ -148,7 +148,7 @@ export const POST = withAuth(async (request, ctx) => {
     // Program change first — it decides which units are valid below.
     if (body.program !== undefined && body.program !== null) {
       if (!PROGRAMS.includes(asProgram(body.program)) || asProgram(body.program) !== body.program) {
-        return NextResponse.json({ error: 'program must be physics, trades or projects' }, { status: 400 })
+        return NextResponse.json({ error: 'program must be physics or trades' }, { status: 400 })
       }
       const { error } = await supabaseAdmin.from('courses').update({ program: body.program }).eq('id', body.course_id)
       if (error) return NextResponse.json({ error: error.message }, { status: 500 })

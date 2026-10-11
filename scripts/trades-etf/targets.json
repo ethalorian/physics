@@ -1,0 +1,202 @@
+[
+  {
+    "slug": "etf26.p1.math",
+    "statement": "I can calculate fractional dimensions, clearance, material area and cost for a useful product.",
+    "domain": "reasoning",
+    "unit_id": "trades-etf-1",
+    "program": "trades",
+    "content_strand": "trade-math",
+    "order_index": 1,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p1.measure",
+    "statement": "I can measure, lay out and inspect organizer parts from a consistent reference.",
+    "domain": "skill",
+    "unit_id": "trades-etf-1",
+    "program": "trades",
+    "content_strand": "metrology",
+    "order_index": 2,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p1.plans",
+    "statement": "I can interpret and revise dimensioned part drawings, views and cut lists.",
+    "domain": "skill",
+    "unit_id": "trades-etf-1",
+    "program": "trades",
+    "content_strand": "plan-reading",
+    "order_index": 3,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p1.build",
+    "statement": "I can build, user-test and physically improve a useful organizer.",
+    "domain": "product",
+    "unit_id": "trades-etf-1",
+    "program": "trades",
+    "content_strand": "engineering-design",
+    "order_index": 4,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p1.vocabulary",
+    "statement": "I can define and use measurement, drawing, fit and fabrication vocabulary.",
+    "domain": "knowledge",
+    "unit_id": "trades-etf-1",
+    "program": "trades",
+    "content_strand": "plan-reading",
+    "order_index": 5,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p2.math",
+    "statement": "I can convert feet/inches, scale dimensions, and calculate building quantities and performance change.",
+    "domain": "reasoning",
+    "unit_id": "trades-etf-2",
+    "program": "trades",
+    "content_strand": "trade-math",
+    "order_index": 1,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p2.measure",
+    "statement": "I can survey a space and check model dimensions, openings and structural/thermal tests.",
+    "domain": "skill",
+    "unit_id": "trades-etf-2",
+    "program": "trades",
+    "content_strand": "metrology",
+    "order_index": 2,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p2.plans",
+    "statement": "I can interpret coordinated floor plans, elevations, details, symbols and scale.",
+    "domain": "skill",
+    "unit_id": "trades-etf-2",
+    "program": "trades",
+    "content_strand": "plan-reading",
+    "order_index": 3,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p2.build",
+    "statement": "I can build and improve a model building using structural and thermal test evidence.",
+    "domain": "product",
+    "unit_id": "trades-etf-2",
+    "program": "trades",
+    "content_strand": "engineering-design",
+    "order_index": 4,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p2.vocabulary",
+    "statement": "I can define and use building, scale, load and insulation vocabulary.",
+    "domain": "knowledge",
+    "unit_id": "trades-etf-2",
+    "program": "trades",
+    "content_strand": "plan-reading",
+    "order_index": 5,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p3.math",
+    "statement": "I can calculate displacement ratios, volume or distance rates, and performance change.",
+    "domain": "reasoning",
+    "unit_id": "trades-etf-3",
+    "program": "trades",
+    "content_strand": "trade-math",
+    "order_index": 1,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p3.measure",
+    "statement": "I can measure device geometry and repeatable motion or flow with stated conditions.",
+    "domain": "skill",
+    "unit_id": "trades-etf-3",
+    "program": "trades",
+    "content_strand": "metrology",
+    "order_index": 2,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p3.plans",
+    "statement": "I can interpret fluid routes, assembly drawings, centerlines and parts lists.",
+    "domain": "skill",
+    "unit_id": "trades-etf-3",
+    "program": "trades",
+    "content_strand": "plan-reading",
+    "order_index": 3,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p3.build",
+    "statement": "I can build, test, diagnose and physically improve a working fluid device.",
+    "domain": "product",
+    "unit_id": "trades-etf-3",
+    "program": "trades",
+    "content_strand": "engineering-design",
+    "order_index": 4,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p3.vocabulary",
+    "statement": "I can define and use fluid-system, assembly and performance-test vocabulary.",
+    "domain": "knowledge",
+    "unit_id": "trades-etf-3",
+    "program": "trades",
+    "content_strand": "plan-reading",
+    "order_index": 5,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p4.math",
+    "statement": "I can calculate wire quantities, relevant circuit relationships, power and energy.",
+    "domain": "reasoning",
+    "unit_id": "trades-etf-4",
+    "program": "trades",
+    "content_strand": "trade-math",
+    "order_index": 1,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p4.measure",
+    "statement": "I can lay out circuit components and perform demonstrated measurements and inspection.",
+    "domain": "skill",
+    "unit_id": "trades-etf-4",
+    "program": "trades",
+    "content_strand": "metrology",
+    "order_index": 2,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p4.plans",
+    "statement": "I can interpret circuit symbols, complete paths, control states and physical wiring layouts.",
+    "domain": "skill",
+    "unit_id": "trades-etf-4",
+    "program": "trades",
+    "content_strand": "plan-reading",
+    "order_index": 3,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p4.build",
+    "statement": "I can build, diagnose and improve a functioning low-voltage control system.",
+    "domain": "product",
+    "unit_id": "trades-etf-4",
+    "program": "trades",
+    "content_strand": "engineering-design",
+    "order_index": 4,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "etf26.p4.vocabulary",
+    "statement": "I can define and use electrical-control, schematic, power and energy vocabulary.",
+    "domain": "knowledge",
+    "unit_id": "trades-etf-4",
+    "program": "trades",
+    "content_strand": "plan-reading",
+    "order_index": 5,
+    "exclude_from_growth": false
+  }
+]

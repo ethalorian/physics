@@ -8,7 +8,7 @@
  * feedback the daily rep gives. Correct reps earn 1 XP once per issued problem. Bonus points are the REWARD layer; none of this writes
  * mastery records — the teacher's rating on the daily warm-up moves the ladder.
  */
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, XCircle, HelpCircle, Dumbbell } from 'lucide-react'
 import ProblemReward from './ProblemReward'
@@ -16,6 +16,9 @@ import StandardFocus from './StandardFocus'
 import WarmupAnswer from './WarmupAnswer'
 import MathTutor from './MathTutor'
 import MathWorkReview from './MathWorkReview'
+import MathGameRecommendation from './MathGameRecommendation'
+import { mathRemediation } from '@/lib/math-remediation'
+import type { MathXpStatus } from '@/lib/xp-policy'
 import type { MathResponse } from '@/lib/math-response'
 
 import { useTranslator } from '@/lib/math-translate-store'
@@ -40,7 +43,7 @@ interface SlipFeedback { tag: string | null; label: string | null; message: stri
 
 const LABEL = 'text-overline font-bold uppercase tracking-widest'
 
-export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGraph?: boolean; lang?: string }) {
+export default function PracticeRep({ needsGraph = false, lang = '', skill }: { needsGraph?: boolean; lang?: string; skill?: string }) {
   const t = useTranslator(lang)
   const [item, setItem] = useState<PracticeItem | null>(null)
   const [loading, setLoading] = useState(true)
@@ -51,27 +54,35 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
   const [checking, setChecking] = useState(false)
   const [verdict, setVerdict] = useState<Verdict | null>(null)
   const [feedback, setFeedback] = useState<SlipFeedback | null>(null)
-  const [lastAward, setLastAward] = useState(0)
+  const [lastAward, setLastAward] = useState<number | null>(null)
+  const [xpStatus, setXpStatus] = useState<MathXpStatus | null>(null)
+  const pendingLoad = useRef<AbortController | null>(null)
 
   const load = useCallback(() => {
+    pendingLoad.current?.abort()
+    const controller = new AbortController()
+    pendingLoad.current = controller
     setLoading(true)
+    setItem(null)
     setError('')
     setVerdict(null)
     setFeedback(null)
     setAnswer('')
-    setLastAward(0)
+    setLastAward(null)
     setBoard({})
     setBoardKey((k) => k + 1)
-    fetch('/api/math-spine/practice')
+    fetch('/api/math-spine/practice' + (skill ? `?skill=${encodeURIComponent(skill)}` : ''), { signal: controller.signal })
       .then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Could not load practice'); return d })
       .then((d) => {
+        if (controller.signal.aborted) return
         setItem(d?.item ?? null)
+        setXpStatus(d.xpStatus ?? null)
         setLoading(false)
       })
-      .catch(e => { setError(e.message); setLoading(false) })
-  }, [])
+      .catch(e => { if (!controller.signal.aborted) { setError(e.message); setLoading(false) } })
+  }, [skill])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => { load(); return () => pendingLoad.current?.abort() }, [load])
 
   async function check() {
     if (!item || !answer.trim() || checking) return
@@ -88,7 +99,9 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
       if (res.ok) {
         setVerdict(d.result as Verdict)
         setFeedback(d.feedback ?? null)
-        setLastAward(d.xpEarned ?? 0)
+        setLastAward(d.result === 'match' ? d.xpEarned ?? 0 : null)
+        setXpStatus(d.xpStatus ?? null)
+        if (d.xpAwarded > 0) window.dispatchEvent(new CustomEvent('xp-updated'))
       }
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not check your answer') } finally {
       setChecking(false)
@@ -112,7 +125,7 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
 
       <StandardFocus code={item.competencyCode} statement={item.competencyStatement} mode="practice" lang={lang} />
       <p className="mt-3 text-base font-semibold text-foreground leading-snug">{(lang && item.translations?.[lang]) || item.prompt}</p>
-      <ProblemReward practice earned={lastAward} lang={lang} />
+      <ProblemReward practice earned={lastAward} status={xpStatus} lang={lang} />
 
       <div className="mt-3"><MathTutor key={'practice-help-'+boardKey} code={item.competencyCode} customTiers={item.miniLessonTiers} lang={lang} /></div>
       <div className="mt-3">
@@ -132,7 +145,7 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
             <p className="flex items-center gap-2 text-sm font-semibold" style={{ color: 'var(--viz-up)' }}>
               <CheckCircle2 className="h-4 w-4" />
               {answer.trim()} — {t('matches')}
-              {lastAward > 0 ? <span className="font-normal text-foreground">· +{lastAward} XP</span>
+              {lastAward !== null && lastAward > 0 ? <span className="font-normal text-foreground">· +{lastAward} XP</span>
                 : null}
             </p>
           )}
@@ -148,6 +161,7 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
               <p className="text-sm text-foreground mt-2 leading-relaxed">
                 {feedback ? t('Check whether this hint fits your reasoning: ') + feedback.message : t('Re-read what the question asks for and check the units on every number, then try another.')}
               </p>
+              <div className="mt-3"><MathGameRecommendation recommendation={mathRemediation(item.competencyCode, verdict)} lang={lang} /></div>
             </div>
           )}
           {verdict === 'unknown' && (

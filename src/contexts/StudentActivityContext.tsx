@@ -147,7 +147,7 @@ export function StudentActivityProvider({ children }: { children: ReactNode }) {
   const [initialized, setInitialized] = useState(false)
 
   // Check if user has permission to access activity data
-  const userRole = getUserRole(session?.user?.email)
+  const userRole = (session?.user?.role ?? getUserRole(session?.user?.email))
   const canAccessActivityData = userRole === 'admin' || userRole === 'teacher'
 
   // LAZY LOADING: Only initialize when user navigates to pages that need activity data
@@ -201,6 +201,7 @@ export function StudentActivityProvider({ children }: { children: ReactNode }) {
   }
 
   const recordActivity = useCallback(async (activity: Partial<StudentActivity>) => {
+    if (session?.experience) return
     try {
       const response = await fetch('/api/student-activity', {
         method: 'POST',
@@ -223,7 +224,7 @@ export function StudentActivityProvider({ children }: { children: ReactNode }) {
       console.error('Error recording activity:', err)
       throw err
     }
-  }, [])
+  }, [session?.experience])
 
   const recordSubmission = useCallback(async (submission: Partial<AssignmentSubmission>): Promise<string> => {
     try {

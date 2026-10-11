@@ -1,153 +1,183 @@
-import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
-import { PAL, clearField, groundShadow, arrow, label, chip, roundRectPath } from '@/components/simulations/lab/draw'
+import { terrain, rover } from "@/components/simulations/lab/scene-art";
+import type {
+  SimEngine,
+  ParamValues,
+  SimData,
+} from "@/components/simulations/lab/contract";
+import { arrow, label } from "@/components/simulations/lab/draw";
 
 // Uniformly accelerated motion — the "oil-drop ticker": a car drops a spot every
 // second, and the growing/shrinking spacing reveals constant acceleration. The
 // canvas shows the ticker; the shell's Motion Detector shows velocity vs time
 // (a straight line of slope = a). Physics is exact closed-form kinematics.
 
-interface Spot { t: number; x: number; v: number }
+interface Spot {
+  t: number;
+  x: number;
+  v: number;
+}
 
 // Scene tokens; structural/semantic tones come from the shared PAL so the sim
 // matches every other lab. road/lane are scene-specific.
-const COL = {
-  sky: PAL.bg, road: '#3A3550', lane: '#FAC775',
-  car: PAL.primary, carDark: '#3C3489', window: '#BFE3FF', wheel: PAL.ink,
-  oil: PAL.ink, vel: PAL.velocity, label: PAL.bg, marker: PAL.mute, text: PAL.onAccent,
-}
-const DOMAIN = 400 // metres of road shown
 
-export function createUAMEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, initial: ParamValues): SimEngine {
-  let v0 = Number(initial.v0 ?? 5)
-  let a = Number(initial.a ?? 2)
-  let t = 0, x = 0, v = v0
-  let done = false
-  let lastSecond = -1
-  let lastTrace = -1
-  let spots: Spot[] = []
-  let samp: { t: number; v: number; x: number }[] = []
+export function createUAMEngine(
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  initial: ParamValues,
+): SimEngine {
+  let v0 = Number(initial.v0 ?? 5);
+  let a = Number(initial.a ?? 2);
+  let t = 0,
+    x = 0,
+    v = v0;
+  let done = false;
+  let lastSecond = -1;
+  let lastTrace = -1;
+  let spots: Spot[] = [];
+  let samp: { t: number; v: number; x: number }[] = [];
 
   const dims = () => {
-    const dpr = window.devicePixelRatio || 1
-    return { w: canvas.width / dpr, h: canvas.height / dpr }
-  }
+    const dpr = window.devicePixelRatio || 1;
+    return { w: canvas.width / dpr, h: canvas.height / dpr };
+  };
 
   function render() {
-    const { w, h } = dims()
-    clearField(ctx, w, h)
-
-    const roadTop = h * 0.34
-    const roadH = h * 0.42
-    const roadMid = roadTop + roadH / 2
-    const left = w * 0.04, right = w * 0.96, span = right - left
-    const toX = (m: number) => left + (Math.max(0, Math.min(DOMAIN, m)) / DOMAIN) * span
-
-    // road
-    ctx.fillStyle = COL.road; ctx.fillRect(left, roadTop, span, roadH)
-    // lane dashes
-    ctx.strokeStyle = COL.lane; ctx.lineWidth = 3; ctx.setLineDash([14, 12])
-    ctx.beginPath(); ctx.moveTo(left, roadMid); ctx.lineTo(right, roadMid); ctx.stroke(); ctx.setLineDash([])
-    // distance markers
-    ctx.fillStyle = COL.marker; ctx.font = '10px ui-sans-serif, system-ui, sans-serif'; ctx.textAlign = 'center'
-    for (let m = 0; m <= DOMAIN; m += 50) {
-      const mx = toX(m)
-      ctx.fillRect(mx, roadTop + roadH, 1, 5)
-      ctx.fillText(`${m}`, mx, roadTop + roadH + 16)
-    }
-    ctx.textAlign = 'left'
-
-    // oil spots + time labels. Every spot gets its ellipse, but a time LABEL is
-    // drawn only when it clears the previous label horizontally — at low speed the
-    // first spots sit almost on top of each other, so labelling all of them
-    // collided "0s" and "1s" into one smear near the start.
-    let lastLabelX = -Infinity
+    const { w, h } = dims();
+    terrain(ctx, w, h, true);
+    const y = h * 0.72;
+    const min = Math.min(-10, ...spots.map((s) => s.x), x) - 5,
+      max = Math.max(25, ...spots.map((s) => s.x), x) + 5;
+    const toX = (m: number) => 50 + ((m - min) / (max - min)) * (w - 100);
+    ctx.fillStyle = "#263B45";
+    ctx.fillRect(0, y - 4, w, 35);
+    ctx.strokeStyle = "#A8BAAD";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, y + 30);
+    ctx.lineTo(w, y + 30);
+    ctx.stroke();
+    let lastX = -Infinity;
     spots.forEach((s) => {
-      const sx = toX(s.x)
-      ctx.fillStyle = COL.oil
-      ctx.beginPath(); ctx.ellipse(sx, roadMid + 14, 6, 3.5, 0, 0, Math.PI * 2); ctx.fill()
-      if (sx - lastLabelX >= 22) {
-        chip(ctx, `${s.t}s`, sx, roadMid - 16, { bg: PAL.surface, color: PAL.mute, size: 10 })
-        lastLabelX = sx
+      const px = toX(s.x);
+      ctx.fillStyle = "#E2C279";
+      ctx.beginPath();
+      ctx.arc(px, y + 17, 4, 0, Math.PI * 2);
+      ctx.fill();
+      if (Math.abs(px - lastX) > 34) {
+        label(ctx, s.t + " s", px, y + 53, {
+          color: "#D8DDD2",
+          size: 11,
+          align: "center",
+        });
+        lastX = px;
       }
-    })
-
-    // car
-    const cx = toX(x)
-    const cy = roadMid
-    // ground shadow under the moving car
-    groundShadow(ctx, cx, cy + 10, 18, 4)
-    // velocity arrow (ahead, length ∝ v; reversed if v<0)
-    if (Math.abs(v) > 0.1) {
-      const len = Math.max(-60, Math.min(60, v * 3))
-      const x0 = cx + 18 * Math.sign(len)
-      arrow(ctx, x0, cy, x0 + len, cy, { color: COL.vel, width: 3, head: 8 })
-    }
-    // body
-    ctx.fillStyle = COL.car
-    roundRectPath(ctx, cx - 16, cy - 9, 32, 16, 4); ctx.fill()
-    ctx.fillStyle = COL.window; roundRectPath(ctx, cx + 2, cy - 6, 9, 7, 2); ctx.fill()
-    ctx.fillStyle = COL.wheel
-    ctx.beginPath(); ctx.arc(cx - 8, cy + 8, 4, 0, Math.PI * 2); ctx.arc(cx + 8, cy + 8, 4, 0, Math.PI * 2); ctx.fill()
-
-    // motion hint
-    const hint = a > 0.01 ? 'speeding up — spots spread out' : a < -0.01 ? 'slowing down — spots bunch up' : 'constant velocity — even spacing'
-    label(ctx, hint, left, roadTop - 10, { color: PAL.primary, size: 12, weight: 'bold' })
+    });
+    const rx = toX(x);
+    rover(ctx, rx, y - 9, 0.92, v < 0 ? -1 : 1, x * 0.65);
+    if (Math.abs(v) > 0.05)
+      arrow(ctx, rx, y - 92, rx + Math.max(-95, Math.min(95, v * 5)), y - 92, {
+        color: "#88D6AE",
+        width: 3,
+        head: 10,
+      });
+    if (Math.abs(a) > 0.05)
+      arrow(ctx, rx, y - 119, rx + a * 14, y - 119, {
+        color: "#E79775",
+        width: 3,
+        head: 9,
+      });
+    label(ctx, "v", Math.min(w - 20, rx + 105), y - 88, {
+      color: "#88D6AE",
+      size: 12,
+    });
+    label(ctx, "a", Math.min(w - 20, rx + 105), y - 115, {
+      color: "#E79775",
+      size: 12,
+    });
+    label(ctx, "EQUAL-TIME MOTION MAP / 1 DOT PER SECOND", 20, 28, {
+      color: "#D8E3DD",
+      size: 11,
+    });
+    const hint =
+      Math.abs(v) < 0.05
+        ? "At the turning point"
+        : Math.abs(a) < 0.01
+          ? "Constant velocity"
+          : v * a > 0
+            ? "Speed increasing"
+            : "Speed decreasing";
+    label(ctx, hint + " · x = " + x.toFixed(1) + " m", 20, h - 15, {
+      color: "#D8E3DD",
+      size: 12,
+    });
   }
 
   const engine: SimEngine = {
     render,
     step(dt: number) {
-      if (done) return
-      // Forward-motion model (conceptual-first): a decelerating car brakes to
-      // REST at v=0 rather than reversing (which would break the oil-spot story).
-      if (a < 0) {
-        const tStop = -v0 / a // exact time the car reaches v=0
-        if (t + dt >= tStop) {
-          t = tStop; v = 0; x = v0 * t + 0.5 * a * t * t
-          const sec = Math.floor(t)
-          if (sec > lastSecond) { spots.push({ t: sec, x, v }); lastSecond = sec }
-          samp.push({ t, v: 0, x })
-          done = true
-          return
-        }
+      if (done) return;
+      t = Math.min(15, t + dt);
+      v = v0 + a * t;
+      x = v0 * t + 0.5 * a * t * t;
+      const sec = Math.floor(t + 1e-9);
+      while (lastSecond < sec) {
+        lastSecond++;
+        spots.push({
+          t: lastSecond,
+          x: v0 * lastSecond + 0.5 * a * lastSecond * lastSecond,
+          v: v0 + a * lastSecond,
+        });
       }
-      t += dt
-      v = v0 + a * t
-      x = v0 * t + 0.5 * a * t * t
-      const sec = Math.floor(t)
-      if (sec > lastSecond) { spots.push({ t: sec, x, v }); lastSecond = sec }
-      if (t - lastTrace >= 0.05) { samp.push({ t, v, x }); lastTrace = t }
-      if (x > DOMAIN || t > 15) done = true
+      if (t - lastTrace >= 0.05) {
+        samp.push({ t, v, x });
+        lastTrace = t;
+      }
+      if (t >= 15) done = true;
     },
     setParams(values: ParamValues) {
-      v0 = Number(values.v0 ?? v0)
-      a = Number(values.a ?? a)
-      v = v0
+      v0 = Number(values.v0 ?? v0);
+      a = Number(values.a ?? a);
+      v = v0;
     },
     start(values: ParamValues) {
-      this.setParams(values)
-      t = 0; x = 0; v = v0; done = false; lastSecond = -1; lastTrace = -1
-      spots = [{ t: 0, x: 0, v: v0 }]
-      samp = [{ t: 0, v: v0, x: 0 }]
+      this.setParams(values);
+      t = 0;
+      x = 0;
+      v = v0;
+      done = false;
+      lastSecond = 0;
+      lastTrace = 0;
+      spots = [{ t: 0, x: 0, v: v0 }];
+      samp = [{ t: 0, v: v0, x: 0 }];
     },
     reset() {
-      t = 0; x = 0; v = v0; done = false; lastSecond = -1; lastTrace = -1; spots = []; samp = []
+      t = 0;
+      x = 0;
+      v = v0;
+      done = false;
+      lastSecond = -1;
+      lastTrace = -1;
+      spots = [];
+      samp = [];
     },
     getReadouts() {
-      return { time: t, position: x, velocity: v }
+      return { time: t, position: x, velocity: v };
     },
     getData(): SimData {
       return {
-        columns: ['Time (s)', 'Position (m)', 'Velocity (m/s)'],
+        columns: ["Time (s)", "Position (m)", "Velocity (m/s)"],
         rows: spots.map((s) => [s.t, s.x, s.v]),
-        xCol: 0, yCol: 2,
-      }
+        xCol: 0,
+        yCol: 2,
+      };
     },
     getSensorTrace(key?: string) {
-      return samp.map((s) => ({ x: s.t, y: key === 'position' ? s.x : s.v }))
+      return samp.map((s) => ({ x: s.t, y: key === "position" ? s.x : s.v }));
     },
-    isComplete() { return done },
+    isComplete() {
+      return done;
+    },
     destroy() {},
-  }
-  return engine
+  };
+  return engine;
 }

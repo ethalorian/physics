@@ -17,5 +17,7 @@ const assert=require('assert/strict'),path=require('path'),{randomUUID}=require(
  response=await f.teacher.POST(req({action:'assign',userId:f.user,mission:'balance-bay',code:'SM1'},f.user,'teacher'));assert.equal(response.status,200);const a=(await response.json()).assignment;
  response=await f.route.POST(req({action:'start',id:randomUUID(),mission:'balance-bay',code:'SM1',mode:'practice',assignmentId:a.id},f.other));assert.equal(response.status,403);
  response=await f.teacher.POST(req({action:'review',id,note:'Your rearrangement is secure. Next, check negative substitution.'},f.user,'teacher'));assert.equal(response.status,200);assert(f.tables.math_mission_sessions[0].review_note);
- console.log('PASS actual routes: invalid skills, no answer-key leak, idempotent start/save, ownership, delayed-check gate, server reward, failed-save retry, daily eligibility, teacher roster scope, assignments and feedback');
+ const guided={action:'start',id:randomUUID(),mission:'balance-bay',code:'SM2',mode:'practice',guided:true};response=await f.route.POST(req(guided));data=await response.json();assert.equal(response.status,200);assert.equal(data.session.state.hintCount,1);assert(data.session.strategy);assert(!('expected' in data.session.task));
+ response=await f.route.POST(req({...guided,id:randomUUID(),mode:'challenge'}));data=await response.json();assert.equal(data.session.state.hintCount,0);assert.equal(data.session.strategy,undefined);
+ console.log('PASS actual routes: invalid skills, no answer-key leak, idempotent start/save, ownership, delayed-check gate, server reward, failed-save retry, daily eligibility, teacher roster scope, assignments, feedback, and guided support only in practice');
 })().catch(e=>{console.error(e);process.exitCode=1});

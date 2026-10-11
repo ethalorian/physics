@@ -52,7 +52,7 @@ export const GET = withAuth(async (_req, ctx) => {
     const window = windows.get(c.id)!
     const progress = bountyProgress(c, window, { arcade, plays, vocab, math })
     let bonusAwarded = paidSet.has(keyFor(c.id))
-    if (!bonusAwarded && c.bonus_xp > 0 && progress >= c.target) {
+    if (!ctx.session?.experience && !bonusAwarded && c.bonus_xp > 0 && progress >= c.target) {
       const { error } = await supabaseAdmin.from('economy_point_grants').insert({
         user_id: uid, user_email: ctx.email, source: 'challenge-bonus', points: c.bonus_xp,
         reference: c.id, note: `Bounty earned — ${c.title}`, dedupe_key: keyFor(c.id),

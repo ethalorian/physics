@@ -2,21 +2,22 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { TabsContent } from '@/components/ui/tabs'
 import { Card } from '@/components/ui/card'
 import { Textarea } from '@/components/ui/textarea'
-import { PULSE_OPTIONS, uncalledStudents, type TeachingStudent, type ToolsState } from '@/lib/presentation-tools'
+import { uncalledStudents, type TeachingStudent, type ToolsState } from '@/lib/presentation-tools'
 import type { LiveCommandState } from '@/lib/classroom-command'
 
 interface Props {
+  view: string
   live: LiveCommandState
   state: ToolsState
   busy: boolean
   action: (body: Record<string, unknown>) => Promise<{ state: ToolsState; selected?: TeachingStudent } | null>
   patch: (body: Record<string, unknown>) => Promise<boolean>
 }
-export default function TeachingTools({ live, state, busy, action, patch }: Props) {
+export default function TeachingTools({ view, live, state, busy, action, patch }: Props) {
   const [showAllNeeds, setShowAllNeeds] = useState(false)
-  const [anonymous, setAnonymous] = useState(true)
   const [picked, setSelected] = useState<TeachingStudent | null>(null)
   const selected = picked ?? state.roster.find(s => s.id === state.marks.find(m => m.kind === 'called')?.student_id) ?? null
   const [note, setNote] = useState('')
@@ -37,7 +38,8 @@ export default function TeachingTools({ live, state, busy, action, patch }: Prop
     const link = document.createElement('a'); link.href = url; link.download = 'teaching-recap.txt'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
   return <div className="space-y-4">
-    <div className="grid items-start gap-4 xl:grid-cols-2">
+    <TabsContent value="students" forceMount hidden={view !== 'students'} className="mt-0 space-y-4">
+      <Button asChild variant="outline" className="min-h-12"><Link href={`/admin/observe?class=${encodeURIComponent(live.session.course_id)}`} target="_blank">Observe & give feedback</Link></Button>
       <Card id="help-queue" density="compact" className="min-w-0 scroll-mt-44"><h2 className="text-title-2">Who needs me?</h2><p className="text-caption text-muted-foreground">Private to you. Missing responses are check-in prompts, not evidence of low mastery.</p>
         {state.needs.length ? (showAllNeeds ? state.needs : state.needs.slice(0, 5)).map(student => {
           const query = new URLSearchParams({ student: student.id, class: live.session.course_id })
@@ -45,15 +47,12 @@ export default function TeachingTools({ live, state, busy, action, patch }: Prop
           return <div key={student.id} className="rounded-xl border p-3"><div className="font-semibold">{student.name}</div><p className="text-caption text-muted-foreground">{student.reasons.join(' · ')}</p><div className="mt-2 flex flex-wrap gap-2"><Button asChild variant="outline" className="min-h-12"><Link href={`/admin/observe?${query}`} target="_blank">Observe {student.name}</Link></Button>{student.requestedAt && <Button variant="outline" className="min-h-12" disabled={busy} onClick={() => action({ action: 'resolve_help', student_id: student.id })}>Help given</Button>}</div></div>
         }) : <p>No help requests or response gaps right now.</p>}{state.needs.length > 5 && <Button variant="outline" className="min-h-12" onClick={() => setShowAllNeeds(v => !v)}>{showAllNeeds ? 'Show fewer' : `Show all ${state.needs.length} students`}</Button>}
       </Card>
-      <Card id="pulse-checks" density="compact" className="min-w-0 scroll-mt-44"><h2 className="text-title-2">Quick pulse check</h2><label className="flex min-h-12 items-center gap-3"><input type="checkbox" checked={anonymous} disabled={busy || state.pulse?.status === 'open'} onChange={e => setAnonymous(e.target.checked)} className="h-6 w-6" />Anonymous totals only</label><p className="text-caption text-muted-foreground">Anonymous checks never add names or missing-response flags to the help queue.</p>
-        {state.pulse?.status === 'open' ? <><p className="font-semibold">{state.pulse.kind === 'readiness' ? 'Readiness' : 'Confidence'} · {state.pulse.anonymous ? 'anonymous' : 'named'}</p>{PULSE_OPTIONS[state.pulse.kind].map((label,i) => <div key={label} className="flex justify-between rounded-lg bg-muted p-3"><span>{label}</span><span>{state.pulse?.tally?.[i] ?? 0}</span></div>)}<p>{state.pulse.saved ?? 0} responses</p><Button className="min-h-12" disabled={busy} onClick={() => action({ action: 'close_pulse' })}>Close pulse check</Button></> : <div className="flex flex-wrap gap-2"><Button className="min-h-14 flex-1" disabled={busy || Boolean(live.session.poll_block_id || live.lobby)} onClick={() => action({ action: 'pulse', kind: 'readiness', anonymous })}>Ready / Almost / Need help</Button><Button variant="outline" className="min-h-14 flex-1" disabled={busy || Boolean(live.session.poll_block_id || live.lobby)} onClick={() => action({ action: 'pulse', kind: 'confidence', anonymous })}>Confidence check</Button></div>}
-        {(live.session.poll_block_id || live.lobby) && <p className="text-caption">Close the current poll or lobby before launching a pulse check.</p>}
-      </Card>
-    </div>
-    <div className="grid items-start gap-4 xl:grid-cols-2">
       <Card id="student-picker" density="compact" className="min-w-0 scroll-mt-44"><h2 className="text-title-2">Fair student picker</h2><p>{remaining} of {state.roster.length} students haven’t had a turn this session.</p>{selected && <p role="status" className="text-title-1">{selected.name}</p>}<div className="flex flex-wrap gap-2"><Button className="min-h-14" disabled={busy || !remaining} onClick={() => pick()}>Pick a student</Button><Button variant="outline" className="min-h-14" disabled={busy || !selected || !remaining} onClick={() => pick(true)}>Skip & pick next</Button><Button variant="outline" className="min-h-14" disabled={busy} onClick={() => patch({ timer_seconds: 60 })}>Think-pair-share · 1 min</Button></div><p className="text-caption text-muted-foreground">Names stay on your iPad. Skipping keeps that student out of this round.</p></Card>
-      <Card id="teaching-bookmarks" density="compact" className="min-w-0 scroll-mt-44"><h2 className="text-title-2">Private teaching bookmarks</h2><label className="text-caption">Student (optional)<select disabled={busy} aria-label="Bookmark student" value={studentId} onChange={e => setStudentId(e.target.value)} className="min-h-12 w-full rounded-xl border bg-background px-3 text-base"><option value="">This lesson / slide</option>{state.roster.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label><div className="flex flex-wrap gap-2">{['Revisit this', 'Great explanation', 'Follow up with this student'].map(text => <Button key={text} variant="outline" className="min-h-12" disabled={busy || (text.startsWith('Follow up') && !studentId)} onClick={() => bookmark(text)}>{text}</Button>)}</div><Textarea disabled={busy} aria-label="Private bookmark note" maxLength={1000} value={note} onChange={e => setNote(e.target.value)} placeholder="A detail to remember after class…" className="min-h-24 text-base" /><Button className="min-h-12" disabled={busy || !note.trim()} onClick={() => bookmark(note)}>Save private note</Button>{notice && <p role="status">{notice}</p>}</Card>
-    </div>
+    </TabsContent>
+    <TabsContent value="notes" forceMount hidden={view !== 'notes'} className="mt-0 space-y-4">
+      <Card id="teaching-bookmarks" density="compact" className="min-w-0 scroll-mt-44"><h2 className="text-title-2">Your private notes</h2><label className="text-caption">Student (optional)<select disabled={busy} aria-label="Bookmark student" value={studentId} onChange={e => setStudentId(e.target.value)} className="min-h-12 w-full rounded-xl border bg-background px-3 text-base"><option value="">This lesson / slide</option>{state.roster.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label><div className="flex flex-wrap gap-2">{['Revisit this', 'Great explanation', 'Follow up with this student'].map(text => <Button key={text} variant="outline" className="min-h-12" disabled={busy || (text.startsWith('Follow up') && !studentId)} onClick={() => bookmark(text)}>{text}</Button>)}</div><Textarea disabled={busy} aria-label="Private bookmark note" maxLength={1000} value={note} onChange={e => setNote(e.target.value)} placeholder="A detail to remember after class…" className="min-h-24 text-base" /><Button className="min-h-12" disabled={busy || !note.trim()} onClick={() => bookmark(note)}>Save private note</Button>{notice && <p role="status">{notice}</p>}</Card>
     <Card density="compact" className=""><div className="flex flex-wrap items-center justify-between gap-2"><h2 className="text-title-2">Saved teaching notes</h2><Button variant="outline" className="min-h-12" disabled={!bookmarks.length} onClick={exportRecap}>Download notes</Button></div>{bookmarks.length ? bookmarks.map(m => <div key={m.id} className="rounded-xl border p-3"><p className="text-caption text-muted-foreground">Slide {m.slide + 1}{m.student_id ? ` · ${state.roster.find(s => s.id === m.student_id)?.name ?? 'Student'}` : ''}</p><p className="whitespace-pre-wrap">{m.note}</p></div>) : <p>Your private bookmarks will appear here and remain saved after class.</p>}</Card>
+    </TabsContent>
+
   </div>
 }

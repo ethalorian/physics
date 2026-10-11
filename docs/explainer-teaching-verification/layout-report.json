@@ -1,0 +1,342 @@
+[
+  {
+    "id": "explainer-course-0",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-course-1",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-course-2",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-course-3",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-course-4",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-course-5",
+    "scale": 0.89,
+    "overflow": false
+  },
+  {
+    "id": "explainer-course-6",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-course-7",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-course-8",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-course-9",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-0",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-1",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-2",
+    "scale": 0.8476190476190476,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-3",
+    "scale": 0.8476190476190476,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-4",
+    "scale": 0.89,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-5",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-6",
+    "scale": 0.8109339407744874,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-7",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-8",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-9",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-10",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-vectors-11",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-0",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-1",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-2",
+    "scale": 0.9128205128205128,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-3",
+    "scale": 0.9128205128205128,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-4",
+    "scale": 0.9128205128205128,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-5",
+    "scale": 0.8704156479217604,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-6",
+    "scale": 0.8682926829268293,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-7",
+    "scale": 0.9128205128205128,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-8",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-9",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-10",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-kinematics-11",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-derivatives-0",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-derivatives-1",
+    "scale": 0.89,
+    "overflow": false
+  },
+  {
+    "id": "explainer-derivatives-2",
+    "scale": 0.89,
+    "overflow": false
+  },
+  {
+    "id": "explainer-derivatives-3",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-derivatives-4",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-derivatives-5",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-derivatives-6",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-derivatives-7",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-derivatives-8",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-derivatives-9",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-derivatives-10",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-units-0",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-units-1",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-units-2",
+    "scale": 0.930718954248366,
+    "overflow": false
+  },
+  {
+    "id": "explainer-units-3",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-units-4",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-units-5",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-units-6",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-units-7",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-units-8",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-units-9",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-units-10",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-0",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-1",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-2",
+    "scale": 0.8298368298368298,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-3",
+    "scale": 0.9128205128205128,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-4",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-5",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-6",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-7",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-8",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-9",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-10",
+    "scale": 1,
+    "overflow": false
+  },
+  {
+    "id": "explainer-uam-11",
+    "scale": 1,
+    "overflow": false
+  }
+]

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#f6f6fb;color:#22233a;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+a{color:#4b4ba8;text-decoration:none}a:hover{color:#3a3a8a;text-decoration:underline}
+input[type=range]{accent-color:#4b4ba8;width:100%}
+</style>
+</helmet>
+<div style="min-height:100vh;font-family:'Newsreader',Georgia,serif;font-size:18px;line-height:1.55;color:#22233a;background-color:#f6f6fb;background-image:linear-gradient(rgba(75,75,168,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(75,75,168,0.08) 1px,transparent 1px);background-size:24px 24px;background-position:-1px -1px">
+
+<nav style="position:sticky;top:0;z-index:10;background:rgba(246,246,251,0.92);backdrop-filter:blur(6px);border-bottom:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase">
+  <div style="max-width:1000px;margin:0 auto;padding:12px 24px;display:flex;flex-wrap:nowrap;gap:6px 18px;align-items:center;overflow-x:auto">
+    <a href="Course Explainer - 2026-XJ.dc.html" style="display:flex;align-items:center;gap:10px;margin-right:auto;color:#22233a;text-decoration:none;min-width:0;flex:1 1 0;overflow:hidden"><svg width="28" height="28" viewBox="0 0 40 40" aria-label="Antocci Physics" style="display:block;flex-shrink:0"><circle cx="20" cy="20" r="20" fill="#4B4BA8"></circle><path d="M6 29 H11.5 L20 8.5 L28.5 29 H34" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></path><path d="M15.6 21.5 H24.4" stroke="#9FD1B3" stroke-width="2.6" stroke-linecap="round"></path><circle cx="20" cy="8.5" r="2.6" fill="#F0A58A"></circle></svg><span style="font-weight:600;white-space:nowrap;letter-spacing:0.08em;flex-shrink:0">Antocci Physics</span><span style="color:#5c5d70;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis">· Unit 0 · Kinematics</span></a>
+    <a href="#what" style="color:#5c5d70;white-space:nowrap">01 What</a>
+    <a href="#vs" style="color:#5c5d70;white-space:nowrap">02 Vs. Dynamics</a>
+    <a href="#why" style="color:#5c5d70;white-space:nowrap">03 Why first</a>
+    <a href="#sim" style="color:#5c5d70;white-space:nowrap">04 Simulator</a>
+    <a href="#map" style="color:#5c5d70;white-space:nowrap">05 Map</a>
+    <a href="#check" style="color:#5c5d70;white-space:nowrap">06 Check</a>
+  </div>
+</nav>
+
+<main style="max-width:1000px;margin:0 auto;padding:24px 24px 96px;display:flex;flex-direction:column;gap:72px">
+
+  <header data-screen-label="Hook" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;align-items:end;padding-top:40px">
+    <div>
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:16px">AP Physics · Lab notebook 00</div>
+      <h1 style="font-size:clamp(40px,6vw,64px);line-height:1.02;font-weight:500;margin:0 0 20px;letter-spacing:-0.02em;text-wrap:balance">Before you can explain motion, you have to describe it.</h1>
+      <p style="font-size:20px;margin:0;max-width:52ch;text-wrap:pretty">Kinematics is the language physics uses to say <em>where</em> something is, <em>how fast</em> it's moving, and <em>how that's changing</em> — without yet asking why. Every law you'll learn this year is written in that language.</p>
+    </div>
+    <div style="background:#ffffff;border:1px solid #d4d5e2;padding:24px;box-shadow:4px 4px 0 #e4e4f0">
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70;margin-bottom:12px">The phenomenon</div>
+      <p style="margin:0 0 12px;font-size:19px">A car is doing 12 m/s when the light turns red. The driver brakes, slowing steadily at 1.5 m/s².</p>
+      <p style="margin:0 0 16px;font-size:19px;font-weight:600">How far does the car travel before it stops?</p>
+      <p style="margin:0;color:#5c5d70;font-size:16px">You don't need to know the car's mass, the tire friction, or the engine. You only need position, velocity, acceleration, and time. That's the whole point of kinematics. <a href="#sim">Try it in the simulator ↓</a></p>
+    </div>
+  </header>
+
+  <section id="what" data-screen-label="01 What">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">01 · What kinematics is</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Four quantities, one variable underneath</h2>
+    <p style="max-width:64ch;margin:0 0 28px;text-wrap:pretty">Kinematics (from the Greek <em>kinēma</em>, "movement") is the geometry of motion. It builds a chain: position is where you are; velocity is how position changes; acceleration is how velocity changes. Each one is the rate of change of the one before it, and time is the thread running through all of them.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px">
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-family:'IBM Plex Mono',ui-monospace,monospace"><span style="font-size:28px;font-weight:600;color:#22233a">x</span><span style="font-size:12px;color:#5c5d70">meters · m</span></div>
+        <div style="font-weight:600;margin:10px 0 4px">Position</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58">Where the object is, measured from an origin you choose. <strong>Displacement</strong> Δx = x<sub>f</sub> − x<sub>i</sub> is the change — a vector, not the distance walked.</p>
+      </div>
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-family:'IBM Plex Mono',ui-monospace,monospace"><span style="font-size:28px;font-weight:600;color:#3e7a58">v</span><span style="font-size:12px;color:#5c5d70">m/s</span></div>
+        <div style="font-weight:600;margin:10px 0 4px">Velocity</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58">Rate of change of position: v = Δx/Δt. Sign tells direction. On an x‑t graph, velocity is the <em>slope</em>.</p>
+      </div>
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-family:'IBM Plex Mono',ui-monospace,monospace"><span style="font-size:28px;font-weight:600;color:#c9573f">a</span><span style="font-size:12px;color:#5c5d70">m/s²</span></div>
+        <div style="font-weight:600;margin:10px 0 4px">Acceleration</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58">Rate of change of velocity: a = Δv/Δt. Slowing down is still acceleration — just pointing against v. On a v‑t graph, it's the slope.</p>
+      </div>
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-family:'IBM Plex Mono',ui-monospace,monospace"><span style="font-size:28px;font-weight:600;color:#5c5d70">t</span><span style="font-size:12px;color:#5c5d70">seconds · s</span></div>
+        <div style="font-weight:600;margin:10px 0 4px">Time</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58">The independent variable. Everything else is a function of it. Area under a v‑t graph gives displacement; area under a‑t gives Δv.</p>
+      </div>
+    </div>
+    <div style="margin-top:24px;background:#22233a;color:#f6f6fb;padding:20px 24px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:15px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 32px">
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">CONSTANT‑a EQUATIONS</div>v = v₀ + at</div>
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">&nbsp;</div>x = x₀ + v₀t + ½at²</div>
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">&nbsp;</div>v² = v₀² + 2aΔx</div>
+    </div>
+  </section>
+
+  <section id="vs" data-screen-label="02 Vs Dynamics">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">02 · Kinematics vs. dynamics</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Describing vs. explaining</h2>
+    <p style="max-width:64ch;margin:0 0 28px;text-wrap:pretty">Classical mechanics splits into two halves. Kinematics answers <em>how</em> things move. Dynamics answers <em>why</em> — it brings in mass and force. Newton's second law, F = ma, is the bridge: the <strong>a</strong> on the right side is a kinematic quantity.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+      <div style="border:1px solid #d4d5e2;background:#ffffff;padding:24px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#3e7a58;margin-bottom:8px">Kinematics · how</div>
+        <div style="font-size:24px;font-weight:500;margin-bottom:12px">"Where will it be at t = 3 s?"</div>
+        <ul style="margin:0;padding-left:20px;font-size:17px;color:#3e3f58;display:flex;flex-direction:column;gap:6px">
+          <li>Variables: x, v, a, t</li>
+          <li>Tools: graphs, slopes, areas, the constant‑a equations</li>
+          <li>Ignores: mass, force, what caused the motion</li>
+          <li>Output: a complete description of the trajectory</li>
+        </ul>
+      </div>
+      <div style="border:1px solid #d4d5e2;background:#ffffff;padding:24px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:8px">Dynamics · why</div>
+        <div style="font-size:24px;font-weight:500;margin-bottom:12px">"What makes it accelerate that way?"</div>
+        <ul style="margin:0;padding-left:20px;font-size:17px;color:#3e3f58;display:flex;flex-direction:column;gap:6px">
+          <li>Variables: F, m — plus everything from kinematics</li>
+          <li>Tools: free‑body diagrams, Newton's laws</li>
+          <li>Predicts: the acceleration, which kinematics then turns into a path</li>
+          <li>Output: a causal explanation</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" data-screen-label="03 Why first">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">03 · Why every physics course starts here</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 28px;letter-spacing:-0.01em">Three reasons, one historical and two logical</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px">
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">1</div>
+        <div style="font-size:22px;font-weight:500;margin:8px 0">It's how physics itself started.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">For 2,000 years, Aristotle's physics tried to explain motion by <em>purpose</em>. Galileo (c. 1600) changed the question: instead of asking why a ball rolls, he timed it down a ramp and found distance grew with time squared. Measuring first, explaining second — that shift is the scientific method, and kinematics is where it happened.</p>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">2</div>
+        <div style="font-size:22px;font-weight:500;margin:8px 0">You can't write a law about a thing you can't measure.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">Newton's laws are statements about acceleration. Momentum is m·v. Kinetic energy is ½mv². Angular velocity, wave speed, orbital period — all are kinematic ideas wearing new clothes. Define x, v, a precisely once, and every later chapter can build on them instead of redefining them.</p>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">3</div>
+        <div style="font-size:22px;font-weight:500;margin:8px 0">It trains the core skill: reading rates of change.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">Slope means rate. Area means accumulation. Vectors have direction and sign. Graphs and equations are the same information in two forms. Those habits are the actual content of a physics course — kinematics is just the simplest place to learn them, because the "stuff" is only motion.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="sim" data-screen-label="04 Simulator">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">04 · Motion simulator</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">One equation, three graphs, one moving object</h2>
+    <p style="max-width:64ch;margin:0 0 24px;text-wrap:pretty">Set the initial position, initial velocity, and a constant acceleration. Press play and watch the same motion in four representations at once. Try to predict the graph shapes <em>before</em> you press play.</p>
+    <div style="background:#ffffff;border:1px solid #d4d5e2;box-shadow:4px 4px 0 #e4e4f0;padding:24px;display:flex;flex-direction:column;gap:24px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px">
+        <span style="color:#5c5d70;margin-right:4px">Presets</span>
+        <sc-for list="{{ presets }}" as="p" hint-placeholder-count="4">
+          <button onClick="{{ p.apply }}" style="font-family:inherit;font-size:13px;padding:6px 12px;border:1px solid {{ p.border }};background:{{ p.bg }};color:{{ p.color }};cursor:pointer">{{ p.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px">
+        <label style="display:flex;flex-direction:column;gap:6px">
+          <span style="display:flex;justify-content:space-between"><span>x₀ initial position</span><span style="font-weight:600">{{ x0 }} m</span></span>
+          <input type="range" min="-20" max="20" step="1" value="{{ x0 }}" onChange="{{ setX0 }}">
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px">
+          <span style="display:flex;justify-content:space-between"><span style="color:#3e7a58">v₀ initial velocity</span><span style="font-weight:600;color:#3e7a58">{{ v0 }} m/s</span></span>
+          <input type="range" min="-20" max="20" step="0.5" value="{{ v0 }}" onChange="{{ setV0 }}">
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px">
+          <span style="display:flex;justify-content:space-between"><span style="color:#c9573f">a acceleration</span><span style="font-weight:600;color:#c9573f">{{ a }} m/s²</span></span>
+          <input type="range" min="-10" max="10" step="0.1" value="{{ a }}" onChange="{{ setA }}">
+        </label>
+      </div>
+
+      <div>
+        <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;color:#5c5d70;margin-bottom:6px"><span>{{ trackLo }} m</span><span>position along track</span><span>{{ trackHi }} m</span></div>
+        <div style="position:relative;height:56px;border-top:1px solid #d4d5e2;border-bottom:2px solid #22233a;background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),#d4d5e2 calc(10% - 1px) 10%)">
+          <div style="position:absolute;top:0;bottom:0;width:1px;background:#4b4ba8;left:{{ originPct }}%;opacity:0.6"></div>
+          <div style="position:absolute;bottom:6px;left:{{ objPct }}%;transform:translateX(-50%);width:44px;height:26px;background:#4b4ba8;border-radius:6px 6px 3px 3px;box-shadow:inset 0 -6px 0 #3a3a8a;transition:none"></div>
+          <div style="position:absolute;bottom:2px;left:{{ objPct }}%;transform:translateX(-50%);width:52px;display:flex;justify-content:space-between"><span style="width:10px;height:10px;border-radius:50%;background:#22233a"></span><span style="width:10px;height:10px;border-radius:50%;background:#22233a"></span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px">
+        <button onClick="{{ togglePlay }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:10px 20px;border:none;background:#22233a;color:#f6f6fb;cursor:pointer;min-width:110px">{{ playLabel }}</button>
+        <button onClick="{{ reset }}" style="font-family:inherit;font-size:14px;padding:10px 16px;border:1px solid #22233a;background:transparent;color:#22233a;cursor:pointer">Reset</button>
+        <div style="flex:1;min-width:160px"><input type="range" min="0" max="{{ T }}" step="0.01" value="{{ t }}" onChange="{{ setT }}"></div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap">
+          <span>t = <strong>{{ tLabel }}</strong> s</span>
+          <span>x = <strong>{{ xLabel }}</strong> m</span>
+          <span style="color:#3e7a58">v = <strong>{{ vLabel }}</strong> m/s</span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+        <div>
+          <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.08em;color:#22233a;margin-bottom:6px">x – t · position</div>
+          <svg viewBox="0 0 300 150" style="width:100%;height:auto;display:block;background:#f6f6fb;border:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace">
+            <line x1="10" x2="290" y1="{{ xZero }}" y2="{{ xZero }}" stroke="#babbcb" stroke-width="1"></line>
+            <polyline points="{{ xPts }}" fill="none" stroke="#4b4ba8" stroke-width="2"></polyline>
+            <line x1="{{ tX }}" x2="{{ tX }}" y1="10" y2="140" stroke="#22233a" stroke-dasharray="3 3" stroke-width="1"></line>
+            <circle cx="{{ tX }}" cy="{{ xNow }}" r="4" fill="#4b4ba8"></circle>
+            <text x="12" y="16" font-size="9" fill="#5c5d70">{{ xHi }}</text>
+            <text x="12" y="146" font-size="9" fill="#5c5d70">{{ xLo }}</text>
+          </svg>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.08em;color:#3e7a58;margin-bottom:6px">v – t · velocity</div>
+          <svg viewBox="0 0 300 150" style="width:100%;height:auto;display:block;background:#f6f6fb;border:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace">
+            <line x1="10" x2="290" y1="{{ vZero }}" y2="{{ vZero }}" stroke="#babbcb" stroke-width="1"></line>
+            <polyline points="{{ vPts }}" fill="none" stroke="#3e7a58" stroke-width="2"></polyline>
+            <line x1="{{ tX }}" x2="{{ tX }}" y1="10" y2="140" stroke="#22233a" stroke-dasharray="3 3" stroke-width="1"></line>
+            <circle cx="{{ tX }}" cy="{{ vNow }}" r="4" fill="#3e7a58"></circle>
+            <text x="12" y="16" font-size="9" fill="#5c5d70">{{ vHi }}</text>
+            <text x="12" y="146" font-size="9" fill="#5c5d70">{{ vLo }}</text>
+          </svg>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.08em;color:#c9573f;margin-bottom:6px">a – t · acceleration</div>
+          <svg viewBox="0 0 300 150" style="width:100%;height:auto;display:block;background:#f6f6fb;border:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace">
+            <line x1="10" x2="290" y1="{{ aZero }}" y2="{{ aZero }}" stroke="#babbcb" stroke-width="1"></line>
+            <polyline points="{{ aPts }}" fill="none" stroke="#c9573f" stroke-width="2"></polyline>
+            <line x1="{{ tX }}" x2="{{ tX }}" y1="10" y2="140" stroke="#22233a" stroke-dasharray="3 3" stroke-width="1"></line>
+            <circle cx="{{ tX }}" cy="{{ aNow }}" r="4" fill="#c9573f"></circle>
+            <text x="12" y="16" font-size="9" fill="#5c5d70">{{ aHi }}</text>
+            <text x="12" y="146" font-size="9" fill="#5c5d70">{{ aLo }}</text>
+          </svg>
+        </div>
+      </div>
+
+      <sc-if value="{{ showEquations }}" hint-placeholder-val="{{ true }}">
+      <div style="background:#22233a;color:#f6f6fb;padding:16px 20px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;display:flex;flex-wrap:wrap;gap:8px 32px">
+        <span>x(t) = {{ x0 }} + ({{ v0 }})·t + ½({{ a }})·t²</span>
+        <span style="color:#9fd1b3">v(t) = {{ v0 }} + ({{ a }})·t</span>
+        <span style="color:#a9abc8">{{ insight }}</span>
+      </div>
+      </sc-if>
+    </div>
+    <p style="max-width:64ch;margin:20px 0 0;font-size:16px;color:#5c5d70;text-wrap:pretty">Notice: the x‑t curve's slope at any instant equals the height of the v‑t graph there, and the v‑t slope equals the a‑t height. That chain — each graph is the slope of the one before — is the entire structure of kinematics.</p>
+  </section>
+
+  <section id="map" data-screen-label="05 Concept map">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">05 · Where it leads</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Kinematics underneath classical mechanics</h2>
+    <p style="max-width:64ch;margin:0 0 24px;text-wrap:pretty">Click any topic to see what it borrows from kinematics.</p>
+    <div style="display:flex;flex-direction:column;gap:0;align-items:stretch">
+      <sc-for list="{{ tiers }}" as="tier" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70;margin-bottom:8px">{{ tier.label }}</div>
+          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;width:100%">
+            <sc-for list="{{ tier.nodes }}" as="n" hint-placeholder-count="3">
+              <button onClick="{{ n.select }}" style="font-family:'Newsreader',Georgia,serif;font-size:{{ n.size }};font-weight:500;padding:10px 18px;border:1px solid {{ n.border }};background:{{ n.bg }};color:{{ n.color }};cursor:pointer;box-shadow:{{ n.shadow }};min-height:44px">{{ n.label }}</button>
+            </sc-for>
+          </div>
+          <div style="width:1px;height:{{ tier.connector }};background:#babbcb;margin:8px 0"></div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top:8px;background:#ffffff;border:1px solid #d4d5e2;padding:24px;box-shadow:4px 4px 0 #e4e4f0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px">
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:8px">{{ sel.tierLabel }}</div>
+        <div style="font-size:28px;font-weight:500;line-height:1.1">{{ sel.label }}</div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#5c5d70;margin-top:10px">{{ sel.formula }}</div>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70;margin-bottom:8px">What it takes from kinematics</div>
+        <p style="margin:0;font-size:17px;text-wrap:pretty">{{ sel.body }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="check" data-screen-label="06 Check">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">06 · Check for understanding</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Five questions</h2>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:24px">
+      <p style="max-width:56ch;margin:0;text-wrap:pretty">Pick an answer; you'll get feedback immediately. Use the simulator above if you want to test a hunch.</p>
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#5c5d70">Score <strong style="color:#22233a">{{ score }}</strong> / {{ total }}</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <sc-for list="{{ quiz }}" as="q" hint-placeholder-count="5">
+        <div style="background:#ffffff;border:1px solid #d4d5e2;padding:24px">
+          <div style="display:flex;gap:16px;align-items:baseline">
+            <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70;flex-shrink:0">Q{{ q.n }}</span>
+            <p style="margin:0 0 16px;font-size:19px;font-weight:500;text-wrap:pretty">{{ q.text }}</p>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+            <sc-for list="{{ q.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.pick }}" style="text-align:left;font-family:'Newsreader',Georgia,serif;font-size:17px;padding:12px 14px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.color }};cursor:pointer;display:flex;gap:10px;align-items:baseline;min-height:44px"><span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:14px;padding:12px 16px;border-left:3px solid {{ q.fbColor }};background:#f6f6fb;font-size:16px"><strong style="color:{{ q.fbColor }}">{{ q.verdict }}</strong> {{ q.feedback }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid #d4d5e2;padding-top:20px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <span>Unit 0 · Kinematics · describe first, explain second</span>
+    <span>Next: Unit 1 · Newton's laws</span>
+  </footer>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;simDuration&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:8,&quot;min&quot;:3,&quot;max&quot;:15,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Simulator&quot;},&quot;showEquations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Simulator&quot;},&quot;allowRetry&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Quiz&quot;}}">
+class Component extends DCLogic {
+  state = { x0: 0, v0: 12, a: -1.5, t: 0, playing: false, preset: 'brake', node: 'kin', answers: {} };
+  T() { return this.props.simDuration ?? 8; }
+  componentDidMount() {
+    this._last = null;
+    const loop = (ts) => {
+      if (this.state.playing) {
+        const dt = this._last ? (ts - this._last) / 1000 : 0;
+        this._last = ts;
+        let t = this.state.t + dt;
+        if (t >= this.T()) this.setState({ t: this.T(), playing: false });
+        else this.setState({ t });
+      } else this._last = null;
+      this._raf = requestAnimationFrame(loop);
+    };
+    this._raf = requestAnimationFrame(loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this._raf); }
+  pos(t) { const { x0, v0, a } = this.state; return x0 + v0 * t + 0.5 * a * t * t; }
+  vel(t) { return this.state.v0 + this.state.a * t; }
+  series(fn) {
+    const T = this.T(), N = 80, W = 300, H = 150, pad = 10, ys = [];
+    for (let i = 0; i <= N; i++) ys.push(fn(T * i / N));
+    let lo = Math.min(0, ...ys), hi = Math.max(0, ...ys);
+    if (hi - lo < 1e-6) hi = lo + 1;
+    const r = hi - lo; lo -= r * 0.1; hi += r * 0.1;
+    const sx = t => pad + (W - 2 * pad) * t / T, sy = y => H - pad - (H - 2 * pad) * (y - lo) / (hi - lo);
+    return { pts: ys.map((y, i) => sx(T * i / N).toFixed(1) + ',' + sy(y).toFixed(1)).join(' '), sx, sy, zero: sy(0).toFixed(1), lo: (lo + r * 0.1).toFixed(0), hi: (hi - r * 0.1).toFixed(0) };
+  }
+  setParam(k) { return e => this.setState({ [k]: +e.target.value, t: 0, playing: false, preset: null }); }
+  renderVals() {
+    const s = this.state, T = this.T(), t = s.t;
+    const X = this.series(tt => this.pos(tt)), V = this.series(tt => this.vel(tt)), A = this.series(() => s.a);
+    const presetDefs = [
+      { id: 'brake', label: 'Braking car', x0: 0, v0: 12, a: -1.5 },
+      { id: 'cruise', label: 'Constant velocity', x0: -15, v0: 4, a: 0 },
+      { id: 'toss', label: 'Ball tossed up', x0: 0, v0: 15, a: -9.8 },
+      { id: 'reverse', label: 'Speeding up backward', x0: 10, v0: 0, a: -2 }
+    ];
+    const presets = presetDefs.map(p => ({
+      label: p.label,
+      bg: s.preset === p.id ? '#22233a' : 'transparent', color: s.preset === p.id ? '#f6f6fb' : '#22233a', border: s.preset === p.id ? '#22233a' : '#babbcb',
+      apply: () => this.setState({ x0: p.x0, v0: p.v0, a: p.a, t: 0, playing: false, preset: p.id })
+    }));
+    const trackLo = +X.lo, trackHi = +X.hi, span = trackHi - trackLo || 1;
+    const pct = x => 4 + 92 * (x - trackLo) / span;
+    const stopT = s.a !== 0 ? -s.v0 / s.a : null;
+    let insight = 'a = 0 → v never changes, x is a straight line.';
+    if (s.a !== 0 && stopT > 0 && stopT <= T) insight = `v = 0 at t = ${stopT.toFixed(2)} s, x = ${this.pos(stopT).toFixed(1)} m → v–t crosses zero, x–t turns around.`;
+    else if (s.a !== 0) insight = s.a * s.v0 >= 0 ? 'a and v₀ agree in sign → speeding up the whole time.' : 'v never reaches zero in this window.';
+
+    const nodeDefs = [
+      { id: 'kin', tier: 0, label: 'Kinematics', formula: 'x(t), v = dx/dt, a = dv/dt', body: 'The starting point. Position, velocity, acceleration, time — and the graph and equation skills to move between them. Everything below is built from these four symbols.' },
+      { id: 'dyn', tier: 1, label: "Dynamics · Newton's laws", formula: 'ΣF = ma', body: 'The a in F = ma is the kinematic acceleration. Dynamics tells you what a is; kinematics turns that a back into a trajectory. Without kinematics, F = ma predicts nothing you can observe.' },
+      { id: 'energy', tier: 2, label: 'Work & energy', formula: 'K = ½mv², W = FΔx', body: 'Kinetic energy is built on speed; work is force times displacement. The work–energy theorem is literally v² = v₀² + 2aΔx multiplied through by ½m.' },
+      { id: 'mom', tier: 2, label: 'Momentum & collisions', formula: 'p = mv, J = FΔt', body: 'Momentum is mass times a kinematic quantity. Impulse is F = ma rearranged as Δ(mv) = FΔt. Analyzing a collision means reading velocities before and after.' },
+      { id: 'rot', tier: 2, label: 'Rotational motion', formula: 'θ, ω, α — same equations, new symbols', body: 'Angular kinematics is a direct copy: θ for x, ω for v, α for a. The constant‑acceleration equations carry over letter for letter. Torque = Iα mirrors F = ma.' },
+      { id: 'osc', tier: 2, label: 'Oscillations', formula: 'x = A cos(ωt), a = −ω²x', body: 'Simple harmonic motion is defined kinematically: acceleration proportional to displacement and opposite in sign. Period, frequency and phase are all read off the x–t graph.' },
+      { id: 'grav', tier: 3, label: 'Gravitation & orbits', formula: 'a = v²/r = GM/r²', body: 'Circular orbits require centripetal acceleration v²/r — a purely kinematic result — to equal the gravitational acceleration. Kepler’s laws describe planetary kinematics; Newton explained them.' },
+      { id: 'waves', tier: 3, label: 'Waves & sound', formula: 'v = fλ', body: 'A wave is a disturbance whose position changes in time. Wave speed, Doppler shifts and interference all come from tracking where a crest is at time t.' },
+      { id: 'fluids', tier: 3, label: 'Fluids', formula: 'continuity: A₁v₁ = A₂v₂', body: 'Flow rate and Bernoulli’s equation are velocity and energy bookkeeping for a moving fluid — kinematics applied to a continuum rather than a single object.' },
+      { id: 'em', tier: 3, label: 'Electromagnetism', formula: 'F = qE + qv×B → a', body: 'Charged particles in fields accelerate; projectile motion in a uniform E field is the braking‑car problem with a new cause. Circuits aside, E&M mechanics is kinematics with electric forces.' },
+      { id: 'modern', tier: 3, label: 'Relativity & quantum', formula: 'x′, t′; p = ħk', body: 'Special relativity is a revision of kinematics itself — how x and t transform between observers. Quantum mechanics keeps position and momentum as its central observables.' }
+    ];
+    const tierLabels = ['Foundation', 'Explains the motion', 'Reframes the motion', 'Beyond classical mechanics'];
+    const tiers = tierLabels.map((label, i) => ({
+      label, connector: i === 3 ? '0px' : '28px',
+      nodes: nodeDefs.filter(n => n.tier === i).map(n => {
+        const on = s.node === n.id;
+        return { label: n.label, size: i === 0 ? '22px' : '17px', bg: on ? '#22233a' : '#ffffff', color: on ? '#f6f6fb' : '#22233a', border: on ? '#22233a' : '#babbcb', shadow: on ? '3px 3px 0 #4b4ba8' : 'none', select: () => this.setState({ node: n.id }) };
+      })
+    }));
+    const selDef = nodeDefs.find(n => n.id === s.node) || nodeDefs[0];
+    const sel = { ...selDef, tierLabel: tierLabels[selDef.tier] };
+
+    const quizDefs = [
+      { text: 'A car’s v–t graph is a straight line sloping downward that crosses zero at t = 4 s. What does the car do?', options: ['Speeds up in the negative direction the whole time', 'Slows down, is momentarily at rest at 4 s, then speeds up in the opposite direction', 'Its acceleration flips sign at 4 s', 'Its displacement is zero at 4 s'], correct: 1, feedback: 'A straight v–t line means constant acceleration. Crossing zero is a turnaround: speed decreases, hits zero, then grows the other way. The slope (a) never changes.' },
+      { text: 'Which question belongs to kinematics rather than dynamics?', options: ['Why does the ball fall?', 'How much force does the floor exert on the ball?', 'How far does the ball fall in 2 s?', 'What is the ball’s mass?'], correct: 2, feedback: '“How far in how long” is pure description — no cause, no mass, no force. The other three ask why or bring in dynamic quantities.' },
+      { text: 'A ball is thrown straight up. At the very top of its flight:', options: ['v = 0 and a = 0', 'v = 0 and a = 9.8 m/s² downward', 'v ≠ 0 and a = 0', 'v and a are both undefined at a turning point'], correct: 1, feedback: 'Velocity passes through zero, but acceleration is set by gravity and doesn’t care what v is. Check the “Ball tossed up” preset: the v–t line has the same slope at the crossing.' },
+      { text: 'The car from the opener: 12 m/s, braking at 1.5 m/s². Stopping distance?', options: ['8 m', '24 m', '48 m', '96 m'], correct: 2, feedback: 'v² = v₀² + 2aΔx → 0 = 144 + 2(−1.5)Δx → Δx = 48 m. Or: it stops at t = 8 s, and average velocity 6 m/s × 8 s = 48 m.' },
+      { text: 'Why do physics courses start with kinematics?', options: ['It’s the hardest topic, so it needs the most time', 'It defines the variables (x, v, a, t) that every later law is written in terms of', 'It requires no mathematics', 'Newton discovered it before anything else'], correct: 1, feedback: 'F = ma, p = mv, K = ½mv², ω, v = fλ — all are built on kinematic quantities. Define them once, precisely, and the rest of the year can build on them.' }
+    ];
+    const quiz = quizDefs.map((q, qi) => {
+      const picked = s.answers[qi], answered = picked !== undefined, right = picked === q.correct;
+      return {
+        n: qi + 1, text: q.text, answered, feedback: q.feedback,
+        verdict: right ? 'Correct.' : 'Not quite.', fbColor: right ? '#3E7A58' : '#C2413D',
+        options: q.options.map((label, oi) => {
+          const isPick = picked === oi, isCorrect = oi === q.correct;
+          let bg = '#f6f6fb', border = '#d4d5e2', color = '#22233a';
+          if (answered && isCorrect) { bg = '#e3efe8'; border = '#3e7a58'; }
+          else if (answered && isPick) { bg = '#F7E3E2'; border = '#C2413D'; }
+          else if (answered) color = '#8a8b9e';
+          return { label, letter: 'ABCD'[oi], bg, border, color, pick: () => { if (!answered || this.props.allowRetry) this.setState({ answers: { ...s.answers, [qi]: oi } }); } };
+        })
+      };
+    });
+    const score = quizDefs.reduce((n, q, i) => n + (s.answers[i] === q.correct ? 1 : 0), 0);
+
+    return {
+      x0: s.x0, v0: s.v0, a: s.a, t, T, tLabel: t.toFixed(2), xLabel: this.pos(t).toFixed(1), vLabel: this.vel(t).toFixed(1),
+      setX0: this.setParam('x0'), setV0: this.setParam('v0'), setA: this.setParam('a'),
+      setT: e => this.setState({ t: +e.target.value, playing: false }),
+      togglePlay: () => this.setState({ playing: !s.playing, t: s.t >= T ? 0 : s.t }),
+      reset: () => this.setState({ t: 0, playing: false }),
+      playLabel: s.playing ? '❚❚ Pause' : (t >= T ? '↺ Replay' : '▶ Play'),
+      presets, insight, showEquations: this.props.showEquations ?? true,
+      trackLo, trackHi, originPct: pct(0).toFixed(1), objPct: pct(this.pos(t)).toFixed(2),
+      tX: X.sx(t).toFixed(1),
+      xPts: X.pts, xZero: X.zero, xNow: X.sy(this.pos(t)).toFixed(1), xHi: X.hi, xLo: X.lo,
+      vPts: V.pts, vZero: V.zero, vNow: V.sy(this.vel(t)).toFixed(1), vHi: V.hi, vLo: V.lo,
+      aPts: A.pts, aZero: A.zero, aNow: A.sy(s.a).toFixed(1), aHi: A.hi, aLo: A.lo,
+      tiers, sel, quiz, score, total: quizDefs.length
+    };
+  }
+}
+</script>
+</body>
+</html>

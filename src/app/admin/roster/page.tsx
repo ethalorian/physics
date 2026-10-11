@@ -33,10 +33,9 @@ interface ImportedCourse {
 // a level — there is no honors trades — so it maps to program='trades'.
 type ClassType = 'cpa' | 'honors' | 'trades' | 'projects'
 const CLASS_TYPES: { id: ClassType; label: string; track: 'cpa' | 'honors'; program: 'physics' | 'trades' | 'projects'; hint: string }[] = [
-  { id: 'cpa', label: 'CPA', track: 'cpa', program: 'physics', hint: 'CPA Physics — the asteroid curriculum' },
+  { id: 'cpa', label: 'CPA', track: 'cpa', program: 'physics', hint: 'CPA Physics — shared video lessons and mastery targets' },
   { id: 'honors', label: 'Honors', track: 'honors', program: 'physics', hint: 'Honors Physics — unlocks the honors thread' },
   { id: 'trades', label: 'Trades', track: 'cpa', program: 'trades', hint: 'Trades Physics — the fieldhouse curriculum (units, targets, mastery tasks)' },
-  { id: 'projects', label: 'Projects', track: 'cpa', program: 'projects', hint: 'Project Physics — the MVP CPA section, one build per academic week' },
 ]
 const classTypeOf = (track: string | null | undefined, program: string | null | undefined): ClassType =>
   program === 'trades' ? 'trades' : program === 'projects' ? 'projects' : track === 'honors' ? 'honors' : 'cpa'

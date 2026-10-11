@@ -24,6 +24,9 @@ export class LessonResponseStore {
     private request: typeof fetch = (...args) => fetch(...args),
     private storage: () => Storage = () => localStorage) {}
   getSnapshot = () => this.state
+  recordXpTotal = (xp: number) => {
+    if (Number.isFinite(xp) && xp >= 0) this.update({ xpEarned: Math.max(this.state.xpEarned, xp) })
+  }
   subscribe = (listener: () => void) => { this.listeners.add(listener); return () => { this.listeners.delete(listener) } }
   private current = () => this.active && this.isCurrent()
   private update(patch: Partial<ResponseSnapshot>) {
@@ -59,7 +62,7 @@ export class LessonResponseStore {
         return r.json()
       }))
       if (!this.current() || n !== this.loadNumber) return
-      if (typeof a.xpEarned === 'number') this.update({ xpEarned: a.xpEarned })
+      if (typeof a.xpEarned === 'number') this.recordXpTotal(a.xpEarned)
       if (!record(a.responses) || !record(b.drafts)) throw new Error('shape')
       const merged = { ...a.responses } as BlockResponseMap
       const at = (s?: string) => s ? Date.parse(s) || 0 : 0
@@ -137,7 +140,7 @@ export class LessonResponseStore {
         if (!r.ok) return false
         const d = await r.json()
         if (!this.current()) return false
-        if (typeof d.xpEarned === 'number') this.update({ xpEarned: d.xpEarned })
+        if (typeof d.xpEarned === 'number') this.recordXpTotal(d.xpEarned)
         else if (typeof d.xp_awarded === 'number' && d.xp_awarded > 0) this.update({ xpEarned: this.state.xpEarned + d.xp_awarded })
         if (typeof window !== 'undefined' && d.xp_awarded > 0) window.dispatchEvent(new CustomEvent('xp-updated'))
         if (this.revisions[id] !== revision) return false

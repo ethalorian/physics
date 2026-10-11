@@ -9,7 +9,8 @@ import { useRouter } from 'next/navigation'
 import { BookOpen } from 'lucide-react'
 
 export default function LessonsPage() {
-  const { status } = useSession()
+  const { data: session, status } = useSession()
+  const observer = session?.user?.role === 'observer'
   const router = useRouter()
 
   // Redirect if not authenticated
@@ -43,15 +44,15 @@ export default function LessonsPage() {
             <BookOpen className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Physics Lessons</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{observer ? 'Lessons & concept map' : 'Your lessons'}</h1>
             <p className="text-sm text-muted-foreground">
-              Explore concepts through videos, simulations, and interactive content
+              {observer ? 'Browse published video lessons and explore how the concepts connect. Observer access is read-only.' : 'Watch, investigate, and show your thinking. Follow your class learning path.'}
             </p>
           </div>
         </div>
 
         {/* Main Content */}
-        <LessonBrowser />
+        <LessonBrowser observer={observer} />
       </div>
     </EnrollmentGate>
   )

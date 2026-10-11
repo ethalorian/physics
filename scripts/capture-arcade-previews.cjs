@@ -9,6 +9,8 @@ const output = path.join(root, 'public/arcade/previews');
 const raw = '/private/tmp/arcade-preview-captures';
 const files = fs.readdirSync(path.join(root, 'public/games')).filter(f => f.endsWith('.html') && !f.includes('highnoon')).map(f => '/games/' + f);
 files.push('/games/tape-workshop/index.html');
+files.push('/games/cut-and-fit/index.html');
+files.push('/games/centerpoint/index.html');
 let server, browser;
 (async () => {
   fs.mkdirSync(output, { recursive: true });
@@ -23,7 +25,7 @@ let server, browser;
   browser = await chromium.launch({ channel: 'chrome', headless: true });
   const manifest = {};
   for (const srcPath of files) {
-    const name = srcPath.includes('tape-workshop') ? 'tape-workshop' : path.basename(srcPath, '.html');
+    const name = srcPath.endsWith('/index.html') ? path.basename(path.dirname(srcPath)) : path.basename(srcPath, '.html');
     if (process.env.PREVIEW_ONLY && !process.env.PREVIEW_ONLY.split(',').includes(name)) continue;
     const page = await browser.newPage({ viewport: { width: 1000, height: 650 }, deviceScaleFactor: 1 });
     // No API requests, external fonts, or trackers: only local game assets.
@@ -49,6 +51,24 @@ let server, browser;
       await page.locator('#overlay').waitFor({state:'hidden'});
       if (name === 'rotation-tether') { await page.keyboard.down('Space'); await page.waitForTimeout(450); }
       else { await page.keyboard.down('ArrowRight'); await page.waitForTimeout(450); }
+    } else if (name === 'midway-mic-check') {
+      await page.locator('#playerAvatar svg').waitFor();
+      capture = page.locator('.stage-panel');
+    } else if (name === 'midway-pulse') {
+      // The real attract screen previews the chart without starting a run.
+      capture = page.locator('.stage');
+    } else if (name === 'centerpoint') {
+      await page.setViewportSize({ width:1366, height:1000 });
+      await page.locator('[data-bench="face"]').click();
+      await page.locator('#xInput').fill('6');
+      await page.locator('#yInput').fill('4');
+      await page.locator('#placeButton').click();
+      capture = page.locator('#drawing');
+    } else if (name === 'cut-and-fit') {
+      await page.setViewportSize({ width:1366, height:900 });
+      await page.locator('#length').fill('20');
+      await page.locator('#markButton').click();
+      capture = page.locator('.bp-overview');
     } else if (name === 'tape-workshop') {
       await page.locator('#exploreTab').click();
       capture = page.locator('#exploreScale');

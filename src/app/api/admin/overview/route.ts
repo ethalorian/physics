@@ -1,3 +1,4 @@
+import { currentLessonIds } from '@/lib/current-lesson-catalog-server'
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -32,18 +33,19 @@ export const GET = withRole('admin', async () => {
         .filter((e): e is string => !!e),
     ).size
 
+    const currentIds = [...await currentLessonIds()]
     // Published lessons
     const { count: lessonCount } = await supabaseAdmin
       .from('lessons')
       .select('*', { count: 'exact', head: true })
-      .eq('published', true)
+      .eq('published', true).in('id', currentIds)
     overview.publishedLessons = lessonCount ?? 0
 
     // Unpublished lessons = drafts awaiting publish (the actionable "needs you" count)
     const { count: draftCount } = await supabaseAdmin
       .from('lessons')
       .select('*', { count: 'exact', head: true })
-      .eq('published', false)
+      .eq('published', false).in('id', currentIds)
     overview.unpublishedLessons = draftCount ?? 0
 
     // Mastery ratings logged (all-time)

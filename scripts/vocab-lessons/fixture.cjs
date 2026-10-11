@@ -1,0 +1,25 @@
+const fs=require('fs');const base=require('../quiz-grading/fixture.cjs');const {root,id}=base;
+async function createFixture(out){const f=await base.createFixture(out),{fx,course,seed}=f;
+ fx.rows.courses.push({...course,id:id(7),section:'B'},{...course,id:id(8),name:'Engineering',program:'trades',section:'C'});
+ fx.rows.course_students.push(...fx.rows.course_students.map((e,i)=>({...e,id:id(100+i),course_id:id(7)})));
+ fx.rows.units.push({id:'etf-unit-1',name:'Engineering foundations',program:'trades'});
+ fx.rows.learning_targets.forEach(t=>{t.slug=t.id===id(3)?'u1.motion':'u1.reasoning';});
+ fx.rows.lessons=[{id:id(60),title:'Position & displacement',slug:'position-displacement',unit_id:'unit-1',published:true,visibility_track:null,presentation:'physics-path',learning_path:{targetSlugs:['u1.motion']}},{id:id(61),title:'Closed video lesson',unit_id:'unit-1',published:true,visibility_track:null,presentation:'physics-path',learning_path:{targetSlugs:['u1.reasoning']}}];
+ Object.assign(fx.rows.vocabulary_sets[0],{lesson_id:id(60)});
+ fx.rows.vocabulary_sets.push({id:id(71),name:'Closed lesson words',lesson_id:id(61),unit_id:'unit-1',published:true,archived:false},{id:id(72),name:'Legacy vocabulary',lesson_id:id(62),unit_id:'unit-1',published:true,archived:false},{id:id(73),name:'Engineering words',lesson_id:null,unit_id:'etf-unit-1',published:true,archived:false});
+ fx.rows.vocabulary_terms.push({id:id(85),term:'Acceleration',definition:'Rate of velocity change.',vocabulary_set_id:id(71),archived:false},{id:id(86),term:'Model',definition:'A representation.',vocabulary_set_id:id(72),archived:false},{id:id(87),term:'Force',definition:'An interaction.',vocabulary_set_id:id(72),archived:false},{id:id(88),term:'Tolerance',definition:'An allowed variation.',vocabulary_set_id:id(73),archived:false});
+ fx.rows.lesson_class_windows=[{course_id:id(1),lesson_id:id(60),open_at:null,close_at:null}];
+ fx.rows.vocab_tasks=[{id:id(95),course_id:id(7),title:'Review the word model',active:true,student_ids:[id(2)],term_ids:[id(86)],task_kind:'practice',target_id:id(3)}];fx.rows.vocab_assignments=[];fx.rows.vocab_target_terms=[];
+ fx.rows.quiz_assignments.push({...structuredClone(seed),id:id(13),course_id:id(7)});
+ for(const [i,user,quiz,earned] of [[0,id(2),seed,8],[1,id(4),seed,6],[2,id(2),fx.rows.quiz_assignments.at(-1),10]]){
+  const sid=id(200+i);fx.rows.quiz_work.push({quiz_id:quiz.id,user_id:user,state:'graded',version:2,submission_id:sid});
+  fx.rows.quiz_submissions.push({id:sid,quiz_id:quiz.id,user_id:user,snapshot:structuredClone(quiz),answers:{[id(20)]:'1',[id(21)]:'Distance 6m; displacement 0m.',[id(22)]:{format:'problem-workspace',text:'-8 m'}},submitted_at:'2026-09-28T12:00:00Z'});
+  fx.rows.quiz_reviews.push({id:id(300+i),submission_id:sid,decision:'graded',scores:{[id(21)]:4,[id(22)]:earned-6},ratings:{[id(3)]:3,[id(5)]:i===2?3:2},earned,possible:10,reviewed_at:'2026-09-28T13:00:00Z'});
+ }
+ const db=global.quizFakeDB,from=db.from;db.from=table=>{const q=from(table);q.contains=(key,values)=>q.in('id',(fx.rows[table]??[]).filter(r=>values.every(v=>r[key]?.includes(v))).map(r=>r.id));q.limit=n=>q.range(0,n-1);return q};
+ const rpc=db.rpc;db.rpc=async(name,p)=>{if(name==='save_quiz_assignment'){const old=fx.rows.quiz_assignments.find(q=>q.id===p.p_quiz.id);if(old?.version===p.p_quiz.version+1&&Object.keys(p.p_quiz).filter(k=>k!=='version').every(k=>JSON.stringify(old[k])===JSON.stringify(p.p_quiz[k])))return {data:structuredClone(old),error:null}}return rpc(name,p)};
+ const mocks={'server-only':'','next/server':`export const NextResponse={json:(d,o)=>Response.json(d,o)};`,'@/lib/auth':`export const auth=async()=>global.quizFixture.session;`,'@/lib/effective-context':`export const getEffectiveContext=async()=>global.quizFixture.context;`,'@/lib/student-enrollment':`export const requireEnrolledStudent=async()=>null;`,'@/lib/content-access':`export const canEditArea=async()=>false;`,'@/lib/supabase':`export const supabaseAdmin=global.quizFakeDB;`};
+ const routes={vocabulary:'quizzes/vocabulary',reuse:'quizzes/reuse',results:'quizzes/results',sources:'vocab/sources',play:'vocab/play',sets:'vocabulary',vocabCatalog:'vocab/catalog'};
+ for(const[name,file]of Object.entries(routes)){await require(root+'/node_modules/esbuild').build({entryPoints:[root+'/src/app/api/'+file+'/route.ts'],outfile:out+'/'+name+'.cjs',bundle:true,platform:'node',format:'cjs',plugins:[{name:'fixture',setup(b){b.onResolve({filter:/.*/},a=>Object.hasOwn(mocks,a.path)?{path:a.path,namespace:'fixture'}:undefined);b.onLoad({filter:/.*/,namespace:'fixture'},a=>({contents:mocks[a.path],loader:'js'}))}}]});f.handlers[name]=require(out+'/'+name+'.cjs')}
+ f.call=(name,method,body={},quizId=id(10),query='')=>{const url=new URL('http://local/api/'+(routes[name]??('quizzes'+(name==='detail'?'/'+quizId:name==='list'?'':'/'+name)))+query);return f.handlers[name][method]({url:url.href,nextUrl:url,method,json:async()=>body},{params:Promise.resolve({id:quizId})})};return f;
+}module.exports={createFixture,root,id};

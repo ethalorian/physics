@@ -13,6 +13,9 @@ export async function accessVocabTask(id: string, ctx: AuthContext): Promise<Voc
  if(!task) return null
  if(ctx.role==='teacher'||ctx.role==='admin') return (await vocabCourses(ctx)).some(c=>c.id===task.course_id)?task:null
  if(ctx.realRole!=='student'||!task.student_ids.includes(ctx.userId)) return null
+ const {data:course,error:courseError}=await supabaseAdmin.from('courses').select('id').eq('id',task.course_id).is('archived_at',null).maybeSingle()
+ if(courseError)throw courseError
+ if(!course)return null
  const {data:enrollment,error:e}=await supabaseAdmin.from('course_students').select('id').eq('course_id',task.course_id).eq('student_id',ctx.userId).eq('enrollment_state','ACTIVE').maybeSingle()
  if(e) throw e
  return enrollment ? task : null

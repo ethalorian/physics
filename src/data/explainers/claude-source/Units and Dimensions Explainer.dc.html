@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#f6f6fb;color:#22233a;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+a{color:#4b4ba8;text-decoration:none}a:hover{color:#3a3a8a;text-decoration:underline}
+</style>
+</helmet>
+<div style="min-height:100vh;font-family:'Newsreader',Georgia,serif;font-size:18px;line-height:1.55;color:#22233a;background-color:#f6f6fb;background-image:linear-gradient(rgba(75,75,168,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(75,75,168,0.08) 1px,transparent 1px);background-size:24px 24px;background-position:-1px -1px">
+
+<nav style="position:sticky;top:0;z-index:10;background:rgba(246,246,251,0.92);backdrop-filter:blur(6px);border-bottom:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase">
+  <div style="max-width:1000px;margin:0 auto;padding:12px 24px;display:flex;flex-wrap:nowrap;gap:6px 18px;align-items:center;overflow-x:auto">
+    <a href="Course Explainer - 2026-XJ.dc.html" style="display:flex;align-items:center;gap:10px;margin-right:auto;color:#22233a;text-decoration:none;min-width:0;flex:1 1 0;overflow:hidden"><svg width="28" height="28" viewBox="0 0 40 40" aria-label="Antocci Physics" style="display:block;flex-shrink:0"><circle cx="20" cy="20" r="20" fill="#4B4BA8"></circle><path d="M6 29 H11.5 L20 8.5 L28.5 29 H34" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></path><path d="M15.6 21.5 H24.4" stroke="#9FD1B3" stroke-width="2.6" stroke-linecap="round"></path><circle cx="20" cy="8.5" r="2.6" fill="#F0A58A"></circle></svg><span style="font-weight:600;white-space:nowrap;letter-spacing:0.08em;flex-shrink:0">Antocci Physics</span><span style="color:#5c5d70;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis">· Unit 0 · Units &amp; dimensions</span></a>
+    <a href="#quantities" style="color:#5c5d70;white-space:nowrap">01 Quantities</a>
+    <a href="#build" style="color:#5c5d70;white-space:nowrap">02 Build a unit</a>
+    <a href="#common" style="color:#5c5d70;white-space:nowrap">03 The usual suspects</a>
+    <a href="#why" style="color:#5c5d70;white-space:nowrap">04 Why it matters</a>
+    <a href="#tool" style="color:#5c5d70;white-space:nowrap">05 Units as a tool</a>
+    <a href="#check" style="color:#5c5d70;white-space:nowrap">06 Check</a>
+  </div>
+</nav>
+
+<main style="max-width:1000px;margin:0 auto;padding:24px 24px 96px;display:flex;flex-direction:column;gap:72px">
+
+  <header data-screen-label="Hook" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;align-items:end;padding-top:40px">
+    <div>
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:16px">AP Physics · Lab notebook 02</div>
+      <h1 style="font-size:clamp(40px,6vw,64px);line-height:1.02;font-weight:500;margin:0 0 20px;letter-spacing:-0.02em;text-wrap:balance">A number without a unit isn't a measurement. It's a guess.</h1>
+      <p style="font-size:20px;margin:0;max-width:52ch;text-wrap:pretty">Every quantity in physics is a number <em>times</em> a unit, and every unit is built from a handful of basic dimensions. Learn to read them and equations start telling you what they mean before you calculate anything.</p>
+    </div>
+    <div style="background:#ffffff;border:1px solid #d4d5e2;padding:24px;box-shadow:4px 4px 0 #e4e4f0">
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70;margin-bottom:12px">The phenomenon · 1999</div>
+      <p style="margin:0 0 12px;font-size:19px">NASA's Mars Climate Orbiter arrived after a nine‑month flight — and vanished into the Martian atmosphere.</p>
+      <p style="margin:0 0 16px;font-size:19px;font-weight:600">One team's software reported thruster impulse in pound‑force·seconds. The other team read it as newton·seconds. Off by a factor of 4.45.</p>
+      <p style="margin:0;color:#5c5d70;font-size:16px">Every number was computed correctly. The units weren't. That mistake cost $327 million and a spacecraft.</p>
+    </div>
+  </header>
+
+  <section id="quantities" data-screen-label="01 Quantities">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">01 · Physical quantities</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Three dimensions build all of mechanics</h2>
+    <p style="max-width:64ch;margin:0 0 28px;text-wrap:pretty">A <strong>dimension</strong> is the <em>kind</em> of thing you're measuring — length, mass, time. A <strong>unit</strong> is the agreed‑on amount of it you count with — meters, kilograms, seconds. Mechanics needs only three dimensions. Everything else — speed, force, energy, pressure — is a combination of them.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-family:'IBM Plex Mono',ui-monospace,monospace"><span style="font-size:32px;font-weight:600;color:#4b4ba8">L</span><span style="font-size:12px;color:#5c5d70">meter · m</span></div>
+        <div style="font-weight:600;margin:10px 0 4px">Length</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58">How far. Defined today by the distance light travels in 1/299 792 458 s — so a meter is the same in every lab on Earth.</p>
+      </div>
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-family:'IBM Plex Mono',ui-monospace,monospace"><span style="font-size:32px;font-weight:600;color:#3e7a58">M</span><span style="font-size:12px;color:#5c5d70">kilogram · kg</span></div>
+        <div style="font-weight:600;margin:10px 0 4px">Mass</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58">How much stuff — and how hard it is to accelerate. Since 2019, fixed by Planck's constant rather than a metal cylinder in a vault near Paris.</p>
+      </div>
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-family:'IBM Plex Mono',ui-monospace,monospace"><span style="font-size:32px;font-weight:600;color:#c9573f">T</span><span style="font-size:12px;color:#5c5d70">second · s</span></div>
+        <div style="font-weight:600;margin:10px 0 4px">Time</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58">How long. One second is 9 192 631 770 oscillations of a cesium‑133 atom — the most precisely realized unit we have.</p>
+      </div>
+    </div>
+    <sc-if value="{{ showAllSeven }}" hint-placeholder-val="{{ false }}">
+    <div style="margin-top:16px;background:#ffffff;border:1px solid #d4d5e2;padding:16px 20px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px;color:#3e3f58;display:flex;flex-wrap:wrap;gap:8px 24px">
+      <span style="color:#5c5d70;letter-spacing:0.08em;text-transform:uppercase;font-size:11px;width:100%">The other four SI base units · used beyond mechanics</span>
+      <span>I · electric current · ampere (A)</span><span>Θ · temperature · kelvin (K)</span><span>N · amount · mole (mol)</span><span>J · luminous intensity · candela (cd)</span>
+    </div>
+    </sc-if>
+    <div style="margin-top:24px;background:#22233a;color:#f6f6fb;padding:20px 24px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:15px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 32px">
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">NOTATION</div>[velocity] = L T⁻¹</div>
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">READ AS</div>"the dimensions of velocity are length per time"</div>
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">IN SI UNITS</div>m/s · but also mph, knots, furlongs per fortnight</div>
+    </div>
+  </section>
+
+  <section id="build" data-screen-label="02 Build a unit">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">02 · Base units vs. derived units</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Every derived unit is a recipe</h2>
+    <p style="max-width:64ch;margin:0 0 24px;text-wrap:pretty">A <strong>base unit</strong> is defined directly: m, kg, s. A <strong>derived unit</strong> is a product of powers of base units — nothing more. Some get their own name (newton, joule, watt) because we use them constantly, but the name is a nickname for the recipe. Set the exponents and see what you've built.</p>
+    <div style="background:#ffffff;border:1px solid #d4d5e2;box-shadow:4px 4px 0 #e4e4f0;padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ dims }}" as="d" hint-placeholder-count="3">
+          <div style="display:flex;align-items:center;gap:14px;font-family:'IBM Plex Mono',ui-monospace,monospace">
+            <span style="font-size:28px;font-weight:600;color:{{ d.color }};width:28px">{{ d.sym }}</span>
+            <span style="font-size:13px;color:#5c5d70;width:70px">{{ d.name }}</span>
+            <button onClick="{{ d.dec }}" style="font-family:inherit;font-size:16px;width:44px;height:44px;border:1px solid #22233a;background:transparent;color:#22233a;cursor:pointer">−</button>
+            <span style="font-size:22px;font-weight:600;width:36px;text-align:center">{{ d.exp }}</span>
+            <button onClick="{{ d.inc }}" style="font-family:inherit;font-size:16px;width:44px;height:44px;border:1px solid #22233a;background:transparent;color:#22233a;cursor:pointer">+</button>
+          </div>
+        </sc-for>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px">
+          <span style="color:#5c5d70;align-self:center">Jump to</span>
+          <sc-for list="{{ jumps }}" as="j" hint-placeholder-count="5">
+            <button onClick="{{ j.apply }}" style="font-family:inherit;font-size:12px;padding:6px 10px;border:1px solid #babbcb;background:transparent;color:#22233a;cursor:pointer;white-space:nowrap">{{ j.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="background:#22233a;color:#f6f6fb;padding:18px 20px;font-family:'IBM Plex Mono',ui-monospace,monospace">
+          <div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">DIMENSIONS</div>
+          <div style="font-size:26px;font-weight:600">{{ dimFormula }}</div>
+          <div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin:14px 0 6px">SI UNITS</div>
+          <div style="font-size:22px">{{ siUnits }}</div>
+        </div>
+        <div style="border:1px solid {{ matchBorder }};background:{{ matchBg }};padding:16px 20px">
+          <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70;margin-bottom:4px">{{ matchKicker }}</div>
+          <div style="font-size:24px;font-weight:500">{{ matchName }}</div>
+          <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#3e3f58;margin-top:4px">{{ matchUnit }}</div>
+          <p style="margin:10px 0 0;font-size:16px;color:#3e3f58">{{ matchNote }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="common" data-screen-label="03 Common units">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">03 · The units you'll actually use</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">The mechanics toolkit</h2>
+    <p style="max-width:64ch;margin:0 0 24px;text-wrap:pretty">Twelve quantities cover almost every problem this year. Learn the base‑unit recipe for each — it's what lets you check your work by inspection.</p>
+    <div style="border:1px solid #d4d5e2;background:#ffffff">
+      <div style="display:grid;grid-template-columns:minmax(120px,1.4fr) minmax(70px,0.7fr) minmax(90px,1fr) minmax(110px,1.3fr);gap:0 16px;padding:10px 20px;border-bottom:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70">
+        <span>Quantity</span><span>Symbol</span><span>SI unit</span><span>In base units</span>
+      </div>
+      <sc-for list="{{ table }}" as="r" hint-placeholder-count="12">
+        <div style="display:grid;grid-template-columns:minmax(120px,1.4fr) minmax(70px,0.7fr) minmax(90px,1fr) minmax(110px,1.3fr);gap:0 16px;padding:10px 20px;border-bottom:1px solid #e4e4f0;align-items:baseline;font-size:17px">
+          <span style="font-weight:500">{{ r.q }}</span>
+          <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#4b4ba8">{{ r.sym }}</span>
+          <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px">{{ r.si }}</span>
+          <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#3e3f58">{{ r.base }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <p style="max-width:64ch;margin:20px 0 0;font-size:16px;color:#5c5d70;text-wrap:pretty">Notice the pattern: newton, joule, watt and pascal are all just kg·m·s combinations that earned a nickname. If you forget one, rebuild it from a formula you trust — F = ma gives kg·m/s² every time.</p>
+  </section>
+
+  <section id="why" data-screen-label="04 Why it matters">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">04 · Why units matter</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 28px;letter-spacing:-0.01em">Units aren't bookkeeping. They're physics.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px">
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">1</div>
+        <div style="font-size:22px;font-weight:500;margin:8px 0">They make numbers mean something.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">"The car is going 30" is not information. 30 m/s is highway speed; 30 km/h is a school zone. The Mars orbiter was lost by people who all had the right numbers.</p>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">2</div>
+        <div style="font-size:22px;font-weight:500;margin:8px 0">Both sides of an equation must match.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">You can't set a length equal to a time, or add a force to an energy. This rule — <em>dimensional homogeneity</em> — lets you reject a wrong formula in ten seconds, before you touch a calculator.</p>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">3</div>
+        <div style="font-size:22px;font-weight:500;margin:8px 0">They tell you what an equation is <em>for</em>.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">An answer in kg·m/s² is a force — whatever you called it. An answer in J/s is a power. Units are the fastest way to tell whether you've computed the thing you were asked for.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="tool" data-screen-label="05 Units as a tool">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">05 · Dimensional analysis as a problem‑solving tool</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Let the units do the thinking</h2>
+    <p style="max-width:64ch;margin:0 0 24px;text-wrap:pretty">A simple pendulum has length L and swings under gravity g. Four students propose formulas for its period T. Click each one and check the dimensions of the right‑hand side against the left.</p>
+    <div style="background:#ffffff;border:1px solid #d4d5e2;box-shadow:4px 4px 0 #e4e4f0;padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ candidates }}" as="c" hint-placeholder-count="4">
+          <button onClick="{{ c.select }}" style="text-align:left;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:17px;padding:14px 16px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px;box-shadow:{{ c.shadow }}"><span>{{ c.formula }}</span><span style="font-size:12px;letter-spacing:0.08em;color:{{ c.tagColor }}">{{ c.tag }}</span></button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="background:#22233a;color:#f6f6fb;padding:18px 20px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:15px;display:flex;flex-direction:column;gap:8px">
+          <div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8">CHECKING · {{ selC.formula }}</div>
+          <sc-for list="{{ selC.steps }}" as="st" hint-placeholder-count="3">
+            <div>{{ st }}</div>
+          </sc-for>
+          <div style="margin-top:6px;font-weight:600;color:{{ selC.verdictColor }}">{{ selC.verdict }}</div>
+        </div>
+        <div style="padding:12px 16px;border-left:3px solid {{ selC.markColor }};background:#f6f6fb;font-size:16px">{{ selC.note }}</div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:24px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#3e7a58;margin-bottom:8px">Habit 1 · Aim at the target unit</div>
+        <p style="margin:0 0 10px;font-size:17px">Stuck? Write down the unit of the answer, then look at what you have.</p>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#3e3f58;line-height:1.8">Want: s &nbsp;·&nbsp; Have: 20 m and 9.8 m/s²<br>m ÷ (m/s²) = s² → √ → s<br>t = √(2·20/9.8) ≈ 2.0 s</div>
+      </div>
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:24px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#3e7a58;margin-bottom:8px">Habit 2 · Guess the form of a law</div>
+        <p style="margin:0 0 10px;font-size:17px">Air drag on a falling object depends on air density ρ, speed v and area A. What's the formula?</p>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#3e3f58;line-height:1.8">[F] = M L T⁻² &nbsp; [ρ] = M L⁻³ &nbsp; [v] = L T⁻¹ &nbsp; [A] = L²<br>Only ρ carries M → ρ¹. Only v carries T → v².<br>Then L: −3 + 2 + 2a = 1 → A¹.<br><strong style="color:#22233a">F ∝ ρ v² A</strong> — right up to a number.</div>
+      </div>
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:24px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#3e7a58;margin-bottom:8px">Habit 3 · Multiply by one</div>
+        <p style="margin:0 0 10px;font-size:17px">Converting units is multiplying by fractions equal to 1, arranged so the old unit cancels.</p>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#3e3f58;line-height:1.8">72 km/h × (1000 m / 1 km) × (1 h / 3600 s)<br>= 72 × 1000 / 3600 m/s<br>= <strong style="color:#22233a">20 m/s</strong></div>
+      </div>
+    </div>
+    <div style="margin-top:24px;background:#22233a;color:#f6f6fb;padding:20px 24px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:15px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 32px">
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">WHAT UNITS CAN DO</div>Reject wrong formulas. Predict the form of unknown ones. Tell you what you've computed.</div>
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#9fd1b3;margin-bottom:6px">WHAT THEY CAN'T</div>Find pure numbers — the 2π, the ½, the 4.45. Those need real physics or a measurement.</div>
+    </div>
+  </section>
+
+  <section id="check" data-screen-label="06 Check">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">06 · Check for understanding</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Five questions</h2>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:24px">
+      <p style="max-width:56ch;margin:0;text-wrap:pretty">Pick an answer; you'll get feedback immediately. The unit builder above is fair game.</p>
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#5c5d70">Score <strong style="color:#22233a">{{ score }}</strong> / {{ total }}</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <sc-for list="{{ quiz }}" as="q" hint-placeholder-count="5">
+        <div style="background:#ffffff;border:1px solid #d4d5e2;padding:24px">
+          <div style="display:flex;gap:16px;align-items:baseline">
+            <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70;flex-shrink:0">Q{{ q.n }}</span>
+            <p style="margin:0 0 16px;font-size:19px;font-weight:500;text-wrap:pretty">{{ q.text }}</p>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+            <sc-for list="{{ q.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.pick }}" style="text-align:left;font-family:'Newsreader',Georgia,serif;font-size:17px;padding:12px 14px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.color }};cursor:pointer;display:flex;gap:10px;align-items:baseline;min-height:44px"><span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:14px;padding:12px 16px;border-left:3px solid {{ q.fbColor }};background:#f6f6fb;font-size:16px"><strong style="color:{{ q.fbColor }}">{{ q.verdict }}</strong> {{ q.feedback }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid #d4d5e2;padding-top:20px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <span>Unit 0 · Units &amp; dimensions · a number times a unit</span>
+    <span style="display:flex;gap:18px;flex-wrap:wrap"><a href="Kinematics Explainer.dc.html">Lab notebook 00 · Kinematics</a><a href="Vectors and Scalars Explainer.dc.html">Lab notebook 01 · Vectors</a></span>
+  </footer>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showAllSeven&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;allowRetry&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Quiz&quot;}}">
+class Component extends DCLogic {
+  state = { exps: { L: 1, M: 0, T: -1 }, cand: 0, answers: {} };
+  SUP = { '-': '⁻', '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵' };
+  sup(n) { return n === 1 ? '' : String(n).split('').map(c => this.SUP[c] || c).join(''); }
+  dimStr(e) {
+    const parts = [['L', e.L], ['M', e.M], ['T', e.T]].filter(([, n]) => n !== 0).map(([s, n]) => s + this.sup(n));
+    return parts.length ? parts.join(' ') : '1 (dimensionless)';
+  }
+  siStr(e) {
+    const u = { L: 'm', M: 'kg', T: 's' }, order = ['M', 'L', 'T'];
+    const num = order.filter(k => e[k] > 0).map(k => u[k] + this.sup(e[k])), den = order.filter(k => e[k] < 0).map(k => u[k] + this.sup(-e[k]));
+    if (!num.length && !den.length) return '—';
+    if (!den.length) return num.join('·');
+    return (num.length ? num.join('·') : '1') + '/' + (den.length > 1 ? '(' + den.join('·') + ')' : den[0]);
+  }
+  KNOWN = {
+    '1,0,0': ['Length', 'meter · m', 'Base unit', 'One of the three you start with.'],
+    '0,1,0': ['Mass', 'kilogram · kg', 'Base unit', 'One of the three you start with.'],
+    '0,0,1': ['Time', 'second · s', 'Base unit', 'One of the three you start with.'],
+    '2,0,0': ['Area', 'm²', 'Derived', 'Length squared. No special name.'],
+    '3,0,0': ['Volume', 'm³', 'Derived', 'The liter (10⁻³ m³) is a nickname, not an SI unit.'],
+    '1,0,-1': ['Velocity · speed', 'm/s', 'Derived', 'Length per time. The first derived unit in every physics course.'],
+    '1,0,-2': ['Acceleration', 'm/s²', 'Derived', 'Velocity per time — length per time, per time. g ≈ 9.8 of these.'],
+    '0,0,-1': ['Frequency', 'hertz · Hz = 1/s', 'Derived · named', 'Cycles per second. Also the unit of angular velocity (rad/s), since radians are dimensionless.'],
+    '1,1,-2': ['Force', 'newton · N = kg·m/s²', 'Derived · named', 'From F = ma: mass times acceleration. About the weight of a small apple.'],
+    '2,1,-2': ['Energy · work', 'joule · J = kg·m²/s²', 'Derived · named', 'Force times distance, or ½mv². Lift that apple one meter: one joule.'],
+    '2,1,-3': ['Power', 'watt · W = J/s', 'Derived · named', 'Energy per time. A joule every second.'],
+    '1,1,-1': ['Momentum · impulse', 'kg·m/s = N·s', 'Derived', 'Mass times velocity. Also force times time — that\'s why impulse and momentum share a unit. This is the unit the Mars orbiter teams disagreed on.'],
+    '-1,1,-2': ['Pressure · stress', 'pascal · Pa = N/m²', 'Derived · named', 'Force per area. Atmospheric pressure is about 101 000 of these.'],
+    '-3,1,0': ['Density', 'kg/m³', 'Derived', 'Mass per volume. Water: 1000 kg/m³.'],
+    '2,1,-1': ['Angular momentum · action', 'kg·m²/s = J·s', 'Derived', 'Planck\'s constant h has exactly these dimensions — the unit that now defines the kilogram.'],
+    '2,1,0': ['Moment of inertia', 'kg·m²', 'Derived', 'Mass times distance squared — how hard something is to spin up.'],
+    '0,1,-2': ['Spring constant', 'N/m = kg/s²', 'Derived', 'Force per length, from Hooke\'s law F = −kx.'],
+    '0,0,0': ['Dimensionless', 'pure number', '—', 'Ratios, angles in radians, coefficients of friction. Same in every unit system.']
+  };
+  renderVals() {
+    const s = this.state, e = s.exps;
+    const colors = { L: '#4b4ba8', M: '#3e7a58', T: '#c9573f' }, names = { L: 'length', M: 'mass', T: 'time' };
+    const dims = ['L', 'M', 'T'].map(k => ({
+      sym: k, name: names[k], color: colors[k], exp: e[k] > 0 ? '+' + e[k] : String(e[k]),
+      inc: () => this.setState({ exps: { ...e, [k]: Math.min(3, e[k] + 1) } }), dec: () => this.setState({ exps: { ...e, [k]: Math.max(-3, e[k] - 1) } })
+    }));
+    const jumps = [['Force', 1, 1, -2], ['Energy', 2, 1, -2], ['Power', 2, 1, -3], ['Pressure', -1, 1, -2], ['Momentum', 1, 1, -1], ['Density', -3, 1, 0]].map(([label, L, M, T]) => ({ label, apply: () => this.setState({ exps: { L, M, T } }) }));
+    const key = [e.L, e.M, e.T].join(','), known = this.KNOWN[key];
+    const match = known ? { matchKicker: known[2], matchName: known[0], matchUnit: known[1], matchNote: known[3], matchBorder: '#3e7a58', matchBg: '#e3efe8' }
+      : { matchKicker: 'Derived · unnamed', matchName: 'A perfectly legal unit', matchUnit: this.siStr(e), matchNote: 'Nothing in mechanics is commonly measured in this — but it\'s still a valid product of base units. Not every recipe gets a name.', matchBorder: '#d4d5e2', matchBg: '#ffffff' };
+
+    const candDefs = [
+      { formula: 'T = 2π √(L / g)', ok: true, steps: ['[L / g] = L ÷ (L T⁻²) = T²', '√(T²) = T', 'LHS [T] = T'], note: 'Dimensionally consistent — and it happens to be the real formula. Note what dimensional analysis can\'t tell you: the 2π.' },
+      { formula: 'T = 2π √(g / L)', ok: false, steps: ['[g / L] = (L T⁻²) ÷ L = T⁻²', '√(T⁻²) = T⁻¹', 'LHS [T] = T ≠ T⁻¹'], note: 'Upside down. This has units of frequency, not period — a common slip that dimensions catch instantly.' },
+      { formula: 'T = 2π L / g', ok: false, steps: ['[L / g] = L ÷ (L T⁻²) = T²', 'no square root', 'LHS [T] = T ≠ T²'], note: 'Right ingredients, missing the square root. Seconds squared isn\'t a time.' },
+      { formula: 'T = 2π √(m L / g)', ok: false, steps: ['[m L / g] = M · L ÷ (L T⁻²) = M T²', '√(M T²) = M^½ T', 'LHS [T] = T ≠ M^½ T'], note: 'The mass has nowhere to go — nothing else in the problem carries M to cancel it. So the period of a pendulum can\'t depend on its mass. You just proved that without an experiment.' }
+    ];
+    const candidates = candDefs.map((c, i) => {
+      const on = s.cand === i;
+      return { formula: c.formula, select: () => this.setState({ cand: i }), bg: on ? '#22233a' : '#f6f6fb', color: on ? '#f6f6fb' : '#22233a', border: on ? '#22233a' : '#babbcb', shadow: on ? '3px 3px 0 #4b4ba8' : 'none', tag: c.ok ? 'CONSISTENT' : 'FAILS', tagColor: c.ok ? (on ? '#9FD1B3' : '#3E7A58') : (on ? '#F0A58A' : '#C2413D') };
+    });
+    const sc = candDefs[s.cand];
+    const selC = { formula: sc.formula, steps: sc.steps, verdict: sc.ok ? '✓ Both sides are T. The formula passes.' : '✗ Sides don\'t match. Reject it.', verdictColor: sc.ok ? '#9fd1b3' : '#f0a58a', markColor: sc.ok ? '#3E7A58' : '#C2413D', note: sc.note };
+
+    const table = [
+      ['Length', 'x, d, L', 'm', 'm'], ['Mass', 'm', 'kg', 'kg'], ['Time', 't', 's', 's'],
+      ['Velocity', 'v', 'm/s', 'm·s⁻¹'], ['Acceleration', 'a', 'm/s²', 'm·s⁻²'], ['Force', 'F', 'N', 'kg·m·s⁻²'],
+      ['Momentum', 'p', 'kg·m/s', 'kg·m·s⁻¹'], ['Energy / work', 'E, K, U, W', 'J', 'kg·m²·s⁻²'], ['Power', 'P', 'W', 'kg·m²·s⁻³'],
+      ['Pressure', 'P', 'Pa', 'kg·m⁻¹·s⁻²'], ['Frequency', 'f', 'Hz', 's⁻¹'], ['Density', 'ρ', 'kg/m³', 'kg·m⁻³']
+    ].map(([q, sym, si, base]) => ({ q, sym, si, base }));
+
+    const quizDefs = [
+      { text: 'Which pair has the same dimensions?', options: ['Force and energy', 'Impulse and momentum', 'Power and work', 'Pressure and force'], correct: 1, feedback: 'Impulse is F·Δt = (M L T⁻²)(T) = M L T⁻¹; momentum is m·v = M · L T⁻¹. Identical — which is exactly why impulse changes momentum.' },
+      { text: 'A student derives that the speed of a wave on a string is v = √(T/μ), where T is tension (N) and μ is mass per length (kg/m). Does it pass a dimension check?', options: ['No — the units come out as kg', 'No — the units come out as m/s²', 'Yes — √(N ÷ kg/m) = √(m²/s²) = m/s', 'Can\'t tell without knowing the string'], correct: 2, feedback: 'N ÷ (kg/m) = (kg·m/s²)(m/kg) = m²/s². Square root: m/s. The formula is dimensionally sound (and correct).' },
+      { text: 'The Mars Climate Orbiter was lost because two teams used different units for:', options: ['Distance to Mars', 'Thruster impulse (force × time)', 'Fuel mass', 'Orbital period'], correct: 1, feedback: 'One system output pound‑force·seconds; the other expected newton·seconds. Same dimension (M L T⁻¹), different unit, factor of 4.45 — enough to drop the orbit into the atmosphere.' },
+      { text: 'Which of these is a base SI unit?', options: ['Newton', 'Joule', 'Kilogram', 'Liter'], correct: 2, feedback: 'The kilogram is defined directly. Newton and joule are named recipes of kg, m and s; the liter isn\'t SI at all (it\'s 10⁻³ m³).' },
+      { text: 'You need a time, and the problem gives you a height h (m) and g (m/s²). Before any algebra, the combination that yields seconds is:', options: ['h · g', 'g / h', '√(h / g)', '√(g / h)'], correct: 2, feedback: 'm ÷ (m/s²) = s², and a square root gives s. Dimensional analysis hands you the form of the answer — the actual √(2h/g) just adds the number.' }
+    ];
+    const quiz = quizDefs.map((q, qi) => {
+      const picked = s.answers[qi], answered = picked !== undefined, right = picked === q.correct;
+      return {
+        n: qi + 1, text: q.text, answered, feedback: q.feedback, verdict: right ? 'Correct.' : 'Not quite.', fbColor: right ? '#3E7A58' : '#C2413D',
+        options: q.options.map((label, oi) => {
+          const isPick = picked === oi, isCorrect = oi === q.correct;
+          let bg = '#f6f6fb', border = '#d4d5e2', color = '#22233a';
+          if (answered && isCorrect) { bg = '#e3efe8'; border = '#3e7a58'; } else if (answered && isPick) { bg = '#F7E3E2'; border = '#C2413D'; } else if (answered) color = '#8a8b9e';
+          return { label, letter: 'ABCD'[oi], bg, border, color, pick: () => { if (!answered || this.props.allowRetry) this.setState({ answers: { ...s.answers, [qi]: oi } }); } };
+        })
+      };
+    });
+    const score = quizDefs.reduce((n, q, i) => n + (s.answers[i] === q.correct ? 1 : 0), 0);
+
+    return { dims, jumps, dimFormula: this.dimStr(e), siUnits: this.siStr(e), ...match, candidates, selC, table, quiz, score, total: quizDefs.length, showAllSeven: this.props.showAllSeven ?? false };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,3 +1,4 @@
+import {checkedLessonResponse} from '@/lib/lesson-response-validation'
 import { authorizeLesson } from '@/lib/lesson-access'
 import { isCaptureBlock } from '@/data/content-blocks'
 import { NextResponse } from 'next/server'
@@ -17,7 +18,6 @@ import { withAuth, withEnrolledStudent } from '@/lib/api-auth'
 // clears the draft. sendBeacon can only POST, which is why this is POST not PUT.
 
 const MAX_DRAFTS = 40
-const MAX_BYTES = 200_000 // a sketch's strokes; anything larger is dropped, not stored
 
 export const POST = withEnrolledStudent(async (request, ctx) => {
   const body = await request.json().catch(() => null) as { lesson_id?: string; expected_user_id?: string; drafts?: { block_id?: string; block_type?: string; response?: unknown }[] } | null
@@ -28,11 +28,12 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
   if (!access.ok) return access.response
   const blocks = new Map((access.document?.blocks ?? []).filter(isCaptureBlock).map((b) => [b.id, b]))
   if (body.drafts.some((d) => !d.block_id || !blocks.has(d.block_id))) return NextResponse.json({ error: 'A draft block is not assigned in this lesson.' }, { status: 422 })
+  const checkedDrafts=[]
+  for(const d of body.drafts.slice(0,MAX_DRAFTS)){if(d.response===undefined||d.response===null)continue;const checked=checkedLessonResponse(blocks.get(d.block_id!)!,d.response);if(!checked.ok)return NextResponse.json({error:checked.error},{status:422});checkedDrafts.push({...d,response:checked.response})}
   const now = new Date().toISOString()
-  const rows = body!.drafts!
+  const rows = checkedDrafts
     .filter((d) => typeof d.block_id === 'string' && d.block_id && d.response !== undefined && d.response !== null)
     .slice(0, MAX_DRAFTS)
-    .filter((d) => JSON.stringify(d.response).length <= MAX_BYTES)
     .map((d) => ({ user_id: ctx.userId, lesson_id: lessonId, block_id: d.block_id!, block_type: blocks.get(d.block_id!)!.type, response: d.response, updated_at: now }))
   if (rows.length === 0) return NextResponse.json({ ok: true, saved: 0 })
   const { error } = await supabaseAdmin.from('block_drafts').upsert(rows, { onConflict: 'user_id,lesson_id,block_id' })

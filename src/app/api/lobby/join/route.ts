@@ -25,7 +25,7 @@ export const POST = withAuth(async (request, ctx) => {
   if (!session) return NextResponse.json({ error: 'No lobby with that code' }, { status: 404 })
   if (session.status === 'closed') return NextResponse.json({ error: 'This lobby is closed' }, { status: 410 })
 
-  const { data: enrolled } = await supabaseAdmin.from('course_students').select('student_id').eq('course_id', session.course_id).eq('student_id', ctx.userId).maybeSingle()
+  const { data: enrolled } = await supabaseAdmin.from('course_students').select('student_id').eq('course_id', session.course_id).eq('student_id', ctx.userId).eq('enrollment_state','ACTIVE').maybeSingle()
   if (!enrolled) return NextResponse.json({ error: 'Not enrolled in this lobby class' }, { status: 403 })
 
   const { error } = await supabaseAdmin
@@ -45,7 +45,7 @@ export const GET = withAuth(async (request, ctx) => {
   const session = await findOpenSession(code)
   if (!session) return NextResponse.json({ error: 'No lobby with that code' }, { status: 404 })
 
-  const { data: enrolled } = await supabaseAdmin.from('course_students').select('student_id').eq('course_id', session.course_id).eq('student_id', ctx.userId).maybeSingle()
+  const { data: enrolled } = await supabaseAdmin.from('course_students').select('student_id').eq('course_id', session.course_id).eq('student_id', ctx.userId).eq('enrollment_state','ACTIVE').maybeSingle()
   if (!enrolled) return NextResponse.json({ error: 'Not enrolled in this lobby class' }, { status: 403 })
 
   const { data: member } = await supabaseAdmin

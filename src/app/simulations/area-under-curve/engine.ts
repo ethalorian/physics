@@ -1,5 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
-import { PAL, clearField, axes as drawAxes, label, chip } from '@/components/simulations/lab/draw'
+import { PAL, clearField, label, chip } from '@/components/simulations/lab/draw'
 
 // Area under the curve — an input-driven graphing tutorial. Two control points
 // define a line on a v-t / a-t / x-t graph; the shaded region between the line
@@ -140,6 +140,25 @@ export function createAreaUnderCurveEngine(
     return { x: 'Time (s)', y: 'Position (m)' }
   }
 
+  // A chip is drawn only when every corner fits inside its region. This keeps
+  // labels off the curve even for steep, flat, negative or very narrow shapes.
+  function regionChip(text: string, vertices: Point[]) {
+    const size = s(13)
+    ctx.font = `bold ${size}px ui-sans-serif, system-ui, sans-serif`
+    const halfW = (ctx.measureText(text).width + 12) / 2 + s(5)
+    const halfH = (size + 8) / 2 + s(5)
+    const center = vertices.reduce((sum, p) => ({ x: sum.x + p.x / vertices.length, y: sum.y + p.y / vertices.length }), { x: 0, y: 0 })
+    const corners = [-1, 1].flatMap(dx => [-1, 1].map(dy => ({ x: center.x + dx * halfW, y: center.y + dy * halfH })))
+    const fits = corners.every(p => {
+      const sides = vertices.map((a, i) => {
+        const b = vertices[(i + 1) % vertices.length]
+        return (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x)
+      })
+      return sides.every(v => v > 0) || sides.every(v => v < 0)
+    })
+    if (fits) chip(ctx, text, center.x, center.y, { color: PAL.velocity, size })
+  }
+
   // ---- render: faithful canvas reproduction of the SVG AreaGraph ------------
   function render() {
     const { w, h } = dims()
@@ -199,22 +218,30 @@ export function createAreaUnderCurveEngine(
       ctx.closePath(); ctx.fill()
       ctx.strokeStyle = PAL.primary; ctx.lineWidth = 3; ctx.stroke()
 
-      // decomposition line + labels for rectangle + triangle
-      if (Math.abs(p1.y - p2.y) > 0.1) {
-        const minY = Math.min(Math.abs(p1.y), Math.abs(p2.y))
+      // Label the interiors, not the sloping edge. Small regions keep their
+      // shape description in the HTML readouts instead of squeezing in text.
+      if (Math.abs(p1.y - p2.y) > 0.1 && p1.y * p2.y >= 0) {
+        const low = Math.abs(p1.y) <= Math.abs(p2.y) ? p1 : p2
+        const high = low === p1 ? p2 : p1
+        const baseY = low.y
         ctx.strokeStyle = PAL.velocity; ctx.lineWidth = 2; ctx.setLineDash([s(8), s(4)])
-        ctx.beginPath(); ctx.moveTo(cx(p1.x), cy(minY)); ctx.lineTo(cx(p2.x), cy(minY)); ctx.stroke()
+        ctx.beginPath(); ctx.moveTo(cx(p1.x), cy(baseY)); ctx.lineTo(cx(p2.x), cy(baseY)); ctx.stroke()
         ctx.setLineDash([])
-        chip(ctx, 'Rectangle', (cx(p1.x) + cx(p2.x)) / 2, (cy(minY) + zeroLine) / 2, { color: PAL.velocity, size: s(13) })
-        const maxY = Math.max(Math.abs(p1.y), Math.abs(p2.y))
-        chip(ctx, 'Triangle', (cx(p1.x) + cx(p2.x)) / 2, (cy(maxY) + cy(minY)) / 2, { color: PAL.velocity, size: s(13) })
+        regionChip('Rectangle', [
+          { x: cx(p1.x), y: zeroLine }, { x: cx(p2.x), y: zeroLine },
+          { x: cx(p2.x), y: cy(baseY) }, { x: cx(p1.x), y: cy(baseY) },
+        ])
+        regionChip('Triangle', [
+          { x: cx(low.x), y: cy(baseY) }, { x: cx(high.x), y: cy(baseY) },
+          { x: cx(high.x), y: cy(high.y) },
+        ])
       }
     }
 
     // width dimension line + label (force / coral)
     ctx.strokeStyle = PAL.force; ctx.lineWidth = 2
-    ctx.beginPath(); ctx.moveTo(cx(p1.x), zeroLine + s(20)); ctx.lineTo(cx(p2.x), zeroLine + s(20)); ctx.stroke()
-    chip(ctx, `Width = ${(p2.x - p1.x).toFixed(2)}`, (cx(p1.x) + cx(p2.x)) / 2, zeroLine + s(36), { color: PAL.force, size: s(13) })
+    ctx.beginPath(); ctx.moveTo(cx(p1.x), cy0(DESIGN_H - 60)); ctx.lineTo(cx(p2.x), cy0(DESIGN_H - 60)); ctx.stroke()
+    chip(ctx, `Width = ${(p2.x - p1.x).toFixed(2)}`, (cx(p1.x) + cx(p2.x)) / 2, cy0(DESIGN_H - 45), { color: PAL.force, size: s(13) })
 
     // height indicators (velocity / green). Clamp the left labels so they never
     // back into the rotated "Velocity (m/s)" axis title (at design x≈25) when a
@@ -253,14 +280,12 @@ export function createAreaUnderCurveEngine(
     // control points (draggable)
     ctx.fillStyle = PAL.primary; ctx.strokeStyle = PAL.onAccent; ctx.lineWidth = 3
     ctx.beginPath(); ctx.arc(cx(p1.x), cy(p1.y), s(10), 0, Math.PI * 2); ctx.fill(); ctx.stroke()
-    chip(ctx, `Start: ${p1.y.toFixed(1)}`, cx(p1.x), cy(p1.y) < zeroLine ? cy(p1.y) - s(25) : cy(p1.y) + s(30), { color: PAL.primary, size: s(13), align: 'center' })
+    chip(ctx, `Start: ${p1.y.toFixed(1)}`, cx0(200), cy0(28), { color: PAL.primary, size: s(13), align: 'center' })
 
     ctx.fillStyle = PAL.cool; ctx.strokeStyle = PAL.onAccent; ctx.lineWidth = 3
     ctx.beginPath(); ctx.arc(cx(p2.x), cy(p2.y), s(10), 0, Math.PI * 2); ctx.fill(); ctx.stroke()
-    chip(ctx, `End: ${p2.y.toFixed(1)}`, cx(p2.x), cy(p2.y) < zeroLine ? cy(p2.y) - s(25) : cy(p2.y) + s(30), { color: PAL.cool, size: s(13), align: 'center' })
+    chip(ctx, `End: ${p2.y.toFixed(1)}`, cx0(500), cy0(28), { color: PAL.cool, size: s(13), align: 'center' })
 
-    // AREA label inside region
-    label(ctx, 'AREA', (cx(p1.x) + cx(p2.x)) / 2, (Math.min(cy(p1.y), cy(p2.y)) + zeroLine) / 2, { color: PAL.accent, size: s(24), weight: 'bold', align: 'center', baseline: 'middle' })
 
     ctx.restore()
   }

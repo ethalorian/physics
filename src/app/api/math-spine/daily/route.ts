@@ -1,3 +1,5 @@
+import { getMathXpStatus } from '@/lib/math-xp-status'
+import { mathRemediation, type MathRemediation } from '@/lib/math-remediation'
 import { pendingFreshCheck } from '@/lib/math-student-view'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -164,7 +166,13 @@ export const GET = withAuth(async (request, ctx) => {
     }
     // One immutable task per student and school day. The server-only checking
     // snapshot keeps the answer key out of all client payloads.
-    if (ctx.role === 'student') {
+    if (ctx.session?.experience) {
+      const stored = await supabaseAdmin.from('math_warmup_instances').select('id,item').eq('user_id', targetUserId).eq('school_day', schoolDayKey()).maybeSingle()
+      if (stored.error) throw stored.error
+      if (stored.data) item = { ...stored.data.item, instanceId: stored.data.id }
+      // An unissued task is rendered from the same deterministic picker without
+      // creating a task on the student's behalf. Submissions remain disabled.
+    } else if (ctx.role === 'student') {
       const inserted = await supabaseAdmin.from('math_warmup_instances').upsert({
         user_id: targetUserId, school_day: schoolDayKey(), item,
         checking: { key: answerKey, mode: chosen.check_mode, template: chosen.template, values: templateValues, slips: chosen.misconceptions, fallback: target.misconception_fallback },
@@ -194,15 +202,28 @@ export const GET = withAuth(async (request, ctx) => {
   // One RATED submission per day, regardless of competency (the picker target
   // can shift mid-day after a review — that must not grant a second rated rep).
   let alreadySubmitted = false
+  let submissionXp: number | null = null
+  let remediation: MathRemediation | null = null
   {
     const dayStart = schoolDayStart()
-    const { data: pend } = await supabaseAdmin
+    const { data: pend, error: submissionError } = await supabaseAdmin
       .from('math_warmup_submissions')
-      .select('id')
+      .select('id,competency_id,self_check,status,resulting_level')
       .eq('user_id', targetUserId)
       .gte('submitted_at', dayStart.toISOString())
+      .order('submitted_at', { ascending: false })
       .limit(1)
+    if (submissionError) return NextResponse.json({ error: 'Could not load your submitted warm-up. Please retry.' }, { status: 503 })
     alreadySubmitted = (pend ?? []).length > 0
+    if (pend?.[0]) {
+      const submission = pend[0]
+      const code = competencies.find(c => c.id === submission.competency_id)?.code
+      if (code) remediation = mathRemediation(code, submission.self_check, submission.status === 'reviewed' ? submission.resulting_level : null)
+      const { data: reward, error: rewardError } = await supabaseAdmin.from('math_spine_point_grants').select('points')
+        .eq('user_id', targetUserId).eq('dedupe_key', 'warmup-xp:' + pend[0].id).maybeSingle()
+      if (rewardError) throw rewardError
+      submissionXp = reward?.points ?? null
+    }
   }
 
   // Day count + streak for the warm-up ribbon. A streak counts consecutive
@@ -263,6 +284,9 @@ export const GET = withAuth(async (request, ctx) => {
     pickKind,
     ladder,
     alreadySubmitted,
+    remediation,
+    submissionXp,
+    xpStatus: await getMathXpStatus(targetUserId),
     translationEnabled,
     dayCount,
     streak,

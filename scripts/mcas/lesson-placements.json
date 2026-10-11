@@ -1,0 +1,2198 @@
+{
+  "status": "prepared-not-applied",
+  "tracks": [
+    "cpa",
+    "honors"
+  ],
+  "optionalPractice": true,
+  "placementCount": 8,
+  "lessonCount": 7,
+  "placements": [
+    {
+      "lessonId": "eaa95227-1bc7-41e8-af7c-192bdedc8303",
+      "lessonTitle": "Kinematics: the language of motion",
+      "expectedUpdatedAt": "2026-09-29T04:17:54.395211+00:00",
+      "afterBlockId": "kinematics-model",
+      "questionId": "mcas-physics-2006-09",
+      "type": "multiple_choice",
+      "targetSlug": "u1.kinematics-language",
+      "estimatedMinutes": 3,
+      "block": {
+        "id": "mcas-checkpoint-2006-09",
+        "mcasId": "mcas-physics-2006-09",
+        "capture": true,
+        "targetId": "u1.kinematics-language",
+        "requiredForCompletion": false,
+        "evidenceRole": "practice",
+        "gate": false,
+        "xp": 0,
+        "teachingMoment": {
+          "phase": "discuss",
+          "title": "MCAS 2006 · Question 9"
+        },
+        "note": "Independently worked teacher-draft solution; review before use. 35 km / 5 h = 7 km/h describes average speed, not displacement, acceleration, or momentum.",
+        "type": "question",
+        "question": {
+          "prompt": "Choose one answer, then explain the physics behind your choice.",
+          "options": [
+            {
+              "id": "A",
+              "text": "A"
+            },
+            {
+              "id": "B",
+              "text": "B"
+            },
+            {
+              "id": "C",
+              "text": "C"
+            },
+            {
+              "id": "D",
+              "text": "D"
+            }
+          ],
+          "explain": "Why does your choice fit the situation?",
+          "correctOptionId": "D"
+        }
+      }
+    },
+    {
+      "lessonId": "fc67d63d-a011-426b-b9f3-fd8f1ea7f501",
+      "lessonTitle": "Position & displacement",
+      "expectedUpdatedAt": "2026-10-07T12:03:11.578051+00:00",
+      "afterBlockId": "position-practice",
+      "questionId": "mcas-physics-2016-24",
+      "type": "multiple_choice",
+      "targetSlug": "u1.vocab-position-distance-displacement",
+      "estimatedMinutes": 3,
+      "block": {
+        "id": "mcas-checkpoint-2016-24",
+        "mcasId": "mcas-physics-2016-24",
+        "capture": true,
+        "targetId": "u1.vocab-position-distance-displacement",
+        "requiredForCompletion": false,
+        "evidenceRole": "practice",
+        "gate": false,
+        "xp": 0,
+        "teachingMoment": {
+          "phase": "discuss",
+          "title": "MCAS 2016 · Question 24"
+        },
+        "note": "Independently worked teacher-draft solution; review before use. Three 50 m lengths give 150 m total distance. The swimmer ends 50 m from the starting point.",
+        "type": "question",
+        "question": {
+          "prompt": "Choose one answer, then explain the physics behind your choice.",
+          "options": [
+            {
+              "id": "A",
+              "text": "A"
+            },
+            {
+              "id": "B",
+              "text": "B"
+            },
+            {
+              "id": "C",
+              "text": "C"
+            },
+            {
+              "id": "D",
+              "text": "D"
+            }
+          ],
+          "explain": "Why does your choice fit the situation?",
+          "correctOptionId": "B"
+        }
+      }
+    },
+    {
+      "lessonId": "7456e6c4-fd01-455f-b0a2-e8e1a0f65304",
+      "lessonTitle": "Position & displacement in 2D and 3D",
+      "expectedUpdatedAt": "2026-09-29T04:17:54.395211+00:00",
+      "afterBlockId": "scope-djR8sAAi740",
+      "questionId": "mcas-physics-2009-16",
+      "type": "multiple_choice",
+      "targetSlug": "u1.vocab-position-distance-displacement",
+      "estimatedMinutes": 3,
+      "block": {
+        "id": "mcas-checkpoint-2009-16",
+        "mcasId": "mcas-physics-2009-16",
+        "capture": true,
+        "targetId": "u1.vocab-position-distance-displacement",
+        "requiredForCompletion": false,
+        "evidenceRole": "practice",
+        "gate": false,
+        "xp": 0,
+        "teachingMoment": {
+          "phase": "discuss",
+          "title": "MCAS 2009 · Question 16"
+        },
+        "note": "Independently worked teacher-draft solution; review before use. 2.0 km north includes both magnitude and direction. Use as retrieval of the vector definition before discussing components.",
+        "type": "question",
+        "question": {
+          "prompt": "Choose one answer, then explain the physics behind your choice.",
+          "options": [
+            {
+              "id": "A",
+              "text": "A"
+            },
+            {
+              "id": "B",
+              "text": "B"
+            },
+            {
+              "id": "C",
+              "text": "C"
+            },
+            {
+              "id": "D",
+              "text": "D"
+            }
+          ],
+          "explain": "Why does your choice fit the situation?",
+          "correctOptionId": "A"
+        }
+      }
+    },
+    {
+      "lessonId": "df1acb44-9f62-45cf-9270-1f1a2d413505",
+      "lessonTitle": "How far vs. exactly where: scalars, vectors & position",
+      "expectedUpdatedAt": "2026-09-29T04:17:54.395211+00:00",
+      "afterBlockId": "scope-FshpPgPAeWM",
+      "questionId": "mcas-physics-2008-40",
+      "type": "multiple_choice",
+      "targetSlug": "u1.vocab-position-distance-displacement",
+      "estimatedMinutes": 3,
+      "block": {
+        "id": "mcas-checkpoint-2008-40",
+        "mcasId": "mcas-physics-2008-40",
+        "capture": true,
+        "targetId": "u1.vocab-position-distance-displacement",
+        "requiredForCompletion": false,
+        "evidenceRole": "practice",
+        "gate": false,
+        "xp": 0,
+        "teachingMoment": {
+          "phase": "discuss",
+          "title": "MCAS 2008 · Question 40"
+        },
+        "note": "Independently worked teacher-draft solution; review before use. Mass has magnitude only. Velocity, force, and acceleration are vectors.",
+        "type": "question",
+        "question": {
+          "prompt": "Choose one answer, then explain the physics behind your choice.",
+          "options": [
+            {
+              "id": "A",
+              "text": "A"
+            },
+            {
+              "id": "B",
+              "text": "B"
+            },
+            {
+              "id": "C",
+              "text": "C"
+            },
+            {
+              "id": "D",
+              "text": "D"
+            }
+          ],
+          "explain": "Why does your choice fit the situation?",
+          "correctOptionId": "A"
+        }
+      }
+    },
+    {
+      "lessonId": "c1f8c609-88ad-4d42-93ce-25ae2b0c8206",
+      "lessonTitle": "The sign is the direction: position vectors in 1D",
+      "expectedUpdatedAt": "2026-10-07T12:03:11.578051+00:00",
+      "afterBlockId": "check-maoz-9mGWyk",
+      "questionId": "mcas-physics-2012-07",
+      "type": "multiple_choice",
+      "targetSlug": "u1.vocab-position-distance-displacement",
+      "estimatedMinutes": 3,
+      "block": {
+        "id": "mcas-checkpoint-2012-07",
+        "mcasId": "mcas-physics-2012-07",
+        "capture": true,
+        "targetId": "u1.vocab-position-distance-displacement",
+        "requiredForCompletion": false,
+        "evidenceRole": "practice",
+        "gate": false,
+        "xp": 0,
+        "teachingMoment": {
+          "phase": "discuss",
+          "title": "MCAS 2012 · Question 7"
+        },
+        "note": "Independently worked teacher-draft solution; review before use. Take right as positive: +5 − 4 + 6 − 5 = +2 m. Distance = 5 + 4 + 6 + 5 = 20 m. The original image confirms that kick 2 is 4 m left.",
+        "type": "question",
+        "question": {
+          "prompt": "Choose one answer, then explain the physics behind your choice.",
+          "options": [
+            {
+              "id": "A",
+              "text": "A"
+            },
+            {
+              "id": "B",
+              "text": "B"
+            },
+            {
+              "id": "C",
+              "text": "C"
+            },
+            {
+              "id": "D",
+              "text": "D"
+            }
+          ],
+          "explain": "Why does your choice fit the situation?",
+          "correctOptionId": "A"
+        }
+      }
+    },
+    {
+      "lessonId": "685abc3e-737c-4572-9be2-928f8fd7a707",
+      "lessonTitle": "Length, time & rates of change: why we divide by time",
+      "expectedUpdatedAt": "2026-09-29T04:17:54.395211+00:00",
+      "afterBlockId": "scope-YViTBR_aygk",
+      "questionId": "mcas-physics-2011-09",
+      "type": "multiple_choice",
+      "targetSlug": "u1.kinematics-language",
+      "estimatedMinutes": 3,
+      "block": {
+        "id": "mcas-checkpoint-2011-09",
+        "mcasId": "mcas-physics-2011-09",
+        "capture": true,
+        "targetId": "u1.kinematics-language",
+        "requiredForCompletion": false,
+        "evidenceRole": "practice",
+        "gate": false,
+        "xp": 0,
+        "teachingMoment": {
+          "phase": "discuss",
+          "title": "MCAS 2011 · Question 9"
+        },
+        "note": "Independently worked teacher-draft solution; review before use. Time = distance / speed = 640000 m / (80 m/s) = 8000 s.",
+        "type": "question",
+        "question": {
+          "prompt": "Choose one answer, then explain the physics behind your choice.",
+          "options": [
+            {
+              "id": "A",
+              "text": "A"
+            },
+            {
+              "id": "B",
+              "text": "B"
+            },
+            {
+              "id": "C",
+              "text": "C"
+            },
+            {
+              "id": "D",
+              "text": "D"
+            }
+          ],
+          "explain": "Why does your choice fit the situation?",
+          "correctOptionId": "B"
+        }
+      }
+    },
+    {
+      "lessonId": "f2770d7c-8494-4808-9ba2-fb463bd47508",
+      "lessonTitle": "Velocity vs. speed: average and instantaneous",
+      "expectedUpdatedAt": "2026-09-29T04:17:54.395211+00:00",
+      "afterBlockId": "check-hj8usnvYrRo",
+      "questionId": "mcas-physics-2017-10",
+      "type": "multiple_choice",
+      "targetSlug": "u1.kinematics-language",
+      "estimatedMinutes": 3,
+      "block": {
+        "id": "mcas-checkpoint-2017-10",
+        "mcasId": "mcas-physics-2017-10",
+        "capture": true,
+        "targetId": "u1.kinematics-language",
+        "requiredForCompletion": false,
+        "evidenceRole": "practice",
+        "gate": false,
+        "xp": 0,
+        "teachingMoment": {
+          "phase": "discuss",
+          "title": "MCAS 2017 · Question 10"
+        },
+        "note": "Independently worked teacher-draft solution; review before use. Distance and time determine average speed, a scalar: 240 m / 20 s = 12 m/s. Direction and displacement are not given.",
+        "type": "question",
+        "question": {
+          "prompt": "Choose one answer, then explain the physics behind your choice.",
+          "options": [
+            {
+              "id": "A",
+              "text": "A"
+            },
+            {
+              "id": "B",
+              "text": "B"
+            },
+            {
+              "id": "C",
+              "text": "C"
+            },
+            {
+              "id": "D",
+              "text": "D"
+            }
+          ],
+          "explain": "Why does your choice fit the situation?",
+          "correctOptionId": "A"
+        }
+      }
+    },
+    {
+      "lessonId": "f2770d7c-8494-4808-9ba2-fb463bd47508",
+      "lessonTitle": "Velocity vs. speed: average and instantaneous",
+      "expectedUpdatedAt": "2026-09-29T04:17:54.395211+00:00",
+      "afterBlockId": "explain-hj8usnvYrRo",
+      "questionId": "mcas-physics-2011-44",
+      "type": "open_response",
+      "targetSlug": "u1.kinematics-language",
+      "estimatedMinutes": 8,
+      "block": {
+        "id": "mcas-checkpoint-2011-44",
+        "mcasId": "mcas-physics-2011-44",
+        "capture": true,
+        "targetId": "u1.kinematics-language",
+        "requiredForCompletion": false,
+        "evidenceRole": "practice",
+        "gate": false,
+        "xp": 0,
+        "teachingMoment": {
+          "phase": "discuss",
+          "title": "MCAS 2011 · Question 44"
+        },
+        "note": "Independently worked teacher-draft solution; review before use. Teacher-draft guide, four parts: (a) distance 1200 + 400 = 1600 m; (b) average speed 1600/100 = 16 m/s; (c) displacement 800 m north; (d) average velocity 800/100 = 8 m/s north. Require labeled calculations, units, and direction where applicable.",
+        "type": "lab_notebook",
+        "instruction": "Respond to every labeled part of the original MCAS question. Use the sketch area for diagrams or graphs and the response box for calculations and explanations.",
+        "fields": [
+          "Responses to all labeled parts"
+        ],
+        "requireAllFields": true,
+        "grid": true
+      }
+    }
+  ],
+  "lessonPatches": [
+    {
+      "lessonId": "eaa95227-1bc7-41e8-af7c-192bdedc8303",
+      "lessonTitle": "Kinematics: the language of motion",
+      "expectedUpdatedAt": "2026-09-29T04:17:54.395211+00:00",
+      "contentBlocks": {
+        "blocks": [
+          {
+            "id": "kinematics-video",
+            "type": "instruction_video",
+            "title": "What is kinematics?",
+            "summary": "Kinematics describes motion without explaining its causes. Position tells us where something is relative to a reference. Velocity tells us how fast position changes and in what direction. Acceleration means velocity is changing: speeding up, slowing down, or changing direction—even at a constant speed.",
+            "workshop": {
+              "stage": "Learn",
+              "pageBreakBefore": true
+            },
+            "youtubeId": "vf7X7mmJfsE"
+          },
+          {
+            "id": "kinematics-check",
+            "type": "question",
+            "capture": true,
+            "question": {
+              "prompt": "A bicycle turns along a curved path at constant speed. Is it accelerating?",
+              "options": [
+                {
+                  "id": "yes",
+                  "text": "Yes, because its direction changes.",
+                  "feedback": "Velocity includes direction. Changing direction is acceleration even with constant speed."
+                },
+                {
+                  "id": "no",
+                  "text": "No, because its speed stays constant.",
+                  "feedback": "Constant speed is only part of constant velocity. The direction is changing."
+                },
+                {
+                  "id": "only-faster",
+                  "text": "Only if it starts moving faster.",
+                  "feedback": "Acceleration includes speeding up, slowing down, and changing direction."
+                }
+              ],
+              "correctOptionId": "yes"
+            },
+            "targetId": "u1.kinematics-language",
+            "workshop": {
+              "stage": "Check your thinking",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "practice"
+          },
+          {
+            "id": "kinematics-model",
+            "type": "prose",
+            "markdown": "A runner moves around a circular track at steady speed. At two different points, the runner is moving in different directions. The speed is unchanged, but the velocity has changed: the runner is accelerating.",
+            "workshop": {
+              "stage": "See the idea",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "mcas-checkpoint-2006-09",
+            "mcasId": "mcas-physics-2006-09",
+            "capture": true,
+            "targetId": "u1.kinematics-language",
+            "requiredForCompletion": false,
+            "evidenceRole": "practice",
+            "gate": false,
+            "xp": 0,
+            "teachingMoment": {
+              "phase": "discuss",
+              "title": "MCAS 2006 · Question 9"
+            },
+            "note": "Independently worked teacher-draft solution; review before use. 35 km / 5 h = 7 km/h describes average speed, not displacement, acceleration, or momentum.",
+            "type": "question",
+            "question": {
+              "prompt": "Choose one answer, then explain the physics behind your choice.",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "A"
+                },
+                {
+                  "id": "B",
+                  "text": "B"
+                },
+                {
+                  "id": "C",
+                  "text": "C"
+                },
+                {
+                  "id": "D",
+                  "text": "D"
+                }
+              ],
+              "explain": "Why does your choice fit the situation?",
+              "correctOptionId": "D"
+            }
+          },
+          {
+            "id": "kinematics-figure",
+            "alt": "Two equal-length tangent velocity arrows at different positions around a circular track. The speed is the same but the directions differ.",
+            "src": "/learning/acceleration.svg",
+            "type": "figure"
+          },
+          {
+            "id": "kinematics-try",
+            "type": "prose",
+            "markdown": "Compare a straight path with a turning path.",
+            "workshop": {
+              "stage": "Explain",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "kinematics-exit",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "The ___ cart is accelerating because its ___ changes, even though its ___ stays the same.",
+                  "level": 1
+                },
+                {
+                  "text": "The ___ cart is accelerating because its ___ changes, even though its ___ stays the same.",
+                  "level": 2
+                },
+                {
+                  "text": "My evidence is ___, which means ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "A labeled diagram supporting this physics question.",
+                "src": "/learning/acceleration.svg"
+              },
+              "wordBank": [
+                "velocity",
+                "direction",
+                "speed",
+                "turning",
+                "straight"
+              ]
+            },
+            "type": "exit_ticket",
+            "prompt": "A cart moves straight at constant speed. Another cart turns a corner at the same constant speed. Which cart is accelerating? Explain using velocity and direction.",
+            "targetId": "u1.kinematics-language"
+          },
+          {
+            "id": "kinematics-connection",
+            "type": "prose",
+            "markdown": "To describe 2026-XJ, we need a reference for its position and information about how its velocity changes. Later lessons will build those tools. This introduction does not yet let us predict an orbit or an impact.",
+            "workshop": {
+              "stage": "Connect",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "kinematics-vocab",
+            "type": "vocab",
+            "terms": [],
+            "termIds": [
+              "c9d272d4-7fea-4c3f-be96-bd59fab86c61",
+              "a007b1ea-5db6-44ea-8da6-65c7895955a0",
+              "0d3f76cd-d21a-430e-8357-118fdacb4a3c",
+              "7b7f8edb-b99e-4b5d-a1b0-01a4ce79f064"
+            ],
+            "referencePanel": true,
+            "vocabularySetId": "47a33471-6760-4514-8f77-c436d1ec5b26"
+          }
+        ],
+        "dayType": "STANDARD",
+        "learningPath": {
+          "kind": "lesson",
+          "focus": "Explain what kinematics describes. Recognize that changing direction is acceleration even at constant speed.",
+          "version": 1,
+          "targetSlugs": [
+            "u1.kinematics-language"
+          ],
+          "sourceLessonId": "fe529665-a1df-4f80-a5cc-df0d09b95210"
+        },
+        "presentation": "physics-path",
+        "schemaVersion": 1
+      }
+    },
+    {
+      "lessonId": "fc67d63d-a011-426b-b9f3-fd8f1ea7f501",
+      "lessonTitle": "Position & displacement",
+      "expectedUpdatedAt": "2026-10-07T12:03:11.578051+00:00",
+      "contentBlocks": {
+        "blocks": [
+          {
+            "id": "position-video",
+            "type": "instruction_video",
+            "title": "Position & displacement on a number line",
+            "summary": "Position is a location relative to a chosen origin. In this lesson, right is positive. Displacement is final position minus initial position: $\\Delta x=x_f-x_i$. Distance adds the lengths of all parts of a journey. A negative displacement tells you a direction; it is not a negative distance.",
+            "workshop": {
+              "stage": "Learn",
+              "pageBreakBefore": true
+            },
+            "youtubeId": "u0V8uJ5KTvo"
+          },
+          {
+            "id": "position-language",
+            "type": "prose",
+            "markdown": "**Position** describes a location. **Displacement** describes a change in location.\n\nA **scalar** has magnitude only: distance is a scalar. A **vector** has magnitude and direction: displacement is a vector. In one dimension, the sign tells you the direction."
+          },
+          {
+            "id": "position-check",
+            "type": "question",
+            "capture": true,
+            "question": {
+              "prompt": "A cart returns to where it started. Which statement must be true?",
+              "options": [
+                {
+                  "id": "zero-displacement",
+                  "text": "Its displacement is zero.",
+                  "feedback": "Displacement compares final and initial position. The path can still have a nonzero length."
+                },
+                {
+                  "id": "zero-distance",
+                  "text": "Its distance traveled is zero.",
+                  "feedback": "Distance adds the lengths traveled. Returning does not erase the outward trip."
+                },
+                {
+                  "id": "negative-distance",
+                  "text": "Its distance is negative on the return trip.",
+                  "feedback": "Distance is a nonnegative length. A direction can make displacement negative, not distance."
+                }
+              ],
+              "correctOptionId": "zero-displacement"
+            },
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Check your thinking",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "practice"
+          },
+          {
+            "id": "wp01-position-video",
+            "type": "instruction_video",
+            "title": "Distance vs. displacement on a number line · Worked Problem 01",
+            "summary": "Follow the trip +2 m → +8 m → −3 m using Problem → Model → Plan → Work → Answer. Pause at 1:40, just before Work, and try the calculation. Resume to compare your method and interpret the sign.",
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Watch a worked problem",
+              "pageBreakBefore": true
+            },
+            "youtubeId": "B51oRJa9MSM",
+            "durationSeconds": 167
+          },
+          {
+            "id": "wp01-position-reference",
+            "type": "callout",
+            "title": "Distance and displacement method",
+            "variant": "tip",
+            "markdown": "**Problem:** Name the quantities you need.\n\n**Model:** Choose a positive direction, label the positions, and draw every leg.\n\n**Plan:** For distance, add the lengths of all legs: $d=|x_1-x_0|+|x_2-x_1|+\\cdots$. For displacement, use only the endpoints: $\\Delta x=x_f-x_i$. Use $y$ for a vertical axis.\n\n**Work:** Substitute signed positions; take magnitudes for distance.\n\n**Answer:** Include meters and interpret the displacement sign. Check $d\\geq|\\Delta x|$.\n\nVideo chapters: 0:00 Problem · 0:30 Model · 1:04 Plan · 1:40 Work · 2:20 Answer.\n\n[Watch Worked Problem 01 on YouTube](https://www.youtube.com/watch?v=B51oRJa9MSM) · [Worked Problems: Kinematics playlist](https://www.youtube.com/playlist?list=PLZKwzUFM2PaM)",
+            "teachingMoment": {
+              "phase": "reference",
+              "title": "Distance and displacement method"
+            }
+          },
+          {
+            "id": "wp01-position-solution",
+            "type": "worked_example",
+            "work": "First leg: $|8-2|=6$ m. Second leg: $|-3-8|=11$ m. Distance: $6+11=17$ m. Displacement: $-3-2=-5$ m.",
+            "given": "Use a straight x-axis with right positive. Mark start +2 m, turn +8 m, and finish −3 m. Draw the two legs in order.",
+            "answer": "Distance = 17 m. Displacement = −5 m: the student finishes 5 m to the left of where she started. The return leg adds distance; it does not subtract distance.",
+            "format": "problem-workspace",
+            "prompt": "A student starts at +2 m, walks to a fountain at +8 m, then to a locker at −3 m. Find distance and displacement.",
+            "equation": "Distance adds the magnitude of each leg. Displacement compares only the endpoints: $\\Delta x=x_f-x_i$.",
+            "teachingMoment": {
+              "phase": "reference",
+              "title": "Open the video’s worked solution"
+            }
+          },
+          {
+            "id": "position-model-title",
+            "type": "prose",
+            "markdown": "Choose right as positive. A cart starts at −2 m, travels to +4 m, then returns to +1 m.",
+            "workshop": {
+              "stage": "See it worked",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-worked",
+            "sei": {
+              "visual": {
+                "alt": "Reference: start minus 2 meters, turn at plus 4 meters, finish at plus 1 meter.",
+                "src": "/learning/position-worked-model.svg"
+              }
+            },
+            "type": "worked_example",
+            "work": "First segment: $|4-(-2)|=6$ m. Return segment: $|1-4|=3$ m.\n\nDistance: $6+3=9$ m.\n\nDisplacement: $1-(-2)=+3$ m.",
+            "given": "Initial: −2 m. Turn: +4 m. Final: +1 m. Model the trip on one straight number line, with right positive.",
+            "answer": "Distance = 9 m. Displacement = +3 m: 3 m to the right. The return trip increases distance while reducing the final displacement.",
+            "format": "problem-workspace",
+            "prompt": "Find the total distance and the displacement for the trip.",
+            "equation": "$\\Delta x=x_f-x_i$; distance = sum of segment lengths. Use the endpoints for displacement and add each segment length for distance, because the cart changes direction."
+          },
+          {
+            "id": "position-explore-title",
+            "type": "prose",
+            "markdown": "Change one position at a time. Try an out-and-back trip, then try moving only to the left.",
+            "workshop": {
+              "stage": "Explore",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-explorer",
+            "type": "position_explorer",
+            "title": "Distance and displacement explorer"
+          },
+          {
+            "id": "position-practice-title",
+            "type": "prose",
+            "markdown": "Use a new trip. Show your reasoning; the example above uses different numbers.",
+            "workshop": {
+              "stage": "Try it",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-practice",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "The displacement is ___ m because ___. The distance is ___ m.",
+                  "level": 1
+                },
+                {
+                  "text": "The displacement is ___ m because ___. The distance is ___ m.",
+                  "level": 2
+                },
+                {
+                  "text": "My evidence is ___, which means ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "Reference number line: start at plus 6 meters, finish at minus 2 meters; right is positive.",
+                "src": "/learning/position-model.svg"
+              },
+              "wordBank": [
+                "initial",
+                "final",
+                "negative",
+                "left",
+                "distance",
+                "displacement"
+              ]
+            },
+            "type": "gewa",
+            "prompt": "A cart moves directly from +6 m to −2 m. Find its displacement and distance traveled. State the direction of its displacement.",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "givenHint": "Record the initial and final positions with their signs.",
+            "stageHints": {
+              "plan": "Displacement compares the endpoints. Distance adds the lengths traveled. This trip has one direct segment.",
+              "work": "Write (final position) − (initial position) before combining the signed numbers. Keep the unit with your calculation.",
+              "model": "Mark +6 m and −2 m relative to the origin. State which direction you chose as positive.",
+              "answer": "Explain what the sign tells you. Report distance and displacement separately."
+            },
+            "equationHint": "Displacement = final position − initial position. Distance is the length traveled.",
+            "responseFormat": "problem-workspace",
+            "requireCompleteWork": true
+          },
+          {
+            "id": "mcas-checkpoint-2016-24",
+            "mcasId": "mcas-physics-2016-24",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "requiredForCompletion": false,
+            "evidenceRole": "practice",
+            "gate": false,
+            "xp": 0,
+            "teachingMoment": {
+              "phase": "discuss",
+              "title": "MCAS 2016 · Question 24"
+            },
+            "note": "Independently worked teacher-draft solution; review before use. Three 50 m lengths give 150 m total distance. The swimmer ends 50 m from the starting point.",
+            "type": "question",
+            "question": {
+              "prompt": "Choose one answer, then explain the physics behind your choice.",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "A"
+                },
+                {
+                  "id": "B",
+                  "text": "B"
+                },
+                {
+                  "id": "C",
+                  "text": "C"
+                },
+                {
+                  "id": "D",
+                  "text": "D"
+                }
+              ],
+              "explain": "Why does your choice fit the situation?",
+              "correctOptionId": "B"
+            }
+          },
+          {
+            "id": "wp01-position-turnaround",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "The total distance is ___ m. The displacement is ___ m, which means ___. They differ because ___.",
+                  "level": 1
+                }
+              ],
+              "wordBank": [
+                "initial",
+                "final",
+                "leg",
+                "distance",
+                "displacement",
+                "direction"
+              ]
+            },
+            "note": "Teacher solution — Practice 1 · A new turnaround. Model: +1 m → +7 m → −2 m; positive right. Plan: sum the magnitude of every leg for distance; Δx = xf − xi for displacement. Work: signed leg changes = +6 m, −9 m. Distance = 6 + 9 = 15 m. Displacement = (−2) − (+1) = −3 m. Answer: The student finishes 3 m left of the starting point. Adding signed leg changes gives displacement, not distance. Review the model, plan, arithmetic, units, and interpretation; a completed save alone is not evidence of correctness.",
+            "type": "gewa",
+            "prompt": "A student starts at x = +1 m, walks along a straight hallway to x = +7 m, then turns and walks to x = −2 m. Choose right as positive. Find the total distance and displacement, and explain the direction of the displacement.",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Practice 1 · A new turnaround",
+              "pageBreakBefore": true
+            },
+            "stageHints": {
+              "plan": "Add the lengths of both legs for distance. For displacement, compare only the initial and final positions.",
+              "work": "Write final minus initial for each leg. Use each leg’s magnitude when adding distance, and keep meters with your values.",
+              "model": "Draw a number line. Mark +1 m as start, +7 m as the turn, and −2 m as finish. Draw one arrow for each leg.",
+              "answer": "Report both quantities with units. Explain what the displacement sign means for your chosen positive direction."
+            },
+            "evidenceRole": "practice",
+            "responseFormat": "problem-workspace",
+            "referenceBlockIds": [
+              "wp01-position-reference"
+            ],
+            "requireCompleteWork": true
+          },
+          {
+            "id": "wp01-position-return",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "The total distance is ___ m. The displacement is ___ m, which means ___. They differ because ___.",
+                  "level": 1
+                }
+              ],
+              "wordBank": [
+                "initial",
+                "final",
+                "leg",
+                "distance",
+                "displacement",
+                "direction"
+              ]
+            },
+            "note": "Teacher solution — Practice 2 · Back to the start. Model: −4 m → +3 m → −4 m; positive right. Plan: sum the magnitude of every leg for distance; Δx = xf − xi for displacement. Work: signed leg changes = +7 m, −7 m. Distance = 7 + 7 = 14 m. Displacement = (−4) − (−4) = 0 m. Answer: The displacement is zero because the endpoints coincide. There is no net direction, but both 7 m legs count toward distance. Review the model, plan, arithmetic, units, and interpretation; a completed save alone is not evidence of correctness.",
+            "type": "gewa",
+            "prompt": "A cart starts at x = −4 m, rolls directly to x = +3 m, then returns to x = −4 m. Choose right as positive. Find distance and displacement. Explain why returning to the start does not erase the distance traveled.",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Practice 2 · Back to the start",
+              "pageBreakBefore": true
+            },
+            "stageHints": {
+              "plan": "Which calculation depends on the whole route? Which depends only on the endpoints?",
+              "work": "Write final minus initial for each leg. Use each leg’s magnitude when adding distance, and keep meters with your values.",
+              "model": "Show both legs, even though the initial and final positions share the same point.",
+              "answer": "Report both quantities with units. Explain what the displacement sign means for your chosen positive direction."
+            },
+            "evidenceRole": "practice",
+            "responseFormat": "problem-workspace",
+            "referenceBlockIds": [
+              "wp01-position-reference"
+            ],
+            "requireCompleteWork": true
+          },
+          {
+            "id": "wp01-position-three-legs",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "The total distance is ___ m. The displacement is ___ m, which means ___. They differ because ___.",
+                  "level": 1
+                }
+              ],
+              "wordBank": [
+                "initial",
+                "final",
+                "leg",
+                "distance",
+                "displacement",
+                "direction"
+              ]
+            },
+            "note": "Teacher solution — Practice 3 · Plan a longer trip. Model: +5 m → −1 m → +2 m → −3 m; positive right. Plan: sum the magnitude of every leg for distance; Δx = xf − xi for displacement. Work: signed leg changes = −6 m, +3 m, −5 m. Distance = 6 + 3 + 5 = 14 m. Displacement = (−3) − (+5) = −8 m. Answer: The robot finishes 8 m left of its start. The check is 14 m ≥ |−8 m|; changes of direction add distance without increasing the net change by the same amount. Review the model, plan, arithmetic, units, and interpretation; a completed save alone is not evidence of correctness.",
+            "type": "gewa",
+            "prompt": "A robot moves on one straight track through these positions in order: +5 m → −1 m → +2 m → −3 m. It moves directly between each listed position. Right is positive. Find its total distance and displacement. Show a model and a plan before calculating, then check that the distance is at least as large as the magnitude of the displacement.",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Practice 3 · Plan a longer trip",
+              "pageBreakBefore": true
+            },
+            "stageHints": {
+              "plan": "Choose which positions each quantity needs. Explain your choice before doing the arithmetic.",
+              "work": "Write final minus initial for each leg. Use each leg’s magnitude when adding distance, and keep meters with your values.",
+              "model": "Label each stop in order and count the legs. A table or a number-line sketch can organize the route.",
+              "answer": "Report both quantities with units. Explain what the displacement sign means for your chosen positive direction."
+            },
+            "evidenceRole": "practice",
+            "responseFormat": "problem-workspace",
+            "referenceBlockIds": [
+              "wp01-position-reference"
+            ],
+            "requireCompleteWork": true
+          },
+          {
+            "id": "position-explain-title",
+            "type": "prose",
+            "markdown": "Explain the idea without another calculation.",
+            "workshop": {
+              "stage": "Explain",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-explain",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "The displacement is ___ because ___. The distance is ___ because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "The displacement is ___ because ___. The distance is ___ because ___.",
+                  "level": 2
+                },
+                {
+                  "text": "My evidence is ___, which means ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "A labeled diagram supporting this physics question.",
+                "src": "/learning/position-line.svg"
+              },
+              "wordBank": [
+                "start",
+                "finish",
+                "path",
+                "scalar",
+                "vector"
+              ]
+            },
+            "type": "exit_ticket",
+            "prompt": "An object travels away from its starting point and comes back. Explain why its displacement can be zero while its distance is not. Identify which quantity is a scalar and which is a vector.",
+            "targetId": "u1.vocab-position-distance-displacement"
+          },
+          {
+            "id": "position-reading",
+            "type": "reading",
+            "focus": "Read section 5.1 on page 69. Use the distinction between scalars and vectors to explain distance and displacement. Answer the three checks in your own words, then submit for teacher review.",
+            "chapter": 5,
+            "workshop": {
+              "stage": "Read & respond",
+              "pageBreakBefore": true
+            },
+            "essential": true,
+            "sectionIds": [
+              "5.1"
+            ],
+            "assignmentChecks": [
+              {
+                "prompt": "What information does a vector include that a scalar does not? Use distance and displacement as your examples.",
+                "targetId": "u1.vocab-position-distance-displacement",
+                "reference": "1 · Explain the distinction"
+              },
+              {
+                "prompt": "A student walks 3 m east, then 3 m west. Find the total distance and displacement. Explain why the two answers differ, and identify which quantity is a scalar and which is a vector.",
+                "targetId": "u1.vocab-position-distance-displacement",
+                "reference": "2 · Apply the idea"
+              },
+              {
+                "prompt": "A classmate says, “If displacement is zero, the object could not have moved.” Do you agree? Use a possible trip to support your reasoning.",
+                "targetId": "u1.vocab-position-distance-displacement",
+                "reference": "3 · Evaluate a claim"
+              }
+            ]
+          },
+          {
+            "id": "position-transfer-title",
+            "type": "prose",
+            "markdown": "**Fictional training data for 2026-XJ.** This is a one-dimensional coordinate model, not a claim about the asteroid’s real orbit.",
+            "workshop": {
+              "stage": "Apply to 2026-XJ",
+              "pageBreakBefore": true
+            }
+          },
+          {
+            "id": "position-mission-diagram",
+            "alt": "Earth at the origin. Two fictional asteroid positions on the same axis: plus 12 million kilometers and plus 9 million kilometers.",
+            "src": "/learning/asteroid-position.svg",
+            "type": "figure"
+          },
+          {
+            "id": "position-transfer",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "Its displacement is ___ million km. The sign means ___. The two positions [do / do not] determine distance because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "Its displacement is ___ million km. The sign means ___. The two positions [do / do not] determine distance because ___.",
+                  "level": 2
+                },
+                {
+                  "text": "My evidence is ___, which means ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "A labeled diagram supporting this physics question.",
+                "src": "/learning/asteroid-position.svg"
+              },
+              "wordBank": [
+                "reference",
+                "toward",
+                "initial",
+                "final",
+                "path"
+              ]
+            },
+            "type": "exit_ticket",
+            "prompt": "Along a chosen axis, Earth is at 0. The asteroid’s position changes from +12 million km to +9 million km. Report its displacement and explain the sign. Can those two positions alone tell you its total distance traveled? Explain.",
+            "targetId": "u1.vocab-position-distance-displacement",
+            "evidenceRole": "exit"
+          },
+          {
+            "id": "position-vocabulary",
+            "type": "vocab",
+            "terms": [],
+            "termIds": [
+              "a892cf0e-00e0-4aa5-8da5-03a59e20fe2f",
+              "2d3af579-0ee6-4f13-a922-686774c28eb3",
+              "50ca756f-2733-4c91-8d86-71589f89e01c",
+              "3f589087-3b2f-4ea0-9225-39465f92466f",
+              "1189dd38-37a0-4d4c-b827-743cbe6396f2"
+            ],
+            "referencePanel": true,
+            "vocabularySetId": "72512c75-af30-476b-8a62-05bbf14b2283"
+          }
+        ],
+        "dayType": "STANDARD",
+        "learningPath": {
+          "kind": "lesson",
+          "focus": "Describe where an object is and how its position changes. Compare distance and displacement, and distinguish scalars from vectors.",
+          "version": 1,
+          "targetSlugs": [
+            "u1.vocab-position-distance-displacement"
+          ],
+          "sourceLessonId": "fe529665-a1df-4f80-a5cc-df0d09b95210"
+        },
+        "presentation": "physics-path",
+        "schemaVersion": 1
+      }
+    },
+    {
+      "lessonId": "7456e6c4-fd01-455f-b0a2-e8e1a0f65304",
+      "lessonTitle": "Position & displacement in 2D and 3D",
+      "expectedUpdatedAt": "2026-09-29T04:17:54.395211+00:00",
+      "contentBlocks": {
+        "blocks": [
+          {
+            "id": "video-djR8sAAi740",
+            "type": "instruction_video",
+            "title": "Position & displacement in 2D and 3D",
+            "summary": "A position has one coordinate per axis: (x, y) in a plane or (x, y, z) in space. Calculate displacement one component at a time, always final minus initial. Do not subtract an x-coordinate from a y-coordinate.",
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Watch & understand",
+              "pageBreakBefore": true
+            },
+            "youtubeId": "djR8sAAi740"
+          },
+          {
+            "id": "scope-djR8sAAi740",
+            "type": "prose",
+            "markdown": "Extends position and displacement to two and three dimensions."
+          },
+          {
+            "id": "mcas-checkpoint-2009-16",
+            "mcasId": "mcas-physics-2009-16",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "requiredForCompletion": false,
+            "evidenceRole": "practice",
+            "gate": false,
+            "xp": 0,
+            "teachingMoment": {
+              "phase": "discuss",
+              "title": "MCAS 2009 · Question 16"
+            },
+            "note": "Independently worked teacher-draft solution; review before use. 2.0 km north includes both magnitude and direction. Use as retrieval of the vector definition before discussing components.",
+            "type": "question",
+            "question": {
+              "prompt": "Choose one answer, then explain the physics behind your choice.",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "A"
+                },
+                {
+                  "id": "B",
+                  "text": "B"
+                },
+                {
+                  "id": "C",
+                  "text": "C"
+                },
+                {
+                  "id": "D",
+                  "text": "D"
+                }
+              ],
+              "explain": "Why does your choice fit the situation?",
+              "correctOptionId": "A"
+            }
+          },
+          {
+            "id": "check-djR8sAAi740",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "I notice ___. This means ___ because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "My reasoning is ___, supported by ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "Reference model for interpreting measurements, positions and direction.",
+                "src": "/learning/video-position.svg"
+              },
+              "wordBank": [
+                "quantity",
+                "unit",
+                "position",
+                "change",
+                "direction",
+                "evidence"
+              ]
+            },
+            "type": "question",
+            "capture": true,
+            "question": {
+              "prompt": "An object moves from (1, −2) m to (4, 2) m. What is its displacement?",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "(3, 4) m",
+                  "feedback": "Subtract separately: 4 − 1 = 3 and 2 − (−2) = 4."
+                },
+                {
+                  "id": "B",
+                  "text": "(5, 0) m",
+                  "feedback": "This adds coordinates. Displacement subtracts the initial position from the final position."
+                },
+                {
+                  "id": "C",
+                  "text": "(4, 2) m",
+                  "feedback": "That is the final position; displacement is the change from the initial position."
+                }
+              ],
+              "correctOptionId": "A"
+            },
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Check your thinking",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "practice"
+          },
+          {
+            "id": "explain-djR8sAAi740",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "I notice ___. This means ___ because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "My reasoning is ___, supported by ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "Reference model for interpreting measurements, positions and direction.",
+                "src": "/learning/video-position.svg"
+              },
+              "wordBank": [
+                "quantity",
+                "unit",
+                "position",
+                "change",
+                "direction",
+                "evidence"
+              ]
+            },
+            "type": "exit_ticket",
+            "prompt": "An object moves from (−2, 4, 1) m to (3, 4, −1) m. Find its displacement and explain the meaning of the component that is zero.",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Apply & explain",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "exit"
+          },
+          {
+            "id": "vocabulary-djR8sAAi740",
+            "type": "vocab",
+            "terms": [],
+            "termIds": [
+              "634a093e-3702-4a4d-9e76-94e2c8daca88",
+              "ff773329-fcd0-42bb-86cc-189f969f7907",
+              "08afa740-b8a8-49c3-81cf-3beb5a2a1058",
+              "19af6160-d5c9-4baa-bc13-390205d4023d",
+              "8b26d811-e68f-4af7-954d-facc49293920"
+            ],
+            "referencePanel": true,
+            "vocabularySetId": "b304e31c-7c2d-40ed-858f-9d1c989c53fe"
+          }
+        ],
+        "dayType": "STANDARD",
+        "learningPath": {
+          "kind": "lesson",
+          "focus": "How does final minus initial work when position has more than one coordinate?",
+          "version": 1,
+          "foundations": false,
+          "targetSlugs": [
+            "u1.vocab-position-distance-displacement"
+          ]
+        },
+        "presentation": "physics-path",
+        "schemaVersion": 1
+      }
+    },
+    {
+      "lessonId": "df1acb44-9f62-45cf-9270-1f1a2d413505",
+      "lessonTitle": "How far vs. exactly where: scalars, vectors & position",
+      "expectedUpdatedAt": "2026-09-29T04:17:54.395211+00:00",
+      "contentBlocks": {
+        "blocks": [
+          {
+            "id": "video-FshpPgPAeWM",
+            "type": "instruction_video",
+            "title": "How far vs. exactly where: scalars, vectors & position",
+            "summary": "A distance from an origin leaves many possible locations. A position vector adds direction: its tail is at the reference point and its head is at the object. Components describe the same arrow. Its magnitude is a scalar, found in 2D using the Pythagorean theorem.",
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Watch & understand",
+              "pageBreakBefore": true
+            },
+            "youtubeId": "FshpPgPAeWM"
+          },
+          {
+            "id": "scope-FshpPgPAeWM",
+            "type": "prose",
+            "markdown": "Scalar versus vector, position-vector anatomy, components, and magnitude."
+          },
+          {
+            "id": "mcas-checkpoint-2008-40",
+            "mcasId": "mcas-physics-2008-40",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "requiredForCompletion": false,
+            "evidenceRole": "practice",
+            "gate": false,
+            "xp": 0,
+            "teachingMoment": {
+              "phase": "discuss",
+              "title": "MCAS 2008 · Question 40"
+            },
+            "note": "Independently worked teacher-draft solution; review before use. Mass has magnitude only. Velocity, force, and acceleration are vectors.",
+            "type": "question",
+            "question": {
+              "prompt": "Choose one answer, then explain the physics behind your choice.",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "A"
+                },
+                {
+                  "id": "B",
+                  "text": "B"
+                },
+                {
+                  "id": "C",
+                  "text": "C"
+                },
+                {
+                  "id": "D",
+                  "text": "D"
+                }
+              ],
+              "explain": "Why does your choice fit the situation?",
+              "correctOptionId": "A"
+            }
+          },
+          {
+            "id": "check-FshpPgPAeWM",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "I notice ___. This means ___ because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "My reasoning is ___, supported by ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "Reference model for interpreting measurements, positions and direction.",
+                "src": "/learning/video-position.svg"
+              },
+              "wordBank": [
+                "quantity",
+                "unit",
+                "position",
+                "change",
+                "direction",
+                "evidence"
+              ]
+            },
+            "type": "question",
+            "capture": true,
+            "question": {
+              "prompt": "A position vector is (5, 12) m. Which statement is correct?",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "Its magnitude is 13 m; the components also identify direction.",
+                  "feedback": "The magnitude is √(5² + 12²) = 13 m; components carry more information than magnitude alone."
+                },
+                {
+                  "id": "B",
+                  "text": "Its magnitude is 17 m.",
+                  "feedback": "Adding component magnitudes gives 17, but the straight-line magnitude follows the Pythagorean theorem."
+                },
+                {
+                  "id": "C",
+                  "text": "Knowing only 13 m locates the object uniquely.",
+                  "feedback": "Many locations are 13 m from the origin. Direction is also needed."
+                }
+              ],
+              "correctOptionId": "A"
+            },
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Check your thinking",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "practice"
+          },
+          {
+            "id": "explain-FshpPgPAeWM",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "I notice ___. This means ___ because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "My reasoning is ___, supported by ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "Reference model for interpreting measurements, positions and direction.",
+                "src": "/learning/video-position.svg"
+              },
+              "wordBank": [
+                "quantity",
+                "unit",
+                "position",
+                "change",
+                "direction",
+                "evidence"
+              ]
+            },
+            "type": "exit_ticket",
+            "prompt": "Compare the information in “10 m from the origin” and “position (6, 8) m.” Explain why they can describe the same distance but do not provide the same location information.",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Apply & explain",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "exit"
+          },
+          {
+            "id": "vocabulary-FshpPgPAeWM",
+            "type": "vocab",
+            "terms": [],
+            "termIds": [
+              "e878f947-3894-4252-bdbd-dc8c763ba216",
+              "0d7f37e9-9fe6-4e24-9a88-25521d2cce33",
+              "c314cde0-2b83-4144-9ace-28d5b17a66f3",
+              "8e884d46-d005-4109-905b-57e42549267d",
+              "d46deede-10ee-4177-9f89-2e796deeb331"
+            ],
+            "referencePanel": true,
+            "vocabularySetId": "2b591edb-3f5a-45d7-9e54-1d9d6e6650a8"
+          }
+        ],
+        "dayType": "STANDARD",
+        "learningPath": {
+          "kind": "lesson",
+          "focus": "Why does a distance alone fail to identify a location?",
+          "version": 1,
+          "foundations": false,
+          "targetSlugs": [
+            "u1.vocab-position-distance-displacement"
+          ]
+        },
+        "presentation": "physics-path",
+        "schemaVersion": 1
+      }
+    },
+    {
+      "lessonId": "c1f8c609-88ad-4d42-93ce-25ae2b0c8206",
+      "lessonTitle": "The sign is the direction: position vectors in 1D",
+      "expectedUpdatedAt": "2026-10-07T12:03:11.578051+00:00",
+      "contentBlocks": {
+        "blocks": [
+          {
+            "id": "video-maoz-9mGWyk",
+            "type": "instruction_video",
+            "title": "The sign is the direction: position vectors in 1D",
+            "summary": "In one dimension, a sign supplies direction along the chosen axis. A position x = −3 m has magnitude |x| = 3 m. A vertical coordinate can use y with up positive. A negative position is a location, not proof that an object is moving in the negative direction.",
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Watch & understand",
+              "pageBreakBefore": true
+            },
+            "youtubeId": "maoz-9mGWyk"
+          },
+          {
+            "id": "scope-maoz-9mGWyk",
+            "type": "prose",
+            "markdown": "Signed horizontal and vertical coordinates; magnitude versus position."
+          },
+          {
+            "id": "wp01-signs-video",
+            "type": "instruction_video",
+            "title": "Distance vs. displacement on a number line · Worked Problem 01",
+            "summary": "Follow the trip +2 m → +8 m → −3 m using Problem → Model → Plan → Work → Answer. Pause at 1:40, just before Work, and try the calculation. Resume to compare your method and interpret the sign.",
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Watch a worked problem",
+              "pageBreakBefore": true
+            },
+            "youtubeId": "B51oRJa9MSM",
+            "durationSeconds": 167
+          },
+          {
+            "id": "wp01-signs-reference",
+            "type": "callout",
+            "title": "Distance and displacement method",
+            "variant": "tip",
+            "markdown": "**Problem:** Name the quantities you need.\n\n**Model:** Choose a positive direction, label the positions, and draw every leg.\n\n**Plan:** For distance, add the lengths of all legs: $d=|x_1-x_0|+|x_2-x_1|+\\cdots$. For displacement, use only the endpoints: $\\Delta x=x_f-x_i$. Use $y$ for a vertical axis.\n\n**Work:** Substitute signed positions; take magnitudes for distance.\n\n**Answer:** Include meters and interpret the displacement sign. Check $d\\geq|\\Delta x|$.\n\nVideo chapters: 0:00 Problem · 0:30 Model · 1:04 Plan · 1:40 Work · 2:20 Answer.\n\n[Watch Worked Problem 01 on YouTube](https://www.youtube.com/watch?v=B51oRJa9MSM) · [Worked Problems: Kinematics playlist](https://www.youtube.com/playlist?list=PLZKwzUFM2PaM)",
+            "teachingMoment": {
+              "phase": "reference",
+              "title": "Distance and displacement method"
+            }
+          },
+          {
+            "id": "wp01-signs-solution",
+            "type": "worked_example",
+            "work": "First leg: $|8-2|=6$ m. Second leg: $|-3-8|=11$ m. Distance: $6+11=17$ m. Displacement: $-3-2=-5$ m.",
+            "given": "Use a straight x-axis with right positive. Mark start +2 m, turn +8 m, and finish −3 m. Draw the two legs in order.",
+            "answer": "Distance = 17 m. Displacement = −5 m: the student finishes 5 m to the left of where she started. The return leg adds distance; it does not subtract distance.",
+            "format": "problem-workspace",
+            "prompt": "A student starts at +2 m, walks to a fountain at +8 m, then to a locker at −3 m. Find distance and displacement.",
+            "equation": "Distance adds the magnitude of each leg. Displacement compares only the endpoints: $\\Delta x=x_f-x_i$.",
+            "teachingMoment": {
+              "phase": "reference",
+              "title": "Open the video’s worked solution"
+            }
+          },
+          {
+            "id": "check-maoz-9mGWyk",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "I notice ___. This means ___ because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "My reasoning is ___, supported by ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "Reference model for interpreting measurements, positions and direction.",
+                "src": "/learning/video-position.svg"
+              },
+              "wordBank": [
+                "quantity",
+                "unit",
+                "position",
+                "change",
+                "direction",
+                "evidence"
+              ]
+            },
+            "type": "question",
+            "capture": true,
+            "question": {
+              "prompt": "An object is at x = −3 m. What can you conclude from this position alone?",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "It is 3 m from the origin on the negative side.",
+                  "feedback": "The sign gives the side of the origin and the magnitude gives the distance from it."
+                },
+                {
+                  "id": "B",
+                  "text": "It is moving left.",
+                  "feedback": "You need how position changes over time to determine the direction of motion."
+                },
+                {
+                  "id": "C",
+                  "text": "Its distance from the origin is −3 m.",
+                  "feedback": "Distance is nonnegative. The position is negative; its magnitude is 3 m."
+                }
+              ],
+              "correctOptionId": "A"
+            },
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Check your thinking",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "practice"
+          },
+          {
+            "id": "mcas-checkpoint-2012-07",
+            "mcasId": "mcas-physics-2012-07",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "requiredForCompletion": false,
+            "evidenceRole": "practice",
+            "gate": false,
+            "xp": 0,
+            "teachingMoment": {
+              "phase": "discuss",
+              "title": "MCAS 2012 · Question 7"
+            },
+            "note": "Independently worked teacher-draft solution; review before use. Take right as positive: +5 − 4 + 6 − 5 = +2 m. Distance = 5 + 4 + 6 + 5 = 20 m. The original image confirms that kick 2 is 4 m left.",
+            "type": "question",
+            "question": {
+              "prompt": "Choose one answer, then explain the physics behind your choice.",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "A"
+                },
+                {
+                  "id": "B",
+                  "text": "B"
+                },
+                {
+                  "id": "C",
+                  "text": "C"
+                },
+                {
+                  "id": "D",
+                  "text": "D"
+                }
+              ],
+              "explain": "Why does your choice fit the situation?",
+              "correctOptionId": "A"
+            }
+          },
+          {
+            "id": "wp01-signs-negative-positions",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "The total distance is ___ m. The displacement is ___ m, which means ___. They differ because ___.",
+                  "level": 1
+                }
+              ],
+              "wordBank": [
+                "initial",
+                "final",
+                "leg",
+                "distance",
+                "displacement",
+                "direction"
+              ]
+            },
+            "note": "Teacher solution — Practice 1 · Negative position, positive change. Model: −6 m → −2 m → −5 m; positive right. Plan: sum the magnitude of every leg for distance; Δx = xf − xi for displacement. Work: signed leg changes = +4 m, −3 m. Distance = 4 + 3 = 7 m. Displacement = (−5) − (−6) = +1 m. Answer: The final position is −5 m, but displacement is +1 m: the cart finishes 1 m to the right of where it started. Its final leg is leftward; that is different from its total displacement. Review the model, plan, arithmetic, units, and interpretation; a completed save alone is not evidence of correctness.",
+            "type": "gewa",
+            "prompt": "A cart follows the route x = −6 m → −2 m → −5 m, moving directly between each stop. Right is positive. Find distance and displacement. Its final position is negative: does that make its total displacement negative? Use your calculation to explain.",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Practice 1 · Negative position, positive change",
+              "pageBreakBefore": true
+            },
+            "stageHints": {
+              "plan": "The sign of final position tells you which side of the origin it is on. To find the sign of displacement, compare final with initial position.",
+              "work": "Write final minus initial for each leg. Use each leg’s magnitude when adding distance, and keep meters with your values.",
+              "model": "Put all three positions left of zero, then draw the motion arrows in order.",
+              "answer": "Report both quantities with units. Explain what the displacement sign means for your chosen positive direction."
+            },
+            "evidenceRole": "practice",
+            "responseFormat": "problem-workspace",
+            "referenceBlockIds": [
+              "wp01-signs-reference"
+            ],
+            "requireCompleteWork": true
+          },
+          {
+            "id": "wp01-signs-vertical",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "The total distance is ___ m. The displacement is ___ m, which means ___. They differ because ___.",
+                  "level": 1
+                }
+              ],
+              "wordBank": [
+                "initial",
+                "final",
+                "leg",
+                "distance",
+                "displacement",
+                "direction"
+              ]
+            },
+            "note": "Teacher solution — Practice 2 · Use a vertical axis. Model: +2 m → −4 m → +1 m; positive up. Plan: sum the magnitude of every leg for distance; Δy = yf − yi for displacement. Work: signed leg changes = −6 m, +5 m. Distance = 6 + 5 = 11 m. Displacement = (+1) − (+2) = −1 m. Answer: The last leg is 5 m upward, while total displacement is −1 m (1 m down from the start). A positive final position does not imply positive total displacement. Review the model, plan, arithmetic, units, and interpretation; a completed save alone is not evidence of correctness.",
+            "type": "gewa",
+            "prompt": "A lift moves directly from y = +2 m to y = −4 m, then to y = +1 m. Up is positive. Find its total distance and displacement. State the direction of the last leg and the direction of the total displacement, and explain why they differ.",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Practice 2 · Use a vertical axis",
+              "pageBreakBefore": true
+            },
+            "stageHints": {
+              "plan": "Use Δy = yf − yi for the whole trip. The direction of the final leg depends on a different pair of positions.",
+              "work": "Write final minus initial for each leg. Use each leg’s magnitude when adding distance, and keep meters with your values.",
+              "model": "Turn the number line vertically. Label up as positive and mark the three positions.",
+              "answer": "Report both quantities with units. Explain what the displacement sign means for your chosen positive direction."
+            },
+            "evidenceRole": "practice",
+            "responseFormat": "problem-workspace",
+            "referenceBlockIds": [
+              "wp01-signs-reference"
+            ],
+            "requireCompleteWork": true
+          },
+          {
+            "id": "explain-maoz-9mGWyk",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "I notice ___. This means ___ because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "My reasoning is ___, supported by ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "Reference model for interpreting measurements, positions and direction.",
+                "src": "/learning/video-position.svg"
+              },
+              "wordBank": [
+                "quantity",
+                "unit",
+                "position",
+                "change",
+                "direction",
+                "evidence"
+              ]
+            },
+            "type": "exit_ticket",
+            "prompt": "With up positive, a probe moves from y = +7 m to y = +2 m. Find its displacement, state the direction of its motion, and distinguish that direction from the sign of its final position.",
+            "capture": true,
+            "targetId": "u1.vocab-position-distance-displacement",
+            "workshop": {
+              "stage": "Apply & explain",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "exit"
+          },
+          {
+            "id": "vocabulary-maoz-9mGWyk",
+            "type": "vocab",
+            "terms": [],
+            "termIds": [
+              "c6c76086-a031-4192-9fcf-752ca1e5c412",
+              "ab455a29-8b74-4c7e-8a73-4b90d4767d4c",
+              "d070596c-3121-4ba4-bf39-10da65dcf234",
+              "69ae4851-896c-4e97-b96b-6f05835f5e53"
+            ],
+            "referencePanel": true,
+            "vocabularySetId": "13ec25f1-fe24-4e69-ada7-d2589105bdd2"
+          }
+        ],
+        "dayType": "STANDARD",
+        "learningPath": {
+          "kind": "lesson",
+          "focus": "What does the sign tell you—and what does it not tell you?",
+          "version": 1,
+          "foundations": false,
+          "targetSlugs": [
+            "u1.vocab-position-distance-displacement"
+          ]
+        },
+        "presentation": "physics-path",
+        "schemaVersion": 1
+      }
+    },
+    {
+      "lessonId": "685abc3e-737c-4572-9be2-928f8fd7a707",
+      "lessonTitle": "Length, time & rates of change: why we divide by time",
+      "expectedUpdatedAt": "2026-09-29T04:17:54.395211+00:00",
+      "contentBlocks": {
+        "blocks": [
+          {
+            "id": "video-YViTBR_aygk",
+            "type": "instruction_video",
+            "title": "Length, time & rates of change: why we divide by time",
+            "summary": "A rate compares a change with the time interval over which it occurs. Change in position is final minus initial; divide by elapsed time to find the average rate of change of position. Its units are length per time, such as m/s. A negative rate describes change toward the negative direction.",
+            "targetId": "u1.kinematics-language",
+            "workshop": {
+              "stage": "Watch & understand",
+              "pageBreakBefore": true
+            },
+            "youtubeId": "YViTBR_aygk"
+          },
+          {
+            "id": "scope-YViTBR_aygk",
+            "type": "prose",
+            "markdown": "The position-change-over-time idea that defines average velocity.\n\nLength, time, physical quantities, and combined units."
+          },
+          {
+            "id": "mcas-checkpoint-2011-09",
+            "mcasId": "mcas-physics-2011-09",
+            "capture": true,
+            "targetId": "u1.kinematics-language",
+            "requiredForCompletion": false,
+            "evidenceRole": "practice",
+            "gate": false,
+            "xp": 0,
+            "teachingMoment": {
+              "phase": "discuss",
+              "title": "MCAS 2011 · Question 9"
+            },
+            "note": "Independently worked teacher-draft solution; review before use. Time = distance / speed = 640000 m / (80 m/s) = 8000 s.",
+            "type": "question",
+            "question": {
+              "prompt": "Choose one answer, then explain the physics behind your choice.",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "A"
+                },
+                {
+                  "id": "B",
+                  "text": "B"
+                },
+                {
+                  "id": "C",
+                  "text": "C"
+                },
+                {
+                  "id": "D",
+                  "text": "D"
+                }
+              ],
+              "explain": "Why does your choice fit the situation?",
+              "correctOptionId": "B"
+            }
+          },
+          {
+            "id": "check-YViTBR_aygk",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "I notice ___. This means ___ because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "My reasoning is ___, supported by ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "Reference model contrasting a trip, displacement, distance and elapsed time.",
+                "src": "/learning/video-rates.svg"
+              },
+              "wordBank": [
+                "quantity",
+                "unit",
+                "position",
+                "change",
+                "direction",
+                "evidence"
+              ]
+            },
+            "type": "question",
+            "capture": true,
+            "question": {
+              "prompt": "Position changes from 8 m to 2 m in 3 s. What is the average rate of change of position?",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "−2 m/s",
+                  "feedback": "(2 − 8) m ÷ 3 s = −2 m/s."
+                },
+                {
+                  "id": "B",
+                  "text": "+2 m/s",
+                  "feedback": "The position decreased, so the average rate is negative with this axis choice."
+                },
+                {
+                  "id": "C",
+                  "text": "−6 m",
+                  "feedback": "−6 m is the displacement. Divide by elapsed time to obtain a rate."
+                }
+              ],
+              "correctOptionId": "A"
+            },
+            "targetId": "u1.kinematics-language",
+            "workshop": {
+              "stage": "Check your thinking",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "practice"
+          },
+          {
+            "id": "explain-YViTBR_aygk",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "I notice ___. This means ___ because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "My reasoning is ___, supported by ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "Reference model contrasting a trip, displacement, distance and elapsed time.",
+                "src": "/learning/video-rates.svg"
+              },
+              "wordBank": [
+                "quantity",
+                "unit",
+                "position",
+                "change",
+                "direction",
+                "evidence"
+              ]
+            },
+            "type": "exit_ticket",
+            "prompt": "A probe moves from x = 10 km at t = 2 s to x = 4 km at t = 5 s. Calculate its average velocity, showing both subtractions and the units. Explain its sign.",
+            "capture": true,
+            "targetId": "u1.kinematics-language",
+            "workshop": {
+              "stage": "Apply & explain",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "exit"
+          },
+          {
+            "id": "vocabulary-YViTBR_aygk",
+            "type": "vocab",
+            "terms": [],
+            "termIds": [
+              "824ab6c4-d2c4-4ffb-a0ed-e8d249587d34",
+              "5b029ca1-1a3f-423a-84d7-36ca7dfd1894",
+              "8c0a4dfe-ce8a-4456-b537-eca053adc5ee",
+              "39e0142f-34b4-4a33-afb9-57680b071720"
+            ],
+            "referencePanel": true,
+            "vocabularySetId": "dd786fe0-5d95-4835-a1e7-476621ec9218"
+          }
+        ],
+        "dayType": "STANDARD",
+        "learningPath": {
+          "kind": "lesson",
+          "focus": "What does “per second” mean in a motion measurement?",
+          "version": 1,
+          "foundations": false,
+          "targetSlugs": [
+            "u1.kinematics-language",
+            "foundations.units-quantities"
+          ]
+        },
+        "presentation": "physics-path",
+        "schemaVersion": 1
+      }
+    },
+    {
+      "lessonId": "f2770d7c-8494-4808-9ba2-fb463bd47508",
+      "lessonTitle": "Velocity vs. speed: average and instantaneous",
+      "expectedUpdatedAt": "2026-09-29T04:17:54.395211+00:00",
+      "contentBlocks": {
+        "blocks": [
+          {
+            "id": "video-hj8usnvYrRo",
+            "type": "instruction_video",
+            "title": "Velocity vs. speed: average and instantaneous",
+            "summary": "Average velocity uses displacement divided by elapsed time; average speed uses total distance divided by elapsed time. Instantaneous velocity is the slope of the tangent to a position–time graph, and instantaneous speed is its magnitude. For an out-and-back trip, average speed is not generally the magnitude of average velocity.",
+            "targetId": "u1.kinematics-language",
+            "workshop": {
+              "stage": "Watch & understand",
+              "pageBreakBefore": true
+            },
+            "youtubeId": "hj8usnvYrRo"
+          },
+          {
+            "id": "scope-hj8usnvYrRo",
+            "type": "prose",
+            "markdown": "Velocity, speed, average and instantaneous values; this does not replace the full acceleration target.\n\nUses distance/displacement and scalar/vector distinctions in rates."
+          },
+          {
+            "id": "check-hj8usnvYrRo",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "I notice ___. This means ___ because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "My reasoning is ___, supported by ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "Reference model contrasting a trip, displacement, distance and elapsed time.",
+                "src": "/learning/video-rates.svg"
+              },
+              "wordBank": [
+                "quantity",
+                "unit",
+                "position",
+                "change",
+                "direction",
+                "evidence"
+              ]
+            },
+            "type": "question",
+            "capture": true,
+            "question": {
+              "prompt": "A cart travels 6 m out and 6 m back in 4 s. What are its average velocity and average speed?",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "0 m/s and 3 m/s",
+                  "feedback": "Displacement is zero; total distance is 12 m. Divide each by 4 s."
+                },
+                {
+                  "id": "B",
+                  "text": "3 m/s and 3 m/s",
+                  "feedback": "3 m/s uses distance, which gives average speed. Average velocity uses displacement."
+                },
+                {
+                  "id": "C",
+                  "text": "0 m/s and 0 m/s",
+                  "feedback": "Returning makes displacement zero but does not erase the distance traveled."
+                }
+              ],
+              "correctOptionId": "A"
+            },
+            "targetId": "u1.kinematics-language",
+            "workshop": {
+              "stage": "Check your thinking",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "practice"
+          },
+          {
+            "id": "mcas-checkpoint-2017-10",
+            "mcasId": "mcas-physics-2017-10",
+            "capture": true,
+            "targetId": "u1.kinematics-language",
+            "requiredForCompletion": false,
+            "evidenceRole": "practice",
+            "gate": false,
+            "xp": 0,
+            "teachingMoment": {
+              "phase": "discuss",
+              "title": "MCAS 2017 · Question 10"
+            },
+            "note": "Independently worked teacher-draft solution; review before use. Distance and time determine average speed, a scalar: 240 m / 20 s = 12 m/s. Direction and displacement are not given.",
+            "type": "question",
+            "question": {
+              "prompt": "Choose one answer, then explain the physics behind your choice.",
+              "options": [
+                {
+                  "id": "A",
+                  "text": "A"
+                },
+                {
+                  "id": "B",
+                  "text": "B"
+                },
+                {
+                  "id": "C",
+                  "text": "C"
+                },
+                {
+                  "id": "D",
+                  "text": "D"
+                }
+              ],
+              "explain": "Why does your choice fit the situation?",
+              "correctOptionId": "A"
+            }
+          },
+          {
+            "id": "explain-hj8usnvYrRo",
+            "sei": {
+              "modes": [
+                "text",
+                "sketch"
+              ],
+              "frames": [
+                {
+                  "text": "I notice ___. This means ___ because ___.",
+                  "level": 1
+                },
+                {
+                  "text": "My reasoning is ___, supported by ___.",
+                  "level": 3
+                }
+              ],
+              "visual": {
+                "alt": "Reference model contrasting a trip, displacement, distance and elapsed time.",
+                "src": "/learning/video-rates.svg"
+              },
+              "wordBank": [
+                "quantity",
+                "unit",
+                "position",
+                "change",
+                "direction",
+                "evidence"
+              ]
+            },
+            "type": "exit_ticket",
+            "prompt": "Explain how a secant and a tangent on a position–time graph represent different kinds of velocity. Then explain why neither should be confused with total distance traveled.",
+            "capture": true,
+            "targetId": "u1.kinematics-language",
+            "workshop": {
+              "stage": "Apply & explain",
+              "pageBreakBefore": true
+            },
+            "evidenceRole": "exit"
+          },
+          {
+            "id": "mcas-checkpoint-2011-44",
+            "mcasId": "mcas-physics-2011-44",
+            "capture": true,
+            "targetId": "u1.kinematics-language",
+            "requiredForCompletion": false,
+            "evidenceRole": "practice",
+            "gate": false,
+            "xp": 0,
+            "teachingMoment": {
+              "phase": "discuss",
+              "title": "MCAS 2011 · Question 44"
+            },
+            "note": "Independently worked teacher-draft solution; review before use. Teacher-draft guide, four parts: (a) distance 1200 + 400 = 1600 m; (b) average speed 1600/100 = 16 m/s; (c) displacement 800 m north; (d) average velocity 800/100 = 8 m/s north. Require labeled calculations, units, and direction where applicable.",
+            "type": "lab_notebook",
+            "instruction": "Respond to every labeled part of the original MCAS question. Use the sketch area for diagrams or graphs and the response box for calculations and explanations.",
+            "fields": [
+              "Responses to all labeled parts"
+            ],
+            "requireAllFields": true,
+            "grid": true
+          },
+          {
+            "id": "vocabulary-hj8usnvYrRo",
+            "type": "vocab",
+            "terms": [],
+            "termIds": [
+              "0998a52e-f634-49cd-8169-c056919db764",
+              "e3e57980-a06b-42ec-9505-448520c80e3a",
+              "fa630dcf-189d-42e6-862d-477c6b0e654e",
+              "8f90833b-4184-4e4a-89da-b03a67c6d3a5",
+              "32b5e73f-ebb5-4698-ac63-7fbcc5518c7b",
+              "44b26182-85a1-4215-8ac8-0ad3b5cebc20"
+            ],
+            "referencePanel": true,
+            "vocabularySetId": "be3f57e1-55fe-4a52-8362-0ca0eb52d2af"
+          }
+        ],
+        "dayType": "STANDARD",
+        "learningPath": {
+          "kind": "lesson",
+          "focus": "Why can average velocity be zero while average speed is not?",
+          "version": 1,
+          "foundations": false,
+          "targetSlugs": [
+            "u1.kinematics-language",
+            "u1.vocab-position-distance-displacement"
+          ]
+        },
+        "presentation": "physics-path",
+        "schemaVersion": 1
+      }
+    }
+  ]
+}

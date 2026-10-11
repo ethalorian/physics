@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, BookOpen, GraduationCap, type LucideIcon } from 'lucide-react'
+import { useLessonContext } from './useLessonContext'
+import { lessonContextHref } from '@/lib/lesson-release'
 import type { Tool } from './adminNav'
 
 interface CommandItem {
@@ -29,6 +31,7 @@ type SearchIndex = {
  */
 export default function AdminCommand({ tools }: { tools: Tool[] }) {
   const router = useRouter()
+  const context = useLessonContext()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
@@ -77,7 +80,7 @@ export default function AdminCommand({ tools }: { tools: Tool[] }) {
       key: `lesson:${l.id}`,
       label: l.title,
       desc: l.published ? 'Lesson' : 'Draft',
-      href: `/admin/lessons/${l.id}/edit`,
+      href: `/admin/lessons/${l.id}`,
       icon: BookOpen,
       accent: 'var(--primary)',
       group: 'Lessons',
@@ -106,7 +109,7 @@ export default function AdminCommand({ tools }: { tools: Tool[] }) {
 
   useEffect(() => { setActive(0) }, [query])
 
-  const go = (it: CommandItem) => { setOpen(false); router.push(it.href) }
+  const go = (it: CommandItem) => { setOpen(false); router.push(lessonContextHref(it.href,{class:context.classId})) }
 
   return (
     <>

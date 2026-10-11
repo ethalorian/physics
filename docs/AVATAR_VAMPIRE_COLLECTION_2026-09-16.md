@@ -31,6 +31,6 @@ Regenerate the focused preview with `node scripts/render-avatar-vampires.cjs`.
 
 ## Publication status
 
-Implemented and tested locally. The production catalog was inspected read-only to confirm its slot constraint; no production changes or deployment were made.
+Published to the production catalog on September 16, 2026 after confirming that the live avatar editor already included the new Ears and Fangs & mouths categories. The missing database migration caused those categories to appear empty. Applied `avatar_vampire_collection` through Supabase (recorded version `20260916175718`) and verified that all six records are enabled, with the expected prices, artwork, and render options.
 
-Publish `supabase/migrations/20260916164359_avatar_vampire_collection.sql` together with the updated avatar renderer, types, and admin category labels. The migration only widens the existing slot constraint and inserts the six new items, preserving established entries on conflict. The live catalog reads from the database, so editing the JSON fixture alone does not publish items. Avoid leaving new ear/mouth items for sale on an old application version that cannot render those slots.
+The source migration is `supabase/migrations/20260916164359_avatar_vampire_collection.sql`. It only widens the existing slot constraint and inserts the six new items, preserving established entries on conflict. The live catalog reads from the database, so editing the JSON fixture alone does not publish items. Future releases must include both the catalog migration and the application changes. Existing open editor pages need a refresh to load newly published items.

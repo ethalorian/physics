@@ -1,0 +1,53 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const root=process.cwd(),out=fs.mkdtempSync('/private/tmp/course-plan-api-');
+(async()=>{
+const mocks={
+'next/server':`export const NextResponse={json:(body,init)=>({body,status:init?.status??200})}`,
+'@/lib/api-auth':`export const withRole=(_roles,handler)=>handler`,
+'@/lib/supabase':`export const supabaseAdmin={from:table=>globalThis.db(table),rpc:async()=>({data:"pulse",error:null})}`,
+'@/lib/lesson-access':`export const hydrateLessonDocument=async d=>d`,
+'@/lib/program':`export const asProgram=p=>p;export const getProgramUnitIds=async()=>['unit-1'];export const PROGRAM_LABEL={physics:'Physics'}`,
+'@/lib/current-lesson-catalog-server':`export const currentLessonIds=async()=>new Set(['legacy'])`,
+};
+const build=async(file,name)=>{await require(root+'/node_modules/esbuild').build({entryPoints:[root+'/'+file],outfile:out+'/'+name+'.cjs',bundle:true,platform:'node',format:'cjs',packages:'external',plugins:[{name:'dependencies',setup(b){b.onResolve({filter:/.*/},a=>mocks[a.path]?{path:a.path,namespace:'mock'}:undefined);b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:mocks[a.path],loader:'js'}))}}]});return require(out+'/'+name+'.cjs')};
+const catalog=await build('src/lib/course-plan-presentation-server.ts','catalog'),keys=await build('src/lib/course-plan-presentation.ts','keys'),plans=await build('src/app/api/present/plans/route.ts','plans'),sessions=await build('src/app/api/present/sessions/route.ts','sessions'),controls=await build('src/app/api/present/sessions/[id]/route.ts','controls'),doc=await build('src/app/api/present/document/route.ts','doc'),tools=await build('src/app/api/present/sessions/[id]/tools/route.ts','tools');
+const courses=[{id:'cpa',track:'cpa',program:'physics',teacher_email:'teacher@example.com'},{id:'honors',track:'honors',program:'physics',teacher_email:'teacher@example.com'},{id:'foreign',track:'cpa',program:'physics',teacher_email:'other@example.com'},{id:'trades',track:'cpa',program:'trades',teacher_email:'teacher@example.com'}];
+let rows=[],calls=[],writes=[],lessons=[{id:'legacy',slug:'unit-1-day-1',lesson_number:1,unit_id:'unit-1',title:'Legacy lesson',visibility_track:'all',published:true,content_blocks:{schemaVersion:1,blocks:[{type:'prose',id:'intro',markdown:'Introduction'}]}}];
+global.db=table=>{calls.push(table);const filters=[];let verb='select',value,one=false,limit=Infinity;let q=new Proxy({}, {get(_k,key){if(key==='then')return(resolve,reject)=>Promise.resolve().then(()=>{let data=table==='courses'?courses:table==='present_sessions'?rows:table==='lessons'?lessons:[];data=data.filter(r=>filters.every(([op,k,v])=>op==='in'?v.includes(r[k]):op==='gte'?r[k]>=v:r[k]===v));if(verb==='insert'){const r={id:'s'+(rows.length+1),status:'live',current_slide:0,current_section:0,current_anchor:null,poll_block_id:null,poll_run_id:null,projected_block_id:null,projected_block_page:0,poll_locked:false,poll_revealed:false,blackout:false,timer_ends_at:null,command_revision:0,created_at:new Date().toISOString(),updated_at:new Date().toISOString(),...value};if(table==='present_sessions')rows.push(r);data=[r];writes.push({table,value});}if(verb==='update'){for(const r of data)Object.assign(r,value,{command_revision:(r.command_revision??0)+1});writes.push({table,value});}if(verb==='upsert')writes.push({table,value});return {data:one?data[0]??null:data.slice(0,limit),error:null,count:data.length}}).then(resolve,reject);return(...args)=>{if(['eq','is','in','gte'].includes(key))filters.push([key,...args]);if(['insert','update','upsert'].includes(key)){verb=key;value=args[0]}if(['single','maybeSingle'].includes(key))one=true;if(key==='limit')limit=args[0];return q}}});return q};
+const ctx={role:'teacher',email:'teacher@example.com',userId:'teacher',params:Promise.resolve({id:'s1'})};
+const request=(query='',body)=>new Request('http://test/'+query,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:undefined);
+for(const track of ['cpa','honors']){
+const c=courses.find(c=>c.id===track);assert.equal(catalog.coursePlanChoices(c).length,137);assert.ok(catalog.coursePlanChoices(c).every(d=>d.deck));const choices=catalog.coursePlanChoices(c).filter(d=>d.unit_id==='unit-1');assert.equal(choices.length,22);for(const [i,d] of choices.entries()){assert.equal(d.day,i+1);assert.equal(keys.presentationKey({plan_unit_id:d.unit_id,plan_day:d.day}),d.id);assert.equal(d.deck.src,`/api/teacher/worksheets/unit-1/${i+1}/presentation?track=${track}`);assert.deepEqual(keys.presentationTarget(d.id),{plan_unit_id:'unit-1',plan_day:i+1});}
+const result=await plans.GET(request('?course_id='+track),ctx);assert.equal(result.status,200);assert.equal(result.body.track,track);assert.equal(result.body.plans.filter(p=>p.unit_id==='unit-1').length,22);
+}
+assert.equal(keys.planTarget('plan:unit-1:0'),null);assert.equal(keys.planTarget('plan:unit-1:1.5'),null);assert.equal(keys.planTeachHref('unit-1',21,'cpa'),'/admin/command-center?unit=unit-1&day=21&class=cpa');
+let r=await plans.GET(request('?course_id=foreign'),ctx);assert.equal(r.status,403);
+for(const body of [{course_id:'cpa',plan_unit_id:'unit-1',plan_day:0},{course_id:'cpa',plan_unit_id:'unit-1',plan_day:1,lesson_id:'legacy'},{course_id:'cpa',plan_unit_id:'unit-1',plan_day:99},{course_id:'foreign',plan_unit_id:'unit-1',plan_day:1}]){r=await sessions.POST(request('',body),ctx);assert.ok(r.status>=400);assert.equal(writes.length,0,'Invalid target must not end an existing presentation');}
+calls=[];r=await sessions.GET(request('?course_id=cpa&plan_unit_id=unit-1&plan_day=21&prepare=1'),ctx);assert.equal(r.status,200);assert.equal(r.body.session,null);assert.match(r.body.deck.src,/unit-1\/21\/presentation\?track=cpa/);assert.deepEqual(r.body.lesson.content_blocks.blocks,[]);assert.ok(!calls.includes('lessons'));
+r=await sessions.POST(request('',{course_id:'cpa',plan_unit_id:'unit-1',plan_day:21,plan_track:'honors'}),ctx);assert.equal(r.status,200);assert.equal(r.body.session.lesson_id,null);assert.equal(r.body.session.plan_track,'cpa');assert.equal(rows.length,1);
+// Track changes affect the next presentation, never a presentation already open.
+courses[0].track='honors';r=await sessions.GET(request('?course_id=cpa&plan_unit_id=unit-1&plan_day=21'),ctx);assert.equal(r.body.session.id,'s1');assert.match(r.body.deck.src,/track=cpa/);r=await sessions.GET(request('?course_id=cpa&plan_unit_id=unit-1&plan_day=21&prepare=1'),ctx);assert.match(r.body.deck.src,/track=honors/);
+r=await doc.GET(request('?session_id=s1'),ctx);assert.equal(r.status,200);assert.match(r.body.deck.src,/track=cpa/);assert.equal((await doc.GET(request('?session_id=s1'),{...ctx,userId:'other'})).status,403);assert.equal((await doc.GET(request('?session_id=s1&lesson_id=legacy'),ctx)).status,403);
+calls=[];r=await controls.GET(request(),ctx);assert.equal(r.status,200);assert.equal(r.body.lobby,null);assert.ok(calls.includes('lobby_sessions'));assert.ok(calls.includes('course_students'));
+for(const body of [{current_slide:8,current_anchor:null,projected_block_id:null},{blackout:true},{blackout:false,timer_seconds:180}]){r=await controls.PATCH(request('',body),ctx);assert.equal(r.status,200)}assert.equal(rows[0].current_slide,8);assert.ok(rows[0].timer_ends_at);
+for(const body of [{current_slide:-1},{current_slide:1.5},{current_anchor:'intro'},{current_section:0},{poll_block_id:'q'},{projected_block_id:'intro'},{teaching_tool:{block_id:'a'}},{timer_seconds:4000}])assert.equal((await controls.PATCH(request('',body),ctx)).status,400);
+assert.equal((await controls.PATCH(request('',{current_slide:1}),{...ctx,userId:'other'})).status,403);
+assert.equal((await tools.POST(request('',{action:'pulse',kind:'readiness',anonymous:true}),ctx)).status,200);
+assert.equal((await tools.POST(request('',{action:'ack',signature:'slide-8',slide:8,ready:true}),ctx)).status,200);
+assert.equal((await tools.POST(request('',{action:'bookmark',note:'Compare both force arrows.'}),ctx)).status,200);
+r=await controls.PATCH(request('',{status:'ended'}),ctx);assert.equal(r.status,200);assert.equal(rows[0].blackout,true);assert.equal(rows[0].timer_ends_at,null);assert.equal((await controls.PATCH(request('',{current_slide:1}),ctx)).status,409);
+courses[0].track='cpa';r=await sessions.POST(request('',{course_id:'honors',plan_unit_id:'unit-1',plan_day:13}),ctx);assert.equal(r.status,200);assert.match(r.body.deck.src,/track=honors/);
+r=await sessions.GET(request('?active=1'),ctx);assert.deepEqual(r.body.sessions.map(s=>s.id),['s2']);
+r=await sessions.GET(request('?history=1&course_id=cpa'),ctx);assert.equal(r.body.sessions[0].id,'s1');
+// Keep explicit lesson launches and their publication gate compatible.
+r=await sessions.POST(request('',{course_id:'cpa',lesson_id:'legacy'}),ctx);assert.equal(r.status,200);assert.equal(r.body.session.lesson_id,'legacy');lessons[0].published=false;r=await sessions.POST(request('',{course_id:'cpa',lesson_id:'legacy'}),ctx);assert.equal(r.status,403);
+// ETF uses the same authenticated plan/session routes and keeps course scope.
+r=await plans.GET(request('?course_id=trades'),ctx);assert.equal(r.status,200);assert.equal(r.body.plans.length,36);assert.ok(r.body.plans.every(p=>p.deck));
+r=await sessions.GET(request('?course_id=trades&plan_unit_id=trades-etf-1&plan_day=2&prepare=1'),ctx);assert.equal(r.status,200);assert.match(r.body.deck.src,/trades-etf\/mvp-etf-1-02.html/);
+r=await sessions.POST(request('',{course_id:'trades',plan_unit_id:'trades-etf-1',plan_day:2}),ctx);assert.equal(r.status,200);assert.equal(r.body.session.lesson_id,null);assert.equal(r.body.session.plan_track,'cpa');const etfId=r.body.session.id;
+r=await doc.GET(request('?session_id='+etfId),ctx);assert.equal(r.status,200);assert.match(r.body.deck.src,/trades-etf\/mvp-etf-1-02.html/);
+r=await controls.PATCH(request('',{current_slide:1}),{...ctx,params:Promise.resolve({id:etfId})});assert.equal(r.status,200);
+const count=writes.length;r=await sessions.POST(request('',{course_id:'cpa',plan_unit_id:'trades-etf-1',plan_day:2}),ctx);assert.equal(r.status,404);assert.equal(writes.length,count,'ETF day cannot alter a physics class presentation');
+console.log('PASS 36 ETF plan choices, authenticated preparation/launch/document/remote control and course isolation.');
+console.log('PASS 274 standard course-plan choices, class track, plan day identity, ownership, no lesson publication dependency, pinned edition, session resume/document, remote controls, notes, projector acknowledgment, plan live activities, end/history and legacy lesson compatibility.');
+})().catch(e=>{console.error(e);process.exitCode=1});

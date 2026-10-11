@@ -1,5 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
-import { PAL, clearField, grid as drawFieldGrid, groundShadow, arrow, chip, panel, label } from '@/components/simulations/lab/draw'
+import { PAL, clearField, grid as drawFieldGrid, groundShadow, arrow, chip, label } from '@/components/simulations/lab/draw'
 
 // Free body diagram — an input-driven sim. A box sits at the centre; the student
 // builds a free-body diagram on it by adding force arrows (each with a magnitude
@@ -42,7 +42,11 @@ const FORCE_TYPE_CONFIG: Record<ForceType, { label: string; color: string; defau
   custom: { label: 'Custom Force', color: PAL.accent, defaultAngle: 0 },
 }
 
-const SCALE = 10 // pixels per Newton
+export interface ForceDiagramEngine extends SimEngine {
+ getForces(): {id:string;name:string;magnitude:number;angle:number;color:string}[]
+ setForce(id:string,changes:{magnitude?:number;angle?:number}):void
+ removeForce(id:string):void
+}
 const BOX_SIZE = 60
 
 function makeForce(type: ForceType, magnitude: number, angle: number): ForceVector {
@@ -63,7 +67,8 @@ export function createFreeBodyDiagramEngine(
   ctx: CanvasRenderingContext2D,
   initial: ParamValues,
   opts?: { invalidate: () => void },
-): SimEngine {
+): ForceDiagramEngine {
+  let SCALE=10
   let mass = typeof initial.mass === 'number' ? initial.mass : 5
   let showGrid = initial.showGrid !== false
   let showLabels = initial.showLabels !== false
@@ -120,8 +125,10 @@ export function createFreeBodyDiagramEngine(
     // Flat contact shadow under the box for depth (replaces the gradient sheen).
     groundShadow(ctx, box.x, box.y + BOX_SIZE / 2 + 6, BOX_SIZE * 0.5)
     // Flat PAL fill (gradient flattened) with a darker ink edge.
-    ctx.fillStyle = PAL.primary
-    ctx.fillRect(box.x - BOX_SIZE / 2, box.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE)
+    const material=ctx.createLinearGradient(box.x-30,box.y-30,box.x+30,box.y+30);material.addColorStop(0,'#6B7395');material.addColorStop(1,'#343E5B');ctx.fillStyle=material
+    ctx.beginPath();ctx.roundRect(box.x-30,box.y-30,60,60,7);ctx.fill()
+    ctx.strokeStyle='#A8B2C9';ctx.lineWidth=1;ctx.strokeRect(box.x-24,box.y-24,48,48)
+    ctx.fillStyle='#A8B2C9';for(const dx of [-20,20])for(const dy of [-20,20]){ctx.beginPath();ctx.arc(box.x+dx,box.y+dy,2,0,Math.PI*2);ctx.fill()}
     ctx.strokeStyle = PAL.ink
     ctx.lineWidth = 2
     ctx.strokeRect(box.x - BOX_SIZE / 2, box.y - BOX_SIZE / 2, BOX_SIZE, BOX_SIZE)
@@ -180,38 +187,6 @@ export function createFreeBodyDiagramEngine(
   // acceleration. This is the single source of on-canvas numbers, so no two labels
   // can ever overlap no matter how the student stacks the force arrows. Colour +
   // angle disambiguate arrows that share a hue (e.g. Applied and Gravity).
-  function drawLegend(w: number) {
-    if (!showLabels) return
-    const shown = forces.filter((f) => f.magnitude > 0)
-    const nf = netForce()
-    const netMag = Math.hypot(nf.x, nf.y)
-    const aMag = netMag / mass
-    const rows = shown.length + 1 + (showAcceleration ? 1 : 0)
-    const lw = 234
-    const lh = 30 + rows * 18 + 6
-    const lx = w - lw - 10
-    const ly = 10
-    panel(ctx, lx, ly, lw, lh, 10, PAL.surface)
-    label(ctx, 'Forces (N)', lx + 12, ly + 19, { color: PAL.ink, weight: 'bold', size: 12 })
-    let ry = ly + 36
-    for (const f of shown) {
-      ctx.fillStyle = f.color
-      ctx.fillRect(lx + 12, ry - 8, 10, 10)
-      label(ctx, `${f.name}  ${f.magnitude.toFixed(1)} N @ ${Math.round(f.angle)}°`, lx + 28, ry + 1, { color: PAL.ink, size: 12 })
-      ry += 18
-    }
-    // Net force + acceleration, set off below the individual forces.
-    ctx.fillStyle = PAL.accent
-    ctx.fillRect(lx + 12, ry - 8, 10, 10)
-    label(ctx, `Net Force  ${netMag.toFixed(1)} N`, lx + 28, ry + 1, { color: PAL.ink, size: 12, weight: 'bold' })
-    ry += 18
-    if (showAcceleration) {
-      ctx.fillStyle = PAL.cool
-      ctx.fillRect(lx + 12, ry - 8, 10, 10)
-      label(ctx, `a = ${aMag.toFixed(2)} m/s²`, lx + 28, ry + 1, { color: PAL.ink, size: 12 })
-    }
-  }
-
   function drawScale(h: number) {
     const scaleX = 10
     const scaleY = h - 10
@@ -230,13 +205,15 @@ export function createFreeBodyDiagramEngine(
     // Keep the box centred when the canvas resizes (bespoke recentred on resize),
     // but only if it hasn't been dragged off-centre meaningfully.
     clearField(ctx, w, h)
+    box={x:w/2,y:h/2};const net=netForce();const maxForce=Math.max(25,...forces.map(f=>f.magnitude),Math.hypot(net.x,net.y));SCALE=Math.min(10,Math.max(1,Math.min(w-100,h-100)/2/maxForce))
+    label(ctx,'FORCE WORKBENCH / DRAG ARROWHEADS OR EDIT VALUES BELOW',18,24,{color:PAL.mute,size:w<500?8:10})
     if (showGrid) drawFieldGrid(ctx, w, h, 20, { color: PAL.grid })
     drawObject()
     for (const f of forces) drawForceVector(f)
     if (forces.length > 1) drawNetForce()
     if (showAcceleration) drawAcceleration()
     drawScale(h)
-    drawLegend(w) // opaque, drawn last → always legible over any arrow
+    if(showLabels){label(ctx,'Solid: individual forces · dashed: net force · dotted: acceleration',18,h-12,{color:PAL.mute,size:w<500?8:10})}
   }
 
   // ---- pointer input: drag the object, or drag a force arrowhead --------
@@ -310,19 +287,15 @@ export function createFreeBodyDiagramEngine(
   function loadPreset(preset: string) {
     switch (preset) {
       case 'balanced':
-        mass = 10
         forces = [makeForce('applied', 30, 0), makeForce('friction', 30, 180)]
         break
       case 'unbalanced':
-        mass = 5
         forces = [makeForce('applied', 50, 45)]
         break
       case 'gravity':
-        mass = 2
         forces = [makeForce('gravity', 19.6, FORCE_TYPE_CONFIG.gravity.defaultAngle)]
         break
       case 'friction':
-        mass = 8
         forces = [makeForce('applied', 40, 0), makeForce('friction', 20, 180)]
         break
       default: // 'custom' — leave forces as-is
@@ -333,7 +306,10 @@ export function createFreeBodyDiagramEngine(
     massChanged = true
   }
 
-  const engine: SimEngine = {
+  const engine: ForceDiagramEngine = {
+    getForces(){return forces.map(({id,name,magnitude,angle,color})=>({id,name,magnitude,angle,color}))},
+    setForce(id,changes){forces=forces.map(f=>f.id===id?{...f,...changes,magnitude:Math.max(0,Math.min(100,changes.magnitude??f.magnitude))}:f);render();opts?.invalidate()},
+    removeForce(id){forces=forces.filter(f=>f.id!==id);render();opts?.invalidate()},
     render,
     setParams(values: ParamValues) {
       if (typeof values.mass === 'number' && values.mass !== mass) {

@@ -20,6 +20,7 @@ class Query {
     this.filters.push((r) => r[k] === v)
     return this
   }
+  is(k, v) { this.filters.push(r=>(r[k]??null)===v); return this; }
   in(k, v) {
     this.filters.push((r) => v.includes(r[k]))
     return this
@@ -130,6 +131,7 @@ const lesson = (id, unit_id = 'u1', n = 1, extra = {}) => ({
   unit: 'Legacy name',
   lesson_number: n,
   published: true,
+  content_blocks:{schemaVersion:1,presentation:'physics-path',learningPath:{version:1,kind:'lesson',targetSlugs:[],focus:id},blocks:[]},
   ...extra,
 })
 function reset() {
@@ -192,7 +194,63 @@ async function check(name, fn) {
     ),
     all = await bundle('src/app/api/lessons/[id]/open-all/route.ts', 'all'),
     board = await bundle('src/app/api/lesson-access/route.ts', 'board'),
-    plans = await bundle('src/app/api/teacher/lesson-plans/route.ts', 'plans')
+    plans = await bundle('src/app/api/teacher/lesson-plans/route.ts', 'plans'),
+    courses = await bundle('src/app/api/teacher/courses/route.ts', 'courses'),
+    catalog = await bundle('src/lib/current-lesson-catalog.ts', 'catalog'),
+    programs = await bundle('src/lib/program.ts', 'programs')
+  await check('retired MVP lessons cannot re-enter the catalog even if republished', async () => {
+    state.tables.units.push({id:'proj-1',name:'Retired MVP',program:'projects',order_index:1})
+    state.tables.lessons.push(lesson('old-mvp','proj-1'))
+    assert.equal(catalog.isCurrentLesson(lesson('old-mvp','proj-1')),false)
+    assert.equal(catalog.isCurrentLesson({...lesson('unknown-project'),program:'projects'}),false)
+    const data=await (await board.GET(req({}),teacher)).json()
+    assert(!data.lessons.some(l=>l.id==='old-mvp'))
+    assert.equal((await windows.POST(req({lesson_id:'old-mvp',open_at:'2026-09-28T10:00:00Z'}),ctx())).status,422)
+    assert.equal(state.writes,0)
+  })
+  await check('MVP uses individual Physics releases without opening neighboring videos', async () => {
+    state.tables.courses.push({...course('mvp'),name:'MVP Physics'})
+    for(const lesson_id of ['first','next']) {
+      assert.equal((await windows.POST(req({lesson_id,open_at:'2026-09-28T10:00:00Z'}),ctx('mvp'))).status,200)
+    }
+    const data=await (await board.GET(req({}),teacher)).json()
+    const mvp=data.classes.find(c=>c.id==='mvp')
+    assert.equal(mvp.program,'physics')
+    assert.deepEqual(state.tables.lesson_class_windows.map(w=>[w.course_id,w.lesson_id]),[['mvp','first'],['mvp','next']])
+    assert.equal(lib.releaseStatus(data.windows['mvp|last']),'closed')
+  })
+  await check('retired program assignments are rejected before any write', async () => {
+    assert.deepEqual(programs.PROGRAMS,['physics','trades'])
+    assert.equal(programs.asProgram('projects'),'projects') // historical records stay readable
+    assert.equal((await courses.POST(req({course_id:'cpa',program:'projects'}),teacher)).status,400)
+    assert.equal(state.writes,0)
+  })
+  await check('admin teaching-plan picker omits retired MVP units', async () => {
+    const response=await plans.GET(new Request('http://local/api/teacher/lesson-plans?unit_id=proj-1'),{...teacher,role:'admin',realRole:'admin'})
+    assert.equal(response.status,200)
+    const data=await response.json()
+    assert(!data.tracks.includes('projects'))
+    assert(!data.availableUnits.some(id=>id.startsWith('proj-')))
+    assert.deepEqual(data.days,[])
+  })
+  await check('legacy physics days cannot be newly released and bodies stay private', async()=>{
+    state.tables.lessons.push(lesson('old-day','u1',0,{content_blocks:{schemaVersion:1,blocks:[]}}));
+    state.tables.courses.push({...course('archived'),archived_at:'2026-01-01'});
+    const d=await (await board.GET(req({}),teacher)).json();
+    assert(!d.lessons.some(l=>l.id==='old-day')); assert(!d.classes.some(c=>c.id==='archived'));
+    assert(d.lessons.every(l=>!('content_blocks' in l)));
+    const response=await windows.POST(req({lesson_id:'old-day',open_at:'2026-09-28T10:00:00Z'}),ctx());
+    assert.equal(response.status,422); assert.equal(state.writes,0);
+  });
+  await check('opening and closing one lesson leaves its unit siblings and other classes unchanged',async()=>{
+    state.tables.lesson_class_windows=[{course_id:'cpa',lesson_id:'first',open_at:'2026-09-01T10:00:00Z',close_at:null},{course_id:'honors',lesson_id:'next',open_at:'2026-09-02T10:00:00Z',close_at:null}];
+    const before=structuredClone(state.tables.lesson_class_windows);
+    assert.equal((await windows.POST(req({lesson_id:'next',open_at:'2026-09-28T10:00:00Z'}),ctx())).status,200);
+    assert.deepEqual(state.tables.lesson_class_windows.slice(0,2),before);
+    assert.equal(state.tables.lesson_class_windows.length,3);
+    assert.equal((await windows.POST(req({lesson_id:'next',open_at:null,close_at:null}),ctx())).status,200);
+    assert.deepEqual(state.tables.lesson_class_windows,before);
+  });
   await check('class board is owned, canonical and ordered', async () => {
     const d = await (await board.GET(req({}), teacher)).json()
     assert.equal(d.classes.length, 3)

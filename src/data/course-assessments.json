@@ -1,0 +1,106 @@
+[
+  {
+    "unit": "unit-2",
+    "day": 16,
+    "stage": "start",
+    "title": "Transfer assessment — Receive, plan, begin",
+    "src": "/decks/course-assessments/unit-2-day-16.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-2",
+    "day": 17,
+    "stage": "finish",
+    "title": "Transfer assessment — Complete, defend, submit",
+    "src": "/decks/course-assessments/unit-2-day-17.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-3",
+    "day": 14,
+    "stage": "start",
+    "title": "Transfer assessment — Receive, plan, begin",
+    "src": "/decks/course-assessments/unit-3-day-14.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-3",
+    "day": 15,
+    "stage": "finish",
+    "title": "Transfer assessment — Complete, defend, submit",
+    "src": "/decks/course-assessments/unit-3-day-15.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-4",
+    "day": 22,
+    "stage": "start",
+    "title": "Transfer assessment — Receive, plan, begin",
+    "src": "/decks/course-assessments/unit-4-day-22.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-4",
+    "day": 23,
+    "stage": "finish",
+    "title": "Transfer assessment — Complete, defend, submit",
+    "src": "/decks/course-assessments/unit-4-day-23.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-5",
+    "day": 12,
+    "stage": "start",
+    "title": "Transfer assessment — Receive, plan, begin",
+    "src": "/decks/course-assessments/unit-5-day-12.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-5",
+    "day": 13,
+    "stage": "finish",
+    "title": "Transfer assessment — Complete, defend, submit",
+    "src": "/decks/course-assessments/unit-5-day-13.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-6",
+    "day": 18,
+    "stage": "start",
+    "title": "Transfer assessment — Receive, plan, begin",
+    "src": "/decks/course-assessments/unit-6-day-18.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-6",
+    "day": 19,
+    "stage": "finish",
+    "title": "Transfer assessment — Complete, defend, submit",
+    "src": "/decks/course-assessments/unit-6-day-19.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-7",
+    "day": 18,
+    "stage": "start",
+    "title": "Transfer assessment — Receive, plan, begin",
+    "src": "/decks/course-assessments/unit-7-day-18.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-7",
+    "day": 19,
+    "stage": "finish",
+    "title": "Transfer assessment — Complete, defend, submit",
+    "src": "/decks/course-assessments/unit-7-day-19.html",
+    "slides": 7
+  },
+  {
+    "unit": "unit-8",
+    "day": 9,
+    "stage": "capstone",
+    "title": "Transfer assessment — Design defense",
+    "src": "/decks/course-assessments/unit-8-day-9.html",
+    "slides": 7
+  }
+]

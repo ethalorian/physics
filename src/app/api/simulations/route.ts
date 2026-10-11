@@ -1,3 +1,4 @@
+import { canExploreSimulations } from '@/lib/simulation-access'
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getUserRole } from '@/lib/permissions'
@@ -16,7 +17,8 @@ export async function GET(request: NextRequest) {
     
     // Check if user is admin/teacher to bypass RLS
     const session = await auth()
-    const userRole = session?.user?.email ? getUserRole(session.user.email) : 'student'
+    const userRole = session?.user?.role ?? getUserRole(session?.user?.email)
+    if (userRole === 'student' && session?.user?.id && !await canExploreSimulations(session.user.id, 'student')) return NextResponse.json({ simulations: [], count: 0, assignedOnly: true })
     const isAdminOrTeacher = userRole === 'admin' || userRole === 'teacher'
     
     // Filters

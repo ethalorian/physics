@@ -5,9 +5,10 @@ import styles from './LessonViewer.module.css'
 export function lessonXpTotal(blocks: ContentBlock[]) {
   const seen = new Set<string>()
   return blocks.reduce((total, block) => {
-    if (seen.has(block.id)) return total
-    seen.add(block.id)
-    return total + (isCaptureBlock(block) && typeof block.xp === 'number' && Number.isFinite(block.xp) && block.xp > 0 ? Math.round(block.xp) : 0)
+    const identity = block.type === 'instruction_video' ? `video:${block.youtubeId}` : block.id
+    if (seen.has(identity)) return total
+    seen.add(identity)
+    return total + ((isCaptureBlock(block) || block.type === 'instruction_video') && typeof block.xp === 'number' && Number.isFinite(block.xp) && block.xp > 0 ? Math.round(block.xp) : 0)
   }, 0)
 }
 
@@ -21,7 +22,7 @@ export default function LessonXp({ blocks, earned }: { blocks: ContentBlock[]; e
     </div>
     <div className={styles.xpDetail}>
       <span role="status">{earned === undefined ? `${total.toLocaleString()} XP lesson reward` : `${earned.toLocaleString()} XP earned · ${total.toLocaleString()} XP total`}</span>
-      <small>{total > 0 ? 'Earn once per eligible completed answer.' : 'Your answers still count as learning evidence.'}</small>
+      <small>{total > 0 ? 'Earn once for each video watched and each complete answer saved. XP rewards participation; your teacher rates mastery.' : 'Your answers still count as learning evidence.'}</small>
     </div>
   </section>
 }

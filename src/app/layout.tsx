@@ -1,3 +1,4 @@
+import StudentLiveInvitations from '@/components/present/StudentLiveInvitations'
 // React/Next.js imports
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
@@ -9,6 +10,8 @@ import './globals.css'
 import AuthProvider from '@/components/auth-provider'
 import AccessGate from '@/components/AccessGate'
 import Navbar from '@/components/navbar'
+import RoleExperienceBar from '@/components/RoleExperienceBar'
+import ExperienceRequestBoundary from '@/components/ExperienceRequestBoundary'
 import SimulationLauncher from '@/components/simulations/SimulationLauncher'
 import { QuickTestAccountSwitcher } from '@/components/QuickTestAccountSwitcher'
 import { StudentActivityProvider } from '@/contexts/StudentActivityContext'
@@ -57,11 +60,14 @@ export default function RootLayout({
         </div>
 
         <AuthProvider>
+          <ExperienceRequestBoundary />
+          <RoleExperienceBar />
           <ToastProvider>
             <ViewModeProvider>
               <SimulationProvider>
                 <StudentActivityProvider>
                   <AccessGate>
+                    <StudentLiveInvitations />
                     <Navbar />
                     <SimulationLauncher />
                     <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">

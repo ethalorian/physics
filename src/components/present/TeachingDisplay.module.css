@@ -1,0 +1,8 @@
+.screen {
+  width: min(100%, calc((100dvh - 240px) * 16 / 9));
+  min-width: 0;
+  margin-inline: auto;
+}
+@media (max-height: 600px) {
+  .screen { width: 100%; }
+}

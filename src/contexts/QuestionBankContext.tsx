@@ -101,7 +101,7 @@ export function QuestionBankProvider({ children }: { children: ReactNode }) {
   }, [])
 
   // Check if user can access question bank
-  const userRole = getUserRole(session?.user?.email)
+  const userRole = (session?.user?.role ?? getUserRole(session?.user?.email))
   const canAccessQuestionBank = userRole === 'admin' || userRole === 'teacher'
 
   // Initialize data loading - only for authorized users

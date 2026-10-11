@@ -1,0 +1,398 @@
+[
+  {
+    "project": 1,
+    "example": [
+      "How much of the strip makes the three sides?",
+      "10 1/2 − 1/2 = 10 in; 3 + 3 + 4 = 10 in.",
+      "The joining tab overlaps; it is not a fourth side of the triangular stand."
+    ],
+    "exit": "A revised stand uses two 3 1/4-in faces, a 4-in base and a 1/2-in joining tab. Find its blank length. Explain where you would measure the second fold from datum A. Cite your notebook and one test result.",
+    "key": "Blank = 3 1/4 + 3 1/4 + 4 + 1/2 = 11 in. Second fold is 6 1/2 in from datum A. Actual tests vary; inspect independent tape use and a real revision, not only the digital answer.",
+    "kind": "core"
+  },
+  {
+    "project": 1,
+    "example": [
+      "Find the interior and outside width of three clear bays.",
+      "3 × 2 1/2 + 2 × 1/8 = 7 3/4 in interior; + 2 × 1/8 = 8 in outside.",
+      "Only the two internal partitions belong in the interior-width sum."
+    ],
+    "exit": "Two clear bays each need 3 1/4 in. One internal partition is 1/8 in and two outer walls are each 1/8 in. Calculate outside width and identify the internal partition on your sketch.",
+    "key": "Outside width = 6 1/2 + 3/8 = 6 7/8 in. Interior width = 6 5/8 in. Check that the student adds three thicknesses for the outside width, not two.",
+    "kind": "core"
+  },
+  {
+    "project": 1,
+    "example": [
+      "Can four rectangular pieces fit this sheet?",
+      "Each 4 × 3-in piece has 12 in² area; four use 48 in². Two rows of two fit in an 8 × 6-in rectangle.",
+      "A 9 × 12-in sheet can contain this arrangement. Area alone would not prove a different set of shapes fits."
+    ],
+    "exit": "A 12 × 9-in sheet supplies six 4 × 3-in pieces. Show an arrangement, calculate used area and remaining area, and explain why the layout matters.",
+    "key": "Three columns of 4 in and two rows of 3 in fit: 12 × 6 in. Used area 72 in²; sheet 108 in²; remaining 36 in². An equivalent rotated layout is acceptable.",
+    "kind": "core"
+  },
+  {
+    "project": 1,
+    "example": [
+      "Estimate the cost using classroom prices, not a supplier quote.",
+      "0.50 sheet × $2.40/sheet + 3 ft × $0.10/ft = $1.50.",
+      "This is material consumed. Buying one whole sheet would cost $2.40 before tape or other supplies."
+    ],
+    "exit": "Your build consumes 3/4 sheet at a classroom price of $2.40 per sheet and 4 ft of tape at $0.10/ft. Find consumed-material cost and the purchase cost if you must buy one sheet plus that tape.",
+    "key": "Consumed cost = $1.80 + $0.40 = $2.20. Whole-sheet purchase = $2.40 + $0.40 = $2.80. Do not present sample prices as current quotations.",
+    "kind": "core"
+  },
+  {
+    "project": 1,
+    "example": [
+      "Check an inspected dimension.",
+      "Actual 8 1/8 in − intended 8 in = +1/8 in.",
+      "A teacher-set ±1/8-in tolerance includes both limits; whether this is suitable depends on the object and material."
+    ],
+    "exit": "A plan calls for 6 3/4 in ±1/8 in. State the acceptable interval. Does an actual 6 7/8-in part meet it? Give your own final measurement and notebook reference.",
+    "key": "Interval 6 5/8 through 6 7/8 in, inclusive. 6 7/8 in meets the stated dimensional tolerance. It still needs the functional fit test.",
+    "kind": "core"
+  },
+  {
+    "project": 1,
+    "example": [
+      "Find the center spacing.",
+      "Horizontal: 8 1/2 − 2 × 3/4 = 7 in. Vertical: 5 1/4 − 2 × 3/4 = 3 3/4 in.",
+      "Overall dimensions and center spacing are different quantities."
+    ],
+    "exit": "If both horizontal edge offsets become 1 in while overall width stays 8 1/2 in, what is the new center spacing? Which two marks move?",
+    "key": "Spacing = 6 1/2 in. Both left and right columns of centers move inward by 1/4 in; all four centers change horizontal position.",
+    "kind": "flex"
+  },
+  {
+    "project": 2,
+    "example": [
+      "Compare improvement against a baseline.",
+      "Version 1 holds 4 identical objects; version 2 holds 7: (7 − 4)/4 × 100 = 75% more.",
+      "Object count is a comparative load measure, not force in newtons. A capped test gives a lower bound on capacity."
+    ],
+    "exit": "A tower improves from 5 to 8 identical test objects. Find percent increase. Read the footprint limit from drawing D and explain why taller is not automatically stronger.",
+    "key": "60% increase. Footprint limit is 6 × 6 in. Strength depends on geometry, material, load path and stability; height alone is not evidence.",
+    "kind": "core"
+  },
+  {
+    "project": 2,
+    "example": [
+      "Calculate bearing from actual geometry.",
+      "A centered 11-in member over an 8-in gap has (11 − 8)/2 = 1 1/2 in bearing at each end.",
+      "The clear gap excludes the supports; total member length includes both bearings."
+    ],
+    "exit": "A beam spans 9 1/4 in with 3/4 in bearing at each end. What minimum length is needed? Sketch where the three lengths sit.",
+    "key": "10 3/4 in. The three consecutive segments are bearing, clear gap, bearing. Material results depend on observed data.",
+    "kind": "core"
+  },
+  {
+    "project": 2,
+    "example": [
+      "Convert feet and inches consistently.",
+      "12 ft 6 in = 12 × 12 + 6 = 150 in.",
+      "6 in is half a foot, not 0.6 ft."
+    ],
+    "exit": "Convert a 9 ft 8-in surveyed length to inches. On drawing E, how far from the southwest corner is the far edge of the 3-ft door?",
+    "key": "116 in. Door far edge is 2 + 3 = 5 ft from the specified corner along the south wall.",
+    "kind": "core"
+  },
+  {
+    "project": 2,
+    "example": [
+      "Transfer real dimensions to the model.",
+      "16 ft × 1/2 in/ft = 8 in; 12 ft × 1/2 in/ft = 6 in; 3-ft door = 1 1/2 in.",
+      "Both plan and elevation must use the same chosen model scale."
+    ],
+    "exit": "A 14-ft wall with an 8-ft height uses the model scale 1/2 in = 1 ft. Find model width and height. Explain what changes if a printed drawing is resized.",
+    "key": "7 × 4 in. Resizing changes the measurable paper scale; written dimensions remain the stated values. Verify a calibration dimension before scaling from paper.",
+    "kind": "core"
+  },
+  {
+    "project": 2,
+    "example": [
+      "Find a diagonal for a right-angled frame.",
+      "For a 6 × 8-in rectangle: d² = 6² + 8² = 100; d = 10 in.",
+      "This uses a right angle. Check the frame; do not apply it to an arbitrary four-sided shape."
+    ],
+    "exit": "A right-angled bay is 3 × 4 in. Calculate its diagonal. Identify which view would show a brace on a vertical wall.",
+    "key": "5 in by the Pythagorean relationship. The wall elevation shows the vertical-wall brace; the floor plan alone does not show its height.",
+    "kind": "core"
+  },
+  {
+    "project": 2,
+    "example": [
+      "Estimate net covering area.",
+      "A 12 × 8-ft wall minus a 3 × 7-ft opening: 96 − 21 = 75 ft². With a stated 10% allowance: 82.5 ft².",
+      "Allowance is a planning choice, not a universal trade rule; purchase quantities depend on usable stock sizes."
+    ],
+    "exit": "A 10 × 8-ft wall has a 2 × 3-ft opening. Find net area and area with a supplied 10% allowance. Identify the opening in the elevation.",
+    "key": "80 − 6 = 74 ft²; 74 × 1.10 = 81.4 ft². Do not subtract the opening perimeter from wall area.",
+    "kind": "core"
+  },
+  {
+    "project": 2,
+    "example": [
+      "Compare melting in a controlled test.",
+      "12 g melted from 60 g = 20%; 6 g from 60 g = 10%. Melt reduction = (12 − 6)/12 × 100 = 50%.",
+      "The enclosure halved melt in this trial; it did not establish a material R-value."
+    ],
+    "exit": "A control melts 15 g and an insulated version melts 9 g in comparable trials. Find percent melt reduction. State one condition that must be held the same.",
+    "key": "40% reduction relative to control. Accept equal starting mass/temperature, duration, container, surroundings or handling. No R-value inference.",
+    "kind": "core"
+  },
+  {
+    "project": 2,
+    "example": [
+      "Calculate the effect of a measured change.",
+      "Deflection falls from 6 mm to 4 mm: (6 − 4)/6 × 100 ≈ 33.3% reduction.",
+      "Report measurement resolution; a small difference may not be meaningful enough to justify a strong claim."
+    ],
+    "exit": "Movement changes from 8 mm to 5 mm. Calculate the reduction and name the baseline. Identify the revised feature on the relevant drawing view.",
+    "key": "37.5% reduction using 8 mm as baseline. A claim of improvement needs comparable actual testing and instrument resolution.",
+    "kind": "core"
+  },
+  {
+    "project": 2,
+    "example": [
+      "Convert a checked model dimension back to full size.",
+      "7 1/2 model inches ÷ (1/2 in per ft) = 15 ft.",
+      "The result describes the intended full-size dimension, not a physically validated full-size building."
+    ],
+    "exit": "At 1/2 in = 1 ft, an opening measures 1 3/4 in in the model. What real width does it represent? Identify whether opening width is read from plan, elevation, or both when dimensioned.",
+    "key": "3 1/2 ft = 3 ft 6 in. Either dimensioned view can supply width; related views must agree.",
+    "kind": "core"
+  },
+  {
+    "project": 2,
+    "example": [
+      "Translate a revised opening offset.",
+      "At 1/2 in per ft, changing 2 ft to 3 ft moves the opening by 1/2 in in the model.",
+      "The designer must decide the intended offset before either view is corrected."
+    ],
+    "exit": "A model door must move 1 ft 6 in at scale 1/2 in = 1 ft. Calculate model movement and list the drawing views that need checking.",
+    "key": "3/4 in. Check plan and the affected wall elevation, plus any detail or parts affected by the change.",
+    "kind": "flex"
+  },
+  {
+    "project": 3,
+    "example": [
+      "Use an ideal displaced-volume model.",
+      "Equal piston areas predict equal travel: A × 20 mm = A × d, so d = 20 mm.",
+      "This model fits an ideal liquid system; trapped air, leaks and friction can change actual motion."
+    ],
+    "exit": "For equal piston areas, predict output travel for 18 mm input in the ideal liquid model. State why an air-filled system may behave differently and identify input/output on G.",
+    "key": "18 mm ideal output. Air is compressible; water is much less compressible under this classroom condition. Real travel must still be measured.",
+    "kind": "core"
+  },
+  {
+    "project": 3,
+    "example": [
+      "Predict travel with a larger output piston.",
+      "A_in = 1 cm²; A_out = 2 cm²; input 4 cm: output = (1 × 4)/2 = 2 cm.",
+      "Ideal output force would double, but do not claim you measured a force ratio without force measurements."
+    ],
+    "exit": "Input area 2 cm² moves 3 cm; output area is 3 cm². Predict output travel. Point to the mounting feature that prevents sideways motion.",
+    "key": "Output = (2 × 3)/3 = 2 cm. An actual guide/brace must be identified; ideal force claims require the model’s limitations.",
+    "kind": "core"
+  },
+  {
+    "project": 3,
+    "example": [
+      "Calculate an average collection rate.",
+      "180 mL in 15 s = 12 mL/s. At that average rate, 240 mL would take 20 s.",
+      "A falling reservoir changes pressure head; the reported value is the trial’s average."
+    ],
+    "exit": "A system collects 200 mL in 25 s. Find average flow rate and identify two conditions to hold constant when comparing a second tube.",
+    "key": "8 mL/s. Constant starting head, liquid, tube bore when not the changed variable, collection method and timing are valid choices.",
+    "kind": "core"
+  },
+  {
+    "project": 3,
+    "example": [
+      "Locate symmetric features from a centerline.",
+      "On a 3-in-wide hull, the centerline is 1 1/2 in from each edge. Pipes 1 in apart lie 1/2 in on each side of center.",
+      "Their centers lie 1 in and 2 in from the same edge."
+    ],
+    "exit": "Two mounting centers must be 1 1/2 in apart, symmetric about the centerline of a 4-in-wide base. Find both locations from the left edge. Identify which drawing provides their spacing.",
+    "key": "Centerline 2 in; offsets ±3/4 in; positions 1 1/4 and 2 3/4 in. A dimensioned plan/layout supplies spacing; schematic connectivity alone does not.",
+    "kind": "core"
+  },
+  {
+    "project": 3,
+    "example": [
+      "Check a simple liquid balance.",
+      "Start 200 mL; receiver 175 mL; liquid retained 20 mL: unaccounted volume = 5 mL.",
+      "Do not call all 25 mL missing from the receiver a leak."
+    ],
+    "exit": "A 150-mL trial leaves 130 mL collected and 15 mL in the route. What volume is unaccounted for? Name one check needed before calling it a leak.",
+    "key": "5 mL. Check retained liquid, spills, measurement resolution and starting/ending conditions.",
+    "kind": "core"
+  },
+  {
+    "project": 3,
+    "example": [
+      "Calculate a boat’s average speed.",
+      "120 cm in 8 s = 15 cm/s.",
+      "Machine alternative: 6 complete cycles in 30 s = 0.20 cycles/s. These are different performance quantities."
+    ],
+    "exit": "Choose your route: boat travels 150 cm in 10 s; machine completes 5 cycles in 25 s. Calculate its rate and name the drawing feature used to establish the measurement endpoints.",
+    "key": "Boat 15 cm/s; machine 0.20 cycles/s. Accept the declared route only; endpoints must match its lane or completed-cycle definition.",
+    "kind": "core"
+  },
+  {
+    "project": 3,
+    "example": [
+      "Compare average performance.",
+      "Speed changes from 12 to 15 cm/s: (15 − 12)/12 × 100 = 25% increase.",
+      "For time over a fixed distance, a shorter time is better; label the metric before calculating percent change."
+    ],
+    "exit": "A fixed task takes 20 s before revision and 16 s after. Find percent time reduction. Explain why that is not the same numerical value as percent rate increase.",
+    "key": "Time reduction 20%. For the same task, rate rises by 20/16 − 1 = 25%. Each percentage has a different baseline quantity.",
+    "kind": "core"
+  },
+  {
+    "project": 3,
+    "example": [
+      "Check whether a test meets its stated requirement.",
+      "A gate must move at least 20 mm. Three trials of 22, 21 and 19 mm include one failure.",
+      "An average above 20 mm does not prove every trial meets an every-cycle requirement."
+    ],
+    "exit": "A 20-mm minimum travel requirement gives trials 20, 23 and 18 mm. Does the machine meet an every-cycle requirement? Calculate the mean and explain its limitation.",
+    "key": "No: the 18-mm trial fails. Mean = 61/3 ≈20.3 mm; averaging conceals the failed cycle.",
+    "kind": "core"
+  },
+  {
+    "project": 3,
+    "example": [
+      "Convert units before comparing readings.",
+      "2.4 cm = 24 mm; 24 − 20 = 4 mm above a 20-mm target.",
+      "Subtracting 2.4 from 20 without converting units gives a meaningless comparison."
+    ],
+    "exit": "A drawing calls for 30 mm travel and you measure 2.7 cm. Find the shortfall and identify the start/end references to recheck.",
+    "key": "2.7 cm = 27 mm; shortfall 3 mm. Start and end must refer to the same moving point and reset position.",
+    "kind": "flex"
+  },
+  {
+    "project": 4,
+    "example": [
+      "Estimate wire with a stated routing allowance.",
+      "A 14-in route plus 2 in for connections needs 16 in.",
+      "Allowance is stated for this kit and layout; it is not a universal wiring rule."
+    ],
+    "exit": "Three routes are 8, 11 and 6 in. Each needs a supplied 2-in connection allowance. Calculate total wire. Identify the switch symbol in J.",
+    "key": "8+11+6+3×2 = 31 in. Switch interrupts or completes a path; merely drawing a line across it does not establish physical contact.",
+    "kind": "core"
+  },
+  {
+    "project": 4,
+    "example": [
+      "Calculate reliability from repeated trials.",
+      "Eight successful triggers in ten trials = 80%; ten in ten = 100% in that test.",
+      "Ten successes do not prove permanent reliability under all conditions."
+    ],
+    "exit": "Nine of twelve trials succeed. Calculate success percentage. Explain why moving a symbol on a schematic need not mean moving the physical component.",
+    "key": "75%. A schematic represents connectivity; physical positions are given by the layout drawing.",
+    "kind": "core"
+  },
+  {
+    "project": 4,
+    "example": [
+      "Compare a reading with a nominal value.",
+      "A nominal 3.0-V source reads 2.8 V: difference = −0.2 V.",
+      "A nominal rating is not a guaranteed measurement; interpret readings with the circuit condition and instrument resolution."
+    ],
+    "exit": "A nominal 4.5-V source reads 4.2 V. Find the difference. On the schematic identify two points for measuring lamp voltage and state the required measurement mode.",
+    "key": "−0.3 V relative to nominal. Across the lamp terminals in the taught DC-voltage mode. Teacher verifies instrument-specific sockets/range.",
+    "kind": "core"
+  },
+  {
+    "project": 4,
+    "example": [
+      "Use Ohm’s law for an explicitly resistive example.",
+      "For a 30-ohm resistor at 3.0 V, I = V/R = 0.10 A = 100 mA.",
+      "Do not assume a motor, lamp or LED behaves like a constant resistor across all conditions."
+    ],
+    "exit": "A supplied 60-ohm resistor is connected to 3.0 V. Calculate current in A and mA. Show where a current meter enters the series path.",
+    "key": "0.05 A = 50 mA. It replaces a break in the series path using the demonstrated setup, never bridges the source.",
+    "kind": "core"
+  },
+  {
+    "project": 4,
+    "example": [
+      "List every control state.",
+      "Two independent on/off switches give 2 × 2 = 4 states: off/off, on/off, off/on, on/on.",
+      "Testing only both-on does not establish independent control."
+    ],
+    "exit": "List the four states and expected lamp outputs for two independent switches. If one 9-in route needs 2 in allowance, how long is that wire?",
+    "key": "00 neither; 10 first only; 01 second only; 11 both. Wire length 11 in. Match bit order to the labeled switch/lamp pair.",
+    "kind": "core"
+  },
+  {
+    "project": 4,
+    "example": [
+      "Calculate power for a supplied steady operating point.",
+      "3.0 V × 0.20 A = 0.60 W.",
+      "A motor’s startup and changing-load behavior may differ from this steady example."
+    ],
+    "exit": "A supplied steady device operates at 4.5 V and 0.10 A. Calculate power. Explain why that single value is not automatically its startup power.",
+    "key": "0.45 W. Startup/load conditions may change current; distinguish the supplied steady point from actual operation.",
+    "kind": "core"
+  },
+  {
+    "project": 4,
+    "example": [
+      "Calculate energy and sample operating cost.",
+      "Two 0.30-W lights for 4 h: 2 × 0.30 × 4 = 2.4 Wh = 0.0024 kWh. At a supplied $0.25/kWh, cost is $0.0006.",
+      "Sample electricity price is not a current tariff. Energy cost does not include battery purchase or equipment cost."
+    ],
+    "exit": "A 0.6-W fan runs for 3 h. Find Wh and kWh. At a supplied $0.20/kWh, find energy cost and state one expense excluded.",
+    "key": "1.8 Wh = 0.0018 kWh; $0.00036. Excludes batteries, device purchase and other costs. Small model power legitimately gives a small energy-only amount.",
+    "kind": "core"
+  },
+  {
+    "project": 4,
+    "example": [
+      "Check a reliability claim.",
+      "Four required switch states × three repeats = 12 checks. Eleven passes means one condition still needs repair.",
+      "Do not hide a failed control state inside an overall average."
+    ],
+    "exit": "Two switch states are tested three times each and one fails twice. How many checks passed? Explain what the failed state tells an inspector to investigate.",
+    "key": "6 total checks, 4 passed. Investigate the branch/trigger/connections associated with that state; percentage alone does not locate the fault.",
+    "kind": "core"
+  },
+  {
+    "project": 4,
+    "example": [
+      "Find an offset from a dimension chain.",
+      "Overall run 12 in; first segment 3 1/4 in; last segment 2 1/2 in: middle = 6 1/4 in.",
+      "All three lengths must refer to consecutive segments on the same route."
+    ],
+    "exit": "A 15-in route contains 4 3/4-in and 3 1/2-in end segments. Find the middle segment and name the drawing needed to measure physical routing.",
+    "key": "6 3/4 in. Use the dimensioned physical layout; a schematic alone does not specify route lengths.",
+    "kind": "flex"
+  },
+  {
+    "project": 4,
+    "example": [
+      "Explain a defensible performance comparison.",
+      "A task improves from 30 s to 24 s: time reduction = 6/30 × 100 = 20%.",
+      "Choose a metric meaningful to your product and preserve the original procedure."
+    ],
+    "exit": "Using your own project, show a calculation with units and identify its baseline or reference. Interpret one supplied-plan feature and cite the notebook page containing its physical check.",
+    "key": "Open response: verify operation, units, baseline/reference, drawing interpretation and actual check independently. Accept unsuccessful tests with a sound diagnosis; do not invent a numerical key.",
+    "kind": "exhibition"
+  },
+  {
+    "project": 4,
+    "example": [
+      "Apply a stated dimensional tolerance.",
+      "Target 5 1/2 in ±1/8 in gives 5 3/8 through 5 5/8 in. An actual 5 3/4 in is 1/8 in above the upper limit.",
+      "Tolerance is a stated acceptance range; function still needs testing."
+    ],
+    "exit": "A supplied part is 7 1/4 in ±1/8 in. State the interval and inspect a 7 3/8-in part. Then name one vocational skill you can now demonstrate independently, with evidence.",
+    "key": "7 1/8 through 7 3/8 in, inclusive; the part meets the dimensional interval. Individual evidence must support the student’s chosen skill.",
+    "kind": "exhibition"
+  }
+]

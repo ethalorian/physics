@@ -3,10 +3,17 @@ import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { isStaff } from '@/lib/arcade'
 import { avatarError } from '@/lib/avatar/server'
+import { DEFAULT_PULSE_CHART, pulseChart } from '@/lib/pulse-charts'
 // Shares the avatar/store spend lock; charge and play creation roll back together.
 export const POST = withAuth(async (request, ctx) => {
   const body = await request.json().catch(() => null)
   if (typeof body?.slug !== 'string' || !/^[a-z0-9-]{1,80}$/.test(body.slug)) return NextResponse.json({ error: 'Missing game slug' }, { status: 400 })
+  if (body.slug === 'pulse') {
+    const chart = pulseChart(body.chartId === undefined ? DEFAULT_PULSE_CHART : body.chartId)
+    if (!chart) return NextResponse.json({ error: 'Choose a valid Pulse song and level' }, { status: 400 })
+    const { data, error } = await supabaseAdmin.rpc('purchase_pulse_play', { p_user_id: ctx.userId, p_email: ctx.email, p_chart_id: chart.id, p_staff: isStaff(ctx) })
+    return error ? avatarError(error) : NextResponse.json(data)
+  }
   if (body.slug === 'mathle') {
     const {data,error}=await supabaseAdmin.rpc('purchase_mathle_daily',{p_user_id:ctx.userId,p_email:ctx.email,p_staff:isStaff(ctx)})
     if(error?.code==='23505') return NextResponse.json({error:'Your daily ranked Mathle run has already started. Choose Practice to replay today’s puzzle.'},{status:409})

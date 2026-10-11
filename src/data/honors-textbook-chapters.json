@@ -1,0 +1,206 @@
+[
+  {
+    "number": 1,
+    "title": "Introduction: The Nature of Science and Physics",
+    "from": 9,
+    "to": 40
+  },
+  {
+    "number": 2,
+    "title": "Kinematics",
+    "from": 41,
+    "to": 104
+  },
+  {
+    "number": 3,
+    "title": "Two-Dimensional Kinematics",
+    "from": 105,
+    "to": 154
+  },
+  {
+    "number": 4,
+    "title": "Dynamics: Force and Newton's Laws of Motion",
+    "from": 155,
+    "to": 210
+  },
+  {
+    "number": 5,
+    "title": "Further Applications of Newton's Laws: Friction, Drag, and Elasticity",
+    "from": 211,
+    "to": 242
+  },
+  {
+    "number": 6,
+    "title": "Uniform Circular Motion and Gravitation",
+    "from": 243,
+    "to": 284
+  },
+  {
+    "number": 7,
+    "title": "Work, Energy, and Energy Resources",
+    "from": 285,
+    "to": 342
+  },
+  {
+    "number": 8,
+    "title": "Linear Momentum and Collisions",
+    "from": 343,
+    "to": 384
+  },
+  {
+    "number": 9,
+    "title": "Statics and Torque",
+    "from": 385,
+    "to": 420
+  },
+  {
+    "number": 10,
+    "title": "Rotational Motion and Angular Momentum",
+    "from": 421,
+    "to": 472
+  },
+  {
+    "number": 11,
+    "title": "Fluid Statics",
+    "from": 473,
+    "to": 524
+  },
+  {
+    "number": 12,
+    "title": "Fluid Dynamics and Its Biological and Medical Applications",
+    "from": 525,
+    "to": 564
+  },
+  {
+    "number": 13,
+    "title": "Temperature, Kinetic Theory, and the Gas Laws",
+    "from": 565,
+    "to": 616
+  },
+  {
+    "number": 14,
+    "title": "Heat and Heat Transfer Methods",
+    "from": 617,
+    "to": 662
+  },
+  {
+    "number": 15,
+    "title": "Thermodynamics",
+    "from": 663,
+    "to": 720
+  },
+  {
+    "number": 16,
+    "title": "Oscillatory Motion and Waves",
+    "from": 721,
+    "to": 774
+  },
+  {
+    "number": 17,
+    "title": "Physics of Hearing",
+    "from": 775,
+    "to": 828
+  },
+  {
+    "number": 18,
+    "title": "Electric Charge and Electric Field",
+    "from": 829,
+    "to": 878
+  },
+  {
+    "number": 19,
+    "title": "Electric Potential and Electric Field",
+    "from": 879,
+    "to": 922
+  },
+  {
+    "number": 20,
+    "title": "Electric Current, Resistance, and Ohm's Law",
+    "from": 923,
+    "to": 972
+  },
+  {
+    "number": 21,
+    "title": "Circuits and DC Instruments",
+    "from": 973,
+    "to": 1026
+  },
+  {
+    "number": 22,
+    "title": "Magnetism",
+    "from": 1027,
+    "to": 1078
+  },
+  {
+    "number": 23,
+    "title": "Electromagnetic Induction, AC Circuits, and Electrical Technologies",
+    "from": 1079,
+    "to": 1138
+  },
+  {
+    "number": 24,
+    "title": "Electromagnetic Waves",
+    "from": 1139,
+    "to": 1174
+  },
+  {
+    "number": 25,
+    "title": "Geometric Optics",
+    "from": 1175,
+    "to": 1230
+  },
+  {
+    "number": 26,
+    "title": "Vision and Optical Instruments",
+    "from": 1231,
+    "to": 1266
+  },
+  {
+    "number": 27,
+    "title": "Wave Optics",
+    "from": 1267,
+    "to": 1322
+  },
+  {
+    "number": 28,
+    "title": "Special Relativity",
+    "from": 1323,
+    "to": 1364
+  },
+  {
+    "number": 29,
+    "title": "Quantum Physics",
+    "from": 1365,
+    "to": 1410
+  },
+  {
+    "number": 30,
+    "title": "Atomic Physics",
+    "from": 1411,
+    "to": 1474
+  },
+  {
+    "number": 31,
+    "title": "Radioactivity and Nuclear Physics",
+    "from": 1475,
+    "to": 1520
+  },
+  {
+    "number": 32,
+    "title": "Medical Applications of Nuclear Physics",
+    "from": 1521,
+    "to": 1566
+  },
+  {
+    "number": 33,
+    "title": "Particle Physics",
+    "from": 1567,
+    "to": 1606
+  },
+  {
+    "number": 34,
+    "title": "Frontiers of Physics",
+    "from": 1607,
+    "to": 1640
+  }
+]

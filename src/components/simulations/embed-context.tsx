@@ -6,3 +6,6 @@ import { createContext, useContext } from 'react'
 // so the sim's own page chrome (assignment editor, etc.) can hide itself.
 export const SimEmbedContext = createContext(false)
 export const useSimEmbedded = () => useContext(SimEmbedContext)
+
+export const SimLessonContext = createContext<string | undefined>(undefined)
+export const useSimLesson = () => useContext(SimLessonContext)

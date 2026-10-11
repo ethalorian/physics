@@ -1,0 +1,6 @@
+/* Mathematical notation stays distinct from the surrounding explanation. */
+.math-quantity{font-family:Georgia,"Times New Roman",serif;font-variant-numeric:lining-nums;font-weight:500;letter-spacing:0;color:var(--primary);font-size:1.04em}
+.math-quantity sub,.math-quantity sup{font-size:70%;line-height:0;position:relative;vertical-align:baseline}
+.math-quantity sub{bottom:-.24em}.math-quantity sup{top:-.45em}
+/* Keep the instructional color of each vector, resultant and graph label. */
+svg .math-quantity{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:1em;fill:inherit;color:inherit}

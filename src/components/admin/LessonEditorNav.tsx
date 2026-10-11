@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState, type ReactNode } from 'react'
 import Link from 'next/link'
+import LessonWorkspaceNav from './LessonWorkspaceNav'
 import { lessonContextHref, safeLessonReturn } from '@/lib/lesson-release'
 export default function LessonEditorNav({
   lessonId,
@@ -36,38 +37,8 @@ export default function LessonEditorNav({
     })
   return (
     <header className="mb-5 space-y-3 border-b pb-4">
-      <Link
-        className="text-sm underline"
-        href={
-          returnTo ?? (courseId
-            ? href(`/admin/classes/${encodeURIComponent(courseId)}`)
-            : canEdit
-              ? '/admin/dashboard'
-              : '/admin/lesson-access')
-        }
-      >
-        ←{' '}
-        {returnTo ? 'Back to library view' : courseId
-          ? 'Back to class'
-          : canEdit
-            ? 'Lesson library'
-            : 'Lesson access'}
-      </Link>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">{title}</h1>
-          {published !== undefined && (
-            <p className="text-sm text-muted-foreground">
-              Curriculum:{' '}
-              {published
-                ? 'Published · ready for teachers to release'
-                : 'Draft'}
-            </p>
-          )}
-        </div>
-        {children}
-      </div>
-      <nav aria-label="Lesson workflow" className="flex flex-wrap gap-2">
+      <LessonWorkspaceNav lessonId={lessonId} title={title} published={published} active={active==='preview'?'preview':'prepare'}/>
+      <nav aria-label="Lesson editing" className="flex flex-wrap gap-2">
         {(canEdit
           ? [
               ['build', 'Content'],
@@ -85,36 +56,8 @@ export default function LessonEditorNav({
             {label}
           </Link>
         ))}
-        <Link
-          className="min-h-11 rounded-lg border px-4 py-2 text-sm"
-          href={href('/admin/lesson-access')}
-        >
-          Class access
-        </Link>
-        {!courseId && unitId && day!==undefined && <Link className="min-h-11 rounded-lg border px-4 py-2 text-sm" href={href('/admin/teacher/plans')}>Teacher plan</Link>}
-        {courseId && (
-          <>
-            <Link
-              className="min-h-11 rounded-lg border px-4 py-2 text-sm"
-              href={href('/admin/teacher/plans')}
-            >
-              Teacher plan
-            </Link>
-            <Link
-              className="min-h-11 rounded-lg border px-4 py-2 text-sm"
-              href={href('/admin/command-center')}
-            >
-              Teach
-            </Link>
-            <Link
-              className="min-h-11 rounded-lg border px-4 py-2 text-sm"
-              href={href('/admin/control-room')}
-            >
-              Review
-            </Link>
-          </>
-        )}
       </nav>
+      {children}
       {published && canEdit && active !== 'preview' && (
         <p className="text-xs text-muted-foreground">
           Saving changes updates this shared published lesson for every class

@@ -1,0 +1,119 @@
+{
+  "baselineDeployment": "dpl_GQRpCZdcbn92x9MZSs8iZL4uUDqG",
+  "productionProject": "prj_lPQUO0Sm3856zxp1vhxidm9nx03h",
+  "files": [
+    {
+      "path": "src/components/quizzes/QuizWorkspace.tsx",
+      "sha1": "1e427c0007939081bceb3fcd83efef1960279d13",
+      "existing": false
+    },
+    {
+      "path": "src/components/quizzes/QuizWorkspace.module.css",
+      "sha1": "617b16bc28f09af7b64f55d12c4f2770531853a6",
+      "existing": false
+    },
+    {
+      "path": "src/components/quizzes/QuizGradebook.tsx",
+      "sha1": "ac38689ca76ac0a36b6f95b8f4c996a8bee4f097",
+      "existing": false
+    },
+    {
+      "path": "src/components/quizzes/QuizGradebook.module.css",
+      "sha1": "23e67c663a52c357eab17132649c4d2ddf0e9508",
+      "existing": false
+    },
+    {
+      "path": "src/components/quizzes/QuizInsights.tsx",
+      "sha1": "c6c986d62337462fbab748f077749e1c0a3ae063",
+      "existing": false
+    },
+    {
+      "path": "src/components/quizzes/QuizArchive.tsx",
+      "sha1": "a109b7bd1f98d791fcbf9fa7ce4fbcf442785405",
+      "existing": false
+    },
+    {
+      "path": "src/components/quizzes/QuizInventory.tsx",
+      "sha1": "6d6cbab6b4bc143541f0a64c880a68da5a199c28",
+      "existing": false
+    },
+    {
+      "path": "src/components/quizzes/QuizInventory.module.css",
+      "sha1": "a60d10750b1cc6059c715d8d36270f4a0b2c1393",
+      "existing": false
+    },
+    {
+      "path": "src/components/quizzes/QuizManage.tsx",
+      "sha1": "12380c946092a573eaaa26c5564accc942cc4896",
+      "existing": false
+    },
+    {
+      "path": "src/components/quizzes/QuizTeacher.tsx",
+      "sha1": "a12fe55d75d0665e1148a8d2fa40eb65ea9c1bd7",
+      "existing": true
+    },
+    {
+      "path": "src/components/quizzes/QuizReview.tsx",
+      "sha1": "b8e43f8b3f71d0d8c1f0d7ec48144676d2f4464e",
+      "existing": true
+    },
+    {
+      "path": "src/components/quizzes/QuizDueDateEditor.tsx",
+      "sha1": "8b5bd65141d0725ae73c48b92a56ca7788ee15ed",
+      "existing": true
+    },
+    {
+      "path": "src/lib/quizzes/insights.ts",
+      "sha1": "a93031f15e3807b357e792783838f115006dbd9b",
+      "existing": false
+    },
+    {
+      "path": "src/lib/quizzes/comparison.ts",
+      "sha1": "526eda7cab444637a71e11402be55f6e06dafe01",
+      "existing": true
+    },
+    {
+      "path": "src/lib/quizzes/types.ts",
+      "sha1": "730da61839c0c2f67efd07f17c5ea2d055d1467a",
+      "existing": true
+    },
+    {
+      "path": "src/lib/quizzes/library.ts",
+      "sha1": "f07bdea8a1de12825b81af89e4199224be177d66",
+      "existing": true
+    },
+    {
+      "path": "src/lib/assessment-center.ts",
+      "sha1": "423bb0507a7b0854591c38df916b3298d7811957",
+      "existing": true
+    },
+    {
+      "path": "src/app/api/quizzes/[id]/route.ts",
+      "sha1": "ce196ac8dc6c734ae2d072436aceea3a4ca7ed88",
+      "existing": true
+    },
+    {
+      "path": "src/app/api/quizzes/[id]/manage/route.ts",
+      "sha1": "dc35c8e9317163571ffa60bf25605138407ae333",
+      "existing": false
+    },
+    {
+      "path": "src/app/api/quizzes/results/route.ts",
+      "sha1": "a0c38df668f3e851773108dc31a8be3df261a607",
+      "existing": true
+    },
+    {
+      "path": "src/app/api/quizzes/route.ts",
+      "sha1": "a26f79fecbe4c4f93988ea091eda7d26ae017134",
+      "existing": true
+    },
+    {
+      "path": "supabase/migrations/20261007124800_quiz_inventory_management.sql",
+      "sha1": "3633396c9b654aca1bdecd155efd159e64aec3a4",
+      "existing": false
+    }
+  ],
+  "productionDeployment": "dpl_FzV9tanUMv7H6EAGF9DTAEkU5ug6",
+  "productionUrl": "https://www.antocciphysics.com",
+  "migrationVersion": "20261007130648"
+}

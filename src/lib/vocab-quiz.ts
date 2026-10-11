@@ -3,5 +3,7 @@ export const QUIZ_FORMATS=[{id:'multiple_choice',label:'Multiple choice',descrip
 export interface QuizCheck {id:string;completed_at:string|null;result:VocabResult[]|null;review_version?:number}
 export function quizSummary(checks:QuizCheck[],staff=false){
  const c=checks.find(c=>c.completed_at)??checks[0];const results=c?.result??[];const graded=results.filter(r=>typeof r.correct==='boolean');
- return {submitted:Boolean(c?.completed_at),needsReview:results.some(r=>r.correct===null),score:results.length&&graded.length===results.length?Math.round(100*graded.filter(r=>r.correct).length/results.length):null,graded:graded.length,total:results.length,checkId:staff?c?.id:undefined,reviewVersion:staff?c?.review_version??0:undefined,responses:staff?results:undefined}
+ const weighted=results.length>0&&results.every(r=>typeof r.points==='number'&&typeof r.max_points==='number');
+ const percent=weighted?Math.round(100*results.reduce((s,r)=>s+r.points!,0)/results.reduce((s,r)=>s+r.max_points!,0)):results.length&&graded.length===results.length?Math.round(100*graded.filter(r=>r.correct).length/results.length):null;
+ return {submitted:Boolean(c?.completed_at),needsReview:results.some(r=>r.correct===null),score:percent,graded:graded.length,total:results.length,checkId:staff?c?.id:undefined,reviewVersion:staff?c?.review_version??0:undefined,responses:staff?results:undefined}
 }

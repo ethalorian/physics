@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090d16">
+  <title>PULSE — find your frequency</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="pulse/style.css?v=2">
+  <script src="pulse/catalog.js?v=2" defer></script>
+  <script src="pulse/engine.js?v=2" defer></script>
+  <script src="pulse/audio.js?v=2" defer></script>
+  <script src="pulse/game.js?v=2" defer></script>
+</head>
+<body data-screen="menu">
+  <main class="cabinet">
+    <header class="topbar">
+      <a class="wordmark" href="#" aria-label="Pulse home" id="home"><svg viewBox="0 0 40 28" aria-hidden="true"><path d="M1 15h8l5-12 9 23 6-17 4 6h6"/></svg>PULSE<span class="edition">02</span></a>
+      <span class="top-caption">FIND YOUR FREQUENCY</span>
+      <div class="top-actions"><span id="modeBadge" class="badge">THE MIDWAY</span><button id="soundToggle" class="icon-button" aria-label="Mute sound" aria-pressed="false">SOUND ON</button><button id="pause" class="icon-button" hidden>PAUSE <kbd>ESC</kbd></button></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar">
+        <section id="menuPanel" class="panel">
+          <div class="eyebrow"><i></i> FIVE TRACKS. FIND YOUR LIMIT.</div>
+          <h1>Lose yourself.<br><em>Find the beat.</em></h1>
+          <p class="intro">Pick your track. Push your pace. Chase the perfect run.</p>
+          <div class="track"><div class="record" aria-hidden="true"><span></span></div><div class="track-choice"><label class="eyebrow" for="song">ORIGINAL SOUNDTRACK / 5 SONGS</label><select id="song" aria-label="Choose song"></select><p id="trackMeta">Synthwave · 120 BPM · 75 seconds</p></div></div><p id="songDescription" class="small"></p>
+          <fieldset class="difficulties"><legend>CHOOSE YOUR LEVEL</legend><div class="segmented"><button type="button" data-difficulty="easy" aria-pressed="false">Easy</button><button type="button" data-difficulty="arcade" aria-pressed="true">Arcade</button><button type="button" data-difficulty="expert" aria-pressed="false">Expert</button><button type="button" data-difficulty="master" aria-pressed="false">Master <small>4 KEYS</small></button><button type="button" data-difficulty="overdrive" aria-pressed="false">Overdrive <small>6 KEYS</small></button></div></fieldset>
+          <p id="chartDensity" class="eyebrow chart-density"></p><p id="difficultyHint" class="small">The original mix. Taps, holds, and two-note chords.</p>
+          <button id="practice" class="primary">PLAY FREE <span>↗</span></button>
+          <button id="ranked" class="secondary" hidden>RANKED RUN <span>10 XP</span></button>
+          <p id="rankedHint" class="small">Practice as much as you like. Find your flow.</p>
+          <div class="controls-help" id="controlsHelp"><span><kbd>D</kbd><kbd>F</kbd><b>LEFT HAND</b></span><span><kbd>J</kbd><kbd>K</kbd><b>RIGHT HAND</b></span></div>
+          <div class="menu-bottom"><span id="best">YOUR BEST —</span><button id="settingsOpen" class="text-button">Sound & timing ↗</button></div>
+        </section>
+        <section id="livePanel" class="panel live" hidden>
+          <div class="eyebrow"><i></i> <span id="liveSong">NEON CURRENT</span></div><h2 id="sectionName">Find the beat</h2>
+          <div class="score-block"><span class="eyebrow">SCORE</span><strong id="score">000000</strong></div>
+          <div class="live-stats"><div><strong id="accuracy">—</strong><span>ACCURACY</span></div><div><strong id="bestCombo">0</strong><span>BEST STREAK</span></div></div>
+          <div class="mix-label"><span>THE MIX</span><span id="songTime">0:00 / 1:15</span></div><div class="progress"><span id="progress"></span></div>
+          <ol class="layers"><li data-layer="0">01 <span>Find the beat</span><i></i></li><li data-layer="1">02 <span>Bassline</span><i></i></li><li data-layer="2">03 <span>Lift off</span><i></i></li><li data-layer="3">04 <span>Afterglow</span><i></i></li><li data-layer="4">05 <span>The drop</span><i></i></li><li data-layer="5">06 <span>One last pulse</span><i></i></li></ol>
+          <p class="small">Tap on the line. Hold the long notes.<br>Miss a beat? The music keeps going.</p>
+        </section>
+        <section id="resultPanel" class="panel results" hidden>
+          <span class="eyebrow" id="finishLabel">TRACK COMPLETE</span><div class="grade-row"><strong id="grade">A</strong><div><h2 id="resultTitle">In your element.</h2><p id="resultMix">Neon Current · Arcade</p></div></div>
+          <div class="result-score"><span class="eyebrow">FINAL SCORE</span><strong id="finalScore">0</strong><span id="newBest" class="eyebrow">PERSONAL BEST</span></div>
+          <div class="live-stats"><div><strong id="finalAccuracy">0%</strong><span>ACCURACY</span></div><div><strong id="finalCombo">0</strong><span>BEST STREAK</span></div></div>
+          <dl class="judgements"><div><dt>Perfect</dt><dd id="perfectCount">0</dd></div><div><dt>Great</dt><dd id="greatCount">0</dd></div><div><dt>Good</dt><dd id="goodCount">0</dd></div><div><dt>Missed / extra taps</dt><dd id="missCount">0</dd></div></dl>
+          <p id="saveStatus" class="small" role="status"></p><button id="retrySave" class="secondary" hidden>RETRY SAVE</button>
+          <button id="again" class="primary">PLAY AGAIN <span>↗</span></button><button id="back" class="text-button">Back to the mixes</button>
+        </section>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </aside>
+      <section class="stage" aria-label="Rhythm highway">
+        <div class="stage-top"><span id="stageTitle">NEON CURRENT</span><span id="stageTag">120 BPM <i></i> ARCADE MIX</span></div>
+        <canvas id="highway" aria-label="Notes fall toward the illuminated hit line. Use D, F, J, K or the four pads." role="img"></canvas>
+        <div class="stage-hud" aria-hidden="true"><span id="mobileScore">000000</span><span id="mobileAccuracy">—</span></div>
+        <div class="judgement" id="judgement" aria-hidden="true"><strong id="hitWord"></strong><span id="hitDetail"></span></div>
+        <div class="combo" id="combo" aria-hidden="true"><strong id="comboNumber">0</strong><span>STREAK</span></div>
+        <div class="attract-label" id="attractLabel"><span>YOUR NEXT HIGH SCORE STARTS HERE</span><b>Get into the flow.</b><span class="attract-note">TAP · HOLD · FEEL IT</span></div>
+        <div id="countdown" class="countdown" hidden aria-live="polite"></div>
+        <div class="pads"><button data-lane="0" aria-label="Lane 1, D" style="--lane:#5ee7ef"><span>01</span><strong>D</strong><i>●</i></button><button data-lane="1" aria-label="Lane 2, F" style="--lane:#bef264"><span>02</span><strong>F</strong><i>◆</i></button><button data-lane="2" aria-label="Lane 3, J" style="--lane:#f9a8d4"><span>03</span><strong>J</strong><i>▲</i></button><button data-lane="3" aria-label="Lane 4, K" style="--lane:#c4b5fd"><span>04</span><strong>K</strong><i>■</i></button></div>
+        <div class="stage-bottom"><span id="stageFooter">HEADPHONES RECOMMENDED</span><span>● PULSE / VOL. 02</span></div>
+        <div id="pauseOverlay" class="overlay" hidden><div><span class="eyebrow">TAKE A BREATH</span><h2>You’re still<br>in the groove.</h2><p>The track is paused. Re-hold any lit pads when you resume.</p><button id="resume" class="primary">RESUME <span>↗</span></button><button id="endRun" class="text-button">End this run</button></div></div>
+      </section>
+    </div>
+    <footer class="footer"><span>RHYTHM IS A FEELING.</span><span>NO FAILURES. JUST ANOTHER SHOT AT THE PERFECT RUN.</span><span>THE MIDWAY / 004</span></footer>
+  </main>
+  <dialog id="settings"><form method="dialog"><div class="dialog-top"><span class="eyebrow">MAKE IT YOURS</span><button class="icon-button" aria-label="Close sound and timing settings">✕</button></div><h2>Sound & timing</h2><label for="volume">Music volume <output id="volumeValue">65%</output></label><input id="volume" type="range" min="0" max="100" value="65"><label for="offset">Timing offset <output id="offsetValue">0 ms</output></label><input id="offset" type="range" min="-200" max="200" step="10" value="0"><p class="small">If taps on the beat keep reading LATE, increase the offset. If they read EARLY, decrease it. Wired headphones usually need less adjustment.</p><label class="check-label"><input id="motion" type="checkbox"> Reduce motion and light effects</label><div class="instruction"><b>How to play</b><p>Use D, F, J, K for four-key levels, or S, D, F, J, K, L for Overdrive. Tap when notes meet the pads. Hold long notes to the tail and press chords together. Touch pads work too.</p><p>Perfect ±50 ms · Great ±100 ms · Good ±160 ms. Extra taps break your streak. Holds score once at the head and once at the tail.</p><p>Every song and level has its own ranked board. One credit plays your selected chart. Practice is always free.</p></div><button class="primary">ALL SET <span>↗</span></button></form></dialog>
+</body>
+</html>

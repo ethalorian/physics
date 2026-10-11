@@ -1,3 +1,6 @@
+import {presentationForActor} from '@/lib/presentation-tools-server'
+import { textbookGroupActivities } from '@/lib/textbook-group-activities-server'
+import { groupTextbookPrompt, type TextbookGroupActivity } from '@/lib/textbook-group-activities'
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -37,12 +40,15 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     room_id = null,
     prize = null,
     // L-1 · launched from a lesson: which lesson / block / target the artifact is evidence for
+    present_session_id = null,
     lesson_id = null,
     block_id = null,
     target_slug = null,
     language_balance = false,
     debrief = null,
     then = null,
+    textbook_activity_id = null,
+    explainer_frame = null,
   } = body as Record<string, unknown>
 
   if (!course_id || typeof course_id !== 'string') {
@@ -60,10 +66,24 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
   }
 
   if (ctx.role !== 'admin' && (await getCourseOwnerEmail(course_id))?.toLowerCase() !== ctx.email.toLowerCase()) return NextResponse.json({ error: 'Forbidden class' }, { status: 403 })
+  const presentation=typeof present_session_id==='string'?await presentationForActor(present_session_id,ctx):null
+  if(present_session_id!==null&&(!presentation||presentation.status!=='live'||presentation.course_id!==course_id||presentation.lesson_id!==(lesson_id||null)))return NextResponse.json({error:'Choose the active presentation for this class.'},{status:409})
+  if(presentation&&(typeof prompt!=='string'||!prompt.trim()||prompt.length>4000)&&!block_id&&!textbook_activity_id)return NextResponse.json({error:'Write a group activity prompt up to 4,000 characters.'},{status:400})
   const linkedLesson = typeof lesson_id === 'string' ? await classLesson(lesson_id, course_id, ctx) : null
   if (lesson_id && !linkedLesson) return NextResponse.json({ error: 'Lesson unavailable for class' }, { status: 400 })
-  const linkedBlock = linkedLesson?.content_blocks.blocks.find(b => b.id === block_id)
-  if (block_id && (!linkedBlock || !lobbyReadyDefault(linkedBlock))) return NextResponse.json({ error: 'Invalid lobby block' }, { status: 400 })
+  let textbook:TextbookGroupActivity|undefined
+  if(textbook_activity_id!==null) {
+    if(typeof textbook_activity_id!=='string'||!linkedLesson||task_type!=='short_response')return NextResponse.json({error:'Choose a textbook question for this lesson.'},{status:400})
+    try { textbook=(await textbookGroupActivities(linkedLesson.content_blocks,course_id)).find(a=>a.id===textbook_activity_id) }
+    catch { return NextResponse.json({error:'Textbook question could not be verified. Retry.'},{status:502}) }
+    if(!textbook)return NextResponse.json({error:'Textbook question is no longer available.'},{status:400})
+  }
+  const linkedBlock = linkedLesson?.content_blocks.blocks.find(b => b.id === (textbook ? textbook.blockId : block_id))
+  if (!textbook && block_id && (!linkedBlock || (!lobbyReadyDefault(linkedBlock) && !(linkedBlock.teachingTool?.kind==='physics-explainer' && explainer_frame!==null)))) return NextResponse.json({ error: 'Invalid lobby block' }, { status: 400 })
+
+  const explainer=linkedBlock?.teachingTool?.kind==='physics-explainer'?linkedBlock.teachingTool:undefined
+  const discussion=explainer&&typeof explainer_frame==='number'&&Number.isInteger(explainer_frame)?explainer.frames[explainer_frame]?.discussion:undefined
+  if(explainer_frame!==null&&(!discussion||textbook||task_type!=='short_response'))return NextResponse.json({error:'Choose a discussion slide.'},{status:400})
 
   // Jigsaw: clean the authored pieces; require at least two.
   let pieces: string[] | null = null
@@ -76,7 +96,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
 
   // Escape: validate the room and fold the room id + prize into task_prompt as
   // JSON (decoded by the escape API). Keeps the run self-contained — no new column.
-  let taskPrompt: string | null = typeof prompt === 'string' ? prompt : null
+  let taskPrompt: string | null = textbook?groupTextbookPrompt(textbook):discussion?discussion.prompt+'\n\nThink first, take turns explaining, then submit a group claim with evidence and reasoning.':typeof prompt === 'string' ? prompt : null
   if (task_type === 'escape') {
     const room = getRoom(typeof room_id === 'string' ? room_id : null)
     if (!room) return NextResponse.json({ error: 'Unknown escape room' }, { status: 400 })
@@ -92,12 +112,12 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
   }
 
   // L-1 · resolve the target: explicit id, else the block's slug, else the lesson's first target.
-  let targetId: string | null = typeof target_id === 'string' && target_id ? target_id : null
+  let targetId: string | null = textbook?textbook.targetId:discussion?null:(typeof target_id === 'string' && target_id ? target_id : null)
   if (linkedBlock?.targetId) {
     const { data: target } = await supabaseAdmin.from('learning_targets').select('id').eq('slug', linkedBlock.targetId).maybeSingle()
     targetId = target?.id ?? null
   }
-  if (!targetId && typeof target_slug === 'string' && target_slug) {
+  if (!textbook && !discussion && !targetId && typeof target_slug === 'string' && target_slug) {
     const { data: t } = await supabaseAdmin.from('learning_targets').select('id').eq('slug', target_slug).maybeSingle()
     targetId = (t as { id: string } | null)?.id ?? null
   }
@@ -107,8 +127,9 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     if (!targetId) targetId = (await targetIdsForLesson(lesson_id))[0] ?? null // a day lesson that only references its week's targets
   }
   // Debrief question + teacher's next move ride along for the projector (L-5, L-6).
-  const debriefMeta = (typeof debrief === 'string' && debrief) || (typeof then === 'string' && then)
-    ? { debrief: typeof debrief === 'string' ? debrief : null, then: typeof then === 'string' ? then : null }
+  const debriefText=textbook?.debrief??discussion?.debrief??debrief
+  const debriefMeta = (typeof debriefText === 'string' && debriefText) || (typeof then === 'string' && then)
+    ? { ...(textbook||discussion?{prompt_source:textbook?'textbook':'explainer',source_block_id:linkedBlock?.id??null,textbook_activity_id:textbook?.id??null,explainer_frame:discussion?explainer_frame:null}:{}), debrief: typeof debriefText === 'string' ? debriefText : null, then: typeof then === 'string' ? then : null }
     : null
 
   // Mint a code, retrying on the (rare) unique collision.
@@ -119,7 +140,8 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
       .from('lobby_sessions')
       .insert({
         course_id,
-        created_by: ctx.userId,
+        created_by: presentation?.teacher_id??ctx.userId,
+        present_session_id: presentation?.id??null,
         code,
         task_type,
         grouping_mode,
@@ -129,15 +151,15 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
         jigsaw_pieces: task_type === 'jigsaw' ? pieces : null,
         status: 'lobby',
         lesson_id: typeof lesson_id === 'string' && lesson_id ? lesson_id : null,
-        block_id: typeof block_id === 'string' && block_id ? block_id : null,
+        block_id: textbook||discussion?null:typeof block_id === 'string' && block_id ? block_id : null,
         language_balance: language_balance === true,
         debrief_meta: debriefMeta,
       })
-      .select('id, code')
+      .select('id, code, status, debrief_meta, task_prompt')
       .single()
     if (!error && data) created = data as { id: string; code: string }
     else if (error && !String(error.message).toLowerCase().includes('duplicate')) {
-      return NextResponse.json({ error: 'Failed to create session' }, { status: 500 })
+      return NextResponse.json({ error: error.code==='P0001'?error.message:'Failed to create session' }, { status: error.code==='P0001'?409:500 })
     }
   }
 

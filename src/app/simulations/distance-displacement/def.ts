@@ -5,9 +5,9 @@ export const distanceDisplacementDef: SimDefinition = {
   slug: 'distance-displacement',
   title: 'Distance vs. displacement',
   level: 'Intro',
-  summary: 'Click to walk a bug from stop to stop. The green path is the distance it actually travelled; the lavender arrow is its displacement — the straight-line change in position from start to finish.',
+  summary: 'Guide a survey rover across the field. Compare the green travelled route with the displacement arrow from base to its current position.',
   canvasHeight: 420,
-  params: [],
+  params: [{ key: 'route', label: 'Compare a route', type: 'select', live: true, default: 'free', options: [{value:'free',label:'Build your own route'},{value:'out-back',label:'4 m east, then back to base'},{value:'corner',label:'3 m east, then 4 m north'},{value:'direct',label:'Direct to (3 m, 4 m)'}] }],
   readouts: [
     { key: 'distance', label: 'Distance', unit: 'm', precision: 2, color: 'var(--success)' },
     { key: 'displacement', label: 'Displacement', unit: 'm', precision: 2, color: 'var(--primary)' },

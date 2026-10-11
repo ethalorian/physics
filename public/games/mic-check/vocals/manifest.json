@@ -1,0 +1,775 @@
+{
+  "voice": "Eddy (English (US))",
+  "rate": 205,
+  "sampleRate": 22050,
+  "samples": [
+    {
+      "file": "unit-1-0-0.wav",
+      "text": "Distance counts each step."
+    },
+    {
+      "file": "unit-1-0-1.wav",
+      "text": "Displacement: end minus start."
+    },
+    {
+      "file": "unit-1-0-2.wav",
+      "text": "Out and back is zero."
+    },
+    {
+      "file": "unit-1-0-3.wav",
+      "text": "Two ideas apart."
+    },
+    {
+      "file": "unit-1-1-0.wav",
+      "text": "How fast and which way?"
+    },
+    {
+      "file": "unit-1-1-1.wav",
+      "text": "Velocity carries both."
+    },
+    {
+      "file": "unit-1-1-2.wav",
+      "text": "Speed drops direction."
+    },
+    {
+      "file": "unit-1-1-3.wav",
+      "text": "That is how they go."
+    },
+    {
+      "file": "unit-1-2-0.wav",
+      "text": "Position-time graph."
+    },
+    {
+      "file": "unit-1-2-1.wav",
+      "text": "Slope tells the story."
+    },
+    {
+      "file": "unit-1-2-2.wav",
+      "text": "Steeper means faster."
+    },
+    {
+      "file": "unit-1-2-3.wav",
+      "text": "Velocity in glory."
+    },
+    {
+      "file": "unit-1-3-0.wav",
+      "text": "Slope of position: v."
+    },
+    {
+      "file": "unit-1-3-1.wav",
+      "text": "Slope of velocity: a."
+    },
+    {
+      "file": "unit-1-3-2.wav",
+      "text": "Same direction? Speed grows."
+    },
+    {
+      "file": "unit-1-3-3.wav",
+      "text": "Opposite? Slows away."
+    },
+    {
+      "file": "unit-1-4-0.wav",
+      "text": "No net force."
+    },
+    {
+      "file": "unit-1-4-1.wav",
+      "text": "No velocity change."
+    },
+    {
+      "file": "unit-1-4-2.wav",
+      "text": "Rest or a straight line."
+    },
+    {
+      "file": "unit-1-4-3.wav",
+      "text": "Nothing to rearrange."
+    },
+    {
+      "file": "unit-1-5-0.wav",
+      "text": "Add every force."
+    },
+    {
+      "file": "unit-1-5-1.wav",
+      "text": "Then divide by mass."
+    },
+    {
+      "file": "unit-1-5-2.wav",
+      "text": "Forces in, motion out."
+    },
+    {
+      "file": "unit-1-5-3.wav",
+      "text": "Predict the asteroid path."
+    },
+    {
+      "file": "unit-2-0-0.wav",
+      "text": "Mass is in kilos."
+    },
+    {
+      "file": "unit-2-0-1.wav",
+      "text": "Weight is a force."
+    },
+    {
+      "file": "unit-2-0-2.wav",
+      "text": "Mass times local g."
+    },
+    {
+      "file": "unit-2-0-3.wav",
+      "text": "Gravity, of course."
+    },
+    {
+      "file": "unit-2-1-0.wav",
+      "text": "Double the distance."
+    },
+    {
+      "file": "unit-2-1-1.wav",
+      "text": "Same masses there."
+    },
+    {
+      "file": "unit-2-1-2.wav",
+      "text": "Force drops to a fourth."
+    },
+    {
+      "file": "unit-2-1-3.wav",
+      "text": "Inverse square."
+    },
+    {
+      "file": "unit-2-2-0.wav",
+      "text": "No air resistance."
+    },
+    {
+      "file": "unit-2-2-1.wav",
+      "text": "Drop from the sky."
+    },
+    {
+      "file": "unit-2-2-2.wav",
+      "text": "Same acceleration."
+    },
+    {
+      "file": "unit-2-2-3.wav",
+      "text": "Watch them fly."
+    },
+    {
+      "file": "unit-2-3-0.wav",
+      "text": "Sideways and falling."
+    },
+    {
+      "file": "unit-2-3-1.wav",
+      "text": "One shared time."
+    },
+    {
+      "file": "unit-2-3-2.wav",
+      "text": "Split the components."
+    },
+    {
+      "file": "unit-2-3-3.wav",
+      "text": "Solve that climb."
+    },
+    {
+      "file": "unit-2-4-0.wav",
+      "text": "Turn in a circle."
+    },
+    {
+      "file": "unit-2-4-1.wav",
+      "text": "Inward we go."
+    },
+    {
+      "file": "unit-2-4-2.wav",
+      "text": "Speed squared over r."
+    },
+    {
+      "file": "unit-2-4-3.wav",
+      "text": "That is the flow."
+    },
+    {
+      "file": "unit-2-5-0.wav",
+      "text": "Orbit is falling."
+    },
+    {
+      "file": "unit-2-5-1.wav",
+      "text": "Earth curves away."
+    },
+    {
+      "file": "unit-2-5-2.wav",
+      "text": "Gravity still acts."
+    },
+    {
+      "file": "unit-2-5-3.wav",
+      "text": "All night, all day."
+    },
+    {
+      "file": "unit-3-0-0.wav",
+      "text": "Mass times velocity."
+    },
+    {
+      "file": "unit-3-0-1.wav",
+      "text": "Momentum on track."
+    },
+    {
+      "file": "unit-3-0-2.wav",
+      "text": "Keep the direction."
+    },
+    {
+      "file": "unit-3-0-3.wav",
+      "text": "Plus or minus back."
+    },
+    {
+      "file": "unit-3-1-0.wav",
+      "text": "Force over time."
+    },
+    {
+      "file": "unit-3-1-1.wav",
+      "text": "Impulse in play."
+    },
+    {
+      "file": "unit-3-1-2.wav",
+      "text": "Changes momentum."
+    },
+    {
+      "file": "unit-3-1-3.wav",
+      "text": "Push a new way."
+    },
+    {
+      "file": "unit-3-2-0.wav",
+      "text": "Same momentum change."
+    },
+    {
+      "file": "unit-3-2-1.wav",
+      "text": "More stopping time."
+    },
+    {
+      "file": "unit-3-2-2.wav",
+      "text": "Less average force."
+    },
+    {
+      "file": "unit-3-2-3.wav",
+      "text": "A safer rhyme."
+    },
+    {
+      "file": "unit-3-3-0.wav",
+      "text": "No net outside force."
+    },
+    {
+      "file": "unit-3-3-1.wav",
+      "text": "Total p stays."
+    },
+    {
+      "file": "unit-3-3-2.wav",
+      "text": "Before and after."
+    },
+    {
+      "file": "unit-3-3-3.wav",
+      "text": "Through the crash phase."
+    },
+    {
+      "file": "unit-3-4-0.wav",
+      "text": "Stick after impact."
+    },
+    {
+      "file": "unit-3-4-1.wav",
+      "text": "Together they slide."
+    },
+    {
+      "file": "unit-3-4-2.wav",
+      "text": "Momentum conserved."
+    },
+    {
+      "file": "unit-3-4-3.wav",
+      "text": "No outside force applied."
+    },
+    {
+      "file": "unit-3-5-0.wav",
+      "text": "Could we push it away?"
+    },
+    {
+      "file": "unit-3-5-1.wav",
+      "text": "A small nudge in time."
+    },
+    {
+      "file": "unit-3-5-2.wav",
+      "text": "Early change in velocity."
+    },
+    {
+      "file": "unit-3-5-3.wav",
+      "text": "Shifts the arrival line."
+    },
+    {
+      "file": "unit-4-0-0.wav",
+      "text": "Force along motion."
+    },
+    {
+      "file": "unit-4-0-1.wav",
+      "text": "Work gets done."
+    },
+    {
+      "file": "unit-4-0-2.wav",
+      "text": "Force times distance."
+    },
+    {
+      "file": "unit-4-0-3.wav",
+      "text": "Joules, every one."
+    },
+    {
+      "file": "unit-4-1-0.wav",
+      "text": "Double the speed."
+    },
+    {
+      "file": "unit-4-1-1.wav",
+      "text": "Same mass in flight."
+    },
+    {
+      "file": "unit-4-1-2.wav",
+      "text": "Four times the K E."
+    },
+    {
+      "file": "unit-4-1-3.wav",
+      "text": "Get that right."
+    },
+    {
+      "file": "unit-4-2-0.wav",
+      "text": "Net work on the cart."
+    },
+    {
+      "file": "unit-4-2-1.wav",
+      "text": "Changes K E."
+    },
+    {
+      "file": "unit-4-2-2.wav",
+      "text": "Energy in motion."
+    },
+    {
+      "file": "unit-4-2-3.wav",
+      "text": "That is the key."
+    },
+    {
+      "file": "unit-4-3-0.wav",
+      "text": "Near Earth, lift it."
+    },
+    {
+      "file": "unit-4-3-1.wav",
+      "text": "Store energy high."
+    },
+    {
+      "file": "unit-4-3-2.wav",
+      "text": "m g times height."
+    },
+    {
+      "file": "unit-4-3-3.wav",
+      "text": "Let it fly."
+    },
+    {
+      "file": "unit-4-4-0.wav",
+      "text": "Where does energy go?"
+    },
+    {
+      "file": "unit-4-4-1.wav",
+      "text": "Keep accounts clear."
+    },
+    {
+      "file": "unit-4-4-2.wav",
+      "text": "Transforms into thermal."
+    },
+    {
+      "file": "unit-4-4-3.wav",
+      "text": "Does not disappear."
+    },
+    {
+      "file": "unit-4-5-0.wav",
+      "text": "Same work, less time."
+    },
+    {
+      "file": "unit-4-5-1.wav",
+      "text": "Power goes higher."
+    },
+    {
+      "file": "unit-4-5-2.wav",
+      "text": "Joules every second."
+    },
+    {
+      "file": "unit-4-5-3.wav",
+      "text": "Watts in the wire."
+    },
+    {
+      "file": "unit-5-0-0.wav",
+      "text": "Temperature and heat."
+    },
+    {
+      "file": "unit-5-0-1.wav",
+      "text": "Not the same thing."
+    },
+    {
+      "file": "unit-5-0-2.wav",
+      "text": "Heat is a transfer."
+    },
+    {
+      "file": "unit-5-0-3.wav",
+      "text": "Let that bell ring."
+    },
+    {
+      "file": "unit-5-1-0.wav",
+      "text": "Mass times heat capacity."
+    },
+    {
+      "file": "unit-5-1-1.wav",
+      "text": "Temperature change."
+    },
+    {
+      "file": "unit-5-1-2.wav",
+      "text": "Q equals m c delta T."
+    },
+    {
+      "file": "unit-5-1-3.wav",
+      "text": "Now rearrange."
+    },
+    {
+      "file": "unit-5-2-0.wav",
+      "text": "Touch: conduction."
+    },
+    {
+      "file": "unit-5-2-1.wav",
+      "text": "Flow: convection."
+    },
+    {
+      "file": "unit-5-2-2.wav",
+      "text": "Waves: radiation."
+    },
+    {
+      "file": "unit-5-2-3.wav",
+      "text": "Make the connection."
+    },
+    {
+      "file": "unit-5-3-0.wav",
+      "text": "Melting takes energy."
+    },
+    {
+      "file": "unit-5-3-1.wav",
+      "text": "Temperature stays."
+    },
+    {
+      "file": "unit-5-3-2.wav",
+      "text": "At fixed pressure."
+    },
+    {
+      "file": "unit-5-3-3.wav",
+      "text": "Through the phase."
+    },
+    {
+      "file": "unit-5-4-0.wav",
+      "text": "Heat added in."
+    },
+    {
+      "file": "unit-5-4-1.wav",
+      "text": "Work done out."
+    },
+    {
+      "file": "unit-5-4-2.wav",
+      "text": "Changes stored energy."
+    },
+    {
+      "file": "unit-5-4-3.wav",
+      "text": "That is the route."
+    },
+    {
+      "file": "unit-5-5-0.wav",
+      "text": "Heat flows hot to cold."
+    },
+    {
+      "file": "unit-5-5-1.wav",
+      "text": "On its own."
+    },
+    {
+      "file": "unit-5-5-2.wav",
+      "text": "A fridge needs work."
+    },
+    {
+      "file": "unit-5-5-3.wav",
+      "text": "To reverse that zone."
+    },
+    {
+      "file": "unit-6-0-0.wav",
+      "text": "Waves carry energy."
+    },
+    {
+      "file": "unit-6-0-1.wav",
+      "text": "Across the floor."
+    },
+    {
+      "file": "unit-6-0-2.wav",
+      "text": "Medium oscillates."
+    },
+    {
+      "file": "unit-6-0-3.wav",
+      "text": "Hear the roar."
+    },
+    {
+      "file": "unit-6-1-0.wav",
+      "text": "Cycles each second."
+    },
+    {
+      "file": "unit-6-1-1.wav",
+      "text": "Frequency in hertz."
+    },
+    {
+      "file": "unit-6-1-2.wav",
+      "text": "Higher sound frequency."
+    },
+    {
+      "file": "unit-6-1-3.wav",
+      "text": "Higher pitch works."
+    },
+    {
+      "file": "unit-6-2-0.wav",
+      "text": "Frequency times wavelength."
+    },
+    {
+      "file": "unit-6-2-1.wav",
+      "text": "Wave speed in play."
+    },
+    {
+      "file": "unit-6-2-2.wav",
+      "text": "v equals f lambda."
+    },
+    {
+      "file": "unit-6-2-3.wav",
+      "text": "Ride that wave."
+    },
+    {
+      "file": "unit-6-3-0.wav",
+      "text": "Air squeezes together."
+    },
+    {
+      "file": "unit-6-3-1.wav",
+      "text": "Then spreads away."
+    },
+    {
+      "file": "unit-6-3-2.wav",
+      "text": "Longitudinal sound."
+    },
+    {
+      "file": "unit-6-3-3.wav",
+      "text": "That is our way."
+    },
+    {
+      "file": "unit-6-4-0.wav",
+      "text": "Crests meet crests."
+    },
+    {
+      "file": "unit-6-4-1.wav",
+      "text": "Waves combine."
+    },
+    {
+      "file": "unit-6-4-2.wav",
+      "text": "Crest meets a trough."
+    },
+    {
+      "file": "unit-6-4-3.wav",
+      "text": "Subtract that line."
+    },
+    {
+      "file": "unit-6-5-0.wav",
+      "text": "How do we know?"
+    },
+    {
+      "file": "unit-6-5-1.wav",
+      "text": "Radar out and back."
+    },
+    {
+      "file": "unit-6-5-2.wav",
+      "text": "Echo delay gives distance."
+    },
+    {
+      "file": "unit-6-5-3.wav",
+      "text": "Half of c times that."
+    },
+    {
+      "file": "unit-7-0-0.wav",
+      "text": "Like charges repel."
+    },
+    {
+      "file": "unit-7-0-1.wav",
+      "text": "Opposites pull near."
+    },
+    {
+      "file": "unit-7-0-2.wav",
+      "text": "An electric force."
+    },
+    {
+      "file": "unit-7-0-3.wav",
+      "text": "Make it clear."
+    },
+    {
+      "file": "unit-7-1-0.wav",
+      "text": "Voltage is energy."
+    },
+    {
+      "file": "unit-7-1-1.wav",
+      "text": "Per unit charge."
+    },
+    {
+      "file": "unit-7-1-2.wav",
+      "text": "Joules per coulomb."
+    },
+    {
+      "file": "unit-7-1-3.wav",
+      "text": "Small or large."
+    },
+    {
+      "file": "unit-7-2-0.wav",
+      "text": "Charge passing through."
+    },
+    {
+      "file": "unit-7-2-1.wav",
+      "text": "Each second of time."
+    },
+    {
+      "file": "unit-7-2-2.wav",
+      "text": "That is the current."
+    },
+    {
+      "file": "unit-7-2-3.wav",
+      "text": "Amps in the rhyme."
+    },
+    {
+      "file": "unit-7-3-0.wav",
+      "text": "Ohmic resistor."
+    },
+    {
+      "file": "unit-7-3-1.wav",
+      "text": "Temperature steady."
+    },
+    {
+      "file": "unit-7-3-2.wav",
+      "text": "V equals I R."
+    },
+    {
+      "file": "unit-7-3-3.wav",
+      "text": "Circuit ready."
+    },
+    {
+      "file": "unit-7-4-0.wav",
+      "text": "Series: same current."
+    },
+    {
+      "file": "unit-7-4-1.wav",
+      "text": "One path to go."
+    },
+    {
+      "file": "unit-7-4-2.wav",
+      "text": "Parallel: same voltage."
+    },
+    {
+      "file": "unit-7-4-3.wav",
+      "text": "Branch currents flow."
+    },
+    {
+      "file": "unit-7-5-0.wav",
+      "text": "Change magnetic flux."
+    },
+    {
+      "file": "unit-7-5-1.wav",
+      "text": "Voltage appears."
+    },
+    {
+      "file": "unit-7-5-2.wav",
+      "text": "Generator energy."
+    },
+    {
+      "file": "unit-7-5-3.wav",
+      "text": "Power the gears."
+    },
+    {
+      "file": "unit-8-0-0.wav",
+      "text": "Battery and switch."
+    },
+    {
+      "file": "unit-8-0-1.wav",
+      "text": "Motor and wire."
+    },
+    {
+      "file": "unit-8-0-2.wav",
+      "text": "Close the whole loop."
+    },
+    {
+      "file": "unit-8-0-3.wav",
+      "text": "Spin that tire."
+    },
+    {
+      "file": "unit-8-1-0.wav",
+      "text": "Chemical energy."
+    },
+    {
+      "file": "unit-8-1-1.wav",
+      "text": "Electrical flow."
+    },
+    {
+      "file": "unit-8-1-2.wav",
+      "text": "Motor turns wheels."
+    },
+    {
+      "file": "unit-8-1-3.wav",
+      "text": "Off we go."
+    },
+    {
+      "file": "unit-8-2-0.wav",
+      "text": "Gear the speed down."
+    },
+    {
+      "file": "unit-8-2-1.wav",
+      "text": "Torque can rise."
+    },
+    {
+      "file": "unit-8-2-2.wav",
+      "text": "Trade with rotation."
+    },
+    {
+      "file": "unit-8-2-3.wav",
+      "text": "Choose your prize."
+    },
+    {
+      "file": "unit-8-3-0.wav",
+      "text": "Same axle spin."
+    },
+    {
+      "file": "unit-8-3-1.wav",
+      "text": "Bigger wheels roll."
+    },
+    {
+      "file": "unit-8-3-2.wav",
+      "text": "More distance each turn."
+    },
+    {
+      "file": "unit-8-3-3.wav",
+      "text": "Speed is the goal."
+    },
+    {
+      "file": "unit-8-4-0.wav",
+      "text": "Line up the axles."
+    },
+    {
+      "file": "unit-8-4-1.wav",
+      "text": "Balance the drag."
+    },
+    {
+      "file": "unit-8-4-2.wav",
+      "text": "Unequal friction."
+    },
+    {
+      "file": "unit-8-4-3.wav",
+      "text": "Turns our flag."
+    },
+    {
+      "file": "unit-8-5-0.wav",
+      "text": "Build what you learned."
+    },
+    {
+      "file": "unit-8-5-1.wav",
+      "text": "Measure the run."
+    },
+    {
+      "file": "unit-8-5-2.wav",
+      "text": "Explain the difference."
+    },
+    {
+      "file": "unit-8-5-3.wav",
+      "text": "A year of physics done."
+    }
+  ]
+}

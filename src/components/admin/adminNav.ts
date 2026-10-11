@@ -29,9 +29,11 @@ const ORIGINAL_GROUPS: ToolGroup[] = [
     tools: [
       { href: '/admin/classes', label: 'Classes', desc: 'The cockpit — one card per class: plan, roster & analytics, engagement', icon: GraduationCap, accent: 'var(--primary)' },
       { href: '/admin/vocabulary/tasks', label: 'Vocabulary tasks', desc: 'Assign word goals and track each student’s accuracy and progress by target', icon: BookText, accent: 'var(--primary)' },
-      { href: '/admin/command-center', label: 'Teach', desc: 'Run slides, live polls, timers and group activities from your iPad', icon: LayoutGrid, accent: 'var(--primary)' },
+      { href: '/admin/command-center', label: 'Teach', desc: 'Present Course Plans day decks from your iPad', icon: LayoutGrid, accent: 'var(--primary)' },
       { href: '/admin/observe', label: 'Classroom observations', desc: 'Walk the room: quick mastery ratings and feedback on iPad', icon: Eye, accent: 'var(--primary)' },
-      { href: '/admin/control-room', label: 'Review student work', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', icon: LayoutGrid, accent: 'var(--primary)' },
+      { href: '/admin/control-room', label: 'Student work', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', icon: LayoutGrid, accent: 'var(--primary)' },
+      { href: '/admin/quizzes', label: 'Quizzes & grades', desc: 'Assign vocabulary and physics quizzes, return grades, and review mastery', icon: BookOpenCheck, accent: 'var(--primary)' },
+      { href: '/admin/readings', label: 'Reading dashboard', desc: 'Manage textbooks, the reading syllabus, connected assignments, and review', icon: BookText, accent: 'var(--primary)' },
       { href: '/admin/lobby', label: 'Lobby sessions', desc: 'Code-gated group activities — sort students, split a passphrase, review every artifact live', icon: Users, accent: 'var(--primary)' },
       { href: '/admin/lesson-access', label: 'Lesson access', desc: 'Open & close lessons per class — the single release board', icon: CalendarClock, accent: 'var(--primary)' },
       { href: '/admin/challenges', label: 'XP challenges', desc: 'Daily game challenges with bonus XP — assign to classes or student slices', icon: Trophy, accent: 'var(--reward)' },
@@ -43,9 +45,9 @@ const ORIGINAL_GROUPS: ToolGroup[] = [
     title: 'Plan & build',
     tools: [
       { href: '/admin/workshop', label: 'Coverage', desc: 'Curriculum studio — shape seeded lessons, review coverage, target workbench', icon: BookOpenCheck, accent: 'var(--primary)', adminOnly: true },
-      { href: '/admin/dashboard', editorArea: 'lessons', label: 'Lesson library', desc: 'Shape seeded lessons — blocks, settings, publish — unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
+      { href: '/admin/dashboard', label: 'Lessons', desc: 'Find, prepare, preview, and teach a lesson', icon: BookOpen, accent: 'var(--primary)' },
       { href: '/admin/reviews', label: 'Review materials', desc: 'Generate and approve AI skill reviews shared with students app-wide', icon: BookOpenCheck, accent: 'var(--success)', adminOnly: true },
-      { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Day-by-day teacher plans per unit — Word/PDF downloads and the Present deck launch', icon: CalendarRange, accent: 'var(--primary)' },
+      { href: '/admin/teacher/plans', label: 'Course plans', desc: 'Asteroid course sequence, classroom investigations, and supporting videos; also Trades plans', icon: CalendarRange, accent: 'var(--primary)' },
       { href: '/admin/pacing', label: 'Pacing', desc: 'Map your sections to the calendar — all-section overview inside', icon: CalendarClock, accent: 'var(--reward)' },
       { href: '/admin/collaborators', label: 'Collaborators', desc: 'Grant per-area curriculum edit rights to specific people', icon: Users, accent: 'var(--primary)', adminOnly: true },
     ],
@@ -73,18 +75,24 @@ const ORIGINAL_GROUPS: ToolGroup[] = [
   {
     title: 'Preview',
     tools: [
-      { href: '/home', label: 'View as student', desc: 'See the student home experience', icon: Eye, accent: 'var(--muted-foreground)' },
+      { href: '/admin/student-preview', label: 'View student account', desc: 'Inspect a selected student’s availability, progress, and feedback read-only', icon: Eye, accent: 'var(--muted-foreground)' },
     ],
   },
 ]
 
-const tools = ORIGINAL_GROUPS.flatMap(g => g.tools)
+const tools = [...ORIGINAL_GROUPS.flatMap(g => g.tools),
+  { href: '/experience', label: 'Experience as…', desc: 'Walk through student, teacher, observer, and admin accounts read-only', icon: Eye, accent: 'var(--primary)', adminOnly: true },
+  {href:'/admin/resources',label:'Resources',desc:'Textbook, simulations, vocabulary, and teacher plans',icon:BookText,accent:'var(--primary)'},
+  {href:'/arcade',label:'Arcade',desc:'Visit the arcade and explore the games available to students',icon:Joystick,accent:'var(--reward)'},
+]
 const group = (title: string, paths: string[]): ToolGroup => ({ title, tools: paths.map(path => tools.find(t => t.href === path)!).filter(Boolean) })
 export const GROUPS: ToolGroup[] = [
   group('Classes', ['/admin/classes', '/admin/lesson-access', '/admin/pacing', '/admin/roster', '/admin/vocabulary/tasks', '/admin/challenges', '/admin/store']),
-  group('Teach', ['/admin/command-center', '/admin/teacher/plans', '/admin/observe', '/admin/lobby', '/home']),
-  group('Review', ['/admin/control-room']),
-  group('Library', ['/admin/dashboard', '/admin/workshop', '/admin/reviews', '/admin/vocabulary', '/admin/simulations', '/admin/textbook', '/admin/media', '/admin/arcade', '/admin/avatar']),
+  group('Lessons', ['/admin/dashboard', '/admin/command-center', '/admin/teacher/plans', '/admin/student-preview', '/admin/observe', '/admin/lobby']),
+  group('Student work', ['/admin/control-room', '/admin/quizzes', '/admin/readings']),
+  group('Resources', ['/admin/resources', '/admin/workshop', '/admin/reviews', '/admin/vocabulary', '/admin/simulations', '/admin/textbook', '/admin/media', '/admin/avatar']),
+  group('Role walkthroughs', ['/experience']),
+  group('Arcade', ['/arcade', '/admin/arcade']),
   group('Insights', ['/admin/analytics', '/admin/oversight', '/admin/duplicates', '/leaderboard', '/admin/collaborators']),
 ]
 

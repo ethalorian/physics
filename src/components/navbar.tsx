@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 
 // External package imports
 import { useSession, signIn } from "next-auth/react"
-import { Menu, BookOpen, BookText, Settings, Home, Trophy, Gift, LayoutGrid, Users, Sigma, Joystick } from "lucide-react"
+import { Menu, BookOpen, BookText, Settings, Home, Trophy, Gift, LayoutGrid, Users, Sigma, Joystick, Eye } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -20,16 +20,20 @@ import { useViewMode } from "@/contexts/ViewModeContext"
 import { useViewAwarePermissions } from "@/hooks/useViewAwarePermissions"
 import AccountMenu from "@/components/AccountMenu"
 import NotificationBell from "@/components/NotificationBell"
+import { useLessonContext } from '@/components/admin/useLessonContext'
+import { lessonContextHref } from '@/lib/lesson-release'
+import BrandLogo from "@/components/BrandLogo"
 
 export default function Navbar() {
   const { data: session, status } = useSession()
   const { viewMode } = useViewMode()
   const pathname = usePathname()
+  const context = useLessonContext()
+  const navigationHref=(path:string)=>['/admin/dashboard','/admin/control-room'].includes(path)?lessonContextHref(path,{class:context.classId,lesson:context.lessonId}):path
 
   // Use view-aware permissions for navigation decisions
   const {
-    isAuthenticated,
-    canAccessAdmin
+    isAuthenticated
   } = useViewAwarePermissions(viewMode)
 
   // "View as teacher" (admin previewing the colleague experience)
@@ -55,10 +59,10 @@ export default function Navbar() {
   // is currently active without any background job.
   const sessionRole = session?.user?.role
   useEffect(() => {
-    if (sessionRole === 'admin' || sessionRole === 'teacher') {
+    if (!session?.experience && (sessionRole === 'admin' || sessionRole === 'teacher')) {
       fetch('/api/presence/ping', { method: 'POST' }).catch(() => {})
     }
-  }, [pathname, sessionRole])
+  }, [pathname, sessionRole, session?.experience])
 
   // Show loading state while session is loading to prevent hydration mismatch
   const isLoading = !mounted || status === "loading"
@@ -67,14 +71,15 @@ export default function Navbar() {
   const getNavigationItems = () => {
     if (!isAuthenticated) return []
 
-    // Observer (principal / coach): read-only — global analytics + lesson
-    // plans. No control room, no admin tools, no student journey.
+    // Observer (principal / coach): insights and read-only curriculum access.
     if (role === 'observer') {
       return [
         { href: "/admin/analytics", label: "Mastery", icon: LayoutGrid },
         { href: "/admin/oversight", label: "Oversight", icon: Settings },
         { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
         { href: "/admin/teacher/plans", label: "Lesson plans", icon: BookOpen },
+        { href: "/lessons", label: "Lessons & map", icon: BookOpen },
+        { href: "/admin/resources", label: "Resources", icon: BookText },
       ]
     }
 
@@ -88,17 +93,16 @@ export default function Navbar() {
       const staff = [
         { href: isTeacherOnly ? "/admin/classes" : "/admin/home", label: "Home", icon: Home },
         { href: "/admin/classes", label: "Classes", icon: BookOpen },
-        { href: "/admin/control-room", label: "Control Room", icon: LayoutGrid },
-        { href: "/textbook", label: "Textbook", icon: BookText }, // same reader students see
-        { href: "/arcade", label: "Arcade", icon: Joystick }, // staff runs are free + unranked
-        { href: "/admin/store", label: "Rewards", icon: Gift },
-        { href: "/admin/dashboard", label: "Admin", icon: Settings },
+        { href: "/admin/control-room", label: "Student work", icon: LayoutGrid },
+        { href: "/admin/dashboard", label: "Lessons", icon: BookOpen },
+        { href: "/admin/resources", label: "Resources", icon: BookText },
+        { href: "/arcade", label: "Arcade", icon: Joystick },
       ]
       // The global Admin tab is admin-only; it's also hidden while an admin is
       // previewing the teacher experience. Teachers whose Home IS the cockpit
       // don't need the duplicate Classes entry.
-      const deduped = isTeacherOnly ? staff.filter((i) => i.label !== "Classes") : staff
-      return canAccessAdmin && !viewingAs ? deduped : deduped.filter((i) => i.href !== "/admin/dashboard")
+      const deduped = isTeacherOnly ? staff.filter((i) => i.label !== "Home") : staff
+      return isTeacherOnly ? deduped : [...deduped, { href: "/experience", label: "Experience as…", icon: Eye }]
     }
 
     // Student nav: orient → work → play → compete → spend. Simulations are
@@ -107,6 +111,7 @@ export default function Navbar() {
     return [
       { href: "/home", label: "Home", icon: Home },
       { href: "/lessons", label: "Lessons", icon: BookOpen },
+      { href: "/quizzes", label: "Quizzes", icon: LayoutGrid },
       { href: "/reference", label: "Reference", icon: Sigma },
       { href: "/textbook", label: "Textbook", icon: BookText },   // Conceptual Physics, session-gated PDF reader
       { href: "/lobby", label: "Lobby", icon: Users },
@@ -127,7 +132,7 @@ export default function Navbar() {
   const logoHref = isAuthenticated ? (role === 'observer' ? '/admin/oversight' : role === 'teacher' && !studentViewActive ? '/admin/classes' : isStaff && !studentViewActive ? '/admin/home' : '/home') : '/'
 
   // Chrome-free embed pages (e.g. simulations rendered inside a lesson iframe).
-  if (pathname?.startsWith('/embed') || pathname === '/admin/observe') return null
+  if (pathname?.startsWith('/embed') || pathname === '/admin/observe' || pathname === '/admin/command-center' || pathname === '/admin/projector') return null
 
   return (
     <>
@@ -143,15 +148,13 @@ export default function Navbar() {
         <button onClick={() => { clearStudentView(); window.location.reload() }} className="underline font-medium">Exit</button>
       </div>
     )}
-    <nav className="sticky top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-background/60">
+    <nav style={{ top: 'var(--role-walkthrough-height, 0px)' }} className="sticky top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-background/60">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
-          {/* Brand Logo - Apple-style clean typography with earth tones */}
+          {/* Shared Antocci Physics brand */}
           <div className="flex items-center gap-3 sm:gap-4">
             <Link href={logoHref} className="group flex items-center gap-2 font-semibold text-foreground hover:text-primary transition-colors duration-200">
-              <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25">
-                <span className="text-primary-foreground text-sm font-bold">φ</span>
-              </div>
+              <BrandLogo decorative priority />
               <span className="text-base sm:text-lg tracking-tight">
                 <span className="block lg:hidden">Physics</span>
                 <span className="hidden lg:block">Antocci Physics</span>
@@ -172,7 +175,7 @@ export default function Navbar() {
                 return (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={navigationHref(item.href)}
                     data-active={isActive ? 'true' : 'false'}
                     title={item.label}
                     aria-label={item.label}
@@ -212,7 +215,7 @@ export default function Navbar() {
                       return (
                         <SheetClose asChild key={item.href}>
                           <Link
-                            href={item.href}
+                            href={navigationHref(item.href)}
                             className={`flex items-center gap-3 mx-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
                               isActive
                                 ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25'

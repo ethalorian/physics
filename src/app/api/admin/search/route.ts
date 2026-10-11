@@ -1,10 +1,11 @@
+import { CURRENT_LESSON_FIELDS, isCurrentLesson } from '@/lib/current-lesson-catalog'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withRole } from '@/lib/api-auth'
 import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/admin/search
-// Index for the admin command palette: every lesson (staff can navigate to any)
+// Index for the admin command palette: catalog lessons (including drafts)
 // plus students — all of them for admins, roster-only for teachers (and for an
 // admin previewing as a teacher, since ctx.role reflects the impersonation).
 // The client filters this list; we just return a bounded, role-scoped index.
@@ -15,10 +16,10 @@ type StudentHit = { id: string; name: string | null; email: string | null }
 export const GET = withRole(['admin', 'teacher'], async (_request, ctx) => {
   const { data: lessonRows } = await supabaseAdmin
     .from('lessons')
-    .select('id, slug, title, published')
+    .select(`id,slug,title,published,${CURRENT_LESSON_FIELDS}`)
     .order('lesson_number', { ascending: true })
     .limit(500)
-  const lessons: LessonHit[] = (lessonRows ?? []).map((l) => ({
+  const lessons: LessonHit[] = (lessonRows ?? []).filter(isCurrentLesson).map((l) => ({
     id: l.id, slug: l.slug, title: l.title ?? '(untitled lesson)', published: !!l.published,
   }))
 

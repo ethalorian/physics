@@ -31,7 +31,7 @@ interface Ctx {
 const PresentLiveContext = createContext<Ctx>({ session: null, follow: false, stale: false, setFollow: () => {} })
 export const usePresentLive = () => useContext(PresentLiveContext)
 
-export function PresentLiveProvider({ lessonId, enabled, children }: { lessonId: string; enabled: boolean; children: ReactNode }) {
+export function PresentLiveProvider({ lessonId, enabled, children, simulation }: { lessonId: string; enabled: boolean; children: ReactNode; simulation?: LiveSession }) {
   const [session, setSession] = useState<LiveSession | null>(null)
   const [follow, setFollow] = useState(true)
   const [stale, setStale] = useState(false)
@@ -72,7 +72,7 @@ export function PresentLiveProvider({ lessonId, enabled, children }: { lessonId:
     return () => { active = false; clearTimeout(timer); controller?.abort(); window.removeEventListener('online', wake); window.removeEventListener('offline', offline); window.removeEventListener('pageshow', wake); document.removeEventListener('visibilitychange', wake) }
   }, [lessonId, enabled])
 
-  return <PresentLiveContext.Provider value={{ session, follow, setFollow, stale }}>{enabled && stale && <p role="status" className="border-b bg-muted px-4 py-2 text-sm">Live class connection interrupted. Showing the last confirmed update; reconnecting… You can keep working.</p>}{enabled && <StudentLiveTools session={session} />}{children}</PresentLiveContext.Provider>
+  return <PresentLiveContext.Provider value={{ session:simulation??session, follow, setFollow, stale }}>{enabled && stale && <p role="status" className="border-b bg-muted px-4 py-2 text-sm">Live class connection interrupted. Showing the last confirmed update; reconnecting… You can keep working.</p>}{enabled && <StudentLiveTools session={session} />}{children}</PresentLiveContext.Provider>
 }
 
 /** Seconds left on the class timer, or null. */

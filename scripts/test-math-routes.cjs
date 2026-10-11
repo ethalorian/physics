@@ -13,6 +13,7 @@ const mocks={
  'next/server':`export const NextResponse={json:(d,o)=>new Response(JSON.stringify(d),{status:o?.status??200})};`,
  '@/lib/teacher-scope':`export const teacherCanAccessStudent=async()=>global.__mathRoutes.own(); export const resolveTargetStudent=async a=>a.role==='student'?{ok:true,userId:a.selfId}:global.__mathRoutes.own()?{ok:true,userId:a.requestedUserId??a.selfId}:{ok:false};`,
  '@/lib/math-spine-server':`export const recordMathObservation=async()=>({awarded:[]});`,
+ '@/lib/math-xp-status':`export const getMathXpStatus=async()=>({dailyEarned:0,dailyCap:50,remaining:50});`,
 };
 const plugin={name:'isolate-math',setup(b){b.onResolve({filter:/.*/},a=>mocks[a.path]?{path:a.path,namespace:'mock'}:undefined);b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:mocks[a.path],loader:'js'}))}};
 async function load(name){const outfile=path.join(dir,name+'.cjs');await esbuild.build({entryPoints:['src/app/api/math-spine/'+name+'/route.ts'],outfile,bundle:true,platform:'node',format:'cjs',plugins:[plugin],logLevel:'silent'});return require(outfile)}

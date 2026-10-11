@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "prebuild": "npm run audit:styles",
+    "prebuild": "npm run audit:styles && npm run audit:brand",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
@@ -38,6 +38,7 @@
     "test:flywheel-browser": "node scripts/test-flywheel-browser.cjs",
     "preview:flywheel": "node scripts/preview-flywheel.cjs",
     "test:styles-browser": "node scripts/test-styling-browser.cjs",
+    "audit:brand": "node scripts/audit-brand.cjs",
     "test:math-arcade": "node scripts/test-math-arcade-logic.cjs && node scripts/test-math-upgrade-logic.cjs && node scripts/test-math-save-routes.cjs && node --import tsx --test src/lib/tether-bridge.test.ts",
     "test:math-arcade-browser": "node scripts/test-math-arcade-browser.cjs",
     "preview:math-arcade": "node scripts/preview-math-arcade.cjs"

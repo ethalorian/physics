@@ -1,0 +1,19 @@
+Unit 1 visual edition — live October 1, 2026
+
+Live: https://www.antocciphysics.com/decks/unit-1-teaching/index.html
+Day 1: https://www.antocciphysics.com/decks/unit-1-teaching/day-01.html#1
+Deployment: dpl_8rHF6pv4t4skYsGfvxzhfAVbHB15 (READY)
+Previous production: dpl_EYHA2mzHJdEosFeeFV1aPcAszfbo
+
+All 22 daily decks retain the 421-slide sequence, original questions, solutions, teacher notes, and section anchors. 100 slides now have authored scientific graphics or visual sequences. All 22 covers use conceptual artwork. Motion models link the cart, graph, and numerical values. Replay, pause, reset, scrubbing, finite playback, and reduced-motion presentation are supported. Assessment support does not add numerical solutions.
+
+Verification: All 421 slides checked for overflow, scientific-label overlaps, page errors and missing assets; none found. All 22 decks have at least three visual teaching slides. 83 existing decks passed metadata parsing, with navigation checks for all 22 updated decks plus five legacy decks. Animation controls, stopping offscreen, reduced motion, linked cart reversal values, and the session acknowledgment contract passed. Offline file loading checked. Full production build, type check, style and brand audits passed; existing unrelated lint warnings remain.
+
+Release was assembled from verified current production. 27 existing files changed, 14 were added, and 2,628 unrelated files were preserved. Uploaded source manifest: all 2,669 files match. Live deck assets: all 40 return HTTP 200 and match local hashes. Live browser confirmed the moving cart visual with no runtime errors. Initial deployment error scan: 0 entries. This is an initial scan, not ongoing monitoring. No production student data was read or written for this task.
+
+Direct candidate-host checking encountered a local certificate-trust failure. Validation used the exact uploaded manifest, local browser checks, Vercel build result, and the normal production domain after promotion. Physical iPad/projector hardware was not available; device-sized layouts and the real presentation bridge were checked in Chrome. Direct embedded simulation parameter control is not synchronized remotely; iPad navigation starts the finite visual animations when slides change.
+
+Source and generation prompts: /Users/craigantocci/Desktop/Physics/physics-classroom/src/data/deck-sources/unit-1-teaching/
+Offline: /Users/craigantocci/Documents/Claude/Projects/Physics Curriculum Planning/Unit 1 Visual Upgrade/decks/index.html
+ZIP: /Users/craigantocci/Documents/Claude/Projects/Physics Curriculum Planning/Unit 1 Visual Upgrade/Unit-1-Visual-Decks.zip
+Release records: /private/tmp/unit1-visual-release-work

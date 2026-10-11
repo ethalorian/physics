@@ -1,0 +1,3539 @@
+[
+  {
+    "unit": 1,
+    "day": 1,
+    "title": "Notice, question, predict",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-01.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-01.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 10
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 2,
+    "title": "Position, distance, displacement",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-02.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-02.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 10
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 3,
+    "title": "Velocity and position graphs",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-03.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-03.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 10
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 4,
+    "title": "Velocity graphs and components",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-04.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-04.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 10
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 5,
+    "title": "Predict a position and a range",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-05.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-05.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 10
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 10
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 6,
+    "title": "Vector addition",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-06.pdf",
+        "pages": 2,
+        "problems": 12
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-06.pdf",
+        "pages": 2,
+        "problems": 12
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-06.pdf",
+        "pages": 3,
+        "problems": 12
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-06.pdf",
+        "pages": 3,
+        "problems": 12
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 7,
+    "title": "Changing velocity",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 8,
+    "title": "Choose a motion method",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 9,
+    "title": "Inertia and balanced forces",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 10,
+    "title": "Name the force and its source",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 11,
+    "title": "Cart lab: change mass",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 12,
+    "title": "Cart lab: change driving force",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 13,
+    "title": "Net force first",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 14,
+    "title": "Forces on two objects",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 15,
+    "title": "Free-body diagrams",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 16,
+    "title": "From force diagrams to motion",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 17,
+    "title": "Static and kinetic friction",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 18,
+    "title": "Equilibrium and missing forces",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 19,
+    "title": "Diagnose, repair, recheck",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-19.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-19.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-19.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-19.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 20,
+    "title": "Build a complete prediction",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-20.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-20.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-20.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-20.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 21,
+    "title": "Transfer task: plan and begin",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-21.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-21.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-21.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-21.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 1,
+    "day": 22,
+    "title": "Transfer task: defend and revise",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-1/cpa/day-22.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-1/honors/day-22.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-1/cpa-sei/day-22.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-1/honors-sei/day-22.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 1,
+    "title": "What changes an asteroid’s path?",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 2,
+    "title": "Free fall",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-02.pdf",
+        "pages": 1,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 3,
+    "title": "Weight and local gravity",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 4,
+    "title": "Universal gravitation",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 5,
+    "title": "Calculate gravitational force",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 6,
+    "title": "Gravitational field strength",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 7,
+    "title": "Gravity above the surface",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-07.pdf",
+        "pages": 1,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-07.pdf",
+        "pages": 1,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 8,
+    "title": "Free-fall lab",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 9,
+    "title": "Independent projectile directions",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 10,
+    "title": "Horizontal launches",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 11,
+    "title": "Angled launches",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 12,
+    "title": "Circular motion",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 13,
+    "title": "An orbit is continuous falling",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 14,
+    "title": "Kepler’s laws",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 15,
+    "title": "Timing a possible encounter",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 2,
+    "day": 16,
+    "title": "Transfer: gravity and motion",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-2/cpa/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-2/honors/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-2/cpa-sei/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-2/honors-sei/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 1,
+    "title": "What makes motion hard to stop?",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 2,
+    "title": "Momentum",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 3,
+    "title": "Impulse changes momentum",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 4,
+    "title": "Stopping time and force",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 5,
+    "title": "Recoil and explosions",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 6,
+    "title": "Kinds of collisions",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 7,
+    "title": "Collision lab",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 8,
+    "title": "Stick-together calculations",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 9,
+    "title": "Bounce-apart calculations",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 10,
+    "title": "Momentum in two dimensions",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 11,
+    "title": "A kinetic-impact deflection model",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-11.pdf",
+        "pages": 1,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 12,
+    "title": "What momentum says about impact",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-12.pdf",
+        "pages": 1,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 13,
+    "title": "Momentum analysis: put it together",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-13.pdf",
+        "pages": 1,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 3,
+    "day": 14,
+    "title": "Transfer: momentum and impulse",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-3/cpa/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-3/honors/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-3/cpa-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-3/honors-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 1,
+    "title": "Why impact also needs energy",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 2,
+    "title": "Work along a displacement",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 3,
+    "title": "Angled and negative work",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 4,
+    "title": "Kinetic energy and net work",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 5,
+    "title": "Use work-energy to solve motion",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 6,
+    "title": "Work-energy lab",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 7,
+    "title": "Gravitational potential energy",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 8,
+    "title": "When constant g is not enough",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 9,
+    "title": "Universal gravitational energy",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 10,
+    "title": "Conserve mechanical energy",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 11,
+    "title": "Sliding, swinging and rolling",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 12,
+    "title": "Coasters and pendulums",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-12.pdf",
+        "pages": 1,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 13,
+    "title": "Ramp energy lab",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 14,
+    "title": "Hooke’s law",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 15,
+    "title": "Spring potential energy",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 16,
+    "title": "Power",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 17,
+    "title": "Collision energy revisited",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 18,
+    "title": "The energy that becomes thermal",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 19,
+    "title": "Impact energy and TNT equivalents",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-19.pdf",
+        "pages": 1,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-19.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-19.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-19.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 20,
+    "title": "Escape speed",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-20.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-20.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-20.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-20.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 21,
+    "title": "An energy budget",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-21.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-21.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-21.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-21.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 4,
+    "day": 22,
+    "title": "Transfer: energy and work",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-4/cpa/day-22.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-4/honors/day-22.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-4/cpa-sei/day-22.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-4/honors-sei/day-22.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 1,
+    "title": "Heat is not temperature",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 2,
+    "title": "Specific heat",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 3,
+    "title": "Conduction, convection, radiation",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 4,
+    "title": "Phase changes",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 5,
+    "title": "Calorimetry lab",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 6,
+    "title": "Temperature and particle motion",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 7,
+    "title": "The first law",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 8,
+    "title": "The second law",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 9,
+    "title": "Heat-engine efficiency",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 10,
+    "title": "Atmospheric entry",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 11,
+    "title": "Thermal effects and energy budgets",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 5,
+    "day": 12,
+    "title": "Transfer: thermal energy",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-5/cpa/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-5/honors/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-5/cpa-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-5/honors-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 1,
+    "title": "What can waves tell us?",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 2,
+    "title": "Describe a wave",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 3,
+    "title": "Wave speed",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-03.pdf",
+        "pages": 1,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 4,
+    "title": "Waves at boundaries",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 5,
+    "title": "Refraction",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 6,
+    "title": "Diffraction",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 7,
+    "title": "Superposition and interference",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 8,
+    "title": "Sound: pitch and amplitude",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 9,
+    "title": "Sound speed and resonance",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 10,
+    "title": "Measure sound speed",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 11,
+    "title": "Intensity, decibels and Doppler",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 12,
+    "title": "The electromagnetic spectrum",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 13,
+    "title": "Plane mirrors",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 14,
+    "title": "Lenses and image formation",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 15,
+    "title": "Radar range and velocity",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 16,
+    "title": "Thermal radiation and color",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 17,
+    "title": "Mechanical waves and distant effects",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 6,
+    "day": 18,
+    "title": "Transfer: waves and signals",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-6/cpa/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-6/honors/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-6/cpa-sei/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-6/honors-sei/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 1,
+    "title": "Charge and the electric car",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 2,
+    "title": "Coulomb’s law",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 3,
+    "title": "Electric fields",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 4,
+    "title": "Voltage: energy per charge",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 5,
+    "title": "Current: charge flow rate",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 6,
+    "title": "Ohm’s law",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 7,
+    "title": "Series circuits",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 8,
+    "title": "Parallel circuits",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 9,
+    "title": "Combination circuits",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 10,
+    "title": "Circuit investigation",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-10.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 11,
+    "title": "Electrical power and energy",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-11.pdf",
+        "pages": 1,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-11.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 12,
+    "title": "Magnetic fields",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-12.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 13,
+    "title": "Current makes a magnetic field",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-13.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 14,
+    "title": "Electromagnetic induction",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-14.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 15,
+    "title": "Motors and generators",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-15.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 16,
+    "title": "Magnetosphere and changing fields",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-16.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 17,
+    "title": "Plan the electric car",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-17.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 7,
+    "day": 18,
+    "title": "Transfer: circuits and induction",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-7/cpa/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-7/honors/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-7/cpa-sei/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-7/honors-sei/day-18.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 8,
+    "day": 1,
+    "title": "Electric car: launch the design",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-8/cpa/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-8/honors/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-8/cpa-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-8/honors-sei/day-01.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 8,
+    "day": 2,
+    "title": "Circuit model and solder practice",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-8/cpa/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-8/honors/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-8/cpa-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-8/honors-sei/day-02.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 8,
+    "day": 3,
+    "title": "Gears and wheels",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-8/cpa/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-8/honors/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-8/cpa-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-8/honors-sei/day-03.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 8,
+    "day": 4,
+    "title": "Theme and chassis layout",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-8/cpa/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-8/honors/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-8/cpa-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-8/honors-sei/day-04.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 8,
+    "day": 5,
+    "title": "Axles and alignment",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-8/cpa/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-8/honors/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-8/cpa-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-8/honors-sei/day-05.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 8,
+    "day": 6,
+    "title": "Gears, motor and first power",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-8/cpa/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-8/honors/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-8/cpa-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-8/honors-sei/day-06.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 8,
+    "day": 7,
+    "title": "Secure wiring and finish the design",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-8/cpa/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-8/honors/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-8/cpa-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-8/honors-sei/day-07.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 8,
+    "day": 8,
+    "title": "Practice runs and evidence",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-8/cpa/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-8/honors/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-8/cpa-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-8/honors-sei/day-08.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  },
+  {
+    "unit": 8,
+    "day": 9,
+    "title": "Race, explain and transfer",
+    "files": {
+      "cpa": {
+        "path": "/worksheets/unit-8/cpa/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors": {
+        "path": "/worksheets/unit-8/honors/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "cpa-sei": {
+        "path": "/worksheets/unit-8/cpa-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      },
+      "honors-sei": {
+        "path": "/worksheets/unit-8/honors-sei/day-09.pdf",
+        "pages": 2,
+        "problems": 8
+      }
+    }
+  }
+]

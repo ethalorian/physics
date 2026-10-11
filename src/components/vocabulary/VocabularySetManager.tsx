@@ -1,6 +1,6 @@
 "use client"
 import { Spinner } from '@/components/ui/spinner'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useVocabulary, VocabularySet } from '@/contexts/VocabularyContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,9 @@ import { Badge } from '@/components/ui/badge'
 import { Plus, Trash2, Edit, BookOpen, Save, X, Upload, Eye, EyeOff } from 'lucide-react'
 import { physicsUnits } from '@/data/physics-units'
 import VocabularyUploader from './VocabularyUploader'
+import VocabularySourcePicker from './VocabularySourcePicker'
+import VocabularyConnectionEditor from './VocabularyConnectionEditor'
+import type {VocabularyTeachingChoice,VocabularyTeachingSource} from '@/lib/vocab-teaching-source'
 
 interface VocabularySetManagerProps {
   onSelectSet?: (vocabularySet: VocabularySet) => void
@@ -19,7 +22,11 @@ interface VocabularySetManagerProps {
 }
 
 export default function VocabularySetManager({ onSelectSet, selectedSetId }: VocabularySetManagerProps) {
-  const { vocabularySets, createVocabularySet, deleteVocabularySet, addTermToSet, deleteTerm, publishVocabularySet, loading, error } = useVocabulary()
+  const { vocabularySets, createVocabularySet, deleteVocabularySet, addTermToSet, deleteTerm, publishVocabularySet, updateVocabularySet, loading, error } = useVocabulary()
+  const [choices,setChoices]=useState<VocabularyTeachingChoice[]>([])
+  const [choicesError,setChoicesError]=useState(''),[choicesLoading,setChoicesLoading]=useState(true),[choicesRetry,setChoicesRetry]=useState(0),[creating,setCreating]=useState(false)
+  const [connecting,setConnecting]=useState('')
+  useEffect(()=>{const abort=new AbortController();setChoicesLoading(true);setChoicesError('');fetch('/api/vocab/teaching-sources',{signal:abort.signal}).then(async r=>{const d=await r.json();if(!r.ok)throw new Error(d.error??'Could not load teaching sources');return d}).then(d=>{if(!abort.signal.aborted)setChoices(d.sources)}).catch(e=>{if(!abort.signal.aborted)setChoicesError(e.message)}).finally(()=>{if(!abort.signal.aborted)setChoicesLoading(false)});return()=>abort.abort()},[choicesRetry])
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [showUploader, setShowUploader] = useState(false)
   const [editingSetId, setEditingSetId] = useState<string | null>(null)
@@ -27,7 +34,8 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
     name: '',
     description: '',
     unit: '',
-    lesson: ''
+    lesson: '',
+    teachingSource: {kind:'none'} as VocabularyTeachingSource|null
   })
   const [newTerm, setNewTerm] = useState({
     term: '',
@@ -45,7 +53,8 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
   }
 
   const handleCreateSet = async () => {
-    if (!newSetData.name.trim()) return
+    if (creating || !newSetData.name.trim() || !newSetData.teachingSource || !newSetData.unit) return
+    setCreating(true)
 
     try {
       await createVocabularySet({
@@ -53,11 +62,11 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
         terms: [],
         published: false
       })
-      setNewSetData({ name: '', description: '', unit: '', lesson: '' })
+      setNewSetData({ name: '', description: '', unit: '', lesson: '', teachingSource:{kind:'none'} })
       setShowCreateForm(false)
     } catch (error) {
       console.error('Error creating vocabulary set:', error)
-    }
+    } finally {setCreating(false)}
   }
 
   const handleAddTerm = async (setId: string) => {
@@ -72,11 +81,10 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
   }
 
 
-  const selectedUnit = physicsUnits.find(unit => unit.id === newSetData.unit)
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <h2 className="text-2xl font-bold">Vocabulary Sets</h2>
         <div className="flex gap-2">
           <Button
@@ -94,6 +102,7 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
         </div>
       </div>
 
+      {choicesError&&<p role="alert" className="text-destructive">{choicesError} <Button variant="outline" onClick={()=>setChoicesRetry(n=>n+1)}>Reload video and deck choices</Button></p>}
       {showCreateForm && (
         <Card>
           <CardHeader>
@@ -120,48 +129,14 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="set-unit">Physics Unit (Optional)</Label>
-                <Select value={newSetData.unit || 'none'} onValueChange={(value) => setNewSetData({ ...newSetData, unit: value === 'none' ? '' : value, lesson: '' })}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select unit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">No specific unit</SelectItem>
-                    {physicsUnits.map((unit) => (
-                      <SelectItem key={unit.id} value={unit.id}>
-                        {unit.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="set-lesson">Lesson (Optional)</Label>
-                <Select value={newSetData.lesson || 'none'} onValueChange={(value) => setNewSetData({ ...newSetData, lesson: value === 'none' ? '' : value })} disabled={!selectedUnit}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select lesson" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">No specific lesson</SelectItem>
-                    {selectedUnit?.lessons.map((lesson) => (
-                      <SelectItem key={lesson.id} value={lesson.id}>
-                        {lesson.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            <VocabularySourcePicker choices={choices} value={newSetData.teachingSource} unit={newSetData.unit} disabled={creating||choicesLoading} onChange={(teachingSource,unit)=>setNewSetData({...newSetData,teachingSource,unit,lesson:''})}/>
 
             <div className="flex gap-2">
-              <Button onClick={handleCreateSet}>
+              <Button disabled={creating||choicesLoading||!!choicesError||!newSetData.name.trim()||!newSetData.unit||!newSetData.teachingSource} onClick={handleCreateSet}>
                 <Save className="w-4 h-4 mr-2" />
                 Create Set
               </Button>
-              <Button variant="outline" onClick={() => setShowCreateForm(false)}>
+              <Button disabled={creating} variant="outline" onClick={() => setShowCreateForm(false)}>
                 <X className="w-4 h-4 mr-2" />
                 Cancel
               </Button>
@@ -173,7 +148,7 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
       {showUploader && (
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-start justify-between gap-3">
               <CardTitle>Upload Vocabulary</CardTitle>
               <Button variant="outline" size="icon" onClick={() => setShowUploader(false)}>
                 <X className="w-4 h-4" />
@@ -202,21 +177,23 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
         {vocabularySets.map((set) => (
           <Card key={set.id} className={selectedSetId === set.id ? 'ring-2 ring-primary' : ''}>
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     <BookOpen className="w-5 h-5" />
                     {set.name}
                   </CardTitle>
-                  {set.published && <a className="inline-block min-h-11 py-2 underline text-sm" href={`/admin/vocabulary/assign?set_id=${set.id}`}>Assign these words</a>}
+                  {set.teachingConnection&&<p className="mt-2 text-sm">Connected {set.teachingConnection.source.kind==='deck'?'presentation deck':'video lesson'}: <a className="underline" href={set.teachingConnection.href} target="_blank" rel="noopener noreferrer">{set.teachingConnection.label}</a></p>}
+                  <Button variant="outline" className="mt-2 min-h-11" disabled={choicesLoading||!!choicesError} onClick={()=>setConnecting(connecting===set.id?'':set.id)}>Connect to video or deck</Button>
+                  {set.published && <a className="ml-2 inline-block min-h-11 py-2 underline text-sm" href={`/admin/vocabulary/assign?set_id=${set.id}`}>Assign these words</a>}
                   {set.description && (
                     <p className="text-sm text-muted-foreground mt-1">{set.description}</p>
                   )}
-                  <div className="flex gap-2 mt-2">
+                  <div className="flex flex-wrap gap-2 mt-2">
                     <Badge variant="secondary">{set.terms.length} terms</Badge>
                     {set.unit && (
                       <Badge variant="outline">
-                        {physicsUnits.find(u => u.id === set.unit)?.name || set.unit}
+                        {set.teachingConnection?.unit_name || physicsUnits.find(u => u.id === set.unit)?.name || set.unit}
                       </Badge>
                     )}
                     <Badge variant={set.published ? "default" : "secondary"} className={set.published ? "bg-success" : ""}>
@@ -279,6 +256,7 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
               </div>
             </CardHeader>
 
+            {connecting===set.id&&<CardContent><VocabularyConnectionEditor key={set.id} set={set} choices={choices} onCancel={()=>setConnecting('')} onSave={async(teachingSource,unit)=>{await updateVocabularySet(set.id,{teachingSource,unit});setConnecting('')}}/></CardContent>}
             {editingSetId === set.id && (
               <CardContent className="border-t">
                 <div className="space-y-4">

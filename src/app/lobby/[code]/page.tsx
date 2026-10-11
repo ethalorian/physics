@@ -127,11 +127,16 @@ export default function LobbyActivityPage() {
     const mate = st?.group?.find((g) => String(g.idx) === buildWho)
     const built_on = mate ? { who_idx: mate.idx, who_alias: mate.alias, note: buildNote.trim() } : undefined
     const payload = isDrawing ? { strokes, built_on } : { text: response, built_on }
-    await fetch('/api/lobby/submit', {
+    setGroupError(null)
+    try {
+    const result = await fetch('/api/lobby/submit', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ session_id: sessionId.current, response: payload }),
-    }).catch(() => {})
-    setBusy(false); poll()
+    })
+    if(!result.ok){const data=await result.json().catch(()=>({}));throw new Error(data.error??'Your group response was not saved. Try again.')}
+    poll()
+    } catch(error) { setGroupError(error instanceof Error?error.message:'Your group response was not saved. Try again.') }
+    finally {setBusy(false)}
   }
 
   const card: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--card)' }

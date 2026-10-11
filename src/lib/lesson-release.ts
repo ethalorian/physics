@@ -20,8 +20,10 @@ export interface ReleaseLesson {
   visibility_track?: string | null
   program: string | null
   unit_order: number
+  video_sequence?: number
 }
 export interface ReleaseWindow {
+  due_at?: string | null
   open_at: string | null
   close_at: string | null
 }
@@ -35,7 +37,7 @@ export type ReleaseStatus = 'open' | 'closed' | 'scheduled' | 'ended'
 export const classLabel = (c: ReleaseClass) =>
   c.section ? `${c.name} · ${c.section}` : c.name
 export const lessonLabel = (l: ReleaseLesson) =>
-  `${l.lesson_number ? `Day ${l.lesson_number} · ` : ''}${l.title}`
+  l.video_sequence ? `Video ${l.video_sequence} · ${l.title}` : l.title
 export function appliesToClass(
   l: Pick<ReleaseLesson, 'published' | 'program' | 'visibility_track'>,
   c: Pick<ReleaseClass, 'program' | 'track'>,
@@ -125,6 +127,6 @@ export function lessonContextHref(
 }
 
 export function safeLessonReturn(value: string | null): string | null {
-  if (!value || !/^\/admin\/(dashboard|workshop|reviews|classes(?:\/[^/?#]+)?)(?:[?#]|$)/.test(value) || value.includes('\\')) return null
+  if (!value || !/^\/admin\/(dashboard|workshop|reviews|lessons(?:\/[^/?#]+)?|classes(?:\/[^/?#]+)?)(?:[?#]|$)/.test(value) || value.includes('\\')) return null
   return value
 }

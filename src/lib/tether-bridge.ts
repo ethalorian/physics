@@ -34,17 +34,17 @@ export function createTetherBridge(options: BridgeOptions) {
     } finally { clearTimeout(timeout) }
   }
   async function handle(message: Record<string, unknown>): Promise<void> {
-    if (!['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle'].includes(options.slug) || message.protocol !== 2 || message.source !== `${options.slug}-arcade` || typeof message.requestId !== 'string' || message.requestId.length > 120) return
+    if (!['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle', 'pulse', 'mic-check'].includes(options.slug) || message.protocol !== 2 || message.source !== `${options.slug}-arcade` || typeof message.requestId !== 'string' || message.requestId.length > 120) return
     const requestId = message.requestId
     if (message.type === 'arcade:coinRequest') {
       if (coins.has(requestId)) { reply(coins.get(requestId)!); return }
       if (activePlay && !closed) { reply({ type: 'arcade:coinDenied', requestId, reason: 'Finish the current run first.' }); return }
       try {
-        const data = await post('/api/arcade/coin', { slug: options.slug })
+        const data = await post('/api/arcade/coin', { slug: options.slug, ...(options.slug === 'pulse' ? { chartId: message.chartId } : {}) })
         if (typeof data.playId !== 'string') throw new Error('Cabinet did not return a play ID.')
         activePlay = data.playId; closed = false; staff = !!data.staff
         if (typeof data.balance === 'number') options.onBalance(data.balance)
-        const accepted = { type: 'arcade:coinAccepted', requestId, playId: activePlay, staff }
+        const accepted = { type: 'arcade:coinAccepted', requestId, playId: activePlay, staff, ...(options.slug === 'pulse' ? { chartId: data.chartId } : {}) }
         coins.clear(); coins.set(requestId, accepted); reply(accepted)
       } catch (error) { reply({ type: 'arcade:coinDenied', requestId, reason: error instanceof Error ? error.message : 'Connection failed.' }) }
     }
@@ -60,7 +60,8 @@ export function createTetherBridge(options: BridgeOptions) {
       try {
         const saved = await post('/api/arcade/score', { playId, slug: options.slug, score: message.score, act: message.act, final: message.final === true, stats: message.stats })
         if (message.final === true) {
-          const payout = await post('/api/arcade/payout', { playId })
+          // Preserve the deployed rhythm cabinets: their paid runs do not earn learning XP.
+          const payout: Record<string, unknown> = ['pulse', 'mic-check'].includes(options.slug) ? { xp: 0 } : await post('/api/arcade/payout', { playId })
           if (typeof payout.balance === 'number') options.onBalance(payout.balance)
           closed = true
           const receipt = { type: 'arcade:scoreSaved', playId, requestId, final: true, score: saved.score, xp: payout.xp ?? 0, capped: !!payout.capped, staff }

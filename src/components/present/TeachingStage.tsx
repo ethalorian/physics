@@ -1,9 +1,10 @@
 'use client'
 import { LessonLocationLabel, lessonIdentityStyles, type LessonLocation } from '@/components/lessons/LessonVisualIdentity'
 import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import BrandLogo from '@/components/BrandLogo'
 
 /** A shared 16:9 student-facing surface. Portal windows inherit the app's palette. */
-export function TeachingStage({ lesson, mode, footer, children, embedded = false, location }: { location?: LessonLocation | null; lesson: string; mode: string; footer?: ReactNode; children: ReactNode; embedded?: boolean }) {
+export function TeachingStage({ lesson, mode, footer, children, embedded = false, location, original = false }: { original?: boolean; location?: LessonLocation | null; lesson: string; mode: string; footer?: ReactNode; children: ReactNode; embedded?: boolean }) {
   const host = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
   const [palette, setPalette] = useState<CSSProperties>({})
@@ -18,10 +19,10 @@ export function TeachingStage({ lesson, mode, footer, children, embedded = false
     return () => win?.removeEventListener('resize', fit)
   }, [])
   return <div ref={host} style={{ ...palette, position: embedded ? 'relative' : 'fixed', inset: embedded ? undefined : 0, width: embedded ? 1600 : undefined, height: embedded ? 900 : undefined, overflow: 'hidden', background: 'var(--foreground)' }}>
-    <section className="teach-screen" aria-label="Classroom presentation" style={{ position: 'absolute', left: embedded ? 0 : '50%', top: embedded ? 0 : '50%', transform: embedded ? undefined : `translate(-50%, -50%) scale(${scale})` }}>
-      <header className="teach-header"><div className="teach-brand" aria-hidden="true">φ</div><p className="teach-lesson">{lesson}</p><div className="teach-location"><LessonLocationLabel location={location ?? null} /><span className="teach-mode">{mode}</span></div></header>
+    <section className="teach-screen" aria-label="Classroom presentation" style={{ position: 'absolute', left: embedded ? 0 : '50%', top: embedded ? 0 : '50%', transform: embedded ? undefined : `translate(-50%, -50%) scale(${scale})`, ...(original?{padding:0,gap:0}:{}) }}>
+      {!original&&<header className="teach-header"><BrandLogo size={48} decorative /><p className="teach-lesson">{lesson}</p><div className="teach-location"><LessonLocationLabel location={location ?? null} /><span className="teach-mode">{mode}</span></div></header>}
       <div className="teach-main">{children}</div>
-      <footer className="teach-footer"><span className="teach-footer-line" />{footer ?? 'Explore the idea. Make a connection.'}<span className="teach-signature">Antocci Physics</span></footer>
+      {!original&&<footer className="teach-footer"><span className="teach-footer-line" />{footer ?? 'Explore the idea. Make a connection.'}<span className="teach-signature">Antocci Physics</span></footer>}
       <style>{lessonIdentityStyles + teachingStyles}</style>
     </section>
   </div>
@@ -72,7 +73,7 @@ export const teachingStyles = `
 .teach-screen .teach-focus .teach-headline{font-family:'Source Serif 4',Georgia,serif}
 
 .teach-screen{width:1600px;height:900px;padding:32px 64px;box-sizing:border-box;background:var(--background);color:var(--foreground);font-family:Inter,system-ui,sans-serif;display:flex;flex-direction:column;gap:18px;overflow:hidden}
-.teach-screen *{box-sizing:border-box}.teach-header{display:flex;align-items:center;gap:16px;height:52px;flex-shrink:0}.teach-brand{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--primary);color:var(--primary-foreground);font-size:32px;font-family:Georgia,serif}.teach-lesson{font-size:22px;font-weight:600;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:1000px}.teach-mode{margin-left:auto;font-size:19px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px 18px;border:1px solid var(--border);border-radius:999px;white-space:nowrap;color:var(--primary)}
+.teach-screen *{box-sizing:border-box}.teach-header{display:flex;align-items:center;gap:16px;height:52px;flex-shrink:0}.teach-lesson{font-size:22px;font-weight:600;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:1000px}.teach-mode{margin-left:auto;font-size:19px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px 18px;border:1px solid var(--border);border-radius:999px;white-space:nowrap;color:var(--primary)}
 .teach-main{flex:1;min-height:0;position:relative}.teach-footer{display:flex;gap:16px;align-items:center;height:36px;flex-shrink:0;font-size:21px;color:var(--muted-foreground)}.teach-footer-line{width:48px;height:4px;border-radius:999px;background:var(--primary)}.teach-signature{margin-left:auto;font-size:14px;letter-spacing:.15em;text-transform:uppercase}
 .teach-eyebrow{font-size:20px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0 0 22px}.teach-headline{font-size:66px;line-height:1.08;font-weight:700;letter-spacing:-.04em;margin:0 0 28px}.teach-headline p{margin:0}.teach-subtitle{font-size:28px;line-height:1.5;margin:0}.teach-split{display:grid;grid-template-columns:.9fr 1.35fr;gap:28px;min-height:640px}.teach-focus{background:var(--primary);color:var(--primary-foreground);border-radius:var(--radius);padding:40px;display:flex;flex-direction:column;justify-content:center}.teach-focus .teach-headline{font-size:49px}.teach-focus .teach-headline p{line-height:1.2}.teach-focus .teach-eyebrow{opacity:.85}.teach-focus .teach-subtitle{opacity:.9}
 .teach-options{display:grid;grid-template-columns:1fr 1fr;gap:20px}.teach-option{position:relative;background:var(--card);border:2px solid var(--border);border-radius:var(--radius);padding:26px;display:flex;flex-direction:column;gap:20px;min-width:0;overflow:hidden}.teach-option-letter{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:color-mix(in oklch,var(--primary) 12%,var(--card));color:var(--primary);font-size:28px;font-weight:700}.teach-option-text{font-size:31px;line-height:1.3;flex:1}.teach-option-text p{margin:0}.teach-response{font-size:23px;color:var(--muted-foreground);display:flex;justify-content:space-between}.teach-bar{height:12px;border-radius:99px;background:var(--muted);overflow:hidden}.teach-bar>span{display:block;height:100%;background:var(--primary);border-radius:99px}.teach-participation{margin-top:28px;padding-top:22px;border-top:1px solid currentColor;font-size:24px}.teach-participation strong{font-size:42px;font-variant-numeric:tabular-nums;margin-right:8px}

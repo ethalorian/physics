@@ -1,0 +1,38 @@
+[
+  {
+    "sequence": 13,
+    "title": "Tip-to-tail addition",
+    "slug": "video-13-adding-vectors-graphically-the-tip-to-tail-method",
+    "formulas": [
+      {"latex": "\\vec R=\\vec A+\\vec B", "meaning": "Draw the resultant from the first tail to the final tip."},
+      {"latex": "\\vec A-\\vec B=\\vec A+(-\\vec B)", "meaning": "Reverse B without changing its magnitude, then add."}
+    ],
+    "note": "Use one scale for all arrows. Sliding an arrow preserves it; changing its length or direction changes the vector."
+  },
+  {
+    "sequence": 14,
+    "title": "Vector components",
+    "slug": "video-14-vector-components-breaking-vectors-into-x-and-y",
+    "formulas": [
+      {"latex": "A_x=A\\cos\\theta", "meaning": "Here θ is measured from positive x, with positive angles toward positive y."},
+      {"latex": "A_y=A\\sin\\theta", "meaning": "The y-component is opposite that reference angle."},
+      {"latex": "R_x=A_x+B_x,\\quad R_y=A_y+B_y", "meaning": "Add matching components; keep their signs."},
+      {"latex": "|\\vec R|=\\sqrt{R_x^2+R_y^2}", "meaning": "Use the component signs to choose the direction and quadrant."}
+    ],
+    "note": "For direction, use atan2(Ry, Rx), or correct tan⁻¹(Ry/Rx) using the quadrant. A zero vector has no direction."
+  },
+  {
+    "sequence": 15,
+    "title": "Dot & cross products",
+    "slug": "video-15-dot-product-vs-cross-product-what-they-mean",
+    "formulas": [
+      {"latex": "\\vec A\\cdot\\vec B=AB\\cos\\theta", "meaning": "A scalar; θ is the angle between the vectors."},
+      {"latex": "\\vec A\\cdot\\vec B=A_xB_x+A_yB_y", "meaning": "Component formula for vectors in the xy plane."},
+      {"latex": "|\\vec A\\times\\vec B|=AB\\sin\\theta", "meaning": "A vector magnitude; use the right-hand rule for direction."},
+      {"latex": "(\\vec A\\times\\vec B)_z=A_xB_y-A_yB_x", "meaning": "For vectors in the xy plane; positive z points out of the page."},
+      {"latex": "W=\\vec F\\cdot\\Delta\\vec r", "meaning": "Constant-force work is measured in joules."},
+      {"latex": "\\vec\\tau=\\vec r\\times\\vec F", "meaning": "Torque is reported in N·m; r runs from the pivot to the force application point."}
+    ],
+    "note": "Reversing order leaves the dot product unchanged and reverses the cross product."
+  }
+]

@@ -1,3 +1,4 @@
+import { isRetiredCurriculumUnit } from '@/lib/retired-curriculum'
 import { NextResponse } from 'next/server'
 import { withContentEditor } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -24,6 +25,7 @@ export const POST = withContentEditor('lessons', async (request) => {
   const { data: unit, error: unitError } = await supabaseAdmin.from('units').select('id, name').eq('id', body.unit_id).maybeSingle()
   if (unitError) throw unitError
   if (!unit) return NextResponse.json({ error: 'Unit not found.' }, { status: 404 })
+  if (isRetiredCurriculumUnit(unit.id)) return NextResponse.json({ error: 'This unit is retired. Choose a current unit.' }, { status: 422 })
   const id = crypto.randomUUID()
   const slug = typeof body.slug === 'string' && body.slug.trim() ? body.slug.trim() : body.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + id.slice(0, 8)
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return NextResponse.json({ error: 'Use lowercase letters, numbers, and single hyphens in the slug.' }, { status: 422 })

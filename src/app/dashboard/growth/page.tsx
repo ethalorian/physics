@@ -1,79 +1,40 @@
-"use client"
+'use client'
 
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import MasteryGrowth, { MasteryGrowthProps } from '@/components/mastery/MasteryGrowth'
-import MathSpineGrowth, { MathSpineGrowthProps } from '@/components/math-spine/MathSpineGrowth'
-import TeacherFeedbackCard from '@/components/feedback/TeacherFeedbackCard'
+import Link from 'next/link'
+import type { MasteryGrowthProps } from '@/components/mastery/MasteryGrowth'
+import type { MathSpineGrowthProps } from '@/components/math-spine/MathSpineGrowth'
+import GrowthJournal from '@/components/growth/GrowthJournal'
+import s from '@/components/growth/growth.module.css'
 
-const UNIT_ID = 'unit-1'
-const UNIT_NAME = 'Unit 1 — Motion & Forces (Asteroid 2026-XJ)'
-
-export default function GrowthPage() {
-  const { data: session } = useSession()
-  const [data, setData] = useState<MasteryGrowthProps | null>(null)
-  // Math fluency lives on the SAME growth page: one place answers "how am I
-  // doing?" for both physics mastery and the math spine. Loaded independently —
-  // a math-spine hiccup never blanks the mastery chart.
-  const [mathData, setMathData] = useState<MathSpineGrowthProps | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
+// Physics evidence is scoped to this unit; math observations span the year.
+const PHYSICS_URL = '/api/mastery/dashboard?unit_id=unit-1'
+function useGrowthData<T>(url: string, identity: string | null) {
+  const [attempt, setAttempt] = useState(0)
+  const [state, setState] = useState<{ identity: string | null; data: T | null; loading: boolean; error: boolean }>({ identity: null, data: null, loading: true, error: false })
   useEffect(() => {
+    if (!identity) return
     let active = true
-    fetch(`/api/mastery/dashboard?unit_id=${UNIT_ID}`)
-      .then(async (r) => {
-        if (!r.ok) {
-          const body = await r.json().catch(() => ({}))
-          throw new Error(body.error || `Request failed (${r.status})`)
-        }
-        return r.json()
-      })
-      .then((d) => {
-        if (!active) return
-        setData({
-          studentName: session?.user?.name ?? undefined,
-          unitName: UNIT_NAME,
-          targets: d.targets ?? [],
-          records: d.records ?? [],
-          taskResult: d.taskResult ?? undefined,
-        })
-        setLoading(false)
-      })
-      .catch((e) => {
-        if (!active) return
-        setError(e instanceof Error ? e.message : 'Could not load growth')
-        setLoading(false)
-      })
-    fetch('/api/math-spine/dashboard')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (!active || !d) return
-        setMathData({
-          studentName: session?.user?.name ?? undefined,
-          competencies: d.competencies ?? [],
-          records: d.records ?? [],
-          grants: d.grants ?? [],
-          mathPointsEarned: d.mathPointsEarned ?? 0,
-        })
-      })
-      .catch(() => {})
-    return () => {
-      active = false
-    }
-  }, [session?.user?.name])
-
-  return (
-    <div className="max-w-3xl mx-auto p-4">
-      {loading && <p className="text-sm text-muted-foreground">Loading your growth…</p>}
-      {error && <p className="text-sm text-destructive">Could not load your growth: {error}</p>}
-      {data && <MasteryGrowth {...data} />}
-      <TeacherFeedbackCard />
-      {mathData && (
-        <div className="mt-4">
-          <MathSpineGrowth {...mathData} />
-        </div>
-      )}
-    </div>
-  )
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 15000)
+    setState({ identity, data: null, loading: true, error: false })
+    fetch(url, { signal: controller.signal, cache: 'no-store' }).then(async r => {
+      if (!r.ok) throw new Error('Growth unavailable')
+      return await r.json() as T
+    }).then(data => { if (active) setState({ identity, data, loading: false, error: false }) })
+      .catch(() => { if (active) setState({ identity, data: null, loading: false, error: true }) })
+      .finally(() => clearTimeout(timeout))
+    return () => { active = false; clearTimeout(timeout); controller.abort() }
+  }, [url, identity, attempt])
+  return { ...(state.identity === identity ? state : { data: null, loading: true, error: false }), retry: () => setAttempt(n => n + 1) }
+}
+export default function GrowthPage() {
+  const { data: session, status } = useSession()
+  const identity = status === 'authenticated' ? session?.user?.email ?? session?.user?.id ?? 'signed-in' : null
+  const physics = useGrowthData<MasteryGrowthProps>(PHYSICS_URL, identity)
+  const math = useGrowthData<MathSpineGrowthProps>('/api/math-spine/dashboard', identity)
+  if (status === 'loading') return <section className={s.page}><div className={s.state} role="status">Opening your learning journal…</div></section>
+  if (status === 'unauthenticated') return <section className={s.page}><div className={s.state}><p className={s.eyebrow}>Your learning journal</p><h1>Your progress belongs here.</h1><p>Sign in to see your evidence, teacher feedback, and next steps.</p><Link href="/api/auth/signin?callbackUrl=%2Fdashboard%2Fgrowth" className={s.primaryLink}>Sign in to see my growth</Link></div></section>
+  return <GrowthJournal key={identity} name={session?.user?.name ?? undefined} physics={physics.data} math={math.data} physicsLoading={physics.loading} mathLoading={math.loading} physicsError={physics.error} mathError={math.error} retryPhysics={physics.retry} retryMath={math.retry}/>
 }

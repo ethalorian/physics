@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useLessonContext } from './useLessonContext'
 import styles from './ClassOverview.module.css'
 import { Play, ArrowRight, BookOpen, Eye, Settings2 } from 'lucide-react'
 import {
@@ -36,7 +37,9 @@ export default function LessonReleasePanel({
 }) {
   const { data, error, setError, busy, now, load, save } = useLessonRelease()
   const [courseId, setCourseId] = useState(fixedClass ?? '')
+  const context = useLessonContext()
   const [lessonId, setLessonId] = useState('')
+  useEffect(()=>{if(!context.ready)return;const p=new URLSearchParams(window.location.search);if(!p.get('lesson')&&(!fixedClass||fixedClass===context.classId))setLessonId(context.lessonId);if(!fixedClass&&!p.get('class'))setCourseId(context.classId)},[context.ready,context.classId,context.lessonId,fixedClass])
   const [requestedPlan, setRequestedPlan] = useState<{
     unit: string | null
     day: number | null
@@ -96,6 +99,7 @@ export default function LessonReleasePanel({
     setLessonId(id)
     setRequestedPlan({ unit: null, day: null })
     setNotice('')
+    context.remember({classId:cid,lessonId:id})
     const lesson = data?.lessons.find((l) => l.id === id)
     const url = lessonContextHref(window.location.pathname, {
       class: cid,
@@ -209,7 +213,7 @@ export default function LessonReleasePanel({
     >
       {!compact && <div>
         <h2 className="text-xl font-semibold">Lesson access</h2>
-        <p className="text-sm text-muted-foreground">Choose a lesson, check its student view, then open it for your class.</p>
+        <p className="text-sm text-muted-foreground">Open or close each lesson independently. Opening a video lesson does not open other videos in its unit or learning target.</p>
       </div>}
       {error && !schedule && (
         <p role="alert" className="text-sm text-destructive">
@@ -243,12 +247,12 @@ export default function LessonReleasePanel({
         {course && selected ? <>
           <div className={styles.lessonBody}>
             <div className={styles.lessonCopy}>
-              <p className={styles.eyebrow}>{selected.lesson_number ? `Day ${selected.lesson_number}` : 'Selected lesson'}</p>
+              <p className={styles.eyebrow}>Selected lesson</p>
               <h2>{selected.title.replace(/^Day \d+\s*[—–:.-]\s*/, '')}</h2>
               <p className={styles.unit}>{selected.unit}</p>
               <div className={styles.lessonActions}>
                 <Link className={styles.primary} href={href('/admin/command-center')}><Play size={17} /> Teach lesson</Link>
-                <Link className={styles.secondary} href={href('/admin/teacher/plans')}><BookOpen size={16} /> Teacher plan</Link>
+                <Link className={styles.secondary} href={href(`/admin/lessons/${selected.id}`)}><BookOpen size={16} /> Prepare lesson</Link>
                 <Link className={styles.textLink} href={href(`/admin/lessons/${selected.id}/preview`)}><Eye size={16} /> Student preview</Link>
               </div>
             </div>
@@ -269,7 +273,7 @@ export default function LessonReleasePanel({
               {data.canEdit && <Link href={href(`/admin/lessons/${selected.id}/build`)}>Edit lesson</Link>}
             </div>
           </div>
-        </> : <p role="status" className="p-5 text-sm text-muted-foreground">{course ? 'No lesson selected. Choose an available lesson above.' : 'This class is not available in your current teacher scope.'}</p>}
+        </> : <p role="status" className="p-5 text-sm text-muted-foreground">{course ? 'Choose a current lesson above. Legacy lessons are kept in the library for saved work.' : 'This class is not available in your current teacher scope.'}</p>}
       </> : <>
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="text-sm font-medium">
@@ -317,8 +321,7 @@ export default function LessonReleasePanel({
       )}
       {course && !selected && (
         <p role="status">
-          This lesson is not available for this class. Choose a published lesson
-          above.
+          This lesson is not in the current release catalog. Choose a current lesson above; legacy lessons remain in the library for saved work.
         </p>
       )}
       {course && selected && (
@@ -365,8 +368,8 @@ export default function LessonReleasePanel({
             >
               Student preview
             </Link>
-            <Link className={button} href={href('/admin/teacher/plans')}>
-              Teacher plan
+            <Link className={button} href={href(`/admin/lessons/${selected.id}`)}>
+              Prepare lesson
             </Link>
             {releaseStatus(data.windows[`${course.id}|${selected.id}`], now) ===
             'scheduled' ? (
@@ -425,8 +428,7 @@ export default function LessonReleasePanel({
             )}
           </div>
           <p className="text-xs text-muted-foreground">
-            Published means ready for teachers to release. Students also need
-            enrollment in a matching curriculum and track.
+            This changes access for this lesson only. Previously opened lessons stay available until you close them.
           </p>
           {summary?.next && (
             <button
@@ -440,6 +442,23 @@ export default function LessonReleasePanel({
         </>
       )}
       </>}
+      {!compact && course && <section aria-label="Individual lesson access" className="space-y-3 border-t pt-5">
+        <h3 className="text-lg font-semibold">Individual lessons · {classLabel(course)}</h3>
+        <p className="text-sm text-muted-foreground">Each row controls one lesson. Preview it before choosing when students can open it.</p>
+        <div className="divide-y rounded-xl border">
+          {summary?.lessons.map(lesson=>{
+            const status=releaseStatus(data.windows[course.id+'|'+lesson.id],now)
+            return <article key={lesson.id} className="flex flex-wrap items-center justify-between gap-3 p-4" aria-label={lessonLabel(lesson)}>
+              <div className="min-w-0 flex-1"><h4 className="font-medium">{lessonLabel(lesson)}</h4><p className="text-sm text-muted-foreground">{lesson.unit} · <span className="capitalize">{status}</span></p></div>
+              <div className="flex flex-wrap gap-2">
+                <Link className={button} href={lessonContextHref('/admin/lessons/'+lesson.id+'/preview',{class:course.id,lesson:lesson.id})}>Preview</Link>
+                <button className={button} disabled={locked} onClick={()=>editSchedule(course,lesson)}>Schedule</button>
+                <button className={button+(status==='open'?'':' bg-primary text-primary-foreground')} disabled={locked} onClick={()=>void setAccess(course,lesson,status!=='open')}>{status==='open'?'Close lesson':'Open lesson'}</button>
+              </div>
+            </article>
+          })}
+        </div>
+      </section>}
       {!compact && (
         <details
           open={matrix}
@@ -452,7 +471,7 @@ export default function LessonReleasePanel({
           {matrix && (
             <div className="mt-3 space-y-3">
               <div className="flex flex-wrap gap-2">
-                <select aria-label="Lesson program" className={field + ' sm:max-w-64'} value={programFilter} onChange={e=>setProgramFilter(e.target.value)}><option value="selected">Selected class · {course?.program ?? 'physics'}</option><option value="trades">Trades</option><option value="physics">Physics</option><option value="projects">Project Physics</option><option value="all">All programs</option></select>
+                <select aria-label="Lesson program" className={field + ' sm:max-w-64'} value={programFilter} onChange={e=>setProgramFilter(e.target.value)}><option value="selected">Selected class · {course?.program ?? 'physics'}</option><option value="trades">Trades</option><option value="physics">Physics</option><option value="all">All programs</option></select>
                 <input
                   aria-label="Search lessons"
                   placeholder="Search lessons or units…"

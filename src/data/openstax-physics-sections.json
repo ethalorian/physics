@@ -1,0 +1,1724 @@
+{
+  "title": "College Physics for AP® Courses 2e",
+  "shortTitle": "OpenStax · AP Physics 2e",
+  "authors": "Irina Lyublinskaya, Gregg Wolfe, Douglas Ingram, Liza Pujji, Sudhi Oberoi, and Nathan Czuba",
+  "copyright": "© 2026 Rice University. OpenStax.",
+  "license": "CC BY-NC-SA 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "source": "college-physics-ap-courses-2e_-_WEB.pdf",
+  "sourceUrl": "https://openstax.org/details/books/college-physics-ap-courses-2e",
+  "pages": 1773,
+  "offset": 18,
+  "defaultPage": 20,
+  "edition": "college-physics-ap-2e",
+  "sections": [
+    {
+      "id": "1.1",
+      "title": "Physics: An Introduction",
+      "pdfPage": 28,
+      "printedPage": 10,
+      "lastPrintedPage": 19
+    },
+    {
+      "id": "1.2",
+      "title": "Physical Quantities and Units",
+      "pdfPage": 37,
+      "printedPage": 19,
+      "lastPrintedPage": 27
+    },
+    {
+      "id": "1.3",
+      "title": "Accuracy, Precision, and Significant Figures",
+      "pdfPage": 45,
+      "printedPage": 27,
+      "lastPrintedPage": 33
+    },
+    {
+      "id": "1.4",
+      "title": "Approximation",
+      "pdfPage": 51,
+      "printedPage": 33,
+      "lastPrintedPage": 36
+    },
+    {
+      "id": "2.1",
+      "title": "Displacement",
+      "pdfPage": 60,
+      "printedPage": 42,
+      "lastPrintedPage": 45
+    },
+    {
+      "id": "2.2",
+      "title": "Vectors, Scalars, and Coordinate Systems",
+      "pdfPage": 63,
+      "printedPage": 45,
+      "lastPrintedPage": 47
+    },
+    {
+      "id": "2.3",
+      "title": "Time, Velocity, and Speed",
+      "pdfPage": 65,
+      "printedPage": 47,
+      "lastPrintedPage": 51
+    },
+    {
+      "id": "2.4",
+      "title": "Acceleration",
+      "pdfPage": 69,
+      "printedPage": 51,
+      "lastPrintedPage": 62
+    },
+    {
+      "id": "2.5",
+      "title": "Motion Equations for Constant Acceleration in One Dimension",
+      "pdfPage": 80,
+      "printedPage": 62,
+      "lastPrintedPage": 73
+    },
+    {
+      "id": "2.6",
+      "title": "Problem-Solving Basics for One-Dimensional Kinematics",
+      "pdfPage": 91,
+      "printedPage": 73,
+      "lastPrintedPage": 75
+    },
+    {
+      "id": "2.7",
+      "title": "Falling Objects",
+      "pdfPage": 93,
+      "printedPage": 75,
+      "lastPrintedPage": 84
+    },
+    {
+      "id": "2.8",
+      "title": "Graphical Analysis of One-Dimensional Motion",
+      "pdfPage": 102,
+      "printedPage": 84,
+      "lastPrintedPage": 92
+    },
+    {
+      "id": "3.1",
+      "title": "Kinematics in Two Dimensions: An Introduction",
+      "pdfPage": 124,
+      "printedPage": 106,
+      "lastPrintedPage": 109
+    },
+    {
+      "id": "3.2",
+      "title": "Vector Addition and Subtraction: Graphical Methods",
+      "pdfPage": 127,
+      "printedPage": 109,
+      "lastPrintedPage": 117
+    },
+    {
+      "id": "3.3",
+      "title": "Vector Addition and Subtraction: Analytical Methods",
+      "pdfPage": 135,
+      "printedPage": 117,
+      "lastPrintedPage": 124
+    },
+    {
+      "id": "3.4",
+      "title": "Projectile Motion",
+      "pdfPage": 142,
+      "printedPage": 124,
+      "lastPrintedPage": 132
+    },
+    {
+      "id": "3.5",
+      "title": "Addition of Velocities",
+      "pdfPage": 150,
+      "printedPage": 132,
+      "lastPrintedPage": 141
+    },
+    {
+      "id": "4.1",
+      "title": "Development of Force Concept",
+      "pdfPage": 177,
+      "printedPage": 159,
+      "lastPrintedPage": 160
+    },
+    {
+      "id": "4.2",
+      "title": "Newton’s First Law of Motion: Inertia",
+      "pdfPage": 178,
+      "printedPage": 160,
+      "lastPrintedPage": 161
+    },
+    {
+      "id": "4.3",
+      "title": "Newton’s Second Law of Motion: Concept of a System",
+      "pdfPage": 179,
+      "printedPage": 161,
+      "lastPrintedPage": 167
+    },
+    {
+      "id": "4.4",
+      "title": "Newton’s Third Law of Motion: Symmetry in Forces",
+      "pdfPage": 185,
+      "printedPage": 167,
+      "lastPrintedPage": 171
+    },
+    {
+      "id": "4.5",
+      "title": "Normal, Tension, and Other Examples of Forces",
+      "pdfPage": 189,
+      "printedPage": 171,
+      "lastPrintedPage": 180
+    },
+    {
+      "id": "4.6",
+      "title": "Problem-Solving Strategies",
+      "pdfPage": 198,
+      "printedPage": 180,
+      "lastPrintedPage": 182
+    },
+    {
+      "id": "4.7",
+      "title": "Further Applications of Newton’s Laws of Motion",
+      "pdfPage": 200,
+      "printedPage": 182,
+      "lastPrintedPage": 189
+    },
+    {
+      "id": "4.8",
+      "title": "Extended Topic: The Four Basic Forces—An Introduction",
+      "pdfPage": 207,
+      "printedPage": 189,
+      "lastPrintedPage": 195
+    },
+    {
+      "id": "5.1",
+      "title": "Friction",
+      "pdfPage": 230,
+      "printedPage": 212,
+      "lastPrintedPage": 219
+    },
+    {
+      "id": "5.2",
+      "title": "Drag Forces",
+      "pdfPage": 237,
+      "printedPage": 219,
+      "lastPrintedPage": 224
+    },
+    {
+      "id": "5.3",
+      "title": "Elasticity: Stress and Strain",
+      "pdfPage": 242,
+      "printedPage": 224,
+      "lastPrintedPage": 235
+    },
+    {
+      "id": "6.1",
+      "title": "Rotation Angle and Angular Velocity",
+      "pdfPage": 263,
+      "printedPage": 245,
+      "lastPrintedPage": 249
+    },
+    {
+      "id": "6.2",
+      "title": "Centripetal Acceleration",
+      "pdfPage": 267,
+      "printedPage": 249,
+      "lastPrintedPage": 253
+    },
+    {
+      "id": "6.3",
+      "title": "Centripetal Force",
+      "pdfPage": 271,
+      "printedPage": 253,
+      "lastPrintedPage": 258
+    },
+    {
+      "id": "6.4",
+      "title": "Fictitious Forces and Non-inertial Frames: The Coriolis Force",
+      "pdfPage": 276,
+      "printedPage": 258,
+      "lastPrintedPage": 261
+    },
+    {
+      "id": "6.5",
+      "title": "Newton’s Universal Law of Gravitation",
+      "pdfPage": 279,
+      "printedPage": 261,
+      "lastPrintedPage": 269
+    },
+    {
+      "id": "6.6",
+      "title": "Satellites and Kepler’s Laws: An Argument for Simplicity",
+      "pdfPage": 287,
+      "printedPage": 269,
+      "lastPrintedPage": 275
+    },
+    {
+      "id": "7.1",
+      "title": "Work: The Scientific Definition",
+      "pdfPage": 305,
+      "printedPage": 287,
+      "lastPrintedPage": 290
+    },
+    {
+      "id": "7.2",
+      "title": "Kinetic Energy and the Work-Energy Theorem",
+      "pdfPage": 308,
+      "printedPage": 290,
+      "lastPrintedPage": 295
+    },
+    {
+      "id": "7.3",
+      "title": "Gravitational Potential Energy",
+      "pdfPage": 313,
+      "printedPage": 295,
+      "lastPrintedPage": 301
+    },
+    {
+      "id": "7.4",
+      "title": "Conservative Forces and Potential Energy",
+      "pdfPage": 319,
+      "printedPage": 301,
+      "lastPrintedPage": 305
+    },
+    {
+      "id": "7.5",
+      "title": "Nonconservative Forces",
+      "pdfPage": 323,
+      "printedPage": 305,
+      "lastPrintedPage": 310
+    },
+    {
+      "id": "7.6",
+      "title": "Conservation of Energy",
+      "pdfPage": 328,
+      "printedPage": 310,
+      "lastPrintedPage": 314
+    },
+    {
+      "id": "7.7",
+      "title": "Power",
+      "pdfPage": 332,
+      "printedPage": 314,
+      "lastPrintedPage": 319
+    },
+    {
+      "id": "7.8",
+      "title": "Work, Energy, and Power in Humans",
+      "pdfPage": 337,
+      "printedPage": 319,
+      "lastPrintedPage": 323
+    },
+    {
+      "id": "7.9",
+      "title": "World Energy Use",
+      "pdfPage": 341,
+      "printedPage": 323,
+      "lastPrintedPage": 327
+    },
+    {
+      "id": "8.1",
+      "title": "Linear Momentum and Force",
+      "pdfPage": 362,
+      "printedPage": 344,
+      "lastPrintedPage": 347
+    },
+    {
+      "id": "8.2",
+      "title": "Impulse",
+      "pdfPage": 365,
+      "printedPage": 347,
+      "lastPrintedPage": 350
+    },
+    {
+      "id": "8.3",
+      "title": "Conservation of Momentum",
+      "pdfPage": 368,
+      "printedPage": 350,
+      "lastPrintedPage": 354
+    },
+    {
+      "id": "8.4",
+      "title": "Elastic Collisions in One Dimension",
+      "pdfPage": 372,
+      "printedPage": 354,
+      "lastPrintedPage": 356
+    },
+    {
+      "id": "8.5",
+      "title": "Inelastic Collisions in One Dimension",
+      "pdfPage": 374,
+      "printedPage": 356,
+      "lastPrintedPage": 361
+    },
+    {
+      "id": "8.6",
+      "title": "Collisions of Point Masses in Two Dimensions",
+      "pdfPage": 379,
+      "printedPage": 361,
+      "lastPrintedPage": 365
+    },
+    {
+      "id": "8.7",
+      "title": "Introduction to Rocket Propulsion",
+      "pdfPage": 383,
+      "printedPage": 365,
+      "lastPrintedPage": 369
+    },
+    {
+      "id": "9.1",
+      "title": "The First Condition for Equilibrium",
+      "pdfPage": 404,
+      "printedPage": 386,
+      "lastPrintedPage": 388
+    },
+    {
+      "id": "9.2",
+      "title": "The Second Condition for Equilibrium",
+      "pdfPage": 406,
+      "printedPage": 388,
+      "lastPrintedPage": 392
+    },
+    {
+      "id": "9.3",
+      "title": "Stability",
+      "pdfPage": 410,
+      "printedPage": 392,
+      "lastPrintedPage": 397
+    },
+    {
+      "id": "9.4",
+      "title": "Applications of Statics, Including Problem-Solving Strategies",
+      "pdfPage": 415,
+      "printedPage": 397,
+      "lastPrintedPage": 400
+    },
+    {
+      "id": "9.5",
+      "title": "Simple Machines",
+      "pdfPage": 418,
+      "printedPage": 400,
+      "lastPrintedPage": 404
+    },
+    {
+      "id": "9.6",
+      "title": "Forces and Torques in Muscles and Joints",
+      "pdfPage": 422,
+      "printedPage": 404,
+      "lastPrintedPage": 411
+    },
+    {
+      "id": "10.1",
+      "title": "Angular Acceleration",
+      "pdfPage": 441,
+      "printedPage": 423,
+      "lastPrintedPage": 428
+    },
+    {
+      "id": "10.2",
+      "title": "Kinematics of Rotational Motion",
+      "pdfPage": 446,
+      "printedPage": 428,
+      "lastPrintedPage": 433
+    },
+    {
+      "id": "10.3",
+      "title": "Dynamics of Rotational Motion: Rotational Inertia",
+      "pdfPage": 451,
+      "printedPage": 433,
+      "lastPrintedPage": 438
+    },
+    {
+      "id": "10.4",
+      "title": "Rotational Kinetic Energy: Work and Energy Revisited",
+      "pdfPage": 456,
+      "printedPage": 438,
+      "lastPrintedPage": 446
+    },
+    {
+      "id": "10.5",
+      "title": "Angular Momentum and Its Conservation",
+      "pdfPage": 464,
+      "printedPage": 446,
+      "lastPrintedPage": 452
+    },
+    {
+      "id": "10.6",
+      "title": "Collisions of Extended Bodies in Two Dimensions",
+      "pdfPage": 470,
+      "printedPage": 452,
+      "lastPrintedPage": 457
+    },
+    {
+      "id": "10.7",
+      "title": "Gyroscopic Effects: Vector Aspects of Angular Momentum",
+      "pdfPage": 475,
+      "printedPage": 457,
+      "lastPrintedPage": 460
+    },
+    {
+      "id": "11.1",
+      "title": "What Is a Fluid?",
+      "pdfPage": 492,
+      "printedPage": 474,
+      "lastPrintedPage": 475
+    },
+    {
+      "id": "11.2",
+      "title": "Density",
+      "pdfPage": 493,
+      "printedPage": 475,
+      "lastPrintedPage": 478
+    },
+    {
+      "id": "11.3",
+      "title": "Pressure",
+      "pdfPage": 496,
+      "printedPage": 478,
+      "lastPrintedPage": 481
+    },
+    {
+      "id": "11.4",
+      "title": "Variation of Pressure with Depth in a Fluid",
+      "pdfPage": 499,
+      "printedPage": 481,
+      "lastPrintedPage": 484
+    },
+    {
+      "id": "11.5",
+      "title": "Pascal’s Principle",
+      "pdfPage": 502,
+      "printedPage": 484,
+      "lastPrintedPage": 487
+    },
+    {
+      "id": "11.6",
+      "title": "Gauge Pressure, Absolute Pressure, and Pressure Measurement",
+      "pdfPage": 505,
+      "printedPage": 487,
+      "lastPrintedPage": 492
+    },
+    {
+      "id": "11.7",
+      "title": "Archimedes’ Principle",
+      "pdfPage": 510,
+      "printedPage": 492,
+      "lastPrintedPage": 499
+    },
+    {
+      "id": "11.8",
+      "title": "Cohesion and Adhesion in Liquids: Surface Tension and Capillary Action",
+      "pdfPage": 517,
+      "printedPage": 499,
+      "lastPrintedPage": 508
+    },
+    {
+      "id": "11.9",
+      "title": "Pressures in the Body",
+      "pdfPage": 526,
+      "printedPage": 508,
+      "lastPrintedPage": 514
+    },
+    {
+      "id": "12.1",
+      "title": "Flow Rate and Its Relation to Velocity",
+      "pdfPage": 544,
+      "printedPage": 526,
+      "lastPrintedPage": 529
+    },
+    {
+      "id": "12.2",
+      "title": "Bernoulli’s Equation",
+      "pdfPage": 547,
+      "printedPage": 529,
+      "lastPrintedPage": 534
+    },
+    {
+      "id": "12.3",
+      "title": "The Most General Applications of Bernoulli’s Equation",
+      "pdfPage": 552,
+      "printedPage": 534,
+      "lastPrintedPage": 537
+    },
+    {
+      "id": "12.4",
+      "title": "Viscosity and Laminar Flow; Poiseuille’s Law",
+      "pdfPage": 555,
+      "printedPage": 537,
+      "lastPrintedPage": 545
+    },
+    {
+      "id": "12.5",
+      "title": "The Onset of Turbulence",
+      "pdfPage": 563,
+      "printedPage": 545,
+      "lastPrintedPage": 547
+    },
+    {
+      "id": "12.6",
+      "title": "Motion of an Object in a Viscous Fluid",
+      "pdfPage": 565,
+      "printedPage": 547,
+      "lastPrintedPage": 549
+    },
+    {
+      "id": "12.7",
+      "title": "Molecular Transport Phenomena: Diffusion, Osmosis, and Related Processes",
+      "pdfPage": 567,
+      "printedPage": 549,
+      "lastPrintedPage": 554
+    },
+    {
+      "id": "13.1",
+      "title": "Temperature",
+      "pdfPage": 584,
+      "printedPage": 566,
+      "lastPrintedPage": 574
+    },
+    {
+      "id": "13.2",
+      "title": "Thermal Expansion of Solids and Liquids",
+      "pdfPage": 592,
+      "printedPage": 574,
+      "lastPrintedPage": 581
+    },
+    {
+      "id": "13.3",
+      "title": "The Ideal Gas Law",
+      "pdfPage": 599,
+      "printedPage": 581,
+      "lastPrintedPage": 589
+    },
+    {
+      "id": "13.4",
+      "title": "Kinetic Theory: Atomic and Molecular Explanation of Pressure and Temperature",
+      "pdfPage": 607,
+      "printedPage": 589,
+      "lastPrintedPage": 596
+    },
+    {
+      "id": "13.5",
+      "title": "Phase Changes",
+      "pdfPage": 614,
+      "printedPage": 596,
+      "lastPrintedPage": 601
+    },
+    {
+      "id": "13.6",
+      "title": "Humidity, Evaporation, and Boiling",
+      "pdfPage": 619,
+      "printedPage": 601,
+      "lastPrintedPage": 607
+    },
+    {
+      "id": "14.1",
+      "title": "Heat",
+      "pdfPage": 636,
+      "printedPage": 618,
+      "lastPrintedPage": 620
+    },
+    {
+      "id": "14.2",
+      "title": "Temperature Change and Heat Capacity",
+      "pdfPage": 638,
+      "printedPage": 620,
+      "lastPrintedPage": 626
+    },
+    {
+      "id": "14.3",
+      "title": "Phase Change and Latent Heat",
+      "pdfPage": 644,
+      "printedPage": 626,
+      "lastPrintedPage": 632
+    },
+    {
+      "id": "14.4",
+      "title": "Heat Transfer Methods",
+      "pdfPage": 650,
+      "printedPage": 632,
+      "lastPrintedPage": 633
+    },
+    {
+      "id": "14.5",
+      "title": "Conduction",
+      "pdfPage": 651,
+      "printedPage": 633,
+      "lastPrintedPage": 639
+    },
+    {
+      "id": "14.6",
+      "title": "Convection",
+      "pdfPage": 657,
+      "printedPage": 639,
+      "lastPrintedPage": 644
+    },
+    {
+      "id": "14.7",
+      "title": "Radiation",
+      "pdfPage": 662,
+      "printedPage": 644,
+      "lastPrintedPage": 651
+    },
+    {
+      "id": "15.1",
+      "title": "The First Law of Thermodynamics",
+      "pdfPage": 683,
+      "printedPage": 665,
+      "lastPrintedPage": 670
+    },
+    {
+      "id": "15.2",
+      "title": "The First Law of Thermodynamics and Some Simple Processes",
+      "pdfPage": 688,
+      "printedPage": 670,
+      "lastPrintedPage": 678
+    },
+    {
+      "id": "15.3",
+      "title": "Introduction to the Second Law of Thermodynamics: Heat Engines and Their Efficiency",
+      "pdfPage": 696,
+      "printedPage": 678,
+      "lastPrintedPage": 685
+    },
+    {
+      "id": "15.4",
+      "title": "Carnot’s Perfect Heat Engine: The Second Law of Thermodynamics Restated",
+      "pdfPage": 703,
+      "printedPage": 685,
+      "lastPrintedPage": 689
+    },
+    {
+      "id": "15.5",
+      "title": "Applications of Thermodynamics: Heat Pumps and Refrigerators",
+      "pdfPage": 707,
+      "printedPage": 689,
+      "lastPrintedPage": 694
+    },
+    {
+      "id": "15.6",
+      "title": "Entropy and the Second Law of Thermodynamics: Disorder and the Unavailability of Energy",
+      "pdfPage": 712,
+      "printedPage": 694,
+      "lastPrintedPage": 702
+    },
+    {
+      "id": "15.7",
+      "title": "Statistical Interpretation of Entropy and the Second Law of Thermodynamics: The Underlying Explanation",
+      "pdfPage": 720,
+      "printedPage": 702,
+      "lastPrintedPage": 708
+    },
+    {
+      "id": "16.1",
+      "title": "Hooke’s Law: Stress and Strain Revisited",
+      "pdfPage": 741,
+      "printedPage": 723,
+      "lastPrintedPage": 728
+    },
+    {
+      "id": "16.2",
+      "title": "Period and Frequency in Oscillations",
+      "pdfPage": 746,
+      "printedPage": 728,
+      "lastPrintedPage": 730
+    },
+    {
+      "id": "16.3",
+      "title": "Simple Harmonic Motion: A Special Periodic Motion",
+      "pdfPage": 748,
+      "printedPage": 730,
+      "lastPrintedPage": 735
+    },
+    {
+      "id": "16.4",
+      "title": "The Simple Pendulum",
+      "pdfPage": 753,
+      "printedPage": 735,
+      "lastPrintedPage": 737
+    },
+    {
+      "id": "16.5",
+      "title": "Energy and the Simple Harmonic Oscillator",
+      "pdfPage": 755,
+      "printedPage": 737,
+      "lastPrintedPage": 740
+    },
+    {
+      "id": "16.6",
+      "title": "Uniform Circular Motion and Simple Harmonic Motion",
+      "pdfPage": 758,
+      "printedPage": 740,
+      "lastPrintedPage": 743
+    },
+    {
+      "id": "16.7",
+      "title": "Damped Harmonic Motion",
+      "pdfPage": 761,
+      "printedPage": 743,
+      "lastPrintedPage": 747
+    },
+    {
+      "id": "16.8",
+      "title": "Forced Oscillations and Resonance",
+      "pdfPage": 765,
+      "printedPage": 747,
+      "lastPrintedPage": 750
+    },
+    {
+      "id": "16.9",
+      "title": "Waves",
+      "pdfPage": 768,
+      "printedPage": 750,
+      "lastPrintedPage": 753
+    },
+    {
+      "id": "16.10",
+      "title": "Superposition and Interference",
+      "pdfPage": 771,
+      "printedPage": 753,
+      "lastPrintedPage": 759
+    },
+    {
+      "id": "16.11",
+      "title": "Energy in Waves: Intensity",
+      "pdfPage": 777,
+      "printedPage": 759,
+      "lastPrintedPage": 763
+    },
+    {
+      "id": "17.1",
+      "title": "Sound",
+      "pdfPage": 794,
+      "printedPage": 776,
+      "lastPrintedPage": 778
+    },
+    {
+      "id": "17.2",
+      "title": "Speed of Sound, Frequency, and Wavelength",
+      "pdfPage": 796,
+      "printedPage": 778,
+      "lastPrintedPage": 783
+    },
+    {
+      "id": "17.3",
+      "title": "Sound Intensity and Sound Level",
+      "pdfPage": 801,
+      "printedPage": 783,
+      "lastPrintedPage": 788
+    },
+    {
+      "id": "17.4",
+      "title": "Doppler Effect and Sonic Booms",
+      "pdfPage": 806,
+      "printedPage": 788,
+      "lastPrintedPage": 793
+    },
+    {
+      "id": "17.5",
+      "title": "Sound Interference and Resonance: Standing Waves in Air Columns",
+      "pdfPage": 811,
+      "printedPage": 793,
+      "lastPrintedPage": 800
+    },
+    {
+      "id": "17.6",
+      "title": "Hearing",
+      "pdfPage": 818,
+      "printedPage": 800,
+      "lastPrintedPage": 807
+    },
+    {
+      "id": "17.7",
+      "title": "Ultrasound",
+      "pdfPage": 825,
+      "printedPage": 807,
+      "lastPrintedPage": 816
+    },
+    {
+      "id": "18.1",
+      "title": "Static Electricity and Charge: Conservation of Charge",
+      "pdfPage": 851,
+      "printedPage": 833,
+      "lastPrintedPage": 838
+    },
+    {
+      "id": "18.2",
+      "title": "Conductors and Insulators",
+      "pdfPage": 856,
+      "printedPage": 838,
+      "lastPrintedPage": 841
+    },
+    {
+      "id": "18.3",
+      "title": "Conductors and Electric Fields in Static Equilibrium",
+      "pdfPage": 859,
+      "printedPage": 841,
+      "lastPrintedPage": 846
+    },
+    {
+      "id": "18.4",
+      "title": "Coulomb’s Law",
+      "pdfPage": 864,
+      "printedPage": 846,
+      "lastPrintedPage": 848
+    },
+    {
+      "id": "18.5",
+      "title": "Electric Field: Concept of a Field Revisited",
+      "pdfPage": 866,
+      "printedPage": 848,
+      "lastPrintedPage": 850
+    },
+    {
+      "id": "18.6",
+      "title": "Electric Field Lines: Multiple Charges",
+      "pdfPage": 868,
+      "printedPage": 850,
+      "lastPrintedPage": 854
+    },
+    {
+      "id": "18.7",
+      "title": "Electric Forces in Biology",
+      "pdfPage": 872,
+      "printedPage": 854,
+      "lastPrintedPage": 855
+    },
+    {
+      "id": "18.8",
+      "title": "Applications of Electrostatics",
+      "pdfPage": 873,
+      "printedPage": 855,
+      "lastPrintedPage": 862
+    },
+    {
+      "id": "19.1",
+      "title": "Electric Potential Energy: Potential Difference",
+      "pdfPage": 899,
+      "printedPage": 881,
+      "lastPrintedPage": 887
+    },
+    {
+      "id": "19.2",
+      "title": "Electric Potential in a Uniform Electric Field",
+      "pdfPage": 905,
+      "printedPage": 887,
+      "lastPrintedPage": 891
+    },
+    {
+      "id": "19.3",
+      "title": "Electrical Potential Due to a Point Charge",
+      "pdfPage": 909,
+      "printedPage": 891,
+      "lastPrintedPage": 893
+    },
+    {
+      "id": "19.4",
+      "title": "Equipotential Lines",
+      "pdfPage": 911,
+      "printedPage": 893,
+      "lastPrintedPage": 896
+    },
+    {
+      "id": "19.5",
+      "title": "Capacitors and Dielectrics",
+      "pdfPage": 914,
+      "printedPage": 896,
+      "lastPrintedPage": 904
+    },
+    {
+      "id": "19.6",
+      "title": "Capacitors in Series and Parallel",
+      "pdfPage": 922,
+      "printedPage": 904,
+      "lastPrintedPage": 908
+    },
+    {
+      "id": "19.7",
+      "title": "Energy Stored in Capacitors",
+      "pdfPage": 926,
+      "printedPage": 908,
+      "lastPrintedPage": 911
+    },
+    {
+      "id": "20.1",
+      "title": "Current",
+      "pdfPage": 943,
+      "printedPage": 925,
+      "lastPrintedPage": 931
+    },
+    {
+      "id": "20.2",
+      "title": "Ohm’s Law: Resistance and Simple Circuits",
+      "pdfPage": 949,
+      "printedPage": 931,
+      "lastPrintedPage": 934
+    },
+    {
+      "id": "20.3",
+      "title": "Resistance and Resistivity",
+      "pdfPage": 952,
+      "printedPage": 934,
+      "lastPrintedPage": 939
+    },
+    {
+      "id": "20.4",
+      "title": "Electric Power and Energy",
+      "pdfPage": 957,
+      "printedPage": 939,
+      "lastPrintedPage": 943
+    },
+    {
+      "id": "20.5",
+      "title": "Alternating Current versus Direct Current",
+      "pdfPage": 961,
+      "printedPage": 943,
+      "lastPrintedPage": 948
+    },
+    {
+      "id": "20.6",
+      "title": "Electric Hazards and the Human Body",
+      "pdfPage": 966,
+      "printedPage": 948,
+      "lastPrintedPage": 952
+    },
+    {
+      "id": "20.7",
+      "title": "Nerve Conduction–Electrocardiograms",
+      "pdfPage": 970,
+      "printedPage": 952,
+      "lastPrintedPage": 960
+    },
+    {
+      "id": "21.1",
+      "title": "Resistors in Series and Parallel",
+      "pdfPage": 992,
+      "printedPage": 974,
+      "lastPrintedPage": 984
+    },
+    {
+      "id": "21.2",
+      "title": "Electromotive Force: Terminal Voltage",
+      "pdfPage": 1002,
+      "printedPage": 984,
+      "lastPrintedPage": 992
+    },
+    {
+      "id": "21.3",
+      "title": "Kirchhoff’s Rules",
+      "pdfPage": 1010,
+      "printedPage": 992,
+      "lastPrintedPage": 998
+    },
+    {
+      "id": "21.4",
+      "title": "DC Voltmeters and Ammeters",
+      "pdfPage": 1016,
+      "printedPage": 998,
+      "lastPrintedPage": 1002
+    },
+    {
+      "id": "21.5",
+      "title": "Null Measurements",
+      "pdfPage": 1020,
+      "printedPage": 1002,
+      "lastPrintedPage": 1005
+    },
+    {
+      "id": "21.6",
+      "title": "DC Circuits Containing Resistors and Capacitors",
+      "pdfPage": 1023,
+      "printedPage": 1005,
+      "lastPrintedPage": 1011
+    },
+    {
+      "id": "22.1",
+      "title": "Magnets",
+      "pdfPage": 1047,
+      "printedPage": 1029,
+      "lastPrintedPage": 1031
+    },
+    {
+      "id": "22.2",
+      "title": "Ferromagnets and Electromagnets",
+      "pdfPage": 1049,
+      "printedPage": 1031,
+      "lastPrintedPage": 1035
+    },
+    {
+      "id": "22.3",
+      "title": "Magnetic Fields and Magnetic Field Lines",
+      "pdfPage": 1053,
+      "printedPage": 1035,
+      "lastPrintedPage": 1036
+    },
+    {
+      "id": "22.4",
+      "title": "Magnetic Field Strength: Force on a Moving Charge in a Magnetic Field",
+      "pdfPage": 1054,
+      "printedPage": 1036,
+      "lastPrintedPage": 1039
+    },
+    {
+      "id": "22.5",
+      "title": "Force on a Moving Charge in a Magnetic Field: Examples and Applications",
+      "pdfPage": 1057,
+      "printedPage": 1039,
+      "lastPrintedPage": 1043
+    },
+    {
+      "id": "22.6",
+      "title": "The Hall Effect",
+      "pdfPage": 1061,
+      "printedPage": 1043,
+      "lastPrintedPage": 1046
+    },
+    {
+      "id": "22.7",
+      "title": "Magnetic Force on a Current-Carrying Conductor",
+      "pdfPage": 1064,
+      "printedPage": 1046,
+      "lastPrintedPage": 1048
+    },
+    {
+      "id": "22.8",
+      "title": "Torque on a Current Loop: Motors and Meters",
+      "pdfPage": 1066,
+      "printedPage": 1048,
+      "lastPrintedPage": 1052
+    },
+    {
+      "id": "22.9",
+      "title": "Magnetic Fields Produced by Currents: Ampere’s Law",
+      "pdfPage": 1070,
+      "printedPage": 1052,
+      "lastPrintedPage": 1056
+    },
+    {
+      "id": "22.10",
+      "title": "Magnetic Force between Two Parallel Conductors",
+      "pdfPage": 1074,
+      "printedPage": 1056,
+      "lastPrintedPage": 1058
+    },
+    {
+      "id": "22.11",
+      "title": "More Applications of Magnetism",
+      "pdfPage": 1076,
+      "printedPage": 1058,
+      "lastPrintedPage": 1063
+    },
+    {
+      "id": "23.1",
+      "title": "Induced Emf and Magnetic Flux",
+      "pdfPage": 1099,
+      "printedPage": 1081,
+      "lastPrintedPage": 1083
+    },
+    {
+      "id": "23.2",
+      "title": "Faraday’s Law of Induction: Lenz’s Law",
+      "pdfPage": 1101,
+      "printedPage": 1083,
+      "lastPrintedPage": 1086
+    },
+    {
+      "id": "23.3",
+      "title": "Motional Emf",
+      "pdfPage": 1104,
+      "printedPage": 1086,
+      "lastPrintedPage": 1089
+    },
+    {
+      "id": "23.4",
+      "title": "Eddy Currents and Magnetic Damping",
+      "pdfPage": 1107,
+      "printedPage": 1089,
+      "lastPrintedPage": 1093
+    },
+    {
+      "id": "23.5",
+      "title": "Electric Generators",
+      "pdfPage": 1111,
+      "printedPage": 1093,
+      "lastPrintedPage": 1097
+    },
+    {
+      "id": "23.6",
+      "title": "Back Emf",
+      "pdfPage": 1115,
+      "printedPage": 1097,
+      "lastPrintedPage": 1098
+    },
+    {
+      "id": "23.7",
+      "title": "Transformers",
+      "pdfPage": 1116,
+      "printedPage": 1098,
+      "lastPrintedPage": 1103
+    },
+    {
+      "id": "23.8",
+      "title": "Electrical Safety: Systems and Devices",
+      "pdfPage": 1121,
+      "printedPage": 1103,
+      "lastPrintedPage": 1107
+    },
+    {
+      "id": "23.9",
+      "title": "Inductance",
+      "pdfPage": 1125,
+      "printedPage": 1107,
+      "lastPrintedPage": 1112
+    },
+    {
+      "id": "23.10",
+      "title": "RL Circuits",
+      "pdfPage": 1130,
+      "printedPage": 1112,
+      "lastPrintedPage": 1114
+    },
+    {
+      "id": "23.11",
+      "title": "Reactance, Inductive and Capacitive",
+      "pdfPage": 1132,
+      "printedPage": 1114,
+      "lastPrintedPage": 1118
+    },
+    {
+      "id": "23.12",
+      "title": "RLC Series AC Circuits",
+      "pdfPage": 1136,
+      "printedPage": 1118,
+      "lastPrintedPage": 1125
+    },
+    {
+      "id": "24.1",
+      "title": "Maxwell’s Equations: Electromagnetic Waves Predicted and Observed",
+      "pdfPage": 1159,
+      "printedPage": 1141,
+      "lastPrintedPage": 1144
+    },
+    {
+      "id": "24.2",
+      "title": "Production of Electromagnetic Waves",
+      "pdfPage": 1162,
+      "printedPage": 1144,
+      "lastPrintedPage": 1147
+    },
+    {
+      "id": "24.3",
+      "title": "The Electromagnetic Spectrum",
+      "pdfPage": 1165,
+      "printedPage": 1147,
+      "lastPrintedPage": 1163
+    },
+    {
+      "id": "24.4",
+      "title": "Energy in Electromagnetic Waves",
+      "pdfPage": 1181,
+      "printedPage": 1163,
+      "lastPrintedPage": 1166
+    },
+    {
+      "id": "25.1",
+      "title": "The Ray Aspect of Light",
+      "pdfPage": 1194,
+      "printedPage": 1176,
+      "lastPrintedPage": 1177
+    },
+    {
+      "id": "25.2",
+      "title": "The Law of Reflection",
+      "pdfPage": 1195,
+      "printedPage": 1177,
+      "lastPrintedPage": 1180
+    },
+    {
+      "id": "25.3",
+      "title": "The Law of Refraction",
+      "pdfPage": 1198,
+      "printedPage": 1180,
+      "lastPrintedPage": 1186
+    },
+    {
+      "id": "25.4",
+      "title": "Total Internal Reflection",
+      "pdfPage": 1204,
+      "printedPage": 1186,
+      "lastPrintedPage": 1192
+    },
+    {
+      "id": "25.5",
+      "title": "Dispersion: The Rainbow and Prisms",
+      "pdfPage": 1210,
+      "printedPage": 1192,
+      "lastPrintedPage": 1196
+    },
+    {
+      "id": "25.6",
+      "title": "Image Formation by Lenses",
+      "pdfPage": 1214,
+      "printedPage": 1196,
+      "lastPrintedPage": 1211
+    },
+    {
+      "id": "25.7",
+      "title": "Image Formation by Mirrors",
+      "pdfPage": 1229,
+      "printedPage": 1211,
+      "lastPrintedPage": 1220
+    },
+    {
+      "id": "26.1",
+      "title": "Physics of the Eye",
+      "pdfPage": 1251,
+      "printedPage": 1233,
+      "lastPrintedPage": 1237
+    },
+    {
+      "id": "26.2",
+      "title": "Vision Correction",
+      "pdfPage": 1255,
+      "printedPage": 1237,
+      "lastPrintedPage": 1242
+    },
+    {
+      "id": "26.3",
+      "title": "Color and Color Vision",
+      "pdfPage": 1260,
+      "printedPage": 1242,
+      "lastPrintedPage": 1246
+    },
+    {
+      "id": "26.4",
+      "title": "Microscopes",
+      "pdfPage": 1264,
+      "printedPage": 1246,
+      "lastPrintedPage": 1253
+    },
+    {
+      "id": "26.5",
+      "title": "Telescopes",
+      "pdfPage": 1271,
+      "printedPage": 1253,
+      "lastPrintedPage": 1257
+    },
+    {
+      "id": "26.6",
+      "title": "Aberrations",
+      "pdfPage": 1275,
+      "printedPage": 1257,
+      "lastPrintedPage": 1260
+    },
+    {
+      "id": "27.1",
+      "title": "The Wave Aspect of Light: Interference",
+      "pdfPage": 1287,
+      "printedPage": 1269,
+      "lastPrintedPage": 1270
+    },
+    {
+      "id": "27.2",
+      "title": "Huygens's Principle: Diffraction",
+      "pdfPage": 1288,
+      "printedPage": 1270,
+      "lastPrintedPage": 1273
+    },
+    {
+      "id": "27.3",
+      "title": "Young’s Double Slit Experiment",
+      "pdfPage": 1291,
+      "printedPage": 1273,
+      "lastPrintedPage": 1277
+    },
+    {
+      "id": "27.4",
+      "title": "Multiple Slit Diffraction",
+      "pdfPage": 1295,
+      "printedPage": 1277,
+      "lastPrintedPage": 1281
+    },
+    {
+      "id": "27.5",
+      "title": "Single Slit Diffraction",
+      "pdfPage": 1299,
+      "printedPage": 1281,
+      "lastPrintedPage": 1285
+    },
+    {
+      "id": "27.6",
+      "title": "Limits of Resolution: The Rayleigh Criterion",
+      "pdfPage": 1303,
+      "printedPage": 1285,
+      "lastPrintedPage": 1290
+    },
+    {
+      "id": "27.7",
+      "title": "Thin Film Interference",
+      "pdfPage": 1308,
+      "printedPage": 1290,
+      "lastPrintedPage": 1295
+    },
+    {
+      "id": "27.8",
+      "title": "Polarization",
+      "pdfPage": 1313,
+      "printedPage": 1295,
+      "lastPrintedPage": 1305
+    },
+    {
+      "id": "27.9",
+      "title": "*Extended Topic* Microscopy Enhanced by the Wave Characteristics of Light",
+      "pdfPage": 1323,
+      "printedPage": 1305,
+      "lastPrintedPage": 1309
+    },
+    {
+      "id": "28.1",
+      "title": "Einstein’s Postulates",
+      "pdfPage": 1343,
+      "printedPage": 1325,
+      "lastPrintedPage": 1327
+    },
+    {
+      "id": "28.2",
+      "title": "Simultaneity And Time Dilation",
+      "pdfPage": 1345,
+      "printedPage": 1327,
+      "lastPrintedPage": 1334
+    },
+    {
+      "id": "28.3",
+      "title": "Length Contraction",
+      "pdfPage": 1352,
+      "printedPage": 1334,
+      "lastPrintedPage": 1338
+    },
+    {
+      "id": "28.4",
+      "title": "Relativistic Addition of Velocities",
+      "pdfPage": 1356,
+      "printedPage": 1338,
+      "lastPrintedPage": 1344
+    },
+    {
+      "id": "28.5",
+      "title": "Relativistic Momentum",
+      "pdfPage": 1362,
+      "printedPage": 1344,
+      "lastPrintedPage": 1346
+    },
+    {
+      "id": "28.6",
+      "title": "Relativistic Energy",
+      "pdfPage": 1364,
+      "printedPage": 1346,
+      "lastPrintedPage": 1355
+    },
+    {
+      "id": "29.1",
+      "title": "Quantization of Energy",
+      "pdfPage": 1385,
+      "printedPage": 1367,
+      "lastPrintedPage": 1370
+    },
+    {
+      "id": "29.2",
+      "title": "The Photoelectric Effect",
+      "pdfPage": 1388,
+      "printedPage": 1370,
+      "lastPrintedPage": 1374
+    },
+    {
+      "id": "29.3",
+      "title": "Photon Energies and the Electromagnetic Spectrum",
+      "pdfPage": 1392,
+      "printedPage": 1374,
+      "lastPrintedPage": 1381
+    },
+    {
+      "id": "29.4",
+      "title": "Photon Momentum",
+      "pdfPage": 1399,
+      "printedPage": 1381,
+      "lastPrintedPage": 1385
+    },
+    {
+      "id": "29.5",
+      "title": "The Particle-Wave Duality",
+      "pdfPage": 1403,
+      "printedPage": 1385,
+      "lastPrintedPage": 1386
+    },
+    {
+      "id": "29.6",
+      "title": "The Wave Nature of Matter",
+      "pdfPage": 1404,
+      "printedPage": 1386,
+      "lastPrintedPage": 1391
+    },
+    {
+      "id": "29.7",
+      "title": "Probability: The Heisenberg Uncertainty Principle",
+      "pdfPage": 1409,
+      "printedPage": 1391,
+      "lastPrintedPage": 1396
+    },
+    {
+      "id": "29.8",
+      "title": "The Particle-Wave Duality Reviewed",
+      "pdfPage": 1414,
+      "printedPage": 1396,
+      "lastPrintedPage": 1400
+    },
+    {
+      "id": "30.1",
+      "title": "Discovery of the Atom",
+      "pdfPage": 1430,
+      "printedPage": 1412,
+      "lastPrintedPage": 1414
+    },
+    {
+      "id": "30.2",
+      "title": "Discovery of the Parts of the Atom: Electrons and Nuclei",
+      "pdfPage": 1432,
+      "printedPage": 1414,
+      "lastPrintedPage": 1422
+    },
+    {
+      "id": "30.3",
+      "title": "Bohr’s Theory of the Hydrogen Atom",
+      "pdfPage": 1440,
+      "printedPage": 1422,
+      "lastPrintedPage": 1429
+    },
+    {
+      "id": "30.4",
+      "title": "X Rays: Atomic Origins and Applications",
+      "pdfPage": 1447,
+      "printedPage": 1429,
+      "lastPrintedPage": 1435
+    },
+    {
+      "id": "30.5",
+      "title": "Applications of Atomic Excitations and De-Excitations",
+      "pdfPage": 1453,
+      "printedPage": 1435,
+      "lastPrintedPage": 1445
+    },
+    {
+      "id": "30.6",
+      "title": "The Wave Nature of Matter Causes Quantization",
+      "pdfPage": 1463,
+      "printedPage": 1445,
+      "lastPrintedPage": 1447
+    },
+    {
+      "id": "30.7",
+      "title": "Patterns in Spectra Reveal More Quantization",
+      "pdfPage": 1465,
+      "printedPage": 1447,
+      "lastPrintedPage": 1450
+    },
+    {
+      "id": "30.8",
+      "title": "Quantum Numbers and Rules",
+      "pdfPage": 1468,
+      "printedPage": 1450,
+      "lastPrintedPage": 1455
+    },
+    {
+      "id": "30.9",
+      "title": "The Pauli Exclusion Principle",
+      "pdfPage": 1473,
+      "printedPage": 1455,
+      "lastPrintedPage": 1463
+    },
+    {
+      "id": "31.1",
+      "title": "Nuclear Radioactivity",
+      "pdfPage": 1494,
+      "printedPage": 1476,
+      "lastPrintedPage": 1481
+    },
+    {
+      "id": "31.2",
+      "title": "Radiation Detection and Detectors",
+      "pdfPage": 1499,
+      "printedPage": 1481,
+      "lastPrintedPage": 1485
+    },
+    {
+      "id": "31.3",
+      "title": "Substructure of the Nucleus",
+      "pdfPage": 1503,
+      "printedPage": 1485,
+      "lastPrintedPage": 1489
+    },
+    {
+      "id": "31.4",
+      "title": "Nuclear Decay and Conservation Laws",
+      "pdfPage": 1507,
+      "printedPage": 1489,
+      "lastPrintedPage": 1496
+    },
+    {
+      "id": "31.5",
+      "title": "Half-Life and Activity",
+      "pdfPage": 1514,
+      "printedPage": 1496,
+      "lastPrintedPage": 1502
+    },
+    {
+      "id": "31.6",
+      "title": "Binding Energy",
+      "pdfPage": 1520,
+      "printedPage": 1502,
+      "lastPrintedPage": 1507
+    },
+    {
+      "id": "31.7",
+      "title": "Tunneling",
+      "pdfPage": 1525,
+      "printedPage": 1507,
+      "lastPrintedPage": 1510
+    },
+    {
+      "id": "32.1",
+      "title": "Diagnostics and Medical Imaging",
+      "pdfPage": 1540,
+      "printedPage": 1522,
+      "lastPrintedPage": 1527
+    },
+    {
+      "id": "32.2",
+      "title": "Biological Effects of Ionizing Radiation",
+      "pdfPage": 1545,
+      "printedPage": 1527,
+      "lastPrintedPage": 1534
+    },
+    {
+      "id": "32.3",
+      "title": "Therapeutic Uses of Ionizing Radiation",
+      "pdfPage": 1552,
+      "printedPage": 1534,
+      "lastPrintedPage": 1537
+    },
+    {
+      "id": "32.4",
+      "title": "Food Irradiation",
+      "pdfPage": 1555,
+      "printedPage": 1537,
+      "lastPrintedPage": 1538
+    },
+    {
+      "id": "32.5",
+      "title": "Fusion",
+      "pdfPage": 1556,
+      "printedPage": 1538,
+      "lastPrintedPage": 1544
+    },
+    {
+      "id": "32.6",
+      "title": "Fission",
+      "pdfPage": 1562,
+      "printedPage": 1544,
+      "lastPrintedPage": 1550
+    },
+    {
+      "id": "32.7",
+      "title": "Nuclear Weapons",
+      "pdfPage": 1568,
+      "printedPage": 1550,
+      "lastPrintedPage": 1556
+    },
+    {
+      "id": "33.1",
+      "title": "The Yukawa Particle and the Heisenberg Uncertainty Principle Revisited",
+      "pdfPage": 1587,
+      "printedPage": 1569,
+      "lastPrintedPage": 1571
+    },
+    {
+      "id": "33.2",
+      "title": "The Four Basic Forces",
+      "pdfPage": 1589,
+      "printedPage": 1571,
+      "lastPrintedPage": 1574
+    },
+    {
+      "id": "33.3",
+      "title": "Accelerators Create Matter from Energy",
+      "pdfPage": 1592,
+      "printedPage": 1574,
+      "lastPrintedPage": 1577
+    },
+    {
+      "id": "33.4",
+      "title": "Particles, Patterns, and Conservation Laws",
+      "pdfPage": 1595,
+      "printedPage": 1577,
+      "lastPrintedPage": 1584
+    },
+    {
+      "id": "33.5",
+      "title": "Quarks: Is That All There Is?",
+      "pdfPage": 1602,
+      "printedPage": 1584,
+      "lastPrintedPage": 1591
+    },
+    {
+      "id": "33.6",
+      "title": "GUTs: The Unification of Forces",
+      "pdfPage": 1609,
+      "printedPage": 1591,
+      "lastPrintedPage": 1596
+    },
+    {
+      "id": "34.1",
+      "title": "Cosmology and Particle Physics",
+      "pdfPage": 1626,
+      "printedPage": 1608,
+      "lastPrintedPage": 1616
+    },
+    {
+      "id": "34.2",
+      "title": "General Relativity and Quantum Gravity",
+      "pdfPage": 1634,
+      "printedPage": 1616,
+      "lastPrintedPage": 1622
+    },
+    {
+      "id": "34.3",
+      "title": "Superstrings",
+      "pdfPage": 1640,
+      "printedPage": 1622,
+      "lastPrintedPage": 1623
+    },
+    {
+      "id": "34.4",
+      "title": "Dark Matter and Closure",
+      "pdfPage": 1641,
+      "printedPage": 1623,
+      "lastPrintedPage": 1627
+    },
+    {
+      "id": "34.5",
+      "title": "Complexity and Chaos",
+      "pdfPage": 1645,
+      "printedPage": 1627,
+      "lastPrintedPage": 1629
+    },
+    {
+      "id": "34.6",
+      "title": "High-temperature Superconductors",
+      "pdfPage": 1647,
+      "printedPage": 1629,
+      "lastPrintedPage": 1631
+    },
+    {
+      "id": "34.7",
+      "title": "Some Questions We Know to Ask",
+      "pdfPage": 1649,
+      "printedPage": 1631,
+      "lastPrintedPage": 1634
+    }
+  ]
+}

@@ -20,6 +20,9 @@ const eslintConfig = [
       "next-env.d.ts",
       "test-service-account.js",
       "scripts/**/*.js",
+      // Preserve the exported Claude runtime verbatim; it is vendor code, not Next.js source.
+      "src/data/explainers/claude-source/**",
+      "public/explainers/claude/**",
     ],
   },
   {

@@ -1,0 +1,2472 @@
+{
+  "sourceProject": "https://claude.ai/design/p/3b51571e-3ae1-4970-8b13-66f3edd9e97e",
+  "exportedAt": "2026-10-11",
+  "lessons": [
+    {
+      "day": 1,
+      "title": "The Briefing",
+      "file": "Day 1 - The Briefing - In Class.dc.html",
+      "guide": "Day 1 - The Briefing - Teacher Guide.md",
+      "duration": 107,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 1 · Setting up the question: The briefing, something is coming. Target R1.",
+          "start": 0
+        },
+        {
+          "name": "Welcome",
+          "dur": 14,
+          "desc": "This class will be different; a year-long puzzle; today is the briefing. The NASA Day 1 Briefing page slides in. STOP 1 (silent reading).",
+          "start": 7
+        },
+        {
+          "name": "Fiction",
+          "dur": 16,
+          "desc": "Tracking view: Earth and 2026-XJ inside a wobbling uncertainty ellipse. This is fiction; the physics is real. STOP 2 (notice and wonder).",
+          "start": 21
+        },
+        {
+          "name": "Wonders",
+          "dur": 14,
+          "desc": "Student-style wonder bubbles float in. STOP 3 (share and capture).",
+          "start": 37
+        },
+        {
+          "name": "Sort",
+          "dur": 18,
+          "desc": "Bubbles sort into six buckets: How fast? Where? When? How big? What’s it made of? Can we stop it? These questions organize the year.",
+          "start": 51
+        },
+        {
+          "name": "Units",
+          "dur": 18,
+          "desc": "Seven unit cards appear; Unit 1 lights up. Each unit answers one piece.",
+          "start": 69
+        },
+        {
+          "name": "Anchor",
+          "dur": 16,
+          "desc": "Anchor question for Unit 1; the language of motion: position, velocity, acceleration; we start tomorrow. STOP 4 (exit ticket).",
+          "start": 87
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 103
+        }
+      ],
+      "unit": "unit-1"
+    },
+    {
+      "day": 2,
+      "title": "How Do We Talk About Motion",
+      "file": "Day 2 - How Do We Talk About Motion - In Class.dc.html",
+      "guide": "Day 2 - How Do We Talk About Motion - Teacher Guide.md",
+      "duration": 123,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 2 · Setting up the question: How do we talk about motion? Target K1.",
+          "start": 0
+        },
+        {
+          "name": "WarmUp",
+          "dur": 14,
+          "desc": "A student walks door → desk → door. STOP 1 (warm-up).",
+          "start": 7
+        },
+        {
+          "name": "Define",
+          "dur": 22,
+          "desc": "“Twice the distance” and “zero”: both right. Distance (scalar, total path) vs displacement (vector, change in position); five vocabulary cards. STOP 2 (track problems).",
+          "start": 21
+        },
+        {
+          "name": "Track",
+          "dur": 22,
+          "desc": "400 m track: runner laps with live distance and displacement. 1 lap: 400 m / 0. 1.5 laps: 600 m / ≈ 112 m across the field. STOP 3 (walk activity).",
+          "start": 43
+        },
+        {
+          "name": "Walk",
+          "dur": 16,
+          "desc": "Top-down grid: 5 N, 3 E, 5 S. Distance 13 steps, displacement 3 steps east. STOP 4 (discuss).",
+          "start": 65
+        },
+        {
+          "name": "Asteroid",
+          "dur": 16,
+          "desc": "Simplified map: Earth and 2026-XJ’s current position; a 1,000,000 km circle of possible moves. STOP 5 (discuss).",
+          "start": 81
+        },
+        {
+          "name": "Wrap",
+          "dur": 22,
+          "desc": "Answers: closer, farther, about the same. Then: direction matters, so we need vectors; next week motion vocabulary and graphs. STOP 6 (exit ticket).",
+          "start": 97
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 119
+        }
+      ],
+      "unit": "unit-1"
+    },
+    {
+      "day": 3,
+      "title": "Velocity",
+      "file": "Day 3 - Velocity - In Class.dc.html",
+      "guide": "Day 3 - Velocity - Teacher Guide.md",
+      "duration": 171,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 3 · Building the tools: Velocity, motion with direction. Target S1.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 14,
+          "desc": "Recap: a walker goes 4 m forward, 1 m back on a number line. STOP 1 (quick check).",
+          "start": 7
+        },
+        {
+          "name": "Question",
+          "dur": 18,
+          "desc": "Answers: distance 5 m, displacement +3 m. Then Fitchburg → Worcester: car A arrives in 1 h, car B in 2 h. STOP 2 (today’s question).",
+          "start": 21
+        },
+        {
+          "name": "Define",
+          "dur": 20,
+          "desc": "Speed = distance/time (scalar); velocity = displacement/time (vector). Car A arrow twice car B. Unit m/s. STOP 3 (convert 72 km/h).",
+          "start": 39
+        },
+        {
+          "name": "Convert",
+          "dur": 14,
+          "desc": "72 km/h → 20 m/s with units cancelling; ÷3.6 shortcut. STOP 4 (2026-XJ in km/h and mph).",
+          "start": 59
+        },
+        {
+          "name": "Asteroid",
+          "dur": 16,
+          "desc": "8,500 m/s ≈ 30,600 km/h ≈ 19,000 mph; bars: car, jet, 2026-XJ; about 35× a jet.",
+          "start": 73
+        },
+        {
+          "name": "Match",
+          "dur": 22,
+          "desc": "Investigation 1.1: detector, walker, target graphs: constant velocity, then a direction change. Predict, attempt, observe, refine. STOP 5.",
+          "start": 89
+        },
+        {
+          "name": "Slope",
+          "dur": 22,
+          "desc": "Three graphs: steep = fast, shallow = slow, flat = not moving; slope = Δx/Δt = velocity; flat misconception. STOP 6.",
+          "start": 111
+        },
+        {
+          "name": "Sign",
+          "dur": 12,
+          "desc": "Walker moves toward the sensor: negative slope, negative velocity. STOP 7 (what if the axis flips?).",
+          "start": 133
+        },
+        {
+          "name": "Connect",
+          "dur": 22,
+          "desc": "Answer to STOP 7: the axis flips, same walk, positive velocity. Then 2026-XJ distance vs time (illustrative): tangent slope ≈ −8,500 m/s = velocity at that point. STOP 8 (exit ticket).",
+          "start": 145
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 167
+        }
+      ],
+      "unit": "unit-1"
+    },
+    {
+      "day": 4,
+      "title": "Velocity-Time Graphs and Vectors",
+      "file": "Day 4 - Velocity-Time Graphs and Vectors - In Class.dc.html",
+      "guide": "Day 4 - Velocity-Time Graphs and Vectors - Teacher Guide.md",
+      "duration": 157,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 4 · Building the tools: Velocity–time graphs and vector thinking. Target R2.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 14,
+          "desc": "Position–time graph with a slope triangle: v = 1.0 m / 2.0 s = 0.5 m/s. STOP 1 (today’s question).",
+          "start": 7
+        },
+        {
+          "name": "VT",
+          "dur": 18,
+          "desc": "Same motion on a v–t graph: a horizontal line at 0.5 m/s. STOP 2 (sketch v–t for yesterday’s graphs).",
+          "start": 21
+        },
+        {
+          "name": "Insights",
+          "dur": 22,
+          "desc": "Five x–t → v–t pairs: steep, shallow, flat, toward the sensor, speeding up. Horizontal vs tilted; slope = acceleration preview. STOP 3.",
+          "start": 39
+        },
+        {
+          "name": "Vectors",
+          "dur": 16,
+          "desc": "An arrow: length = magnitude, direction = direction; a half-length arrow; compass. STOP 4 (draw three vectors).",
+          "start": 61
+        },
+        {
+          "name": "Practice",
+          "dur": 16,
+          "desc": "Answers on one scale (1 square = 25 mph): car, plane, runner (5 m/s ≈ 11 mph); mixed units warning.",
+          "start": 77
+        },
+        {
+          "name": "Decompose",
+          "dur": 26,
+          "desc": "2026-XJ: 8,500 m/s at 15° toward Earth, split into ≈ 8,210 m/s toward Earth and ≈ 2,200 m/s perpendicular; tip to tail; trig box. STOP 5.",
+          "start": 93
+        },
+        {
+          "name": "SixMonths",
+          "dur": 14,
+          "desc": "distance = rate × time; 6 months ≈ 1.6 × 10⁷ s; the two rates. STOP 6.",
+          "start": 119
+        },
+        {
+          "name": "Connect",
+          "dur": 20,
+          "desc": "Answers: ≈ 1.3 × 10⁸ km and ≈ 3.5 × 10⁷ km. Then the asteroid moves with its two component shadows; NASA tracks both. STOP 7 (exit ticket).",
+          "start": 133
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 153
+        }
+      ],
+      "unit": "unit-1"
+    },
+    {
+      "day": 5,
+      "title": "Predicting the Position",
+      "file": "Day 5 - Predicting the Position - In Class.dc.html",
+      "guide": "Day 5 - Predicting the Position - Teacher Guide.md",
+      "duration": 153,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Mission 2026-XJ · In class: Where will it be in six months? Key hints for the teacher.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 16,
+          "desc": "v = Δx/Δt → Δx = vΔt; asteroid moves at constant speed with equal Δx each second. STOP 1 (warm-up).",
+          "start": 7
+        },
+        {
+          "name": "Setup",
+          "dur": 18,
+          "desc": "Plane with Earth at the origin; asteroid at (1.2 × 10⁸ km, 0) with vₓ and v_y arrows. Pan to the Given panel. STOP 2 (prep check).",
+          "start": 23
+        },
+        {
+          "name": "Units",
+          "dur": 14,
+          "desc": "Convert to km/s; interpret 1.6 × 10⁷ s; km vs m warning. STOP 3 (calculate).",
+          "start": 41
+        },
+        {
+          "name": "Solve",
+          "dur": 26,
+          "desc": "Δx, Δy, new x and y in the panel; pan to the plane: asteroid travels, legs, predicted point, d ≈ 3.70 × 10⁷ km; not an orbit. STOP 4 (discuss).",
+          "start": 55
+        },
+        {
+          "name": "HowSure",
+          "dur": 12,
+          "desc": "How sure are we? ±50,000 km position, ±200 m/s velocity. STOP 5 (calculate the window).",
+          "start": 81
+        },
+        {
+          "name": "Window",
+          "dur": 26,
+          "desc": "Zoomed view: position uncertainty smaller than the dot; window grows over 6 months to ±3.25 × 10⁶ km; ranges. STOP 6 (discuss).",
+          "start": 93
+        },
+        {
+          "name": "Reality",
+          "dur": 14,
+          "desc": "Straight-line model vs bending paths under the Sun’s gravity; the real window is bigger. STOP 7 (discuss).",
+          "start": 119
+        },
+        {
+          "name": "Reflect",
+          "dur": 16,
+          "desc": "Fictional scenario, real methods; better model + more observations; Days 21–22 transfer. STOP 8 (exit ticket).",
+          "start": 133
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 149
+        }
+      ],
+      "unit": "unit-1"
+    },
+    {
+      "day": 6,
+      "title": "Vector Addition and Decomposition",
+      "file": "Day 6 - Vector Addition and Decomposition - In Class.dc.html",
+      "guide": "Day 6 - Vector Addition and Decomposition - Teacher Guide.md",
+      "duration": 135,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 6 · Building the tools: Vector addition and decomposition. Target S2.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 14,
+          "desc": "Yesterday’s split: 8,500 m/s → 8,210 toward Earth + 2,200 perpendicular. Today: practice it as a tool.",
+          "start": 7
+        },
+        {
+          "name": "TipTail",
+          "dur": 22,
+          "desc": "Grid: A = 3 east, B = 4 north slides tip to tail; R ≈ 5 units at 53° N of E; √(3² + 4²) = 5. STOP 1.",
+          "start": 21
+        },
+        {
+          "name": "AsteroidAdd",
+          "dur": 16,
+          "desc": "2026-XJ components tip to tail. STOP 2 (find the resultant).",
+          "start": 43
+        },
+        {
+          "name": "Recipe",
+          "dur": 26,
+          "desc": "Answer: R ≈ 8,500 m/s at 15°. Then the Vector Recipe Card: adjacent = V cos θ, opposite = V sin θ; worked 10 m/s at 30°; mix-up alert. STOP 3.",
+          "start": 59
+        },
+        {
+          "name": "Trap",
+          "dur": 14,
+          "desc": "Same vector with the angle measured from the vertical; components marked “?”. STOP 4.",
+          "start": 85
+        },
+        {
+          "name": "Quiz",
+          "dur": 20,
+          "desc": "Answer: vertical is adjacent → cos. Then the mini-quiz card and self-check list. STOP 5.",
+          "start": 99
+        },
+        {
+          "name": "Exit",
+          "dur": 12,
+          "desc": "A vector with its magnitude and components marked “?”. STOP 6 (exit ticket).",
+          "start": 119
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 131
+        }
+      ],
+      "unit": "unit-1"
+    },
+    {
+      "day": 7,
+      "title": "Acceleration",
+      "file": "Day 7 - Acceleration - In Class.dc.html",
+      "guide": "Day 7 - Acceleration - Teacher Guide.md",
+      "duration": 179,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 7 · Building the tools: Acceleration, when velocity changes. Target R4.",
+          "start": 0
+        },
+        {
+          "name": "Warmup",
+          "dur": 16,
+          "desc": "A car accelerates from 0 to 60 mph in 6 s along a road. STOP 1 (predict its acceleration).",
+          "start": 7
+        },
+        {
+          "name": "Define",
+          "dur": 26,
+          "desc": "Answer: +10 mph each second. a = Δv/Δt, units m/s². 60 mph ≈ 27 m/s → 4.5 m/s²; bars compare with g = 9.8 m/s². STOP 2 (is braking accelerating?).",
+          "start": 23
+        },
+        {
+          "name": "Direction",
+          "dur": 20,
+          "desc": "Answer: yes. Speeding up: a with v. Slowing down: a opposite v, negative if forward is +.",
+          "start": 49
+        },
+        {
+          "name": "Graphs",
+          "dur": 18,
+          "desc": "Three v–t graphs A (rising), B (flat), C (falling). STOP 3 (identify each).",
+          "start": 69
+        },
+        {
+          "name": "Slope",
+          "dur": 26,
+          "desc": "Answers. Slope of v–t = acceleration: 12 m/s ÷ 4 s = +3 m/s²; −20 m/s ÷ 5 s = −4 m/s². STOP 4 (practice graphs).",
+          "start": 87
+        },
+        {
+          "name": "Equations",
+          "dur": 20,
+          "desc": "Reference card: v = v₀ + at, x = x₀ + v₀t + ½at². Worked: the car reaches 27 m/s in 81 m. STOP 5 (cart problem).",
+          "start": 113
+        },
+        {
+          "name": "Asteroid",
+          "dur": 30,
+          "desc": "STOP 5 answer, then Earth’s pull on 2026-XJ: g = GM/r² ≈ 2.8 × 10⁻⁸ m/s²; Δv ≈ 0.4 m/s in 6 months. Asteroid moves closer: inverse-square. STOP 6.",
+          "start": 133
+        },
+        {
+          "name": "Exit",
+          "dur": 12,
+          "desc": "A car slows 30 → 0 m/s in 5 s; blank v–t axes. STOP 7 (exit ticket).",
+          "start": 163
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 175
+        }
+      ],
+      "unit": "unit-1"
+    },
+    {
+      "day": 8,
+      "title": "Constant Acceleration Problem-Solving",
+      "file": "Day 8 - Constant Acceleration Problem-Solving - In Class.dc.html",
+      "guide": "Day 8 - Constant Acceleration Problem-Solving - Teacher Guide.md",
+      "duration": 151,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 8 · Building the tools: Constant acceleration problem-solving. Target R5.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 14,
+          "desc": "Skateboarder speeds up from 2 to 5 m/s over 2 s. STOP 1 (acceleration?).",
+          "start": 7
+        },
+        {
+          "name": "Three",
+          "dur": 24,
+          "desc": "Answer: 1.5 m/s². The three equations, each with its missing variable struck out (no Δx, no v, no t). STOP 2 (no time given: which equation?).",
+          "start": 21
+        },
+        {
+          "name": "Strategy",
+          "dur": 26,
+          "desc": "Answer: v² = v₀² + 2aΔx. Strategy: given, asked, missing variable. Example 1: car brakes 30 → 0 at −6 m/s² → 75 m.",
+          "start": 45
+        },
+        {
+          "name": "Ball",
+          "dur": 24,
+          "desc": "Example 2: ball thrown up at 15 m/s; hidden given v = 0 at the top → 11.5 m. STOP 3 (bullet train).",
+          "start": 71
+        },
+        {
+          "name": "Train",
+          "dur": 20,
+          "desc": "Answer: no Δx → v = v₀ + at → t = 160 s. STOP 4 (problem set in pairs).",
+          "start": 95
+        },
+        {
+          "name": "Share",
+          "dur": 18,
+          "desc": "How do I choose? Given · Asked · Connect; missing t / Δx / v → which equation; constant acceleration only. STOP 5 (share-out).",
+          "start": 115
+        },
+        {
+          "name": "Exit",
+          "dur": 14,
+          "desc": "Cart at +12 m/s stops at −3.0 m/s²; givens with no time. STOP 6 (exit ticket).",
+          "start": 133
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 147
+        }
+      ],
+      "unit": "unit-1"
+    },
+    {
+      "day": 9,
+      "title": "Newtons 1st Law - Inertia",
+      "file": "Day 9 - Newtons 1st Law - Inertia - In Class.dc.html",
+      "guide": "Day 9 - Newtons 1st Law - Inertia - Teacher Guide.md",
+      "duration": 165,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 9 · Building the tools: Newton’s 1st Law, inertia. Target R6.",
+          "start": 0
+        },
+        {
+          "name": "Hook",
+          "dur": 16,
+          "desc": "Puck slides far on ice; brick stops fast on the floor. STOP 1 (why?).",
+          "start": 7
+        },
+        {
+          "name": "History",
+          "dur": 28,
+          "desc": "Answer: friction. Aristotle (≈350 BCE): things come to rest. Galileo’s ramps: flatten the far ramp and the ball keeps going. Newton’s 1st Law card. STOP 2 (own words; net force).",
+          "start": 23
+        },
+        {
+          "name": "Inertia",
+          "dur": 18,
+          "desc": "Inertia = resistance to change in motion. Same push on light and heavy carts: more mass, more inertia.",
+          "start": 51
+        },
+        {
+          "name": "Cloth",
+          "dur": 14,
+          "desc": "Demo 1 setup: cups on a tablecloth. STOP 3 (predict).",
+          "start": 69
+        },
+        {
+          "name": "Coin",
+          "dur": 18,
+          "desc": "Answer: cloth whips out, cups stay. Demo 2 setup: coin on a card over a glass. STOP 4 (predict).",
+          "start": 83
+        },
+        {
+          "name": "Car",
+          "dur": 22,
+          "desc": "Answer: card flies, coin drops in. A car stops suddenly; the passenger lurches forward. STOP 5 (why?).",
+          "start": 101
+        },
+        {
+          "name": "Asteroid",
+          "dur": 26,
+          "desc": "Answer: inertia, seatbelt supplies the force. 2026-XJ coasts at constant velocity in space; gravity (mostly the Sun) is what pulls. To change its path, a force.",
+          "start": 123
+        },
+        {
+          "name": "Exit",
+          "dur": 12,
+          "desc": "A spacecraft approaches the asteroid; F = ?. STOP 6 (exit ticket).",
+          "start": 149
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 161
+        }
+      ],
+      "unit": "unit-1"
+    },
+    {
+      "day": 10,
+      "title": "Forces",
+      "file": "Day 10 - Forces - In Class.dc.html",
+      "guide": "Day 10 - Forces - Teacher Guide.md",
+      "duration": 179,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 10 · Building the tools: Forces, what pushes and pulls. Target K2.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 14,
+          "desc": "Newton’s 1st Law recap: a puck coasts at constant velocity until a force bends its path. “Today: what IS a force?” STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Define",
+          "dur": 22,
+          "desc": "A force is a push or a pull, measured in newtons. 1 N ≈ weight of a small apple. Forces are vectors: 2 N and 5 N arrows; same 5 N rotated is a different force.",
+          "start": 21
+        },
+        {
+          "name": "Sensor",
+          "dur": 14,
+          "desc": "Demo: Go Direct force sensor with a hook and a blank reading. STOP 2 (predict pull vs push).",
+          "start": 43
+        },
+        {
+          "name": "Types",
+          "dur": 26,
+          "desc": "Answer: pull reads +, push reads −. Five force cards: gravity, normal, friction, tension, applied.",
+          "start": 57
+        },
+        {
+          "name": "Book",
+          "dur": 14,
+          "desc": "Scenario 1: a book resting on a desk. STOP 3 (draw every force).",
+          "start": 83
+        },
+        {
+          "name": "Scenarios",
+          "dur": 26,
+          "desc": "Answer: book gravity down, normal up. Car on a road: gravity, normal, applied (engine), friction + drag. Person on a rope: gravity, tension. Not forces: momentum, speed, inertia. STOP 4.",
+          "start": 97
+        },
+        {
+          "name": "Asteroid",
+          "dur": 26,
+          "desc": "Forces on 2026-XJ: solar gravity dominant, Earth’s gravity tiny but growing, other planets negligible, friction zero, solar radiation pressure tiny. STOP 5 (which can humans add?).",
+          "start": 123
+        },
+        {
+          "name": "Human",
+          "dur": 14,
+          "desc": "Answer: add an applied force. Kinetic impactor (DART, 2022) and a nuclear blast push.",
+          "start": 149
+        },
+        {
+          "name": "Exit",
+          "dur": 12,
+          "desc": "A car coasting down a hill. STOP 6 (exit ticket).",
+          "start": 163
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 175
+        }
+      ],
+      "unit": "unit-1"
+    },
+    {
+      "day": 11,
+      "title": "Newtons 2nd Law - Vary Mass",
+      "file": "Day 11 - Newtons 2nd Law - Vary Mass - In Class.dc.html",
+      "guide": "Day 11 - Newtons 2nd Law - Vary Mass - Teacher Guide.md",
+      "duration": 173,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 11 · Building the tools: Newton’s 2nd Law, vary the mass. Target S3.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 14,
+          "desc": "A net force changes motion: a cart pushed by F. But how MUCH? STOP 1 (predict).",
+          "start": 7
+        },
+        {
+          "name": "Setup",
+          "dur": 20,
+          "desc": "Investigation 1.2: track, motion detector, cart with mass bars, string over a pulley to a hanging mass. STOP 2 (variables).",
+          "start": 21
+        },
+        {
+          "name": "Run",
+          "dur": 26,
+          "desc": "Answer: change m, measure a, keep the hanging mass constant. One trial (0.50 kg): v–t line drawn live, slope a ≈ 0.37 m/s². STOP 3 (run the lab).",
+          "start": 41
+        },
+        {
+          "name": "Data",
+          "dur": 24,
+          "desc": "Example class data: four masses, a falls from 0.374 to 0.155 m/s²; a vs m plotted with a dashed curve. STOP 4 (describe the trend).",
+          "start": 67
+        },
+        {
+          "name": "Linear",
+          "dur": 26,
+          "desc": "More mass, less a, but a curve. Doubling m halves a. 1/m column; a vs 1/m is a straight line through 0. m·a ≈ 0.19 N every trial.",
+          "start": 91
+        },
+        {
+          "name": "Connect",
+          "dur": 16,
+          "desc": "a ∝ 1/m → a = F/m → F = ma. F ≈ 0.19 N, close to the hanger’s weight 0.196 N.",
+          "start": 117
+        },
+        {
+          "name": "Asteroid",
+          "dur": 24,
+          "desc": "2026-XJ: m ≈ 3.5 × 10¹¹ kg. F = 1,000 N gives a ≈ 2.9 × 10⁻⁹ m/s²; over 10 years Δv ≈ 0.9 m/s. Huge force short time vs small force long time. STOP 5.",
+          "start": 133
+        },
+        {
+          "name": "Exit",
+          "dur": 12,
+          "desc": "Same F on m and on 2m. STOP 6 (exit ticket).",
+          "start": 157
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 169
+        }
+      ],
+      "unit": "unit-1"
+    },
+    {
+      "unit": "unit-1",
+      "day": 12,
+      "title": "Newtons 2nd Law - Vary Force",
+      "file": "Day 12 - Newtons 2nd Law - Vary Force - In Class.dc.html",
+      "guide": "Day 12 - Newtons 2nd Law - Vary Force - Teacher Guide.md",
+      "duration": 153,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 12 · Building the tools: Newton’s 2nd Law, vary the force. Target S4.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 14,
+          "desc": "Day 11: a ∝ 1/m at constant F. Today keep m, change F. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Setup",
+          "dur": 16,
+          "desc": "Investigation 1.3: same cart, no bars; hanging mass grows 10 → 50 g. STOP 2 (predict a vs F).",
+          "start": 21
+        },
+        {
+          "name": "Run",
+          "dur": 20,
+          "desc": "F ≈ m·g: 50 g → 0.49 N. One trial with the 0.50 kg cart: v–t line, slope a ≈ 0.89 m/s². STOP 3 (lab).",
+          "start": 37
+        },
+        {
+          "name": "Data",
+          "dur": 20,
+          "desc": "Example data: five hanging masses, F and a; a vs F points. STOP 4 (shape? double F?).",
+          "start": 57
+        },
+        {
+          "name": "Linear",
+          "dur": 24,
+          "desc": "Straight line through the origin. Double F → about double a: a ∝ F. Slope ≈ 1.8 /kg; 1/slope ≈ 0.55 kg = cart + hanger; slope = 1/m.",
+          "start": 77
+        },
+        {
+          "name": "Combine",
+          "dur": 14,
+          "desc": "Day 11 a ∝ 1/m + Day 12 a ∝ F → a ∝ F/m → F = ma. Found from your own data.",
+          "start": 101
+        },
+        {
+          "name": "Asteroid",
+          "dur": 22,
+          "desc": "2026-XJ: 1,000 N → 2.9 × 10⁻⁹ m/s²; 2,000 N → 5.7 × 10⁻⁹ m/s². Double the push, double Δv. STOP 5.",
+          "start": 115
+        },
+        {
+          "name": "Exit",
+          "dur": 12,
+          "desc": "Same m, F vs 2F. STOP 6 (exit ticket).",
+          "start": 137
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 149
+        }
+      ]
+    },
+    {
+      "unit": "unit-1",
+      "day": 13,
+      "title": "F equals ma in Practice",
+      "file": "Day 13 - F equals ma in Practice - In Class.dc.html",
+      "guide": "Day 13 - F equals ma in Practice - Teacher Guide.md",
+      "duration": 111,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 13 · Building the tools: F = ma in practice, net force first. Target R7.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 12,
+          "desc": "F = ma found from data. A 5 kg box pushed with 10 N. STOP 1 (quick check).",
+          "start": 7
+        },
+        {
+          "name": "Net",
+          "dur": 20,
+          "desc": "STOP 1 answer: 2 m/s². Net force = sum of all forces with direction. Box: 20 N applied, 5 N friction → 15 N net, a = 3 m/s². STOP 2 (4 kg, 30 N, 6 N).",
+          "start": 19
+        },
+        {
+          "name": "Types",
+          "dur": 20,
+          "desc": "STOP 2 answer: 24 N, 6 m/s². Three problem types; worked reverse problem (60 kg × 2.5 = 150 N); four-step strategy. STOP 3 (problem set).",
+          "start": 39
+        },
+        {
+          "name": "Car",
+          "dur": 14,
+          "desc": "Application: 1500 kg car slows 30 → 0 m/s in 5 s; animated braking. STOP 4 (solve it).",
+          "start": 59
+        },
+        {
+          "name": "Friction",
+          "dur": 22,
+          "desc": "STOP 4 answer: a = −6 m/s², F = −9000 N (backward). Three cars: speeding up (engine > friction), coasting (only friction), braking. STOP 5.",
+          "start": 73
+        },
+        {
+          "name": "Exit",
+          "dur": 12,
+          "desc": "STOP 5 answer: equal, net force 0. Exit ticket: 2 kg cart, 12 N push, 4 N friction. STOP 6.",
+          "start": 95
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 107
+        }
+      ]
+    },
+    {
+      "unit": "unit-1",
+      "day": 14,
+      "title": "Newtons 3rd Law",
+      "file": "Day 14 - Newtons 3rd Law - In Class.dc.html",
+      "guide": "Day 14 - Newtons 3rd Law - Teacher Guide.md",
+      "duration": 123,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 14 · Building the tools: Newton’s 3rd Law, action and reaction. Target R8.",
+          "start": 0
+        },
+        {
+          "name": "Riddle",
+          "dur": 14,
+          "desc": "Horse pulls cart; cart pulls back equally. How does the cart move? STOP 1 (argue).",
+          "start": 7
+        },
+        {
+          "name": "Law",
+          "dur": 14,
+          "desc": "3rd Law: A on B and B on A, equal and opposite, every instant. STOP 2 (why don’t they cancel?).",
+          "start": 21
+        },
+        {
+          "name": "Resolve",
+          "dur": 20,
+          "desc": "Answer: they act on different objects. Forces on the cart (horse pull > friction) and on the horse (ground push > cart pull); both move off.",
+          "start": 35
+        },
+        {
+          "name": "Tug",
+          "dur": 14,
+          "desc": "Investigation 1.4: two linked force sensors read equal and opposite as pulls vary. STOP 3 (lab).",
+          "start": 55
+        },
+        {
+          "name": "Results",
+          "dur": 18,
+          "desc": "Sensor A and B traces mirror each other through jerky pulls. STOP 4 (stronger student?).",
+          "start": 69
+        },
+        {
+          "name": "Asteroid",
+          "dur": 20,
+          "desc": "STOP 4 answer. Kinetic impactor hits 2026-XJ: equal and opposite forces; 600 kg vs 3.5 × 10¹¹ kg. STOP 5.",
+          "start": 87
+        },
+        {
+          "name": "Exit",
+          "dur": 12,
+          "desc": "STOP 5 answer (a = F/m). Exit ticket: you push a wall; what pushes back? STOP 6.",
+          "start": 107
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 119
+        }
+      ]
+    },
+    {
+      "unit": "unit-1",
+      "day": 15,
+      "title": "Free Body Diagrams Part 1",
+      "file": "Day 15 - Free Body Diagrams Part 1 - In Class.dc.html",
+      "guide": "Day 15 - Free Body Diagrams Part 1 - Teacher Guide.md",
+      "duration": 129,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 15 · Building the tools: Free body diagrams, part 1. Target S5.",
+          "start": 0
+        },
+        {
+          "name": "Intro",
+          "dur": 12,
+          "desc": "Why FBDs: every force on one object, then F = ma. A book on a desk shrinks to a dot. STOP 1 (forces on the book?).",
+          "start": 7
+        },
+        {
+          "name": "Rules",
+          "dur": 24,
+          "desc": "Answer: F_g down, F_N up, equal lengths. The six rules appear one by one; rule 6 crosses out the book’s push on the desk. STOP 2 (box pushed at constant speed).",
+          "start": 19
+        },
+        {
+          "name": "Box",
+          "dur": 18,
+          "desc": "Answer: four arrows; push = friction, gravity = normal; net force 0. STOP 3 (ball at the peak).",
+          "start": 43
+        },
+        {
+          "name": "Peak",
+          "dur": 18,
+          "desc": "Answer: only gravity, even at v = 0. Common errors: momentum and inertia are not forces. STOP 4 (car on a curve).",
+          "start": 61
+        },
+        {
+          "name": "Curve",
+          "dur": 18,
+          "desc": "Answer: top view, friction toward the centre; FBD with F_g, F_N, sideways friction. Changing direction means accelerating.",
+          "start": 79
+        },
+        {
+          "name": "Asteroid",
+          "dur": 16,
+          "desc": "FBD of 2026-XJ: big Sun gravity arrow, small Earth arrow, others negligible, no friction or normal. STOP 5 (what does an impactor add?).",
+          "start": 97
+        },
+        {
+          "name": "Exit",
+          "dur": 12,
+          "desc": "STOP 5 answer: applied force along the impact. Exit ticket: box pulled by a rope with friction. STOP 6.",
+          "start": 113
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 125
+        }
+      ]
+    },
+    {
+      "unit": "unit-1",
+      "day": 16,
+      "title": "Free Body Diagrams Part 2 - Net Force",
+      "file": "Day 16 - Free Body Diagrams Part 2 - Net Force - In Class.dc.html",
+      "guide": "Day 16 - Free Body Diagrams Part 2 - Net Force - Teacher Guide.md",
+      "duration": 105,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 16 · Building the tools: Free body diagrams part 2, net force. Target R9.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 12,
+          "desc": "Net force is the vector sum. FBD of a 5 kg box: 30 N pull, 10 N friction. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "OneD",
+          "dur": 20,
+          "desc": "Answer: pick + direction, F_net = 30 − 10 = 20 N, a = 4 m/s². Then the floor tilts into a ramp. STOP 2 (which part of gravity pulls down the slope?).",
+          "start": 19
+        },
+        {
+          "name": "Incline",
+          "dur": 16,
+          "desc": "Answer: tilted axes; gravity splits into mg sin θ down the slope and mg cos θ into it; θ marked between F_g and the perpendicular.",
+          "start": 39
+        },
+        {
+          "name": "Split",
+          "dur": 18,
+          "desc": "Worked example: 2 kg, 30°, 4.0 N friction → 9.8 N down, F_N = 17.0 N, F_net = 5.8 N, a = 2.9 m/s². STOP 3 (frictionless 20°).",
+          "start": 55
+        },
+        {
+          "name": "Space",
+          "dur": 16,
+          "desc": "STOP 3 answer ≈ 3.4 m/s². 2026-XJ’s FBD is only gravity; a spacecraft orbiting Earth has gravity plus thrust. STOP 4.",
+          "start": 73
+        },
+        {
+          "name": "Exit",
+          "dur": 12,
+          "desc": "STOP 4 answer. Exit ticket: 10 kg box, 50 N push, 15 N friction. STOP 5.",
+          "start": 89
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 101
+        }
+      ]
+    },
+    {
+      "unit": "unit-1",
+      "day": 17,
+      "title": "Friction",
+      "file": "Day 17 - Friction - In Class.dc.html",
+      "guide": "Day 17 - Friction - Teacher Guide.md",
+      "duration": 103,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 17 · Building the tools: Friction, the force that resists motion. Target R10.",
+          "start": 0
+        },
+        {
+          "name": "Hook",
+          "dur": 12,
+          "desc": "A heavy crate strains, then slides; pushing gets easier. STOP 1 (why?).",
+          "start": 7
+        },
+        {
+          "name": "Types",
+          "dur": 20,
+          "desc": "Answer: static vs kinetic. Friction vs push graph rises to max static, drops to kinetic. f_s ≤ μ_s N, f_k = μ_k N; μ_s > μ_k. STOP 2 (10 kg box).",
+          "start": 19
+        },
+        {
+          "name": "Lab",
+          "dur": 14,
+          "desc": "STOP 2 answer: 49 N to start, 29.4 N to keep going. Investigation 1.5: pull at constant velocity, sensor reading = friction; surfaces cycle. STOP 3 (lab).",
+          "start": 39
+        },
+        {
+          "name": "Data",
+          "dur": 16,
+          "desc": "Example data: wax paper 0.15, paper 0.30, sandpaper 0.50; double mass doubles f and N; double speed, same f. STOP 4.",
+          "start": 53
+        },
+        {
+          "name": "Space",
+          "dur": 20,
+          "desc": "STOP 4 answer: μ unchanged. A puck on frictionless ice slides forever; 2026-XJ never slows by itself; a tiny push adds up. Gravity tractor preview.",
+          "start": 69
+        },
+        {
+          "name": "Exit",
+          "dur": 10,
+          "desc": "Exit ticket: easier because… / harder because…. STOP 5.",
+          "start": 89
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 99
+        }
+      ]
+    },
+    {
+      "unit": "unit-1",
+      "day": 18,
+      "title": "Equilibrium",
+      "file": "Day 18 - Equilibrium - In Class.dc.html",
+      "guide": "Day 18 - Equilibrium - Teacher Guide.md",
+      "duration": 91,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 18 · Building the tools: Equilibrium, when forces balance. Target R11.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 12,
+          "desc": "If a = 0 then F_net = 0: equilibrium, ΣF = 0. At rest or constant velocity. STOP 1 (which are in equilibrium?).",
+          "start": 7
+        },
+        {
+          "name": "Scenarios",
+          "dur": 20,
+          "desc": "STOP 1 answer. Book at rest: ΣF_y = 0, F_N = 9.8 N. Box at constant velocity: friction = 20 N whatever the mass. STOP 2 (3 kg box, 12 N).",
+          "start": 19
+        },
+        {
+          "name": "Ropes",
+          "dur": 22,
+          "desc": "STOP 2 answer. A 10 kg sign on two ropes at 30°: components, ΣF_x = 0 cancels, ΣF_y = 0 gives T = 98 N each. STOP 3 (ropes at 60°).",
+          "start": 39
+        },
+        {
+          "name": "Space",
+          "dur": 16,
+          "desc": "STOP 3 answer: T ≈ 56.6 N, steeper needs less. 2026-XJ is not in equilibrium (Sun’s pull), but its velocity barely changes over short times. Unit 2 preview.",
+          "start": 61
+        },
+        {
+          "name": "Exit",
+          "dur": 10,
+          "desc": "Exit ticket: a 5 kg lamp on one rope. STOP 4.",
+          "start": 77
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 87
+        }
+      ]
+    },
+    {
+      "unit": "unit-1",
+      "day": 19,
+      "title": "Workshop and Revision",
+      "file": "Unit 1 Workshop and Revision - In Class.dc.html",
+      "guide": "Unit 1 Workshop and Revision - Teacher Guide.md",
+      "duration": 73,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 1 · Workshop and revision. Target R12.",
+          "start": 0
+        },
+        {
+          "name": "Stock",
+          "dur": 12,
+          "desc": "All Unit 1 targets so far, grouped Know / Reason / Skill, appear one by one.",
+          "start": 7
+        },
+        {
+          "name": "Rate",
+          "dur": 14,
+          "desc": "The 0–4 scale (not yet · still learning · got it). An example sheet fills in; the weakest targets (R5, R9) light up. STOP 1 (self-assess).",
+          "start": 19
+        },
+        {
+          "name": "Workshop",
+          "dur": 16,
+          "desc": "Five stations: re-do problems, re-run an investigation, replay a lesson, 5-minute teacher coaching, peer partner. A “you” dot visits each. STOP 2.",
+          "start": 33
+        },
+        {
+          "name": "Reconvene",
+          "dur": 12,
+          "desc": "Speech bubbles of things that clicked. Fix weak spots before the transfer task. STOP 3 (share).",
+          "start": 49
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: weakest target + concrete plan. STOP 4.",
+          "start": 61
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 69
+        }
+      ]
+    },
+    {
+      "unit": "unit-1",
+      "day": 20,
+      "title": "Synthesis",
+      "file": "Day 20 - Synthesis - In Class.dc.html",
+      "guide": "Day 20 - Synthesis - Teacher Guide.md",
+      "duration": 95,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Day 20 · Synthesis: 2026-XJ through the full physics lens. Targets K1–R12.",
+          "start": 0
+        },
+        {
+          "name": "Toolkit",
+          "dur": 12,
+          "desc": "The Unit 1 toolkit chips float in around 2026-XJ. STOP 1 (draw its FBD).",
+          "start": 7
+        },
+        {
+          "name": "FBD",
+          "dur": 14,
+          "desc": "Answer: Sun gravity dominant, Earth weaker, others negligible, no friction; net force ≈ solar gravity toward the Sun. STOP 2 (what does it do?).",
+          "start": 19
+        },
+        {
+          "name": "Velocity",
+          "dur": 18,
+          "desc": "Answer: it accelerates toward the Sun and its path bends. Velocity 8,500 m/s at 15° splits into 8,210 m/s toward Earth and 2,200 m/s perpendicular. STOP 3 (predict 6 months).",
+          "start": 33
+        },
+        {
+          "name": "Predict",
+          "dur": 18,
+          "desc": "Answer: path from (1.2 × 10⁸, 0) to (−1.14 × 10⁷, 3.52 × 10⁷) km, ≈ 3.7 × 10⁷ km from Earth; ±200 m/s → ±3.2 × 10⁶ km window; the real path curves.",
+          "start": 51
+        },
+        {
+          "name": "Group",
+          "dur": 14,
+          "desc": "Group problem 2026-XK: 1.5 × 10⁸ km, 9,000 m/s at 20°, 6 months; four deliverables. Tomorrow: transfer task. STOP 4.",
+          "start": 69
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: the one tool I most need ready. STOP 5.",
+          "start": 83
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the exit ticket.",
+          "start": 91
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 1,
+      "title": "Why Does the Path Bend",
+      "file": "Unit 2 Day 1 - Why Does the Path Bend - In Class.dc.html",
+      "guide": "Unit 2 Day 1 - Why Does the Path Bend - Teacher Guide.md",
+      "duration": 91,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 1: You predicted WHERE. Now we ask WHY. Targets K1, R4.",
+          "start": 0
+        },
+        {
+          "name": "Reframe",
+          "dur": 14,
+          "desc": "Unit 1 predictions: a straight constant-velocity line toward Earth; the real path bends. “How fast?” becomes “what force?”. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Drop",
+          "dur": 12,
+          "desc": "Demo 1: a book and a flat sheet dropped together. The book lands first; the paper flutters. STOP 2 (predict the crumpled drop).",
+          "start": 21
+        },
+        {
+          "name": "Crumple",
+          "dur": 10,
+          "desc": "Demo 2: book and crumpled paper land together. STOP 3 (why did the rule change?).",
+          "start": 33
+        },
+        {
+          "name": "Wonder",
+          "dur": 14,
+          "desc": "Answer: air resistance changed, not gravity; without air all objects fall with the same acceleration. Notice/Wonder boxes and the physics-can / can’t sort. STOP 4.",
+          "start": 43
+        },
+        {
+          "name": "Law",
+          "dur": 14,
+          "desc": "Preview: every mass pulls on every other; universal gravitation. Sun and Earth pull on 2026-XJ; does its path bend toward us or miss?",
+          "start": 57
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: why doesn’t 2026-XJ drift away at constant velocity? STOP 5.",
+          "start": 71
+        },
+        {
+          "name": "Scale",
+          "dur": 8,
+          "desc": "Marzano check-in on K1 and R4, 0–4. STOP 6.",
+          "start": 79
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold on the check-in.",
+          "start": 87
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 2,
+      "title": "g Near Earth",
+      "file": "Unit 2 Day 2 - g Near Earth - In Class.dc.html",
+      "guide": "Unit 2 Day 2 - g Near Earth - Teacher Guide.md",
+      "duration": 91,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 2: g = 9.81 m/s². Targets K1, S4.",
+          "start": 0
+        },
+        {
+          "name": "Anchor",
+          "dur": 10,
+          "desc": "Day 1’s best exit-ticket idea; a bowling ball and a tennis ball fall side by side. STOP 1 (force vs acceleration).",
+          "start": 7
+        },
+        {
+          "name": "Detector",
+          "dur": 14,
+          "desc": "STOP 1 answer. Motion detector above a dropped ball; v–t lines for two balls draw on the same slope. STOP 2 (read g).",
+          "start": 17
+        },
+        {
+          "name": "Slope",
+          "dur": 12,
+          "desc": "Answer: two points, Δv = 3.92 m/s over Δt = 0.40 s → g ≈ 9.8 m/s²; units m/s².",
+          "start": 31
+        },
+        {
+          "name": "Worked",
+          "dur": 18,
+          "desc": "Worked: 10 m → 1.43 s, 14.0 m/s; 100 m → 4.52 s, 44.3 m/s; 10× height, ~3.2× time. STOP 3 (packet).",
+          "start": 43
+        },
+        {
+          "name": "Far",
+          "dur": 12,
+          "desc": "2026-XJ: near Earth g = 9.81 m/s²; farther out smaller; at 1.2 × 10⁸ km, 2.8 × 10⁻⁸ m/s².",
+          "start": 61
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: coin falls 1 m. STOP 4.",
+          "start": 73
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano check-in on K1. STOP 5.",
+          "start": 81
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 87
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 3,
+      "title": "Weight vs Mass",
+      "file": "Unit 2 Day 3 - Weight vs Mass - In Class.dc.html",
+      "guide": "Unit 2 Day 3 - Weight vs Mass - Teacher Guide.md",
+      "duration": 77,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 3: Weight vs mass. F = mg works here because g is local. Target K2.",
+          "start": 0
+        },
+        {
+          "name": "Hook",
+          "dur": 12,
+          "desc": "A person on a scale reading “? N” as the ground changes: Earth, Moon, Mars, 2026-XJ. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Define",
+          "dur": 12,
+          "desc": "Answer: mass is the same everywhere. Mass (kg, how much stuff) vs weight (N, force of gravity on it). F = mg. STOP 2 (2 kg bag on the Moon).",
+          "start": 19
+        },
+        {
+          "name": "Worlds",
+          "dur": 18,
+          "desc": "STOP 2 answer: 2 kg, 3.24 N. A 70 kg student: Earth 686.7 N, Moon 113.4 N, Mars 259.7 N, 2026-XJ 0.021 N; mass stays 70 kg. STOP 3 (worksheet).",
+          "start": 31
+        },
+        {
+          "name": "Teaser",
+          "dur": 10,
+          "desc": "2026-XJ on a giant scale on Earth: “? N”. m ≈ 3.5 × 10¹¹ kg. Answered on Day 4.",
+          "start": 49
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: 600 N on Earth; mass? weight where g = 25? STOP 4.",
+          "start": 59
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano check-in on K2; tomorrow: where does g come from? STOP 5.",
+          "start": 67
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 73
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 4,
+      "title": "Universal Gravitation",
+      "file": "Unit 2 Day 4 - Universal Gravitation - In Class.dc.html",
+      "guide": "Unit 2 Day 4 - Universal Gravitation - Teacher Guide.md",
+      "duration": 89,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 4: F = G m₁ m₂ / r². Targets K1, R1.",
+          "start": 0
+        },
+        {
+          "name": "Check",
+          "dur": 8,
+          "desc": "Quick check from Day 3: mass, weight, why weight changed on Mars. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Law",
+          "dur": 14,
+          "desc": "Answer, then the law piece by piece: F, G = 6.67 × 10⁻¹¹ (tiny), m₁m₂, r².",
+          "start": 15
+        },
+        {
+          "name": "Square",
+          "dur": 12,
+          "desc": "Why r²: the same lines of pull spread over spheres at r, 2r, 3r; 4× and 9× the area → ¼ and ⅑ the pull. STOP 2 (predict).",
+          "start": 29
+        },
+        {
+          "name": "Ratios",
+          "dur": 12,
+          "desc": "Answers: double m₁ → 2F; double r → F/4; triple r → F/9. Not F/2. STOP 3 (PhET lab).",
+          "start": 41
+        },
+        {
+          "name": "Worked",
+          "dur": 18,
+          "desc": "Earth and a 1000 kg asteroid at 3.84 × 10⁸ m: F ≈ 2.7 N. Day 3’s question: g = GM/r² ≈ 9.9 (9.81 exact); 2026-XJ’s weight ≈ 3.4 × 10¹² N.",
+          "start": 53
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: 2026-XJ at 2r and 3r. STOP 4.",
+          "start": 71
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano check-in on K1; tomorrow: calculation day. STOP 5.",
+          "start": 79
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 85
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 5,
+      "title": "Run the Numbers",
+      "file": "Unit 2 Day 5 - Run the Numbers - In Class.dc.html",
+      "guide": "Unit 2 Day 5 - Run the Numbers - Teacher Guide.md",
+      "duration": 95,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 5: Run the numbers. Targets S1, R1.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 8,
+          "desc": "Day 4 recap: the law, G, double r → ¼. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "EarthMoon",
+          "dur": 14,
+          "desc": "STOP 1 answer. Worked together: Earth–Moon at 3.84 × 10⁸ m (centre to centre) → F ≈ 2.0 × 10²⁰ N. STOP 2 (is it big?).",
+          "start": 15
+        },
+        {
+          "name": "Compare",
+          "dur": 10,
+          "desc": "Answer: about 3 × 10¹⁷ times a 700 N weight; bars not to scale.",
+          "start": 29
+        },
+        {
+          "name": "Stations",
+          "dur": 12,
+          "desc": "Five stations, 4 minutes each: Earth–Sun, Moon–Sun, Earth–2026-XJ far / 5 LD / 1 LD; predict then calculate. STOP 3.",
+          "start": 39
+        },
+        {
+          "name": "Table",
+          "dur": 10,
+          "desc": "Class table: six pairs with r, F, and a log-scale bar. STOP 4 (biggest? changes most?).",
+          "start": 51
+        },
+        {
+          "name": "Pattern",
+          "dur": 16,
+          "desc": "Answers: Earth–Sun biggest; the Sun pulls the Moon about twice as hard as Earth does; doubling r gives ¼ for every pair; gravity dominates for big things at short distances.",
+          "start": 61
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: 5 LD → 1 LD; how many times larger? STOP 5.",
+          "start": 77
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano on S1 and R1. STOP 6.",
+          "start": 85
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 91
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 6,
+      "title": "The Gravitational Field",
+      "file": "Unit 2 Day 6 - The Gravitational Field - In Class.dc.html",
+      "guide": "Unit 2 Day 6 - The Gravitational Field - Teacher Guide.md",
+      "duration": 77,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 6: g = GM/r², the gravitational field. Target K2.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 8,
+          "desc": "Recap of F = Gm₁m₂/r²; a 1 kg and a 2 kg mass on Earth’s surface. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Field",
+          "dur": 16,
+          "desc": "STOP 1 answer: 9.81 N and 19.6 N; both 9.81 N/kg. Divide by the test mass: g = F/m = GM/r²; N/kg = m/s². Field arrows around Earth shrink with distance. STOP 2 (predict g at the ISS).",
+          "start": 15
+        },
+        {
+          "name": "Worked",
+          "dur": 14,
+          "desc": "GM ≈ 3.98 × 10¹⁴. Table: surface 9.81, ISS 8.69, Moon’s orbit 2.7 × 10⁻³, 2026-XJ now 2.8 × 10⁻⁸ m/s². STOP 2 answer. STOP 3 (half and 1% altitudes).",
+          "start": 31
+        },
+        {
+          "name": "Table",
+          "dur": 14,
+          "desc": "g vs r (Earth radii) drawn as a 1/r² curve; half at 1.41 R (≈ 2,600 km up), 1% at 10 R (≈ 57,000 km up).",
+          "start": 45
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "The ISS orbiting Earth; g ≈ 8.7 m/s². Why do astronauts float? STOP 4.",
+          "start": 59
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano on K2. STOP 5.",
+          "start": 67
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 73
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 7,
+      "title": "Graphing g",
+      "file": "Unit 2 Day 7 - Graphing g - In Class.dc.html",
+      "guide": "Unit 2 Day 7 - Graphing g - Teacher Guide.md",
+      "duration": 85,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 7: Graphing g, and planting the orbit idea. Targets K2, R3.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 8,
+          "desc": "g = GM/r²; an asteroid far away doesn’t feel 9.81. STOP 1 (units? r from where?).",
+          "start": 7
+        },
+        {
+          "name": "Points",
+          "dur": 12,
+          "desc": "STOP 1 answer. Table of five altitudes with r = R_E + altitude; students compute g. STOP 2 (graph it).",
+          "start": 15
+        },
+        {
+          "name": "Curve",
+          "dur": 12,
+          "desc": "Answer: points 9.81, 9.51, 7.33, 1.49 plotted vs r in Earth radii; the 1/r² curve draws; lunar distance off the chart. STOP 3 (ever zero?).",
+          "start": 27
+        },
+        {
+          "name": "Read",
+          "dur": 14,
+          "desc": "Answer: never zero. Marks: LEO 8.7, half at √2 R (2,600 km), 10% at √10 R (13,800 km), GEO 0.22, 1% at 10 R (57,000 km).",
+          "start": 39
+        },
+        {
+          "name": "Cannon",
+          "dur": 14,
+          "desc": "Bridge: astronauts float because they fall. Newton’s cannon: faster sideways launches curve farther; fast enough becomes an orbit. STOP 4.",
+          "start": 53
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: altitude where g = 4.9 m/s². STOP 5.",
+          "start": 67
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano on K2/R3; tomorrow: measure g. STOP 6.",
+          "start": 75
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 81
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 8,
+      "title": "Measure g Lab",
+      "file": "Unit 2 Day 8 - Measure g Lab - In Class.dc.html",
+      "guide": "Unit 2 Day 8 - Measure g Lab - Teacher Guide.md",
+      "duration": 79,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 8 lab: Measure g. Targets S4, K1.",
+          "start": 0
+        },
+        {
+          "name": "Setup",
+          "dur": 10,
+          "desc": "Procedure (detector facing up, drop from ~1 m, 3 trials) and safety (heads, feet, floor clear). STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Demo",
+          "dur": 10,
+          "desc": "Teacher demo: ball held, dropped, bounces above an upward detector; v–t graph draws live: held, falling, bounce. STOP 2.",
+          "start": 17
+        },
+        {
+          "name": "Fit",
+          "dur": 14,
+          "desc": "Answer: select only the straight segment; linear fit slope −9.74 m/s²; negative because the ball moves toward the detector; g ≈ 9.74. STOP 3 (lab).",
+          "start": 27
+        },
+        {
+          "name": "Data",
+          "dur": 12,
+          "desc": "Example class table: four pairs × 3 trials; class average ≈ 9.73 m/s², ~0.8% from 9.81. A copied 9.81 isn’t evidence.",
+          "start": 41
+        },
+        {
+          "name": "Error",
+          "dur": 8,
+          "desc": "Sources of error: detection angle, ball wobble, air resistance, sample rate. STOP 4.",
+          "start": 53
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Individual exit: sketch / calculation / observation + model + one assumption. STOP 5.",
+          "start": 61
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Write-up (data table + CER) and Marzano on S4. STOP 6.",
+          "start": 69
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 75
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 9,
+      "title": "Projectile Motion",
+      "file": "Unit 2 Day 9 - Projectile Motion - In Class.dc.html",
+      "guide": "Unit 2 Day 9 - Projectile Motion - Teacher Guide.md",
+      "duration": 73,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 9: Gravity acts down; sideways motion carries on. Target K3.",
+          "start": 0
+        },
+        {
+          "name": "Frame",
+          "dur": 10,
+          "desc": "Three days of curved paths that scale up to orbits. A pushed ball and a dropped ball at a ledge. STOP 1 (which lands first?).",
+          "start": 7
+        },
+        {
+          "name": "Same",
+          "dur": 14,
+          "desc": "Answer: strobe snapshots every 0.1 s stay level; they land together. Then 0, 5, 10 m/s: same fall time, different landing spots. STOP 2 (why?).",
+          "start": 17
+        },
+        {
+          "name": "Split",
+          "dur": 12,
+          "desc": "Answer: gravity only pulls down. Horizontal arrows stay the same; vertical arrows grow. Horizontal constant v, vertical free fall, independent.",
+          "start": 31
+        },
+        {
+          "name": "Cliff",
+          "dur": 12,
+          "desc": "Worked: 5 m cliff at 10 m/s: t ≈ 1.01 s, x ≈ 10.1 m. Time from vertical, distance from horizontal. STOP 3 (pair practice).",
+          "start": 43
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Individual exit: sketch / calculation / observation + model + assumption. STOP 4.",
+          "start": 55
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano on K3. STOP 5.",
+          "start": 63
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 69
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 10,
+      "title": "Predict the Landing",
+      "file": "Unit 2 Day 10 - Predict the Landing - In Class.dc.html",
+      "guide": "Unit 2 Day 10 - Predict the Landing - Teacher Guide.md",
+      "duration": 85,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 10: Where will it land? Vary the height and the speed. Target R2.",
+          "start": 0
+        },
+        {
+          "name": "Check",
+          "dur": 8,
+          "desc": "Quick check from Day 9: 20 m cliff at 15 m/s; trajectory draws. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Recap",
+          "dur": 14,
+          "desc": "STOP 1 answer: 2.02 s, 30 m. Three equations: v_y = −gt, y = y₀ − ½gt², x = v_x t. The order: vertical → time, horizontal → distance; one shared time.",
+          "start": 15
+        },
+        {
+          "name": "Stations",
+          "dur": 10,
+          "desc": "Four stations: 5 m/5 m/s, 20 m/10 m/s, 50 m/20 m/s, 100 m/10 m/s; timer. STOP 2.",
+          "start": 29
+        },
+        {
+          "name": "Answers",
+          "dur": 14,
+          "desc": "All four trajectories drawn together with times and distances; time depends only on height; distance = speed × time. STOP 3 (PhET).",
+          "start": 39
+        },
+        {
+          "name": "Flyby",
+          "dur": 14,
+          "desc": "2026-XJ passing Earth sideways: too slow strikes, just right falls around, fast flies past. Orbits preview.",
+          "start": 53
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: 45 m cliff at 15 m/s. STOP 4.",
+          "start": 67
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano on R2. STOP 5.",
+          "start": 75
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 81
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 11,
+      "title": "Angled Launches",
+      "file": "Unit 2 Day 11 - Angled Launches - In Class.dc.html",
+      "guide": "Unit 2 Day 11 - Angled Launches - Teacher Guide.md",
+      "duration": 79,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 11: Launch at an angle. v_x = v cos θ, v_y = v sin θ. Target R2.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 8,
+          "desc": "Recap of horizontal launches (v_y = 0 at launch); an angled launch arrow. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Split",
+          "dur": 12,
+          "desc": "Answer: v_y isn’t zero. v splits into v cos θ and v sin θ; same vertical kinematics with v_y starting positive; level ground is symmetric.",
+          "start": 15
+        },
+        {
+          "name": "Worked",
+          "dur": 12,
+          "desc": "Worked: 20 m/s at 30°: v_x 17.3, v_y 10.0, t 2.04 s, max height 5.1 m, range 35.3 m. STOP 2 (60°).",
+          "start": 27
+        },
+        {
+          "name": "Sixty",
+          "dur": 10,
+          "desc": "STOP 2 answer: 60° gives v_x 10, v_y 17.3, t 3.53 s, range 35.3 m: the same spot as 30°. STOP 3 (PhET table).",
+          "start": 39
+        },
+        {
+          "name": "Angles",
+          "dur": 12,
+          "desc": "Angle vs range at 20 m/s: 15°…75° arcs and table; 45° wins (40.8 m); complementary angles tie; equal heights, no drag.",
+          "start": 49
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: why 45°? Steeper / flatter boxes. STOP 4.",
+          "start": 61
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano on R2. STOP 5.",
+          "start": 69
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 75
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 12,
+      "title": "Centripetal Force",
+      "file": "Unit 2 Day 12 - Centripetal Force - In Class.dc.html",
+      "guide": "Unit 2 Day 12 - Centripetal Force - Teacher Guide.md",
+      "duration": 83,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 12: a_c = v²/r, F_c = mv²/r, always toward the centre. Target S3.",
+          "start": 0
+        },
+        {
+          "name": "Hook",
+          "dur": 12,
+          "desc": "A ball whirls on a string, then stops at the top with “cut!” and three direction choices A/B/C. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Cut",
+          "dur": 10,
+          "desc": "Answer: the string is cut and the ball flies off along the tangent: Newton’s 1st Law, not outward.",
+          "start": 19
+        },
+        {
+          "name": "Inward",
+          "dur": 12,
+          "desc": "Same speed, changing direction: Δv between before/after velocity points inward. a_c = v²/r, F_c = mv²/r inward; name what supplies it. STOP 2 (car).",
+          "start": 29
+        },
+        {
+          "name": "Car",
+          "dur": 12,
+          "desc": "STOP 2 answer: a_c = 8.0 m/s², F_c = 12,000 N supplied by friction; on ice it slides off along the tangent. STOP 3 (satellite).",
+          "start": 41
+        },
+        {
+          "name": "Sat",
+          "dur": 12,
+          "desc": "STOP 3 answer: a_c ≈ 8.76 m/s² vs g = 8.69 m/s² at 400 km: they match. Tomorrow: gravity is the centripetal force.",
+          "start": 53
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: 0.2 kg ball, 1 m string, 4 m/s. STOP 4.",
+          "start": 65
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano on S3. STOP 5.",
+          "start": 73
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 79
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 13,
+      "title": "Orbits Are Falling",
+      "file": "Unit 2 Day 13 - Orbits Are Falling - In Class.dc.html",
+      "guide": "Unit 2 Day 13 - Orbits Are Falling - Teacher Guide.md",
+      "duration": 87,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 13: Orbits are falling. Target K5.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 10,
+          "desc": "Recap: F_c = mv²/r, supplied by gravity for a satellite. A cannon on a very tall mountain. STOP 1 (predict).",
+          "start": 7
+        },
+        {
+          "name": "Cannon",
+          "dur": 18,
+          "desc": "Newton’s cannon: four shots, faster each time; the fourth falls all the way around. STOP 2 (is it still falling?).",
+          "start": 17
+        },
+        {
+          "name": "Sim",
+          "dur": 18,
+          "desc": "Answer: yes, it falls around, not down. Same launch point, four speeds: crash, circle, ellipse, escape. STOP 3 (PhET).",
+          "start": 35
+        },
+        {
+          "name": "Connect",
+          "dur": 14,
+          "desc": "GMm/r² = mv²/r; m cancels; v = √(GM/r). Higher orbit, slower speed. STOP 4 (ISS).",
+          "start": 53
+        },
+        {
+          "name": "Exit",
+          "dur": 10,
+          "desc": "STOP 4 answer ≈ 7,670 m/s. ISS on its orbit: velocity tangent, gravity inward, dashed straight-line path. STOP 5 (exit ticket).",
+          "start": 67
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano on K5; tomorrow Kepler’s laws. STOP 6.",
+          "start": 77
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 83
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 14,
+      "title": "Keplers Laws",
+      "file": "Unit 2 Day 14 - Keplers Laws - In Class.dc.html",
+      "guide": "Unit 2 Day 14 - Keplers Laws - Teacher Guide.md",
+      "duration": 109,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 14: Kepler’s three laws. Target K4.",
+          "start": 0
+        },
+        {
+          "name": "Hook",
+          "dur": 12,
+          "desc": "Tycho’s naked-eye positions appear around the Sun; Kepler 1609–1619 found three patterns. STOP 1 (predict).",
+          "start": 7
+        },
+        {
+          "name": "Law1",
+          "dur": 16,
+          "desc": "Law 1: an ellipse with the Sun at one focus; empty focus, centre, perihelion, aphelion; two focus lines add to a constant. STOP 2.",
+          "start": 19
+        },
+        {
+          "name": "Law2",
+          "dur": 16,
+          "desc": "Law 2 (answer to STOP 2): equal areas in equal times; 1 s sectors near perihelion (short and wide) and aphelion (long and thin).",
+          "start": 35
+        },
+        {
+          "name": "Law3",
+          "dur": 22,
+          "desc": "Law 3: T² ∝ a³ around the same body. Sun table: Earth and Jupiter T² = a³. Around Earth: Moon vs ISS, 57× → ≈430× (423 actual). Don’t mix central bodies. STOP 3 (Mars).",
+          "start": 51
+        },
+        {
+          "name": "Practice",
+          "dur": 16,
+          "desc": "STOP 3 answer: Mars 1.87 yr. Earth, Mars and an asteroid (a = 2.8 AU) orbit at correct relative speeds. STOP 4.",
+          "start": 73
+        },
+        {
+          "name": "Exit",
+          "dur": 10,
+          "desc": "STOP 4 answer: asteroid 4.7 yr. Exit ticket: three cards (shape, speed, timing) with blank lines. STOP 5.",
+          "start": 89
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano on K4. STOP 6.",
+          "start": 99
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 105
+        }
+      ]
+    },
+    {
+      "unit": "unit-2",
+      "day": 15,
+      "title": "2026-XJ Orbit",
+      "file": "Unit 2 Day 15 - 2026-XJ Orbit - In Class.dc.html",
+      "guide": "Unit 2 Day 15 - 2026-XJ Orbit - Teacher Guide.md",
+      "duration": 105,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 2 · Day 15: 2026-XJ’s orbit. Where is it going, and when? Target R4.",
+          "start": 0
+        },
+        {
+          "name": "Frame",
+          "dur": 8,
+          "desc": "The asteroid math day: the tools (F = Gm₁m₂/r², orbits are falling, Kepler 1–3) and the question.",
+          "start": 7
+        },
+        {
+          "name": "Params",
+          "dur": 18,
+          "desc": "Example parameters: a = 1.8 AU, e = 0.48, current position “today”; Earth’s 1 AU orbit; formulas for q, Q and T. STOP 1 (group work).",
+          "start": 15
+        },
+        {
+          "name": "Results",
+          "dur": 18,
+          "desc": "Answers: T ≈ 2.4 yr, q ≈ 0.94 AU, Q ≈ 2.66 AU; 0.94 < 1 < 2.66 so the orbit reaches 1 AU; two crossing points in the flat sketch. STOP 2.",
+          "start": 33
+        },
+        {
+          "name": "Encounter",
+          "dur": 20,
+          "desc": "Crossing orbits ≠ a collision: Earth and 2026-XJ move at real relative rates; at each crossing the Earth–asteroid gap is shown (≈1.9 AU on the first pass, ≈0.1 AU on the second). Also needed: orientation, both positions, timing, uncertainty.",
+          "start": 51
+        },
+        {
+          "name": "Compare",
+          "dur": 14,
+          "desc": "Unit 1 straight-line extrapolation vs Unit 2 curved, timed orbit. STOP 3.",
+          "start": 71
+        },
+        {
+          "name": "Exit",
+          "dur": 10,
+          "desc": "STOP 3 answer; exit ticket with model / assumption / evidence prompts and a sample. STOP 4.",
+          "start": 85
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano on R4; tomorrow the transfer task. STOP 5.",
+          "start": 95
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 101
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 1,
+      "title": "What If Earth Is in the Way",
+      "file": "Unit 3 Day 1 - What If Earth Is in the Way - In Class.dc.html",
+      "guide": "Unit 3 Day 1 - What If Earth Is in the Way - Teacher Guide.md",
+      "duration": 99,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 1: What if Earth is in the way? Motion that’s hard to stop. Targets K1, R3 (preview).",
+          "start": 0
+        },
+        {
+          "name": "Return",
+          "dur": 10,
+          "desc": "From Unit 2: Earth’s orbit and 2026-XJ’s path, uncomfortably close. Now: what if Earth is in the way?",
+          "start": 7
+        },
+        {
+          "name": "Demo",
+          "dur": 12,
+          "desc": "Demo trial 1: a light car rolled gently into a cardboard wall; nothing happens. STOP 1 (predict trials 2 and 3).",
+          "start": 17
+        },
+        {
+          "name": "DemoB",
+          "dur": 16,
+          "desc": "Trial 2: light car, fast: wall buckles. Trial 3: heavy cart, slow: wall buckles. STOP 2 (notice and wonder).",
+          "start": 29
+        },
+        {
+          "name": "Wonder",
+          "dur": 14,
+          "desc": "Two things matter: mass and velocity. One number combines both: momentum p = mv, kg·m/s.",
+          "start": 45
+        },
+        {
+          "name": "Preview",
+          "dur": 20,
+          "desc": "Unit 3’s two payoffs: impact physics (Days 12–13) and DART 2022 animated: spacecraft hits Dimorphos, orbit shrinks; period 11 h 55 min → about 11 h 23 min; speed change a few mm/s. STOP 3.",
+          "start": 59
+        },
+        {
+          "name": "Exit",
+          "dur": 10,
+          "desc": "Exit ticket: carts A (1 kg) and B (3 kg) at +2 m/s, both stopped in 1 s; then A at +4 m/s. STOP 4.",
+          "start": 79
+        },
+        {
+          "name": "Scale",
+          "dur": 6,
+          "desc": "Marzano preview on K1 and R3. STOP 5.",
+          "start": 89
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 95
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 2,
+      "title": "Momentum",
+      "file": "Unit 3 Day 2 - Momentum - In Class.dc.html",
+      "guide": "Unit 3 Day 2 - Momentum - Teacher Guide.md",
+      "duration": 101,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 2: p = mv, kg·m/s, a vector. Targets K1, S1.",
+          "start": 0
+        },
+        {
+          "name": "Return",
+          "dur": 8,
+          "desc": "From Day 1’s exit tickets: combine mass and speed. Today we define it.",
+          "start": 7
+        },
+        {
+          "name": "Define",
+          "dur": 12,
+          "desc": "p = mv; p (kg·m/s), m (kg), v (m/s with a direction); p points the same way as v. STOP 1 (car).",
+          "start": 15
+        },
+        {
+          "name": "Examples",
+          "dur": 22,
+          "desc": "Answer: car 45,000 kg·m/s east. Table: bullet 20, sprinter 700, cruise ship 4 × 10⁷, 2026-XJ “?”. STOP 2 (estimate 2026-XJ).",
+          "start": 27
+        },
+        {
+          "name": "Chart",
+          "dur": 16,
+          "desc": "Answer: 2026-XJ ≈ 3.0 × 10¹⁵ kg·m/s. Log-scale bars, each gridline ×10; ≈ 75 million cruise ships.",
+          "start": 49
+        },
+        {
+          "name": "Direction",
+          "dur": 16,
+          "desc": "East = +. 2 kg at +3 m/s → +6; 2 kg at −3 m/s → −6. The sign carries the direction. STOP 3 (packet).",
+          "start": 65
+        },
+        {
+          "name": "Exit",
+          "dur": 10,
+          "desc": "Exit ticket: 0.15 kg baseball, 40 m/s east → 50 m/s west off a bat; Δp = p_f − p_i. STOP 4.",
+          "start": 81
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on K1 and S1. STOP 5.",
+          "start": 91
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 97
+        }
+      ]
+    }
+  ],
+  "files": {
+    "accel-day7.jsx": "4b2718e17d469a38b2b11a350634f66ac99d1784b6bae96dca687518e9b18e4c",
+    "animations-v3.jsx": "06ae64d470d6db9c1292d885551f2cf13eaba0fab9d6d53a5577516f23e6cc7d",
+    "asteroid-predict.jsx": "d8cbc462c167117c47f212571ef28b03c1fe50d30c3fe1ab61851acc417a4e7c",
+    "briefing-day1.jsx": "e9664195bdb4d060eea3e1c92320c2d385dd1b2c96b2e1a003cad0a6d755703e",
+    "ca-problems-day8.jsx": "80e728effc52760e10fb153c4e839fb3727215814f0cf4c694ebe7db313fbcae",
+    "Day 1 - The Briefing - In Class.dc.html": "48be5d42968745c70cdd35abcf2006cb10e5859bd2d1dde3f03b2307324cc1cc",
+    "Day 1 - The Briefing - Teacher Guide.md": "039967d45741efb1c116aa5e69117852bd4c047b0016af5646415d551ec4cf13",
+    "Day 10 - Forces - In Class.dc.html": "415ab5d24e51035a5da84e5709124605e63dc1c4da3c5764aecb5a908be2a31b",
+    "Day 10 - Forces - Teacher Guide.md": "2d6222d9105e6be43ff0962488b809303465b83b07d31932b9cebb99ed349c96",
+    "Day 11 - Newtons 2nd Law - Vary Mass - In Class.dc.html": "df3ad400df18247af57db3fb3f881790c12290644a143dc71be68be513dbd7a8",
+    "Day 11 - Newtons 2nd Law - Vary Mass - Teacher Guide.md": "443d8dadbc40f2b66e64cb6391f0df41729860b2f2fb42be5a9c428f62400a0e",
+    "Day 12 - Newtons 2nd Law - Vary Force - In Class.dc.html": "c0f00820ab2ce0b4d161dea884a68200c96481be5c8fb4f8f13664da105b7542",
+    "Day 12 - Newtons 2nd Law - Vary Force - Teacher Guide.md": "7aa81ee74f8a405bd4b7877114f20a4a35a15a9291150c6a2a1e75704e8821dc",
+    "Day 13 - F equals ma in Practice - In Class.dc.html": "b6e5328d68fcb27288a1882f49abe1118383ab50c68878e90f69c35ac78b67b4",
+    "Day 13 - F equals ma in Practice - Teacher Guide.md": "7496dfb89d5b412de0d265bfefea3f9ea55c45d60bb1d0a5c3cd87fe78bcf34f",
+    "Day 14 - Newtons 3rd Law - In Class.dc.html": "e291bdba647da62e5b480559075fa486811e3cdcdffde8ae4a4fee88abacf6a8",
+    "Day 14 - Newtons 3rd Law - Teacher Guide.md": "50693ea78f52e3606fd693872435f11ebce3c8d21249004fa7da9713e8f19703",
+    "Day 15 - Free Body Diagrams Part 1 - In Class.dc.html": "d9f2503b866f3337efbeeff6f6a4ec462fbbe6b554c6374ca61f70c383b36c44",
+    "Day 15 - Free Body Diagrams Part 1 - Teacher Guide.md": "53978ca1179546e39a6828244a581ed164ab532817305665afadf5509ace52ea",
+    "Day 16 - Free Body Diagrams Part 2 - Net Force - In Class.dc.html": "7ce96c4a84aa4e5cd8e54703c247f4e02c014f3a0161f761f0581a4d6a30f9a5",
+    "Day 16 - Free Body Diagrams Part 2 - Net Force - Teacher Guide.md": "bfd39e16213e55c983c09b662fa8c144bd7c3d6a5d3b52e366082e72ff25a6f0",
+    "Day 17 - Friction - In Class.dc.html": "42af6d9813744db4395d64892db65876ae9c25cd0ffe7f17babdba39ad73fa58",
+    "Day 17 - Friction - Teacher Guide.md": "a598f5e360c52bba9fdd2385357b92bbc4ac13c385da79274621ed60643811ae",
+    "Day 18 - Equilibrium - In Class.dc.html": "1ce40a9a4e7b401876ac9bec61f82d92ae7138667fd7051ba4359dc2fa1c3c57",
+    "Day 18 - Equilibrium - Teacher Guide.md": "19c4f863aaa445eec2756562523cd64d96208fa4619510314f4e42d9dbd7ac59",
+    "Day 2 - How Do We Talk About Motion - In Class.dc.html": "e8675665a74537dd54e6df08e677f400a09abbebeb03cd5f215697a007510bff",
+    "Day 2 - How Do We Talk About Motion - Teacher Guide.md": "309d937d246a70c44a064cff500639c9e1a0ccbc266ecd56e406227d434db448",
+    "Day 20 - Synthesis - In Class.dc.html": "d245080a025af3887010343b56606834a305c510cdf2bf661bd34c6ed4db50ad",
+    "Day 20 - Synthesis - Teacher Guide.md": "79d4282f821530661427290b5633f2c620982c278ffd42d45b91040a3c4db351",
+    "Day 3 - Velocity - In Class.dc.html": "cdca8c106bb4c5f8534b97cf6882aa949286616f535486911cebf4fe01b2577c",
+    "Day 3 - Velocity - Teacher Guide.md": "c5e8c9bfc869d924bca497f881030a4e9fc6b9cad1fa95a13e2282ec370b009c",
+    "Day 4 - Velocity-Time Graphs and Vectors - In Class.dc.html": "7ffd4357cc535ece716cec6c8971976ecccce4a23b753f98a584d382f8d91ee7",
+    "Day 4 - Velocity-Time Graphs and Vectors - Teacher Guide.md": "10b68b9513672e2d393cbd981b0c67f09a1497a807d1e52d493d40074e1b1880",
+    "Day 5 - Predicting the Position - In Class.dc.html": "0da7e3fc0d8520e1f921737506603105d7f1b3e6b91df790247a784ca80c66e6",
+    "Day 5 - Predicting the Position - Teacher Guide.md": "8428e47b503254d6927b25ab55d86287b89493102d943ef54c1619b541961b55",
+    "Day 6 - Vector Addition and Decomposition - In Class.dc.html": "e2507ca6b7ce84245f5526846319ebbfb9978cc4fe1e9ca35ce91d5b8ba93552",
+    "Day 6 - Vector Addition and Decomposition - Teacher Guide.md": "79d6c445e03010df9ce9425358e03c71e253c1d3afe415dbac8c51014d39ce17",
+    "Day 7 - Acceleration - In Class.dc.html": "2197e5a009b786dfecb2c4061f074337691ed39f8c27c9a88bf229f283054f54",
+    "Day 7 - Acceleration - Teacher Guide.md": "fb0fa3a2b4a01a20e178947ba3a9965f64177d876ecc99739aefe726e134a0f8",
+    "Day 8 - Constant Acceleration Problem-Solving - In Class.dc.html": "414f98bd0564d020d4d26dac8973a931dc58390655fb200adf8a1b4acabcd0f2",
+    "Day 8 - Constant Acceleration Problem-Solving - Teacher Guide.md": "27c29ddb80a27a9ad033d317a102a8b27aca20159e1941a9a0111f2d2db6976a",
+    "Day 9 - Newtons 1st Law - Inertia - In Class.dc.html": "01761cbd490e3bac390fea9bd6f5ff63d9a4dfd57c2bbe24792ebbef33a91d69",
+    "Day 9 - Newtons 1st Law - Inertia - Teacher Guide.md": "2312a378ee075c3084c93b6b1e586e90b65e21d99a1dd689ea75b1bc43dfe7f5",
+    "equil-day18.jsx": "7c6197e62808a59c0b449582231c03c93041f756946285d9d34959f1c9502bb2",
+    "fbd-day15.jsx": "57b5b78aaa2768ea76f01fd41ed6ce8ed744a50a7b90072bcf229d10c0249cc6",
+    "fma-day13.jsx": "78907e53f34777452204218d8d729cf60b88e2277dbbdffb9fb0750facb15cb8",
+    "force-day12.jsx": "f88a7da38672550fccdebb8cc7230c4d91b9cc9a75d849dea447b9401a90f288",
+    "forces-day10.jsx": "9df7054f15685d3fb2bc46dba1627b952b94bf65137235c4f3f086437370513e",
+    "friction-day17.jsx": "c63c9cff75f862151ca3bb2036c8542becebdd1e4c37f366c98752041b30b192",
+    "inertia-day9.jsx": "af77ef4db2fca85c12f97569c76dede63c8f36b27282307973a6811679af58f6",
+    "mass-day11.jsx": "bb5c8bf84fbdbd3c0456c9ad96b9dce3daafd28ea65ea5a38f389e48faeaaf8d",
+    "motion-day2.jsx": "e9d93b1a398067a1181080efc8275bf9e724c86dfff6cc6fd66589ba4235aca2",
+    "netfbd-day16.jsx": "a659dd60fbefe5bd61b6bfaf2f0506facc348ad3ffad19cc8327a86ca8b099cf",
+    "support.js": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe",
+    "synth-day20.jsx": "e40c8f998f7e9bb16c2d57f0321f567a78bd14f1a816c7283e007b376b152161",
+    "thirdlaw-day14.jsx": "a86fe9f6f58f8da29f2937144f5492683161834b86d297306c27e4b6a9682dc5",
+    "tweaks-panel.jsx": "d259e3a86f7300c808daa21baa358688b54665a3978816cfa028757a7f41f04d",
+    "u2-day1.jsx": "f91efd8df635834f98232301a3600c74f215b34d6c57337da2f2169cea3844f4",
+    "u2-day10.jsx": "a0001af61eb38e0a4b1c4e3109d9cb478d9c5279236ea5163fc30aa1878d41c8",
+    "u2-day11.jsx": "d12081bb93df9734541b14161b868ffb789c28852d70790bc9e6090d76a4e64c",
+    "u2-day12.jsx": "184faec68674b71b6e45198e6878028738efae7e9ea685b6d7dccfd318127d39",
+    "u2-day13.jsx": "d32daa2327106b8d105bf6447382fb27caba35e0d90d9240778c5b4b7154fbd4",
+    "u2-day14.jsx": "92591fa0ac0f3b6bda3324ba5f850020a61b77b876b2e146c2a810dc268a553f",
+    "u2-day15.jsx": "64b56d0a5fb1663e22b2574f49c0f0bd647b0c201ae247582c92d5ace0ab8678",
+    "u2-day2.jsx": "be0c8c0e360d2668fafcdcea4cab6a4d420aead0969fa90a9ef5289417d86489",
+    "u2-day3.jsx": "a8d2c78f4c647c541190149324ca4013d64bc7ae67699d8f087f040d97643cd1",
+    "u2-day4.jsx": "09ad4d2f528545a242cda687d3afb17c50333a75cf1111abfd2afd70c7c61866",
+    "u2-day5.jsx": "356914d63bdec4678c6180578d1bf459a5eebaa9fa1e6d7329b5f7950fc6b22a",
+    "u2-day6.jsx": "8dd0bb97051dcb152611e2000c260e1139f74181a8f6d84d72c34a95ba29181e",
+    "u2-day7.jsx": "9138b3dbed963f443691ff17c4726e79fbcaede0c70f8f8e909b28a262f0e334",
+    "u2-day8.jsx": "4132202518b040ab3d4e1a442dd94c33ae676c84e66a8edcb618e1455139a9d0",
+    "u2-day9.jsx": "a8f79b98dc0d58d69814655a9821edc9b067166e1f6a6abc007110361019d246",
+    "u3-day1.jsx": "898eeab9d2036436091321d1b4f022156eda00de50e33e48555c2e57bc23b292",
+    "u3-day2.jsx": "f3421726a0ed3c02cb48b7f88960e7a349dc9477d5988f3f0168e4f71281cdff",
+    "Unit 1 Workshop and Revision - In Class.dc.html": "46ac04c3da09f6cb4929f534428efa2795c6d111f840032654919cf36f182fde",
+    "Unit 1 Workshop and Revision - Teacher Guide.md": "151e5ae2f5dd30b4068b6ae3c9a65c3b56e5489fb3b948bdaeacf2dac0866570",
+    "Unit 2 Day 1 - Why Does the Path Bend - In Class.dc.html": "a1fe2ed2e41fb1bcca1a983012ca3708478e8ecd13debaf8093f5d29d1521e17",
+    "Unit 2 Day 1 - Why Does the Path Bend - Teacher Guide.md": "d249d3a456ada4e4e56bc55745e246fb061b1076e96137fd4db644692aaf34f2",
+    "Unit 2 Day 10 - Predict the Landing - In Class.dc.html": "922261b68cf4a59a1fc4fa350d90b2bd5c69e2c73f5bc1d167399f97b333be95",
+    "Unit 2 Day 10 - Predict the Landing - Teacher Guide.md": "50c576001bba575dc39d5770dd1eaab568d87325a778f7c724299a2184c42ecb",
+    "Unit 2 Day 11 - Angled Launches - In Class.dc.html": "d9f8e3c56eaa16e234ef70b9db7399be64f4c789b649119801735c1eaae3a2d4",
+    "Unit 2 Day 11 - Angled Launches - Teacher Guide.md": "f8bd7b4212ab7a29a5e1ef07688ea51484365fc29dd49157c08f1ef18da4b63a",
+    "Unit 2 Day 12 - Centripetal Force - In Class.dc.html": "c562fda8653e55d124e98ca19a4ebab74ee9ef761cfae2fb13cbcd14782cdbb7",
+    "Unit 2 Day 12 - Centripetal Force - Teacher Guide.md": "733ec31ca31e0185bd99d6af5a85bae3e1b118c4c6e3b7343476383f4d492850",
+    "Unit 2 Day 13 - Orbits Are Falling - In Class.dc.html": "a8d6af1b27920b72c5a04d0b00f87eee5ca0323ce22ef5fab781095bb89eb684",
+    "Unit 2 Day 13 - Orbits Are Falling - Teacher Guide.md": "7ca57342a600704b4cf48c23ea6abb5d2ab25409e9c3f366c310832d9b8e6185",
+    "Unit 2 Day 14 - Keplers Laws - In Class.dc.html": "dd2e7df6b0df2a6dd906880202467b7e1bf7f68e37b174bac477176544ec991e",
+    "Unit 2 Day 14 - Keplers Laws - Teacher Guide.md": "e17098844a7570c2a9e65a5e59d6c7a4dc5c30437906fbc567e46bc50ed909a4",
+    "Unit 2 Day 15 - 2026-XJ Orbit - In Class.dc.html": "407a6e1bb3581b0e979155806950e0958c289f3e4d215739e627330d28fa7f53",
+    "Unit 2 Day 15 - 2026-XJ Orbit - Teacher Guide.md": "45a26352e78803695e47fb7c5e4f9402f89d03f8129a2dda2911f5df12249aae",
+    "Unit 2 Day 2 - g Near Earth - In Class.dc.html": "1b7567f1f66001ed16eb497c963c43ab698f4e247a05171f473a81c8d7e1f77d",
+    "Unit 2 Day 2 - g Near Earth - Teacher Guide.md": "08fcb303434893a98271a5244f091a7af21133cb7ba6eef764830275fd1cdc0c",
+    "Unit 2 Day 3 - Weight vs Mass - In Class.dc.html": "0d057063ac25391c685017eef582c35e72c735a04e7634ee7b3d33d4aec493ad",
+    "Unit 2 Day 3 - Weight vs Mass - Teacher Guide.md": "b3823b3c55446580a4a0e7019226c115b6e2a78590d3ce50ec3b5bb118ff6c61",
+    "Unit 2 Day 4 - Universal Gravitation - In Class.dc.html": "670edbdcac69394d8cd526579e02b49f8d16c171e0a89614cbdf9d32a6e7c63e",
+    "Unit 2 Day 4 - Universal Gravitation - Teacher Guide.md": "c3bf119b21d34a6c60dabe8b25259f15ef14f7b92a2a44df44eaeb0a33a6cf4d",
+    "Unit 2 Day 5 - Run the Numbers - In Class.dc.html": "e7024933cf7f89a8fdfbaebaf6d524fc3432e620ec66d00ed005c8fd2b9bd618",
+    "Unit 2 Day 5 - Run the Numbers - Teacher Guide.md": "33559c0ad376ea7b59fac94d76b72138b2db9ebaeb831d545572aace75fcc28e",
+    "Unit 2 Day 6 - The Gravitational Field - In Class.dc.html": "11a38e9c3c4d3f9c5fc4ae6cd7ce91f5c2a696fb5dd0f76380b3f422e89eab52",
+    "Unit 2 Day 6 - The Gravitational Field - Teacher Guide.md": "5573a295cda67b35ec8f5c71a9bf4a5db2dc9116cbbdec5008b8f7d4f39e21ed",
+    "Unit 2 Day 7 - Graphing g - In Class.dc.html": "90f1d243770fb5846a9ef7fd8afe2a16ecda6e6e91e6dee29c183eb7b280db31",
+    "Unit 2 Day 7 - Graphing g - Teacher Guide.md": "9932eff0f947187587958104e95c29f0ab924070e1509a1ca6fa67b5cdc74f6a",
+    "Unit 2 Day 8 - Measure g Lab - In Class.dc.html": "9f5624ede05d142ce3e2730d58d0b9c1db72bbd33f52261a84bc5e8a927b188b",
+    "Unit 2 Day 8 - Measure g Lab - Teacher Guide.md": "5f91fe6d745c41060e269c227aca023908c87290c3c3f04358fd758fb91c111c",
+    "Unit 2 Day 9 - Projectile Motion - In Class.dc.html": "0a8284da8d7214dce476d842c273e9ffbc5446499bbd68cd683f1a9094aae7ca",
+    "Unit 2 Day 9 - Projectile Motion - Teacher Guide.md": "cca83227951d3d32d22284ee1d6ca127c2ae53faf9e37c9d2b78e65e473ea1ad",
+    "Unit 3 Day 1 - What If Earth Is in the Way - In Class.dc.html": "9fcc6338ca7ed21d34931bdf3b215b2df10e1055bdcc3f4e7c3522f1e6e8ae88",
+    "Unit 3 Day 1 - What If Earth Is in the Way - Teacher Guide.md": "d219b56ed59307ba41513e668dc6a91ab4447f5cd0650e510f477a34cbc9c647",
+    "Unit 3 Day 2 - Momentum - In Class.dc.html": "1ae7267441ba63ba1f21caab0eff563d42982e0214443e136e2344b34bc6ec64",
+    "Unit 3 Day 2 - Momentum - Teacher Guide.md": "81e1ef11897167dd69feac444154cb6545022b40261d602274e560f749a32542",
+    "vectors-day6.jsx": "aca9b67a547457de5122f68d4add4e8104fc5d917d38cff0665cbb36072d75a8",
+    "velocity-day3.jsx": "63767ead9dcf3a7a384cc663c7bb74e571c516f1a70d015418b569b9d7767441",
+    "velocity-day4.jsx": "294915a8f282c10136852fca5c10fecff33100c16716bb686c29fe372ea622ca",
+    "workshop-unit1.jsx": "807daca5b0c529dbdccced5f89d2fcd3f34af45fb1eea375dda42f0afae4488b"
+  }
+}

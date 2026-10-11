@@ -124,3 +124,27 @@ test('recovery rejects other cabinet sources, checkpoints, and unavailable owner
   await bridge.handle({ ...m, source: 'mathle-arcade' }); await bridge.handle({ ...m, final: false }); assert.equal(calls, 0)
   await bridge.handle(m); assert.equal(calls, 1); assert.equal(replies.at(-1)?.permanent, true)
 })
+
+for (const slug of ['pulse', 'mic-check']) {
+  test(`${slug} preserves deployed paid-cabinet saves without requesting math XP`, async () => {
+    const replies: Record<string, unknown>[] = [], calls: string[] = []
+    const bridge = createTetherBridge({ slug, onBalance: () => {}, onFinished: () => {}, reply: m => replies.push(m), fetcher: (async (url: string, init: RequestInit) => {
+      calls.push(url)
+      const body = JSON.parse(init.body as string)
+      if (url.endsWith('/coin')) {
+        assert.equal(body.chartId, slug === 'pulse' ? 'fixture-chart' : undefined)
+        return Response.json({ playId: 'paid-run', chartId: 'fixture-chart' })
+      }
+      assert(url.endsWith('/score'))
+      return Response.json({ score: 100 })
+    }) as typeof fetch })
+    const base = { protocol: 2, source: `${slug}-arcade` }
+    await bridge.handle({ ...base, type: 'arcade:coinRequest', requestId: 'coin', chartId: 'fixture-chart' })
+    assert.equal(replies.at(-1)?.chartId, slug === 'pulse' ? 'fixture-chart' : undefined)
+    const final = { ...base, type: 'arcade:score', requestId: 'final', playId: 'paid-run', final: true, score: 100 }
+    await bridge.handle(final); await bridge.handle(final)
+    assert.deepEqual(calls, ['/api/arcade/coin', '/api/arcade/score'])
+    assert.equal(replies.at(-1)?.xp, 0)
+    assert.equal(replies.at(-1)?.final, true)
+  })
+}

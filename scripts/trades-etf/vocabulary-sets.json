@@ -1,0 +1,2954 @@
+[
+  {
+    "lesson_id": "5020385b-020f-5887-84d0-e6b591241e8f",
+    "lesson_slug": "mvp-etf-1-01",
+    "name": "ETF P1 · 01 · Build a Stand for an Instruction Card",
+    "unit_id": "trades-etf-1",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p1.vocabulary",
+    "terms": [
+      {
+        "term": "dimension",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A measured or specified size, such as length, width, or height.",
+        "example": "Label the tray's base length, base width, and wall height as separate dimensions.",
+        "order_index": 0,
+        "difficulty": "easy"
+      },
+      {
+        "term": "datum",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A chosen reference point, line, or surface from which measurements are taken.",
+        "example": "Name corner A as the datum and locate three school-zone features from it.",
+        "order_index": 1,
+        "difficulty": "easy"
+      },
+      {
+        "term": "fraction",
+        "tier": 2,
+        "category": "math",
+        "definition": "A number that expresses parts of a whole; the denominator names the equal parts and the numerator counts them.",
+        "example": "A clearance of 1/8 in on each side adds 2/8 in, or 1/4 in, to a notebook dimension.",
+        "order_index": 2,
+        "difficulty": "easy"
+      },
+      {
+        "term": "blank",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "The starting piece of material before it is folded or shaped into the finished part.",
+        "example": "For the model tray, a 5 3/4-in base plus two 3/4-in walls needs a 7 1/4-in blank length.",
+        "order_index": 3,
+        "difficulty": "easy"
+      },
+      {
+        "term": "NTS",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "Not to scale: a drawing whose written dimensions must be used because its drawn lengths are not proportional to the real sizes.",
+        "example": "Mark your notebook sketch NTS and write the dimensions the builder must follow.",
+        "order_index": 4,
+        "difficulty": "easy"
+      },
+      {
+        "term": "layout",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The planned or marked positions of parts, edges, and reference lines before making or placing something.",
+        "example": "Lay out the work area's boundaries and fixture locations before placing the paper equipment.",
+        "order_index": 5,
+        "difficulty": "easy"
+      },
+      {
+        "term": "prototype",
+        "tier": 3,
+        "category": "design",
+        "definition": "A trial version or model used to check a design before committing to a final product.",
+        "example": "Use the paper model to check fit and access before requesting hardware.",
+        "order_index": 6,
+        "difficulty": "easy"
+      },
+      {
+        "term": "revision",
+        "tier": 2,
+        "category": "communication",
+        "definition": "An identified change to a drawing, plan, or product that replaces an earlier version.",
+        "example": "After checking an unclear endpoint, date the drawing and label the corrected version revision B.",
+        "order_index": 7,
+        "difficulty": "easy"
+      }
+    ]
+  },
+  {
+    "lesson_id": "949c7fc6-a33a-5120-a2a4-6f37f8ae4f43",
+    "lesson_slug": "mvp-etf-1-02",
+    "name": "ETF P1 · 02 · Mock Up a Three-Bay Supply Tray",
+    "unit_id": "trades-etf-1",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p1.vocabulary",
+    "terms": [
+      {
+        "term": "user need",
+        "tier": 2,
+        "category": "design",
+        "definition": "A practical problem or requirement experienced by the person who will use the result.",
+        "example": "Describe the actual difficulty the school user experiences before suggesting a storage solution.",
+        "order_index": 0,
+        "difficulty": "easy"
+      },
+      {
+        "term": "clearance",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The space intentionally left between a part and another surface so the part can fit or move.",
+        "example": "Add two 1/8-in clearances to the notebook width to find the tray's inside base width.",
+        "order_index": 1,
+        "difficulty": "easy"
+      },
+      {
+        "term": "partition",
+        "tier": 3,
+        "category": "layout",
+        "definition": "A dividing part between spaces whose thickness reduces the clear space available.",
+        "example": "Account for two 1/4-in-thick dividers inside the supplied 18-in clear opening.",
+        "order_index": 2,
+        "difficulty": "easy"
+      },
+      {
+        "term": "inside dimension",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A distance between the inner faces of a part or opening.",
+        "example": "The model's inside base grows from 5 3/4 × 3 3/4 in to 6 × 4 in.",
+        "order_index": 3,
+        "difficulty": "easy"
+      },
+      {
+        "term": "outside dimension",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A distance between the outer faces of a part or assembly.",
+        "example": "The finished tray's outside size includes its wall material; do not confuse it with the flat blank size.",
+        "order_index": 4,
+        "difficulty": "easy"
+      },
+      {
+        "term": "thickness",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "The distance between the two opposite faces of a material layer or part.",
+        "example": "Include each route's full thickness when locating its top and bottom surfaces.",
+        "order_index": 5,
+        "difficulty": "easy"
+      },
+      {
+        "term": "prototype",
+        "tier": 3,
+        "category": "design",
+        "definition": "A trial version or model used to check a design before committing to a final product.",
+        "example": "Use the paper model to check fit and access before requesting hardware.",
+        "order_index": 6,
+        "difficulty": "easy"
+      },
+      {
+        "term": "acceptance criterion",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "A measurable requirement or stated test used to decide whether the work meets the job's needs.",
+        "example": "One criterion is that a partner can locate both divider centers from your drawing without guessing.",
+        "order_index": 7,
+        "difficulty": "easy"
+      }
+    ]
+  },
+  {
+    "lesson_id": "72423444-4bbf-5aa1-834a-a69bd852072c",
+    "lesson_slug": "mvp-etf-1-03",
+    "name": "ETF P1 · 03 · Measure and Cut the Durable Tray Parts",
+    "unit_id": "trades-etf-1",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p1.vocabulary",
+    "terms": [
+      {
+        "term": "cut list",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A list of the finished pieces to make, with each piece's size and quantity.",
+        "example": "List two 6-ft border pieces and two 4-ft border pieces before deciding how much stock to buy.",
+        "order_index": 0,
+        "difficulty": "easy"
+      },
+      {
+        "term": "plan view",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "A drawing showing a space or object as viewed from directly above.",
+        "example": "Show the zone boundaries and equipment as seen from above.",
+        "order_index": 1,
+        "difficulty": "easy"
+      },
+      {
+        "term": "elevation view",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "A drawing looking straight at a vertical face, showing heights and vertical relationships.",
+        "example": "Show the selected divider height in a view of its vertical face.",
+        "order_index": 2,
+        "difficulty": "easy"
+      },
+      {
+        "term": "stock",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "Material in the starting size available for making parts.",
+        "example": "Start the cutting plan with one 48-in stock strip.",
+        "order_index": 3,
+        "difficulty": "easy"
+      },
+      {
+        "term": "area",
+        "tier": 2,
+        "category": "math",
+        "definition": "The amount of a flat surface, measured in square units; a rectangle has area length × width.",
+        "example": "The model 4 × 6 ft display has 24 ft² of surface to cover.",
+        "order_index": 4,
+        "difficulty": "easy"
+      },
+      {
+        "term": "offcut",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A piece left after cutting that may still be usable for another part.",
+        "example": "After four parts and four cuts, a 1/2-in piece of stock remains; decide whether it is useful.",
+        "order_index": 5,
+        "difficulty": "easy"
+      },
+      {
+        "term": "datum",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A chosen reference point, line, or surface from which measurements are taken.",
+        "example": "Name corner A as the datum and locate three school-zone features from it.",
+        "order_index": 6,
+        "difficulty": "easy"
+      },
+      {
+        "term": "verify",
+        "tier": 2,
+        "category": "inspection",
+        "definition": "To check a claim, value, or condition against a measurement, calculation, or other evidence.",
+        "example": "Check the new blank dimensions and test the revised fit before accepting the change.",
+        "order_index": 7,
+        "difficulty": "easy"
+      }
+    ]
+  },
+  {
+    "lesson_id": "84c374fe-da07-5e6f-b298-e0ee6a3c7b08",
+    "lesson_slug": "mvp-etf-1-04",
+    "name": "ETF P1 · 04 · Assemble and Reinforce the Supply Tray",
+    "unit_id": "trades-etf-1",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p1.vocabulary",
+    "terms": [
+      {
+        "term": "revision",
+        "tier": 2,
+        "category": "communication",
+        "definition": "An identified change to a drawing, plan, or product that replaces an earlier version.",
+        "example": "After checking an unclear endpoint, date the drawing and label the corrected version revision B.",
+        "order_index": 0,
+        "difficulty": "easy"
+      },
+      {
+        "term": "unit price",
+        "tier": 3,
+        "category": "estimating",
+        "definition": "The price for one stated unit, such as one sheet or one foot of material.",
+        "example": "At the fictional unit price of $4 per panel, each additional panel adds $4.",
+        "order_index": 1,
+        "difficulty": "easy"
+      },
+      {
+        "term": "quantity",
+        "tier": 2,
+        "category": "estimating",
+        "definition": "The count or measured amount of an item needed or purchased.",
+        "example": "A feasible layout uses four 2 × 3 ft panels to cover the model display.",
+        "order_index": 2,
+        "difficulty": "easy"
+      },
+      {
+        "term": "total cost",
+        "tier": 2,
+        "category": "estimating",
+        "definition": "The sum of all included costs, with any exclusions stated.",
+        "example": "The classroom comparison is $42 versus $44, excluding tax, delivery, and labor.",
+        "order_index": 3,
+        "difficulty": "easy"
+      },
+      {
+        "term": "rework",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "Work done again or corrected because the result did not meet a requirement.",
+        "example": "Correct the dimension that failed, then measure again before marking it accepted.",
+        "order_index": 4,
+        "difficulty": "easy"
+      },
+      {
+        "term": "fit",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "How well a part matches its intended space and required clearance.",
+        "example": "Place the template in the recess and check the intended gap along every edge.",
+        "order_index": 5,
+        "difficulty": "easy"
+      },
+      {
+        "term": "thickness",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "The distance between the two opposite faces of a material layer or part.",
+        "example": "Include each route's full thickness when locating its top and bottom surfaces.",
+        "order_index": 6,
+        "difficulty": "easy"
+      },
+      {
+        "term": "reasonableness check",
+        "tier": 2,
+        "category": "math",
+        "definition": "A quick estimate, comparison, or unit check used to see whether a calculated result makes sense.",
+        "example": "The bay width should be slightly less than 6 in because the partitions occupy some of the 18 in.",
+        "order_index": 7,
+        "difficulty": "easy"
+      }
+    ]
+  },
+  {
+    "lesson_id": "edb5feb9-2032-5469-9fa5-a81247d9c728",
+    "lesson_slug": "mvp-etf-1-05",
+    "name": "ETF P1 · 05 · Inspect and Hand Over the Finished Tray",
+    "unit_id": "trades-etf-1",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p1.vocabulary",
+    "terms": [
+      {
+        "term": "tolerance",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "The allowed variation from a specified dimension or value.",
+        "example": "State the permitted dimensional variation before deciding whether the replacement matches the specification.",
+        "order_index": 0,
+        "difficulty": "easy"
+      },
+      {
+        "term": "acceptable range",
+        "tier": 2,
+        "category": "inspection",
+        "definition": "The interval of values permitted by the stated limits or tolerance.",
+        "example": "The acceptable interval is 39 3/4 to 40 1/4 in, including the endpoints.",
+        "order_index": 1,
+        "difficulty": "easy"
+      },
+      {
+        "term": "inspection",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "A deliberate check of the work against its stated requirements.",
+        "example": "Compare the completed model with every acceptance criterion in the plan.",
+        "order_index": 2,
+        "difficulty": "easy"
+      },
+      {
+        "term": "handover",
+        "tier": 3,
+        "category": "communication",
+        "definition": "The transfer of a completed work package and its essential information to the next person or user.",
+        "example": "Give the next person the brief, drawings, estimate, test record, revisions, and unresolved questions.",
+        "order_index": 3,
+        "difficulty": "easy"
+      },
+      {
+        "term": "signed difference",
+        "tier": 2,
+        "category": "math",
+        "definition": "A subtraction result that keeps its positive or negative sign; measured minus specified shows the direction of a dimensional error.",
+        "example": "Measured minus specified is 40 3/8 − 40 = +3/8 in, showing the layout is too long.",
+        "order_index": 4,
+        "difficulty": "easy"
+      },
+      {
+        "term": "traceability",
+        "tier": 3,
+        "category": "communication",
+        "definition": "The ability to follow a result or decision back to its source measurement, calculation, drawing, or test.",
+        "example": "Show which site measurement and calculation support a dimension in the final drawing.",
+        "order_index": 5,
+        "difficulty": "easy"
+      },
+      {
+        "term": "dimension",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A measured or specified size, such as length, width, or height.",
+        "example": "Label the tray's base length, base width, and wall height as separate dimensions.",
+        "order_index": 6,
+        "difficulty": "easy"
+      },
+      {
+        "term": "fit",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "How well a part matches its intended space and required clearance.",
+        "example": "Place the template in the recess and check the intended gap along every edge.",
+        "order_index": 7,
+        "difficulty": "easy"
+      }
+    ]
+  },
+  {
+    "lesson_id": "42f20a3a-960d-556a-a10f-7858a5a1ceaf",
+    "lesson_slug": "mvp-etf-1-06",
+    "name": "ETF P1 · 06 · Clinic: Make a Four-Center Mounting Template",
+    "unit_id": "trades-etf-1",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p1.vocabulary",
+    "terms": [
+      {
+        "term": "template",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A pattern used to transfer a shape or feature locations to another piece of material.",
+        "example": "Make a paper pattern another student can use to reproduce the replacement liner.",
+        "order_index": 0,
+        "difficulty": "easy"
+      },
+      {
+        "term": "center spacing",
+        "definition": "The distance between the center points or centerlines of two features.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "Two mounting points 3/4 in from opposite edges of an 8 1/2-in plate have 7-in center spacing.",
+        "order_index": 1,
+        "difficulty": "easy"
+      },
+      {
+        "term": "datum",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A chosen reference point, line, or surface from which measurements are taken.",
+        "example": "Name corner A as the datum and locate three school-zone features from it.",
+        "order_index": 2,
+        "difficulty": "easy"
+      },
+      {
+        "term": "offset",
+        "tier": 3,
+        "category": "layout",
+        "definition": "A stated distance and direction from a reference line or point to a feature.",
+        "example": "Locate a fixture 12 in inward from the short end and state the reference edge.",
+        "order_index": 3,
+        "difficulty": "easy"
+      },
+      {
+        "term": "overall dimension",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "The full distance between the outside endpoints of an object or layout.",
+        "example": "Measure the zone from its first boundary to its last boundary as one overall dimension.",
+        "order_index": 4,
+        "difficulty": "easy"
+      },
+      {
+        "term": "fraction",
+        "tier": 2,
+        "category": "math",
+        "definition": "A number that expresses parts of a whole; the denominator names the equal parts and the numerator counts them.",
+        "example": "A clearance of 1/8 in on each side adds 2/8 in, or 1/4 in, to a notebook dimension.",
+        "order_index": 5,
+        "difficulty": "easy"
+      },
+      {
+        "term": "verify",
+        "tier": 2,
+        "category": "inspection",
+        "definition": "To check a claim, value, or condition against a measurement, calculation, or other evidence.",
+        "example": "Check the new blank dimensions and test the revised fit before accepting the change.",
+        "order_index": 6,
+        "difficulty": "easy"
+      },
+      {
+        "term": "rework",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "Work done again or corrected because the result did not meet a requirement.",
+        "example": "Correct the dimension that failed, then measure again before marking it accepted.",
+        "order_index": 7,
+        "difficulty": "easy"
+      }
+    ]
+  },
+  {
+    "lesson_id": "7423bc8c-233c-5a33-bdfc-7dd34e537801",
+    "lesson_slug": "mvp-etf-2-01",
+    "name": "ETF P2 · 01 · Build and Load-Test Two Paper Towers",
+    "unit_id": "trades-etf-2",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p2.vocabulary",
+    "terms": [
+      {
+        "term": "load",
+        "tier": 3,
+        "category": "structures",
+        "definition": "An external force acting on a structure or part, such as the weight of an object placed on it.",
+        "example": "Identical erasers apply loads through their weight; an eraser count is not a measured force in newtons.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "footprint",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The area or outline an object occupies when viewed from above.",
+        "example": "A 4 × 2 ft desk has a 2 × 1 in paper footprint at the chosen scale.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "elevation view",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "A drawing looking straight at a vertical face, showing heights and vertical relationships.",
+        "example": "Show the selected divider height in a view of its vertical face.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "capacity",
+        "tier": 3,
+        "category": "structures",
+        "definition": "The greatest load or demand that meets a stated performance limit under specified conditions.",
+        "example": "Record the count at the agreed test limit for each beam; state the limit used.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "baseline",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "The original or reference result used for comparison with a changed design or condition.",
+        "example": "Use the original wrap's result as the comparison point for the revised design.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "percent increase",
+        "tier": 2,
+        "category": "math",
+        "definition": "The increase divided by the original value, multiplied by 100%.",
+        "example": "A 15% increase on a fictional $80 estimate adds $12 and gives a revised total of $92.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "trial",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "One run of a test using a recorded set of conditions.",
+        "example": "Record each run and identify whether it used a fresh specimen or a previously loaded one.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "revision",
+        "tier": 2,
+        "category": "communication",
+        "definition": "An identified change to a drawing, plan, or product that replaces an earlier version.",
+        "example": "After checking an unclear endpoint, date the drawing and label the corrected version revision B.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "fdb04055-26be-5e28-95ba-767db31acfac",
+    "lesson_slug": "mvp-etf-2-02",
+    "name": "ETF P2 · 02 · Compare Flat, V and Channel Beams",
+    "unit_id": "trades-etf-2",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p2.vocabulary",
+    "terms": [
+      {
+        "term": "span",
+        "tier": 3,
+        "category": "structures",
+        "definition": "The distance between supports, with the measurement endpoints stated as faces or centerlines.",
+        "example": "Change the stated distance between the beam supports while keeping the beam shape the same.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "beam",
+        "tier": 3,
+        "category": "structures",
+        "definition": "A structural member that carries loads across a span mainly by resisting bending.",
+        "example": "The paper member bridges two supports and carries the small test objects.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "cross section",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "The shape exposed by an imaginary cut across an object, such as the end shape of a folded beam.",
+        "example": "Compare the flat paper's end shape with the folded beam's end shape.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "deflection",
+        "tier": 3,
+        "category": "structures",
+        "definition": "The change in a part's position caused by loading, measured from its unloaded position.",
+        "example": "A midspan height changing from 2 in to 1 3/4 in gives 1/4 in of downward deflection.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "stiffness",
+        "tier": 3,
+        "category": "structures",
+        "definition": "How strongly a structure resists deformation under load; it is different from the load it can withstand before failure.",
+        "example": "Compare bending under the same load to investigate how the fold changes resistance to deformation.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "support",
+        "tier": 3,
+        "category": "structures",
+        "definition": "A part or contact that holds a structure and transfers forces from it to another part or surface.",
+        "example": "Keep the two supporting surfaces in the same positions for both beam shapes.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "controlled variable",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A condition deliberately kept the same to make a comparison fair.",
+        "example": "Use the same paper allowance, support spacing, and loading method when comparing shapes.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "compression",
+        "tier": 3,
+        "category": "structures",
+        "definition": "A loading action that pushes parts of a material toward one another.",
+        "example": "The support foot pushes into the pad and compresses it.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "8c8c7873-a69e-50ba-81bd-1c3b6a05300a",
+    "lesson_slug": "mvp-etf-2-03",
+    "name": "ETF P2 · 03 · Survey a Doorway and Lay Out the Community Room",
+    "unit_id": "trades-etf-2",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p2.vocabulary",
+    "terms": [
+      {
+        "term": "survey",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A recorded set of observations and measurements describing a site or work area.",
+        "example": "Your survey includes a sketch, checked dimensions, and the positions of three features.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "datum",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A chosen reference point, line, or surface from which measurements are taken.",
+        "example": "Name corner A as the datum and locate three school-zone features from it.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "offset",
+        "tier": 3,
+        "category": "layout",
+        "definition": "A stated distance and direction from a reference line or point to a feature.",
+        "example": "Locate a fixture 12 in inward from the short end and state the reference edge.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "opening",
+        "tier": 3,
+        "category": "layout",
+        "definition": "A gap in a surface, such as a window or door space, that must be accounted for in the design.",
+        "example": "The model has a 12-ft² opening that is excluded from the wall covering estimate.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "plan view",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "A drawing showing a space or object as viewed from directly above.",
+        "example": "Show the zone boundaries and equipment as seen from above.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "unit conversion",
+        "tier": 2,
+        "category": "math",
+        "definition": "Expressing the same quantity in another unit without changing its size.",
+        "example": "Convert 3 ft 4 in to 40 in before adding it to another length in inches.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "circulation",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The routes people use to move through a space.",
+        "example": "Use the plan to keep the teacher-defined model walking route clear of equipment footprints.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "user need",
+        "tier": 2,
+        "category": "design",
+        "definition": "A practical problem or requirement experienced by the person who will use the result.",
+        "example": "Describe the actual difficulty the school user experiences before suggesting a storage solution.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "09594a2d-c603-5acf-89e8-21ef11952a74",
+    "lesson_slug": "mvp-etf-2-04",
+    "name": "ETF P2 · 04 · Build the Scale Room and Working Door",
+    "unit_id": "trades-etf-2",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p2.vocabulary",
+    "terms": [
+      {
+        "term": "scale",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "The stated relationship between a drawing length and the actual length it represents.",
+        "example": "At 1 in = 2 ft, a 12-ft wall is drawn 6 in long.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "scale factor",
+        "tier": 2,
+        "category": "math",
+        "definition": "The multiplier between corresponding lengths when both lengths use the same unit.",
+        "example": "Because 2 ft = 24 in, the drawing-to-actual scale factor is 1/24.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "plan view",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "A drawing showing a space or object as viewed from directly above.",
+        "example": "Show the zone boundaries and equipment as seen from above.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "elevation view",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "A drawing looking straight at a vertical face, showing heights and vertical relationships.",
+        "example": "Show the selected divider height in a view of its vertical face.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "coordination",
+        "tier": 2,
+        "category": "design",
+        "definition": "Checking that related drawings, dimensions, components, and routes work together without conflict.",
+        "example": "Make sure the route order and positions agree in the plan, side view, and model.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "actual dimension",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "The full-size measurement of the real object or space, rather than its drawing size.",
+        "example": "Label the real desk width as 2 ft even though its paper width is only 1 in.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "layout",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The planned or marked positions of parts, edges, and reference lines before making or placing something.",
+        "example": "Lay out the work area's boundaries and fixture locations before placing the paper equipment.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "revision",
+        "tier": 2,
+        "category": "communication",
+        "definition": "An identified change to a drawing, plan, or product that replaces an earlier version.",
+        "example": "After checking an unclear endpoint, date the drawing and label the corrected version revision B.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "2f91683d-aeac-5a46-9296-1e2a91fa6b82",
+    "lesson_slug": "mvp-etf-2-05",
+    "name": "ETF P2 · 05 · Test a Wall Frame and Add a Diagonal",
+    "unit_id": "trades-etf-2",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p2.vocabulary",
+    "terms": [
+      {
+        "term": "brace",
+        "tier": 3,
+        "category": "structures",
+        "definition": "A member added to reduce unwanted movement or deformation of a structure.",
+        "example": "Add a diagonal paper member to reduce the frame's sideways distortion.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "diagonal",
+        "tier": 2,
+        "category": "math",
+        "definition": "A line segment joining two corners of a shape that are not next to each other.",
+        "example": "Measure from one corner to the opposite corner, then check the other diagonal.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "Pythagorean theorem",
+        "tier": 2,
+        "category": "math",
+        "definition": "For a right triangle, the square of the longest side equals the sum of the squares of the other two sides: c² = a² + b².",
+        "example": "For the 36 × 48 in rectangle, the ideal diagonal is √(36² + 48²) = 60 in.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "racking",
+        "tier": 3,
+        "category": "structures",
+        "definition": "A sideways distortion that changes the angles of a frame, such as a rectangle leaning into a parallelogram.",
+        "example": "Observe how the unbraced rectangular frame changes into a slanted shape under sideways movement.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "triangulation",
+        "tier": 3,
+        "category": "structures",
+        "definition": "Arranging members into triangles to resist changes of shape when the members and connections hold their lengths.",
+        "example": "The diagonal divides the rectangular frame into triangles when its joints hold.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "joint",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "The place and method by which two or more parts are connected.",
+        "example": "Inspect the taped brace connections because a loose joint can let the frame move.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "load path",
+        "tier": 3,
+        "category": "structures",
+        "definition": "The route by which forces pass through connected parts and supports.",
+        "example": "Draw arrows showing how the applied load passes through the member to the supports.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "square (layout)",
+        "tier": 3,
+        "category": "layout",
+        "definition": "Having the intended right angles; a rectangular layout must be checked against its side lengths and geometry.",
+        "example": "Check side lengths and corner geometry before calling the work-area layout square; one correct diagonal is insufficient.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "56dbaefc-15bc-5d1d-a0bf-2cb04b4986d3",
+    "lesson_slug": "mvp-etf-2-06",
+    "name": "ETF P2 · 06 · Close the Room and Count the Material",
+    "unit_id": "trades-etf-2",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p2.vocabulary",
+    "terms": [
+      {
+        "term": "takeoff",
+        "tier": 3,
+        "category": "estimating",
+        "definition": "Counting and measuring the material quantities needed from drawings or a surveyed job.",
+        "example": "Use the wall drawing to list covering areas and the resulting sheet quantities.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "gross area",
+        "tier": 3,
+        "category": "math",
+        "definition": "The full area before openings or other excluded areas are subtracted.",
+        "example": "The supplied wall's full area is 96 ft² before subtracting the opening.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "net area",
+        "tier": 3,
+        "category": "math",
+        "definition": "The area remaining after specified openings or excluded areas are subtracted from the gross area.",
+        "example": "With no excluded openings, the 6 × 8 ft job needs 48 ft² of coverage.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "allowance",
+        "tier": 3,
+        "category": "layout",
+        "definition": "An amount deliberately included for a stated purpose, such as overlap, cutting loss, or material thickness.",
+        "example": "Include both 3/4-in wall allowances when recalculating each blank dimension.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "opening",
+        "tier": 3,
+        "category": "layout",
+        "definition": "A gap in a surface, such as a window or door space, that must be accounted for in the design.",
+        "example": "The model has a 12-ft² opening that is excluded from the wall covering estimate.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "cut list",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A list of the finished pieces to make, with each piece's size and quantity.",
+        "example": "List two 6-ft border pieces and two 4-ft border pieces before deciding how much stock to buy.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "offcut",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A piece left after cutting that may still be usable for another part.",
+        "example": "After four parts and four cuts, a 1/2-in piece of stock remains; decide whether it is useful.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "enclosure",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A surrounding structure that contains or protects parts of a system.",
+        "example": "Build a paper base and four walls around the proposed low-voltage service route.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "cacdc7c7-c90f-5378-a594-a9e49f28cf85",
+    "lesson_slug": "mvp-etf-2-07",
+    "name": "ETF P2 · 07 · Build and Test an Insulated Cup Enclosure",
+    "unit_id": "trades-etf-2",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p2.vocabulary",
+    "terms": [
+      {
+        "term": "insulation",
+        "tier": 3,
+        "category": "thermal",
+        "definition": "Material used to slow heat transfer through an assembly.",
+        "example": "Compare a wrap intended to slow heat transfer with the reference arrangement.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "controlled variable",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A condition deliberately kept the same to make a comparison fair.",
+        "example": "Use the same paper allowance, support spacing, and loading method when comparing shapes.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "heat transfer",
+        "tier": 3,
+        "category": "thermal",
+        "definition": "Energy moving from a warmer region to a cooler region because of a temperature difference.",
+        "example": "The warmer cup transfers energy to its cooler surroundings during the comparison.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "baseline",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "The original or reference result used for comparison with a changed design or condition.",
+        "example": "Use the original wrap's result as the comparison point for the revised design.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "percent reduction",
+        "tier": 2,
+        "category": "math",
+        "definition": "The decrease divided by the original value, multiplied by 100%.",
+        "example": "A drop reduced from 8°C to 6°C is 2/8 × 100% = 25% smaller than the original drop.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "thermal envelope",
+        "tier": 3,
+        "category": "thermal",
+        "definition": "The parts of an enclosure that separate its inside from outside and affect heat transfer, such as walls, roof, and openings.",
+        "example": "Identify the model wall and opening that separate the room's inside from its surroundings.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "trial",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "One run of a test using a recorded set of conditions.",
+        "example": "Record each run and identify whether it used a fresh specimen or a previously loaded one.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "uncertainty",
+        "tier": 2,
+        "category": "measurement",
+        "definition": "The doubt or range associated with a measurement because tools and methods cannot give an exact value.",
+        "example": "Identify how reaction time or a hard-to-read volume mark affects confidence in the rate.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "be35d203-e56d-5279-9a65-eae23c5d528a",
+    "lesson_slug": "mvp-etf-2-08",
+    "name": "ETF P2 · 08 · Seal One Insulation Gap and Retest",
+    "unit_id": "trades-etf-2",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p2.vocabulary",
+    "terms": [
+      {
+        "term": "revision",
+        "tier": 2,
+        "category": "communication",
+        "definition": "An identified change to a drawing, plan, or product that replaces an earlier version.",
+        "example": "After checking an unclear endpoint, date the drawing and label the corrected version revision B.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "retest",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A new test after a change, using stated conditions so the results can be compared.",
+        "example": "Test the revised wrap under the original conditions and report an inconclusive result honestly if necessary.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "deflection",
+        "tier": 3,
+        "category": "structures",
+        "definition": "The change in a part's position caused by loading, measured from its unloaded position.",
+        "example": "A midspan height changing from 2 in to 1 3/4 in gives 1/4 in of downward deflection.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "percent reduction",
+        "tier": 2,
+        "category": "math",
+        "definition": "The decrease divided by the original value, multiplied by 100%.",
+        "example": "A drop reduced from 8°C to 6°C is 2/8 × 100% = 25% smaller than the original drop.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "thermal path",
+        "tier": 3,
+        "category": "thermal",
+        "definition": "A route through which energy can transfer between warmer and cooler parts of a system.",
+        "example": "Mark possible energy-transfer routes through the sides, lid, and base before changing one.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "inspection",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "A deliberate check of the work against its stated requirements.",
+        "example": "Compare the completed model with every acceptance criterion in the plan.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "access",
+        "tier": 3,
+        "category": "design",
+        "definition": "The space or opening needed to reach a part for operation, inspection, or maintenance.",
+        "example": "Demonstrate that the chosen opening lets a person reach the model component without tearing the enclosure.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "evidence",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "Recorded observations, measurements, or results used to support a claim.",
+        "example": "Record what you actually observed before choosing the next diagnostic action.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "c9138847-2637-52f2-842e-06bcf1884ff6",
+    "lesson_slug": "mvp-etf-2-09",
+    "name": "ETF P2 · 09 · Inspect the Community-Room Model",
+    "unit_id": "trades-etf-2",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p2.vocabulary",
+    "terms": [
+      {
+        "term": "inspection",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "A deliberate check of the work against its stated requirements.",
+        "example": "Compare the completed model with every acceptance criterion in the plan.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "scale",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "The stated relationship between a drawing length and the actual length it represents.",
+        "example": "At 1 in = 2 ft, a 12-ft wall is drawn 6 in long.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "offset",
+        "tier": 3,
+        "category": "layout",
+        "definition": "A stated distance and direction from a reference line or point to a feature.",
+        "example": "Locate a fixture 12 in inward from the short end and state the reference edge.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "acceptance criterion",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "A measurable requirement or stated test used to decide whether the work meets the job's needs.",
+        "example": "One criterion is that a partner can locate both divider centers from your drawing without guessing.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "limitation",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A boundary on what a method, model, or result can establish.",
+        "example": "Explain which real-system tests were not performed on the paper prototype.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "handover",
+        "tier": 3,
+        "category": "communication",
+        "definition": "The transfer of a completed work package and its essential information to the next person or user.",
+        "example": "Give the next person the brief, drawings, estimate, test record, revisions, and unresolved questions.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "plan view",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "A drawing showing a space or object as viewed from directly above.",
+        "example": "Show the zone boundaries and equipment as seen from above.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "measured value",
+        "tier": 2,
+        "category": "measurement",
+        "definition": "A number with a unit obtained from a stated measurement method.",
+        "example": "Record the actual tape reading of 40 3/8 in before judging whether it passes.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "e1bfd2e6-7789-5eb4-a6a2-44fadf241a58",
+    "lesson_slug": "mvp-etf-2-10",
+    "name": "ETF P2 · 10 · Clinic: Move the Door and Coordinate Both Views",
+    "unit_id": "trades-etf-2",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p2.vocabulary",
+    "terms": [
+      {
+        "term": "discrepancy",
+        "tier": 2,
+        "category": "inspection",
+        "definition": "A difference between values or records that are expected to agree.",
+        "example": "If the segment sum is 75 in but the direct measurement is 74 3/4 in, investigate the 1/4-in discrepancy.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "datum",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A chosen reference point, line, or surface from which measurements are taken.",
+        "example": "Name corner A as the datum and locate three school-zone features from it.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "coordination",
+        "tier": 2,
+        "category": "design",
+        "definition": "Checking that related drawings, dimensions, components, and routes work together without conflict.",
+        "example": "Make sure the route order and positions agree in the plan, side view, and model.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "elevation view",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "A drawing looking straight at a vertical face, showing heights and vertical relationships.",
+        "example": "Show the selected divider height in a view of its vertical face.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "revision",
+        "tier": 2,
+        "category": "communication",
+        "definition": "An identified change to a drawing, plan, or product that replaces an earlier version.",
+        "example": "After checking an unclear endpoint, date the drawing and label the corrected version revision B.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "scale",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "The stated relationship between a drawing length and the actual length it represents.",
+        "example": "At 1 in = 2 ft, a 12-ft wall is drawn 6 in long.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "offset",
+        "tier": 3,
+        "category": "layout",
+        "definition": "A stated distance and direction from a reference line or point to a feature.",
+        "example": "Locate a fixture 12 in inward from the short end and state the reference edge.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "verify",
+        "tier": 2,
+        "category": "inspection",
+        "definition": "To check a claim, value, or condition against a measurement, calculation, or other evidence.",
+        "example": "Check the new blank dimensions and test the revised fit before accepting the change.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "1cf44326-a99f-5518-b92b-025ef63afd98",
+    "lesson_slug": "mvp-etf-3-01",
+    "name": "ETF P3 · 01 · Compare Air and Water Syringe Motion",
+    "unit_id": "trades-etf-3",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p3.vocabulary",
+    "terms": [
+      {
+        "term": "hydraulic",
+        "definition": "Using a liquid to transmit pressure and motion in a connected system.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "A water-filled syringe pair can move a small platform from a remote hand input.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "pneumatic",
+        "definition": "Using a gas, commonly air, to transmit pressure and produce motion.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The air-filled syringe system feels springier because its air can compress.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "piston",
+        "definition": "A moving part that fits inside a cylinder and pushes on or is pushed by the fluid.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The syringe plunger moves its piston 20 mm during a measured input stroke.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "input",
+        "definition": "The action, energy, or signal supplied to a system.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "Pushing the hand syringe is the input that moves the remote platform.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "output",
+        "definition": "The action, energy, or signal a system delivers.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The rising platform is the output of the connected syringe machine.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "displacement",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A change in position with its direction stated.",
+        "example": "Apply the same initial sideways displacement when comparing the braced and unbraced frames.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "measured value",
+        "tier": 2,
+        "category": "measurement",
+        "definition": "A number with a unit obtained from a stated measurement method.",
+        "example": "Record the actual tape reading of 40 3/8 in before judging whether it passes.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "uncertainty",
+        "tier": 2,
+        "category": "measurement",
+        "definition": "The doubt or range associated with a measurement because tools and methods cannot give an exact value.",
+        "example": "Identify how reaction time or a hard-to-read volume mark affects confidence in the rate.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "07a41f8e-1bf4-5efe-8026-23bfdbcdab27",
+    "lesson_slug": "mvp-etf-3-02",
+    "name": "ETF P3 · 02 · Build the Syringe-Powered Delivery Sled",
+    "unit_id": "trades-etf-3",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p3.vocabulary",
+    "terms": [
+      {
+        "term": "piston",
+        "definition": "A moving part that fits inside a cylinder and pushes on or is pushed by the fluid.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The syringe plunger moves its piston 20 mm during a measured input stroke.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "ratio",
+        "tier": 2,
+        "category": "math",
+        "definition": "A comparison of two quantities by division, with units and order stated.",
+        "example": "A folded beam reaching 8 erasers versus 2 for the flat beam has a capacity-count ratio of 4 to 1 in that test.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "area",
+        "tier": 2,
+        "category": "math",
+        "definition": "The amount of a flat surface, measured in square units; a rectangle has area length × width.",
+        "example": "The model 4 × 6 ft display has 24 ft² of surface to cover.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "displacement",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A change in position with its direction stated.",
+        "example": "Apply the same initial sideways displacement when comparing the braced and unbraced frames.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "coordination",
+        "tier": 2,
+        "category": "design",
+        "definition": "Checking that related drawings, dimensions, components, and routes work together without conflict.",
+        "example": "Make sure the route order and positions agree in the plan, side view, and model.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "brace",
+        "tier": 3,
+        "category": "structures",
+        "definition": "A member added to reduce unwanted movement or deformation of a structure.",
+        "example": "Add a diagonal paper member to reduce the frame's sideways distortion.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "assembly drawing",
+        "definition": "A drawing showing how components fit together to form a working object.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The assembly drawing shows the actuator mounted below the moving platform.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "output",
+        "definition": "The action, energy, or signal a system delivers.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The rising platform is the output of the connected syringe machine.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "e893f81c-ca62-548f-9114-51493721e7cc",
+    "lesson_slug": "mvp-etf-3-03",
+    "name": "ETF P3 · 03 · Measure Flow Through Two Tube Routes",
+    "unit_id": "trades-etf-3",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p3.vocabulary",
+    "terms": [
+      {
+        "term": "flow rate",
+        "tier": 3,
+        "category": "math",
+        "definition": "The volume of fluid passing a point or collected per unit time, such as mL/s.",
+        "example": "A supplied collection of 240 mL in 12 s has a flow rate of 20 mL/s.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "volume",
+        "tier": 2,
+        "category": "math",
+        "definition": "The amount of three-dimensional space occupied or contained, measured in cubic units or units such as milliliters.",
+        "example": "Record how many milliliters are collected, using the actual reading or a clearly labeled supplied value.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "elapsed time",
+        "tier": 2,
+        "category": "math",
+        "definition": "The amount of time between a stated start and finish.",
+        "example": "Measure from the stated start of collection to its finish.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "route",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The planned path followed by a service, material, or moving object.",
+        "example": "Draw the two dry model service paths before constructing their crossing.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "controlled variable",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A condition deliberately kept the same to make a comparison fair.",
+        "example": "Use the same paper allowance, support spacing, and loading method when comparing shapes.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "average rate",
+        "tier": 2,
+        "category": "math",
+        "definition": "The total change in a quantity divided by the time interval over which it occurred.",
+        "example": "A 6°C drop over 10 min is an average cooling magnitude of 0.6°C/min.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "baseline",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "The original or reference result used for comparison with a changed design or condition.",
+        "example": "Use the original wrap's result as the comparison point for the revised design.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "trial",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "One run of a test using a recorded set of conditions.",
+        "example": "Record each run and identify whether it used a fresh specimen or a previously loaded one.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "174d2b00-f2db-5b6d-9afb-a3125f931f76",
+    "lesson_slug": "mvp-etf-3-04",
+    "name": "ETF P3 · 04 · Add a Cargo Fence and Read the Assembly",
+    "unit_id": "trades-etf-3",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p3.vocabulary",
+    "terms": [
+      {
+        "term": "assembly drawing",
+        "definition": "A drawing showing how components fit together to form a working object.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The assembly drawing shows the actuator mounted below the moving platform.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "centerline",
+        "tier": 3,
+        "category": "layout",
+        "definition": "A reference line through the middle of a feature, used to locate or align it.",
+        "example": "Mark the work area's middle line so both fixture points share one centerline.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "center spacing",
+        "definition": "The distance between the center points or centerlines of two features.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "Two mounting points 3/4 in from opposite edges of an 8 1/2-in plate have 7-in center spacing.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "offset",
+        "tier": 3,
+        "category": "layout",
+        "definition": "A stated distance and direction from a reference line or point to a feature.",
+        "example": "Locate a fixture 12 in inward from the short end and state the reference edge.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "bill of materials",
+        "tier": 3,
+        "category": "estimating",
+        "definition": "An itemized list of materials and components, including sizes and quantities needed for an assembly.",
+        "example": "List paper sheets and tape segments with their sizes, quantities, and simulated prices.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "clearance",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The space intentionally left between a part and another surface so the part can fit or move.",
+        "example": "Add two 1/8-in clearances to the notebook width to find the tray's inside base width.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "fabrication",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "Making a part from material by operations such as marking, cutting, folding, and joining.",
+        "example": "Mark, cut, and check the paper liner using the dimensions on your work order.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "coordination",
+        "tier": 2,
+        "category": "design",
+        "definition": "Checking that related drawings, dimensions, components, and routes work together without conflict.",
+        "example": "Make sure the route order and positions agree in the plan, side view, and model.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "c443cea2-ab16-581e-9dbb-6e2a15bc748d",
+    "lesson_slug": "mvp-etf-3-05",
+    "name": "ETF P3 · 05 · Find and Repair a Loose Actuator Mount",
+    "unit_id": "trades-etf-3",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p3.vocabulary",
+    "terms": [
+      {
+        "term": "fault",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A condition that prevents a system from operating as intended.",
+        "example": "An open switch or a broken lead can prevent the model lamp from operating.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "diagnosis",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "Identifying a problem's cause by following evidence from inspection and tests.",
+        "example": "Follow a recorded sequence of inspection and approved tests to identify which condition caused the failure.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "repair",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A correction intended to restore a part or system to its required operation.",
+        "example": "After securing the loose actuator mount, repeat the same three-cycle test to check the repair.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "volume",
+        "tier": 2,
+        "category": "math",
+        "definition": "The amount of three-dimensional space occupied or contained, measured in cubic units or units such as milliliters.",
+        "example": "Record how many milliliters are collected, using the actual reading or a clearly labeled supplied value.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "uncertainty",
+        "tier": 2,
+        "category": "measurement",
+        "definition": "The doubt or range associated with a measurement because tools and methods cannot give an exact value.",
+        "example": "Identify how reaction time or a hard-to-read volume mark affects confidence in the rate.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "access",
+        "tier": 3,
+        "category": "design",
+        "definition": "The space or opening needed to reach a part for operation, inspection, or maintenance.",
+        "example": "Demonstrate that the chosen opening lets a person reach the model component without tearing the enclosure.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "coordination",
+        "tier": 2,
+        "category": "design",
+        "definition": "Checking that related drawings, dimensions, components, and routes work together without conflict.",
+        "example": "Make sure the route order and positions agree in the plan, side view, and model.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "retest",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A new test after a change, using stated conditions so the results can be compared.",
+        "example": "Test the revised wrap under the original conditions and report an inconclusive result honestly if necessary.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "b80ba8ae-94d9-51c0-82ef-a5299242253b",
+    "lesson_slug": "mvp-etf-3-06",
+    "name": "ETF P3 · 06 · Time Five Delivery Cycles",
+    "unit_id": "trades-etf-3",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p3.vocabulary",
+    "terms": [
+      {
+        "term": "baseline",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "The original or reference result used for comparison with a changed design or condition.",
+        "example": "Use the original wrap's result as the comparison point for the revised design.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "elapsed time",
+        "tier": 2,
+        "category": "math",
+        "definition": "The amount of time between a stated start and finish.",
+        "example": "Measure from the stated start of collection to its finish.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "trial",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "One run of a test using a recorded set of conditions.",
+        "example": "Record each run and identify whether it used a fresh specimen or a previously loaded one.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "mean",
+        "tier": 2,
+        "category": "math",
+        "definition": "The arithmetic average: add the values and divide by the number of values.",
+        "example": "For equal-duration trials with rates 20, 19, and 21 mL/s, the mean rate is 20 mL/s.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "measured value",
+        "tier": 2,
+        "category": "measurement",
+        "definition": "A number with a unit obtained from a stated measurement method.",
+        "example": "Record the actual tape reading of 40 3/8 in before judging whether it passes.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "controlled variable",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A condition deliberately kept the same to make a comparison fair.",
+        "example": "Use the same paper allowance, support spacing, and loading method when comparing shapes.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "endpoint",
+        "tier": 2,
+        "category": "measurement",
+        "definition": "A point that marks the beginning or end of a measured distance.",
+        "example": "Record whether the tape ends at a desk edge or its center; those endpoints give different lengths.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "evidence",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "Recorded observations, measurements, or results used to support a claim.",
+        "example": "Record what you actually observed before choosing the next diagnostic action.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "bf678ee6-8eee-5c65-b871-f36f9fa2f8ec",
+    "lesson_slug": "mvp-etf-3-07",
+    "name": "ETF P3 · 07 · Add Guide Rails and Retest the Sled",
+    "unit_id": "trades-etf-3",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p3.vocabulary",
+    "terms": [
+      {
+        "term": "revision",
+        "tier": 2,
+        "category": "communication",
+        "definition": "An identified change to a drawing, plan, or product that replaces an earlier version.",
+        "example": "After checking an unclear endpoint, date the drawing and label the corrected version revision B.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "percent increase",
+        "tier": 2,
+        "category": "math",
+        "definition": "The increase divided by the original value, multiplied by 100%.",
+        "example": "A 15% increase on a fictional $80 estimate adds $12 and gives a revised total of $92.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "percent reduction",
+        "tier": 2,
+        "category": "math",
+        "definition": "The decrease divided by the original value, multiplied by 100%.",
+        "example": "A drop reduced from 8°C to 6°C is 2/8 × 100% = 25% smaller than the original drop.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "baseline",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "The original or reference result used for comparison with a changed design or condition.",
+        "example": "Use the original wrap's result as the comparison point for the revised design.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "average rate",
+        "tier": 2,
+        "category": "math",
+        "definition": "The total change in a quantity divided by the time interval over which it occurred.",
+        "example": "A 6°C drop over 10 min is an average cooling magnitude of 0.6°C/min.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "retest",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A new test after a change, using stated conditions so the results can be compared.",
+        "example": "Test the revised wrap under the original conditions and report an inconclusive result honestly if necessary.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "controlled variable",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A condition deliberately kept the same to make a comparison fair.",
+        "example": "Use the same paper allowance, support spacing, and loading method when comparing shapes.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "limitation",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A boundary on what a method, model, or result can establish.",
+        "example": "Explain which real-system tests were not performed on the paper prototype.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "ca3689a7-16a9-52de-bfde-d39082b317e2",
+    "lesson_slug": "mvp-etf-3-08",
+    "name": "ETF P3 · 08 · Demonstrate the Delivery Machine",
+    "unit_id": "trades-etf-3",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p3.vocabulary",
+    "terms": [
+      {
+        "term": "assembly drawing",
+        "definition": "A drawing showing how components fit together to form a working object.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The assembly drawing shows the actuator mounted below the moving platform.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "input",
+        "definition": "The action, energy, or signal supplied to a system.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "Pushing the hand syringe is the input that moves the remote platform.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "output",
+        "definition": "The action, energy, or signal a system delivers.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The rising platform is the output of the connected syringe machine.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "acceptance criterion",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "A measurable requirement or stated test used to decide whether the work meets the job's needs.",
+        "example": "One criterion is that a partner can locate both divider centers from your drawing without guessing.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "mean",
+        "tier": 2,
+        "category": "math",
+        "definition": "The arithmetic average: add the values and divide by the number of values.",
+        "example": "For equal-duration trials with rates 20, 19, and 21 mL/s, the mean rate is 20 mL/s.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "handover",
+        "tier": 3,
+        "category": "communication",
+        "definition": "The transfer of a completed work package and its essential information to the next person or user.",
+        "example": "Give the next person the brief, drawings, estimate, test record, revisions, and unresolved questions.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "evidence",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "Recorded observations, measurements, or results used to support a claim.",
+        "example": "Record what you actually observed before choosing the next diagnostic action.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "limitation",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A boundary on what a method, model, or result can establish.",
+        "example": "Explain which real-system tests were not performed on the paper prototype.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "70daddfa-7ba1-5990-b891-dcee213ccd66",
+    "lesson_slug": "mvp-etf-3-09",
+    "name": "ETF P3 · 09 · Clinic: Restore a Shifted Sled Mount",
+    "unit_id": "trades-etf-3",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p3.vocabulary",
+    "terms": [
+      {
+        "term": "diagnosis",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "Identifying a problem's cause by following evidence from inspection and tests.",
+        "example": "Follow a recorded sequence of inspection and approved tests to identify which condition caused the failure.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "unit conversion",
+        "tier": 2,
+        "category": "math",
+        "definition": "Expressing the same quantity in another unit without changing its size.",
+        "example": "Convert 3 ft 4 in to 40 in before adding it to another length in inches.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "displacement",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A change in position with its direction stated.",
+        "example": "Apply the same initial sideways displacement when comparing the braced and unbraced frames.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "reference line",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A marked or established line used as the basis for locating or measuring other features.",
+        "example": "Keep the same line for both readings so the difference has a valid basis.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "repair",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A correction intended to restore a part or system to its required operation.",
+        "example": "After securing the loose actuator mount, repeat the same three-cycle test to check the repair.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "retest",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A new test after a change, using stated conditions so the results can be compared.",
+        "example": "Test the revised wrap under the original conditions and report an inconclusive result honestly if necessary.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "hydraulic",
+        "definition": "Using a liquid to transmit pressure and motion in a connected system.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "A water-filled syringe pair can move a small platform from a remote hand input.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "pneumatic",
+        "definition": "Using a gas, commonly air, to transmit pressure and produce motion.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The air-filled syringe system feels springier because its air can compress.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "b5d5d2c4-0492-5dfb-8c49-7575e99abd24",
+    "lesson_slug": "mvp-etf-4-01",
+    "name": "ETF P4 · 01 · Build a Door-Open Light Signal",
+    "unit_id": "trades-etf-4",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p4.vocabulary",
+    "terms": [
+      {
+        "term": "circuit",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "An arrangement of connected electrical components; sustained current requires a complete conducting path through a source and load.",
+        "example": "Trace a complete path from one source terminal through the switch and lamp to the other terminal.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "switch",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A component that opens or closes a conducting path in a circuit.",
+        "example": "Place the switch so opening it interrupts the intended lamp path.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "closed circuit",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A circuit with a complete conducting path through the source and load.",
+        "example": "With the switch closed and every connection complete, the source and lamp form a closed path.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "open circuit",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A circuit with a break that prevents sustained current through that path.",
+        "example": "When the switch opens, the break stops sustained current through the lamp path.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "polarity",
+        "definition": "The positive and negative orientation of electrical terminals or components.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "Connect the protected LED using the polarity markings required by its classroom kit.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "route",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The planned path followed by a service, material, or moving object.",
+        "example": "Draw the two dry model service paths before constructing their crossing.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "allowance",
+        "tier": 3,
+        "category": "layout",
+        "definition": "An amount deliberately included for a stated purpose, such as overlap, cutting loss, or material thickness.",
+        "example": "Include both 3/4-in wall allowances when recalculating each blank dimension.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "schematic",
+        "definition": "A drawing that uses symbols to show functional connections rather than exact physical positions.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The lamp can move across the model room while its electrical connections on the schematic stay the same.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "8e65aedf-96f5-5583-87f1-44bb30f707d5",
+    "lesson_slug": "mvp-etf-4-02",
+    "name": "ETF P4 · 02 · Make the Door Trigger Reliable",
+    "unit_id": "trades-etf-4",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p4.vocabulary",
+    "terms": [
+      {
+        "term": "schematic",
+        "definition": "A drawing that uses symbols to show functional connections rather than exact physical positions.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The lamp can move across the model room while its electrical connections on the schematic stay the same.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "layout",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The planned or marked positions of parts, edges, and reference lines before making or placing something.",
+        "example": "Lay out the work area's boundaries and fixture locations before placing the paper equipment.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "trial",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "One run of a test using a recorded set of conditions.",
+        "example": "Record each run and identify whether it used a fresh specimen or a previously loaded one.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "fault",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A condition that prevents a system from operating as intended.",
+        "example": "An open switch or a broken lead can prevent the model lamp from operating.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "revision",
+        "tier": 2,
+        "category": "communication",
+        "definition": "An identified change to a drawing, plan, or product that replaces an earlier version.",
+        "example": "After checking an unclear endpoint, date the drawing and label the corrected version revision B.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "switch",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A component that opens or closes a conducting path in a circuit.",
+        "example": "Place the switch so opening it interrupts the intended lamp path.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "enclosure",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A surrounding structure that contains or protects parts of a system.",
+        "example": "Build a paper base and four walls around the proposed low-voltage service route.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "access",
+        "tier": 3,
+        "category": "design",
+        "definition": "The space or opening needed to reach a part for operation, inspection, or maintenance.",
+        "example": "Demonstrate that the chosen opening lets a person reach the model component without tearing the enclosure.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "c368f58a-21b0-598a-a4fa-ba846df69404",
+    "lesson_slug": "mvp-etf-4-03",
+    "name": "ETF P4 · 03 · Measure Voltage Across the Source and Lamp",
+    "unit_id": "trades-etf-4",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p4.vocabulary",
+    "terms": [
+      {
+        "term": "voltage",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "Electric potential difference: energy transferred per unit charge between two points, measured in volts (V).",
+        "example": "The supplied resistor example has 6 V across its load.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "test point",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A specified location in a circuit where an observation or measurement is made.",
+        "example": "State which two locations an approved voltage measurement would compare.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "rating",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A stated operating value or limit for a component, valid under specified conditions.",
+        "example": "Label the supplied voltage and current values as stated operating data rather than student measurements.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "measured value",
+        "tier": 2,
+        "category": "measurement",
+        "definition": "A number with a unit obtained from a stated measurement method.",
+        "example": "Record the actual tape reading of 40 3/8 in before judging whether it passes.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "open circuit",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A circuit with a break that prevents sustained current through that path.",
+        "example": "When the switch opens, the break stops sustained current through the lamp path.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "diagnosis",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "Identifying a problem's cause by following evidence from inspection and tests.",
+        "example": "Follow a recorded sequence of inspection and approved tests to identify which condition caused the failure.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "schematic",
+        "definition": "A drawing that uses symbols to show functional connections rather than exact physical positions.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The lamp can move across the model room while its electrical connections on the schematic stay the same.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "uncertainty",
+        "tier": 2,
+        "category": "measurement",
+        "definition": "The doubt or range associated with a measurement because tools and methods cannot give an exact value.",
+        "example": "Identify how reaction time or a hard-to-read volume mark affects confidence in the rate.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "0b7ff29a-a638-5630-b720-cb889cdf244c",
+    "lesson_slug": "mvp-etf-4-04",
+    "name": "ETF P4 · 04 · Measure Current in the Lamp Branch",
+    "unit_id": "trades-etf-4",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p4.vocabulary",
+    "terms": [
+      {
+        "term": "current",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "The rate of flow of electric charge, measured in amperes (A).",
+        "example": "The model calculation predicts 0.20 A through a 30-Ω resistor at 6 V.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "series circuit",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A circuit arrangement with components along one path, so the same current passes through each component.",
+        "example": "Two supplied 12-Ω resistors in one path have an equivalent resistance of 24 Ω.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "Ohm's law",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "The relationship V = I × R for an ohmic component under constant physical conditions such as temperature.",
+        "example": "Use I = V/R to calculate 6 V / 30 Ω = 0.20 A for the supplied resistor case.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "resistance",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A measure of opposition to current, expressed in ohms (Ω); for a resistor model, R = V ÷ I.",
+        "example": "The supplied 30-Ω resistor model is not a claim that a real warming lamp has constant resistance.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "voltage",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "Electric potential difference: energy transferred per unit charge between two points, measured in volts (V).",
+        "example": "The supplied resistor example has 6 V across its load.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "unit conversion",
+        "tier": 2,
+        "category": "math",
+        "definition": "Expressing the same quantity in another unit without changing its size.",
+        "example": "Convert 3 ft 4 in to 40 in before adding it to another length in inches.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "rating",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A stated operating value or limit for a component, valid under specified conditions.",
+        "example": "Label the supplied voltage and current values as stated operating data rather than student measurements.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "test point",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A specified location in a circuit where an observation or measurement is made.",
+        "example": "State which two locations an approved voltage measurement would compare.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "bd1d6573-8d2a-532e-82ad-7aac0e05ecad",
+    "lesson_slug": "mvp-etf-4-05",
+    "name": "ETF P4 · 05 · Wire Two Independently Lit Rooms",
+    "unit_id": "trades-etf-4",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p4.vocabulary",
+    "terms": [
+      {
+        "term": "parallel circuit",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A circuit arrangement with branches connected across the same two points, so each branch has the same voltage across it.",
+        "example": "Two resistor branches connected across the same 6-V source each have 6 V across them.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "branch",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "One path for current between junctions in a circuit.",
+        "example": "Trace each complete path separately in the parallel drawing.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "switch",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A component that opens or closes a conducting path in a circuit.",
+        "example": "Place the switch so opening it interrupts the intended lamp path.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "schematic",
+        "definition": "A drawing that uses symbols to show functional connections rather than exact physical positions.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The lamp can move across the model room while its electrical connections on the schematic stay the same.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "layout",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The planned or marked positions of parts, edges, and reference lines before making or placing something.",
+        "example": "Lay out the work area's boundaries and fixture locations before placing the paper equipment.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "route",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The planned path followed by a service, material, or moving object.",
+        "example": "Draw the two dry model service paths before constructing their crossing.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "allowance",
+        "tier": 3,
+        "category": "layout",
+        "definition": "An amount deliberately included for a stated purpose, such as overlap, cutting loss, or material thickness.",
+        "example": "Include both 3/4-in wall allowances when recalculating each blank dimension.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "inspection",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "A deliberate check of the work against its stated requirements.",
+        "example": "Compare the completed model with every acceptance criterion in the plan.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "39950b2c-7d82-51e9-9398-6f7fc4b9c347",
+    "lesson_slug": "mvp-etf-4-06",
+    "name": "ETF P4 · 06 · Add the Door Signal to Room Two",
+    "unit_id": "trades-etf-4",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p4.vocabulary",
+    "terms": [
+      {
+        "term": "power",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "The rate at which energy is transferred or converted, measured in watts (W).",
+        "example": "A supplied 6-V load drawing 0.25 A converts energy at 6 × 0.25 = 1.5 W.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "current",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "The rate of flow of electric charge, measured in amperes (A).",
+        "example": "The model calculation predicts 0.20 A through a 30-Ω resistor at 6 V.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "voltage",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "Electric potential difference: energy transferred per unit charge between two points, measured in volts (V).",
+        "example": "The supplied resistor example has 6 V across its load.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "rating",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A stated operating value or limit for a component, valid under specified conditions.",
+        "example": "Label the supplied voltage and current values as stated operating data rather than student measurements.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "access",
+        "tier": 3,
+        "category": "design",
+        "definition": "The space or opening needed to reach a part for operation, inspection, or maintenance.",
+        "example": "Demonstrate that the chosen opening lets a person reach the model component without tearing the enclosure.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "enclosure",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A surrounding structure that contains or protects parts of a system.",
+        "example": "Build a paper base and four walls around the proposed low-voltage service route.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "revision",
+        "tier": 2,
+        "category": "communication",
+        "definition": "An identified change to a drawing, plan, or product that replaces an earlier version.",
+        "example": "After checking an unclear endpoint, date the drawing and label the corrected version revision B.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "test plan",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "A written method that states what to test, the conditions, what to record, and how to judge the result.",
+        "example": "Name the access and fit checks, plus a future operating test if electrical hardware is unavailable.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "8a541873-1c64-5d12-8024-183d316f3061",
+    "lesson_slug": "mvp-etf-4-07",
+    "name": "ETF P4 · 07 · Make an Operating Schedule and Energy Estimate",
+    "unit_id": "trades-etf-4",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p4.vocabulary",
+    "terms": [
+      {
+        "term": "power",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "The rate at which energy is transferred or converted, measured in watts (W).",
+        "example": "A supplied 6-V load drawing 0.25 A converts energy at 6 × 0.25 = 1.5 W.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "energy",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "An amount transferred or converted by a system; electrical use may be counted in joules, watt-hours, or kilowatt-hours.",
+        "example": "Using the 1.5-W load for 2 h transfers 3 Wh of energy.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "watt",
+        "tier": 3,
+        "category": "math",
+        "definition": "The unit of power, written W; one watt equals one joule per second.",
+        "example": "Label 1.5 W as power, not as the total energy used during the session.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "watt-hour",
+        "tier": 3,
+        "category": "math",
+        "definition": "The energy transferred by one watt operating for one hour; written Wh.",
+        "example": "Multiply watts by hours: 1.5 W × 2 h = 3 Wh.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "kilowatt-hour",
+        "tier": 3,
+        "category": "math",
+        "definition": "An energy unit equal to 1,000 watt-hours, written kWh.",
+        "example": "Divide 3 Wh by 1,000 to obtain 0.003 kWh.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "operating time",
+        "tier": 3,
+        "category": "math",
+        "definition": "The duration for which a device is in use under the stated conditions.",
+        "example": "Reducing the hours used reduces the energy estimate when the power stays the same.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "tariff",
+        "tier": 3,
+        "category": "estimating",
+        "definition": "A stated price schedule; a classroom electricity calculation may use a fictional price per kWh.",
+        "example": "At the fictional $0.20/kWh rate, 0.003 kWh costs $0.0006 for energy alone.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "assumption",
+        "tier": 2,
+        "category": "design",
+        "definition": "A condition treated as true for planning or calculation that must be stated and checked when possible.",
+        "example": "State the model's assumption that the panel sizes tile the surface without cutting loss.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "c4b154ba-d452-5d7a-bec5-989605a6f5ce",
+    "lesson_slug": "mvp-etf-4-08",
+    "name": "ETF P4 · 08 · Find an Open Return and Hand Over the Controls",
+    "unit_id": "trades-etf-4",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p4.vocabulary",
+    "terms": [
+      {
+        "term": "fault",
+        "tier": 3,
+        "category": "electrical",
+        "definition": "A condition that prevents a system from operating as intended.",
+        "example": "An open switch or a broken lead can prevent the model lamp from operating.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "diagnosis",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "Identifying a problem's cause by following evidence from inspection and tests.",
+        "example": "Follow a recorded sequence of inspection and approved tests to identify which condition caused the failure.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "hypothesis",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A testable proposed explanation for an observation or problem.",
+        "example": "Predict that the lead is disconnected, then name an observation that would support or reject that explanation.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "repair",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A correction intended to restore a part or system to its required operation.",
+        "example": "After securing the loose actuator mount, repeat the same three-cycle test to check the repair.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "retest",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A new test after a change, using stated conditions so the results can be compared.",
+        "example": "Test the revised wrap under the original conditions and report an inconclusive result honestly if necessary.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "schematic",
+        "definition": "A drawing that uses symbols to show functional connections rather than exact physical positions.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The lamp can move across the model room while its electrical connections on the schematic stay the same.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "handover",
+        "tier": 3,
+        "category": "communication",
+        "definition": "The transfer of a completed work package and its essential information to the next person or user.",
+        "example": "Give the next person the brief, drawings, estimate, test record, revisions, and unresolved questions.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "evidence",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "Recorded observations, measurements, or results used to support a claim.",
+        "example": "Record what you actually observed before choosing the next diagnostic action.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "e3587b82-9554-516d-bfd3-00fb16d3b2ca",
+    "lesson_slug": "mvp-etf-4-09",
+    "name": "ETF P4 · 09 · Clinic: Lay Out Mounting Centers and Trace a Branch",
+    "unit_id": "trades-etf-4",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p4.vocabulary",
+    "terms": [
+      {
+        "term": "template",
+        "tier": 3,
+        "category": "fabrication",
+        "definition": "A pattern used to transfer a shape or feature locations to another piece of material.",
+        "example": "Make a paper pattern another student can use to reproduce the replacement liner.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "datum",
+        "tier": 3,
+        "category": "measurement",
+        "definition": "A chosen reference point, line, or surface from which measurements are taken.",
+        "example": "Name corner A as the datum and locate three school-zone features from it.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "center spacing",
+        "definition": "The distance between the center points or centerlines of two features.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "Two mounting points 3/4 in from opposite edges of an 8 1/2-in plate have 7-in center spacing.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "dimension string",
+        "tier": 3,
+        "category": "drawing",
+        "definition": "A chain of labeled distances between successive features on a drawing.",
+        "example": "Add three consecutive wall segments and compare their sum with the overall wall measurement.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "schematic",
+        "definition": "A drawing that uses symbols to show functional connections rather than exact physical positions.",
+        "tier": 3,
+        "category": "project-language",
+        "example": "The lamp can move across the model room while its electrical connections on the schematic stay the same.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "layout",
+        "tier": 3,
+        "category": "layout",
+        "definition": "The planned or marked positions of parts, edges, and reference lines before making or placing something.",
+        "example": "Lay out the work area's boundaries and fixture locations before placing the paper equipment.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "inspection",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "A deliberate check of the work against its stated requirements.",
+        "example": "Compare the completed model with every acceptance criterion in the plan.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "unit conversion",
+        "tier": 2,
+        "category": "math",
+        "definition": "Expressing the same quantity in another unit without changing its size.",
+        "example": "Convert 3 ft 4 in to 40 in before adding it to another length in inches.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "41eff721-a5d9-5cb2-ba98-6ff96b1b9fbd",
+    "lesson_slug": "mvp-etf-4-10",
+    "name": "ETF P4 · 10 · Prepare the Working Controls Exhibition",
+    "unit_id": "trades-etf-4",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p4.vocabulary",
+    "terms": [
+      {
+        "term": "prototype",
+        "tier": 3,
+        "category": "design",
+        "definition": "A trial version or model used to check a design before committing to a final product.",
+        "example": "Use the paper model to check fit and access before requesting hardware.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "revision",
+        "tier": 2,
+        "category": "communication",
+        "definition": "An identified change to a drawing, plan, or product that replaces an earlier version.",
+        "example": "After checking an unclear endpoint, date the drawing and label the corrected version revision B.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "baseline",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "The original or reference result used for comparison with a changed design or condition.",
+        "example": "Use the original wrap's result as the comparison point for the revised design.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "percent reduction",
+        "tier": 2,
+        "category": "math",
+        "definition": "The decrease divided by the original value, multiplied by 100%.",
+        "example": "A drop reduced from 8°C to 6°C is 2/8 × 100% = 25% smaller than the original drop.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "user need",
+        "tier": 2,
+        "category": "design",
+        "definition": "A practical problem or requirement experienced by the person who will use the result.",
+        "example": "Describe the actual difficulty the school user experiences before suggesting a storage solution.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "evidence",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "Recorded observations, measurements, or results used to support a claim.",
+        "example": "Record what you actually observed before choosing the next diagnostic action.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "handover",
+        "tier": 3,
+        "category": "communication",
+        "definition": "The transfer of a completed work package and its essential information to the next person or user.",
+        "example": "Give the next person the brief, drawings, estimate, test record, revisions, and unresolved questions.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "inspection",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "A deliberate check of the work against its stated requirements.",
+        "example": "Compare the completed model with every acceptance criterion in the plan.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  },
+  {
+    "lesson_id": "51872d9f-aacb-5725-90e3-11e079952d44",
+    "lesson_slug": "mvp-etf-4-11",
+    "name": "ETF P4 · 11 · Demonstrate, Inspect and Complete Individual Checks",
+    "unit_id": "trades-etf-4",
+    "description": "Eight words for this project meeting. Preview three or four at the bench; assign the full set or a selection for review. Practical skills are assessed separately.",
+    "recommended_target_slug": "etf26.p4.vocabulary",
+    "terms": [
+      {
+        "term": "tolerance",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "The allowed variation from a specified dimension or value.",
+        "example": "State the permitted dimensional variation before deciding whether the replacement matches the specification.",
+        "order_index": 0,
+        "difficulty": "medium"
+      },
+      {
+        "term": "acceptable range",
+        "tier": 2,
+        "category": "inspection",
+        "definition": "The interval of values permitted by the stated limits or tolerance.",
+        "example": "The acceptable interval is 39 3/4 to 40 1/4 in, including the endpoints.",
+        "order_index": 1,
+        "difficulty": "medium"
+      },
+      {
+        "term": "inspection",
+        "tier": 3,
+        "category": "inspection",
+        "definition": "A deliberate check of the work against its stated requirements.",
+        "example": "Compare the completed model with every acceptance criterion in the plan.",
+        "order_index": 2,
+        "difficulty": "medium"
+      },
+      {
+        "term": "limitation",
+        "tier": 2,
+        "category": "investigation",
+        "definition": "A boundary on what a method, model, or result can establish.",
+        "example": "Explain which real-system tests were not performed on the paper prototype.",
+        "order_index": 3,
+        "difficulty": "medium"
+      },
+      {
+        "term": "handover",
+        "tier": 3,
+        "category": "communication",
+        "definition": "The transfer of a completed work package and its essential information to the next person or user.",
+        "example": "Give the next person the brief, drawings, estimate, test record, revisions, and unresolved questions.",
+        "order_index": 4,
+        "difficulty": "medium"
+      },
+      {
+        "term": "traceability",
+        "tier": 3,
+        "category": "communication",
+        "definition": "The ability to follow a result or decision back to its source measurement, calculation, drawing, or test.",
+        "example": "Show which site measurement and calculation support a dimension in the final drawing.",
+        "order_index": 5,
+        "difficulty": "medium"
+      },
+      {
+        "term": "revision",
+        "tier": 2,
+        "category": "communication",
+        "definition": "An identified change to a drawing, plan, or product that replaces an earlier version.",
+        "example": "After checking an unclear endpoint, date the drawing and label the corrected version revision B.",
+        "order_index": 6,
+        "difficulty": "medium"
+      },
+      {
+        "term": "reasonableness check",
+        "tier": 2,
+        "category": "math",
+        "definition": "A quick estimate, comparison, or unit check used to see whether a calculated result makes sense.",
+        "example": "The bay width should be slightly less than 6 in because the partitions occupy some of the 18 in.",
+        "order_index": 7,
+        "difficulty": "medium"
+      }
+    ]
+  }
+]

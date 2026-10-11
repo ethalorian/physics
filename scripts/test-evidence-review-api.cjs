@@ -6,7 +6,7 @@ const root=path.resolve(__dirname,'..');
   'next/server':`export class NextRequest extends Request{};export const NextResponse={json:(d,o)=>Response.json(d,o)};`,
   '@/lib/api-auth':`export const withAuth=h=>h;`,
   '@/lib/teacher-scope':`export const teacherCanAccessStudent=async()=>global.reviewApiFixture.allowed;`,
-  '@/lib/mastery-student-work':`export const getMasteryStudentWork=async()=>Response.json(global.reviewApiFixture.work);`,
+  '@/lib/mastery-student-work':`export const getMasteryStudentWork=async(request)=>{global.reviewApiFixture.workUrl=request.url;return Response.json(global.reviewApiFixture.work)};`,
   '@/lib/lesson-targets':`export const targetIdsForLesson=async()=>['target'];`,
   '@/lib/supabase':`export const supabaseAdmin={from:()=>({select(){return this},eq(){return this},async maybeSingle(){return {data:global.reviewApiFixture.prior,error:null}}}),rpc:async(name,args)=>{global.reviewApiFixture.calls.push({name,args});return {data:{id:args.p_id,level:3,mean:2.5},error:null}}};`,
  };
@@ -22,5 +22,19 @@ const root=path.resolve(__dirname,'..');
  assert.equal((await call()).status,201);assert.equal(fixture.calls.length,1);assert.match(fixture.calls[0].args.p_message,/Overall rating: 3/);assert.match(fixture.calls[0].args.p_message,/2.50/);assert.equal(fixture.calls[0].args.p_evidence[0].prompt,'Why?');assert.equal(fixture.calls[0].args.p_reviewer,'teacher@test');
  fixture.prior={id:body.requestId,user_id:'student',target_id:'target',lesson_id:'lesson',reviewer_email:'teacher@test',overall_level:3,mean:2.5};assert.equal((await call()).status,200);assert.equal(fixture.calls.length,1);
  fixture.prior.user_id='other';assert.equal((await call()).status,409);
+ fixture.prior=null;
+ const direct={...body,mode:'target',level:2,evidenceKeys:['a','b'],submissionId:'00000000-0000-0000-0000-000000000005'};
+ assert.equal((await call({...direct,level:0})).status,422);
+ assert.equal((await call({...direct,evidenceKeys:['a']})).status,422);
+ assert.equal((await call({...direct,evidenceKeys:['a','a']})).status,422);
+ assert.equal((await call({...direct,evidenceKeys:['a','stale']})).status,422);
+ assert.equal((await call({...direct,mode:'unknown'})).status,422);
+ assert.equal((await call(direct)).status,201);
+ const manual=fixture.calls.at(-1);
+ assert.equal(manual.name,'submit_mastery_review');assert.equal(manual.args.p_mode,'target');assert.equal(manual.args.p_level,2);
+ assert(manual.args.p_evidence.every(e=>!Object.hasOwn(e,'level')),'target judgment must not fabricate individual scores');
+ assert.deepEqual(manual.args.p_evidence.map(e=>e.key),['a','b']);assert.match(manual.args.p_message,/Teacher assessment/);assert.doesNotMatch(manual.args.p_message,/Evidence average/);
+ assert.equal(new URL(fixture.workUrl).searchParams.get('submission_id'),direct.submissionId);
+ assert.equal(manual.args.p_note,body.message);
  console.log('PASS: role + roster authorization, complete evidence validation, stale/duplicate rejection, server calculation, authored snapshot, and scoped retry');
 })().catch(e=>{console.error(e);process.exitCode=1});

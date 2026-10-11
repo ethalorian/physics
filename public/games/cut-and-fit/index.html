@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#10282d"><title>Cut &amp; Fit · Trades Workshop</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<main>
+  <header class="masthead"><a class="wordmark" href="/arcade" target="_top"><span class="mark" aria-hidden="true">⌜</span> TRADES WORKSHOP <span>/ 02</span></a><span class="session-label">FREE PRACTICE · NO TIMER</span></header>
+  <section class="intro"><div><p class="eyebrow">A GOOD FIT STARTS WITH A PLAN</p><h1>Cut <span>&amp;</span> Fit<span class="period">.</span></h1><p>Read the drawing. Make your cut. See how it fits.</p></div><div class="intro-note"><span aria-hidden="true">↳</span><p>A little room.<br>A little precision.<br><strong>A job well done.</strong></p></div></section>
+  <nav class="benches" aria-label="Choose a trade bench"><button data-trade="all" aria-pressed="true">All trades <span>12 jobs</span></button><button data-trade="carpentry" aria-pressed="false">Carpentry <span>Wood</span></button><button data-trade="plumbing" aria-pressed="false">Plumbing <span>Pipe</span></button><button data-trade="electrical" aria-pressed="false">Electrical <span>Conduit</span></button></nav>
+  <div class="set-tools"><p>Changing benches starts a fresh set. Progress lasts for this visit.</p><button id="restart" class="text-button">New practice set ↻</button></div>
+  <div class="progress-line"><span id="orderCount"></span><div class="track"><div id="progress"></div></div><span id="score">0 points</span></div>
+  <section id="game" class="workspace">
+    <div class="bench">
+      <section class="drawing-panel" aria-labelledby="jobTitle">
+        <div class="panel-heading"><div><p class="eyebrow" id="tradeLabel"></p><h2 id="jobTitle" tabindex="-1"></h2></div><span class="level" id="level"></span></div>
+        <p id="brief" class="brief"></p>
+        <div class="blueprint-toolbar"><span>Read the assembly, then details A and B.</span><button id="expandDrawing" class="text-button">Open full drawing ↗</button></div>
+        <div id="blueprintSheet"></div>
+        <div id="fitInspection" hidden></div>
+        <dl id="dimensions" class="dimensions"></dl>
+        <p class="drawing-note" id="drawingNote"></p>
+      </section>
+      <section class="stock-panel" aria-labelledby="stockTitle">
+        <div class="panel-heading compact"><div><p class="eyebrow" id="stockMode">ON THE CUTTING BENCH</p><h2 id="stockTitle"></h2></div><span id="available"></span></div>
+        <svg id="stock" viewBox="0 0 880 145" role="img" aria-label="Stock and cutting mark"></svg>
+        <div class="mark-controls"><button id="back" class="nudge" aria-label="Move mark back one sixteenth">−</button><div><label for="pointer">Fine-adjust the mark <output id="markValue">No mark yet</output></label><input id="pointer" type="range" min="1" max="384" step="1" value="1" aria-label="Cut position in sixteenths of an inch" disabled></div><button id="forward" class="nudge" aria-label="Move mark forward one sixteenth">+</button></div>
+        <p id="cuttingNote" class="cutting-note"></p>
+      </section>
+    </div>
+    <aside class="order-panel" aria-label="Plan, cut, and inspect">
+      <div class="order-top"><span class="eyebrow">YOUR WORK ORDER</span><span id="pieceCount"></span></div>
+      <ol class="steps" aria-label="Work sequence"><li id="planStep" aria-current="step"><span>1</span> Plan</li><li id="cutStep"><span>2</span> Cut</li><li id="fitStep"><span>3</span> Fit</li></ol>
+      <h2 id="actionTitle">What length will fit?</h2><p id="actionDescription" class="muted">Use the drawing to find the finished length of one piece.</p>
+      <form id="planForm" novalidate><label for="length">Finished length, in inches</label><div class="input-wrap"><input id="length" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. 18 1/4" aria-describedby="entryHelp"><span>in</span></div><p id="entryHelp" class="input-help">Fractions or decimals · exact to 1/16 in</p><button id="markButton" class="secondary" type="submit">Place my mark <span aria-hidden="true">↓</span></button></form>
+      <button id="cutButton" class="primary" disabled>Cut &amp; test fit <span aria-hidden="true">→</span></button>
+      <div id="feedback" class="feedback" role="status" aria-live="polite" tabindex="-1" hidden></div>
+      <div class="recovery"><button id="trim" class="secondary" hidden>Trim this piece</button><button id="replace" class="secondary" hidden>Set aside &amp; cut another</button><button id="nextPiece" class="primary" hidden>Make the second piece →</button><button id="next" class="primary" hidden>Next work order →</button></div>
+      <div id="helpPanel" class="help-panel"><button id="hint" class="text-button">Need a hint?</button><p id="hintText" hidden></p><p id="earning">10 points independently · 5 with help or rework</p></div>
+      <div class="stock-ledger"><div><span>Stock left</span><strong id="remaining"></strong></div><div><span>New lengths used</span><strong id="stockUsed">1</strong></div><button id="newStock" class="text-button">Get a fresh length of stock</button><p>Keep usable offcuts. A saw removes material on the waste side of your mark.</p></div>
+    </aside>
+  </section>
+  <section id="report" class="report" aria-labelledby="reportTitle" hidden><p class="eyebrow">SHIFT COMPLETE</p><h2 id="reportTitle" tabindex="-1">Good work. Check your fit.</h2><p id="reportIntro"></p><div id="reportStats" class="report-stats"></div><div id="reportJobs" class="report-jobs"></div><div class="report-actions"><button id="retryHelped" class="secondary">Revisit jobs with help or rework</button><button id="another" class="primary">Another practice set →</button></div></section>
+  <footer><span>Built for hands-on minds.</span><span>Practice points only · No XP or leaderboard · Drawings are not actual size</span><a href="/arcade" target="_top">Back to arcade ↗</a></footer>
+</main>
+<dialog id="drawingDialog" aria-labelledby="drawingDialogTitle"><div class="drawing-dialog-bar"><h2 id="drawingDialogTitle">Job drawing</h2><button id="closeDrawing" class="secondary" autofocus>Close drawing ×</button></div><div id="expandedDrawing"></div></dialog>
+<script src="math.js"></script><script src="blueprint.js"></script><script src="game.js"></script>
+</body></html>

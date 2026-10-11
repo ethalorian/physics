@@ -1,176 +1,270 @@
-import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
-import { PAL, clearField, grid as drawGrid, axes as drawAxes, arrow, chip } from '@/components/simulations/lab/draw'
-
-// Distance vs. displacement — a click-driven walk. The student clicks to send the
-// bug to each new spot; the green polyline is the PATH it actually walked
-// (distance = total length), while the lavender arrow runs straight from START to
-// where the bug stands now (displacement = the net change in position). This sim
-// is NOT animated: it reacts to clicks, so the canvas owns its own pointer input
-// and asks the shell to re-read state via opts.invalidate() after each click.
-
-const PPM = 42 // pixels per metre at the reference size
-const MIN_DISTANCE = 15 // metres of path travelled before the sim counts as complete
-// Structural/semantic tones come from the shared PAL so the sim matches every
-// other lab. The bug's own scene colors stay distinct.
-const COL = {
-  bg: PAL.bg, grid: PAL.grid, axis: PAL.axis,
-  start: PAL.accent, startRing: PAL.accent,
-  path: PAL.velocity, node: '#3FB98C',
-  disp: PAL.primary,
-  bug: '#D85A30', bugLeg: '#26215C', bugBack: '#B8471F',
-  text: PAL.ink, mute: PAL.mute,
+import type {
+  SimEngine,
+  ParamValues,
+  SimData,
+} from "@/components/simulations/lab/contract";
+import { arrow, chip, label } from "@/components/simulations/lab/draw";
+import { rover } from "@/components/simulations/lab/scene-art";
+export interface RoutePoint {
+  x: number;
+  y: number;
 }
-
-interface Pt { x: number; y: number } // metres, relative to START (0,0)
-
+export function routeMeasurements(path: RoutePoint[]) {
+  let distance = 0;
+  for (let i = 1; i < path.length; i++)
+    distance += Math.hypot(
+      path[i].x - path[i - 1].x,
+      path[i].y - path[i - 1].y,
+    );
+  const start = path[0] ?? { x: 0, y: 0 },
+    end = path.at(-1) ?? start;
+  return {
+    distance,
+    dx: end.x - start.x,
+    dy: end.y - start.y,
+    displacement: Math.hypot(end.x - start.x, end.y - start.y),
+  };
+}
 export function createDistanceDisplacementEngine(
   canvas: HTMLCanvasElement,
   ctx: CanvasRenderingContext2D,
-  _initial: ParamValues,
+  initial: ParamValues,
   opts?: { invalidate: () => void },
 ): SimEngine {
-  // Path always begins at START (the origin, 0,0). Each click appends a waypoint.
-  let path: Pt[] = [{ x: 0, y: 0 }]
-
-  const dims = () => {
-    const dpr = window.devicePixelRatio || 1
-    return { w: canvas.width / dpr, h: canvas.height / dpr }
-  }
-  // METRE space has +y up (physics convention); screen space has +y down.
-  const center = () => { const { w, h } = dims(); return { cx: w / 2, cy: h / 2 } }
-  const toScreen = (p: Pt) => { const { cx, cy } = center(); return { x: cx + p.x * PPM, y: cy - p.y * PPM } }
-  const toMetres = (sx: number, sy: number): Pt => {
-    const { cx, cy } = center()
-    return { x: (sx - cx) / PPM, y: (cy - sy) / PPM }
-  }
-
-  const distance = () => {
-    let d = 0
-    for (let i = 1; i < path.length; i++) d += Math.hypot(path[i].x - path[i - 1].x, path[i].y - path[i - 1].y)
-    return d
-  }
-  const last = () => path[path.length - 1]
-  const dx = () => last().x - path[0].x
-  const dy = () => last().y - path[0].y
-  const displacement = () => Math.hypot(dx(), dy())
-
-  function drawBug(x: number, y: number, headingDeg: number) {
-    ctx.save()
-    ctx.translate(x, y)
-    ctx.rotate((headingDeg * Math.PI) / 180)
-    // legs
-    ctx.strokeStyle = COL.bugLeg; ctx.lineWidth = 2
-    for (const off of [-6, 0, 6]) {
-      ctx.beginPath(); ctx.moveTo(-2, off); ctx.lineTo(-12, off - 4); ctx.stroke()
-      ctx.beginPath(); ctx.moveTo(2, off); ctx.lineTo(12, off - 4); ctx.stroke()
-    }
-    // body
-    ctx.fillStyle = COL.bug
-    ctx.beginPath(); ctx.ellipse(0, 0, 9, 12, 0, 0, Math.PI * 2); ctx.fill()
-    ctx.fillStyle = COL.bugBack
-    ctx.beginPath(); ctx.ellipse(0, 3, 8, 8, 0, 0, Math.PI * 2); ctx.fill()
-    // head
-    ctx.fillStyle = COL.bugLeg
-    ctx.beginPath(); ctx.arc(0, -11, 5, 0, Math.PI * 2); ctx.fill()
-    ctx.restore()
-  }
-
+  let path: RoutePoint[] = [{ x: 0, y: 0 }],
+    params = { ...initial };
+  const dims = () => ({
+    w: canvas.width / (window.devicePixelRatio || 1),
+    h: canvas.height / (window.devicePixelRatio || 1),
+  });
+  const scale = () => {
+    const { w, h } = dims();
+    return Math.min((w - 60) / 16, (h - 90) / 12);
+  };
+  const screen = (p: RoutePoint) => {
+    const { w, h } = dims(),
+      s = scale();
+    return { x: w / 2 + p.x * s, y: h / 2 - p.y * s };
+  };
   function render() {
-    const { w, h } = dims()
-    clearField(ctx, w, h)
-
-    const { cx, cy } = center()
-    // metre grid (shared visual language), origin on START
-    drawGrid(ctx, w, h, PPM, { originX: cx, originY: cy, color: COL.grid })
-    // axes through START
-    drawAxes(ctx, cx, 0, w, cy, COL.axis) // vertical axis (down) + bottom segment
-    ctx.strokeStyle = COL.axis; ctx.lineWidth = 1.5
-    ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(cx, cy); ctx.stroke() // left half of x-axis
-    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, h); ctx.stroke() // bottom half of y-axis
-
-    // PATH (distance) — green polyline through every waypoint
+    const { w, h } = dims(),
+      s = scale();
+    ctx.clearRect(0, 0, w, h);
+    const bg = ctx.createLinearGradient(0, 0, w, h);
+    bg.addColorStop(0, "#172A39");
+    bg.addColorStop(1, "#31474C");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+    // Survey contours are scenery; the numbered grid is the measurement reference.
+    ctx.strokeStyle = "rgba(156,191,179,.08)";
+    ctx.lineWidth = 1;
+    for (let ring = 0; ring < 12; ring++) {
+      ctx.beginPath();
+      ctx.ellipse(
+        w * 0.13,
+        h * 0.1,
+        80 + ring * 16,
+        40 + ring * 12,
+        -0.4,
+        0,
+        Math.PI * 2,
+      );
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.ellipse(
+        w * 0.87,
+        h * 0.8,
+        35 + ring * 15,
+        30 + ring * 11,
+        0.6,
+        0,
+        Math.PI * 2,
+      );
+      ctx.stroke();
+    }
+    for (let x = -8; x <= 8; x++) {
+      const a = screen({ x, y: 0 });
+      ctx.strokeStyle = x === 0 ? "#91ADB1" : "rgba(203,220,215,.13)";
+      ctx.beginPath();
+      ctx.moveTo(a.x, 35);
+      ctx.lineTo(a.x, h - 45);
+      ctx.stroke();
+      if (x % 2 === 0)
+        label(ctx, String(x), a.x, h - 27, {
+          color: "#BDCFCE",
+          size: 11,
+          align: "center",
+        });
+    }
+    for (let y = -5; y <= 5; y++) {
+      const a = screen({ x: 0, y });
+      ctx.strokeStyle = y === 0 ? "#91ADB1" : "rgba(203,220,215,.13)";
+      ctx.beginPath();
+      ctx.moveTo(25, a.y);
+      ctx.lineTo(w - 25, a.y);
+      ctx.stroke();
+      if (y % 2 === 0)
+        label(ctx, String(y), 13, a.y + 4, { color: "#BDCFCE", size: 10 });
+    }
+    label(ctx, "SURVEY FIELD / 1 SQUARE = 1 m", 18, 22, {
+      color: "#D5E2DC",
+      size: 10,
+    });
+    label(ctx, "x (m) · east →", w - 18, h - 10, {
+      color: "#D5E2DC",
+      size: 10,
+      align: "right",
+    });
+    label(ctx, "↑ north", w - 18, 22, {
+      color: "#D5E2DC",
+      size: 10,
+      align: "right",
+    });
     if (path.length > 1) {
-      ctx.strokeStyle = COL.path; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.lineCap = 'round'
-      ctx.beginPath()
-      path.forEach((p, i) => { const s = toScreen(p); if (i === 0) ctx.moveTo(s.x, s.y); else ctx.lineTo(s.x, s.y) })
-      ctx.stroke()
-      // waypoint dots
-      ctx.fillStyle = COL.node
-      path.slice(1).forEach((p) => { const s = toScreen(p); ctx.beginPath(); ctx.arc(s.x, s.y, 3.5, 0, Math.PI * 2); ctx.fill() })
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      for (const [width, color] of [
+        [10, "rgba(132,207,170,.14)"],
+        [3, "#88D6AE"],
+      ] as const) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = width;
+        ctx.beginPath();
+        path.forEach((p, i) => {
+          const q = screen(p);
+          if (!i) ctx.moveTo(q.x, q.y);
+          else ctx.lineTo(q.x, q.y);
+        });
+        ctx.stroke();
+      }
+      path.forEach((p, i) => {
+        if (!i) return;
+        const q = screen(p);
+        ctx.fillStyle = "#88D6AE";
+        ctx.beginPath();
+        ctx.arc(q.x, q.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        label(ctx, String(i), q.x + 8, q.y - 8, { color: "#D8EBDA", size: 11 });
+      });
+      const start = screen(path[0]),
+        end = screen(path.at(-1)!);
+      arrow(ctx, start.x, start.y, end.x, end.y, {
+        color: "#C4BEFF",
+        width: 3,
+        head: 11,
+        dash: [6, 4],
+      });
     }
-
-    // DISPLACEMENT (lavender arrow) — straight from START to the bug
-    if (path.length > 1 && displacement() > 0.01) {
-      const s0 = toScreen(path[0]), s1 = toScreen(last())
-      arrow(ctx, s0.x, s0.y, s1.x, s1.y, { color: PAL.primary, width: 3.5, head: 12 })
-    }
-
-    // START marker (gold)
-    const s0 = toScreen(path[0])
-    ctx.strokeStyle = COL.startRing; ctx.lineWidth = 2.5
-    ctx.beginPath(); ctx.arc(s0.x, s0.y, 9, 0, Math.PI * 2); ctx.stroke()
-    ctx.fillStyle = COL.start
-    ctx.beginPath(); ctx.arc(s0.x, s0.y, 6, 0, Math.PI * 2); ctx.fill()
-    chip(ctx, 'START', s0.x, s0.y - 16, { bg: COL.start, color: PAL.onAccent, size: 10 })
-
-    // BUG at the current position, facing the last leg of travel
-    const s1 = toScreen(last())
-    let heading = 0
-    if (path.length > 1) {
-      const a = path[path.length - 2], b = last()
-      heading = (Math.atan2(-(b.y - a.y), b.x - a.x) * 180) / Math.PI + 90
-    }
-    drawBug(s1.x, s1.y, heading)
-
-    // hint / legend
-    ctx.textAlign = 'left'; ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
-    if (path.length === 1) {
-      ctx.fillStyle = COL.mute
-      ctx.fillText('Click anywhere to walk the bug — build a path.', 12, h - 12)
-    } else {
-      ctx.fillStyle = COL.path; ctx.fillText('— path = distance walked', 12, h - 26)
-      ctx.fillStyle = COL.disp; ctx.fillText('→ arrow = displacement (from start)', 12, h - 10)
-    }
+    const origin = screen({ x: 0, y: 0 });
+    ctx.strokeStyle = "#E3BF71";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(origin.x, origin.y, 10, 0, Math.PI * 2);
+    ctx.stroke();
+    chip(ctx, "BASE / (0, 0)", origin.x, origin.y + 25, {
+      bg: "#213541",
+      color: "#E9D69D",
+      size: 10,
+    });
+    const p = path.at(-1)!,
+      q = screen(p);
+    rover(
+      ctx,
+      q.x,
+      q.y - 3,
+      Math.min(0.55, s / 50),
+      path.length > 1 && p.x < path[path.length - 2].x ? -1 : 1,
+      path.length * 0.8,
+    );
   }
-
-  // ---- pointer input: each click walks the bug to a new waypoint -------------
-  function onPointerDown(e: PointerEvent) {
-    const rect = canvas.getBoundingClientRect()
-    const p = toMetres(e.clientX - rect.left, e.clientY - rect.top)
-    // round to a tidy 0.25 m so coordinates read cleanly
-    p.x = Math.round(p.x * 4) / 4
-    p.y = Math.round(p.y * 4) / 4
-    path.push(p)
-    render()
-    opts?.invalidate()
+  function add(p: RoutePoint) {
+    if (!Number.isFinite(p.x) || !Number.isFinite(p.y)) return;
+    path = [
+      ...path,
+      { x: Math.max(-7, Math.min(7, p.x)), y: Math.max(-5, Math.min(5, p.y)) },
+    ];
+    render();
+    opts?.invalidate();
   }
-  canvas.addEventListener('pointerdown', onPointerDown)
-  canvas.style.cursor = 'crosshair'
-
-  const engine: SimEngine = {
+  const pointer = (e: PointerEvent) => {
+    const r = canvas.getBoundingClientRect(),
+      { w, h } = dims(),
+      s = scale();
+    add({
+      x:
+        Math.round(((((e.clientX - r.left) * w) / r.width - w / 2) / s) * 4) /
+        4,
+      y:
+        Math.round(((h / 2 - ((e.clientY - r.top) * h) / r.height) / s) * 4) /
+        4,
+    });
+  };
+  const key = (e: KeyboardEvent) => {
+    const p = path.at(-1)!;
+    const d: Record<string, RoutePoint> = {
+      ArrowRight: { x: 1, y: 0 },
+      ArrowLeft: { x: -1, y: 0 },
+      ArrowUp: { x: 0, y: 1 },
+      ArrowDown: { x: 0, y: -1 },
+    };
+    if (d[e.key]) {
+      e.preventDefault();
+      add({ x: p.x + d[e.key].x, y: p.y + d[e.key].y });
+    }
+  };
+  canvas.addEventListener("click", pointer as EventListener);
+  canvas.addEventListener("keydown", key);
+  canvas.tabIndex = 0;
+  canvas.style.cursor = "crosshair";
+  return {
     render,
-    setParams() {},
-    reset() { path = [{ x: 0, y: 0 }]; render() },
+    setParams(next) {
+      if (next.route !== params.route) {
+        const route = String(next.route);
+        if (route === "out-back")
+          path = [
+            { x: 0, y: 0 },
+            { x: 4, y: 0 },
+            { x: 0, y: 0 },
+          ];
+        if (route === "corner")
+          path = [
+            { x: 0, y: 0 },
+            { x: 3, y: 0 },
+            { x: 3, y: 4 },
+          ];
+        if (route === "direct")
+          path = [
+            { x: 0, y: 0 },
+            { x: 3, y: 4 },
+          ];
+        if (route === "free") path = [{ x: 0, y: 0 }];
+      }
+      params = { ...next };
+      render();
+    },
+    reset() {
+      path = [{ x: 0, y: 0 }];
+      params = { ...params, route: "" };
+    },
     getReadouts() {
-      return { distance: distance(), displacement: displacement(), dx: dx(), dy: dy() }
+      return routeMeasurements(path);
     },
     getData(): SimData {
-      let cum = 0
-      const rows: (number | string)[][] = path.map((p, i) => {
-        if (i > 0) cum += Math.hypot(p.x - path[i - 1].x, p.y - path[i - 1].y)
-        return [i, p.x, p.y, Math.round(cum * 100) / 100]
-      })
+      let d = 0;
       return {
-        columns: ['Stop', 'x (m)', 'y (m)', 'Distance so far (m)'],
-        rows,
-        xCol: 1, yCol: 2,
-      }
+        columns: ["Stop", "x (m)", "y (m)", "Distance (m)"],
+        rows: path.map((p, i) => {
+          if (i) d += Math.hypot(p.x - path[i - 1].x, p.y - path[i - 1].y);
+          return [i, p.x, p.y, d];
+        }),
+        xCol: 1,
+        yCol: 2,
+      };
     },
-    // Complete once the bug has walked at least MIN_DISTANCE of path — keyed to
-    // the physics (how far it travelled) rather than how many times the student
-    // clicked. A long enough path is where distance visibly outpaces displacement.
-    isComplete() { return distance() >= MIN_DISTANCE },
-    destroy() { canvas.removeEventListener('pointerdown', onPointerDown) },
-  }
-  return engine
+    destroy() {
+      canvas.removeEventListener("click", pointer as EventListener);
+      canvas.removeEventListener("keydown", key);
+    },
+  };
 }

@@ -91,7 +91,7 @@ export function filterDocumentForViewer(
   if (viewer.role === 'admin') return doc; // global view: nothing hidden
   // A-4 / E-3: the answer key of an inline question never reaches a student; the
   // self-check happens server-side on save. Per-option feedback stays (B-5).
-  return { ...doc, blocks: doc.blocks.filter((b) => isBlockVisible(b, viewer)).map(stripAnswerKey) };
+  return { ...doc, blocks: doc.blocks.filter((b) => isBlockVisible(b, viewer)).map(b=>{const {note: teacherNote,...studentBlock}=b;void teacherNote;return stripAnswerKey(studentBlock as ContentBlock)}) };
 }
 
 function stripAnswerKey(b: ContentBlock): ContentBlock {

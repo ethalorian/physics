@@ -27,6 +27,8 @@ function TeachingBlockContentInner({ block, lessonId, referenceBlocks, seiEnable
   const guide = isCaptureBlock(block) ? answerGuide(block) : null
   let series: GraphSeries[] = []
   if (block.type === 'graph') { series = block.series ?? []; if (!series.length && block.spec) { try { series = JSON.parse(block.spec).series ?? [] } catch { /* renderer retains invalid graph fallback */ } } }
+  if (block.teachingTool?.kind === 'physics-explainer' && block.teachingTool.source) return <TeachingToolRenderer block={block}/>
+  if (block.teachingTool?.kind === 'physics-explainer') return <FitTeachingContent className="projected-content"><TeachingToolRenderer block={block}/></FitTeachingContent>
   if (block.teachingTool) return <FitTeachingContent className="projected-content"><div style={{fontFamily:'var(--font-inter,Inter,Arial,sans-serif)'}}><h1 style={{fontFamily:'inherit',fontSize:48,fontWeight: 700,lineHeight:1.1,margin:'0 0 12px'}}>{block.workshop?.title??'Teaching tool'}</h1><p style={{fontSize:25,margin:'0 0 12px'}}>{block.workshop?.lead}</p><TeachingToolRenderer block={block}/></div></FitTeachingContent>
   if (block.type === 'data_table' && block.sourceRows?.length) {
     const xi = block.xCol ?? 0, yi = block.yCol ?? 1

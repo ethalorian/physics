@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-05",
+  "status": "deployed",
+  "deployment": "dpl_9FdWSJEqP3xX7XnSsjyS4Q4ZkG6D",
+  "url": "https://www.antocciphysics.com",
+  "immutableUrl": "https://physics-4w2od3mbw-ethalorians-projects.vercel.app",
+  "previousDeployment": "dpl_BEKv7gUxYDoJJavko6J34MiLp8ko",
+  "sourceFiles": 3323,
+  "unchangedSourceFiles": 3305,
+  "updatedFiles": [
+    "src/data/physics-videos.ts",
+    "src/data/physics-video-prompts.ts",
+    "src/data/video-vocabulary.ts",
+    "src/data/asteroid-video-support.ts",
+    "src/lib/lesson-concept-map.ts",
+    "src/lib/video-lesson-authoring.ts",
+    "src/app/reference/page.tsx",
+    "src/data/vector-references.json",
+    "public/learning/video-vector-addition.svg",
+    "public/learning/video-vector-components.svg",
+    "public/learning/video-vector-products.svg",
+    "src/lib/video-instruction.test.ts",
+    "src/lib/video-catalog-additions.test.ts",
+    "scripts/physics-learning/oct5-additions.json",
+    "scripts/physics-learning/oct5-lessons.json",
+    "scripts/physics-learning/build-oct5-additions.cjs",
+    "scripts/physics-learning/install-oct5-additions.sql",
+    "src/components/lessons/LessonConceptMap.module.css"
+  ],
+  "videos": 15,
+  "newLessons": [
+    {
+      "id": "4f6755eb-601b-43ca-ae8b-6469e86fc277",
+      "sequence": 13,
+      "youtubeId": "E0CpXzmViwQ",
+      "slug": "video-13-adding-vectors-graphically-the-tip-to-tail-method",
+      "durationSeconds": 234,
+      "target": "u1.vectors-tip-to-tail"
+    },
+    {
+      "id": "ce8c5bd3-aea1-4c31-b817-2107c0390ca2",
+      "sequence": 14,
+      "youtubeId": "uH-NE-LlybM",
+      "slug": "video-14-vector-components-breaking-vectors-into-x-and-y",
+      "durationSeconds": 242,
+      "target": "u1.vectors-tip-to-tail"
+    },
+    {
+      "id": "3392a816-8f39-4ff0-aa76-58dae632c0a3",
+      "sequence": 15,
+      "youtubeId": "pwbD3H8R0BU",
+      "slug": "video-15-dot-product-vs-cross-product-what-they-mean",
+      "durationSeconds": 264,
+      "target": "u1.vector-products"
+    }
+  ],
+  "newVocabularySets": 3,
+  "newVocabularyTerms": 15,
+  "newTargets": 1,
+  "conceptMap": {
+    "nodes": 15,
+    "connections": 18
+  },
+  "validation": {
+    "tests": 40,
+    "typeCheck": "passed (8 GiB Node heap)",
+    "scopedLint": "passed",
+    "styleAndBrand": "passed",
+    "hostedBuild": "READY",
+    "databaseDryRun": "passed and rolled back",
+    "databaseInstall": "verified 3 published lessons, vocabulary sets, targets, durations, response prompts; no class releases",
+    "browser": "Actual components verified with synthetic lesson data; reference search and formulas verified at desktop, tablet, and phone widths; map selection and connections verified; practice response saved in local preview.",
+    "runtimeErrorScan": "No error/fatal logs returned for the promoted deployment at 12:30:59 UTC."
+  },
+  "access": "New lessons are published in the catalog and remain closed to students until released to their classes.",
+  "limits": "Authenticated live teacher/student interactions and full YouTube playback were not exercised. Public metadata and video descriptions/chapters were reviewed.",
+  "databaseRollback": "Unpublish the three listed lesson IDs if needed; preserve any later student work, vocabulary, and target records."
+}

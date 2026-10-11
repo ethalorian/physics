@@ -29,12 +29,12 @@ export default function XpRequirements({ full = false }: { full?: boolean }) {
   const unit = data?.units.find(u => u.id === data.currentUnitId)
   const earned = term?.earned ?? 0
   const remaining = term ? Math.max(0, term.minimum_xp - earned) : undefined
-  if (!full) return <section aria-labelledby="xp-requirements-title" className="rounded-lg border border-border bg-card p-5">
-    <div className="flex flex-wrap items-center justify-between gap-x-4"><h2 id="xp-requirements-title" className="flex items-center gap-2 text-title-3"><Star size={18} aria-hidden="true" className="text-reward" />Term XP</h2><Link href="/xp" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-primary underline underline-offset-4">XP details<ArrowRight size={16} aria-hidden="true" /></Link></div>
+  if (!full) return <section aria-labelledby="xp-requirements-title" className={styles.termXp}>
+    <div className="flex flex-wrap items-center justify-between gap-x-4"><h2 id="xp-requirements-title" className="flex items-center gap-2 text-sm font-semibold"><Star size={18} aria-hidden="true" />Term XP</h2><Link href="/xp" className="inline-flex min-h-11 items-center gap-2 text-xs font-medium text-primary underline underline-offset-4">XP details<ArrowRight size={16} aria-hidden="true" /></Link></div>
     {error ? <div role="alert" className="mt-2 text-sm"><p>XP progress is unavailable. Your earnings are kept.</p><button className="mt-2 min-h-11 rounded-md border px-4 font-semibold" onClick={() => setRetry(n => n + 1)}>Retry XP progress</button></div>
       : !data ? <p role="status" className="mt-2 text-sm text-muted-foreground">Loading your XP progress…</p>
       : term ? <div className="mt-2 space-y-2">
-        <div className="flex flex-wrap justify-between gap-2 text-sm"><p className="font-semibold tabular-nums">{earned.toLocaleString()} / {term.minimum_xp.toLocaleString()} XP</p><span className="text-muted-foreground">{term.label}</span></div>
+        <div className="flex flex-wrap items-baseline justify-between gap-2 text-sm"><p className="font-semibold tabular-nums"><strong className={styles.termEarned}>{earned.toLocaleString()}</strong> / {term.minimum_xp.toLocaleString()} XP</p><span className="text-xs text-muted-foreground">{term.label}</span></div>
         <progress aria-label="Term XP requirement progress" max={Math.max(1, term.minimum_xp)} value={Math.min(earned, term.minimum_xp)} className={styles.unitProgress} />
         <p role="status" className="text-sm text-muted-foreground">{remaining === 0 ? `Minimum met · eligible for +${term.grade_points} term-average points.` : `${remaining?.toLocaleString()} XP to go for +${term.grade_points} term-average points.`}</p>
       </div> : <p className="mt-2 text-sm text-muted-foreground">Your teacher hasn’t published a term minimum yet. Your earned XP is still saved.</p>}

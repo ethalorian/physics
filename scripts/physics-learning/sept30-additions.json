@@ -1,0 +1,62 @@
+[
+  {
+    "youtubeId": "fmjVsKsU9Sw",
+    "sequence": 9,
+    "lessonId": "e8c4a169-e774-4b75-87df-5bec72d9a61f",
+    "target": {
+      "id": "1b14077c-9c25-458b-a568-84eb1bd9ba8d",
+      "slug": "foundations.graph-scales",
+      "statement": "I can choose uniform graph scales that fit the data, label axes with quantities and units, and locate points.",
+      "domain": "skill",
+      "unit_id": "unit-1",
+      "program": "physics",
+      "content_strand": "foundations",
+      "order_index": 9
+    }
+  },
+  {
+    "youtubeId": "lZIZ8jByakc",
+    "sequence": 10,
+    "lessonId": "f3d4122a-5bbe-47c9-86da-ad8cccd6df57",
+    "target": {
+      "id": "f6ab3a25-e6a7-473f-b5b5-83b7dd5716b3",
+      "slug": "foundations.scientific-notation",
+      "statement": "I can write measurements in scientific notation and compare their sizes using coefficients and powers of ten.",
+      "domain": "skill",
+      "unit_id": "unit-1",
+      "program": "physics",
+      "content_strand": "foundations",
+      "order_index": 10
+    }
+  },
+  {
+    "youtubeId": "VQlq7_OtDF8",
+    "sequence": 11,
+    "lessonId": "a1f76a24-a97b-4f44-a77f-793b99303e00",
+    "target": {
+      "id": "e3ad1eaa-5d17-4012-86eb-9a0fd1dcdcf7",
+      "slug": "foundations.metric-prefixes",
+      "statement": "I can read SI units and metric prefixes and express the same measurement with different prefixes.",
+      "domain": "knowledge",
+      "unit_id": "unit-1",
+      "program": "physics",
+      "content_strand": "foundations",
+      "order_index": 11
+    }
+  },
+  {
+    "youtubeId": "SE8M273AKXw",
+    "sequence": 12,
+    "lessonId": "674a0a1f-9b87-4e06-93c0-2fcc14bda8fb",
+    "target": {
+      "id": "1f32a778-2fb3-48f0-a9ca-6713a1583829",
+      "slug": "foundations.unit-conversions",
+      "statement": "I can use conversion factors to convert lengths, times, and rates, showing unit cancellation and checking the result.",
+      "domain": "skill",
+      "unit_id": "unit-1",
+      "program": "physics",
+      "content_strand": "foundations",
+      "order_index": 12
+    }
+  }
+]

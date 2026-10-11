@@ -1,3 +1,4 @@
+import { currentLessonIds } from '@/lib/current-lesson-catalog-server'
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -20,15 +21,16 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
       enrolledStudents: 0
     }
 
-    // Fetch lessons count (all lessons for admin)
+    // Current lesson catalog counts; assessment history stays intact.
     try {
+      const currentIds = [...await currentLessonIds()]
       const { count: allLessonsCount } = await supabaseAdmin
         .from('lessons')
-        .select('*', { count: 'exact', head: true })
+        .select('*', { count: 'exact', head: true }).in('id', currentIds)
 
       const { count: publishedLessonsCount } = await supabaseAdmin
         .from('lessons')
-        .select('*', { count: 'exact', head: true })
+        .select('*', { count: 'exact', head: true }).in('id', currentIds)
         .eq('published', true)
 
       stats.totalLessons = allLessonsCount || 0

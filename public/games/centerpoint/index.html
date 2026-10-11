@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Dead Center · Trades Workshop</title><link rel="stylesheet" href="style.css"><script src="math.js" defer></script><script src="game.js" defer></script></head>
+<body>
+<main class="workshop">
+  <header class="masthead"><span class="brand"><span class="brand-mark" aria-hidden="true">⊕</span> TRADES WORKSHOP <span class="edition">/ 03</span></span><span class="practice">FREE PRACTICE · NO TIMER</span></header>
+  <section class="intro" aria-labelledby="title"><div><p class="eyebrow">Good layout starts here</p><h1 id="title">Dead <em>Center.</em></h1><p>Locate it. Mark it. Prove it with equal distances.</p></div><button id="howButton" class="text-button">How to find the center <span aria-hidden="true">↗</span></button></section>
+  <nav class="benches" aria-label="Practice benches"><button data-bench="all" aria-pressed="true">Full workshop <small>12 jobs</small></button><button data-bench="length" aria-pressed="false">Center a length <small>1 measurement</small></button><button data-bench="face" aria-pressed="false">Center a face <small>2 measurements</small></button><button data-bench="marks" aria-pressed="false">Between two marks <small>Use a reference</small></button></nav>
+  <div class="session-line"><span>Changing benches starts a fresh set. Progress lasts for this visit.</span><button id="newSet" class="text-button">New dimensions ↻</button></div>
+  <div class="progress-row"><strong id="orderCount">JOB 1 / 12</strong><progress id="progress" value="0" max="12" aria-label="Completed jobs"></progress><span id="score">0 points</span></div>
+  <div id="bench" class="bench-grid">
+    <section class="drawing-card" aria-labelledby="jobTitle">
+      <header class="job-header"><div><p id="jobMeta" class="eyebrow"></p><h2 id="jobTitle" tabindex="-1"></h2></div><span id="jobCode" class="code"></span></header>
+      <p id="brief" class="brief"></p>
+      <div id="dimensions" class="dimensions"></div>
+      <div class="drawing-tools"><span>Read the dimensions. Mark on the material.</span><button id="expandDrawing" class="text-button">Enlarge drawing ↗</button></div>
+      <div id="drawing" class="drawing"></div>
+      <p class="drawing-help">Tap the material to place a mark, or enter an exact distance. Focus the drawing and use arrow keys to move 1/32 in; Shift moves 1/4 in.</p>
+      <div id="inspection" class="inspection" hidden></div>
+    </section>
+    <aside class="controls" aria-labelledby="layoutTitle">
+      <p class="eyebrow">Your layout</p><h2 id="layoutTitle">Make your mark.</h2>
+      <p id="referenceNote" class="reference-note"></p>
+      <form id="markForm" novalidate>
+        <label for="xInput">X · from the left end <span>inches</span></label><input id="xInput" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. 4 3/8" aria-describedby="inputHelp">
+        <div id="yField" hidden><label for="yInput">Y · down from the top <span>inches</span></label><input id="yInput" type="text" autocomplete="off" spellcheck="false" placeholder="e.g. 2 1/4" aria-describedby="inputHelp"></div>
+        <p id="inputHelp" class="small">Fractions or decimals. Exact marks to 1/32 in.</p><button id="placeButton" class="secondary" type="submit">Place mark <span aria-hidden="true">＋</span></button>
+      </form>
+      <div class="mark-readout"><span>Current mark</span><strong id="markValue">Not placed</strong></div>
+      <fieldset id="nudges" disabled><legend>Fine adjust · 1/32 in</legend><div class="nudge-row"><button type="button" data-dx="-1" aria-label="Move mark left by one thirty-second inch">←</button><button type="button" data-dx="1" aria-label="Move mark right by one thirty-second inch">→</button><button type="button" data-dy="-1" aria-label="Move mark up by one thirty-second inch">↑</button><button type="button" data-dy="1" aria-label="Move mark down by one thirty-second inch">↓</button></div></fieldset>
+      <button id="checkButton" class="primary" disabled>Check center <span aria-hidden="true">⊕</span></button>
+      <div id="feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+      <button id="nextButton" class="primary" hidden>Next job →</button>
+      <div class="hint-area"><button id="hintButton" class="text-button">Need a hint?</button><p id="hintText" hidden></p></div>
+      <p class="score-note">10 points for a first-check center. 5 with a hint or another check. Practice points stay in this game.</p>
+    </aside>
+  </div>
+  <section id="report" class="report" hidden aria-labelledby="reportTitle"><p class="eyebrow">Workshop complete</p><h2 id="reportTitle" tabindex="-1">Right on center.</h2><p id="reportSummary"></p><div id="reportJobs" class="report-jobs"></div><div class="report-actions"><button id="again" class="primary">Try new dimensions ↻</button><button id="retry" class="secondary" hidden>Practice the jobs with help</button></div></section>
+  <footer class="footer"><span>MEASURE · HALVE · MARK · VERIFY</span><span>Written dimensions control. Drawings are not to scale.</span></footer>
+</main>
+<dialog id="howDialog" aria-labelledby="howTitle"><div class="dialog-head"><div><p class="eyebrow">At the workbench</p><h2 id="howTitle">Equal on both sides.</h2></div><button id="closeHow" class="secondary">Close</button></div><div class="lessons"><section><span>01</span><h3>Center a length</h3><p>Measure between the two ends. Divide that length by 2, then measure that distance from an end and draw a line across the material.</p><div class="example">15 ÷ 2 = 7 1/2 in</div><p>This locates the halfway <strong>line along its length</strong>.</p></section><section><span>02</span><h3>Center a rectangular face</h3><p>Halve the width and height. Mark half the width from the left and half the height down from the top. Their intersection is the center point.</p><div class="example">10 × 6 in → X = 5, Y = 3 in</div><p>On a true rectangle, corner-to-corner diagonals also meet at its center.</p></section><section><span>03</span><h3>Between two marks</h3><p>Subtract the first position from the second. Halve the gap, then add the first position to locate the midpoint from the left end.</p><div class="example">3 + (15 − 3) ÷ 2 = 9 in</div><p>Half of the gap is a distance from the first mark, not from the end of the stock.</p></section></div><div class="fraction-tip"><strong>Halving a fraction?</strong> Double its denominator, then simplify. Half of 3/8 is 3/16; half of 1/16 is 1/32. For a mixed number, halve the whole number and fraction and combine them.</div><p class="small">Check your mark from both ends. For a face, also check from the top and bottom.</p></dialog>
+<dialog id="drawingDialog" class="drawing-dialog" aria-labelledby="expandedTitle"><div class="dialog-head"><h2 id="expandedTitle">Layout drawing</h2><button id="closeDrawing" class="secondary">Close</button></div><p>Reference copy. Close this drawing to place or adjust your mark.</p><div id="expandedDrawing" class="drawing"></div></dialog>
+</body></html>

@@ -5,17 +5,16 @@ import Link from 'next/link'
 import { ArrowRight, BookOpen, CalendarDays, Check, Compass, Eye, GraduationCap, MonitorPlay, Settings2, ClipboardCheck, Gift, DoorOpen } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import XpGoalSettings from '@/components/admin/XpGoalSettings'
-import { setStudentView } from '@/lib/view-as-shared'
+import { useSession } from 'next-auth/react'
 import styles from './teacher.module.css'
 
 type StepKey = 'classroom' | 'curriculum' | 'pacing' | 'tour'
 interface Status { steps: Record<StepKey, boolean>; doneCount: number; total: number; complete: boolean }
 interface Course { id: string; name: string; section: string | null; track: string | null; program?: string | null }
 const TYPES = [
-  { id: 'cpa', label: 'CPA Physics', description: 'Core concepts, investigations, and practice.', track: 'cpa', program: 'physics' },
+  { id: 'cpa', label: 'CPA Physics', description: 'Video lessons, investigations, and practice.', track: 'cpa', program: 'physics' },
   { id: 'honors', label: 'Honors Physics', description: 'The core curriculum with deeper quantitative work.', track: 'honors', program: 'physics' },
   { id: 'trades', label: 'Trades Physics', description: 'Measurement, structures, energy, and practical applications.', track: 'cpa', program: 'trades' },
-  { id: 'projects', label: 'Project Physics', description: 'Build-based learning with bilingual project packets.', track: 'cpa', program: 'projects' },
 ]
 const TOUR = [
   { title: 'Start with your class.', body: 'Open a class to find its roster, lesson access, and student progress. Your workspace brings together the classes you imported from Google Classroom.', href: '/admin/classes', link: 'Explore your classes', Icon: GraduationCap },
@@ -40,6 +39,7 @@ async function request<T>(url: string, body?: object): Promise<T> {
 }
 
 export default function TeacherDashboard() {
+  const { data: session } = useSession()
   const [status, setStatus] = useState<Status | null>(null)
   const [courses, setCourses] = useState<Course[]>([])
   const [loading, setLoading] = useState(true)
@@ -111,7 +111,7 @@ export default function TeacherDashboard() {
           <article className={styles.workflow}><span className={styles.workflowIcon}><ClipboardCheck size={23} /></span><h3>See the learning</h3><p>Look at the evidence. Find the next question, conversation, or small-group lesson.</p><Link href="/admin/control-room">Review student work <ArrowRight size={16} /></Link><Link href="/admin/classes">Class progress <ArrowRight size={16} /></Link><Link href="/admin/vocabulary/tasks">Vocabulary practice <ArrowRight size={16} /></Link></article>
         </div>
       </section>
-      <footer className={styles.footer}><div><h2>The details that support your day.</h2><p>Fine-tune motivation or take a look from the student’s side.</p></div><div className={styles.footerActions}><button onClick={() => openDialog('goals')}><Settings2 size={16} /> XP goals</button><Link href="/admin/store"><Gift size={16} /> Rewards</Link><button onClick={() => { setStudentView(); window.location.assign('/home') }}><Eye size={16} /> Preview student view</button></div></footer>
+      <footer className={styles.footer}><div><h2>The details that support your day.</h2><p>Fine-tune motivation or take a look from the student’s side.</p></div><div className={styles.footerActions}><button onClick={() => openDialog('goals')}><Settings2 size={16} /> XP goals</button><Link href="/admin/store"><Gift size={16} /> Rewards</Link><Link href={session?.user?.role === 'admin' || session?.experience ? '/experience' : '/admin/student-preview'}><Eye size={16} /> {session?.user?.role === 'admin' || session?.experience ? 'Experience as…' : 'Inspect student lesson'}</Link></div></footer>
 
       <Dialog open={dialog !== null} onOpenChange={open => { if (!open && !saving) setDialog(null) }}><DialogContent className={styles.dialog}>
         <DialogTitle>{dialog === 'types' ? 'Choose each class’s curriculum' : dialog === 'goals' ? 'Daily XP goals' : 'Your teaching workspace'}</DialogTitle>

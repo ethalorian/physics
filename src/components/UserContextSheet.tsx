@@ -36,7 +36,7 @@ interface TeacherSummary { classes: number; students: number; needsGrading: numb
 
 export default function UserContextSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const { data: session } = useSession()
-  const role = getUserRole(session?.user?.email)
+  const role = (session?.user?.role ?? getUserRole(session?.user?.email))
   const isStaff = role === 'admin' || role === 'teacher'
 
   const [gameScores, setGameScores] = useState<GameScore[]>([])

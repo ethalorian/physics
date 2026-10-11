@@ -1,0 +1,416 @@
+[
+  {
+    "id": "course",
+    "title": "The 2026-XJ course briefing",
+    "file": "Course Explainer - 2026-XJ.dc.html",
+    "src": "/explainers/claude/Course Explainer - 2026-XJ.dc.html",
+    "sha256": "903a4307ab29009e902a6c1524adb0475475e1b41d27c0f35474a81cae8dfc31",
+    "frames": [
+      {
+        "title": "Something is coming. We have one year of physics to figure out what.",
+        "body": "This course follows a single object — a near‑Earth asteroid called 2026‑XJ — from the day it's detected to the day we can finally say what it will do. Every unit of physics answers one more piece of that puzzle.\n\nA new object, 2026‑XJ, has been detected on an approach toward Earth's neighborhood.",
+        "prompt": "Something is coming. We have one year of physics to figure out what.",
+        "discussion": {
+          "prompt": "Something is coming. We have one year of physics to figure out what.",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "A year of physics, one question at a time",
+        "body": "Most courses teach motion, then forces, then energy, as separate chapters. Here each one shows up because the asteroid story needs it. You learn momentum because you have to know whether a spacecraft could push the asteroid.\n\nUnit 1 predicts where it's going, assuming it moves in a straight line. It doesn't — gravity bends it. That gap is Unit 2. Each unit ends by naming what it still can't answer.",
+        "prompt": "A year of physics, one question at a time",
+        "discussion": {
+          "prompt": "A year of physics, one question at a time",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Seven units, seven questions, one build",
+        "body": "Each unit opens with a new briefing about 2026‑XJ and closes with the physics to answer it. Pick a unit to see what we learn, the tool we need, and the number it hands the next unit.",
+        "prompt": "Seven units, seven questions, one build",
+        "discussion": {
+          "prompt": "Seven units, seven questions, one build",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "What we know, and when we learn it",
+        "body": "On day one the file on 2026‑XJ is almost empty. Drag through the year and watch it fill in — every line is something students compute themselves, with the physics from that unit.",
+        "prompt": "What we know, and when we learn it",
+        "discussion": {
+          "prompt": "What we know, and when we learn it",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Two paths cross. The question is when.",
+        "body": "By Unit 2 we know 2026‑XJ orbits the Sun every 1.69 years, and at its closest it dips to 0.98 AU — just inside Earth's orbit. So its path crosses ours twice every lap. Crossing isn't hitting: both have to arrive at the same place at the same time.",
+        "prompt": "Two paths cross. The question is when.",
+        "discussion": {
+          "prompt": "Two paths cross. The question is when.",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "The asteroid is invented. Nothing else is.",
+        "body": "2026‑XJ doesn't exist. But the constants are real, the equations are real, and the method is the one planetary defense teams use on real near‑Earth objects. And one piece of the story already happened.\n\nNASA's DART spacecraft — about 600 kg at about 6 km/s — deliberately crashed into the small asteroid Dimorphos.",
+        "prompt": "The asteroid is invented. Nothing else is.",
+        "discussion": {
+          "prompt": "The asteroid is invented. Nothing else is.",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "The toolkit, episode by episode",
+        "body": "",
+        "prompt": "The toolkit, episode by episode",
+        "discussion": {
+          "prompt": "The toolkit, episode by episode",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      }
+    ]
+  },
+  {
+    "id": "vectors",
+    "title": "Vectors and scalars",
+    "file": "Vectors and Scalars Explainer.dc.html",
+    "src": "/explainers/claude/Vectors and Scalars Explainer.dc.html",
+    "sha256": "69d7fbf17866e69acb99f40b43df36aa8e05eb4a09f8adcf46b4167ba3d4a9d0",
+    "frames": [
+      {
+        "title": "Some questions need a number. Others need an arrow.",
+        "body": "Physics keeps two kinds of quantities on purpose. Scalars answer how much. Vectors answer how much, and which way. Neither is \"more correct\" — the trick is knowing which question you're asking.\n\nA runner finishes one 400 m lap of the track in 60 s and stops exactly where she started.",
+        "prompt": "Her coach says she averaged 6.7 m/s. Her GPS says her average velocity was zero. Who's right?",
+        "discussion": {
+          "prompt": "Her coach says she averaged 6.7 m/s. Her GPS says her average velocity was zero. Who's right?",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "An odometer and a compass",
+        "body": "Your car carries both. The odometer only counts up — it doesn't care which way you drove. The GPS arrow only cares which way you're pointed and how fast. Each instrument throws away information the other keeps.",
+        "prompt": "An odometer and a compass",
+        "discussion": {
+          "prompt": "An odometer and a compass",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Watch the two numbers come apart",
+        "body": "The walker moves at a steady 4 m/s. The odometer (distance) and the arrow from start to walker (displacement) begin identical. Press play and watch when — and why — they diverge.",
+        "prompt": "Watch the two numbers come apart",
+        "discussion": {
+          "prompt": "Watch the two numbers come apart",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "The question picks the tool",
+        "body": "For each real question, decide: does the answer change if you reverse the direction? If not, a scalar is enough. If it does, you need the vector. Tap your pick.",
+        "prompt": "For each real question, decide: does the answer change if you reverse the direction? If not, a scalar is enough. If it does, you need the vector. Tap your pick.",
+        "discussion": {
+          "prompt": "For each real question, decide: does the answer change if you reverse the direction? If not, a scalar is enough. If it does, you need the vector. Tap your pick.",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Because directions add, cancel, and split",
+        "body": "If scalars are simpler, why does almost every law of mechanics use vectors? Because the world does things scalars can't describe.\n\nWalk 5 m east, then 5 m west. Distance says 10 m; you're standing where you started. Two forces of 100 N on a rope in a tug‑of‑war can produce zero motion. Only arrows can add up to nothing.",
+        "prompt": "If scalars are simpler, why does almost every law of mechanics use vectors? Because the world does things scalars can't describe.",
+        "discussion": {
+          "prompt": "If scalars are simpler, why does almost every law of mechanics use vectors? Because the world does things scalars can't describe.",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Direction isn't always information",
+        "body": "Vectors carry more, but more isn't free. When the physics genuinely doesn't depend on direction, the scalar is not a shortcut — it's the honest answer, and it makes the math simpler.\n\nSquaring erases the sign. A ball thrown up at 10 m/s and one thrown down at 10 m/s have identical kinetic energy. Energy bookkeeping is scalar — that's what makes it so powerful.",
+        "prompt": "Direction isn't always information",
+        "discussion": {
+          "prompt": "Direction isn't always information",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Five questions",
+        "body": "Pick an answer; you'll get feedback immediately.",
+        "prompt": "Five questions",
+        "discussion": {
+          "prompt": "Five questions",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      }
+    ]
+  },
+  {
+    "id": "kinematics",
+    "title": "Kinematics",
+    "file": "Kinematics Explainer.dc.html",
+    "src": "/explainers/claude/Kinematics Explainer.dc.html",
+    "sha256": "1eacf38d53d91a3177a94893aa021f83c4544ef105cf237b551bdef86b5a2344",
+    "frames": [
+      {
+        "title": "Before you can explain motion, you have to describe it.",
+        "body": "Kinematics is the language physics uses to say where something is, how fast it's moving, and how that's changing — without yet asking why. Every law you'll learn this year is written in that language.\n\nA car is doing 12 m/s when the light turns red. The driver brakes, slowing steadily at 1.5 m/s².",
+        "prompt": "How far does the car travel before it stops?",
+        "discussion": {
+          "prompt": "How far does the car travel before it stops?",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Four quantities, one variable underneath",
+        "body": "Kinematics (from the Greek kinēma, \"movement\") is the geometry of motion. It builds a chain: position is where you are; velocity is how position changes; acceleration is how velocity changes. Each one is the rate of change of the one before it, and time is the thread running through all of them.\n\nWhere the object is, measured from an origin you choose. Displacement Δx = xf − xi is the change — a vector, not the distance walked.",
+        "prompt": "Four quantities, one variable underneath",
+        "discussion": {
+          "prompt": "Four quantities, one variable underneath",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Describing vs. explaining",
+        "body": "Classical mechanics splits into two halves. Kinematics answers how things move. Dynamics answers why — it brings in mass and force. Newton's second law, F = ma, is the bridge: the a on the right side is a kinematic quantity.",
+        "prompt": "Describing vs. explaining",
+        "discussion": {
+          "prompt": "Describing vs. explaining",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Three reasons, one historical and two logical",
+        "body": "For 2,000 years, Aristotle's physics tried to explain motion by purpose. Galileo (c. 1600) changed the question: instead of asking why a ball rolls, he timed it down a ramp and found distance grew with time squared. Measuring first, explaining second — that shift is the scientific method, and kinematics is where it happened.\n\nNewton's laws are statements about acceleration. Momentum is m·v. Kinetic energy is ½mv². Angular velocity, wave speed, orbital period — all are kinematic ideas wearing new clothes. Define x, v, a precisely once, and every later chapter can build on them instead of redefining them.",
+        "prompt": "Three reasons, one historical and two logical",
+        "discussion": {
+          "prompt": "Three reasons, one historical and two logical",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "One equation, three graphs, one moving object",
+        "body": "Set the initial position, initial velocity, and a constant acceleration. Press play and watch the same motion in four representations at once. Try to predict the graph shapes before you press play.\n\nNotice: the x‑t curve's slope at any instant equals the height of the v‑t graph there, and the v‑t slope equals the a‑t height. That chain — each graph is the slope of the one before — is the entire structure of kinematics.",
+        "prompt": "One equation, three graphs, one moving object",
+        "discussion": {
+          "prompt": "One equation, three graphs, one moving object",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Kinematics underneath classical mechanics",
+        "body": "Click any topic to see what it borrows from kinematics.",
+        "prompt": "Kinematics underneath classical mechanics",
+        "discussion": {
+          "prompt": "Kinematics underneath classical mechanics",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Five questions",
+        "body": "Pick an answer; you'll get feedback immediately. Use the simulator above if you want to test a hunch.",
+        "prompt": "Five questions",
+        "discussion": {
+          "prompt": "Five questions",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      }
+    ]
+  },
+  {
+    "id": "derivatives",
+    "title": "Derivatives",
+    "file": "Derivatives Explainer.dc.html",
+    "src": "/explainers/claude/Derivatives Explainer.dc.html",
+    "sha256": "5f627973a57ea1352e8e2c62e84b09da6493568156a4b3e788c27ba03c6ba4d9",
+    "frames": [
+      {
+        "title": "Velocity is how fast position changes. Acceleration is how fast velocity changes.",
+        "body": "The derivative is the tool that turns \"how fast is this changing?\" into a number — at a single instant, not averaged over a trip. Apply it once to position and you get velocity. Apply it again and you get acceleration.\n\nYour car's odometer shows how far you've gone. The speedometer shows how fast you're going right now.",
+        "prompt": "The derivative is the tool that turns \"how fast is this changing?\" into a number — at a single instant, not averaged over a trip. Apply it once to position and you get velocity. Apply it again and you get acceleration.",
+        "discussion": {
+          "prompt": "The derivative is the tool that turns \"how fast is this changing?\" into a number — at a single instant, not averaged over a trip. Apply it once to position and you get velocity. Apply it again and you get acceleration.",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Shrink the interval until the answer stops changing",
+        "body": "The slope of the line between two points on an x–t graph is the average velocity between them: Δx / Δt. Slide the second point toward the first. The line pivots, and its slope settles on one value — the slope of the tangent line, the velocity at that instant.",
+        "prompt": "Shrink the interval until the answer stops changing",
+        "discussion": {
+          "prompt": "Shrink the interval until the answer stops changing",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Each graph is the slope of the one above it",
+        "body": "Pick a motion. Drag the time cursor and watch the tangent lines: the slope of the x–t tangent is the height of the v–t graph, and the slope of the v–t tangent is the height of a–t. Or press \"Draw the derivative\" and watch the lower graphs get traced out, one slope at a time.",
+        "prompt": "Each graph is the slope of the one above it",
+        "discussion": {
+          "prompt": "Each graph is the slope of the one above it",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Take the derivative of the UAM equation — by hand",
+        "body": "In Lab 03 you measured x = x₀ + v₀t + ½at². Now run it through the definition of a derivative. Out comes v = v₀ + at — and one more time, out comes a. Step through and watch the terms cancel.\n\nEvery rule below comes from the same limit you just stepped through. Read each row left to right: take the slope, then take it again.",
+        "prompt": "Take the derivative of the UAM equation — by hand",
+        "discussion": {
+          "prompt": "Take the derivative of the UAM equation — by hand",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Four things the slopes tell you",
+        "body": "Wherever x–t has a peak or valley, its tangent is flat, so v = 0. Try the ball toss: at the top, v–t crosses zero.\n\nx–t bending upward (getting steeper) means a > 0. Bending downward means a < 0. A straight x–t means a = 0.",
+        "prompt": "Four things the slopes tell you",
+        "discussion": {
+          "prompt": "Four things the slopes tell you",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Five questions",
+        "body": "Pick an answer; you'll get feedback immediately.",
+        "prompt": "Five questions",
+        "discussion": {
+          "prompt": "Five questions",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      }
+    ]
+  },
+  {
+    "id": "units",
+    "title": "Units and dimensions",
+    "file": "Units and Dimensions Explainer.dc.html",
+    "src": "/explainers/claude/Units and Dimensions Explainer.dc.html",
+    "sha256": "d3a5a9bf7138b63bbfec5ab9dd0ec6e705044171a4a06cb7f5dd4f92100c24d1",
+    "frames": [
+      {
+        "title": "A number without a unit isn't a measurement. It's a guess.",
+        "body": "Every quantity in physics is a number times a unit, and every unit is built from a handful of basic dimensions. Learn to read them and equations start telling you what they mean before you calculate anything.\n\nNASA's Mars Climate Orbiter arrived after a nine‑month flight — and vanished into the Martian atmosphere.",
+        "prompt": "A number without a unit isn't a measurement. It's a guess.",
+        "discussion": {
+          "prompt": "A number without a unit isn't a measurement. It's a guess.",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Three dimensions build all of mechanics",
+        "body": "A dimension is the kind of thing you're measuring — length, mass, time. A unit is the agreed‑on amount of it you count with — meters, kilograms, seconds. Mechanics needs only three dimensions. Everything else — speed, force, energy, pressure — is a combination of them.\n\nHow far. Defined today by the distance light travels in 1/299 792 458 s — so a meter is the same in every lab on Earth.",
+        "prompt": "Three dimensions build all of mechanics",
+        "discussion": {
+          "prompt": "Three dimensions build all of mechanics",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Every derived unit is a recipe",
+        "body": "A base unit is defined directly: m, kg, s. A derived unit is a product of powers of base units — nothing more. Some get their own name (newton, joule, watt) because we use them constantly, but the name is a nickname for the recipe. Set the exponents and see what you've built.",
+        "prompt": "Every derived unit is a recipe",
+        "discussion": {
+          "prompt": "Every derived unit is a recipe",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "The mechanics toolkit",
+        "body": "Twelve quantities cover almost every problem this year. Learn the base‑unit recipe for each — it's what lets you check your work by inspection.\n\nNotice the pattern: newton, joule, watt and pascal are all just kg·m·s combinations that earned a nickname. If you forget one, rebuild it from a formula you trust — F = ma gives kg·m/s² every time.",
+        "prompt": "The mechanics toolkit",
+        "discussion": {
+          "prompt": "The mechanics toolkit",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Units aren't bookkeeping. They're physics.",
+        "body": "\"The car is going 30\" is not information. 30 m/s is highway speed; 30 km/h is a school zone. The Mars orbiter was lost by people who all had the right numbers.\n\nYou can't set a length equal to a time, or add a force to an energy. This rule — dimensional homogeneity — lets you reject a wrong formula in ten seconds, before you touch a calculator.",
+        "prompt": "Units aren't bookkeeping. They're physics.",
+        "discussion": {
+          "prompt": "Units aren't bookkeeping. They're physics.",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Let the units do the thinking",
+        "body": "A simple pendulum has length L and swings under gravity g. Four students propose formulas for its period T. Click each one and check the dimensions of the right‑hand side against the left.\n\nStuck? Write down the unit of the answer, then look at what you have.",
+        "prompt": "Stuck? Write down the unit of the answer, then look at what you have.",
+        "discussion": {
+          "prompt": "Stuck? Write down the unit of the answer, then look at what you have.",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Five questions",
+        "body": "Pick an answer; you'll get feedback immediately. The unit builder above is fair game.",
+        "prompt": "Five questions",
+        "discussion": {
+          "prompt": "Five questions",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      }
+    ]
+  },
+  {
+    "id": "uam",
+    "title": "UAM derivation lab",
+    "file": "UAM Derivation Lab.dc.html",
+    "src": "/explainers/claude/UAM Derivation Lab.dc.html",
+    "sha256": "27f554bbae9a53c03e107bf9cc3e68539bbe88248b975d2b5c4ade7674f450b0",
+    "frames": [
+      {
+        "title": "The equations of motion aren't memorized. They're measured.",
+        "body": "Roll a cart down a ramp, record where it is and how fast it's going, and the four uniformly‑accelerated‑motion equations fall out of your own graphs. One experiment, four equations, no textbook required.",
+        "prompt": "The equations of motion aren't memorized. They're measured.",
+        "discussion": {
+          "prompt": "The equations of motion aren't memorized. They're measured.",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "A cart, a track, and a stack of books",
+        "body": "The Go Direct Sensor Cart has an encoder in its wheels: it counts rotations and reports position and velocity many times a second. Nothing else is needed — no motion detector, no stopwatch. Tilt the track and gravity supplies a constant push along the ramp.",
+        "prompt": "A cart, a track, and a stack of books",
+        "discussion": {
+          "prompt": "A cart, a track, and a stack of books",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Collect a run",
+        "body": "This virtual cart behaves like the real one: 20 samples per second, a little sensor noise, a little rolling friction. Set the ramp, release, and watch the data build. Predict the shape of each graph before you press the button.",
+        "prompt": "Collect a run",
+        "discussion": {
+          "prompt": "Collect a run",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Four steps, each read off your own data",
+        "body": "Each step starts with a picture — a graph or a geometric model — and ends with an equation. Step through the algebra and watch each term move; the model moves with it. The numbers at the bottom come from your most recent run.",
+        "prompt": "Four steps, each read off your own data",
+        "discussion": {
+          "prompt": "Four steps, each read off your own data",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Three measurements of a, one prediction",
+        "body": "If the equations are right, every graph should report the same acceleration. And if gravity is the cause, that acceleration should match g·sinθ, where sinθ = h / (1.00 m).",
+        "prompt": "Three measurements of a, one prediction",
+        "discussion": {
+          "prompt": "Three measurements of a, one prediction",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      },
+      {
+        "title": "Five questions",
+        "body": "Pick an answer; you'll get feedback immediately.",
+        "prompt": "Five questions",
+        "discussion": {
+          "prompt": "Five questions",
+          "debrief": "Compare the groups’ explanations. Which evidence from the explainer supports your reasoning?"
+        }
+      }
+    ]
+  }
+]

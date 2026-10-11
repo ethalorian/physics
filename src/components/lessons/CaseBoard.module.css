@@ -17,4 +17,24 @@
 :global([data-tool-mode=projector]) .face { padding:18px; }
 .board button:focus-visible { outline:3px solid var(--primary); outline-offset:3px; }
 .board button:disabled { opacity:.5; cursor:not-allowed; }
+.compact .face { padding:16px; }
+.compact .face img { max-height:230px; }
+.compact .prompt { font-size:19px; margin-top:14px; }
+.compact .reference { font-size:14px; }
+.drawingBoard .face img { display:block; width:100%; height:auto; max-width:800px; max-height:none; margin-inline:auto; }
+.drawingLink { display:inline-block; padding:10px 0; min-height:44px; color:var(--primary); text-decoration:underline; font-weight:650; }
+.workshopVisual { border-top:5px solid var(--primary); }
+.workshopVisual .face { display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:12px 28px; padding:24px; align-items:start; }
+.workshopVisual .face h3 { grid-column:1/-1; font-size:27px; margin:0 0 4px; }
+.workshopVisual .face img { grid-column:1; grid-row:2/6; max-width:none; border:0; border-radius:12px; }
+.workshopVisual .drawingLink { grid-column:1; grid-row:6; font-size:14px; padding:4px 0; min-height:36px; }
+.workshopVisual .prompt { grid-column:2; grid-row:2; margin:0; font-size:23px; line-height:1.45; }
+.workshopVisual .reference { grid-column:2; margin:0; font-size:16px; }
+.workshopVisual .check { grid-column:2; margin:0; padding:16px; font-size:18px; }
+.actionLabel { display:block; color:var(--primary); font-size:12px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px; font-weight:800; }
+.workshopVisual .tabs { gap:6px; background:var(--secondary); }
+.workshopVisual .tabs button { flex:1; text-align:left; font-size:14px; }
+.frameNav { display:flex; justify-content:space-between; align-items:center; padding:12px 22px; gap:10px; border-top:1px solid var(--border); }
+.frameNav span { font-size:14px; color:var(--muted-foreground); }
+@media(max-width:800px) { .workshopVisual .face { display:block; padding:16px; } .workshopVisual .face h3 { margin-bottom:16px; } .workshopVisual .prompt { font-size:20px; margin:10px 0; } .workshopVisual .check { margin-top:16px; } .workshopVisual .tabs { flex-wrap:nowrap; overflow-x:auto; } .workshopVisual .tabs button { flex:0 0 150px; } .frameNav { padding:12px; } .frameNav button { font-size:13px; padding:8px; } }
 @media(max-width:560px) { .board header { padding:12px; font-size:11px; } .tabs { padding:8px; } .tabs button { flex:1; padding:8px; font-size:13px; } .prompt { font-size:19px; } .reference { font-size:16px; } }

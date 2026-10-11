@@ -1,6 +1,9 @@
 "use client"
 
 import { useEffect, useState, type ReactNode } from 'react'
+import ResumeTeaching from './ResumeTeaching'
+import { useLessonContext } from './useLessonContext'
+import { lessonContextHref } from '@/lib/lesson-release'
 import LobbyLauncher from '@/components/admin/LobbyLauncher'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -10,7 +13,8 @@ import type { ContentArea } from '@/lib/content-access'
 import { GROUPS, gateGroups } from './adminNav'
 import { BookOpen } from 'lucide-react'
 import AdminCommand from './AdminCommand'
-import { Menu, X, FlaskConical } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
+import BrandLogo from '@/components/BrandLogo'
 
 /**
  * Persistent admin/teacher shell: a grouped sidebar (the launcher, moved into
@@ -21,19 +25,23 @@ import { Menu, X, FlaskConical } from 'lucide-react'
  * on narrow widths. Lives inside `.surface-refined` (set by admin/layout).
  */
 export default function AdminShell({ children, effectiveRole, editableAreas = [] }: { children: ReactNode; effectiveRole: UserRole; editableAreas?: ContentArea[] }) {
+  const context = useLessonContext()
+  const scopedHref = (href:string) => ['/admin/dashboard','/admin/command-center','/admin/control-room','/admin/student-preview'].includes(href) ? lessonContextHref(href,{class:context.classId,lesson:href==='/admin/command-center'?'':context.lessonId}) : href
   const role = effectiveRole
   const { data: session, status } = useSession()
   const isAdmin = role === 'admin'
   const pathname = usePathname()
   // Observer: read-only sidebar — the FULL Insights group (mastery analytics,
-  // app oversight, leaderboard) plus lesson plans. adminOnly flags don't apply;
+  // app oversight, leaderboard) plus curriculum resources. adminOnly flags don't apply;
   // the observer role is itself the gate, and every destination is read-only.
   const observerGroups: typeof GROUPS = [
     { title: 'Insights', tools: (GROUPS.find((g) => g.title === 'Insights')?.tools ?? []).filter(t => t.href !== '/admin/collaborators') },
     {
       title: 'Plan',
       tools: [
-        { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Every class type, read-only', icon: BookOpen, accent: 'var(--primary)' },
+        { href: '/admin/teacher/plans', label: 'Course plans', desc: 'Asteroid course plans and Trades plans', icon: BookOpen, accent: 'var(--primary)' },
+        { href: '/lessons', label: 'Lessons & concept map', desc: 'Published video lessons and connected ideas, read-only', icon: BookOpen, accent: 'var(--primary)' },
+        { href: '/admin/resources', label: 'Resources', desc: 'Textbook, simulations, and teaching plans', icon: BookOpen, accent: 'var(--primary)' },
       ],
     },
   ]
@@ -64,14 +72,14 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
   const homeHref = isAdmin ? '/admin/home' : role === 'observer' ? '/admin/oversight' : '/admin/classes'
   const roleLabel = isAdmin ? 'Admin' : role === 'observer' ? 'Observer' : 'Teacher'
 
+  if (pathname === '/admin/command-center' || pathname === '/admin/projector') return <div className="teaching-workspace">{children}</div>
+
   if (pathname === '/admin/observe') return <div className="observation-workspace">{children}</div>
 
   const NavBody = (
     <div className="flex flex-col h-full" style={{ background: 'var(--card)' }}>
       <Link href={homeHref} className="flex items-center gap-2 px-4 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
-        <span className="grid place-items-center shrink-0" style={{ width: 32, height: 32, borderRadius: 'var(--radius-sm)', background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
-          <FlaskConical size={18} />
-        </span>
+        <BrandLogo decorative />
         <span className="min-w-0">
           <span className="block text-sm font-bold tracking-tight truncate" style={{ color: 'var(--foreground)' }}>Antocci Physics</span>
           <span className="block text-overline" style={{ color: 'var(--muted-foreground)' }}>{roleLabel} suite</span>
@@ -89,7 +97,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
                 return (
                   <li key={t.href}>
                     <Link
-                      href={t.href}
+                      href={scopedHref(t.href)}
                       aria-current={act ? 'page' : undefined}
                       className="flex items-center gap-2.5 rounded-lg px-2 py-2 text-sm"
                       style={{
@@ -107,7 +115,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
                 )
               })}
             </ul>
-            {g.tools.length > 1 && <details open={g.tools.slice(1).some(t => isActive(t.href)) || undefined} className="mt-1"><summary className="min-h-11 cursor-pointer px-2 py-3 text-xs text-muted-foreground">More {g.title.toLowerCase()} tools</summary><ul className="space-y-1 pl-2">{g.tools.slice(1).map(t => <li key={t.href}><Link href={t.href} aria-current={isActive(t.href) ? 'page' : undefined} className={`flex min-h-11 items-center rounded-lg px-2 py-2 text-sm ${isActive(t.href) ? 'bg-primary/10 font-semibold' : ''}`}>{t.label}</Link></li>)}</ul></details>}
+            {g.tools.length > 1 && <details open={g.tools.slice(1).some(t => isActive(t.href)) || undefined} className="mt-1"><summary className="min-h-11 cursor-pointer px-2 py-3 text-xs text-muted-foreground">More {g.title.toLowerCase()} tools</summary><ul className="space-y-1 pl-2">{g.tools.slice(1).map(t => <li key={t.href}><Link href={scopedHref(t.href)} aria-current={isActive(t.href) ? 'page' : undefined} className={`flex min-h-11 items-center rounded-lg px-2 py-2 text-sm ${isActive(t.href) ? 'bg-primary/10 font-semibold' : ''}`}>{t.label}</Link></li>)}</ul></details>}
           </div>
         ))}
       </nav>
@@ -156,6 +164,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
             <Menu size={18} />
           </button>
           <AdminCommand tools={tools} />
+          {role!=='observer' && <ResumeTeaching/>}
           <div className="ml-auto text-xs hidden sm:block truncate" style={{ color: 'var(--muted-foreground)', maxWidth: 200 }}>
             {session?.user?.name ?? ''}
           </div>

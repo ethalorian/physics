@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "tr26.p1.vocabulary",
+    "statement": "I can define and recognize measurement, fit, drawing, and material-estimating vocabulary.",
+    "domain": "knowledge",
+    "program": "trades",
+    "unit_id": "trades-reset-1",
+    "content_strand": "job-language",
+    "order_index": 5,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "tr26.p2.vocabulary",
+    "statement": "I can define and recognize layout, scale, cutting, estimating, and inspection vocabulary.",
+    "domain": "knowledge",
+    "program": "trades",
+    "unit_id": "trades-reset-2",
+    "content_strand": "job-language",
+    "order_index": 5,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "tr26.p3.vocabulary",
+    "statement": "I can define and recognize structural-load, support, deformation, and fair-test vocabulary.",
+    "domain": "knowledge",
+    "program": "trades",
+    "unit_id": "trades-reset-3",
+    "content_strand": "job-language",
+    "order_index": 5,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "tr26.p4.vocabulary",
+    "statement": "I can define and recognize level, elevation, slope, clearance, and flow-rate vocabulary.",
+    "domain": "knowledge",
+    "program": "trades",
+    "unit_id": "trades-reset-4",
+    "content_strand": "job-language",
+    "order_index": 5,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "tr26.p5.vocabulary",
+    "statement": "I can define and distinguish thermal, circuit, power, energy, and system-planning vocabulary.",
+    "domain": "knowledge",
+    "program": "trades",
+    "unit_id": "trades-reset-5",
+    "content_strand": "job-language",
+    "order_index": 5,
+    "exclude_from_growth": false
+  },
+  {
+    "slug": "tr26.p6.vocabulary",
+    "statement": "I can define and recognize proposal, survey, design, estimate, inspection, and handover vocabulary.",
+    "domain": "knowledge",
+    "program": "trades",
+    "unit_id": "trades-reset-6",
+    "content_strand": "job-language",
+    "order_index": 5,
+    "exclude_from_growth": false
+  }
+]

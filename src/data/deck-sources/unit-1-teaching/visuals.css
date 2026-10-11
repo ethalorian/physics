@@ -1,0 +1,69 @@
+/* Visual lessons keep the existing 1280 × 720 stage and slide controls. */
+.slide.art-space,.slide.art-lab{background-size:cover;background-position:center;background-repeat:no-repeat}
+.slide.art-space{background-image:linear-gradient(90deg,#10111de8 0%,#10111d30 72%),url('./art/asteroid-briefing.png')}
+.slide.art-lab{background-image:linear-gradient(90deg,#141523c9 0%,#14152315 85%),url('./art/dynamics-lab.png')}
+.slide.cover h1{font-size:65px;max-width:730px;margin-top:52px;line-height:1.04;text-wrap:balance}
+.slide.cover .content{max-width:665px;font-size:29px;text-wrap:pretty}
+.slide.cover .fiction{background:#151624bb;padding:8px 12px;left:64px;bottom:88px}
+.slide.art-space:not(.cover) .content{max-width:710px;font-size:27px}
+.slide.art-space:not(.cover) h2{max-width:740px}
+.slide.visual-slide{padding-top:36px;background-image:none}
+.visual-slide .tag{margin-bottom:14px}
+.slide.visual-slide h2{font-size:45px;margin-bottom:25px;line-height:1.05;max-width:1128px}
+.visual-layout{display:grid;grid-template-columns:minmax(0,.91fr) minmax(0,1.09fr);gap:32px;align-items:center}
+.visual-copy{font-size:25px;line-height:1.3;min-width:0}
+.visual-copy p{line-height:1.29;margin-bottom:18px}
+.visual-copy li{line-height:1.28;margin-bottom:17px}
+.visual-copy .equation{font-size:25px;line-height:1.4;overflow-wrap:anywhere;margin:18px 0}
+.visual-copy table{font-size:21px;line-height:1.25;margin:0}
+.visual-copy th{font-size:13px;padding:11px 8px}
+.visual-copy td{padding:12px 8px}
+.lesson-visual{margin:0;min-width:0;border-left:1px solid #c9cadd;padding-left:22px;color:#22233a;align-self:center}
+.visual-heading{font:500 15px/1.35 'IBM Plex Mono',monospace;color:#4b4ba8;margin-bottom:10px}
+.science-svg{width:100%;height:304px;display:block;overflow:visible}
+.science-svg text{font:20px 'IBM Plex Mono',monospace;fill:#55576c}
+.science-svg .axis-name{font-size:18px;fill:#22233a}
+.science-svg .route-values{font-size:24px;fill:#4b4ba8}
+.science-svg .force-value{font-size:18px;fill:#4b4ba8}
+.v-grid{stroke:#d8dae8;stroke-width:1}
+.v-axis{stroke:#70758d;stroke-width:2}
+.v-trace{stroke-linejoin:round;stroke-linecap:round}
+.lesson-visual figcaption{font:20px/1.28 Newsreader,Georgia,serif;margin-top:9px;color:#5c5d70}
+.visual-key{display:flex;gap:12px 20px;flex-wrap:wrap;margin:7px 0;font:13px/1.4 'IBM Plex Mono',monospace}
+.visual-key span{border-left:4px solid var(--series);padding-left:8px}
+.concept-scene{display:block;width:100%;height:304px;object-fit:contain;border-radius:10px;background:#fffaf0}
+.sentence-stem{border-left:4px solid #28755a;padding-left:16px;color:#245b49}
+.edition-cpa .slide.visual-slide h2{font-size:43px;max-width:1135px}
+.edition-cpa .visual-layout{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr)}
+.edition-cpa .visual-copy{font-size:28px;line-height:1.3}
+.edition-cpa .visual-copy .equation{font-size:28px}
+.edition-cpa .visual-steps strong{font-size:29px}
+.edition-cpa .visual-steps span{font-size:25px}
+.edition-cpa .slide.cover h1{font-size:62px}
+.edition-switch{display:inline-block;margin-top:14px;padding:12px 18px;border:1px solid #4b4ba8;border-radius:6px}
+.visual-controls{display:flex;align-items:center;gap:8px;margin-top:10px;font:13px 'IBM Plex Mono',monospace}
+.visual-controls button{min-height:44px;min-width:64px;padding:8px 12px}
+.visual-controls input[type=range]{flex:1;min-width:70px;accent-color:#4b4ba8;height:44px}
+.visual-controls .visual-state{font-size:11px;color:#5c5d70;min-width:44px;text-align:right}
+.visual-steps{list-style:none;margin:20px 0;padding:0;counter-reset:visual-step}
+.visual-steps li{position:relative;padding:0 0 27px 57px;margin:0;counter-increment:visual-step;border-left:2px solid #c9cadd;margin-left:19px}
+.visual-steps li:last-child{border-left-color:transparent;padding-bottom:8px}
+.visual-steps li:before{content:counter(visual-step,decimal-leading-zero);position:absolute;left:-21px;top:-2px;background:#f6f6fb;color:#4b4ba8;padding:3px;font:23px 'IBM Plex Mono',monospace}
+.visual-steps strong{font:500 27px/1.2 Newsreader,serif;display:block;margin-bottom:7px}
+.visual-steps span{display:block;font:23px/1.3 Newsreader,serif;color:#55576c}
+.slide.has-legacy-visual .chart svg,.slide.has-legacy-visual .vectorplot svg,.slide.has-legacy-visual .forceplot svg{filter:drop-shadow(0 6px 12px #4b4ba810)}
+.slide.has-legacy-visual .content{font-size:26px}
+.slide.has-legacy-visual .equation{font-size:29px}
+.cart-track svg{display:block;width:100%;height:74px;margin:0}
+.simulation:has(.cart-track) .chart svg{height:166px;margin-bottom:5px}
+.simulation:has(.cart-track) .sim-controls{margin:9px 0}
+.simulation:has(.cart-track) output{margin:9px 0}
+.dark.visual-slide .lesson-visual{border-color:#656780;color:#f6f6fb}
+.dark.visual-slide .visual-heading,.dark.visual-slide .science-svg text{fill:#e2e3fa;color:#e2e3fa}
+.dark.visual-slide .lesson-visual figcaption,.dark.visual-slide .visual-state{color:#d4d5e2}
+.dark.visual-slide .v-grid{stroke:#51546f}
+.dark.visual-slide .v-axis{stroke:#aeb0d1}
+.dark.visual-slide .science-svg [stroke="#4b4ba8"]{stroke:#b3b5f2}
+.dark.visual-slide .science-svg [fill="#4b4ba8"]{fill:#b3b5f2}
+@media(prefers-reduced-motion:reduce){.v-trace{transition:none!important;animation:none!important}}
+@media print{.visual-controls{display:none!important}.slide.art-space,.slide.art-lab{print-color-adjust:exact;-webkit-print-color-adjust:exact}.v-trace{stroke-dashoffset:0!important}.lesson-visual{break-inside:avoid}.slide.visual-slide .science-svg{height:304px}}

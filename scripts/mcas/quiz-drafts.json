@@ -1,0 +1,234 @@
+{
+  "status": "prepared-not-assigned",
+  "quizzes": [
+    {
+      "id": "vectors-displacement",
+      "title": "MCAS · Vectors, distance & displacement",
+      "focus": "After position, vector direction, and distance versus displacement.",
+      "questions": [
+        {
+          "id": "acb6e9fe-d387-4407-bb2d-4585fd0a6ecc",
+          "mcas_id": "mcas-physics-2014-04",
+          "kind": "choice",
+          "prompt": "MCAS 2014 · Question 4\nChoose one answer from the original question.",
+          "target_id": "3af8808d-9188-4878-98c7-b1b0877c16be",
+          "points": 1,
+          "guide": "Teacher-draft solution: velocity includes both magnitude (90 km/hr) and direction (northeast); the other choices do not specify a vector. Award 1 point for D.",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct_index": 3,
+          "target_slug": "u1.vocab-position-distance-displacement"
+        },
+        {
+          "id": "d111d98b-d90e-44b3-9692-4259d48b05be",
+          "mcas_id": "mcas-physics-2011-40",
+          "kind": "choice",
+          "prompt": "MCAS 2011 · Question 40\nChoose one answer from the original question.",
+          "target_id": "3af8808d-9188-4878-98c7-b1b0877c16be",
+          "points": 1,
+          "guide": "Teacher-draft solution: vectors include direction; both vectors and scalars can have magnitude and units. Award 1 point for A.",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct_index": 0,
+          "target_slug": "u1.vocab-position-distance-displacement"
+        },
+        {
+          "id": "ce99f345-a645-4473-9709-25d4dec8a285",
+          "mcas_id": "mcas-physics-2011-06",
+          "kind": "choice",
+          "prompt": "MCAS 2011 · Question 6\nChoose one answer from the original question.",
+          "target_id": "3af8808d-9188-4878-98c7-b1b0877c16be",
+          "points": 1,
+          "guide": "Teacher-draft solution: choose north as positive; 2.5 km − 1.0 km = 1.5 km north. Award 1 point for B.",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct_index": 1,
+          "target_slug": "u1.vocab-position-distance-displacement"
+        },
+        {
+          "id": "c9d990b4-d016-47d2-8a2c-272a887d5c02",
+          "mcas_id": "mcas-physics-2014-29",
+          "kind": "choice",
+          "prompt": "MCAS 2014 · Question 29\nChoose one answer from the original question.",
+          "target_id": "3af8808d-9188-4878-98c7-b1b0877c16be",
+          "points": 1,
+          "guide": "Teacher-draft solution: the total distance is 6 km and final displacement is zero. Distance traveled is greater than the displacement magnitude. Award 1 point for C.",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct_index": 2,
+          "target_slug": "u1.vocab-position-distance-displacement"
+        }
+      ],
+      "status": "draft",
+      "course_id": null,
+      "tracks": [
+        "cpa",
+        "honors"
+      ]
+    },
+    {
+      "id": "speed-velocity",
+      "title": "MCAS · Speed & velocity",
+      "focus": "After average speed, average velocity, elapsed time, and return trips.",
+      "questions": [
+        {
+          "id": "e7fd0739-05f0-4443-85b6-a5ca37fa8e4c",
+          "mcas_id": "mcas-physics-2016-05",
+          "kind": "choice",
+          "prompt": "MCAS 2016 · Question 5\nChoose one answer from the original question.",
+          "target_id": "ab4c2c14-6d40-49b3-a24d-5db4aed1fdba",
+          "points": 1,
+          "guide": "Teacher-draft solution: average speed is a scalar with magnitude only; average velocity has magnitude and direction. Award 1 point for D.",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct_index": 3,
+          "target_slug": "u1.kinematics-language"
+        },
+        {
+          "id": "d16d6fa1-07a9-4e73-8287-8aed61a55d43",
+          "mcas_id": "mcas-physics-2015-20",
+          "kind": "choice",
+          "prompt": "MCAS 2015 · Question 20\nChoose one answer from the original question.",
+          "target_id": "ab4c2c14-6d40-49b3-a24d-5db4aed1fdba",
+          "points": 1,
+          "guide": "Teacher-draft solution: total distance = 200 × 4.0 = 800 km. Average speed = 800 / 190 ≈ 4.2 km/min. Award 1 point for D.",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct_index": 3,
+          "target_slug": "u1.kinematics-language"
+        },
+        {
+          "id": "e9e7810c-b23c-46a9-bcb2-4d2843e7e64b",
+          "mcas_id": "mcas-physics-2024-14",
+          "kind": "choice",
+          "prompt": "MCAS 2024 · Question 14\nChoose one answer from the original question.",
+          "target_id": "ab4c2c14-6d40-49b3-a24d-5db4aed1fdba",
+          "points": 1,
+          "guide": "Official DESE key: C. Award the available point for the correct choice.",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct_index": 2,
+          "target_slug": "u1.kinematics-language"
+        },
+        {
+          "id": "82f853d6-e1bf-42c0-b1f1-3a05cfef9140",
+          "mcas_id": "mcas-physics-2013-32",
+          "kind": "problem",
+          "prompt": "MCAS 2013 · Question 32\nRespond to every labeled part. Use the drawing tools where a graph or model is requested.",
+          "target_id": "ab4c2c14-6d40-49b3-a24d-5db4aed1fdba",
+          "points": 4,
+          "guide": "Teacher-draft rubric, 4 points: (a) 1200 m / 1080 s ≈ 1.11 m/s, or 66.7 m/min, with calculation and units (1); (b) equal average-velocity magnitudes but opposite directions: south outbound and north returning (1); (c) total distance 2400 m (1); (d) final displacement 0 m because the student returns to the starting position (1). Accept equivalent units and reasonable rounding.",
+          "target_slug": "u1.kinematics-language"
+        }
+      ],
+      "status": "draft",
+      "course_id": null,
+      "tracks": [
+        "cpa",
+        "honors"
+      ]
+    },
+    {
+      "id": "motion-graphs",
+      "title": "MCAS · Reading position–time graphs",
+      "focus": "After graph scales, slope as velocity, and constant versus changing motion.",
+      "questions": [
+        {
+          "id": "67899d41-29ce-4aa2-9b33-42565738fc9a",
+          "mcas_id": "mcas-physics-2026-31",
+          "kind": "choice",
+          "prompt": "MCAS 2026 · Question 31\nChoose one answer from the original question.",
+          "target_id": "b706181f-0c78-464d-9483-4239fa16c64c",
+          "points": 1,
+          "guide": "Official DESE key: B. Award the available point for the correct choice.",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct_index": 1,
+          "target_slug": "u1.capture-pt-graph"
+        },
+        {
+          "id": "62c86d6c-09b3-4527-b644-eaa3c9304183",
+          "mcas_id": "mcas-physics-2025-39",
+          "kind": "choice",
+          "prompt": "MCAS 2025 · Question 39\nChoose one answer from the original question.",
+          "target_id": "b706181f-0c78-464d-9483-4239fa16c64c",
+          "points": 1,
+          "guide": "Official DESE key: B. Award the available point for the correct choice.",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct_index": 1,
+          "target_slug": "u1.capture-pt-graph"
+        },
+        {
+          "id": "71fba5af-0ba1-4dac-b3bb-b10ca5df1abc",
+          "mcas_id": "mcas-physics-2015-01",
+          "kind": "choice",
+          "prompt": "MCAS 2015 · Question 1\nChoose one answer from the original question.",
+          "target_id": "b706181f-0c78-464d-9483-4239fa16c64c",
+          "points": 1,
+          "guide": "Teacher-draft solution: the position–time segment has a constant nonzero slope, so the car travels at constant speed. Award 1 point for D.",
+          "options": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "correct_index": 3,
+          "target_slug": "u1.capture-pt-graph"
+        },
+        {
+          "id": "edb89ad7-54cf-478d-9b27-85d30e72e9bb",
+          "mcas_id": "mcas-physics-2004-08",
+          "kind": "problem",
+          "prompt": "MCAS 2004 · Question 8\nRespond to every labeled part. Use the drawing tools where a graph or model is requested.",
+          "target_id": "b706181f-0c78-464d-9483-4239fa16c64c",
+          "points": 4,
+          "guide": "Teacher-draft rubric, 4 points: (a) label time (s) horizontally and position (m) vertically with a consistent scale (1), and plot (0,75), (10,125), (20,175), (30,225), (40,275) on a straight line (1); (b) average speed = (275 − 75) m / 40 s = 5 m/s (1); (c) acceleration is zero because the velocity/slope remains constant (1).",
+          "target_slug": "u1.capture-pt-graph"
+        }
+      ],
+      "status": "draft",
+      "course_id": null,
+      "tracks": [
+        "cpa",
+        "honors"
+      ]
+    }
+  ]
+}

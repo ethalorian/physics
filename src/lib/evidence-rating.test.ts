@@ -74,3 +74,11 @@ test("exclusions require reasons and never lower the mean; missing evidence is n
     level: null,
   });
 });
+
+test("direct target judgments require the exact evidence version set", async () => {
+  const { validateEvidenceKeys } = await import('./evidence-rating');
+  assert.deepEqual(validateEvidenceKeys(['b', 'a'], ['a', 'b']), ['b', 'a']);
+  for (const keys of [[], ['a'], ['a','a'], ['a','old'], [1,'b']]) {
+    assert.throws(() => validateEvidenceKeys(keys, ['a','b']));
+  }
+});

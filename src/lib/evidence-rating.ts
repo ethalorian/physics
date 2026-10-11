@@ -3,6 +3,14 @@ export interface EvidenceDecision {
   level: 1 | 2 | 3 | null;
   reason?: string;
 }
+/** Bind a target judgment to exactly the evidence the teacher was shown. */
+export function validateEvidenceKeys(input: unknown, expected: string[]): string[] {
+  if (!Array.isArray(input) || !expected.length || input.length !== expected.length || input.length > 300 ||
+    input.some(key => typeof key !== "string" || !expected.includes(key)) || new Set(input).size !== input.length) {
+    throw new Error("The evidence changed. Reload the review before saving.");
+  }
+  return input;
+}
 export function summarizeEvidence(decisions: EvidenceDecision[]) {
   const levels = decisions.flatMap((d) => (d.level === null ? [] : [d.level]));
   const mean = levels.length

@@ -10,23 +10,9 @@
  */
 import { supabaseAdmin } from '@/lib/supabase'
 
-type Doc = { blocks?: unknown[] } | null | undefined
-
-/** Target slugs referenced by capture / rating blocks (targetId, targetIds, targets). */
-export function targetSlugsInBlocks(doc: Doc): string[] {
-  const out = new Set<string>()
-  const blocks = Array.isArray(doc?.blocks) ? doc!.blocks! : []
-  for (const raw of blocks) {
-    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) continue
-    const b = raw as Record<string, unknown>
-    if (typeof b.targetId === 'string' && b.targetId) out.add(b.targetId)
-    for (const k of ['targetIds', 'targets']) {
-      const v = b[k]
-      if (Array.isArray(v)) for (const s of v) if (typeof s === 'string' && s) out.add(s)
-    }
-  }
-  return [...out]
-}
+import { lessonTargetReferences, type TargetDocument } from './lesson-target-references'
+type Doc = TargetDocument
+export const targetSlugsInBlocks = lessonTargetReferences
 
 /** Target ids a lesson can be rated on: owned by `lesson_id` ∪ referenced in its blocks. */
 export async function targetIdsForLesson(lessonId: string, documentOverride?: Doc): Promise<string[]> {

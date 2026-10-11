@@ -23,6 +23,10 @@ import {
 //   the student computes the number and the block silently checks it.
 
 export interface GewaValue {
+  format?: 'problem-workspace';
+  responses?: import('@/lib/problem-response').ProblemAnswer;
+  modelStrokes?: import('./DoodleCanvas').Stroke[];
+  hintsUsed?: string[];
   given?: string
   equationId?: string
   solveFor?: string

@@ -15,7 +15,7 @@ const repo = process.cwd();
     if (pathname === '/') { res.end('<!doctype html><html><body>Deck verification</body></html>'); return; }
     const file = path.resolve(repo, 'public', '.' + pathname);
     if (!file.startsWith(path.join(repo, 'public') + path.sep) || !fs.existsSync(file)) { res.writeHead(404); res.end(); return; }
-    res.setHeader('Content-Type', /\.(js|jsx)$/.test(file) ? 'application/javascript' : 'text/html'); res.end(fs.readFileSync(file));
+    res.setHeader('Content-Type', /\.(js|jsx)$/.test(file) ? 'application/javascript' : file.endsWith('.css')?'text/css':file.endsWith('.ttf')?'font/ttf':'text/html'); res.end(fs.readFileSync(file));
   });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   let browser;
@@ -24,14 +24,14 @@ const repo = process.cwd();
     const page = await browser.newPage();
     const base = 'http://127.0.0.1:' + server.address().port;
     await page.goto(base); await page.addScriptTag({url: base + '/bridge.js'});
-    const files = ['unit-1','classroom'].flatMap(dir => fs.readdirSync(path.join(repo, 'public/decks',dir)).filter(f=>f.endsWith('.html')&&!f.startsWith('Unit ')).map(f=>dir+'/'+f));
+    const files = ['unit-1','classroom','unit-1-teaching','unit-1-cpa'].flatMap(dir => fs.readdirSync(path.join(repo, 'public/decks',dir)).filter(f=>f.endsWith('.html')&&!f.startsWith('Unit ')&&f!=='index.html').map(f=>dir+'/'+f));
     const metadata = new Map();
     for (const file of files) {
       const html = fs.readFileSync(path.join(repo, 'public/decks', file), 'utf8');
       const slides = await page.evaluate(html => window.deckSlidesFromHtml(html), html);
       assert.ok(slides.length > 1, file + ': slide metadata available'); metadata.set(file, slides);
     }
-    for (const file of ['unit-1/Day 2 - Motion Vocabulary.dc.html', 'unit-1/Day 3 - Graphs as Claims.dc.html', 'classroom/U1 Day 2 - Talking About Motion.dc.html', 'classroom/U1 Day 5 - The First Prediction.dc.html', 'classroom/U2 Day 4 - Universal Gravitation.dc.html']) {
+    for (const file of [...['unit-1-teaching','unit-1-cpa'].flatMap(dir=>Array.from({length:22},(_,i)=>`${dir}/day-${String(i+1).padStart(2,'0')}.html`)), 'unit-1/Day 2 - Motion Vocabulary.dc.html', 'unit-1/Day 3 - Graphs as Claims.dc.html', 'classroom/U1 Day 2 - Talking About Motion.dc.html', 'classroom/U1 Day 5 - The First Prediction.dc.html', 'classroom/U2 Day 4 - Universal Gravitation.dc.html']) {
       await page.goto(base + '/decks/' + file.split('/').map(encodeURIComponent).join('/'));
       await page.locator('deck-stage').waitFor({timeout: 30000});
       await page.addScriptTag({url: base + '/bridge.js'});
@@ -45,6 +45,17 @@ const repo = process.cwd();
       await page.waitForFunction(() => window.bridge.readDeck(window)?.index === 2);
       await page.evaluate(() => window.bridge.deckPrev(window));
       await page.waitForFunction(() => window.bridge.readDeck(window)?.index === 1);
+      if(/^(unit-1-teaching|unit-1-cpa)\//.test(file)) {
+        assert.ok(snapshot.slides.every(s=>s.notes.length>15),'every teaching slide has notes');
+        await page.evaluate(()=>window.bridge.deckPresenting(window,true));
+        await page.waitForFunction(()=>getComputedStyle(document.querySelector('.toolbar')).display==='none');
+        assert.equal(await page.locator('.stage-shell').evaluate(el=>Math.round(el.getBoundingClientRect().height)), await page.evaluate(()=>innerHeight));
+        await page.evaluate(()=>{window.requestedIndex=null;document.addEventListener('classroomnavigate',e=>window.requestedIndex=e.detail.index,{once:true});window.bridge.deckNext(window)});
+        assert.equal(await page.evaluate(()=>window.requestedIndex),2);
+        assert.equal(await page.evaluate(()=>window.bridge.readDeck(window).index),1,'session navigation waits for acknowledgment');
+        await page.evaluate(()=>window.bridge.deckGo(window,window.requestedIndex));
+        assert.equal(await page.evaluate(()=>window.bridge.readDeck(window).index),2);
+      }
       console.log('PASS real deck:', file, snapshot.total, 'slides; titles, notes, jump/next/previous');
     }
     console.log('PASS metadata for', files.length, 'actual exported and imported decks; no exported bundles modified.');

@@ -1,0 +1,47 @@
+\set ON_ERROR_STOP on
+begin;
+create table quiz_inventory_delete_blocker(quiz_id uuid references quiz_assignments(id));
+do $$
+declare c uuid:=gen_random_uuid(); other_c uuid:=gen_random_uuid(); q uuid:=gen_random_uuid(); copied uuid:=gen_random_uuid(); other_q uuid:=gen_random_uuid(); st uuid:=gen_random_uuid(); sub uuid:=gen_random_uuid(); rev uuid:=gen_random_uuid(); d uuid:=gen_random_uuid(); target uuid:=gen_random_uuid(); p jsonb; before_ratings integer;
+begin
+ insert into courses(id,teacher_email) values(c,'quiz-inventory@test'),(other_c,'other@test');
+ insert into students(id,email,name) values(st,'quiz-inventory-student@test','Synthetic student');
+ insert into quiz_assignments(id,course_id,created_by,title,kind,grade_mode,questions,status) values(q,c,'quiz-inventory@test','Delete me','mixed','numeric','[]','published'),(copied,c,'quiz-inventory@test','Keep copy','mixed','numeric','[]','draft'),(other_q,other_c,'other@test','Other class','mixed','numeric','[]','published');
+ update quiz_assignments set source_quiz_id=q where id=copied;
+ insert into quiz_work(quiz_id,user_id,state) values(q,st,'graded');
+ insert into quiz_submissions(id,quiz_id,user_id,answers,snapshot) values(sub,q,st,'{}','{"title":"Delete me"}');
+ update quiz_work set submission_id=sub where quiz_id=q;
+ insert into quiz_reviews(id,submission_id,reviewer_email,decision,note,earned,possible,grade_mode) values(rev,sub,'quiz-inventory@test','graded','Feedback',7,10,'numeric');
+ insert into quiz_review_drafts(submission_id,reviewer_email,payload) values(sub,'quiz-inventory@test','{}');
+ insert into mastery_records(user_id,target_id,level,evidence_source) values(st,target,2,'Quiz: Delete me · submission '||sub);
+ insert into quiz_generations(id,course_id,created_by,request,status,quiz_payload) values(q,c,'quiz-inventory@test','{}','ready','{}');
+ select count(*) into before_ratings from mastery_records;
+ begin perform manage_quiz_inventory(q,'other@test','preview');raise exception 'QA wrong owner allowed' using errcode='XX000';exception when raise_exception then null;end;
+ p:=manage_quiz_inventory(q,'quiz-inventory@test','preview');
+ if p->'impact'<>'{"work":1,"submissions":1,"reviews":1,"reviewDrafts":1,"copies":1,"generations":1}'::jsonb then raise exception 'QA incorrect impact %',p;end if;
+ begin perform manage_quiz_inventory(q,'quiz-inventory@test','delete',1,'Wrong title',p->>'fingerprint');raise exception 'QA confirmation bypass' using errcode='XX000';exception when raise_exception then null;end;
+ update quiz_work set version=version+1 where quiz_id=q;
+ begin perform manage_quiz_inventory(q,'quiz-inventory@test','delete',1,'Delete me',p->>'fingerprint');raise exception 'QA stale work bypass' using errcode='XX000';exception when raise_exception then null;end;
+ p:=manage_quiz_inventory(q,'quiz-inventory@test','preview');
+ update quiz_review_drafts set version=version+1 where submission_id=sub;
+ begin perform manage_quiz_inventory(q,'quiz-inventory@test','delete',1,'Delete me',p->>'fingerprint');raise exception 'QA stale review draft bypass' using errcode='XX000';exception when raise_exception then null;end;
+ perform manage_quiz_inventory(q,'quiz-inventory@test','rename',1,'Renamed');
+ if not exists(select 1 from quiz_submissions where id=sub and snapshot->>'title'='Delete me') then raise exception 'QA snapshot changed';end if;
+ p:=manage_quiz_inventory(q,'quiz-inventory@test','preview');
+ insert into quiz_inventory_delete_blocker values(q);
+ begin perform manage_quiz_inventory(q,'quiz-inventory@test','delete',2,'Renamed',p->>'fingerprint');raise exception 'QA unknown dependency deleted' using errcode='XX000';exception when foreign_key_violation then null;end;
+ if not exists(select 1 from quiz_reviews where id=rev) or not exists(select 1 from quiz_work where submission_id=sub) or not exists(select 1 from quiz_assignments where id=copied and source_quiz_id=q) then raise exception 'QA failed delete was not atomic';end if;
+ delete from quiz_inventory_delete_blocker;
+ set local role service_role;
+ perform manage_quiz_inventory(q,'quiz-inventory@test','delete',2,'Renamed',p->>'fingerprint');
+ reset role;
+ if exists(select 1 from quiz_assignments where id=q) or exists(select 1 from quiz_work where quiz_id=q) or exists(select 1 from quiz_submissions where quiz_id=q) or exists(select 1 from quiz_reviews where id=rev) or exists(select 1 from quiz_review_drafts where submission_id=sub) or exists(select 1 from quiz_generations where id=q) then raise exception 'QA incomplete delete';end if;
+ if not exists(select 1 from quiz_assignments where id=copied and title='Keep copy' and source_quiz_id is null and version=2) or not exists(select 1 from quiz_assignments where id=other_q) then raise exception 'QA copy or other class changed';end if;
+ if (select count(*) from mastery_records)<>before_ratings then raise exception 'QA mastery history deleted';end if;
+ update quiz_assignments set deleted_at=now() where id=copied;
+ p:=manage_quiz_inventory(copied,'quiz-inventory@test','preview');perform manage_quiz_inventory(copied,'quiz-inventory@test','delete',2,'Keep copy',p->>'fingerprint');
+ if exists(select 1 from quiz_assignments where id=copied) then raise exception 'QA removed draft not purged';end if;
+ if has_function_privilege('anon','public.manage_quiz_inventory(uuid,text,text,integer,text,text)','execute') or has_function_privilege('authenticated','public.manage_quiz_inventory(uuid,text,text,integer,text,text)','execute') then raise exception 'QA public RPC access';end if;
+ raise notice 'PASS: real database impact, stale work/review protection, ownership, atomic removal, copies retained, mastery retained, removed draft purge, service role execution, public roles denied.';
+end $$;
+rollback;

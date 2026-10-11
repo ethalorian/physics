@@ -1,31 +1,59 @@
-"use client"
-
-import { use } from 'react'
-import { SIM_COMPONENTS } from '@/components/simulations/registry'
-import { SimEmbedContext } from '@/components/simulations/embed-context'
-import SimErrorBoundary from '@/components/simulations/SimErrorBoundary'
-
-// Chrome-free host for a simulation, loaded inside a lesson via <iframe>. Running
-// the sim in its own document isolates its layout (no overflow into the lesson)
-// and its React tree (a crash here can't take down the lesson page). The app
-// navbar is suppressed for /embed/* paths (see navbar.tsx). SimEmbedContext hides
-// the sim's own page chrome (back button, assignment editor).
-export default function SimEmbedPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = use(params)
-  const Sim = SIM_COMPONENTS[slug]
-
-  if (!Sim) {
-    return <div style={{ padding: 16, color: 'var(--muted-foreground)' }}>Simulation &ldquo;{slug}&rdquo; isn&apos;t available.</div>
-  }
-
-  return (
-    <div className="sim-embed-clean">
-      <style>{`.sim-embed-clean button:has(svg.lucide-arrow-left),.sim-embed-clean a:has(svg.lucide-arrow-left){display:none !important}`}</style>
-      <SimEmbedContext.Provider value={true}>
-        <SimErrorBoundary slug={slug}>
-          <Sim />
-        </SimErrorBoundary>
-      </SimEmbedContext.Provider>
-    </div>
-  )
+import { auth } from "@/lib/auth";
+import { getEffectiveContext } from "@/lib/effective-context";
+import { authorizeLesson } from "@/lib/lesson-access";
+import { canExploreSimulations } from "@/lib/simulation-access";
+import EmbeddedSimulation from "@/components/simulations/EmbeddedSimulation";
+export default async function SimEmbedPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ lesson?: string; block?: string }>;
+}) {
+  const [{ slug }, query, session] = await Promise.all([
+    params,
+    searchParams,
+    auth(),
+  ]);
+  if (!session?.user?.id || !session.user.email)
+    return <p className="p-5">Sign in to open this experiment.</p>;
+  const ctx = await getEffectiveContext(session.user.email);
+  let lessonId: string | undefined;
+  if (ctx.role === "student") {
+    let assigned = false;
+    if (
+      query.lesson &&
+      /^[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}$/i.test(query.lesson) &&
+      query.block
+    ) {
+      const access = await authorizeLesson(
+        {
+          userId: session.user.id,
+          email: session.user.email,
+          realRole: "student",
+        },
+        query.lesson,
+      );
+      assigned =
+        access.ok &&
+        Boolean(
+          access.document?.blocks.some(
+            (b) =>
+              b.id === query.block &&
+              b.type === "sim_embed" &&
+              b.simulationSlug === slug,
+          ),
+        );
+      if (assigned) lessonId = query.lesson;
+    }
+    if (!assigned && !(await canExploreSimulations(session.user.id, ctx.role)))
+      return (
+        <p className="p-5">
+          Open this experiment from an available lesson. Optional exploration is
+          not enabled for your class.
+        </p>
+      );
+  } else if (!["admin", "teacher", "observer"].includes(ctx.role))
+    return <p>Experiment access is unavailable.</p>;
+  return <EmbeddedSimulation slug={slug} lessonId={lessonId} />;
 }

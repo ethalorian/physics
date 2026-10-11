@@ -1,3 +1,4 @@
+import { isCatalogUnit } from '@/lib/retired-curriculum'
 import { auth } from '@/lib/auth'
 import { getEffectiveContext } from '@/lib/effective-context'
 import { canEditArea } from '@/lib/content-access'
@@ -103,7 +104,8 @@ export async function lessonAuthoringData(id: string, editing = true) {
     terms,
     targetIds: ids,
     targets: allTargets,
-    units: units.data ?? [],
+    // A direct historical lesson link keeps its own unit selectable for recovery.
+    units: (units.data ?? []).filter(u => isCatalogUnit(u) || u.id === lesson.unit_id),
     canEdit,
     canPublish: context.realRole === 'admin',
   }

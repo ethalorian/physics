@@ -1,0 +1,12 @@
+New CPA/Honors illustration assets — 2026-10-02
+Generated with the built-in image_gen tool, not the fallback CLI.
+
+Both are conceptual artwork, not photographs or measured data. Scientific labels, forces, numbers, graphs, and animations are authored separately in editable source.
+
+crate-pull.png
+Final prompt:
+Use case: scientific-educational. Asset type: classroom physics slide illustration, landscape 3:2. Draw one plain wooden crate resting on a horizontal tabletop, a taut horizontal rope attached securely to the middle of its right face leading off the right edge. Side view with a little perspective so crate is recognizable, rope perfectly horizontal. Cream background, refined textbook editorial illustration, soft realistic light, crisp boundaries, warm wood and muted blue-gray table. The crate rests visibly on the surface. Empty space above and below for separate HTML force arrows. No people, no hands, no text, no arrows, no labels, no watermark. This is a conceptual illustration, not data. The crate and rope fill central 70% of composition.
+
+block-ramp.png
+Final prompt:
+Use case: scientific-educational. Asset type: classroom physics slide illustration, landscape 3:2. A single blue rectangular block resting with its bottom flush on a simple wooden incline rising from lower left to upper right at about 25 degrees, all on a flat table. Clean near-side view, slight perspective, obvious contact with ramp. Warm cream background, refined textbook editorial illustration, crisp physical geometry, soft realistic light, minimal surroundings. Empty breathing room above block and at sides for labels added in HTML. No ropes, pulleys, extra blocks, people, text, arrows, labels, watermark. This is a conceptual illustration, not measurement.

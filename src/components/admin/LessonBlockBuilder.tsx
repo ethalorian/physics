@@ -1,5 +1,9 @@
 "use client"
 
+import GuidedActivityPicker from './GuidedActivityPicker'
+import LearningPathSettings from './LearningPathSettings'
+import NotebookLessonSettings from './NotebookLessonSettings'
+import TeachingPlanSettings from './TeachingPlanSettings'
 import TeachingMomentEditor from './TeachingMomentEditor'
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { useSession } from 'next-auth/react'
@@ -7,6 +11,7 @@ import { editLessonDocument } from '@/lib/lesson-editing'
 import LessonVocabularySelection from './LessonVocabularySelection'
 import LessonSaveConflict from './LessonSaveConflict'
 import LessonEditorNav from './LessonEditorNav'
+import McasLessonPicker from '@/components/mcas/McasLessonPicker'
 import { LessonStudentPreview } from './AdminLessonPreview'
 import type { GlossaryEntry } from '@/components/MathMarkdown'
 import { BlockSettingsEditor, QuestionEditor } from './BlockSettingsEditor'
@@ -149,7 +154,10 @@ function BuilderSession({
 
   const addBlock = (type: string) => {
     const id = mkId()
-    setBlocks((prev) => [...prev, ...fromDocument({ schemaVersion: 1, blocks: [createBlock(type, id)] })])
+    const block=createBlock(type,id)
+    if(source?.learningPath && block.type==='gewa')block.responseFormat='problem-workspace'
+    if(source?.learningPath && block.type==='worked_example')block.format='problem-workspace'
+    setBlocks((prev) => [...prev, ...fromDocument({ schemaVersion: 1, blocks: [block] })])
     flash(id)
     // Let it mount, then scroll the new card into view so the add is unmistakable.
     window.setTimeout(() => { document.querySelector(`[data-bid="${id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }) }, 40)
@@ -231,6 +239,11 @@ function BuilderSession({
       </div>
       <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>Select a block to edit it. Use Student preview to try the lesson, then save your changes.</p>
 
+      {!preview && doc.interactiveNotebook && <div className="mb-5"><NotebookLessonSettings document={doc} targets={targets} onChange={next=>{setSource(next);setBlocks(fromDocument(next))}}/></div>}
+      {!preview && <TeachingPlanSettings document={doc} onChange={setSource} unitId={unitId} day={day}/>}
+      {!preview && (source?.learningPath || /^unit-[1-8]$/.test(unitId??'')) && <div className="mb-5"><LearningPathSettings document={doc} onChange={setSource} targets={targets} title={lessonTitle} lessonId={lessonId} unitId={unitId}/></div>}
+      {!preview && <GuidedActivityPicker unitId={unitId} onAdd={added=>setBlocks(previous=>[...previous,...fromDocument({schemaVersion:1,blocks:added})])}/>}
+      {!preview && /^unit-[1-8]$/.test(unitId??'') && <McasLessonPicker blocks={doc.blocks} targets={targets} unitId={unitId} onChange={next=>setBlocks(fromDocument({...doc,blocks:next}))}/>}
       {conflict != null && <LessonSaveConflict local={doc} current={conflict} />}
       {recovery && <div role="status" className="mb-4 rounded-xl border p-4 text-sm">
         A recoverable draft is available from this browser.
@@ -363,7 +376,7 @@ function BuilderSession({
                 </div>
                 <TeachingMomentEditor value={b.data.teachingMoment as ContentBlock['teachingMoment']} onChange={value=>setField(b.id,'teachingMoment',value)} />
                 <BlockSettingsEditor targets={targets} data={b.data} capture={isCaptureBlock(liveOf(b))} onPatch={(patch) => Object.entries(patch).forEach(([k, v]) => setField(b.id, k, v))} />
-                {b.type === 'vocab' || b.type === 'lesson_vocab' ? <LessonVocabularySelection lessonId={lessonId} blockId={b.id} data={b.data} onPatch={patch => Object.entries(patch).forEach(([k,v]) => setField(b.id,k,v))} /> : (def?.fields ?? []).length === 0
+                {b.type === 'question' && doc.interactiveNotebook?.questionBlockIds.includes(b.id) ? <p className="text-sm text-muted-foreground">This question matches the original notebook. To change its prompt or choices, choose “Use standard layout and editable questions” in Notebook lesson settings. Its target and language supports remain editable here.</p> : b.type === 'vocab' || b.type === 'lesson_vocab' ? <LessonVocabularySelection lessonId={lessonId} blockId={b.id} data={b.data} onPatch={patch => Object.entries(patch).forEach(([k,v]) => setField(b.id,k,v))} /> : (def?.fields ?? []).length === 0
                   ? <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>This block has no editable fields.</p>
                   : (def?.fields ?? []).map((f) => (
                       <FieldEditor key={f.key} field={f} value={b.data[f.key]} sims={sims} blockType={b.type} blockData={b.data}

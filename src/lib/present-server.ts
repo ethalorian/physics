@@ -1,9 +1,12 @@
+import { withLessonPresentationDeck } from '@/data/lesson-decks'
 import { hydrateLessonDocument } from '@/lib/lesson-access'
 import { supabaseAdmin } from '@/lib/supabase'
 import { asProgram, getProgramUnitIds, PROGRAM_LABEL } from '@/lib/program'
 import { effectiveTrack, filterDocumentForViewer, isLessonVisible, isBlockVisible } from '@/lib/track-visibility'
 import type { BlockDocument } from '@/data/content-blocks'
 import { isSameIdentity } from '@/lib/identity-aliases'
+import { resolveClassPlan } from '@/lib/course-plan-presentation-server'
+import type { PresentationIdentity } from '@/lib/course-plan-presentation'
 
 type PresentationActor = { role: string; email: string; scopeEmail?: string }
 
@@ -12,7 +15,7 @@ export async function resolveClassLesson(lessonId: string, courseId: string, act
   const unavailable = (error: string, status = 403) => ({ ok: false as const, error, status })
   const [courseResult, lessonResult] = await Promise.all([
     supabaseAdmin.from('courses').select('id, teacher_email, program, track').eq('id', courseId).maybeSingle(),
-    supabaseAdmin.from('lessons').select('id, title, unit_id, visibility_track, published, content_blocks').eq('id', lessonId).maybeSingle(),
+    supabaseAdmin.from('lessons').select('id, slug, lesson_number, title, unit_id, visibility_track, published, content_blocks').eq('id', lessonId).maybeSingle(),
   ])
   const { data: course, error } = courseResult
   if (error) return unavailable('Could not check class access. Please retry.', 503)
@@ -26,7 +29,8 @@ export async function resolveClassLesson(lessonId: string, courseId: string, act
   if (!(await getProgramUnitIds(program)).includes(lesson.unit_id)) blockers.push(`This lesson is outside the selected class’s ${PROGRAM_LABEL[program]} curriculum. Choose a matching lesson or class.`)
   if (!isLessonVisible(lesson.visibility_track, { role: 'student', track: course.track })) blockers.push('This lesson is not available for the selected class’s track.')
   if (blockers.length) return unavailable(blockers.join(' '))
-  const original = lesson.content_blocks as BlockDocument | null
+  const stored = lesson.content_blocks as BlockDocument | null
+  const original = stored?.blocks ? withLessonPresentationDeck(stored, lesson, effectiveTrack(course.track)) : stored
   if (!original?.blocks?.length) return unavailable('This lesson has no content to present. Add lesson content first.', 422)
   const doc = filterDocumentForViewer(options.hydrate === false ? original : await hydrateLessonDocument(original, lesson.unit_id), { role: 'student', track: effectiveTrack(course.track) })
   if (!doc.blocks.length) return unavailable('This lesson has no student-visible content for the selected class.', 422)
@@ -37,6 +41,15 @@ export async function resolveClassLesson(lessonId: string, courseId: string, act
 export async function classLesson(lessonId: string, courseId: string, actor?: PresentationActor, options: { hydrate?: boolean } = {}) {
   const result = await resolveClassLesson(lessonId, courseId, actor, options)
   return result.ok ? result.lesson : null
+}
+/** A projector follows the stored presentation target, never a guessed lesson. */
+export async function classPresentation(session: PresentationIdentity & {course_id: string | null}, actor?: PresentationActor, options: {hydrate?: boolean} = {}) {
+  if(!session.course_id)return null
+  if(session.plan_unit_id && session.plan_day){
+    const result=await resolveClassPlan({plan_unit_id:session.plan_unit_id,plan_day:session.plan_day},session.course_id,actor,session.plan_track)
+    return result.ok ? result.lesson : null
+  }
+  return session.lesson_id ? classLesson(session.lesson_id,session.course_id,actor,options) : null
 }
 export async function validateLivePoll(args: { userId: string; lessonId: string; blockId: string; presentSessionId?: string | null; pollRunId?: string | null }): Promise<{ok:true;sessionId:string;pollRunId:string}|{ok:false;error:string;status:number}> {
   const fail = (error: string, status = 409): {ok:false;error:string;status:number} => ({ ok: false, error, status })

@@ -43,6 +43,7 @@
 @keyframes confirmed{0%{transform:scale(.5);opacity:0}70%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
 @media(max-width:760px){.launchArtwork{margin:0 -23px 20px}}
 .board[data-motion=false]:after,.board[data-visible=false]:after{animation:none!important}
+.teaching{margin-top:18px;border-top:1px solid #91b2cb40;padding-top:16px;line-height:1.65}.teaching>summary{min-height:44px;cursor:pointer;font-weight:700;color:var(--mission-color)}.teaching section{margin:16px 0;padding:16px;background:#0b1929;border:1px solid #91b2cb40;border-radius:12px}.teaching h3{font-size:16px}.teaching ol{padding-left:22px}.teaching li{padding:8px 0}.teaching li p{margin:4px 0;color:#c6d9e9}.teaching details summary{min-height:44px;cursor:pointer}.teaching dd{margin:0 0 10px}.teaching p{overflow-wrap:anywhere}
 @media(prefers-reduced-motion:reduce){.board:after{animation:none!important}}
 
 /* Fluency studio: the model, the student's work, then the strategy desk. */

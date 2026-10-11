@@ -8,8 +8,8 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { SIMULATION_CATALOG } from '@/data/simulations-catalog'
 
 const RECENT_KEY = 'physics:sim-launcher-recent'
-const simulations = SIMULATION_CATALOG.filter((sim) => sim.published)
-const searchable = simulations.map((sim) => ({
+const initialSimulations: typeof SIMULATION_CATALOG = []
+const toSearchable = (simulations: typeof SIMULATION_CATALOG) => simulations.map((sim) => ({
   ...sim,
   searchText: [sim.title, sim.description, sim.topic, sim.unit.replace('-', ' '), ...sim.key_concepts, ...sim.tags].join(' ').toLowerCase().replace(/-/g, ' '),
 }))
@@ -18,7 +18,12 @@ const searchable = simulations.map((sim) => ({
 export default function SimulationLauncher() {
   const { status } = useSession()
   const pathname = usePathname() ?? ''
-  const enabled = status === 'authenticated' && !pathname.startsWith('/embed/')
+  const [allowed,setAllowed]=useState(false)
+  useEffect(()=>{const ac=new AbortController();setAllowed(false);if(status==='authenticated')fetch('/api/simulations/access',{signal:ac.signal}).then(r=>r.ok?r.json():{allowed:false}).then(d=>setAllowed(d.allowed===true)).catch(()=>{});return()=>ac.abort()},[status,pathname])
+  const enabled = allowed && status === 'authenticated' && !pathname.startsWith('/embed/') && pathname !== '/admin/command-center' && pathname !== '/admin/projector'
+  const [simulations,setSimulations]=useState(initialSimulations)
+  useEffect(()=>{if(!enabled)return;const ac=new AbortController();fetch('/api/simulations?published=true',{signal:ac.signal}).then(r=>r.ok?r.json():{simulations:[]}).then(d=>setSimulations((d.simulations??[]).map((s:typeof SIMULATION_CATALOG[number])=>({...s,unit:s.unit??'physics',key_concepts:s.key_concepts??[],tags:s.tags??[],sort_order:s.sort_order??999})))).catch(()=>{});return()=>ac.abort()},[enabled])
+  const searchable=useMemo(()=>toSearchable(simulations),[simulations])
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [recent, setRecent] = useState<string[]>([])
@@ -65,7 +70,7 @@ export default function SimulationLauncher() {
         }
         return a.sort_order - b.sort_order || a.title.localeCompare(b.title)
       })
-  }, [query, recent])
+  }, [query, recent, searchable])
 
   const remember = (slug: string) => {
     const next = [slug, ...recent.filter((item) => item !== slug)].slice(0, 6)
@@ -88,7 +93,7 @@ export default function SimulationLauncher() {
       </DialogTrigger>
       <DialogContent className="max-w-2xl gap-3 rounded-2xl p-5"
         onOpenAutoFocus={(event) => { event.preventDefault(); inputRef.current?.focus() }}>
-        <DialogTitle className="flex items-center gap-2 pr-6"><FlaskConical size={20} aria-hidden="true" /> Launch a simulation</DialogTitle>
+        <DialogTitle className="flex items-center gap-2 pr-6"><FlaskConical size={20} aria-hidden="true" /> Optional exploration</DialogTitle>
         <DialogDescription>Find a title or physics concept. Opens in a new tab, keeping your lesson here.</DialogDescription>
         <div className="flex items-center gap-2 rounded-xl border bg-card px-3 focus-within:ring-2 focus-within:ring-ring">
           <Search size={18} className="shrink-0 text-muted-foreground" aria-hidden="true" />
@@ -128,7 +133,7 @@ export default function SimulationLauncher() {
         </ul>
         <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-3 text-xs text-muted-foreground">
           <span>↑ ↓ to choose · Enter to open · Esc to close</span>
-          <a href="/simulations" target="_blank" rel="noopener noreferrer" onClick={() => changeOpen(false)} className="font-medium text-primary underline underline-offset-4">Browse all simulations <span className="sr-only">in a new tab</span></a>
+          <a href="/simulations" target="_blank" rel="noopener noreferrer" onClick={() => changeOpen(false)} className="font-medium text-primary underline underline-offset-4">Browse optional simulations <span className="sr-only">in a new tab</span></a>
         </div>
       </DialogContent>
     </Dialog>

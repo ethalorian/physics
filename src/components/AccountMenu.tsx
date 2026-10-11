@@ -16,7 +16,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { BarChart3, LogOut, Eye, EyeOff, Smile, GraduationCap } from 'lucide-react'
 import { useViewAs } from '@/lib/use-view-as'
-import { setViewAs, clearViewAs, setStudentView, clearStudentView } from '@/lib/view-as-shared'
+import { EXPERIENCE_MARKER } from '@/lib/experience'
+import { clearViewAs, clearStudentView } from '@/lib/view-as-shared'
 import { useViewMode } from '@/contexts/ViewModeContext'
 import UserContextSheet from '@/components/UserContextSheet'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
@@ -69,6 +70,10 @@ export default function AccountMenu() {
   const handleSignOut = async () => {
     try {
       _meCache = null
+      if (session?.experience || document.cookie.split('; ').some(cookie => cookie.startsWith(EXPERIENCE_MARKER + '='))) {
+        await fetch('/api/admin/experience', { method: 'DELETE' })
+        try { localStorage.setItem('experience-changed', String(Date.now())) } catch { /* Sign out still works without browser storage. */ }
+      }
       await signOut({ callbackUrl: '/' })
     } catch (error) {
       console.error('Sign out error:', error)
@@ -145,10 +150,10 @@ export default function AccountMenu() {
               Request teacher access
             </DropdownMenuItem>
           )}
-          {realRole === 'admin' && !viewingAs && !studentViewActive && (
-            <DropdownMenuItem onSelect={() => { if (session?.user?.email) { clearStudentView(); setViewAs(session.user.email); window.location.assign('/admin/classes') } }}>
+          {!session?.experience && realRole === 'admin' && !viewingAs && !studentViewActive && (
+            <DropdownMenuItem onSelect={() => { clearStudentView(); clearViewAs(); window.location.assign('/experience') }}>
               <Eye className="h-4 w-4 mr-2" />
-              View as teacher
+              Experience as…
             </DropdownMenuItem>
           )}
           {viewingAs && (
@@ -157,10 +162,10 @@ export default function AccountMenu() {
               Exit teacher view
             </DropdownMenuItem>
           )}
-          {canToggleView && !studentViewActive && (
-            <DropdownMenuItem onSelect={() => { setStudentView(); window.location.reload() }}>
+          {canToggleView && !studentViewActive && !session?.experience && (
+            <DropdownMenuItem onSelect={() => { clearStudentView(); window.location.assign('/admin/student-preview') }}>
               <GraduationCap className="h-4 w-4 mr-2" />
-              View as student
+              View student account
             </DropdownMenuItem>
           )}
           {studentViewActive && (

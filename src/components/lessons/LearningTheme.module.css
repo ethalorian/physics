@@ -1,0 +1,4 @@
+.theme{--learn-concept:oklch(.44 .15 285);--learn-practice:oklch(.48 .14 36);--learn-investigate:oklch(.4 .08 185);--learn-reading:oklch(.43 .12 310);--learn-space:oklch(.23 .05 280);--learn-on-space:oklch(.97 .009 280);--learn-accent:var(--learn-concept)}
+:global(.dark) .theme{--learn-concept:oklch(.79 .11 285);--learn-practice:oklch(.79 .12 40);--learn-investigate:oklch(.79 .09 185);--learn-reading:oklch(.8 .1 310);--learn-space:oklch(.2 .04 280)}
+.theme [data-tone=practice]{--learn-accent:var(--learn-practice)}.theme [data-tone=investigate]{--learn-accent:var(--learn-investigate)}.theme [data-tone=reading]{--learn-accent:var(--learn-reading)}.theme [data-tone=mission]{--learn-accent:var(--learn-concept)}
+.theme :is(button,a,summary):focus-visible{outline:3px solid var(--primary);outline-offset:4px}

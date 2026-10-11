@@ -1,3 +1,4 @@
+import { getMathXpStatus } from '@/lib/math-xp-status'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -24,5 +25,6 @@ export const POST = withAuth(async (request, ctx) => {
   const saved = await supabaseAdmin.rpc('submit_math_warmup', { p_instance: instance.id, p_user: ctx.userId, p_email: ctx.email, p_response: r, p_summary: summarizeMathResponse(r), p_check: selfCheck, p_tag: feedback?.tag ?? null })
   if (saved.error) return NextResponse.json({ error: 'Your work was not saved. Please retry.' }, { status: 503 })
   // A retry returns the original evidence; never report a verdict for an unsaved change.
-  return NextResponse.json({ ...saved.data, selfCheck: saved.data.self_check, selfCheckReason: saved.data.self_check === 'unknown' ? 'unparsed' : null, workShown, feedback: saved.data.response_json?.answer === answer ? feedback : null })
+  const xpStatus = await getMathXpStatus(ctx.userId)
+  return NextResponse.json({ ...saved.data, xpStatus, selfCheck: saved.data.self_check, selfCheckReason: saved.data.self_check === 'unknown' ? 'unparsed' : null, workShown, feedback: saved.data.response_json?.answer === answer ? feedback : null })
 })

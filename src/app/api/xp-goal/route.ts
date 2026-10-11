@@ -75,7 +75,7 @@ export const GET = withAuth(async (_req, ctx) => {
 
   // Special-day payoff: award once, deduped by key (unique index).
   let bonusAwarded = !!todayBonus
-  if (!bonusAwarded && bonus > 0 && goal > 0 && earned >= goal) {
+  if (!ctx.session?.experience && !bonusAwarded && bonus > 0 && goal > 0 && earned >= goal) {
     const { error } = await supabaseAdmin.from('economy_point_grants').insert({
       user_id: uid,
       user_email: ctx.scopeEmail ?? null,

@@ -84,6 +84,8 @@ export const GET = withAuth(async (request, ctx) => {
       // No drafts at all — fall through and generate the one this target will reuse.
     }
 
+    if (ctx.session?.experience) return NextResponse.json({ error: 'This student has no saved review for this target yet. Generating new work is disabled in the read-only walkthrough.', code: 'EXPERIENCE_READ_ONLY' }, { status: 403 })
+
     // 4. Generate a fresh review with Claude (with the unit's sim catalog), store pending.
     const sims = await loadSimCatalog(tInfo?.unit_id)
     const gen = await generateTargetReview(statement, sims)

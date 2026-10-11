@@ -7,7 +7,8 @@ import { signIn, useSession } from "next-auth/react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { AlertCircle, Atom, RefreshCw } from "lucide-react"
+import { AlertCircle, RefreshCw } from "lucide-react"
+import BrandLogo from "@/components/BrandLogo"
 
 /**
  * The front door (Surface 17). One action — the school Google account — with
@@ -72,12 +73,7 @@ function SignInContent() {
       <Card className="w-full max-w-md p-6 sm:p-8 space-y-6">
         {/* Brand + product name */}
         <div className="text-center space-y-2">
-          <div
-            className="mx-auto grid place-items-center"
-            style={{ width: 52, height: 52, borderRadius: 'var(--radius-md)', background: 'color-mix(in oklch, var(--primary) 12%, transparent)', color: 'var(--primary)' }}
-          >
-            <Atom size={28} strokeWidth={1.75} />
-          </div>
+          <BrandLogo size={52} className="mx-auto" decorative priority />
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Antocci Physics</h1>
           <p className="text-muted-foreground">
             Sign in with your school Google account

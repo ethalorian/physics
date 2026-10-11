@@ -1,0 +1,56 @@
+[
+  {
+    "id": "trades-reset-1",
+    "name": "Phase 1: Measure and make",
+    "description": "Make useful objects and readable records from real measurements.",
+    "order_index": 1,
+    "program": "trades",
+    "allotted_days": 12,
+    "default_start_date": "2026-09-21"
+  },
+  {
+    "id": "trades-reset-2",
+    "name": "Phase 2: Lay out and estimate",
+    "description": "Turn dimensions into layouts, material quantities, and defensible quotes.",
+    "order_index": 2,
+    "program": "trades",
+    "allotted_days": 12,
+    "default_start_date": null
+  },
+  {
+    "id": "trades-reset-3",
+    "name": "Phase 3: Support and strengthen",
+    "description": "Build and compare paper structures using controlled tests.",
+    "order_index": 3,
+    "program": "trades",
+    "allotted_days": 10,
+    "default_start_date": null
+  },
+  {
+    "id": "trades-reset-4",
+    "name": "Phase 4: Route and move",
+    "description": "Coordinate routes using level references, slope, depth, and flow.",
+    "order_index": 4,
+    "program": "trades",
+    "allotted_days": 10,
+    "default_start_date": null
+  },
+  {
+    "id": "trades-reset-5",
+    "name": "Phase 5: Heat and electrical systems",
+    "description": "Investigate thermal performance and low-voltage circuits.",
+    "order_index": 5,
+    "program": "trades",
+    "allotted_days": 16,
+    "default_start_date": null
+  },
+  {
+    "id": "trades-reset-6",
+    "name": "Phase 6: Plan a school improvement",
+    "description": "Deliver a surveyed, calculated, tested proposal for a real user.",
+    "order_index": 6,
+    "program": "trades",
+    "allotted_days": 12,
+    "default_start_date": null
+  }
+]

@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import VocabAssignmentXp from './VocabAssignmentXp'
 import { QUIZ_FORMATS } from '@/lib/vocab-quiz'
 import type { VocabTask,VocabResult } from '@/lib/vocab-learning'
 interface Item {id:string;prompt:string;options:{id:string;label:string}[]}
@@ -14,7 +15,7 @@ export default function VocabQuizWork({task}:{task:VocabTask}){
  const start=()=>run(async()=>{const d=await request({task_id:task.id});setCheck(d.check_id);if(d.completed){setResult(d.result);return}setItems(d.items);try{const saved=JSON.parse(sessionStorage.getItem('vocab-quiz:'+d.check_id)??'{}');setResponses(saved&&typeof saved==='object'&&!Array.isArray(saved)?saved:{})}catch{setResponses({})}})
  const submit=()=>run(async()=>{const d=await request({task_id:task.id,check_id:check,responses:items.map(i=>({id:i.id,response:responses[i.id]??'',supports:[]}))});setResult(d.result);try{sessionStorage.removeItem('vocab-quiz:'+check)}catch{}})
  const shown=game?items.slice(round,round+1):items
- return <section className="space-y-4"><p className="font-semibold">Vocabulary quiz · {format?.label}</p><p>{task.note}</p><p>{format?.description}</p><p className="text-sm text-muted-foreground">{task.term_ids.length} questions · One submitted attempt · {task.threshold}% score goal{task.due_on?` · Due ${task.due_on}`:''}. Untimed. {manual?'Your teacher reviews the meaning of your answer.':'Each correct answer earns one point; speed does not affect your score.'} You can review and change answers before final submission.</p>{error&&<p role="alert" className="text-destructive">{error}</p>}
+ return <section className="space-y-4"><VocabAssignmentXp taskId={task.id} refreshKey={result ? check : ''}/><p className="font-semibold">Vocabulary quiz · {format?.label}</p><p>{task.note}</p><p>{format?.description}</p><p className="text-sm text-muted-foreground">{task.term_ids.length} questions · One submitted attempt · {task.threshold}% score goal{task.due_on?` · Due ${task.due_on}`:''}. Untimed. {manual?'Your teacher reviews the meaning of your answer.':'Each correct answer earns one point; speed does not affect your score.'} You can review and change answers before final submission.</p>{error&&<p role="alert" className="text-destructive">{error}</p>}
  {!check&&<button className={`${field} bg-primary text-primary-foreground`} disabled={busy||!task.active} onClick={start}>Start / resume quiz</button>}
  {check&&!result&&<>{game&&<div className="rounded-xl bg-muted p-4"><strong>Round {round+1} of {items.length}</strong><progress className="mt-2 block w-full" value={items.filter(i=>responses[i.id]?.trim()).length} max={items.length} aria-label="Quiz questions answered"/><p className="text-sm">Choose an answer, then move to the next round. Results are revealed after you submit the whole quiz.</p></div>}
  {task.quiz_format==='matching'&&<p>Match every definition to a word. Use each word exactly once.</p>}

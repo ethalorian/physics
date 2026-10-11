@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Coins, Trophy, Crown, Maximize2 } from 'lucide-react'
 import { createTetherBridge } from '@/lib/tether-bridge'
+import { DEFAULT_PULSE_CHART, pulseChart } from '@/lib/pulse-charts'
 import styles from '../arcade.module.css'
 
 /**
@@ -37,12 +38,18 @@ export default function ArcadeCabinetPage() {
   const [err, setErr] = useState('')
   const frameRef = useRef<HTMLIFrameElement>(null)
   const playIdRef = useRef<string | null>(null)
+  const pulseChartRef = useRef(DEFAULT_PULSE_CHART)
+  const [selectedPulseChart, setSelectedPulseChart] = useState(DEFAULT_PULSE_CHART)
+  const boardRequestRef = useRef(0)
+  const [boardError, setBoardError] = useState('')
 
   const loadBoard = useCallback(() => {
-    fetch(`/api/arcade/leaderboard?slug=${slug}`)
-      .then((r) => r.json())
-      .then(setBoard)
-      .catch(() => {})
+    const request = ++boardRequestRef.current
+    setBoardError('')
+    fetch(`/api/arcade/leaderboard?slug=${slug}${slug === 'pulse' ? `&chart=${pulseChartRef.current}` : ''}`)
+      .then((r) => r.ok ? r.json() : Promise.reject(new Error('Could not load rankings')))
+      .then(data => { if (request === boardRequestRef.current) setBoard(data) })
+      .catch(() => { if (request === boardRequestRef.current) { setBoard(null); setBoardError('Rankings are unavailable. Try again.')} })
   }, [slug])
 
   useEffect(() => {
@@ -72,6 +79,13 @@ export default function ArcadeCabinetPage() {
       if (!frameRef.current || e.source !== frameRef.current.contentWindow) return
       const msg = e.data || {}
       if (msg.protocol === 2) {
+        if (slug === 'pulse' && e.origin === window.location.origin && msg.source === 'pulse-arcade' && msg.type === 'pulse:chartSelected' && pulseChart(msg.chartId)) {
+          pulseChartRef.current = msg.chartId
+          setSelectedPulseChart(msg.chartId)
+          setBoard(null)
+          loadBoard()
+          return
+        }
         if (e.origin === window.location.origin) await tether.handle(msg)
         return
       }
@@ -198,6 +212,8 @@ export default function ArcadeCabinetPage() {
         </div>
       )}
 
+      {slug === 'pulse' && game && <p className="text-sm mt-4" style={{ color: 'var(--muted-foreground)' }}>Rankings: {pulseChart(selectedPulseChart)?.label}</p>}
+      {boardError && <p role="status" className="text-sm mt-3">{boardError} <button className="underline" onClick={loadBoard}>Reload rankings</button></p>}
       {board && (
         <div className="grid gap-4 sm:grid-cols-2 mt-4">
           <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>

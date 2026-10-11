@@ -1,18 +1,124 @@
-/* Keep the greeting compact so the lesson is visible without scrolling. */
-.checkIn { display: flex; align-items: center; gap: 16px; }
-.checkIn h1 { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
-.portraitLink { position: relative; display: grid; place-items: center; flex-shrink: 0; width: 72px; height: 80px; border-radius: var(--radius-lg); background: var(--secondary); }
-.editAvatar { position: absolute; right: -4px; bottom: 0; display: grid; place-items: center; width: 24px; height: 24px; border: 1px solid var(--border); border-radius: var(--radius-full); color: var(--muted-foreground); background: var(--card); }
-.portraitLink:hover { background: var(--accent); }
-.portraitLink:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
-.workGrid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
-.lesson { border-top: 3px solid var(--primary); }
+.home {
+  /* Identity and subject surfaces stay scoped to the student home. */
+  --home-hero: oklch(0.39 0.115 282);
+  --home-on-hero: oklch(0.99 0.004 280);
+  --home-hero-muted: oklch(0.88 0.035 285);
+  --home-portrait: oklch(0.76 0.095 295);
+  --home-math: oklch(0.955 0.026 155);
+  --home-math-ink: oklch(0.38 0.065 155);
+  --home-vocab: oklch(0.965 0.04 72);
+  --home-vocab-ink: oklch(0.42 0.085 65);
+}
+:global(.dark) .home {
+  --home-hero: oklch(0.36 0.105 282);
+  --home-math: oklch(0.30 0.035 155);
+  --home-math-ink: oklch(0.85 0.055 155);
+  --home-vocab: oklch(0.30 0.035 72);
+  --home-vocab-ink: oklch(0.85 0.07 72);
+}
+.checkIn { position: relative; isolation: isolate; display: grid; grid-template-columns: 320px minmax(0, 1fr) 192px; grid-template-areas: 'portrait welcome xp'; align-items: center; gap: 24px; padding: 24px; overflow: hidden; border: 1px solid color-mix(in oklab, var(--home-on-hero) 12%, var(--home-hero)); border-radius: var(--radius-2xl); color: var(--home-on-hero); background: var(--home-hero); box-shadow: 0 6px 0 color-mix(in oklab, var(--primary) 18%, var(--background)); }
+.checkIn::before { content: ''; position: absolute; z-index: -1; width: 420px; height: 420px; top: -275px; left: 170px; border: 1px solid color-mix(in oklab, var(--home-on-hero) 9%, transparent); border-radius: var(--radius-full); box-shadow: 0 0 0 40px color-mix(in oklab, var(--home-on-hero) 3%, transparent), 0 0 0 85px color-mix(in oklab, var(--home-on-hero) 2%, transparent); pointer-events: none; }
+.portraitLink { grid-area: portrait; position: relative; display: grid; place-items: center; width: 320px; height: 380px; border-radius: var(--radius-xl); }
+.portraitHalo { position: absolute; inset: 34px 6px 10px; border-radius: 48% 52% 40% 60%; background: var(--home-portrait); transform: rotate(-9deg); box-shadow: 0 0 0 7px color-mix(in oklab, var(--home-on-hero) 5%, transparent); }
+.portrait { position: relative; width: 280px; height: auto; max-height: 380px; }
+.portraitPlaceholder { position: relative; width: 140px; height: 180px; color: var(--home-hero); }
+.portraitSpark { position: absolute; right: -2px; top: 15px; color: var(--reward); }
+.editAvatar { position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; gap: 5px; min-height: 36px; padding: 6px 10px; border: 1px solid color-mix(in oklab, var(--home-on-hero) 24%, transparent); border-radius: var(--radius-full); white-space: nowrap; color: var(--home-on-hero); background: color-mix(in oklab, var(--home-hero) 90%, var(--foreground)); font-size: var(--type-overline); font-weight: 600; }
+.portraitLink:hover .editAvatar { background: var(--home-hero); }
+.portraitLink:focus-visible { outline: 2px solid var(--home-on-hero); outline-offset: 5px; }
+.welcome { grid-area: welcome; min-width: 0; }
+.welcomeEyebrow { color: var(--home-hero-muted); font-size: var(--type-overline); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.welcome h1 { min-width: 0; max-width: 100%; overflow-wrap: anywhere; margin: 8px 0; color: var(--home-on-hero); font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.1; font-weight: 700; letter-spacing: -0.04em; }
+.welcomeMessage { color: var(--home-hero-muted); font-size: var(--type-caption); line-height: 1.6; }
+.heroClasses { --muted-foreground: var(--home-hero-muted); --foreground: var(--home-on-hero); --accent: color-mix(in oklab, var(--home-on-hero) 12%, var(--home-hero)); --accent-foreground: var(--home-on-hero); margin-top: 6px; }
+.heroClasses summary { font-size: var(--type-caption); }
+.streak { display: inline-flex; align-items: center; gap: 6px; margin-top: 7px; padding: 5px 9px; border: 1px solid color-mix(in oklab, var(--home-on-hero) 18%, transparent); border-radius: var(--radius-full); background: color-mix(in oklab, var(--home-on-hero) 7%, transparent); color: var(--home-on-hero); font-size: var(--type-overline); }
+.streak svg { flex-shrink: 0; color: var(--reward); }
+.xpDisplay { grid-area: xp; min-width: 0; padding: 19px; border: 1px solid color-mix(in oklab, var(--reward) 65%, var(--home-on-hero)); border-radius: var(--radius-xl); color: var(--reward-foreground); background: color-mix(in oklab, var(--reward) 85%, var(--home-on-hero)); transform: rotate(2deg); box-shadow: 4px 5px 0 color-mix(in oklab, var(--home-hero) 75%, var(--foreground)); }
+.xpLabel { display: flex; align-items: center; gap: 6px; font-size: var(--type-overline); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.xpLabel svg, .balance svg { flex-shrink: 0; }
+.xpTotal { margin: 8px 0 4px; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.1; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.xpCaption { font-size: var(--type-overline); }
+.balance { display: flex; align-items: center; gap: 7px; min-height: 44px; margin-top: 14px; padding-top: 10px; border-top: 1px solid color-mix(in oklab, var(--reward-foreground) 22%, transparent); color: inherit; font-size: var(--type-overline); }
+.balance span { min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.balance strong { font-size: var(--type-small); }
+.balance:hover { text-decoration: underline; text-underline-offset: 3px; }
+.balance:focus-visible { outline: 2px solid var(--reward-foreground); outline-offset: 3px; border-radius: var(--radius-xs); }
+.workHeading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; }
+.workGrid, .progressGrid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.lesson { position: relative; min-height: 100%; border-top: 4px solid var(--primary); border-radius: var(--radius-xl); box-shadow: 0 3px 0 color-mix(in oklab, var(--primary) 16%, var(--background)); }
+.lessonNumber { position: absolute; right: 20px; top: 24px; color: color-mix(in oklab, var(--primary) 16%, var(--card)); font-size: 2.5rem; font-weight: 700; line-height: 1; letter-spacing: -0.05em; }
+.lessonEyebrow { position: relative; display: flex; align-items: center; gap: 7px; padding-right: 44px; color: var(--primary); font-size: var(--type-caption); font-weight: 600; }
+.lessonEyebrow svg { flex-shrink: 0; }
+.lessonTitle { position: relative; max-width: 100%; padding-right: 20px; overflow-wrap: anywhere; font-size: 1.75rem; line-height: 1.2; font-weight: 700; letter-spacing: -0.03em; }
+.resumeButton { box-shadow: 0 3px 0 color-mix(in oklab, var(--primary) 75%, var(--foreground)); }
+.practiceTile { --practice-surface: var(--home-math); --practice-ink: var(--home-math-ink); display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: start; gap: 14px; padding: 18px; border: 1px solid color-mix(in oklab, var(--practice-ink) 20%, var(--practice-surface)); border-radius: var(--radius-lg); background: var(--practice-surface); }
+.mathTile { --practice-surface: var(--home-math); --practice-ink: var(--home-math-ink); }
+.vocabTile { --practice-surface: var(--home-vocab); --practice-ink: var(--home-vocab-ink); }
+.practiceIcon { display: grid; place-items: center; min-height: 42px; border-radius: var(--radius-md); background: color-mix(in oklab, var(--card) 58%, transparent); color: var(--practice-ink); font-size: var(--type-title-2); font-weight: 700; }
+.practiceTile > :global([data-slot='card']) { min-width: 0; border: 0; padding: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.practiceTile h4, .practiceTile a { color: var(--practice-ink); }
+.practiceTile :global(.text-muted-foreground) { color: var(--practice-ink); }
+.feedback { min-width: 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--card); }
+.feedback article { border-left-color: color-mix(in oklab, var(--primary) 55%, var(--card)); }
+.feedback article > p { font-size: var(--type-small); line-height: 1.6; }
+.feedback article > p:first-child, .feedback article > p:last-child:not(:nth-child(2)) { font-size: var(--type-caption); }
+.skillReview { padding: 14px 20px 10px; border-top: 1px solid var(--border); background: color-mix(in oklab, var(--primary) 4%, var(--card)); }
+.termXp { min-width: 0; padding: 16px 20px 22px; border: 1px solid color-mix(in oklab, var(--primary) 16%, var(--border)); border-radius: var(--radius-xl); background: color-mix(in oklab, var(--primary) 9%, var(--card)); }
+.termEarned { font-size: 1.75rem; letter-spacing: -0.03em; }
+.rewards { display: flex; align-items: center; gap: 18px; padding: 16px 20px; border: 1px solid color-mix(in oklab, var(--reward) 48%, var(--border)); border-radius: var(--radius-xl); background: color-mix(in oklab, var(--reward) 18%, var(--card)); }
+.rewardsHeading { min-width: 0; flex: 1; }
+.rewardLinks { display: flex; flex-wrap: wrap; gap: 8px; }
+.rewardLinks a { min-height: 44px; background: var(--card); }
+.extras { border-color: color-mix(in oklab, var(--primary) 16%, var(--border)); }
 .unitProgress { display: block; width: 100%; height: 6px; margin-top: 10px; border: 0; border-radius: var(--radius-full); overflow: hidden; appearance: none; background: var(--secondary); }
 .unitProgress::-webkit-progress-bar { background: var(--secondary); }
 .unitProgress::-webkit-progress-value { background: var(--primary); border-radius: var(--radius-full); }
 .unitProgress::-moz-progress-bar { background: var(--primary); border-radius: var(--radius-full); }
 .extrasGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; padding: 0 20px 20px; }
 @media (max-width: 767px) { .workGrid, .extrasGrid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 900px) {
+  .checkIn { grid-template-columns: 320px minmax(0, 1fr); grid-template-areas: 'portrait welcome' 'portrait xp'; gap: 18px; padding: 20px; }
+  .xpDisplay { padding: 16px; }
+  .rewards { flex-wrap: wrap; }
+  .rewardsHeading { flex-basis: 100%; }
+}
+@media (max-width: 640px) {
+  .checkIn { grid-template-columns: 204px minmax(0, 1fr); grid-template-areas: 'portrait welcome' 'xp xp'; gap: 14px; padding: 18px 16px; }
+  .portraitLink { width: 204px; height: 272px; }
+  .portrait { width: 200px; max-height: 276px; }
+  .portraitHalo { inset: 16px 0 0; }
+  .portraitSpark { right: -6px; top: 3px; width: 20px; }
+  .editAvatar { bottom: -8px; padding: 5px 7px; }
+  .welcome h1 { margin: 6px 0; }
+  .welcomeMessage { display: none; }
+  .heroClasses { margin-top: 0; }
+  .heroClasses summary { font-size: var(--type-overline); }
+  .streak { margin-top: 4px; padding: 4px 6px; }
+  .xpDisplay { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 2px 14px; padding: 12px 16px; transform: none; }
+  .xpLabel { grid-column: 1; }
+  .xpTotal { grid-column: 1; margin: 0; font-size: 2rem; }
+  .xpCaption { grid-column: 1; }
+  .balance { grid-column: 2; grid-row: 1 / 4; min-height: 44px; margin-top: 0; padding: 0 0 0 14px; border-top: 0; border-left: 1px solid color-mix(in oklab, var(--reward-foreground) 22%, transparent); }
+  .balance > svg:last-child { display: none; }
+  .progressGrid { grid-template-columns: minmax(0, 1fr); }
+  .lessonTitle { font-size: 1.5rem; }
+  .practiceTile { padding: 16px; gap: 12px; }
+  .rewards { padding: 16px; }
+  .rewardLinks { gap: 7px; }
+  .rewardLinks a { padding-inline: 10px; font-size: var(--type-caption); }
+}
+@media (max-width: 380px) {
+  .checkIn { grid-template-columns: 172px minmax(0, 1fr); gap: 12px; padding: 16px 14px; }
+  .portraitLink { width: 172px; height: 244px; }
+  .portrait { width: 172px; }
+  .editAvatar { white-space: normal; text-align: center; width: 100px; line-height: 1.3; }
+  .editAvatar svg { display: none; }
+  .welcomeEyebrow { letter-spacing: 0.06em; }
+  .xpDisplay { padding: 12px; gap: 2px 10px; }
+  .balance { padding-left: 10px; }
+  .rewardLinks a { padding-inline: 8px; }
+}
 
 /* The optional avatar showcase is mounted only when extras are expanded. */
 .spotlight { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0 16px 16px; background: var(--card); }
@@ -31,3 +137,21 @@
 .cardRank { align-self: start; border-radius: var(--radius-full); background: var(--reward); color: var(--reward-foreground); padding: 2px 9px; font-size: 0.8125rem; font-weight: 700; }
 @media (max-width: 380px) { .playerCard { width: 132px; } .playerCard[data-position='1'] { transform: translateX(calc(-50% - 38px)) translateY(14px) rotate(-8deg); } .playerCard[data-position='2'] { transform: translateX(calc(-50% + 38px)) translateY(14px) rotate(8deg); } }
 @media (prefers-reduced-motion: reduce) { .playerCard { transition: none; } }
+
+/* Learning Week: a shared action baseline beneath the raised portrait and XP plaque. */
+.checkIn { grid-template-columns: 360px minmax(0, 1fr) 174px; grid-template-areas: 'portrait welcome xp' 'personalize actions actions'; row-gap: 25px; padding: 30px; overflow: visible; background: radial-gradient(ellipse at 15% 0%,color-mix(in oklab,var(--home-hero-muted) 20%,transparent),transparent 55%),var(--home-hero); box-shadow: 0 12px 28px color-mix(in oklab,var(--primary) 15%,transparent); }
+.checkIn::before { display: none; }
+.portraitLink { width: min(100%, 360px); height: auto; aspect-ratio: 1; justify-self: center; border-radius: 50%; overflow: hidden; background: var(--home-portrait); box-shadow: 0 0 0 5px color-mix(in oklab,var(--home-portrait) 80%,var(--home-on-hero)),0 -3px 0 7px color-mix(in oklab,var(--home-portrait) 40%,var(--home-on-hero)),0 6px 0 7px color-mix(in oklab,var(--home-portrait) 60%,var(--home-hero)),0 18px 25px color-mix(in oklab,var(--home-hero) 80%,transparent); }
+.portraitLink::after { content: ''; position: absolute; inset: 0; border-radius: 50%; pointer-events: none; box-shadow: inset 0 4px 5px color-mix(in oklab,var(--home-hero) 32%,transparent),inset 0 -2px 2px color-mix(in oklab,var(--home-on-hero) 40%,transparent); }
+.portraitHalo { display: none; }
+.portrait { width: 66.6667%; height: auto; max-height: none; align-self: center; transform: none; }
+.portraitSpark { display: none; }
+.xpDisplay { box-shadow: inset 0 2px 0 color-mix(in oklab,var(--home-on-hero) 55%,transparent),3px 6px 0 color-mix(in oklab,var(--reward) 55%,var(--home-hero)),0 16px 22px color-mix(in oklab,var(--home-hero) 80%,transparent); }
+.welcomeFocus { margin-top: 15px; padding-top: 12px; border-top: 1px solid color-mix(in oklab,var(--home-on-hero) 25%,transparent); color: var(--home-hero-muted); font-size: 0.8125rem; line-height: 1.5; }
+.welcomeFocus strong { font-weight: 500; }
+.personalize { grid-area: personalize; justify-self: center; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 14px; border: 1px solid color-mix(in oklab,var(--home-on-hero) 32%,transparent); border-radius: var(--radius-lg); color: var(--home-on-hero); background: color-mix(in oklab,var(--home-on-hero) 8%,transparent); font-size: 0.875rem; font-weight: 600; box-shadow: inset 0 1px 0 color-mix(in oklab,var(--home-on-hero) 18%,transparent); }
+.welcomeActions { grid-area: actions; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.welcomeActions > * { display: inline-flex; align-items: center; justify-content: center; gap: 9px; height: 44px; padding: 0 15px; border-radius: var(--radius-lg); font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.startLearning { color: var(--home-hero); background: var(--home-on-hero); }
+@media(max-width: 1000px) { .checkIn { grid-template-columns: 300px minmax(0,1fr); grid-template-areas: 'portrait welcome' 'portrait xp' 'personalize actions'; gap: 22px 18px; padding: 25px; } .portraitLink { width: min(100%, 300px); } .xpDisplay { padding: 15px; } }
+@media(max-width: 700px) { .checkIn { grid-template-columns: minmax(0,1fr); grid-template-areas: 'portrait' 'personalize' 'welcome' 'actions' 'xp'; gap: 22px; padding: 27px 20px; } .portraitLink { width: min(100%, 320px); } .personalize { width: 100%; } .welcome { text-align: center; } .welcomeMessage { display: block; } .heroClasses > * { text-align: left; } .welcomeActions { display: grid; grid-template-columns: 1fr; gap: 8px; } .xpDisplay { display: grid; grid-template-columns: 1fr 1fr; grid-column: 1; transform: none; } .xpLabel,.xpTotal,.xpCaption { grid-column: 1; } .xpTotal { font-size: 2rem; margin: 4px 0; } .balance { grid-column: 2; grid-row: 1/4; border-top: 0; border-left: 1px solid color-mix(in oklab,var(--reward-foreground) 25%,transparent); margin: 0; padding: 0 0 0 12px; } }

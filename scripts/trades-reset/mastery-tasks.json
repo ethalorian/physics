@@ -1,0 +1,122 @@
+[
+  {
+    "slug": "tr26.p1.performance",
+    "unit_id": "trades-reset-1",
+    "program": "trades",
+    "prompt": "Use your measure and make project to show a checked measurement, an individual vocational calculation, a usable drawing, and a test-based revision. Independently solve a changed condition supplied by your teacher. Cite notebook pages and distinguish measured, supplied, and assumed values.",
+    "rubric": {
+      "science": {
+        "description": "Uses the relevant physical relationship accurately and distinguishes the model from the real system."
+      },
+      "reasoning": {
+        "description": "Shows individual calculations with units, checks a result, and uses test evidence for a decision."
+      },
+      "communication": {
+        "description": "Supplies a dated, dimensioned, usable drawing/work order and a traceable material or test record."
+      },
+      "transfer": {
+        "description": "Independently responds to a changed requirement and revises the product or recommendation."
+      }
+    }
+  },
+  {
+    "slug": "tr26.p2.performance",
+    "unit_id": "trades-reset-2",
+    "program": "trades",
+    "prompt": "Use your lay out and estimate project to show a checked measurement, an individual vocational calculation, a usable drawing, and a test-based revision. Independently solve a changed condition supplied by your teacher. Cite notebook pages and distinguish measured, supplied, and assumed values.",
+    "rubric": {
+      "science": {
+        "description": "Uses the relevant physical relationship accurately and distinguishes the model from the real system."
+      },
+      "reasoning": {
+        "description": "Shows individual calculations with units, checks a result, and uses test evidence for a decision."
+      },
+      "communication": {
+        "description": "Supplies a dated, dimensioned, usable drawing/work order and a traceable material or test record."
+      },
+      "transfer": {
+        "description": "Independently responds to a changed requirement and revises the product or recommendation."
+      }
+    }
+  },
+  {
+    "slug": "tr26.p3.performance",
+    "unit_id": "trades-reset-3",
+    "program": "trades",
+    "prompt": "Use your support and strengthen project to show a checked measurement, an individual vocational calculation, a usable drawing, and a test-based revision. Independently solve a changed condition supplied by your teacher. Cite notebook pages and distinguish measured, supplied, and assumed values.",
+    "rubric": {
+      "science": {
+        "description": "Uses the relevant physical relationship accurately and distinguishes the model from the real system."
+      },
+      "reasoning": {
+        "description": "Shows individual calculations with units, checks a result, and uses test evidence for a decision."
+      },
+      "communication": {
+        "description": "Supplies a dated, dimensioned, usable drawing/work order and a traceable material or test record."
+      },
+      "transfer": {
+        "description": "Independently responds to a changed requirement and revises the product or recommendation."
+      }
+    }
+  },
+  {
+    "slug": "tr26.p4.performance",
+    "unit_id": "trades-reset-4",
+    "program": "trades",
+    "prompt": "Use your route and move project to show a checked measurement, an individual vocational calculation, a usable drawing, and a test-based revision. Independently solve a changed condition supplied by your teacher. Cite notebook pages and distinguish measured, supplied, and assumed values.",
+    "rubric": {
+      "science": {
+        "description": "Uses the relevant physical relationship accurately and distinguishes the model from the real system."
+      },
+      "reasoning": {
+        "description": "Shows individual calculations with units, checks a result, and uses test evidence for a decision."
+      },
+      "communication": {
+        "description": "Supplies a dated, dimensioned, usable drawing/work order and a traceable material or test record."
+      },
+      "transfer": {
+        "description": "Independently responds to a changed requirement and revises the product or recommendation."
+      }
+    }
+  },
+  {
+    "slug": "tr26.p5.performance",
+    "unit_id": "trades-reset-5",
+    "program": "trades",
+    "prompt": "Use your heat and electrical systems project to show a checked measurement, an individual vocational calculation, a usable drawing, and a test-based revision. Independently solve a changed condition supplied by your teacher. Cite notebook pages and distinguish measured, supplied, and assumed values.",
+    "rubric": {
+      "science": {
+        "description": "Uses the relevant physical relationship accurately and distinguishes the model from the real system."
+      },
+      "reasoning": {
+        "description": "Shows individual calculations with units, checks a result, and uses test evidence for a decision."
+      },
+      "communication": {
+        "description": "Supplies a dated, dimensioned, usable drawing/work order and a traceable material or test record."
+      },
+      "transfer": {
+        "description": "Independently responds to a changed requirement and revises the product or recommendation."
+      }
+    }
+  },
+  {
+    "slug": "tr26.p6.performance",
+    "unit_id": "trades-reset-6",
+    "program": "trades",
+    "prompt": "Use your plan a school improvement project to show a checked measurement, an individual vocational calculation, a usable drawing, and a test-based revision. Independently solve a changed condition supplied by your teacher. Cite notebook pages and distinguish measured, supplied, and assumed values.",
+    "rubric": {
+      "science": {
+        "description": "Uses the relevant physical relationship accurately and distinguishes the model from the real system."
+      },
+      "reasoning": {
+        "description": "Shows individual calculations with units, checks a result, and uses test evidence for a decision."
+      },
+      "communication": {
+        "description": "Supplies a dated, dimensioned, usable drawing/work order and a traceable material or test record."
+      },
+      "transfer": {
+        "description": "Independently responds to a changed requirement and revises the product or recommendation."
+      }
+    }
+  }
+]

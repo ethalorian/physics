@@ -1,4 +1,8 @@
+import { getLessonCompletions } from '@/lib/lesson-completion-server'
+import { buildLessonConceptMap, isMapCatalogLesson } from '@/lib/lesson-concept-map-server'
+import { isCurrentLesson } from '@/lib/current-lesson-catalog'
 import type { AccessibleLesson } from '@/lib/lesson-access'
+import { physicsLearningEntry } from '@/lib/physics-learning'
 import { getEnrollment, getStudentTrack } from '@/lib/student-enrollment'
 import { canEditArea } from '@/lib/content-access'
 import { NextResponse } from 'next/server'
@@ -24,10 +28,12 @@ interface LessonListRow extends AccessibleLesson {
 export const GET = withAuth(async (request, ctx) => {
     // Determine user role based on email
     const userRole = ctx.role
-    const isAdmin = userRole === 'admin' || userRole === 'teacher' || await canEditArea(ctx.email, 'lessons', ctx.realRole === 'admin')
-    if (!isAdmin && userRole !== 'student') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    if (!isAdmin && !(await getEnrollment(ctx.userId)).enrolled) return NextResponse.json({ error: 'You are not in a class yet.' }, { status: 403 })
-    const studentTrack = isAdmin ? null : await getStudentTrack(ctx.userId)
+    const isObserver = userRole === 'observer'
+    const isAdmin = !isObserver && (userRole === 'admin' || userRole === 'teacher' || await canEditArea(ctx.email, 'lessons', ctx.realRole === 'admin'))
+    const isStudent = !isAdmin && !isObserver
+    if (isStudent && userRole !== 'student') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (isStudent && !(await getEnrollment(ctx.userId)).enrolled) return NextResponse.json({ error: 'You are not in a class yet.' }, { status: 403 })
+    const studentTrack = isStudent ? await getStudentTrack(ctx.userId) : null
     const userId = ctx.userId
 
     // Get query parameters for filtering
@@ -44,12 +50,12 @@ export const GET = withAuth(async (request, ctx) => {
     // Note: Simulation join is optional for backward compatibility
     let query = supabaseAdmin
       .from('lessons')
-      .select(isAdmin ? '*' : 'id, title, slug, description, unit, unit_id, lesson_number, lesson_type, estimated_time, objectives, created_at, published, visibility_track')
+      .select(isAdmin ? '*' : 'id, title, slug, description, unit, unit_id, lesson_number, lesson_type, estimated_time, objectives, created_at, published, visibility_track, content_blocks')
 
     // Students only see published lessons — and only their class's curriculum
-    // (physics vs trades). Staff browse everything.
-    if (!isAdmin) {
-      query = query.eq('published', true)
+    // (physics vs trades). Staff browse active catalogs, including drafts.
+    if (!isAdmin) query = query.eq('published', true)
+    if (isStudent) {
       const program = await getStudentProgram(userId)
       const unitIds = await getProgramUnitIds(program)
       query = query.in('unit_id', unitIds.length > 0 ? unitIds : ['__none__'])
@@ -122,24 +128,30 @@ export const GET = withAuth(async (request, ctx) => {
     // lessons stay invisible: no spoilers, nothing to stumble on. The lesson
     // page enforces the same gate server-side, so nothing can be reached by
     // URL either. Staff are ungated so they can preview/build.
-    let visibleLessons = (lessons ?? []) as unknown as LessonListRow[]
+    let visibleLessons = ((lessons ?? []) as unknown as LessonListRow[]).filter(isCurrentLesson)
+    // The map shows current published lesson metadata even before release.
+    // Normal lists and every lesson-body endpoint retain their existing gates.
+    const mapLessons = !isAdmin ? visibleLessons.filter(l => isMapCatalogLesson(l) && (isObserver || isLessonVisible(l.visibility_track, {role:'student',track:studentTrack}))) : []
     const windowStatuses: Record<string, LessonWindowStatus> = {}
-    if (!isAdmin && userId && visibleLessons.length > 0) {
+    // Observers preview published content independently of student release windows.
+    if (isObserver) for (const lesson of visibleLessons) windowStatuses[lesson.id] = { state: 'open', opened_at: null, closes_at: null }
+    if (isStudent && userId && visibleLessons.length > 0) {
       const statuses = await getStudentLessonWindowStatuses(userId)
       Object.assign(windowStatuses, statuses)
       visibleLessons = visibleLessons.filter((l) => statuses[l.id] !== undefined && statuses[l.id].state !== 'scheduled' && isLessonVisible(l.visibility_track, { role: 'student', track: studentTrack }))
     }
 
+    const progressLessons = [...new Map([...visibleLessons,...mapLessons].map(l=>[l.id,l])).values()]
     // Fetch user progress if available
     let progress: Record<string, number> = {}
-    if (userId && visibleLessons.length > 0) {
+    if (!isObserver && userId && progressLessons.length > 0) {
       try {
         // Try to fetch from lesson_progress table (it exists in your schema)
         const { data: progressData } = await supabaseAdmin
           .from('lesson_progress')
           .select('lesson_id, progress_percentage, status')
           .eq('user_id', userId)
-          .in('lesson_id', visibleLessons.map(l => l.id))
+          .in('lesson_id', progressLessons.map(l => l.id))
 
         if (progressData) {
           progress = progressData.reduce((acc, item) => {
@@ -153,6 +165,15 @@ export const GET = withAuth(async (request, ctx) => {
       }
     }
 
+    const completion = isStudent ? await getLessonCompletions(userId, progressLessons, studentTrack) : {}
+    for (const [id, state] of Object.entries(completion)) progress[id] = state.progress
+
+    const targetResult = progressLessons.length
+      ? await supabaseAdmin.from('learning_targets').select('id,slug,statement,domain,unit_id,lesson_id').in('unit_id', [...new Set(progressLessons.flatMap(l=>l.unit_id?[l.unit_id]:[]))])
+      : {data:[],error:null}
+    if (targetResult.error) throw targetResult.error
+    const learningTargets = targetResult.data ?? []
+
     // Parse JSONB fields and enhance lesson data
     const enhancedLessons = visibleLessons.map(lesson => {
       // Student list cards contain metadata only. A closed history card must never
@@ -162,7 +183,8 @@ export const GET = withAuth(async (request, ctx) => {
         unit: lesson.unit, unit_id: lesson.unit_id, lesson_number: lesson.lesson_number,
         lesson_type: lesson.lesson_type || 'markdown',
         estimated_time: lesson.estimated_time, objectives: lesson.objectives ?? [],
-        progress: progress[lesson.id] || 0, window: windowStatuses[lesson.id] ?? null,
+        learning: physicsLearningEntry({ ...lesson, content_blocks: lesson.content_blocks ? filterDocumentForViewer(lesson.content_blocks, isObserver ? {role:'admin'} : {role:'student',track:studentTrack}) : undefined }, learningTargets),
+        completion: completion[lesson.id], progress: progress[lesson.id] || 0, window: windowStatuses[lesson.id] ?? null,
         isNew: Boolean(lesson.created_at && Date.parse(lesson.created_at) > Date.now() - 7 * 24 * 60 * 60 * 1000),
       }
 
@@ -249,6 +271,7 @@ export const GET = withAuth(async (request, ctx) => {
 
       return {
         ...lesson,
+        learning: physicsLearningEntry({...lesson,content_blocks:classScope && lesson.content_blocks ? filterDocumentForViewer(lesson.content_blocks,{role:'teacher',track:classScope.track}):lesson.content_blocks}, learningTargets),
         videos,
         embedded_questions: embeddedQuestions,
         ta_reactions: taReactions,
@@ -275,6 +298,7 @@ export const GET = withAuth(async (request, ctx) => {
 
     return NextResponse.json({
       lessons: enhancedLessons || [],
+      conceptMap: !isAdmin ? buildLessonConceptMap(mapLessons,learningTargets,windowStatuses,progress,studentTrack,completion,isObserver) : undefined,
       progress,
       userRole,
       isAdmin,

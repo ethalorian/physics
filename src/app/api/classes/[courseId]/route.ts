@@ -3,6 +3,7 @@ import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getCourseStudentGids, getCourseOwnerEmail } from '@/lib/teacher-scope'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
+import { CURRENT_LESSON_FIELDS, isCurrentLesson } from '@/lib/current-lesson-catalog'
 
 // GET /api/classes/[courseId]
 // The per-class drill-in: course meta + its roster + a compact mastery/completion
@@ -94,9 +95,9 @@ export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
     const unitOrder = new Map<string, number>(((unitOrderRaw ?? []) as { name: string; order_index: number }[]).map((u) => [u.name, u.order_index]))
     const { data: lessonRaw } = await supabaseAdmin
       .from('lessons')
-      .select('id, title, lesson_number, unit')
+      .select(`id,title,lesson_number,unit,${CURRENT_LESSON_FIELDS}`)
       .eq('published', true)
-    const lessons = ((lessonRaw ?? []) as { id: string; title: string; lesson_number: number | null; unit: string }[])
+    const lessons = (lessonRaw ?? []).filter(isCurrentLesson)
       .sort((a, b) => (unitOrder.get(a.unit) ?? 99) - (unitOrder.get(b.unit) ?? 99) || (a.lesson_number ?? 0) - (b.lesson_number ?? 0))
       .map((l) => ({ id: l.id, title: l.title, lessonNumber: l.lesson_number, unit: l.unit }))
 

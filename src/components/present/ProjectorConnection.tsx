@@ -1,4 +1,5 @@
 'use client'
+import { initialTeachingTool } from '@/lib/teaching-tool-spec'
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Button } from '@/components/ui/button'
@@ -11,7 +12,7 @@ import { useTimerLeft, fmtTimer } from '@/components/lessons/PresentLiveProvider
 import { presentationKey } from '@/lib/presentation-keyboard'
 import { projectedBlockPages } from '@/lib/projected-block'
 import { deckGo, deckPresenting, readDeck, sectionForSlide } from '@/lib/present-bridge'
-import { openPresenterWindow } from '@/lib/present-deck'
+import { fullscreenKeyHint, openPresenterWindow } from '@/lib/present-deck'
 import { commandRequest, commandQuestion, type CommandLesson } from '@/lib/classroom-command'
 import { paginateBlocks, type DeckBlock } from '@/data/content-blocks'
 import { sectionAnchor, sectionIndexForAnchor } from '@/lib/lesson-anchors'
@@ -20,7 +21,7 @@ import { projectorSignature } from '@/lib/presentation-tools'
 import { useCommandSession } from './useCommandSession'
 
 /** Run on the projector COMPUTER. The iPad writes session state; this bridge drives the second window. */
-export default function ProjectorConnection({ sessionId, existingWindow }: { sessionId: string; existingWindow?: Window | null }) {
+export default function ProjectorConnection({ sessionId, existingWindow, compact = false }: { sessionId: string; existingWindow?: Window | null; compact?: boolean }) {
   const { state, error, patch } = useCommandSession(sessionId)
   const teaching = useTeachingTools(sessionId, true)
   const teachingRef = useRef(teaching.state)
@@ -50,19 +51,19 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
     if (snapshot && snapshot.index !== receivedSlide) deckGo(win, receivedSlide)
   }, [connected, receivedSlide])
   const left = useTimerLeft(state?.session.timer_ends_at)
-  const lessonId = state?.session.lesson_id
+  const documentSessionId = state?.session.id
   useEffect(() => { setOrigin(window.location.origin) }, [])
   useEffect(() => {
-    if (!lessonId) return
+    if (!documentSessionId) return
     const controller = new AbortController()
-    commandRequest<{ lesson: CommandLesson; deck: DeckBlock | null }>(`/api/present/document?lesson_id=${encodeURIComponent(lessonId)}&session_id=${encodeURIComponent(sessionId)}`, { signal: controller.signal })
+    commandRequest<{ lesson: CommandLesson; deck: DeckBlock | null }>(`/api/present/document?session_id=${encodeURIComponent(sessionId)}`, { signal: controller.signal })
       .then(setDocumentData).catch(e => { if (!controller.signal.aborted) setLoadError(e.message) })
     return () => controller.abort()
-  }, [lessonId, sessionId])
+  }, [documentSessionId, sessionId])
 
   async function connect() {
-    if (!documentData || !lessonId) return
-    const src = documentData.deck?.src ?? `/embed/present/${encodeURIComponent(lessonId)}?session_id=${encodeURIComponent(sessionId)}`
+    if (!documentData) return
+    const src = documentData.deck?.src ?? `/embed/present/${encodeURIComponent(documentData.lesson.id)}?session_id=${encodeURIComponent(sessionId)}`
     const win = await openPresenterWindow(src)
     deckWindow.current = win
     setConnected(Boolean(win)); setPortal(null)
@@ -82,8 +83,16 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
       event.preventDefault(); event.stopImmediatePropagation()
       if (command === 'blank') { void patch({ blackout: !live.session.blackout }); return }
       if (command === 'timer') return // The class timer lives on the remote.
+      if(live.lobby || live.session.poll_block_id || teachingRef.current?.pulse?.status==='open')return
       if (live.session.projected_block_id) {
         const block = documentData.lesson.content_blocks.blocks.find(b => b.id === live.session.projected_block_id)
+        if(block?.teachingTool?.kind==='physics-explainer') {
+          const old=live.session.teaching_tool_state?.[block.id]?.state
+          const current=Math.min(block.teachingTool.frames.length-1,old?.frame??0)
+          const next=presentationKey(event.key,current,block.teachingTool.frames.length)
+          if(typeof next==='number')void patch({teaching_tool:{block_id:block.id,state:{frame:next,show:false,...(old?.claude?{claude:{...old.claude,offset:0}}:{})}},expected_command_revision:live.session.command_revision})
+          return
+        }
         const count = block ? projectedBlockPages(block).length : 1
         const next = presentationKey(event.key, live.session.projected_block_page ?? 0, count)
         if (typeof next === 'number') void patch({ projected_block_page: next })
@@ -129,7 +138,19 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
     tick(); const timer = setInterval(tick, 300)
     return () => { clearInterval(timer); keyboardDocument?.removeEventListener('keydown', onKey, true); keyboardDocument?.removeEventListener('classroomnavigate', onNavigate) }
   }, [connected, documentData, patch])
-  useEffect(() => () => { try { deckWindow.current?.document.getElementById('classroom-command-overlay')?.remove() } catch { /* window closed */ } }, [])
+  useEffect(() => () => {
+    try {
+      const doc = deckWindow.current?.document
+      if (doc && stateRef.current?.session.status === 'ended') {
+        // Leaving the finished session must not uncover the last slide.
+        const blank = doc.createElement('div')
+        blank.setAttribute('aria-label', 'Presentation ended')
+        blank.style.cssText = 'position:fixed;inset:0;background:#000;z-index:2147483647'
+        doc.body.appendChild(blank)
+      }
+      doc?.getElementById('classroom-command-overlay')?.remove()
+    } catch { /* window closed */ }
+  }, [])
   useEffect(() => {
     const token = teaching.state?.tools?.reconnect_token ?? null
     if (reconnectSeen.current === undefined) { reconnectSeen.current = token; return }
@@ -146,7 +167,7 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
     const ack = async () => {
       if (sending) return
       const live = stateRef.current, tools = teachingRef.current, win = deckWindow.current
-      if (!live || !tools) return
+      if (!live || !tools || !win || win.closed) return
       const signature = projectorSignature(live, tools)
       const snapshot = readDeck(win)
       let ready = false
@@ -158,6 +179,9 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
         if (ready && live.session.projected_block_id && !live.session.blackout && live.session.status === 'live') {
           const frame = win?.document.querySelector<HTMLIFrameElement>('iframe[title="Projected lesson block"]')
           ready = frame?.contentDocument?.querySelector('[data-projected-block-ready]')?.getAttribute('data-projected-block-ready') === `${live.session.projected_block_id}:${live.session.projected_block_page ?? 0}` && frame?.contentDocument?.querySelector('[data-projected-sei]')?.getAttribute('data-projected-sei') === String(tools.tools?.sei_enabled ?? false)
+          const block=documentData?.lesson.content_blocks.blocks.find(b=>b.id===live.session.projected_block_id)
+          if(ready && block?.teachingTool)ready=frame?.contentDocument?.querySelector('[data-projected-tool-state]')?.getAttribute('data-projected-tool-state')===JSON.stringify(live.session.teaching_tool_state?.[block.id]??null)
+          if(ready&&block?.teachingTool?.kind==='physics-explainer'&&block.teachingTool.source){const original=frame?.contentDocument?.querySelector('[data-claude-ready="true"]');ready=!!original&&original.getAttribute('data-claude-applied')===JSON.stringify(live.session.teaching_tool_state?.[block.id]?.state??initialTeachingTool(block).state)}
         }
       } catch { /* closed or block still loading */ }
       sending = true
@@ -167,26 +191,25 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
     }
     const timer = setInterval(ack, 2000)
     return () => { controller.abort(); clearInterval(timer) }
-  }, [sessionId])
+  }, [sessionId, documentData])
   const boundBlock = documentData && binding?.index === state?.session.current_slide ? presentationBinding(binding?.value, documentData.lesson.content_blocks) : undefined
   const pulse = teaching.state?.pulse?.status === 'open' ? teaching.state.pulse : null
   const poll = documentData?.lesson.content_blocks.blocks.find(b => b.id === state?.session.poll_block_id)
   const showLobby = Boolean(state?.lobby)
   const ended = state?.session.status === 'ended'
 
-  return <div className={existingWindow !== undefined ? 'hidden' : 'mx-auto max-w-3xl space-y-5 p-6'}>
-    <div className="rounded-2xl border bg-primary/5 p-6"><p className="text-overline text-primary">On your classroom computer</p><h1 className="mt-2 text-title-1">Connect the classroom screen</h1><p className="mt-3 text-muted-foreground">This computer displays the lesson. Your iPad is the remote.</p></div>
-    <ol className="grid list-none gap-3 sm:grid-cols-3">{[['1','Open the display','Use the button below to launch your deck in a separate window.'],['2','Move it to the projector','Use Extend display, then make the deck fullscreen.'],['3','Take your iPad','Sign in to the same account. Open Command Center and choose the running presentation.']].map(([step,title,detail]) => <li key={step} className="rounded-xl border bg-card p-4"><p className="text-overline text-primary">Step {step}</p><h2 className="mt-2 text-title-3">{title}</h2><p className="mt-2 text-caption text-muted-foreground">{detail}</p></li>)}</ol>
-    <p className="text-title-3">{documentData?.lesson.title ?? 'Loading presentation…'}</p>
+  return <div className={existingWindow !== undefined ? 'hidden' : compact ? 'space-y-3' : 'mx-auto max-w-3xl space-y-5 p-6'}>
+    {!compact && <header><p className="text-overline text-primary">Classroom screen</p><h1 className="mt-2 text-title-1">{documentData?.lesson.title ?? 'Loading presentation…'}</h1><p className="mt-3 text-muted-foreground">Open the deck on the classroom display, then use your iPad to teach.</p></header>}
     {(error || loadError) && <p role="alert" className="text-destructive">{error || loadError}</p>}
     <Button className="min-h-14" disabled={!documentData || ended} onClick={connect}>{connected ? 'Reopen projector window' : 'Open projector window'}</Button>
-    <p role="status">{ended ? 'Presentation ended.' : connected ? 'Projector window open. Move it onto the classroom display and enter fullscreen.' : 'The classroom screen will follow the iPad after you open the projector window.'}</p>
-    <div className="rounded-xl border bg-muted p-4"><p className="font-semibold">Keep both windows open on this computer</p><p className="mt-1 text-caption text-muted-foreground">The deck shows the lesson; this page receives your iPad commands. Switching to a lesson block preserves the deck’s slide position.</p><a className="mt-3 inline-flex min-h-12 items-center text-primary underline" href="/admin/command-center">Open Command Center</a></div>
+    <p role="status">{ended ? 'Presentation ended.' : connected ? 'Projector window open. Keep this page open to receive iPad controls.' : 'The deck opens in a separate window for your classroom screen.'}</p>
+    {connected && <p className="text-sm text-muted-foreground">Move the deck window to your projector and use {fullscreenKeyHint()} for fullscreen. Use Extend display.</p>}
+    {!compact && <div className="rounded-xl border p-4"><p className="font-semibold">Continue on your iPad</p><p className="mt-2 text-sm">Open Command Center with the same account, then choose “Control this presentation.” Keep this page and the projector window open on the computer.</p><a className="mt-3 inline-flex min-h-12 items-center text-primary underline" href="/admin/command-center" target="_blank" rel="noreferrer">Open Command Center</a></div>}
     {portal && state && createPortal(<>
       {teaching.state && <span style={{ display: 'none' }} data-projection-signature={projectorSignature(state, teaching.state)} />}
       {(state.session.blackout || ended) ? <div style={{ position: 'fixed', inset: 0, zIndex: 2147483647, background: '#000' }} aria-label={ended ? 'Presentation ended' : 'Screen blanked'} /> : <>
-        {!state.session.projected_block_id && boundBlock && <div data-bound-slide-ready={state.session.current_slide} style={{position:'fixed',inset:0,zIndex:2147483644}}><TeachingStage lesson={documentData?.lesson.title ?? 'Today’s lesson'} mode={blockMode(boundBlock)} footer={teachingCue(boundBlock)}><TeachingBlockContent block={boundBlock} lessonId={state.session.lesson_id} referenceBlocks={documentData?.lesson.content_blocks.blocks ?? []} seiEnabled={teaching.state?.tools?.sei_enabled ?? false}/></TeachingStage></div>}
-        {state.session.projected_block_id && <iframe key={state.session.projected_block_id} title="Projected lesson block" src={`${origin}/embed/present-block/${encodeURIComponent(sessionId)}?lesson=${encodeURIComponent(state.session.lesson_id)}&block=${encodeURIComponent(state.session.projected_block_id)}&part=${state.session.projected_block_page ?? 0}`} style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', border: 0, zIndex: 2147483644, background: 'white' }} allow="fullscreen" />}
+        {state.session.lesson_id && !state.session.projected_block_id && boundBlock && <div data-bound-slide-ready={state.session.current_slide} style={{position:'fixed',inset:0,zIndex:2147483644}}><TeachingStage lesson={documentData?.lesson.title ?? 'Today’s lesson'} mode={blockMode(boundBlock)} footer={teachingCue(boundBlock)}><TeachingBlockContent block={boundBlock} lessonId={state.session.lesson_id} referenceBlocks={documentData?.lesson.content_blocks.blocks ?? []} seiEnabled={teaching.state?.tools?.sei_enabled ?? false}/></TeachingStage></div>}
+        {state.session.lesson_id && state.session.projected_block_id && <iframe key={state.session.projected_block_id} title="Projected lesson block" src={`${origin}/embed/present-block/${encodeURIComponent(sessionId)}?lesson=${encodeURIComponent(state.session.lesson_id)}&block=${encodeURIComponent(state.session.projected_block_id)}&part=${state.session.projected_block_page ?? 0}`} style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', border: 0, zIndex: 2147483644, background: 'white' }} allow="fullscreen" />}
         {(showLobby || pulse || poll?.type === 'question') && <div style={{ position: 'fixed', inset: 0, zIndex: 2147483645 }}><TeachingActivity seiEnabled={teaching.state?.tools?.sei_enabled ?? false} referenceBlocks={documentData?.lesson.content_blocks.blocks ?? []} lesson={documentData?.lesson.title ?? 'Today’s lesson'} live={state} pulse={pulse} question={commandQuestion(poll)} discussion={Boolean(teaching.state?.tools?.discussion_block_id && teaching.state.tools.discussion_block_id === state.session.poll_block_id)} origin={origin} /></div>}
         {left !== null && <div style={{ position: 'fixed', right: 24, bottom: 20, zIndex: 2147483646, borderRadius: 'var(--radius-lg)', padding: '12px 24px', background: 'var(--background)', color: 'var(--foreground)', fontFamily: 'system-ui', fontSize: 'clamp(28px, 4vw, 64px)', fontVariantNumeric: 'tabular-nums' }}>{fmtTimer(left)}</div>}
         {error && <div style={{ position: 'fixed', left: 20, bottom: 20, zIndex: 2147483646, padding: 12, background: 'var(--background)', color: 'var(--foreground)' }}>Connection interrupted · holding the last view</div>}

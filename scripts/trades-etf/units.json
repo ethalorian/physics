@@ -1,0 +1,38 @@
+[
+  {
+    "id": "trades-etf-1",
+    "name": "ETF Project 1: Build a Stand and Three-Bay Organizer",
+    "description": "Build a card stand, then a three-bay supply tray; measure fit and improve one tested feature. Core strands: trades math, measuring, and drawing/plan interpretation.",
+    "order_index": 1,
+    "program": "trades",
+    "allotted_days": 12,
+    "default_start_date": "2026-09-21"
+  },
+  {
+    "id": "trades-etf-2",
+    "name": "ETF Project 2: Build and Test a Model Community Room",
+    "description": "Build the supplied 16 × 12-ft community room at 1/2 in = 1 ft, with a working door and removable roof. Test structural shapes and insulation. Core strands: trades math, measuring, and drawing/plan interpretation.",
+    "order_index": 2,
+    "program": "trades",
+    "allotted_days": 20,
+    "default_start_date": null
+  },
+  {
+    "id": "trades-etf-3",
+    "name": "ETF Project 3: Build a Syringe-Powered Delivery Sled",
+    "description": "Build one water-powered delivery sled: a hand syringe moves a second syringe and an attached card sled along a marked track. Core strands: trades math, measuring, and drawing/plan interpretation.",
+    "order_index": 3,
+    "program": "trades",
+    "allotted_days": 18,
+    "default_start_date": null
+  },
+  {
+    "id": "trades-etf-4",
+    "name": "ETF Project 4: Wire a Door Signal and Two-Room Lighting",
+    "description": "Build a 3-V door-open signal and two-room model with independently switched lamps. Trace, test and repair the actual connections. Core strands: trades math, measuring, and drawing/plan interpretation.",
+    "order_index": 4,
+    "program": "trades",
+    "allotted_days": 22,
+    "default_start_date": null
+  }
+]

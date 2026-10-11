@@ -1,0 +1,35 @@
+begin;
+create table students(id uuid primary key);
+create table learning_targets(id uuid primary key,domain text,program text);
+create table courses(id uuid primary key,teacher_email text,archived_at timestamptz,program text);
+create table course_students(id uuid primary key,course_id uuid,student_id uuid,enrollment_state text);
+create table vocab_tasks(id uuid primary key,course_id uuid,target_id uuid,student_ids uuid[],title text);
+create table vocab_checks(id uuid primary key,task_id uuid,user_id uuid,completed_at timestamptz,result jsonb,review_version int);
+create table mastery_records(id uuid primary key default gen_random_uuid(),user_id uuid,target_id uuid,level smallint,rated_by text,evidence_source text);
+do $$ begin if not exists(select 1 from pg_roles where rolname='anon') then create role anon;end if;if not exists(select 1 from pg_roles where rolname='authenticated') then create role authenticated;end if;if not exists(select 1 from pg_roles where rolname='service_role') then create role service_role;end if;end $$;
+\ir ../supabase/migrations/20260917021723_vocab_mastery_control_room.sql
+insert into students values('00000000-0000-0000-0000-000000000001');
+insert into learning_targets values('00000000-0000-0000-0000-000000000002','knowledge','physics');
+insert into courses values('00000000-0000-0000-0000-000000000003','teacher@test',null,'physics');
+insert into course_students values('00000000-0000-0000-0000-000000000004','00000000-0000-0000-0000-000000000003','00000000-0000-0000-0000-000000000001','ACTIVE');
+insert into vocab_tasks values('00000000-0000-0000-0000-000000000005','00000000-0000-0000-0000-000000000003','00000000-0000-0000-0000-000000000002',array['00000000-0000-0000-0000-000000000001']::uuid[],'Motion words');
+insert into vocab_checks values('00000000-0000-0000-0000-000000000006','00000000-0000-0000-0000-000000000005','00000000-0000-0000-0000-000000000001',now(),'[{"correct":true,"response":"speed","supports":[]}]',0);
+do $$ declare r jsonb; t uuid:='00000000-0000-0000-0000-000000000005'; u uuid:='00000000-0000-0000-0000-000000000001'; k uuid:='00000000-0000-0000-0000-000000000002'; req uuid:='00000000-0000-0000-0000-000000000007'; evidence text:='00000000-0000-0000-0000-000000000006:0'; begin
+r:=submit_vocab_mastery_review(req,t,u,k,'teacher@test',2::smallint,'Needs precision',evidence,null);
+if r->>'level'<>'2' or (select count(*) from mastery_records)<>1 then raise exception 'Canonical grade missing';end if;
+if (select v.evidence->0->'result'->0->>'response' from vocab_mastery_reviews v)<>'speed' then raise exception 'Evidence snapshot lost';end if;
+perform submit_vocab_mastery_review(req,t,u,k,'teacher@test',2::smallint,'Needs precision',evidence,null);
+if (select count(*) from mastery_records)<>1 then raise exception 'Retry duplicated grade';end if;
+begin perform submit_vocab_mastery_review(gen_random_uuid(),t,u,k,'teacher@test',3::smallint,'',evidence,null);raise exception 'test failure: duplicate save accepted';exception when raise_exception then if sqlerrm like 'test failure:%' then raise;end if;end;
+begin perform submit_vocab_mastery_review(gen_random_uuid(),t,u,k,'other@test',3::smallint,'',evidence,req);raise exception 'test failure: wrong owner accepted';exception when raise_exception then if sqlerrm like 'test failure:%' then raise;end if;end;
+begin perform submit_vocab_mastery_review(gen_random_uuid(),t,u,k,'teacher@test',3::smallint,'','stale',req);raise exception 'test failure: stale evidence accepted';exception when raise_exception then if sqlerrm like 'test failure:%' then raise;end if;end;
+update vocab_checks set review_version=1,result='[{"correct":null}]';
+begin perform submit_vocab_mastery_review(gen_random_uuid(),t,u,k,'teacher@test',3::smallint,'',replace(evidence,':0',':1'),req);raise exception 'test failure: unreviewed quiz accepted';exception when raise_exception then if sqlerrm like 'test failure:%' then raise;end if;end;
+update vocab_checks set result='[{"correct":true}]';
+perform submit_vocab_mastery_review(gen_random_uuid(),t,u,k,'teacher@test',3::smallint,'Now understood',replace(evidence,':0',':1'),req);
+if (select count(*) from mastery_records)<>2 or (select count(*) from vocab_mastery_reviews)<>2 then raise exception 'Append history incorrect';end if;
+update course_students set enrollment_state='REMOVED';
+begin perform submit_vocab_mastery_review(req,t,u,k,'teacher@test',2::smallint,'Needs precision',evidence,null);raise exception 'test failure: removed enrollment accepted';exception when raise_exception then if sqlerrm like 'test failure:%' then raise;end if;end;
+if has_table_privilege('anon','vocab_mastery_reviews','SELECT') or has_function_privilege('authenticated','submit_vocab_mastery_review(uuid,uuid,uuid,uuid,text,smallint,text,text,uuid)','EXECUTE') then raise exception 'Public access exposed';end if;
+end $$;
+rollback;

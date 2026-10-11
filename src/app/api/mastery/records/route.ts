@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { teacherCanAccessStudent } from '@/lib/teacher-scope'
+import { UUID } from '@/lib/vocab-learning'
 
 // POST /api/mastery/records
 // Records a single Marzano observation (1-3) for a student on a target.
@@ -29,6 +30,24 @@ export const POST = withAuth(async (request, ctx) => {
     // admin widens what you can SEE, never whose students you can rate.
     if (!(await teacherCanAccessStudent(ctx.scopeEmail, user_id))) {
       return NextResponse.json({ error: 'Forbidden - student not on your own roster' }, { status: 403 })
+    }
+
+    if (body.vocabulary) {
+      const v = body.vocabulary
+      if (!UUID.test(user_id) || !UUID.test(target_id) || !UUID.test(v.task_id ?? '') || !UUID.test(v.request_id ?? '') || typeof v.evidence_key !== 'string' || typeof v.note !== 'string' || v.note.length > 2000 || (v.previous_review_id != null && !UUID.test(v.previous_review_id))) {
+        return NextResponse.json({ error: 'Invalid vocabulary review.' }, { status: 400 })
+      }
+      const { data, error } = await supabaseAdmin.rpc('submit_vocab_mastery_review', {
+        p_id: v.request_id, p_task: v.task_id, p_user: user_id, p_target: target_id,
+        p_reviewer: ctx.scopeEmail, p_level: level, p_note: v.note,
+        p_evidence_key: v.evidence_key, p_previous: v.previous_review_id ?? null,
+      })
+      if (error) {
+        const conflict = error.code === 'P0001'
+        if (!conflict) console.error('Vocabulary mastery save failed', error)
+        return NextResponse.json({ error: conflict ? error.message : 'Could not save the vocabulary rating. Please retry.' }, { status: conflict ? 409 : 500 })
+      }
+      return NextResponse.json(data, { status: 201 })
     }
 
     const row = {

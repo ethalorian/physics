@@ -10,30 +10,36 @@
  */
 import { useSession } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
-import { Send, CheckCircle2, Clock, PartyPopper } from 'lucide-react'
+import { Send, CheckCircle2, Clock } from 'lucide-react'
 
-export default function SubmitLessonButton({ lessonId, complete = false, blocked = false, prepare, onChange }: { lessonId: string; complete?: boolean; blocked?: boolean; prepare?: () => Promise<boolean>; /** S-6: the stepped reader shows its Done screen from this. */ onChange?: (state: { submittedAt: string | null; locked: boolean }) => void }) {
+export default function SubmitLessonButton({ lessonId, complete = false, blocked = false, blockedReason, prepare, onChange }: { lessonId: string; complete?: boolean; blocked?: boolean; blockedReason?: string; prepare?: () => Promise<boolean>; /** S-6: the stepped reader shows its Done screen from this. */ onChange?: (state: { submittedAt: string | null; locked: boolean; feedback?: string }) => void }) {
   const { data: session } = useSession()
+  const inspection = Boolean(session?.experience)
+  blocked = blocked || inspection
   const studentId = session?.user?.id
   const [submittedAt, setSubmittedAt] = useState<string | null>(null)
   const [locked, setLocked] = useState(false)
+  const [feedback,setFeedback]=useState('')
+  const [loaded,setLoaded]=useState(false)
+  const [loadAttempt,setLoadAttempt]=useState(0)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const submitting = useRef(false)
 
   useEffect(() => {
     let active = true
-    setSubmittedAt(null); setLocked(false); setError(null)
+    setLoaded(false)
+    setSubmittedAt(null); setLocked(false); setFeedback(''); setError(null)
     fetch(`/api/lessons/submit?lesson_id=${encodeURIComponent(lessonId)}`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (active && d) { setSubmittedAt(d.submittedAt ?? null); setLocked(Boolean(d.locked)); onChange?.({ submittedAt: d.submittedAt ?? null, locked: Boolean(d.locked) }) } })
-      .catch(() => {})
+      .then((r) => { if(!r.ok) throw new Error('Could not check whether this lesson was submitted.'); return r.json() })
+      .then((d) => { if (active && d) { setLoaded(true); setSubmittedAt(d.submittedAt ?? null); setFeedback(d.feedback??''); setLocked(Boolean(d.locked)); onChange?.({ submittedAt: d.submittedAt ?? null, locked: Boolean(d.locked), feedback:d.feedback??'' }) } })
+      .catch(() => { if(active) setError('Could not check submission status. Retry before submitting.') })
     return () => { active = false }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lessonId, studentId])
+  }, [lessonId, studentId, loadAttempt])
 
   async function submit() {
-    if (blocked || submitting.current || !studentId) return
+    if (!loaded || locked || blocked || submitting.current || !studentId) return
     submitting.current = true
     setBusy(true)
     setError(null)
@@ -46,10 +52,11 @@ export default function SubmitLessonButton({ lessonId, complete = false, blocked
       })
       const d = await res.json().catch(() => ({}))
       if (!res.ok) {
-        if (res.status === 409 && d.locked) { const at = d.submittedAt ?? new Date().toISOString(); setSubmittedAt(at); setLocked(true); onChange?.({ submittedAt: at, locked: true }); return }
+        if (res.status === 409 && d.locked && d.submittedAt) { const at = d.submittedAt; setSubmittedAt(at); setLocked(true); onChange?.({ submittedAt: at, locked: true }); return }
         throw new Error(d.error || 'Submit failed')
       }
-      const at = d.submittedAt ?? new Date().toISOString()
+      if (!d.submittedAt) throw new Error('Submission could not be confirmed. Reload to check its status.')
+      const at = d.submittedAt
       setSubmittedAt(at)
       setLocked(true)
       onChange?.({ submittedAt: at, locked: true })
@@ -60,6 +67,8 @@ export default function SubmitLessonButton({ lessonId, complete = false, blocked
       setBusy(false)
     }
   }
+
+  if (!loaded) return <div className="space-y-2 text-sm">{error ? <><p role="alert">{error}</p><button type="button" className="min-h-11 rounded-lg border px-4 font-semibold" onClick={()=>setLoadAttempt(n=>n+1)}>Retry submission status</button></> : <p role="status">Checking submission status…</p>}</div>
 
   // Submitted and still awaiting review → locked.
   if (submittedAt && locked) {
@@ -78,12 +87,13 @@ export default function SubmitLessonButton({ lessonId, complete = false, blocked
         <span className="text-xs font-medium inline-flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}>
           <CheckCircle2 size={14} style={{ color: 'var(--success)' }} /> Reviewed by your teacher — you can revise and submit again.
         </span>
+        {feedback&&<p className="w-full rounded-lg border bg-card p-3 text-sm whitespace-pre-wrap"><strong>Teacher feedback: </strong>{feedback}</p>}
         <button onClick={submit} disabled={busy || blocked}
           className="inline-flex items-center justify-center gap-1.5 rounded-2xl px-5 py-2.5 text-sm font-bold disabled:opacity-60"
           style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
           <Send size={16} /> {busy ? 'Saving and submitting…' : 'Submit revision'}
         </button>
-        {blocked && <span role="status" className="text-sm">Save your changed answers before submitting.</span>}
+        {blocked && <span role="status" className="text-sm">{inspection ? 'Read-only walkthrough — submissions are disabled.' : blockedReason || 'Complete the required responses before submitting.'}</span>}
         {error && <span role="alert" className="text-xs text-destructive">{error}</span>}
       </div>
     )
@@ -95,7 +105,7 @@ export default function SubmitLessonButton({ lessonId, complete = false, blocked
       {complete && (
         <div className="inline-flex items-center gap-2 text-sm font-semibold rounded-xl px-3 py-2"
           style={{ background: 'color-mix(in oklch, var(--reward) 16%, var(--card))', color: 'var(--reward-foreground)' }}>
-          <PartyPopper size={16} /> You finished every step — don&apos;t forget to submit!
+          Answers saved — lesson not submitted yet.
         </div>
       )}
       <button onClick={submit} disabled={busy || blocked}
@@ -106,7 +116,7 @@ export default function SubmitLessonButton({ lessonId, complete = false, blocked
       <span className="text-overline inline-flex items-center gap-1" style={{ color: 'var(--muted-foreground)' }}>
         <Clock size={12} /> Once you submit, it locks until your teacher reviews it.
       </span>
-      {blocked && <span role="status" className="text-sm">Save your changed answers before submitting.</span>}
+      {blocked && <span role="status" className="text-sm">{inspection ? 'Read-only walkthrough — submissions are disabled.' : blockedReason || 'Complete the required responses before submitting.'}</span>}
         {error && <span role="alert" className="text-xs text-destructive">{error}</span>}
     </div>
   )

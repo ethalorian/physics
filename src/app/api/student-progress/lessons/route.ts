@@ -1,3 +1,6 @@
+import { getLessonCompletions } from '@/lib/lesson-completion-server'
+import { getStudentTrack } from '@/lib/student-enrollment'
+import { authorizeLesson } from '@/lib/lesson-access'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth } from '@/lib/api-auth'
@@ -16,13 +19,16 @@ export const POST = withAuth(async (request, ctx) => {
       )
     }
 
+    const access = await authorizeLesson(ctx,body.lesson_id,true)
+    if(!access.ok)return access.response
+    const completion = (await getLessonCompletions(ctx.userId,[access.lesson],access.viewer.track??null))[body.lesson_id]
     const progressData = {
       user_id: ctx.userId,
       user_email: ctx.email,
       lesson_id: body.lesson_id,
       lesson_slug: body.lesson_slug || null,
-      status: body.status || 'in_progress',
-      progress_percentage: body.progress_percentage || 0,
+      status: completion ? completion.progress===100?'completed':'in_progress' : body.status || 'in_progress',
+      progress_percentage: completion?.progress ?? (body.progress_percentage || 0),
       objectives_completed: body.objectives_completed || 0,
       objectives_total: body.objectives_total || 0,
       videos_watched: body.videos_watched || 0,
@@ -32,7 +38,7 @@ export const POST = withAuth(async (request, ctx) => {
       video_questions_total: body.video_questions_total || 0,
       time_spent: body.time_spent || 0,
       started_at: body.started_at || new Date().toISOString(),
-      completed_at: body.status === 'completed' ? new Date().toISOString() : null,
+      completed_at: completion ? completion.progress===100?completion.submittedAt:null : body.status === 'completed' ? new Date().toISOString() : null,
       last_accessed_at: new Date().toISOString()
     }
 
@@ -83,9 +89,7 @@ export const GET = withAuth(async (request, ctx) => {
       query = query.eq('lesson_id', lessonId)
     }
 
-    if (status) {
-      query = query.eq('status', status)
-    }
+
 
     const { data, error } = await query
 
@@ -94,5 +98,13 @@ export const GET = withAuth(async (request, ctx) => {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json(data || [])
+    const rows = data ?? []
+    const ids = [...new Set(rows.map(r=>r.lesson_id))]
+    if(ids.length){
+      const {data:lessons,error:lessonError}=await supabaseAdmin.from('lessons').select('id,content_blocks').in('id',ids)
+      if(lessonError)throw lessonError
+      const completion=await getLessonCompletions(userId,lessons??[],await getStudentTrack(userId))
+      for(const row of rows){const c=completion[row.lesson_id];if(c){row.status=c.progress===100?'completed':'in_progress';row.progress_percentage=c.progress;row.completed_at=c.progress===100?c.submittedAt:null}}
+    }
+    return NextResponse.json(status?rows.filter(r=>r.status===status):rows)
 })

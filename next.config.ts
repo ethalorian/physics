@@ -1,6 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  outputFileTracingIncludes: {
+    '/api/teacher/worksheets/*/*/key': ['./resources/worksheet-keys/**/*.pdf'],
+    '/api/teacher/worksheets/*/*/presentation': ['./resources/worksheet-decks/generated/*.html'],
+  },
+  async redirects() {
+    return Array.from({ length: 7 }, (_, i) => i + 1).flatMap(unit =>
+      ['pdf', 'docx'].map(format => ({
+        source: `/student-packets/unit-${unit}.${format}`,
+        destination: `/worksheets/unit-${unit}/index.html`,
+        permanent: true,
+      })),
+    );
+  },
+
   // Environment variables prefixed with NEXT_PUBLIC_ are automatically exposed to the browser
   // No additional configuration needed for NEXT_PUBLIC_GOOGLE_CLIENT_ID
 
@@ -116,6 +130,27 @@ const nextConfig: NextConfig = {
             value: 'strict-origin-when-cross-origin',
           },
         ],
+      },
+      {
+        // These unchanged exports load the three version-pinned, SRI-checked
+        // runtime scripts below. Override only their CSP; keep the other
+        // security headers and the app's existing policy everywhere else.
+        source: '/explainers/claude/:path*',
+        headers: [{
+          key: 'Content-Security-Policy',
+          value: [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com/react@18.3.1/umd/react.production.min.js https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js https://unpkg.com/@babel/standalone@7.29.0/babel.min.js",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "font-src 'self' https://fonts.gstatic.com",
+            "img-src 'self' data: blob:",
+            "connect-src 'self'",
+            "frame-ancestors 'self'",
+            "object-src 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+          ].join('; '),
+        }],
       },
     ];
   },

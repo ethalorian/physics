@@ -36,7 +36,7 @@ function when(iso: string): string {
   return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 }
 
-export default function TeacherFeedbackCard({ initialCount = 3, featured = false }: { initialCount?: number; featured?: boolean } = {}) {
+export default function TeacherFeedbackCard({ initialCount = 3, featured = false, allowExpand = false }: { initialCount?: number; featured?: boolean; allowExpand?: boolean } = {}) {
   const [items, setItems] = useState<FeedbackItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -67,12 +67,13 @@ export default function TeacherFeedbackCard({ initialCount = 3, featured = false
   const shown = expanded ? items : items.slice(0, initialCount)
 
   if (featured) return <div className={styles.featured}>
-    {items.slice(0, initialCount).map(f => <article key={f.id} className={styles.note}>
+    {shown.map(f => <article key={f.id} className={styles.note}>
       <p className="mb-2 text-xs font-semibold text-muted-foreground">{when(f.created_at)}</p>
       <p className={styles.message}>{f.message}</p><EvidenceBreakdown review={f.evidence_review}/>
       {(f.target?.statement || f.target?.slug || f.competency?.statement || f.competency?.code) && <p className={styles.context}>{[f.target?.slug, f.target?.statement, f.competency?.code, f.competency?.statement].filter(Boolean).join(' · ')}</p>}
       {f.submission_id && <Button asChild className="mt-4 min-h-11"><Link href="/dashboard/math-spine#math-feedback">Open my work and respond<ArrowRight aria-hidden="true" /></Link></Button>}
     </article>)}
+    {allowExpand && items.length > initialCount && <Button variant="outline" className="mt-5 min-h-11" aria-expanded={expanded} onClick={() => setExpanded(v => !v)}>{expanded ? 'Show recent notes' : `Read all ${items.length} notes`}</Button>}
   </div>
 
   return (

@@ -1,8 +1,15 @@
+import { isLessonVisible } from '@/lib/track-visibility'
+import { PHYSICS_VIDEOS } from '@/data/physics-videos'
+import { getLessonCompletions } from '@/lib/lesson-completion-server'
+import { getStudentTrack } from '@/lib/student-enrollment'
+import type { BlockDocument } from '@/data/content-blocks'
+import { isCatalogUnit } from '@/lib/retired-curriculum'
+import { CURRENT_LESSON_FIELDS, isCurrentLesson } from '@/lib/current-lesson-catalog'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
-import { getStudentLessonGate } from '@/lib/lesson-windows'
+import { getStudentLessonGate, getStudentLessonWindowStatuses } from '@/lib/lesson-windows'
 import { getStudentProgram } from '@/lib/program'
 import { targetValue, MasteryRecord, Domain } from '@/data/curriculum-types'
 
@@ -16,7 +23,7 @@ import { targetValue, MasteryRecord, Domain } from '@/data/curriculum-types'
 // lessons.unit -> units.name -> units.id -> learning_targets.unit_id.
 
 type UnitRow = { id: string; name: string; order_index: number }
-type LessonRow = { id: string; slug: string; title: string; unit: string; lesson_number: number }
+type LessonRow = { id: string; slug: string; title: string; unit: string; lesson_number: number; content_blocks?: BlockDocument | null; visibility_track?: string | null }
 type ProgressRow = { lesson_id: string; status: string | null; progress_percentage: number | null }
 type TargetRow = { id: string; statement: string; domain: string; order_index: number }
 type RecordRow = { target_id: string; level: number; observed_at: string }
@@ -35,20 +42,20 @@ export const GET = withAuth(async (request, ctx) => {
       .select('id, name, order_index')
       .eq('program', program)
       .order('order_index', { ascending: true })
-    const units = (unitRowsRaw ?? []) as UnitRow[]
+    const units = ((unitRowsRaw ?? []) as UnitRow[]).filter(isCatalogUnit)
     const unitIdByName = new Map<string, string>(units.map((u): [string, string] => [u.name, u.id]))
     const orderByName = new Map<string, number>(units.map((u): [string, number] => [u.name, u.order_index]))
 
     // --- Published lessons, ordered by unit then lesson_number ---------------
     const { data: lessonRowsRaw } = await supabaseAdmin
       .from('lessons')
-      .select('id, slug, title, unit, lesson_number')
+      .select(`id,slug,title,unit,lesson_number,content_blocks,visibility_track,${CURRENT_LESSON_FIELDS}`)
       .eq('published', true)
       .in('unit_id', units.map((u) => u.id))
     // Per-class release gate: hide lessons the student's class hasn't opened yet
     // (or has closed). Published-and-no-window = open by default.
-    const lessonGate = await getStudentLessonGate(userId)
-    const lessons = ((lessonRowsRaw ?? []) as LessonRow[]).filter((l) => lessonGate(l.id)).slice()
+    const [lessonGate,track] = await Promise.all([getStudentLessonGate(userId),getStudentTrack(userId)])
+    const lessons = (lessonRowsRaw ?? []).filter(l => isCurrentLesson({ ...l, program }) && lessonGate(l.id) && isLessonVisible(l.visibility_track,{role:'student',track})) as LessonRow[]
     lessons.sort(
       (a, b) =>
         (orderByName.get(a.unit) ?? 99) - (orderByName.get(b.unit) ?? 99) ||
@@ -63,6 +70,8 @@ export const GET = withAuth(async (request, ctx) => {
     const progByLesson = new Map<string, ProgressRow>(
       ((progRowsRaw ?? []) as ProgressRow[]).map((p): [string, ProgressRow] => [p.lesson_id, p]),
     )
+    const completion = await getLessonCompletions(userId,lessons,track)
+    for (const [id,state] of Object.entries(completion)) progByLesson.set(id,{lesson_id:id,status:state.progress===100?'completed':'in_progress',progress_percentage:state.progress})
     const pctOf = (l: LessonRow): number => progByLesson.get(l.id)?.progress_percentage ?? 0
     const isDone = (l: LessonRow): boolean =>
       progByLesson.get(l.id)?.status === 'completed' || pctOf(l) >= 100
@@ -97,6 +106,7 @@ export const GET = withAuth(async (request, ctx) => {
             title: current.title,
             lessonNumber: current.lesson_number,
             progress: pctOf(current),
+            completion: completion[current.id],
           },
           sequence,
           completed: seqLessons.filter(isDone).length,
@@ -158,6 +168,12 @@ export const GET = withAuth(async (request, ctx) => {
       }
     }
 
+    const windows = await getStudentLessonWindowStatuses(userId)
+    const homework = lessons.flatMap(lesson => {
+      const video = PHYSICS_VIDEOS.find(v => lesson.content_blocks?.blocks?.some(b => b.type === 'instruction_video' && b.youtubeId === v.youtubeId))
+      return video ? [{ id:lesson.id, slug:lesson.slug, title:lesson.title, sequence:video.sequence, due_at:windows[lesson.id]?.due_at??null, complete:isDone(lesson) }] : []
+    }).sort((a,b) => Number(a.complete)-Number(b.complete) || (a.due_at?Date.parse(a.due_at):Infinity)-(b.due_at?Date.parse(b.due_at):Infinity) || a.sequence-b.sequence)
+
     // --- Points / XP ---------------------------------------------------------
     const bal = await getBalance(userId)
 
@@ -201,5 +217,6 @@ export const GET = withAuth(async (request, ctx) => {
       retry,
       climb,
       sideQuest,
+      homework,
     })
 })

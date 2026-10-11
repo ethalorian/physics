@@ -25,6 +25,22 @@ test('parser accepts only arithmetic, rejects code and nonfinite values',()=>{
  assert.equal(arithmetic('2+3*4'),14);assert.equal(arithmetic('-2^2'),-4);assert.equal(arithmetic('2^-2'),.25);assert.equal(arithmetic('(-3) * (2) + 8'),2);assert.equal(arithmetic('1/0'),null);assert.equal(arithmetic('process.exit()'),null);assert.equal(arithmetic('2;console.log(1)'),null);assert.equal(arithmetic('1e3'),1000);
 })
 test('public tasks never expose keys or hidden worked examples',()=>{const v=viewSession(session());assert(v.task);assert(!('expected' in v.task));assert(!('hint' in v.task));assert(!('worked' in v.task));assert.deepEqual(v.worked,[]);assert.equal(v.hint,null)})
+test('a missed practice answer opens matching teaching and a corrected answer remains assisted',()=>{
+ let s=session('SM1');const task=currentTask(s);
+ assert.equal(viewSession(s).strategy,undefined);
+ s={...s,state:transition(s,'answer',{formula:'0'}).state};
+ const view=viewSession(s);assert(view.strategy?.idea);assert.equal(view.strategy?.example?.title,'Undo addition, then multiplication');assert.deepEqual(view.worked,[]);
+ s={...s,state:transition(s,'answer',task.expected).state};s={...s,state:transition(s,'next',{}).state};
+ assert.equal(s.state.evidence[0].firstCorrect,false);assert.equal(s.state.evidence[0].assisted,true);
+})
+test('guided arrivals record support and let the next task be a fresh independent attempt',()=>{
+ let s=session('NS1');s.state.hintCount=1;assert(viewSession(s).strategy);assert(viewSession(s).hint);
+ s={...s,state:transition(s,'answer',currentTask(s).expected).state};s={...s,state:transition(s,'next',{}).state};
+ assert.equal(s.state.evidence[0].firstAssisted,true);assert.equal(s.state.evidence[0].assisted,true);assert.equal(viewSession(s).hint,null);assert.equal(viewSession(s).strategy,undefined);
+})
+test('challenges do not automatically reveal teaching after a wrong answer',()=>{
+ let s=session('SM1','challenge');s={...s,state:transition(s,'answer',{formula:'0'}).state};assert.equal(viewSession(s).strategy,undefined);
+})
 test('help persists drafts and disqualifies challenge ranking; assistance remains attached to evidence',()=>{
  let s=session('SM1','challenge');let task=currentTask(s);const next=transition(s,'hint',task.expected);s={...s,state:next.state,ranked:next.ranked};assert(!s.ranked);assert.deepEqual(s.state.draft,task.expected);
  task=currentTask(s);s={...s,state:transition(s,'answer',task.expected).state};s={...s,state:transition(s,'next',{}).state};assert(s.state.evidence[0].assisted);assert.equal(s.state.evidence[0].hints,1);

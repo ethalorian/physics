@@ -2,12 +2,15 @@
 @import "katex/dist/katex.min.css";
 @import "../styles/arcade.css";
 
+body > main:has(.teaching-workspace),
+main.container:has(.teaching-workspace),
 body > main:has(.observation-workspace),
 main.container:has(.observation-workspace) {
   max-width: none;
   padding: 0;
 }
 
+.teaching-workspace,
 .observation-workspace { min-height: 100dvh; background: var(--background); }
 
 

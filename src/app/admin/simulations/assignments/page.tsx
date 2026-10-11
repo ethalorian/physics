@@ -75,7 +75,7 @@ interface SimulationAssignment {
 export default function SimulationAssignmentsPage() {
   const { data: session } = useSession()
   const router = useRouter()
-  const userRole = getUserRole(session?.user?.email)
+  const userRole = (session?.user?.role ?? getUserRole(session?.user?.email))
   const [assignments, setAssignments] = useState<SimulationAssignment[]>([])
   const [filteredAssignments, setFilteredAssignments] = useState<SimulationAssignment[]>([])
   const [loading, setLoading] = useState(true)
@@ -206,6 +206,7 @@ export default function SimulationAssignmentsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="mb-6 rounded-xl border bg-primary/5 p-5"><h2 className="font-semibold">Use guided investigations for new assignments</h2><p className="my-2 text-sm">This earlier editor creates separate question sets. Guided investigations use class lesson access, saved evidence, XP, and mastery feedback.</p><a href="/admin/simulations/activities" className="inline-flex min-h-11 items-center text-primary underline">Prepare a guided investigation →</a></div>
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between">

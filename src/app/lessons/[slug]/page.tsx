@@ -45,6 +45,6 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
   const nav = await getNav(access.lesson.unit_id, slug, gate, access.viewer)
   const lesson = lessonForReader(access.lesson, access.document)
   const LessonReader = lesson.content_blocks?.blocks.some(b=>b.vocational) ? TradeLessonShell : BlockLessonViewer
-  const reader = <LessonReader lesson={lesson} nav={nav} staffView={access.viewer.role === 'admin'} />
+  const reader = <LessonReader lesson={lesson} nav={nav} staffView={access.viewer.role === 'admin'} previewReturnHref={context.realRole === 'observer' ? '/lessons' : undefined} />
   return access.viewer.role === 'admin' ? reader : <LessonActivityTracker lessonId={lesson.id}>{reader}</LessonActivityTracker>
 }

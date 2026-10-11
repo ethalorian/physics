@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { randomUUID } from 'node:crypto'
-import { classLesson } from '@/lib/present-server'
+import { classPresentation } from '@/lib/present-server'
 import { paginateBlocks } from '@/data/content-blocks'
 import { sectionAnchor, sectionIndexForAnchor } from '@/lib/lesson-anchors'
 
@@ -23,7 +23,7 @@ type Patch = {
 export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
   const { id } = await ctx.params
   const body = (await request.json().catch(() => ({}))) as Patch
-  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, projected_block_id, poll_block_id, poll_run_id, status, command_revision, teaching_tool_state').eq('id', id).maybeSingle()
+  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, plan_unit_id, plan_day, plan_track, projected_block_id, poll_block_id, poll_run_id, status, command_revision, teaching_tool_state').eq('id', id).maybeSingle()
   if (!s) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   if (ctx.role !== 'admin' && (s as { teacher_id: string }).teacher_id !== ctx.userId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
@@ -36,8 +36,11 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
     return NextResponse.json({ session: data })
   }
 
-  const lesson = s.course_id ? await classLesson(s.lesson_id, s.course_id, ctx, { hydrate: Boolean(body.projected_block_id) || 'projected_block_page' in body }) : null
-  if (!lesson) return NextResponse.json({ error: 'Class lesson unavailable' }, { status: 403 })
+  const lesson = await classPresentation(s, ctx, { hydrate: Boolean(body.projected_block_id) || 'projected_block_page' in body })
+  if (!lesson) return NextResponse.json({ error: 'Class presentation unavailable' }, { status: 403 })
+  if(s.status!=='live')return NextResponse.json({error:'This presentation has ended.'},{status:409})
+  if('current_slide' in body && (!Number.isSafeInteger(body.current_slide) || body.current_slide!<0))return NextResponse.json({error:'Invalid slide number.'},{status:400})
+  if(s.plan_unit_id && (body.poll_block_id || body.discussion || body.projected_block_id || body.teaching_tool || body.current_anchor || 'current_section' in body || 'projected_block_page' in body))return NextResponse.json({error:'This presentation follows the deck slides.'},{status:400})
   const pages = paginateBlocks(lesson.content_blocks.blocks)
   const update: Record<string, unknown> = { updated_at: new Date().toISOString() }
   if (body.teaching_tool !== undefined) {
@@ -109,15 +112,11 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
       if (cleared.error) throw cleared.error
     }
   }
-  if (body.poll_block_id) {
-    const pulse = await supabaseAdmin.from('present_pulses').update({ status: 'closed' }).eq('session_id', id).eq('status', 'open')
-    if (pulse.error) throw pulse.error
-  }
   let mutation = supabaseAdmin.from('present_sessions').update(update).eq('id', id)
   if (body.teaching_tool !== undefined) mutation=mutation.eq('command_revision',body.expected_command_revision!)
   const { data, error } = await mutation.select('*').maybeSingle()
   if (!error && !data) return NextResponse.json({error:'Another control arrived first. Refresh and retry.'},{status:409})
-  if (error) return NextResponse.json({ error: 'Could not update' }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.code==='P0001'?error.message:'Could not update' }, { status: error.code==='P0001'?409:500 })
   return NextResponse.json({ session: data })
 })
 
@@ -126,7 +125,7 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
 export const GET = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
   const { id } = await ctx.params
   const blockId = new URL(request.url).searchParams.get('block_id')
-  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, command_revision, teaching_tool_state, status, projected_block_id, projected_block_page, current_slide, current_section, current_anchor, poll_block_id, poll_run_id, poll_locked, poll_revealed, blackout, timer_ends_at, created_at, updated_at').eq('id', id).maybeSingle()
+  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, plan_unit_id, plan_day, plan_track, command_revision, teaching_tool_state, status, projected_block_id, projected_block_page, current_slide, current_section, current_anchor, poll_block_id, poll_run_id, poll_locked, poll_revealed, blackout, timer_ends_at, created_at, updated_at').eq('id', id).maybeSingle()
   if (!s) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   const sess = s as { id: string; teacher_id: string; lesson_id: string; course_id: string | null; poll_block_id: string | null; poll_run_id: string | null }
   if (ctx.role !== 'admin' && sess.teacher_id !== ctx.userId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -134,12 +133,14 @@ export const GET = withRole<{ id: string }>(['teacher', 'admin'], async (request
   // One small read for live notifications; no roster, lobby, or answer aggregation.
   if (new URL(request.url).searchParams.get('state_only') === '1') return NextResponse.json({ session: s }, { headers: { 'Cache-Control': 'no-store' } })
 
+
   // A lobby launched during this presentation temporarily takes the board.
   // Read existing session relationships; no second presentation state store.
-  const { data: lobby, error: lobbyError } = await supabaseAdmin.from('lobby_sessions')
-    .select('id, code, status, block_id, debrief_meta').eq('created_by', sess.teacher_id).eq('course_id', sess.course_id ?? '')
-    .eq('lesson_id', sess.lesson_id).gte('created_at', s.created_at)
-    .order('created_at', { ascending: false }).limit(1).maybeSingle()
+  let lobbyQuery = supabaseAdmin.from('lobby_sessions')
+    .select('id, code, status, block_id, debrief_meta, task_prompt').eq('created_by', sess.teacher_id).eq('course_id', sess.course_id ?? '')
+    .gte('created_at', s.created_at)
+  lobbyQuery=s.plan_unit_id?lobbyQuery.eq('present_session_id',id):lobbyQuery.or(`present_session_id.eq.${id},and(present_session_id.is.null,lesson_id.eq.${sess.lesson_id})`)
+  const {data:lobby,error:lobbyError}=await lobbyQuery.order('created_at',{ascending:false}).limit(1).maybeSingle()
   if (lobbyError) return NextResponse.json({ error: 'Could not refresh live activity' }, { status: 503 })
   const liveState = { session: s, lobby: lobby?.status === 'closed' ? null : lobby ?? null }
   const block = blockId ?? sess.poll_block_id

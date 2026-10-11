@@ -13,7 +13,13 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
     if (result.error) throw result.error
     return NextResponse.json({ saved: true })
   }
-  if (body.action !== 'pulse' || typeof body.pulse_id !== 'string' || ![0,1,2].includes(Number(body.choice)) || typeof body.choice !== 'number') return NextResponse.json({ error: 'Invalid response' }, { status: 400 })
+  if(body.action==='ticket'){
+    if(typeof body.pulse_id!=='string'||typeof body.response!=='string'||!body.response.trim()||body.response.length>5000)return NextResponse.json({error:'Write a response of 1–5000 characters.'},{status:400})
+    const result=await supabaseAdmin.rpc('submit_present_ticket',{p_session:session.id,p_pulse:body.pulse_id,p_user:ctx.userId,p_response:body.response.trim()})
+    if(result.error)return NextResponse.json({error:result.error.code==='P0001'?result.error.message:'Could not save your response. Try again.'},{status:result.error.code==='P0001'?409:500})
+    return NextResponse.json({saved:true})
+  }
+  if (body.action !== 'pulse' || typeof body.pulse_id !== 'string' || typeof body.choice !== 'number' || !Number.isInteger(body.choice) || body.choice<0 || body.choice>5) return NextResponse.json({ error: 'Invalid response' }, { status: 400 })
   // The database locks the pulse while saving, so closing/replacing a round
   // cannot race a late answer. Anonymous responses store no user_id.
   const result = await supabaseAdmin.rpc('submit_present_pulse', { p_session: session.id, p_pulse: body.pulse_id, p_user: ctx.userId, p_choice: body.choice })

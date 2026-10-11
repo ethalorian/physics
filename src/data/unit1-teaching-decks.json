@@ -1,0 +1,134 @@
+[
+  {
+    "day": 1,
+    "title": "The briefing",
+    "slides": 22,
+    "src": "/decks/unit-1-teaching/day-01.html"
+  },
+  {
+    "day": 2,
+    "title": "Position, distance, and displacement",
+    "slides": 21,
+    "src": "/decks/unit-1-teaching/day-02.html"
+  },
+  {
+    "day": 3,
+    "title": "Velocity and position–time graphs",
+    "slides": 21,
+    "src": "/decks/unit-1-teaching/day-03.html"
+  },
+  {
+    "day": 4,
+    "title": "Velocity–time graphs and components",
+    "slides": 21,
+    "src": "/decks/unit-1-teaching/day-04.html"
+  },
+  {
+    "day": 5,
+    "title": "Position predictions and uncertainty",
+    "slides": 24,
+    "src": "/decks/unit-1-teaching/day-05.html"
+  },
+  {
+    "day": 6,
+    "title": "Adding and resolving vectors",
+    "slides": 21,
+    "src": "/decks/unit-1-teaching/day-06.html"
+  },
+  {
+    "day": 7,
+    "title": "Acceleration and changing velocity",
+    "slides": 21,
+    "src": "/decks/unit-1-teaching/day-07.html"
+  },
+  {
+    "day": 8,
+    "title": "Choosing a motion equation",
+    "slides": 24,
+    "src": "/decks/unit-1-teaching/day-08.html"
+  },
+  {
+    "day": 9,
+    "title": "Inertia and Newton’s first law",
+    "slides": 19,
+    "src": "/decks/unit-1-teaching/day-09.html"
+  },
+  {
+    "day": 10,
+    "title": "Identifying forces and interactions",
+    "slides": 21,
+    "src": "/decks/unit-1-teaching/day-10.html"
+  },
+  {
+    "day": 11,
+    "title": "Cart lab: varying system mass",
+    "slides": 20,
+    "src": "/decks/unit-1-teaching/day-11.html"
+  },
+  {
+    "day": 12,
+    "title": "Cart lab: varying driving force",
+    "slides": 20,
+    "src": "/decks/unit-1-teaching/day-12.html"
+  },
+  {
+    "day": 13,
+    "title": "Net force and F = ma",
+    "slides": 24,
+    "src": "/decks/unit-1-teaching/day-13.html"
+  },
+  {
+    "day": 14,
+    "title": "Newton’s third law",
+    "slides": 21,
+    "src": "/decks/unit-1-teaching/day-14.html"
+  },
+  {
+    "day": 15,
+    "title": "Free-body diagrams",
+    "slides": 21,
+    "src": "/decks/unit-1-teaching/day-15.html"
+  },
+  {
+    "day": 16,
+    "title": "From force diagrams to acceleration",
+    "slides": 24,
+    "src": "/decks/unit-1-teaching/day-16.html"
+  },
+  {
+    "day": 17,
+    "title": "Static and kinetic friction",
+    "slides": 21,
+    "src": "/decks/unit-1-teaching/day-17.html"
+  },
+  {
+    "day": 18,
+    "title": "Equilibrium and unknown forces",
+    "slides": 23,
+    "src": "/decks/unit-1-teaching/day-18.html"
+  },
+  {
+    "day": 19,
+    "title": "Workshop: diagnose, repair, recheck",
+    "slides": 24,
+    "src": "/decks/unit-1-teaching/day-19.html"
+  },
+  {
+    "day": 20,
+    "title": "Synthesis: a complete prediction",
+    "slides": 22,
+    "src": "/decks/unit-1-teaching/day-20.html"
+  },
+  {
+    "day": 21,
+    "title": "Transfer task: receive, plan, begin",
+    "slides": 15,
+    "src": "/decks/unit-1-teaching/day-21.html"
+  },
+  {
+    "day": 22,
+    "title": "Transfer task: defend, revise, submit",
+    "slides": 15,
+    "src": "/decks/unit-1-teaching/day-22.html"
+  }
+]

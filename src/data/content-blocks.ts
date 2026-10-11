@@ -65,6 +65,9 @@ export interface SeiScaffold {
 }
 
 export interface WorkshopBlock {
+  /** Start a physical-work stage even when it has no digital response. */
+  pageBreakBefore?: boolean;
+  notebook?: string;
   stage?: string; target?:string; title?: string; lead?: string; minutes?: number;
   tool?: 'measure' | 'mark' | 'inspect';
   taskLabel?: string; purpose?: string; steps?: string[]; catchUp?: string[];
@@ -75,6 +78,8 @@ export interface WorkshopBlock {
 }
 
 interface BaseBlock {
+  /** Original released MCAS content, resolved from the curated bank without answer keys. */
+  mcasId?: string;
   /** Collapsible background reading; essential instructions must stay open. */
   referencePanel?: boolean;
   /** Authored shared-attention moment. References and practice remain available in the block picker. */
@@ -150,6 +155,7 @@ export interface VocabBlock extends BaseBlock {
 }
 
 export interface WorkedExampleBlock extends BaseBlock {
+  format?: 'problem-workspace';
   type: 'worked_example';
   prompt: string;
   given?: string;
@@ -253,6 +259,8 @@ export interface ProcedureBlock extends BaseBlock {
 // ---------------------------------------------------------------------------
 
 export interface GewaBlock extends BaseBlock {
+  responseFormat?: 'problem-workspace' | 'equation-bank';
+  stageHints?: Partial<Record<'problem' | 'model' | 'plan' | 'work' | 'answer', string>>;
   /** Authored active math-competency slugs; links evidence only, never ratings. */
   mathMoveIds?: string[];
   type: 'gewa';
@@ -514,6 +522,25 @@ export interface ReadingBlock extends BaseBlock {
   thinkAndSolve?: number[];
   /** One line of purpose: what to read FOR. */
   focus?: string;
+  /** Optional teacher-authored checks to prefill the linked textbook assignment. */
+  assignmentChecks?: { reference: string; prompt: string; targetId: string }[];
+}
+
+/** Instruction is a shared block, so student, teacher preview and Present use the same source. */
+export interface InstructionVideoBlock extends BaseBlock {
+  type: 'instruction_video';
+  youtubeId: string;
+  title: string;
+  summary: string;
+  startSeconds?: number;
+  /** Teacher-verified length; reviewed catalogue lengths take precedence for XP. */
+  durationSeconds?: number;
+  transcript?: string;
+}
+
+export interface PositionExplorerBlock extends BaseBlock {
+  type: 'position_explorer';
+  title: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -521,7 +548,7 @@ export interface ReadingBlock extends BaseBlock {
 // ---------------------------------------------------------------------------
 
 export type ContentBlock =
-  | MathMissionBlock | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
+  | InstructionVideoBlock | PositionExplorerBlock | MathMissionBlock | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
   | CalloutBlock | SentenceFrameBlock | LabNotebookBlock | SimEmbedBlock | DeckBlock | Animation3DBlock | EquationVisualizerBlock | LessonVocabBlock | ProcedureBlock
   | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock | SketchBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock
@@ -530,7 +557,12 @@ export type ContentBlock =
 export type BlockType = ContentBlock['type'];
 
 export interface BlockDocument {
-  presentation?: 'trades-workshop';
+  /** Original notebook design; its checks remain canonical question blocks. */
+  interactiveNotebook?: import('@/lib/interactive-notebook').InteractiveNotebook;
+  /** Explicit many-to-many links to the existing teacher plan collection. */
+  teachingPlans?: { unitId: string; day: number }[];
+  presentation?: 'trades-workshop' | 'physics-path';
+  learningPath?: { version: 1; kind: 'lesson' | 'investigation' | 'mission'; focus: string; targetSlugs: string[]; sourceLessonId?: string; foundations?: boolean };
   lessonKind?: 'daily' | 'week-overview';
   schemaVersion: 1;
   dayType?: DayType;
@@ -586,6 +618,7 @@ export interface LessonPage {
  * they render a canvas, plot, or figure.
  */
 export const VISUAL_BLOCK_TYPES: BlockType[] = [
+  'instruction_video', 'position_explorer',
   'figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'equation_visualizer',
   'lab_notebook', 'data_table', 'asteroid_thread', 'sketch',
 ];
@@ -603,6 +636,11 @@ export function paginateBlocks(blocks: ContentBlock[]): LessonPage[] {
   const pages: LessonPage[] = [];
   let buffer: ContentBlock[] = [];
   for (const b of blocks) {
+    if (b.workshop?.pageBreakBefore && buffer.length > 0) {
+      const captureBlocks = buffer.filter(isCaptureBlock);
+      pages.push({ blocks: buffer, captureBlocks, hasCapture: captureBlocks.length > 0 });
+      buffer = [];
+    }
     buffer.push(b);
     // A capture block closes the current page — it and the reference blocks that
     // led up to it travel together.
@@ -616,7 +654,7 @@ export function paginateBlocks(blocks: ContentBlock[]): LessonPage[] {
   // by folding them onto the previous task page rather than stranding them on a
   // contextless page. Only when there's no prior page do they stand alone.
   if (buffer.length > 0) {
-    if (pages.length > 0) {
+    if (pages.length > 0 && !buffer[0]?.workshop?.pageBreakBefore) {
       const last = pages[pages.length - 1];
       last.blocks = [...last.blocks, ...buffer];
     } else {

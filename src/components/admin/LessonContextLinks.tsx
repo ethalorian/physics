@@ -44,6 +44,7 @@ export default function LessonContextLinks({
     unit: unitId ?? (changedLesson ? undefined : saved.unit),
     day: day ?? (changedLesson ? undefined : saved.day),
   }
+  if(context.lesson?.startsWith('presentation:'))context.lesson=undefined
   if (!context.class && !context.lesson) return null
   const links = [
     ...(context.class
@@ -63,9 +64,9 @@ export default function LessonContextLinks({
           ],
         ]
       : []),
-    ['/admin/teacher/plans', 'Teacher plan'],
+    ...(context.lesson ? [[`/admin/lessons/${encodeURIComponent(context.lesson)}`, 'Prepare']] : []),
     ['/admin/command-center', 'Teach'],
-    ['/admin/control-room', 'Review'],
+    ['/admin/control-room', 'Student work'],
   ]
   return (
     <nav

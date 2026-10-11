@@ -13,7 +13,8 @@ export default function XpPage() {
         <li>A completed answer can earn XP even when it needs correction. Checkpoint correctness and teacher mastery ratings still work separately.</li>
         <li>Standard units plan 500 lesson XP and 200 math XP. Honors units plan 650 lesson XP and 250 math XP. Lesson rewards are divided across the published work assigned to your track.</li>
         <li>Math games and issued math problems share a daily allowance: 10 XP for standard students or 15 for Honors. Practice stays available after that allowance is used.</li>
-        <li>Vocabulary games add up to 5 XP per day. The daily spin adds 1–25 XP. These smaller bonuses do not replace the lesson and math earning plan.</li>
+        <li>Assigned vocabulary earns 5 XP for your first submitted check or quiz, once per assignment. More checks and retakes help your learning without paying the assignment reward again. This reward is separate from game XP.</li>
+        <li>Vocabulary games share a 5 XP daily limit. Game points are converted to XP; the saved result shows your confirmed daily XP and total earnings. Math and vocabulary game limits reset at midnight UTC. The daily spin adds 1–25 XP.</li>
         <li>Past earnings and purchases are preserved. Future lesson progress percentages do not award a second completion stipend.</li>
         <li>Your home screen shows the term minimum and whether you have met it. Meeting the minimum makes you eligible for the teacher’s published term-average points; it does not change your mastery ratings.</li>
       </ul>

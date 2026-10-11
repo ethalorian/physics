@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { commandRequest, commandSlides, type CommandLesson, type CommandSlide } from '@/lib/classroom-command'
 import type { DeckBlock } from '@/data/content-blocks'
+import { planTeachHref } from '@/lib/course-plan-presentation'
 import { useCommandSession } from './useCommandSession'
 import { useTeachingTools } from './useTeachingTools'
 
@@ -16,13 +17,14 @@ export default function TeachingRecap({ sessionId }: { sessionId: string }) {
   const [contextError, setContextError] = useState('')
   const lessonId = session.state?.session.lesson_id
   const courseId = session.state?.session.course_id
+  const loadedSessionId = session.state?.session.id
   useEffect(() => {
-    if (!lessonId) return
+    if (!loadedSessionId) return
     const controller = new AbortController()
     setContext(null); setContextError('')
     async function load() {
       const [doc, classes] = await Promise.all([
-        commandRequest<{ lesson: CommandLesson; deck: DeckBlock | null }>(`/api/present/document?lesson_id=${encodeURIComponent(lessonId!)}&session_id=${encodeURIComponent(sessionId)}`, { signal: controller.signal }),
+        commandRequest<{ lesson: CommandLesson; deck: DeckBlock | null }>(`/api/present/document?session_id=${encodeURIComponent(sessionId)}`, { signal: controller.signal }),
         commandRequest<{ courses: { id: string; name: string; section?: string }[] }>('/api/teacher/courses', { signal: controller.signal }),
       ])
       const slides = await commandSlides(doc.lesson, doc.deck, controller.signal).catch(() => [])
@@ -31,10 +33,10 @@ export default function TeachingRecap({ sessionId }: { sessionId: string }) {
     }
     void load().catch(e => { if (!controller.signal.aborted) setContextError(e.message) })
     return () => controller.abort()
-  }, [lessonId, courseId, sessionId])
+  }, [loadedSessionId, courseId, sessionId])
   const notes = state?.marks.filter(m => m.kind === 'bookmark') ?? []
   const live = session.state?.session.status === 'live'
-  const back = lessonId && courseId ? `/admin/command-center?course=${encodeURIComponent(courseId)}&lesson=${encodeURIComponent(lessonId)}#teaching-bookmarks` : '/admin/command-center'
+  const back = session.state?.session.plan_unit_id && session.state.session.plan_day ? planTeachHref(session.state.session.plan_unit_id,session.state.session.plan_day,courseId)+'&resume=1#teaching-bookmarks' : lessonId && courseId ? `/admin/command-center?course=${encodeURIComponent(courseId)}&lesson=${encodeURIComponent(lessonId)}#teaching-bookmarks` : '/admin/command-center'
   const slideTitle = (index: number) => context?.slides[index]?.label
   function download() {
     const text = [context?.title ?? 'Saved teaching notes', context?.course ?? '', '', ...notes.map(m => `Slide ${m.slide + 1}${slideTitle(m.slide) ? ` · ${slideTitle(m.slide)}` : ''}${m.student_id ? ` · ${state?.roster.find(s => s.id === m.student_id)?.name ?? 'Student'}` : ''}: ${m.note}`)].join('\n')

@@ -1,15 +1,19 @@
 const fs = require('node:fs'), http = require('node:http'), path = require('node:path'), assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '..'), pkg = n => require(path.join(root, 'node_modules', n));
+const root = process.env.STUDENT_HOME_ROOT || path.resolve(__dirname, '..'), pkg = n => require(path.join(root, 'node_modules', n));
 const { chromium } = require('/Users/craigantocci/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const out = '/private/tmp/student-home-browser'; fs.mkdirSync(out, {recursive:true});
+const out = process.env.STUDENT_HOME_OUTPUT || '/private/tmp/student-home-browser'; fs.mkdirSync(out, {recursive:true});
 let browser, server, mode = 'normal';
 const requests = [];
 const xp = { track:'standard',unitTarget:700,lessonTarget:500,mathTarget:200,currentUnitId:'u1',units:[{id:'u1',name:'Motion & Forces',lesson_earned:160,math_earned:80,evidence_count:4,lesson_available:500,math_target:200}],term:{label:'Term 1',starts_at:'2026-09-01T00:00:00Z',ends_at:'2026-11-01T00:00:00Z',earned:240,minimum_xp:1400,grade_points:5} };
 const home = {student:{name:'Alex'}, points:{xp:240,balance:180}, streak:{current:3}, continue:{unitName:'Motion & Forces',lesson:{slug:'motion-investigation',title:'Investigating motion',lessonNumber:3,progress:40},sequence:[],completed:2,total:12},retry:[{targetId:'motion',statement:'Explain motion using a position graph',domain:'reasoning',level:2}],climb:[{observedAt:'2026-09-01',level:1,domain:'reasoning'},{observedAt:'2026-09-08',level:2,domain:'reasoning'}]};
+const dashboardHomework = Array.from({length:14},(_,i)=>({id:'video'+(i+1),slug:'video-'+(i+1),sequence:i+1,title:'Physics video '+(i+1),due_at:i===1?new Date(Date.now()+86400000).toISOString():null,complete:i>=10}));
+const readingData = {staff:false,courses:[],assignments:[{id:'r1',title:'Read about motion',status:'published',due_at:new Date(Date.now()-86400000).toISOString()},{id:'r2',title:'Read about force',status:'published',due_at:null},{id:'r3',title:'Submitted reading',status:'published',due_at:null}],work:[{assignment_id:'r2',state:'returned'},{assignment_id:'r3',state:'submitted'}]};
+const quizData = {staff:false,courses:[],reviews:[],quizzes:[{id:'q1',title:'Reading check: motion',status:'published',due_at:new Date(Date.now()+2*86400000).toISOString()},{id:'q2',title:'Later quiz',status:'published',due_at:null},{id:'q3',title:'Graded quiz',status:'published',due_at:null}],work:[{quiz_id:'q3',state:'graded'}]};
 (async()=>{
  await pkg('esbuild').build({stdin:{contents:`import React from 'react';import {createRoot} from 'react-dom/client';import Home from './src/app/home/page';import Navbar from './src/components/navbar';import GalleryPage from './src/app/avatar/gallery/page';import XpPage from './src/app/xp/page';createRoot(document.getElementById('root')).render(<><Navbar/><main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">{location.pathname==='/avatar/gallery'?<GalleryPage/>:location.pathname==='/xp'?<XpPage/>:<Home/>}</main></>);`,resolveDir:root,loader:'tsx'},bundle:true,format:'esm',jsx:'automatic',outfile:out+'/app.js',define:{'process.env.NODE_ENV':'"development"'},plugins:[{name:'fixture',setup(b){
  const mocks={
  'next/link':`import React from 'react';export default function Link({prefetch,...p}){return React.createElement('a',p)}`,
+ 'next/image':`import React from 'react';export default function Image({fill,priority,unoptimized,...p}){return React.createElement('img',p)}`,
  'next/navigation':`export const usePathname=()=>'/home';export const useRouter=()=>({push:p=>location.assign(p)});`,
  'next-auth/react':`export const useSession=()=>({data:{user:{name:'Alex',role:'student'}},status:'authenticated'});export const signIn=()=>{};`,
  '@/lib/use-view-as':`export const useViewAs=()=>({role:'student'});`,
@@ -29,6 +33,10 @@ const home = {student:{name:'Alex'}, points:{xp:240,balance:180}, streak:{curren
  if(u.pathname==='/api/avatar/gallery')return json({avatars:[],items:[],next_offset:null});
  if(u.pathname==='/api/avatar/spotlight')return mode==='spotlight-error'?json({},503):json({game:{slug:'orbit-run',name:'Orbit Run'},rankedPlayers:20,items:[],cards:mode==='empty'?[]:[{id:'a',name:'Orbit Owl',rank:2,score:840,traits:{shirt_color:'teal'},equipped:{}},...(mode==='single-card'?[]:[{id:'b',name:'Nova Fox',rank:8,score:620,traits:{hair_style:'afro',shirt_color:'purple'},equipped:{}},{id:'c',name:'Comet Cat',rank:14,score:400,traits:{hair_style:'long',shirt_color:'orange'},equipped:{}}])]});
  if(u.pathname==='/api/avatar/me')return mode==='avatar-error'?json({},503):json({alias:'Orbit Explorer',setup_completed:mode!=='empty',traits:mode==='empty'?null:{skin:'tan',hair_style:'curls',hair_color:'dark_brown',shirt_color:'teal',mouth:'grin'},equipped:{},equipped_items:[]});
+ if(u.pathname==='/api/readings')return mode==='readings-error'?json({error:'Reading assignments unavailable'},503):json(['dashboard','readings-error'].includes(mode)?readingData:{staff:false,courses:[],assignments:[],work:[]});
+ if(u.pathname==='/api/quizzes')return json(['dashboard','readings-error'].includes(mode)?quizData:{staff:false,courses:[],quizzes:[],work:[],reviews:[]});
+ if(u.pathname==='/api/home' && mode==='dashboard')return json({...home,homework:dashboardHomework});
+ if(u.pathname==='/api/vocab/tasks' && mode==='dashboard')return json({tasks:Array.from({length:20},(_,i)=>({id:'v'+i,title:'Word set '+i,term_ids:['a'],progress:[{complete:i>=10,ready:i>=10?1:0,total:1}]}))});
  if(u.pathname==='/api/home' && mode==='long')return json({...home,student:{name:'Alexanderthelongeststudentname'},continue:{...home.continue,lesson:{...home.continue.lesson,title:'A very long lesson about interpreting motion and comparing position, velocity, and acceleration graphs'}}});
  if(u.pathname==='/api/home')return mode==='error'?json({error:'unavailable'},503):json(mode==='empty'?{...home,continue:null,retry:[],climb:[]}:home);
  if(u.pathname==='/api/me/classes')return mode==='class-error'?json({},503):json({classes:mode==='empty'?[]:[{id:'cpa',name:'Physics Section B',section:'Period 2',track:'cpa',program:'physics',teacher:'Teacher Example'},...(mode==='honors'?[{id:'honors',name:'Honors Section A',section:'Period 1',track:'honors',program:'physics',teacher:'Another Teacher'}]:[])]});
@@ -45,7 +53,7 @@ const home = {student:{name:'Alex'}, points:{xp:240,balance:180}, streak:{curren
  if(['/app.js','/style.css'].includes(u.pathname)){res.setHeader('Content-Type',u.pathname.endsWith('.js')?'text/javascript':'text/css');return res.end(fs.readFileSync(out+u.pathname))}
  res.setHeader('Content-Type','text/html');res.end('<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"><body><div id="root"></div><script type="module" src="/app.js"></script></body></html>');});
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
- browser=await chromium.launch({headless:true,channel:'chrome'});const page=await browser.newPage({viewport:{width:1366,height:900}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ browser=await chromium.launch({headless:true,channel:'chrome'});const page=await browser.newPage({viewport:{width:1366,height:900}});const errors=[];page.on('pageerror',e=>{errors.push(e.message);console.error('Browser error:',e.stack)});
 
  const url='http://127.0.0.1:'+server.address().port;
  const resume=page.getByRole('link',{name:'Resume lesson',exact:true});
@@ -64,9 +72,30 @@ const home = {student:{name:'Alex'}, points:{xp:240,balance:180}, streak:{curren
  assert.equal(await feedback.getByRole('link',{name:'All feedback & progress'}).getAttribute('href'),'/dashboard/growth');
  assert.equal(await feedback.getByRole('link',{name:'Practice: Explain motion using a position graph'}).getAttribute('href'),'/review/motion');
  assert((await page.locator('#daily-work').boundingBox()).y<(await feedback.boundingBox()).y,'work precedes feedback');
- assert((await feedback.boundingBox()).y<(await page.getByRole('region',{name:'Term XP',exact:true}).boundingBox()).y,'feedback precedes XP');
+ assert((await feedback.boundingBox()).y<=(await page.getByRole('region',{name:'Term XP',exact:true}).boundingBox()).y,'feedback and XP share the progress row');
  assert(!requests.includes('/api/avatar/spotlight')&&!requests.includes('/api/xp-goal'),'optional extras do not fetch until opened');
  assert.equal(await page.getByRole('link',{name:'Customize your avatar',exact:true}).count(),1);
+ const wallet=page.locator('[aria-label="Your earned XP and spending balance"]');
+ await wallet.getByText('240',{exact:true}).waitFor();
+ assert.equal(await wallet.getByRole('link',{name:'180 XP to spend'}).getAttribute('href'),'/store');
+ const rewards=page.getByRole('navigation',{name:'Play and reward shortcuts'});
+ for(const [name,href] of [['Arcade','/arcade'],['Avatar gallery','/avatar/gallery'],['Store','/store']])assert.equal(await rewards.getByRole('link',{name,exact:true}).getAttribute('href'),href);
+ assert((await page.getByRole('link',{name:'Customize your avatar',exact:true}).boundingBox()).height>=150,'avatar keeps its prominent desktop size');
+ async function assertHomeColorContrast(){
+   const ratios=await page.evaluate(()=>{
+     const canvas=document.createElement('canvas');canvas.width=canvas.height=1;const ctx=canvas.getContext('2d');
+     const luminance=c=>{ctx.clearRect(0,0,1,1);ctx.fillStyle=c;ctx.fillRect(0,0,1,1);const rgb=[...ctx.getImageData(0,0,1,1).data].slice(0,3).map(v=>{const n=v/255;return n<=.04045?n/12.92:((n+.055)/1.055)**2.4});return rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722};
+     const hero=document.querySelector('[aria-labelledby="check-in-heading"]');
+     const math=document.querySelector('[aria-labelledby="practice-heading"] > div:nth-child(2)');
+     const vocab=document.querySelector('[aria-labelledby="practice-heading"] > div:nth-child(3)');
+     const xp=document.querySelector('[aria-label="Your earned XP and spending balance"]');
+     const pairs=[['welcome',hero.querySelector('h1'),hero],['class',hero.querySelector('summary'),hero],['XP',xp,xp],['math',math.querySelector('h4'),math],['vocabulary',vocab.querySelector('h4'),vocab]];
+     const backgrounds=[hero,math,vocab,xp].map(el=>getComputedStyle(el).backgroundColor);if(new Set(backgrounds).size!==4)throw Error('Identity, XP, math and vocabulary must retain distinct surfaces');
+     return pairs.map(([name,ink,surface])=>{const a=luminance(getComputedStyle(ink).color),b=luminance(getComputedStyle(surface).backgroundColor);return {name,ratio:(Math.max(a,b)+.05)/(Math.min(a,b)+.05)}});
+   });
+   for(const {name,ratio}of ratios)assert(ratio>=4.5,`${name} contrast: ${ratio}`);
+ }
+ await assertHomeColorContrast();
  await page.getByText('240 / 1,400 XP',{exact:true}).waitFor();
  const classes=page.getByRole('region',{name:'Your enrolled classes'});
  await classes.locator('summary').getByText('Physics Section B · Period 2 · CPA',{exact:true}).waitFor();
@@ -76,7 +105,10 @@ const home = {student:{name:'Alex'}, points:{xp:240,balance:180}, streak:{curren
  for(const width of [1366,1024,768,390,320]){
    await page.setViewportSize({width,height:844});await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
    assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'overflow at '+width);
-   const button=await resume.boundingBox();assert(button.y+button.height<844,'resume lesson is visible without scrolling at '+width);
+   const avatar=await page.getByRole('link',{name:'Customize your avatar',exact:true}).locator('svg').first().boundingBox();
+   assert(Math.abs(avatar.width-(width>640?280:width>380?200:172))<1,'avatar is twice its previous width at '+width);
+   assert(Math.abs(avatar.height-(width>640?380:width>380?275:236.5))<1,'avatar is twice its previous height at '+width);
+   await resume.scrollIntoViewIfNeeded();const button=await resume.boundingBox();assert(button.height>=44&&button.y>=0&&button.y+button.height<=844,'lesson action remains reachable at '+width);
    if(width<1280){await page.getByRole('button',{name:'Menu',exact:true}).click();await page.getByRole('dialog').getByRole('link',{name:'Lobby',exact:true}).waitFor();await page.keyboard.press('Escape');await page.getByRole('dialog').waitFor({state:'hidden'});}
  }
  await page.setViewportSize({width:390,height:844});await page.screenshot({path:out+'/mobile.png',fullPage:true});
@@ -85,7 +117,7 @@ const home = {student:{name:'Alex'}, points:{xp:240,balance:180}, streak:{curren
  await page.getByRole('button',{name:'Next avatar',exact:true}).click();assert.equal(await carousel.getByRole('button',{name:/Nova Fox/}).getAttribute('aria-pressed'),'true');
  await page.getByRole('button',{name:'Previous avatar',exact:true}).click();await carousel.getByRole('button',{name:/Orbit Owl/}).focus();await page.keyboard.press('ArrowRight');assert.equal(await carousel.getByRole('button',{name:/Nova Fox/}).getAttribute('aria-pressed'),'true');
  await page.getByRole('button',{name:'New sample',exact:true}).click();await page.getByText('Card 1 of 3',{exact:true}).waitFor();
- assert.equal(await page.getByRole('link',{name:'Avatar gallery',exact:true}).getAttribute('href'),'/avatar/gallery');
+ assert.equal(await page.locator('section[aria-labelledby="spotlight-heading"]').getByRole('link',{name:'Avatar gallery',exact:true}).getAttribute('href'),'/avatar/gallery');
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'expanded extras fit mobile');
  await page.locator('section[aria-labelledby="spotlight-heading"]').screenshot({path:out+'/avatar-deck.png'});
  await extras.click();assert.equal(await carousel.count(),0,'closing extras unmounts background requests');
@@ -98,18 +130,59 @@ const home = {student:{name:'Alex'}, points:{xp:240,balance:180}, streak:{curren
  mode='avatar-error';await page.reload();await page.getByRole('link',{name:'Open your avatar',exact:true}).waitFor();await resume.waitFor();
  mode='error';await page.reload();await page.getByRole('button',{name:'Try again',exact:true}).waitFor();await page.locator('#daily-work').getByRole('link',{name:'All lessons',exact:true}).waitFor();await page.getByRole('link',{name:'Start warm-up'}).waitFor();mode='normal';await page.getByRole('button',{name:'Try again',exact:true}).click();await resume.waitFor();
  mode='math-error';await page.reload();await page.getByRole('button',{name:'Retry warm-up'}).waitFor();await practice.getByText('Status unavailable',{exact:true}).waitFor();mode='normal';await page.getByRole('button',{name:'Retry warm-up'}).click();await practice.getByText('0 of 2 done',{exact:true}).waitFor();
- mode='submitted';await page.reload();await page.getByText('Submitted — waiting for your teacher to review.').waitFor();assert.equal(await page.getByRole('link',{name:'Start warm-up'}).count(),0);await practice.getByText('1 of 2 done',{exact:true}).waitFor();
+ mode='submitted';await page.reload();await page.getByText('Warm-up submitted. You can keep practicing.').waitFor();assert.equal(await page.getByRole('link',{name:'Start warm-up'}).count(),0);await practice.getByText('1 of 2 done',{exact:true}).waitFor();
  mode='all-done';await page.reload();await practice.getByText('Practice complete',{exact:true}).waitFor();assert.equal(await page.getByText('Done',{exact:true}).count(),2);await resume.waitFor();await page.locator('section[aria-labelledby="practice-heading"]').screenshot({path:out+'/practice-complete.png'});
- mode='review-due';await page.reload();await page.getByText('Review due',{exact:true}).waitFor();await practice.getByText('1 of 2 done',{exact:true}).waitFor();
+ mode='review-due';await page.reload();await practice.getByText('Practice complete',{exact:true}).waitFor();await page.getByText('Review words',{exact:true}).waitFor();
  mode='vocab-error';await page.reload();await practice.getByText('Status unavailable',{exact:true}).waitFor();assert.equal(await page.getByText('Practice complete',{exact:true}).count(),0);await page.getByRole('link',{name:'Open vocabulary',exact:true}).waitFor();
- mode='quiz';await page.reload();await page.getByRole('link',{name:/Motion vocabulary quiz/}).waitFor();await page.getByText('Open quiz',{exact:true}).waitFor();await practice.getByText('0 of 2 done',{exact:true}).waitFor();assert.equal(await page.getByRole('link',{name:/Motion vocabulary quiz/}).getAttribute('href'),'/vocabulary/work?task_id=quiz1');
+ mode='quiz';await page.reload();await page.locator('[aria-labelledby="practice-heading"]').getByRole('link',{name:/Motion vocabulary quiz/}).waitFor();await page.locator('[aria-labelledby="practice-heading"]').getByText('Open quiz',{exact:true}).waitFor();await practice.getByText('0 of 2 done',{exact:true}).waitFor();assert.equal(await page.locator('[aria-labelledby="practice-heading"]').getByRole('link',{name:/Motion vocabulary quiz/}).getAttribute('href'),'/vocabulary/work?task_id=quiz1');
  mode='quiz-done';await page.reload();await page.getByText('View quiz results',{exact:true}).waitFor();await page.getByText('Awaiting teacher review',{exact:false}).waitFor();await practice.getByText('1 of 2 done',{exact:true}).waitFor();
  mode='xp-error';await page.reload();await page.getByRole('button',{name:'Retry XP progress'}).waitFor();mode='normal';await page.getByRole('button',{name:'Retry XP progress'}).click();await page.getByText('240 / 1,400 XP',{exact:true}).waitFor();
  mode='xp-met';await page.reload();await page.getByText('Minimum met · eligible for +5 term-average points.',{exact:true}).waitFor();
  mode='long';await page.reload();await resume.waitFor();await page.setViewportSize({width:320,height:844});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'long names and lesson titles wrap');
  mode='normal';await page.reload();await practice.getByText('0 of 2 done',{exact:true}).waitFor();await page.setViewportSize({width:390,height:844});await page.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});await page.evaluate(()=>document.documentElement.classList.add('dark'));await page.screenshot({path:out+'/dark-mobile.png',fullPage:true});
+ await assertHomeColorContrast();
  await page.getByRole('link',{name:'XP details',exact:true}).click();await page.getByRole('heading',{name:'Your XP: what counts and what you need'}).waitFor();await page.getByText('1,160',{exact:true}).waitFor();await page.getByRole('heading',{name:'How to earn it'}).waitFor();
- await page.goto(url);await extras.click();await page.getByRole('link',{name:'Avatar gallery',exact:true}).click();await page.getByRole('heading',{name:'Avatar gallery',exact:true}).waitFor();await page.getByRole('region',{name:'Class avatar gallery'}).waitFor();assert.equal(new URL(page.url()).pathname,'/avatar/gallery');
+ await page.goto(url);await rewards.getByRole('link',{name:'Avatar gallery',exact:true}).click();await page.getByRole('heading',{name:'Avatar gallery',exact:true}).waitFor();await page.getByRole('region',{name:'Class avatar gallery'}).waitFor();assert.equal(new URL(page.url()).pathname,'/avatar/gallery');
+ mode='dashboard';await page.goto(url);await page.setViewportSize({width:1366,height:900});
+ const dashboard=page.getByRole('region',{name:'Your assignment dashboard'});
+ const views=dashboard.getByRole('group',{name:'Assignment views'});
+ await views.getByRole('button',{name:'24 To do',exact:true}).waitFor();
+ assert.equal(await dashboard.locator('article').count(),3,'home has only three next tasks regardless of assignment count');
+ assert.equal(await dashboard.locator('article').first().getByRole('heading').textContent(),'Read about motion');
+ assert.equal(await dashboard.getByText('Submitted reading',{exact:true}).count(),0);
+ assert.equal(await page.locator('[aria-labelledby="practice-heading"] li').count(),1,'daily vocabulary stays bounded');
+ assert.equal(await page.getByRole('link',{name:'Explore my growth',exact:true}).getAttribute('href'),'/dashboard/growth');
+ await views.getByRole('button',{name:'1 Past due',exact:true}).click();assert.equal(await dashboard.locator('article').count(),1);
+ await views.getByRole('button',{name:'2 Next 7 days',exact:true}).click();assert.equal(await dashboard.locator('article').count(),2);
+ await dashboard.getByText('Needs completion',{exact:true}).waitFor();
+ await views.getByRole('button',{name:'24 To do',exact:true}).click();
+ await page.screenshot({path:out+'/dashboard-desktop.png',fullPage:true});
+ await dashboard.getByRole('button',{name:'Manage assignments',exact:true}).click();
+ const manager=page.getByRole('dialog',{name:'Manage your assignments'});
+ await manager.getByText('1–5 of 24',{exact:true}).waitFor();assert.equal(await manager.locator('article').count(),5);
+ await manager.getByRole('button',{name:'Next',exact:true}).click();await manager.getByText('6–10 of 24',{exact:true}).waitFor();
+ await manager.getByLabel('Assignment type',{exact:true}).selectOption('video');await manager.getByText('1–5 of 10',{exact:true}).waitFor();
+ await manager.getByLabel('Search assignments',{exact:true}).fill('Video 10');assert.equal(await manager.locator('article').count(),1);
+ assert.equal(await manager.getByRole('link',{name:'Open homework',exact:true}).getAttribute('href'),'/lessons/video-10');
+ await manager.getByLabel('Search assignments',{exact:true}).fill('');await manager.getByLabel('Status',{exact:true}).selectOption('submitted');await manager.getByText('1–4 of 4',{exact:true}).waitFor();
+ assert.equal(await manager.getByRole('link',{name:'View work',exact:true}).count(),4);
+ await manager.getByLabel('Assignment type',{exact:true}).selectOption('quiz');await manager.getByText('Graded quiz',{exact:true}).waitFor();
+ assert.equal(await manager.getByRole('link',{name:'View quiz',exact:true}).getAttribute('href'),'/quizzes/q3');
+ await page.keyboard.press('Escape');await manager.waitFor({state:'hidden'});
+ assert(await dashboard.getByRole('button',{name:'Manage assignments',exact:true}).evaluate(el=>el===document.activeElement),'dialog restores keyboard focus');
+ await views.getByRole('button',{name:'16 Submitted / done',exact:true}).click();await manager.getByText('1–5 of 16',{exact:true}).waitFor();await page.keyboard.press('Escape');
+ for(const width of [768,390,320]){
+   await page.setViewportSize({width,height:844});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'dashboard fits '+width);
+   await dashboard.getByRole('button',{name:'Manage assignments',exact:true}).click();await manager.getByLabel('Assignment type',{exact:true}).selectOption('reading');
+   assert(await manager.evaluate(el=>el.scrollWidth<=el.clientWidth),'assignment manager fits '+width);
+   assert((await manager.getByRole('button',{name:'Close',exact:true}).boundingBox()).height>=44);
+   if(width===390)await page.screenshot({path:out+'/assignments-mobile.png',fullPage:true});
+   await page.keyboard.press('Escape');
+ }
+ await page.setViewportSize({width:390,height:844});await page.screenshot({path:out+'/dashboard-mobile.png',fullPage:true});
+ mode='readings-error';await page.reload();await page.getByText('Some assignments couldn’t load. The list and counts may be incomplete.',{exact:true}).waitFor();
+ await dashboard.getByText('Reading check: motion',{exact:true}).waitFor();assert.equal(await dashboard.getByText('You’re caught up on assigned work.',{exact:false}).count(),0);
+ mode='dashboard';await dashboard.getByRole('button',{name:'Retry readings',exact:true}).click();await dashboard.getByText('Read about motion',{exact:true}).waitFor();
  assert.deepEqual(errors,[]);
- console.log('PASS: work-first hierarchy; above-the-fold lesson at 1366/1024/768/390/320; no duplicated directory or chart; lazy extras and keyboard controls; feedback, class, lesson, math and XP retries; practice completion/review/error states; empty and long content; XP details and gallery navigation; dark/reduced-motion rendering; no browser errors.');
+ console.log('PASS: double-size avatar and reachable lesson at 1366/1024/768/390/320; no duplicated directory or chart; lazy extras and keyboard controls; feedback, class, lesson, math and XP retries; practice completion/review/error states; empty and long content; XP details and gallery navigation; dark/reduced-motion rendering; no browser errors.');
 })().catch(e=>{console.error(e);process.exitCode=1}).finally(async()=>{await browser?.close();server?.close()});

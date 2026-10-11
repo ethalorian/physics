@@ -6,7 +6,8 @@ import { resolveDeckSrc } from '@/data/lesson-decks'
 export interface CommandSession {
   teaching_tool_state?: import('@/lib/teaching-tool-spec').TeachingToolStates;
   command_revision?: number
-  id: string; lesson_id: string; course_id: string; created_at?: string; status: 'live' | 'ended'; current_slide: number
+  id: string; lesson_id: string | null; course_id: string; created_at?: string; status: 'live' | 'ended'; current_slide: number
+  plan_unit_id?: string | null; plan_day?: number | null; plan_track?: string | null
   current_section: number; current_anchor: string | null; poll_block_id: string | null
   projected_block_id?: string | null; projected_block_page?: number
   poll_run_id: string | null; poll_locked: boolean; poll_revealed: boolean; blackout: boolean
@@ -14,11 +15,11 @@ export interface CommandSession {
 }
 export interface LiveCommandState {
   session: CommandSession
-  lobby: { id: string; code: string; status: string; block_id?: string | null; debrief_meta?: { debrief?: string | null; then?: string | null; projection_phase?: 'working' | 'debrief' } | null } | null
+  lobby: { id: string; code: string; status: string; task_prompt?: string | null; block_id?: string | null; debrief_meta?: { prompt_source?: 'textbook'|'explainer'; debrief?: string | null; then?: string | null; projection_phase?: 'working' | 'debrief' } | null } | null
   saved: number; enrolled: number; tally: Record<string, number>
 }
 export interface CommandLesson { id: string; title: string; content_blocks: BlockDocument }
-export interface PresentationData { session: CommandSession | null; lesson: CommandLesson | null; deck: DeckBlock | null; answerKeys?: Record<string, string> }
+export interface PresentationData { session: CommandSession | null; lesson: CommandLesson | null; deck: DeckBlock | null; plan?: {plan_unit_id: string; plan_day: number; plan_track: string; title: string} | null; answerKeys?: Record<string, string> }
 export interface CommandSlide { binding?: string | null; label: string; notes: string; anchor: string | null }
 
 export async function commandRequest<T>(url: string, options?: RequestInit): Promise<T> {

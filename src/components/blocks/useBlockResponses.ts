@@ -16,14 +16,19 @@ export interface SaveMeta { response_mode?: string; scaffolds_used?: string[]; /
 export type BlockResponseMap = Record<string, StoredResponse>
 export type DraftFn = (blockId: string, blockType: string, response: unknown) => void
 
+const inspectionStorage = (): Storage => { throw new Error('Walkthroughs do not read or write local student drafts') }
+const inspectionSave = async () => false
+const inspectionDraft: DraftFn = () => {}
+
 /** A store is scoped to one signed-in student and one lesson. */
 export function useBlockResponses(lessonId: string, enabled = true) {
   const { data: session, status } = useSession()
+  const readOnly = Boolean(session?.experience)
   const studentId = status === 'authenticated' ? session?.user?.id : undefined
   const scope = enabled && studentId ? studentId + ':' + lessonId : null
   const current = useRef(scope)
   current.current = scope
-  const store = useMemo(() => new LessonResponseStore(studentId ?? '', lessonId, () => scope !== null && current.current === scope), [studentId, lessonId, scope])
+  const store = useMemo(() => new LessonResponseStore(studentId ?? '', lessonId, () => scope !== null && current.current === scope, undefined, readOnly ? inspectionStorage : undefined), [studentId, lessonId, scope, readOnly])
   const snapshot = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot)
   useEffect(() => {
     if (!scope) return
@@ -40,5 +45,5 @@ export function useBlockResponses(lessonId: string, enabled = true) {
     }
   }, [scope, store])
   return { ...snapshot, loadError: enabled && status === 'unauthenticated' ? 'Sign in to load your saved work.' : snapshot.loadError,
-    save: store.save, savePending: store.savePending, draft: store.draft, retryLoad: store.load, studentId }
+    save: readOnly ? inspectionSave : store.save, savePending: readOnly ? inspectionSave : store.savePending, draft: readOnly ? inspectionDraft : store.draft, retryLoad: store.load, recordXpTotal: store.recordXpTotal, studentId }
 }

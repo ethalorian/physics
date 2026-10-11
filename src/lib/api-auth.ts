@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type { Session } from 'next-auth'
 import { auth } from '@/lib/auth'
+import { EXPERIENCE_READ_ONLY } from '@/lib/experience'
 import { getEffectiveContext } from '@/lib/effective-context'
 import { requireEnrolledStudent } from '@/lib/student-enrollment'
 import type { UserRole } from '@/lib/permissions'
@@ -92,6 +93,9 @@ export function withAuth<P extends Record<string, string> = Record<string, strin
         return unauthorized()
       }
 
+      if (session.experience && !['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+        return NextResponse.json({ error: EXPERIENCE_READ_ONLY, code: 'EXPERIENCE_READ_ONLY' }, { status: 403 })
+      }
       const ec = await getEffectiveContext(session.user.email)
       const ctx: AuthContext<P> = {
         session,

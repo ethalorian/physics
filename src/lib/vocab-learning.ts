@@ -4,10 +4,11 @@ export interface LearningWord {
  icon?: string | null; definition_es?: string | null; cognate?: string | null; example?: string | null
  translations?: Record<string, { term?: string; definition?: string }>
 }
-export interface VocabResult { term_id: string; correct: boolean | null; supports: string[]; response: string; term?:string; definition?:string; feedback?:string }
+export interface VocabResult { question_id?: string; points?: number; max_points?: number; term_id: string; term_ids?: string[]; correct: boolean | null; supports: string[]; response: string; term?:string; definition?:string; feedback?:string }
 export interface CheckRecord { id: string; completed_at: string | null; result: VocabResult[] | null }
 export interface VocabTask {
- task_kind?: 'practice' | 'quiz'; quiz_format?: 'multiple_choice' | 'matching' | 'recall' | 'definition' | 'sentence' | 'quiz_game' | null
+ syllabus_step_id?: string | null; syllabus_draft?: boolean
+ task_kind?: 'practice' | 'quiz'; quiz_format?: 'multiple_choice' | 'matching' | 'recall' | 'definition' | 'sentence' | 'quiz_game' | 'checkpoint' | null
  id: string; course_id: string; target_id: string | null; title: string; note: string; due_on: string | null
  term_ids: string[]; words: LearningWord[]; student_ids: string[]; active: boolean; created_at: string
  threshold: number; min_checks: number; check_mode: 'recognition' | 'recall'
@@ -17,7 +18,7 @@ export const normalizeWord = (s: string) => s.normalize('NFKC').trim().toLocaleL
 export function summarizeWords(task: Pick<VocabTask,'term_ids'|'threshold'|'min_checks'>, checks: CheckRecord[], now = Date.now()) {
  const done = checks.filter(c => c.completed_at && c.result).sort((a,b) => b.completed_at!.localeCompare(a.completed_at!))
  const words = task.term_ids.map(id => {
-  const history = done.flatMap(c => (c.result ?? []).filter(r => r.term_id === id && typeof r.correct === 'boolean').map(r => ({ ...r, at: c.completed_at! })))
+  const history = done.flatMap(c => (c.result ?? []).filter(r => (r.term_id === id || r.term_ids?.includes(id)) && typeof r.correct === 'boolean').map(r => ({ ...r, at: c.completed_at! })))
   const recent = history.slice(0,5)
   const accuracy = recent.length ? Math.round(100 * recent.filter(r => r.correct).length / recent.length) : null
   const successes = history.filter(r => r.correct).map(r => Date.parse(r.at)).sort((a,b)=>a-b)
@@ -28,5 +29,5 @@ export function summarizeWords(task: Pick<VocabTask,'term_ids'|'threshold'|'min_
  })
  const covered = words.filter(w => w.attempts > 0).length
  const ready = words.filter(w => w.ready).length
- return { words, covered, ready, total: words.length, complete: words.length > 0 && ready === words.length, reviewDue: words.some(w=>w.reviewDue), retained: words.length > 0 && words.every(w=>w.retained), accuracy: covered ? Math.round(words.reduce((n,w)=>n+(w.accuracy ?? 0),0)/covered) : null }
+ return { words, covered, ready, completedChecks: done.length, checksRemaining: words.reduce((n,w)=>Math.max(n,task.min_checks-w.attempts),0), total: words.length, complete: words.length > 0 && ready === words.length, reviewDue: words.some(w=>w.reviewDue), retained: words.length > 0 && words.every(w=>w.retained), accuracy: covered ? Math.round(words.reduce((n,w)=>n+(w.accuracy ?? 0),0)/covered) : null }
 }

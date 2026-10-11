@@ -1,3 +1,4 @@
+import { getMathXpStatus } from '@/lib/math-xp-status'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth } from '@/lib/api-auth'
@@ -6,24 +7,29 @@ import { checkAnswerWithMode } from '@/lib/math-answer-check'
 import { pickTargetRung, type RungInput } from '@/lib/math-spine-picker'
 import { instantiateTemplate, type ItemTemplate } from '@/lib/math-item-template'
 import { matchSlip, type Slip, type SlipFeedback } from '@/lib/math-misconceptions'
+import { isMathSkill } from '@/lib/math-remediation'
 
 // Practice issues an immutable server-side problem. Correct answers earn 1 XP
 // once per instance, through the same XP ledger as warm-ups and milestones.
-async function currentTargetCompetency(userId: string) {
-  const { data: compRows } = await supabaseAdmin
+async function currentTargetCompetency(userId: string, requestedCode: string | null) {
+  const { data: compRows, error: compError } = await supabaseAdmin
     .from('math_competencies')
     .select('id, code, statement, order_index, sequence_order, mini_lesson')
     .eq('is_active', true)
     .order('sequence_order', { ascending: true, nullsFirst: false })
+  if (compError) throw compError
   const competencies = compRows ?? []
   if (competencies.length === 0) return null
+  const requested = requestedCode ? competencies.find(c => c.code === requestedCode) : null
+  if (requestedCode && !requested) return null
 
-  const { data: recRows } = await supabaseAdmin
+  const { data: recRows, error: recordsError } = await supabaseAdmin
     .from('math_competency_records')
     .select('competency_id, level, observed_at')
     .eq('user_id', userId)
     .in('competency_id', competencies.map((c) => c.id))
     .order('observed_at', { ascending: true })
+  if (recordsError) throw recordsError
   const levelsByComp = new Map<string, number[]>()
   const latestByComp = new Map<string, string>()
   for (const r of recRows ?? []) {
@@ -39,7 +45,7 @@ async function currentTargetCompetency(userId: string) {
     latestObservedAt: latestByComp.get(c.id) ?? null,
   }))
   const pick = pickTargetRung(rungs)
-  const target = competencies.find((c) => c.id === pick?.id) ?? competencies[0]
+  const target = requested ?? competencies.find((c) => c.id === pick?.id) ?? competencies[0]
   return {
     target,
     value: decayingAverage(levelsByComp.get(target.id) ?? []),
@@ -47,10 +53,12 @@ async function currentTargetCompetency(userId: string) {
 }
 
 // GET /api/math-spine/practice — another rep on the current rung.
-export const GET = withAuth(async (_request, ctx) => {
+export const GET = withAuth(async (request, ctx) => {
   if (ctx.role !== 'student') return NextResponse.json({ error: 'Student practice only' }, { status: 403 })
-  const picked = await currentTargetCompetency(ctx.userId)
-  if (!picked) return NextResponse.json({ item: null })
+  const requestedCode = new URL(request.url).searchParams.get('skill')
+  if (requestedCode !== null && !isMathSkill(requestedCode)) return NextResponse.json({ error: 'Choose a valid math skill.' }, { status: 400 })
+  const picked = await currentTargetCompetency(ctx.userId, requestedCode)
+  if (!picked) return requestedCode ? NextResponse.json({ error: 'This math skill is not available for practice.' }, { status: 404 }) : NextResponse.json({ item: null })
   const { target, value } = picked
 
   const { data: itemRows, error: itemError } = await supabaseAdmin
@@ -94,9 +102,11 @@ export const GET = withAuth(async (_request, ctx) => {
       competencyValue: value,
       translations,
     }
+  if (ctx.session?.experience) return NextResponse.json({ item, xpAvailable: 1, readOnly: true })
   const issued = await supabaseAdmin.from('math_practice_instances').insert({user_id:ctx.userId,item,checking:chosen}).select('id').single()
   if (issued.error) return NextResponse.json({error:'Could not prepare practice. Please retry.'},{status:503})
-  return NextResponse.json({item:{...item,instanceId:issued.data.id},xpAvailable:1})
+  const xpStatus = await getMathXpStatus(ctx.userId)
+  return NextResponse.json({item:{...item,instanceId:issued.data.id},xpAvailable:Math.min(1,xpStatus.remaining),xpStatus})
 })
 
 // POST /api/math-spine/practice — check a rep; maybe award a token point.
@@ -153,5 +163,6 @@ export const POST = withAuth(async (request, ctx) => {
     if(error) return NextResponse.json({error:'Your XP could not be saved. Check again to retry.'},{status:503})
     reward=data
   }
-  return NextResponse.json({result,feedback,...reward})
+  const xpStatus = await getMathXpStatus(ctx.userId)
+  return NextResponse.json({result,feedback,...reward,xpStatus})
 })

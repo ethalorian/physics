@@ -1,0 +1,3164 @@
+[
+  {
+    "slug": "u1.anchor-know-unknow",
+    "statement": "I can describe what we currently know and don't know about 2026-XJ, and identify what physics tools I would need to learn more.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "7e5d60f9-7232-43d6-a396-34d954dc7972",
+        "title": "The Briefing: Something Is Coming",
+        "slug": "u1-d01",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "4.1",
+      "4.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.vocab-position-distance-displacement",
+    "statement": "I can use precise vocabulary (position, distance, displacement) to describe motion, and I can tell the difference between scalar and vector quantities.",
+    "unit": "unit-1",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "fc67d63d-a011-426b-b9f3-fd8f1ea7f501",
+        "title": "Position & displacement",
+        "slug": "position-and-displacement",
+        "kind": "lesson"
+      },
+      {
+        "id": "fe529665-a1df-4f80-a5cc-df0d09b95210",
+        "title": "Talking About Motion: Distance vs. Displacement",
+        "slug": "u1-d02",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "New video lesson",
+    "nextVideo": "Published",
+    "readings": [
+      "5.1",
+      "4.2",
+      "4.3"
+    ],
+    "videoIds": [
+      "u0V8uJ5KTvo"
+    ]
+  },
+  {
+    "slug": "u1.capture-pt-graph",
+    "statement": "I can capture a position–time graph with a Vernier motion detector and explain what its slope tells me about velocity.",
+    "unit": "unit-1",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "14e9b921-3fc3-426d-8cfa-1cf5a84bfb22",
+        "title": "Velocity: Motion with Direction",
+        "slug": "u1-d03",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.read-vt-graph-components",
+    "statement": "I can read a velocity-time graph and break a 2-D velocity into its toward-Earth and perpendicular components.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "1e1087a2-2693-415f-8b7d-4b54813103ee",
+        "title": "Velocity–Time Graphs & Vector Thinking",
+        "slug": "u1-d04",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Velocity–Time Graphs & Vector Thinking",
+    "readings": [
+      "5.1",
+      "5.2",
+      "5.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.predict-position-uncertainty",
+    "statement": "I can use velocity and time to predict an object's future position, and I can express uncertainty in a prediction.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "7b8feff7-3201-4fc0-924d-142b831590ae",
+        "title": "Predicting Position Using Velocity",
+        "slug": "u1-d05",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Predicting Position Using Velocity",
+    "readings": [
+      "4.9"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.vectors-tip-to-tail",
+    "statement": "I can add two vectors tip-to-tail and break a vector into components with simple trig.",
+    "unit": "unit-1",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "05b9ed09-f516-4544-a37c-0d477f0001e8",
+        "title": "Vector Addition & Decomposition",
+        "slug": "u1-d06",
+        "kind": "lesson"
+      },
+      {
+        "id": "af0f59a3-0978-46fd-bc79-2bdafa66b9e5",
+        "title": "Workshop & Revision",
+        "slug": "u1-d19",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Vector Addition & Decomposition",
+    "readings": [
+      "5.3",
+      "2.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.acceleration-rate-of-change",
+    "statement": "I can define acceleration as the rate of change of velocity and calculate it from velocity-time data.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "ffe1c5c3-1472-4086-87cb-cdbf4b36006b",
+        "title": "Acceleration: When Velocity Changes",
+        "slug": "u1-d07",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "4.4",
+      "4.5",
+      "4.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.pick-equation-of-motion",
+    "statement": "I can pick and use the right equation of motion for a constant-acceleration problem.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "c3019e6c-08eb-4271-8bdc-66060eb35d90",
+        "title": "Constant-Acceleration Problem-Solving",
+        "slug": "u1-d08",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Constant-Acceleration Problem-Solving",
+    "readings": [
+      "4.5",
+      "4.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.newtons-first-law-inertia",
+    "statement": "I can explain Newton's 1st Law in my own words and find everyday examples of inertia.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "315c6005-affb-496f-bc0f-af4e5cbe8676",
+        "title": "Newton's First Law: Inertia",
+        "slug": "u1-d09",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Newton's First Law: Inertia",
+    "readings": [
+      "3.4",
+      "3.1",
+      "3.2",
+      "3.3",
+      "3.5",
+      "3.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.identify-forces",
+    "statement": "I can identify the types of force in a scenario (gravity, normal, friction, applied, tension) and draw them as arrows.",
+    "unit": "unit-1",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "46d77b30-c497-4601-810d-c22fcf8d446c",
+        "title": "Forces: What Pushes and Pulls",
+        "slug": "u1-d10",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Forces: What Pushes and Pulls",
+    "readings": [
+      "6.1",
+      "6.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.lab-accel-vs-mass",
+    "statement": "I can measure how acceleration changes when I change mass at constant force.",
+    "unit": "unit-1",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "02941996-6e8f-4103-853c-bf4c685a6952",
+        "title": "Newton's Second Law: F = ma (Vary Mass)",
+        "slug": "u1-d11",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "6.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.lab-accel-vs-force",
+    "statement": "I can measure how acceleration changes when I change the force at constant mass — and combine it with Day 11 to get F = ma.",
+    "unit": "unit-1",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "5c0bb674-9461-435a-bd1e-3c0302f607ca",
+        "title": "Newton's Second Law: F = ma (Vary Force)",
+        "slug": "u1-d12",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "6.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.fma-solve-net-force",
+    "statement": "I can use F = ma to solve problems — always finding the NET force first.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "c7ec1a1f-2bcb-4369-803f-40eb33ba9b04",
+        "title": "F = ma in Practice",
+        "slug": "u1-d13",
+        "kind": "lesson"
+      },
+      {
+        "id": "af0f59a3-0978-46fd-bc79-2bdafa66b9e5",
+        "title": "Workshop & Revision",
+        "slug": "u1-d19",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "F = ma in Practice",
+    "readings": [
+      "6.6",
+      "6.7"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.third-law-pairs",
+    "statement": "I can identify Newton's 3rd Law force pairs and explain why they don't cancel.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "c8921876-4e41-4720-9a8f-d473b8b4234b",
+        "title": "Newton's Third Law: Action and Reaction",
+        "slug": "u1-d14",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Newton's Third Law: Action and Reaction",
+    "readings": [
+      "7.2",
+      "7.1",
+      "7.3",
+      "7.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.draw-fbd",
+    "statement": "I can draw a free body diagram showing all forces on one object, with arrows sized to the forces.",
+    "unit": "unit-1",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "9f8c21a3-ee87-42f8-877f-25d1795a90ca",
+        "title": "Free-Body Diagrams, Part 1",
+        "slug": "u1-d15",
+        "kind": "lesson"
+      },
+      {
+        "id": "af0f59a3-0978-46fd-bc79-2bdafa66b9e5",
+        "title": "Workshop & Revision",
+        "slug": "u1-d19",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Free-Body Diagrams, Part 1",
+    "readings": [
+      "2.1",
+      "2.2",
+      "2.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.net-force-from-fbd",
+    "statement": "I can find the net force on an object from its FBD and use it to find acceleration.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "dee6f4c3-aa42-4816-bb9a-915cc1415ce0",
+        "title": "Free-Body Diagrams, Part 2: Net Force",
+        "slug": "u1-d16",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Free-Body Diagrams, Part 2: Net Force",
+    "readings": [
+      "2.4",
+      "7.5",
+      "7.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.friction-static-kinetic",
+    "statement": "I can explain friction as a force that depends on the surfaces and the normal force, and tell static from kinetic friction.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "5b8368d1-72c0-4bf4-b54e-aba7cc16a22b",
+        "title": "Friction: The Force That Resists Motion",
+        "slug": "u1-d17",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Friction: The Force That Resists Motion",
+    "readings": [
+      "6.4",
+      "6.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.equilibrium-find-unknown",
+    "statement": "I can recognize when ΣF = 0 and use that to find an unknown force.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "3fbdb8de-bcea-4f72-9dd4-4cf86cde15e8",
+        "title": "Equilibrium: When Forces Balance",
+        "slug": "u1-d18",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Equilibrium: When Forces Balance",
+    "readings": [
+      "2.2",
+      "2.3",
+      "2.4",
+      "3.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.workshop-self-diagnose",
+    "statement": "I can find my own weak spots from Unit 1 and work to fix them before the transfer task.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "af0f59a3-0978-46fd-bc79-2bdafa66b9e5",
+        "title": "Workshop & Revision",
+        "slug": "u1-d19",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Workshop & Revision",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.d01-inertia-obstacle",
+    "statement": "I can explain inertia as a mass's resistance to a change in motion, and argue why 2026-XJ's large mass is the obstacle to deflecting it.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "315c6005-affb-496f-bc0f-af4e5cbe8676",
+        "title": "Newton's First Law: Inertia",
+        "slug": "u1-d09",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Newton's First Law: Inertia",
+    "readings": [
+      "3.4",
+      "3.1",
+      "3.2",
+      "3.3",
+      "3.5",
+      "3.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.d08-kinematics-transfer",
+    "statement": "I can carry a constant-acceleration model into a new context and state what it can — and cannot yet — predict about 2026-XJ.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "c3019e6c-08eb-4271-8bdc-66060eb35d90",
+        "title": "Constant-Acceleration Problem-Solving",
+        "slug": "u1-d08",
+        "kind": "lesson"
+      },
+      {
+        "id": "b426537a-5354-4b96-9461-f354b3c7be13",
+        "title": "Transfer Task: Receive, Plan, Begin",
+        "slug": "u1-d21",
+        "kind": "mission"
+      },
+      {
+        "id": "d7945265-22bf-40d4-bda6-7064cf1e1449",
+        "title": "Transfer Task: Complete, Defend, Submit",
+        "slug": "u1-d22",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Constant-Acceleration Problem-Solving",
+    "readings": [
+      "4.5",
+      "4.6",
+      "13.1",
+      "13.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.d12-fma-limits",
+    "statement": "I can interrogate F = ma — name the hidden assumptions (constant force, fixed mass) and the conditions under which they break.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "5c0bb674-9461-435a-bd1e-3c0302f607ca",
+        "title": "Newton's Second Law: F = ma (Vary Force)",
+        "slug": "u1-d12",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "6.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.d16-equilibrium",
+    "statement": "I can defend an equilibrium claim (ΣF = 0) and state the assumptions it rests on.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "dee6f4c3-aa42-4816-bb9a-915cc1415ce0",
+        "title": "Free-Body Diagrams, Part 2: Net Force",
+        "slug": "u1-d16",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Free-Body Diagrams, Part 2: Net Force",
+    "readings": [
+      "2.4",
+      "7.5",
+      "7.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.d17-incline-components",
+    "statement": "I can justify my choice of axes when decomposing forces on an incline, and name the assumptions behind the result.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "5b8368d1-72c0-4bf4-b54e-aba7cc16a22b",
+        "title": "Friction: The Force That Resists Motion",
+        "slug": "u1-d17",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Friction: The Force That Resists Motion",
+    "readings": [
+      "6.4",
+      "6.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.d18-forces-synthesis",
+    "statement": "I can connect kinematics and forces as one chain — net force to acceleration to motion.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "3fbdb8de-bcea-4f72-9dd4-4cf86cde15e8",
+        "title": "Equilibrium: When Forces Balance",
+        "slug": "u1-d18",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Equilibrium: When Forces Balance",
+    "readings": [
+      "2.2",
+      "2.3",
+      "2.4",
+      "3.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.d19-defend-aloud",
+    "statement": "I can defend my reasoning aloud using claim-evidence-reasoning.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "af0f59a3-0978-46fd-bc79-2bdafa66b9e5",
+        "title": "Workshop & Revision",
+        "slug": "u1-d19",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Workshop & Revision",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.d20-locate-the-arc",
+    "statement": "I can locate Unit 1 in the year's arc — name what it cannot yet answer and which unit will.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "1dac323c-c95e-4002-a122-9ca0d30dc00b",
+        "title": "Synthesis: 2026-XJ Through the Full Physics Lens",
+        "slug": "u1-d20",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u1.d22-honors-transfer",
+    "statement": "I can state my modeling assumptions and connect my analysis across the unit on the transfer task.",
+    "unit": "unit-1",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "b426537a-5354-4b96-9461-f354b3c7be13",
+        "title": "Transfer Task: Receive, Plan, Begin",
+        "slug": "u1-d21",
+        "kind": "mission"
+      },
+      {
+        "id": "d7945265-22bf-40d4-bda6-7064cf1e1449",
+        "title": "Transfer Task: Complete, Defend, Submit",
+        "slug": "u1-d22",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "13.1",
+      "13.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.anchor-why-bend",
+    "statement": "I can explain why 2026-XJ's velocity won't stay constant and name the force that bends its path.",
+    "unit": "unit-2",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "046ecc31-f465-46d1-a515-ec8ca0dd88a8",
+        "title": "Re-anchoring: What Makes 2026-XJ Move?",
+        "slug": "u2-d01",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "13.1",
+      "13.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.free-fall-g",
+    "statement": "I can describe free fall as constant acceleration g, read g from a v–t slope, and calculate fall times for short drops.",
+    "unit": "unit-2",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "338fcceb-cb55-421d-bfa0-4f8cb71bc3fc",
+        "title": "Free Fall: Everything Falls at g",
+        "slug": "u2-d02",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Free Fall: Everything Falls at g",
+    "readings": [
+      "4.5",
+      "4.6",
+      "6.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.mass-vs-weight",
+    "statement": "I can distinguish mass from weight and use F = mg to find weight for any local g.",
+    "unit": "unit-2",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "a73ceefe-2f91-460e-8791-e6288aab5931",
+        "title": "Weight as F = mg (Local Gravity)",
+        "slug": "u2-d03",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Weight as F = mg (Local Gravity)",
+    "readings": [
+      "3.5",
+      "13.8"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.k1-universal-gravitation",
+    "statement": "I can write F = G·m₁·m₂/r², explain each symbol, and explain why gravitation is universal and inverse-square.",
+    "unit": "unit-2",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "a083f924-1385-4a8d-8cbe-98099e42e4e2",
+        "title": "Newton's Law of Universal Gravitation",
+        "slug": "u2-d04",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Newton's Law of Universal Gravitation",
+    "readings": [
+      "13.4",
+      "13.1",
+      "13.2",
+      "13.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.s1-compute-gravitation",
+    "statement": "I can compute the gravitational force between two masses using scientific notation.",
+    "unit": "unit-2",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "26797484-d6e4-41f2-ac15-c6877260f00f",
+        "title": "F = Gm₁m₂/r² Calculation Day",
+        "slug": "u2-d05",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "F = Gm₁m₂/r² Calculation Day",
+    "readings": [
+      "13.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.r1-scale-f",
+    "statement": "I can reason about how F scales when mass or distance changes (r×2 → F×¼; r×½ → F×4).",
+    "unit": "unit-2",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "26797484-d6e4-41f2-ac15-c6877260f00f",
+        "title": "F = Gm₁m₂/r² Calculation Day",
+        "slug": "u2-d05",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "F = Gm₁m₂/r² Calculation Day",
+    "readings": [
+      "13.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.k2-field-strength",
+    "statement": "I can explain g as gravitational field strength (N/kg) and compute g(r) = G·M/r² at any distance.",
+    "unit": "unit-2",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "249f8430-3464-48c3-bd49-3f1efffd5ed0",
+        "title": "Gravitational Fields: g as Field Strength",
+        "slug": "u2-d06",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Gravitational Fields: g as Field Strength",
+    "readings": [
+      "13.6",
+      "13.7"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.r3-compare-g",
+    "statement": "I can compare g across altitudes and bodies, and explain orbital weightlessness as free fall — not absent gravity.",
+    "unit": "unit-2",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "0b91552f-bec2-47f3-8a5c-6842be6b82d3",
+        "title": "g Varies with Altitude → Orbit Preview",
+        "slug": "u2-d07",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "g Varies with Altitude → Orbit Preview",
+    "readings": [
+      "13.8",
+      "14.1"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.s4-vernier-measure-g",
+    "statement": "I can measure g from the slope of a Vernier v–t graph and identify credible sources of error.",
+    "unit": "unit-2",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "8a4268e0-f9b7-4ef3-ada7-8be768a5a32c",
+        "title": "Vernier Free-Fall Lab: Measure g (Investigation 2.1)",
+        "slug": "u2-d08",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.k3-projectile-independence",
+    "statement": "I can decompose projectile motion into independent horizontal and vertical pieces linked only by time.",
+    "unit": "unit-2",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "4bd302b9-64e8-4af3-b49d-c56cf241ead4",
+        "title": "Projectile Motion: Two Independent Dimensions",
+        "slug": "u2-d09",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Projectile Motion: Two Independent Dimensions",
+    "readings": [
+      "5.4",
+      "5.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.s2-projectile-calc",
+    "statement": "I can solve horizontal-launch problems: fall time from height first, then horizontal range.",
+    "unit": "unit-2",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "e70612f8-d292-4db8-8d79-f1c30cdc2eef",
+        "title": "Horizontal Projectile Launches",
+        "slug": "u2-d10",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Horizontal Projectile Launches",
+    "readings": [
+      "5.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.r2-predict-landing",
+    "statement": "I can decompose an angled launch into components and predict flight time and range, including why 45° maximizes range.",
+    "unit": "unit-2",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "9f2f6739-8db1-4d03-b4ef-a53c9447162b",
+        "title": "Angled Projectile Launches",
+        "slug": "u2-d11",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Angled Projectile Launches",
+    "readings": [
+      "5.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.s3-centripetal-calc",
+    "statement": "I can compute a_c = v²/r and F_c = m·v²/r and identify which force plays the centripetal role.",
+    "unit": "unit-2",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "0f701d0e-a148-479e-ac24-414f300931e7",
+        "title": "Circular Motion + Centripetal Force",
+        "slug": "u2-d12",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Circular Motion + Centripetal Force",
+    "readings": [
+      "10.3",
+      "10.1",
+      "10.2",
+      "10.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.k5-orbit-free-fall",
+    "statement": "I can explain an orbit as continuous free fall and derive v_orbit = √(G·M/r).",
+    "unit": "unit-2",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "365bf51b-53e4-4214-8eac-f8eba870f20e",
+        "title": "Newton's Cannon: Orbits as Continuous Falling (Investigation 2.2)",
+        "slug": "u2-d13",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "14.1",
+      "14.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.k4-keplers-laws",
+    "statement": "I can state Kepler's three laws and use T² = a³ for Sun-orbits.",
+    "unit": "unit-2",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "affb6085-78e3-4826-be99-1b092d9b761f",
+        "title": "Kepler's Three Laws",
+        "slug": "u2-d14",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Kepler's Three Laws",
+    "readings": [
+      "14.5",
+      "14.3",
+      "14.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.r4-closest-approach",
+    "statement": "I can apply gravitation and Kepler's laws to predict 2026-XJ's period, perihelion, and orbit crossings.",
+    "unit": "unit-2",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "af429c32-c84e-48fe-b70b-fdd5112a3f7b",
+        "title": "When Does 2026-XJ Arrive?",
+        "slug": "u2-d15",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "14.4",
+      "14.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u2.transfer-task",
+    "statement": "I can apply every Unit 2 tool — gravitation, fields, projectiles, circular motion, orbits, Kepler — independently on the transfer task.",
+    "unit": "unit-2",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "2ed1f563-4cfa-401f-951c-ab24302f82a5",
+        "title": "Unit 2 Transfer Task",
+        "slug": "u2-d16",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.anchor-two-questions",
+    "statement": "I can name the two things that make a moving object hard to stop and frame the two Unit 3 questions about 2026-XJ.",
+    "unit": "unit-3",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "2344d2f2-bac2-41ed-95e3-53cf8abba744",
+        "title": "Re-anchoring: What If It Hits, and Can We Nudge It?",
+        "slug": "u3-d01",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "8.1"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.k1-momentum-vector",
+    "statement": "I can compute p = m·v with correct units and use momentum as a vector with signed velocities.",
+    "unit": "unit-3",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "c4ed5fe8-937d-4ed1-9cfc-1f3883ca2f47",
+        "title": "Momentum p = m·v",
+        "slug": "u3-d02",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Momentum p = m·v",
+    "readings": [
+      "8.1"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.k2-impulse-theorem",
+    "statement": "I can derive FΔt = Δp from F = ma and use the impulse-momentum theorem.",
+    "unit": "unit-3",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "28dd2ebb-05bb-4603-87c0-6d518cf9d390",
+        "title": "Impulse: J = F·Δt = Δp",
+        "slug": "u3-d03",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Impulse: J = F·Δt = Δp",
+    "readings": [
+      "8.2",
+      "8.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.s1-compute-impulse",
+    "statement": "I can compute momentum, Δp, and impulse, and find force from Δp and Δt.",
+    "unit": "unit-3",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "28dd2ebb-05bb-4603-87c0-6d518cf9d390",
+        "title": "Impulse: J = F·Δt = Δp",
+        "slug": "u3-d03",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Impulse: J = F·Δt = Δp",
+    "readings": [
+      "8.2",
+      "8.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.r1-extend-time",
+    "statement": "I can explain why extending Δt reduces F for the same Δp and apply it to safety devices and follow-through.",
+    "unit": "unit-3",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "02d9070b-5bca-4805-9ece-378f6d2d9b78",
+        "title": "Why Impulse Matters: Airbags, Follow-Through",
+        "slug": "u3-d04",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Why Impulse Matters: Airbags, Follow-Through",
+    "readings": [
+      "8.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.k3-conservation",
+    "statement": "I can state conservation of momentum and its no-net-external-force condition, and solve recoil problems.",
+    "unit": "unit-3",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "d9017d65-a87a-4bde-9f1b-3b364a5a01e2",
+        "title": "Conservation of Momentum: Explosions & Recoil",
+        "slug": "u3-d05",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Conservation of Momentum: Explosions & Recoil",
+    "readings": [
+      "8.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.k4-collision-types",
+    "statement": "I can distinguish elastic, inelastic, and perfectly inelastic collisions and which conservation laws apply to each.",
+    "unit": "unit-3",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "b84d75b2-b2a5-42da-8be9-20e1cfc4f2ee",
+        "title": "Three Flavors of Collision",
+        "slug": "u3-d06",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Three Flavors of Collision",
+    "readings": [
+      "8.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.s4-vernier-collisions",
+    "statement": "I can run Vernier cart collisions, compute Σp before and after, and report % difference with a credible error source.",
+    "unit": "unit-3",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "544a63a5-ef63-48a5-b2ff-3f34da4712db",
+        "title": "Vernier Collision Lab (Investigation 3.1)",
+        "slug": "u3-d07",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.s2-inelastic-solve",
+    "statement": "I can solve a 1D perfectly inelastic collision with correct signs and units.",
+    "unit": "unit-3",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "878df4d7-9896-4953-b804-c4ef9edf6b01",
+        "title": "Inelastic Collisions: Stick-Together Worked Examples",
+        "slug": "u3-d08",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Inelastic Collisions: Stick-Together Worked Examples",
+    "readings": [
+      "8.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.s3-elastic-solve",
+    "statement": "I can solve a 1D elastic collision, including the equal-mass and one-at-rest special cases.",
+    "unit": "unit-3",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "1f94bdd3-e1b5-4429-9757-9d15e89863af",
+        "title": "Elastic Collisions: Bounce-Apart Worked Examples",
+        "slug": "u3-d09",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Elastic Collisions: Bounce-Apart Worked Examples",
+    "readings": [
+      "8.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.r2-2d-components",
+    "statement": "I can apply conservation of momentum separately to x- and y-components and solve a 2D glancing collision.",
+    "unit": "unit-3",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "e5b62300-9b42-4087-9576-281343588f4d",
+        "title": "2D Collisions: Glancing Blows",
+        "slug": "u3-d10",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "2D Collisions: Glancing Blows",
+    "readings": [
+      "8.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.r3-deflection",
+    "statement": "I can compute a DART-style Δv and reason about asteroid deflection using Δv × lead time.",
+    "unit": "unit-3",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "919076ea-baf6-46c5-b0fa-3d5f74b442e4",
+        "title": "DART Case Study: Nudging an Asteroid",
+        "slug": "u3-d11",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "8.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.r4-impact-analysis",
+    "statement": "I can compute an asteroid impact's average force and explain why Earth's velocity change is negligible while the local force is catastrophic.",
+    "unit": "unit-3",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "e46c4c76-f351-4fed-a909-bd059dc8986b",
+        "title": "Asteroid Impact: What Momentum Says",
+        "slug": "u3-d12",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "8.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.synthesis-two-branch",
+    "statement": "I can run a full 2026-XJ analysis on both branches (deflection and impact) and articulate which unit ideas were load-bearing.",
+    "unit": "unit-3",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "d76ae1a2-8146-4e5c-8315-14c3063e4adb",
+        "title": "Two-Branch Analysis: Deflect or Impact?",
+        "slug": "u3-d13",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u3.transfer-task",
+    "statement": "I can apply every Unit 3 tool independently on the transfer task.",
+    "unit": "unit-3",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "c77f3918-63b5-49fc-a8f6-2ffbd20ec398",
+        "title": "Unit 3 Transfer Task",
+        "slug": "u3-d14",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.anchor-damage-energy",
+    "statement": "I can articulate why momentum gave us force but not damage, and predict that something involving speed-squared does the work.",
+    "unit": "unit-4",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "8564aa49-0bbf-4ad4-bd6c-e2779006cbf5",
+        "title": "Re-anchoring: Damage Isn't Just Force",
+        "slug": "u4-d01",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "9.1"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.k1-work",
+    "statement": "I can compute work W = F·d in joules and identify when a force does work.",
+    "unit": "unit-4",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "72ff75e9-f614-45ad-965d-88295d1c1fbd",
+        "title": "Work: W = F·d",
+        "slug": "u4-d02",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Work: W = F·d",
+    "readings": [
+      "9.1",
+      "9.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.r1-work-angle",
+    "statement": "I can compute work at an angle (W = F·d·cos θ) and identify negative and zero work.",
+    "unit": "unit-4",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "f9d97574-a9d1-4b8d-9fbf-680c21daf1b1",
+        "title": "Work at an Angle + Negative Work",
+        "slug": "u4-d03",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Work at an Angle + Negative Work",
+    "readings": [
+      "9.1",
+      "5.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.k2-kinetic-energy",
+    "statement": "I can compute KE = ½mv² and explain why doubling speed quadruples kinetic energy.",
+    "unit": "unit-4",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "5b07bc67-99b1-4c22-b478-bf72dd7262b5",
+        "title": "Kinetic Energy: KE = ½mv²",
+        "slug": "u4-d04",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Kinetic Energy: KE = ½mv²",
+    "readings": [
+      "9.5",
+      "9.3",
+      "9.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.s1-work-energy-theorem",
+    "statement": "I can apply the work-energy theorem W_net = ΔKE to solve problems.",
+    "unit": "unit-4",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "0ae51d01-54f6-4a8a-86a0-9ae624778cc9",
+        "title": "Work-Energy Theorem: Worked Examples",
+        "slug": "u4-d05",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Work-Energy Theorem: Worked Examples",
+    "readings": [
+      "9.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.s2-vernier-ke-lab",
+    "statement": "I can measure speed with photogates and verify the work-energy theorem within a % difference.",
+    "unit": "unit-4",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "3ddb3bb8-e7f7-4a43-bd92-57c574a37326",
+        "title": "Vernier KE Lab (Investigation 4.1)",
+        "slug": "u4-d06",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.k3-gpe-mgh",
+    "statement": "I can compute gravitational PE near Earth with U = mgh from a stated reference height.",
+    "unit": "unit-4",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "743b1a8d-f48f-47e9-b235-c71b3257ac5f",
+        "title": "Gravitational PE Near Earth: U = mgh",
+        "slug": "u4-d07",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Gravitational PE Near Earth: U = mgh",
+    "readings": [
+      "9.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.r2-mgh-limits",
+    "statement": "I can explain when U = mgh fails (g changes with altitude) and read a g-vs-altitude curve.",
+    "unit": "unit-4",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "fe1792e9-2758-49ca-9dc2-177bb896f41a",
+        "title": "When mgh Fails: g Changes with Altitude",
+        "slug": "u4-d08",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "When mgh Fails: g Changes with Altitude",
+    "readings": [
+      "13.5",
+      "14.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.k4-universal-pe",
+    "statement": "I can use universal PE, U = −GMm/r, and interpret its negative sign.",
+    "unit": "unit-4",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "6557b41c-157c-4890-a265-906d63d5e555",
+        "title": "Universal PE: U = −GMm/r",
+        "slug": "u4-d09",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Universal PE: U = −GMm/r",
+    "readings": [
+      "14.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.k5-conservation",
+    "statement": "I can state conservation of mechanical energy (KE + PE = constant) and its no-friction condition.",
+    "unit": "unit-4",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "18abe2ee-b8a3-4f79-8fc0-59f53230dc10",
+        "title": "Conservation: KE + PE = Constant",
+        "slug": "u4-d10",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Conservation: KE + PE = Constant",
+    "readings": [
+      "9.7"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.s3-conservation-solve",
+    "statement": "I can solve conservation problems for rolling, sliding, and swinging objects.",
+    "unit": "unit-4",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "903692aa-06e1-46b6-a538-38e2e753bdb6",
+        "title": "Rolling, Sliding, Swinging",
+        "slug": "u4-d11",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Rolling, Sliding, Swinging",
+    "readings": [
+      "12.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.r3-coaster-pendulum",
+    "statement": "I can analyze a roller coaster and a pendulum with the energy ledger, including v = √(2gΔh).",
+    "unit": "unit-4",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "294881b3-1ef7-4e66-876a-24d5448d5df2",
+        "title": "Roller Coaster + Pendulum",
+        "slug": "u4-d12",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Roller Coaster + Pendulum",
+    "readings": [
+      "9.7",
+      "25.1"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.s4-vernier-ramp-lab",
+    "statement": "I can run the Vernier ramp lab and verify v² is proportional to release height.",
+    "unit": "unit-4",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "c525ef9a-5d1b-43dc-92f2-30dbab4e02c0",
+        "title": "Vernier Ramp Lab (Investigation 4.2)",
+        "slug": "u4-d13",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.k6-hookes-law",
+    "statement": "I can use Hooke's law F = −kx and interpret the spring constant k.",
+    "unit": "unit-4",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "b49cd376-3785-4f1e-bbbb-ab6c32c62c33",
+        "title": "Hooke's Law: F = −kx",
+        "slug": "u4-d14",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Hooke's Law: F = −kx",
+    "readings": [
+      "18.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.s5-spring-pe",
+    "statement": "I can compute spring PE = ½kx² and use it in energy conservation problems.",
+    "unit": "unit-4",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "5b47a86b-fec2-4c68-bb11-389cfbc756e2",
+        "title": "Spring PE: ½kx²",
+        "slug": "u4-d15",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Spring PE: ½kx²",
+    "readings": [
+      "18.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.k7-power",
+    "statement": "I can compute power P = W/t = F·v in watts and distinguish energy from power.",
+    "unit": "unit-4",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "b7d89632-6344-40f0-8941-f3e440763df4",
+        "title": "Power: P = W/t = F·v",
+        "slug": "u4-d16",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Power: P = W/t = F·v",
+    "readings": [
+      "9.2",
+      "9.8",
+      "9.9"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.r4-ke-collisions",
+    "statement": "I can compute the KE lost in inelastic collisions and verify KE conservation in elastic ones.",
+    "unit": "unit-4",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "04d35a27-81ae-4541-bd43-27a843e4bfd4",
+        "title": "KE in Elastic vs. Inelastic Collisions",
+        "slug": "u4-d17",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "KE in Elastic vs. Inelastic Collisions",
+    "readings": [
+      "8.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.r5-heat-bridge",
+    "statement": "I can account for 'missing' mechanical energy as heat and trace full energy chains.",
+    "unit": "unit-4",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "9a1ff182-a7ab-4e89-a90c-b60e7f6f25b8",
+        "title": "Heat as the Missing Energy (Unit 5 Bridge)",
+        "slug": "u4-d18",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Heat as the Missing Energy (Unit 5 Bridge)",
+    "readings": [
+      "21.2",
+      "21.1",
+      "21.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.r6-tnt-yield",
+    "statement": "I can convert an impactor's kinetic energy to TNT-equivalent yield and place it on the impact scale.",
+    "unit": "unit-4",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "0455b8c6-552c-40ec-89ac-2d35c4a7c046",
+        "title": "TNT Yield: 2026-XJ on the Impact Scale",
+        "slug": "u4-d19",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "TNT Yield: 2026-XJ on the Impact Scale",
+    "readings": [
+      "9.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.r7-escape-velocity",
+    "statement": "I can derive and use escape velocity v_esc = √(2GM/r) for any body.",
+    "unit": "unit-4",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "36884332-b141-40fa-8ac4-97a6d654cbca",
+        "title": "Escape Velocity",
+        "slug": "u4-d20",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Escape Velocity",
+    "readings": [
+      "14.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.synthesis-energy-budget",
+    "statement": "I can run the three-branch energy budget for 2026-XJ and defend the conclusion.",
+    "unit": "unit-4",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "df127111-4658-4d7d-9f48-60b34ebba6c3",
+        "title": "Three-Branch Energy Budget",
+        "slug": "u4-d21",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u4.transfer-task",
+    "statement": "I can apply every Unit 4 tool independently on the transfer task.",
+    "unit": "unit-4",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "7d145ba7-db3b-46f9-acfd-6120bb659018",
+        "title": "Unit 4 Transfer Task",
+        "slug": "u4-d22",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.anchor-heat-vs-temp",
+    "statement": "I can distinguish thermal energy (total molecular KE), temperature (average per molecule), and heat (thermal energy that transfers).",
+    "unit": "unit-5",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "23171a09-804c-41a8-95e6-0e66c2c5cdd7",
+        "title": "Heat Is Energy, but It's NOT Temperature",
+        "slug": "u5-d01",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Heat Is Energy, but It's NOT Temperature",
+    "readings": [
+      "21.1",
+      "21.2",
+      "21.3",
+      "21.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.k1-specific-heat",
+    "statement": "I can compute heat with Q = m·c·ΔT and interpret specific heat as a material property.",
+    "unit": "unit-5",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "64015060-abd9-4bbb-895f-4f2ce636742c",
+        "title": "Specific Heat: Q = m·c·ΔT",
+        "slug": "u5-d02",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Specific Heat: Q = m·c·ΔT",
+    "readings": [
+      "21.6",
+      "21.5",
+      "21.7"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.k2-transfer-modes",
+    "statement": "I can distinguish conduction, convection, and radiation and identify each in real scenarios.",
+    "unit": "unit-5",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "c451f0c6-02be-4d4e-a58b-4e6c182cdc3c",
+        "title": "Three Modes: Conduction, Convection, Radiation",
+        "slug": "u5-d03",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Three Modes: Conduction, Convection, Radiation",
+    "readings": [
+      "22.1",
+      "22.2",
+      "22.3",
+      "22.4",
+      "22.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.k3-latent-heat",
+    "statement": "I can compute phase-change heat with Q = m·L and read a heating curve's plateaus.",
+    "unit": "unit-5",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "37332179-94f5-4f5d-9efd-88fe24ec6674",
+        "title": "Phase Changes + Latent Heat: Q = m·L",
+        "slug": "u5-d04",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Phase Changes + Latent Heat: Q = m·L",
+    "readings": [
+      "23.8",
+      "23.1",
+      "23.2",
+      "23.3",
+      "23.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.s1-calorimetry-lab",
+    "statement": "I can run a Vernier calorimetry experiment and identify a metal from its measured specific heat.",
+    "unit": "unit-5",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "37f8de2f-5137-4087-880c-dac1def6a392",
+        "title": "Vernier Calorimetry Lab (Investigation 5.1)",
+        "slug": "u5-d05",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.k4-kinetic-theory",
+    "statement": "I can explain temperature as average molecular kinetic energy using kinetic theory.",
+    "unit": "unit-5",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "4aaa4275-ba51-43c6-8a66-3a46641acaba",
+        "title": "Temperature Is Molecular KE",
+        "slug": "u5-d06",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Temperature Is Molecular KE",
+    "readings": [
+      "21.1",
+      "24.1"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.k5-first-law",
+    "statement": "I can apply the first law ΔU = Q − W with correct signs.",
+    "unit": "unit-5",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "85ce1fa4-b27c-4c85-9d0b-29c2121af3ad",
+        "title": "First Law: ΔU = Q − W",
+        "slug": "u5-d07",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "First Law: ΔU = Q − W",
+    "readings": [
+      "24.2",
+      "24.1",
+      "24.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.r1-second-law",
+    "statement": "I can state the second law, explain why heat flows hot to cold, and reason about entropy.",
+    "unit": "unit-5",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "d0927b4b-06fc-4326-a489-5d06fda9b5e3",
+        "title": "Second Law: Heat Flows Hot → Cold; Entropy",
+        "slug": "u5-d08",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Second Law: Heat Flows Hot → Cold; Entropy",
+    "readings": [
+      "24.4",
+      "24.6",
+      "24.7"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.r2-heat-engines",
+    "statement": "I can analyze a heat engine's energy flow and compute its efficiency.",
+    "unit": "unit-5",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "dd0ff2da-2333-475b-8f28-604f1f743eb7",
+        "title": "Heat Engines + Efficiency",
+        "slug": "u5-d09",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Heat Engines + Efficiency",
+    "readings": [
+      "24.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.r3-atmospheric-entry",
+    "statement": "I can explain why small rocks burn up on atmospheric entry and reason about the size threshold.",
+    "unit": "unit-5",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "6735cc77-5da5-4abe-9f18-4eccece1c760",
+        "title": "Atmospheric Entry: Why Pebbles Burn Up",
+        "slug": "u5-d10",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "22.4",
+      "22.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.r4-thermal-damage",
+    "statement": "I can partition impact energy into thermal components and build a damage-by-distance map.",
+    "unit": "unit-5",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "55bb895b-631a-4d33-87b7-1c36a1d0206f",
+        "title": "Impact Thermal Damage Map",
+        "slug": "u5-d11",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Impact Thermal Damage Map",
+    "readings": [
+      "22.6",
+      "22.7"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u5.transfer-task",
+    "statement": "I can apply every Unit 5 tool independently on the transfer task.",
+    "unit": "unit-5",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "29504a99-61cb-4c69-a958-8339dcc9ebd2",
+        "title": "Unit 5 Transfer Task",
+        "slug": "u5-d12",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.anchor-energy-not-matter",
+    "statement": "I can explain that waves carry energy, not matter, and frame how RADAR measured everything we know about 2026-XJ.",
+    "unit": "unit-6",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "7e7f3b71-5e89-4318-bdb4-70f7248b3435",
+        "title": "Waves Carry Energy, Not Matter",
+        "slug": "u6-d01",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Waves Carry Energy, Not Matter",
+    "readings": [
+      "25.3",
+      "25.1",
+      "25.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.k1-wave-anatomy",
+    "statement": "I can label and compute wave anatomy: frequency, wavelength, amplitude, and period.",
+    "unit": "unit-6",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "cc13f53f-e777-4349-8d3c-ef2cc065e9f7",
+        "title": "Wave Anatomy: f, λ, A, T",
+        "slug": "u6-d02",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Wave Anatomy: f, λ, A, T",
+    "readings": [
+      "25.2",
+      "25.5",
+      "25.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.k2-wave-equation",
+    "statement": "I can use the wave equation v = fλ to solve for any of the three quantities.",
+    "unit": "unit-6",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "cfdc6854-600b-4b5b-9102-87362f8bb3ec",
+        "title": "The Wave Equation: v = fλ",
+        "slug": "u6-d03",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "The Wave Equation: v = fλ",
+    "readings": [
+      "25.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.k3-reflection",
+    "statement": "I can apply the law of reflection and describe wave behavior at boundaries.",
+    "unit": "unit-6",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "64a2c768-0491-4831-b711-911a3d0fa052",
+        "title": "Reflection at Boundaries",
+        "slug": "u6-d04",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Reflection at Boundaries",
+    "readings": [
+      "29.2",
+      "29.1",
+      "29.3",
+      "29.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.k4-refraction",
+    "statement": "I can explain refraction as speed change at a boundary and predict which way a wave bends.",
+    "unit": "unit-6",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "1fddcdab-f5da-475d-bb16-0a2efda783a6",
+        "title": "Refraction: Bending at a Boundary",
+        "slug": "u6-d05",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Refraction: Bending at a Boundary",
+    "readings": [
+      "29.6",
+      "29.7",
+      "29.8",
+      "29.9"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.k5-diffraction",
+    "statement": "I can describe diffraction around obstacles and how it depends on wavelength vs. opening size.",
+    "unit": "unit-6",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "af337a86-b517-4552-ada5-d98f1c67f575",
+        "title": "Diffraction: Bending Around Obstacles",
+        "slug": "u6-d06",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Diffraction: Bending Around Obstacles",
+    "readings": [
+      "31.2",
+      "31.1"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.r1-interference",
+    "statement": "I can predict constructive and destructive interference and explain standing waves.",
+    "unit": "unit-6",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "9ac7d748-c1d5-48f2-8279-da129e155efa",
+        "title": "Interference + Standing Waves",
+        "slug": "u6-d07",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Interference + Standing Waves",
+    "readings": [
+      "25.7",
+      "25.8",
+      "31.3",
+      "31.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.k6-sound-longitudinal",
+    "statement": "I can describe sound as a longitudinal pressure wave with compressions and rarefactions.",
+    "unit": "unit-6",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "f319d10f-ea07-406a-9377-cc384d45eb89",
+        "title": "Sound as a Longitudinal Wave",
+        "slug": "u6-d08",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Sound as a Longitudinal Wave",
+    "readings": [
+      "26.2",
+      "26.1",
+      "26.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.r2-resonance",
+    "statement": "I can reason about the speed of sound in different media and explain resonance and harmonics.",
+    "unit": "unit-6",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "efd805be-1235-452a-b26f-0809304766de",
+        "title": "Speed of Sound + Resonance",
+        "slug": "u6-d09",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Speed of Sound + Resonance",
+    "readings": [
+      "26.4",
+      "26.6",
+      "26.7",
+      "26.8"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.s1-echo-lab",
+    "statement": "I can measure the speed of sound with an echo timing experiment and report % error.",
+    "unit": "unit-6",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "ccb161a3-3c38-4638-9353-1590b7fd7949",
+        "title": "Vernier Echo Lab (Investigation 6.1)",
+        "slug": "u6-d10",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.r3-doppler",
+    "statement": "I can reason about intensity, decibels, and the Doppler shift of a moving source.",
+    "unit": "unit-6",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "17036d45-3509-4e38-ba26-bcad80fa7be2",
+        "title": "Intensity, Decibels, Doppler",
+        "slug": "u6-d11",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Intensity, Decibels, Doppler",
+    "readings": [
+      "25.9",
+      "25.10",
+      "25.11",
+      "26.5",
+      "26.10"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.k7-em-spectrum",
+    "statement": "I can place EM bands on the spectrum and use c = fλ for light.",
+    "unit": "unit-6",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "1fdbd7c2-210c-47da-a05e-f9c2111f6c48",
+        "title": "EM Spectrum: Light Is a Wave",
+        "slug": "u6-d12",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "EM Spectrum: Light Is a Wave",
+    "readings": [
+      "27.3",
+      "27.1",
+      "27.2",
+      "27.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.k8-mirrors",
+    "statement": "I can locate virtual images in plane mirrors using the law of reflection.",
+    "unit": "unit-6",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "bcc7651d-d65d-480f-8382-c6e9f9932f73",
+        "title": "Plane Mirrors + Virtual Images",
+        "slug": "u6-d13",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Plane Mirrors + Virtual Images",
+    "readings": [
+      "29.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.r4-lenses",
+    "statement": "I can qualitatively describe how converging and diverging lenses form images.",
+    "unit": "unit-6",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "54eef97b-25dd-4581-bf87-86ead4345b9f",
+        "title": "Lenses, Qualitatively",
+        "slug": "u6-d14",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Lenses, Qualitatively",
+    "readings": [
+      "30.1",
+      "30.2",
+      "30.3",
+      "30.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.r5-radar-chain",
+    "statement": "I can walk the full radar measurement chain: pulse timing → distance, Doppler shift → velocity, signal strength → size.",
+    "unit": "unit-6",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "5828711e-8277-4680-abb4-ac58bb0746bd",
+        "title": "RADAR: The Reveal",
+        "slug": "u6-d15",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "RADAR: The Reveal",
+    "readings": [
+      "29.5",
+      "27.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.r6-wiens-law",
+    "statement": "I can use Wien's law to connect meteor color to temperature.",
+    "unit": "unit-6",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "e43a680a-f720-44dd-b7e2-f90671d2e046",
+        "title": "Meteor Color (Wien's Law)",
+        "slug": "u6-d16",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Meteor Color (Wien's Law)",
+    "readings": [
+      "27.3",
+      "22.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.r7-tsunami",
+    "statement": "I can reason about seismic waves and tsunami formation, shoaling, and damage at distance.",
+    "unit": "unit-6",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "edb4cb52-c534-4c86-a444-82f8885faae5",
+        "title": "Seismic + Tsunami Damage at Distance",
+        "slug": "u6-d17",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Seismic + Tsunami Damage at Distance",
+    "readings": [
+      "25.5",
+      "25.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u6.transfer-task",
+    "statement": "I can apply every Unit 6 tool independently on the transfer task.",
+    "unit": "unit-6",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "a329e76d-370b-4708-a22c-dd8c617ce43d",
+        "title": "Unit 6 Transfer Task",
+        "slug": "u6-d18",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.anchor-charge",
+    "statement": "I can describe charge as Unit 7's fundamental quantity, distinguish positive from negative, and name where the unit is heading — including the bridge to the Car Project.",
+    "unit": "unit-7",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "7ca7df7b-7cc2-4f2f-908c-7faef5187694",
+        "title": "Meet Electric Charge + Unit 8 Preview",
+        "slug": "u7-d01",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Meet Electric Charge + Unit 8 Preview",
+    "readings": [
+      "32.1",
+      "32.2",
+      "32.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.k1-coulombs-law",
+    "statement": "I can compute the electric force with Coulomb's law F = kq₁q₂/r² and reason about its inverse-square scaling.",
+    "unit": "unit-7",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "6d9f3cda-c5b0-4a58-a2e9-67b40dc21a03",
+        "title": "Coulomb's Law: F = kq₁q₂/r²",
+        "slug": "u7-d02",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Coulomb's Law: F = kq₁q₂/r²",
+    "readings": [
+      "32.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.k2-electric-field",
+    "statement": "I can describe an electric field qualitatively and read field-line diagrams.",
+    "unit": "unit-7",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "5d91dbc5-75b0-4eb3-ae92-54d74d8534f9",
+        "title": "Electric Field (Qualitative)",
+        "slug": "u7-d03",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Electric Field (Qualitative)",
+    "readings": [
+      "33.1",
+      "33.2",
+      "33.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.k3-voltage",
+    "statement": "I can explain voltage as energy per charge and compute it from energy and charge.",
+    "unit": "unit-7",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "4f3bbab8-f018-40e2-93e1-d1890da6a94e",
+        "title": "Voltage: Energy per Charge",
+        "slug": "u7-d04",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Voltage: Energy per Charge",
+    "readings": [
+      "33.5",
+      "33.4",
+      "33.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.k4-current",
+    "statement": "I can compute current I = q/t and describe what physically flows in a wire.",
+    "unit": "unit-7",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "4a3c72c9-cc39-4a6b-8b60-a71b95853de6",
+        "title": "Current: I = q/t",
+        "slug": "u7-d05",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Current: I = q/t",
+    "readings": [
+      "34.2",
+      "34.1",
+      "34.3"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.k5-ohms-law",
+    "statement": "I can use Ohm's law V = IR to solve for any of the three quantities.",
+    "unit": "unit-7",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "87497b8a-a364-4ef4-aff0-3fc697d91bae",
+        "title": "Ohm's Law: V = IR",
+        "slug": "u7-d06",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Ohm's Law: V = IR",
+    "readings": [
+      "34.5",
+      "34.4",
+      "34.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.s1-series-circuits",
+    "statement": "I can analyze series circuits: equivalent resistance, shared current, and voltage division.",
+    "unit": "unit-7",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "9d6291e9-fd68-4dcf-8306-11dbb2c43410",
+        "title": "Series Circuits",
+        "slug": "u7-d07",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Series Circuits",
+    "readings": [
+      "35.3",
+      "35.1",
+      "35.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.s2-parallel-circuits",
+    "statement": "I can analyze parallel circuits: branch currents, shared voltage, and reduced equivalent resistance.",
+    "unit": "unit-7",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "38438f51-3f79-48d8-9df1-d4f995570c40",
+        "title": "Parallel Circuits",
+        "slug": "u7-d08",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Parallel Circuits",
+    "readings": [
+      "35.4",
+      "35.7"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.s3-combination-circuits",
+    "statement": "I can reduce and solve combination circuits step by step.",
+    "unit": "unit-7",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "71eac7d9-b147-4efd-aca0-e76c491abaf0",
+        "title": "Combination Circuits",
+        "slug": "u7-d09",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Combination Circuits",
+    "readings": [
+      "35.6",
+      "35.5"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.s4-vernier-circuit-lab",
+    "statement": "I can wire and measure real circuits with ammeter and voltmeter and verify Ohm's law and the series/parallel rules.",
+    "unit": "unit-7",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "892c59fd-efa9-4f8e-96f8-1652caa7ec03",
+        "title": "Vernier Circuit Lab (Investigation 7.1)",
+        "slug": "u7-d10",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.k6-electric-power",
+    "statement": "I can compute electric power P = VI and relate it to resistor heating.",
+    "unit": "unit-7",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "029528b3-7f2e-47fd-9a84-ef5be30c6b18",
+        "title": "Electric Power: P = VI",
+        "slug": "u7-d11",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Electric Power: P = VI",
+    "readings": [
+      "34.11"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.k7-magnetism",
+    "statement": "I can describe magnetic fields, poles, and Earth's magnetic field.",
+    "unit": "unit-7",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "cf1f3e02-6784-49ee-9a77-588ceae50fff",
+        "title": "Magnetism + Earth's Field",
+        "slug": "u7-d12",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Magnetism + Earth's Field",
+    "readings": [
+      "36.2",
+      "36.1",
+      "36.3",
+      "36.4",
+      "36.9"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.k8-oersted",
+    "statement": "I can describe how a current creates a magnetic field and predict a solenoid's polarity.",
+    "unit": "unit-7",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "d3808263-58ff-46d5-98de-31fee42a5b6e",
+        "title": "Oersted: Current → Magnetic Field",
+        "slug": "u7-d13",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Oersted: Current → Magnetic Field",
+    "readings": [
+      "36.5",
+      "36.6",
+      "36.7"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.r1-faraday",
+    "statement": "I can explain Faraday induction: a changing magnetic flux induces a voltage.",
+    "unit": "unit-7",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "bbeb0596-48d0-4096-9024-a789e7f42f28",
+        "title": "Faraday Induction",
+        "slug": "u7-d14",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Faraday Induction",
+    "readings": [
+      "37.1",
+      "37.2"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.r2-motors-generators",
+    "statement": "I can trace the energy flow of motors and generators and compute motor efficiency.",
+    "unit": "unit-7",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "5019185a-efca-47a8-adff-7783af1815fb",
+        "title": "Motors + Generators",
+        "slug": "u7-d15",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Motors + Generators",
+    "readings": [
+      "37.3",
+      "36.8",
+      "37.4"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.r3-magnetosphere-emp",
+    "statement": "I can explain how Earth's dynamo makes the magnetosphere and reason about EMP effects from an impact.",
+    "unit": "unit-7",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "3e7eea88-335f-41d1-bd3d-b273eb41a322",
+        "title": "Magnetosphere + EMP from Impact",
+        "slug": "u7-d16",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "Existing instruction",
+    "nextVideo": "Magnetosphere + EMP from Impact",
+    "readings": [
+      "36.9",
+      "36.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.bridge-car-project",
+    "statement": "I can connect every unit of the year to a Car Project component and pre-compute the car's circuit.",
+    "unit": "unit-7",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "b22d6cd6-eae6-4636-8f43-7f0b3a9f7b77",
+        "title": "Bridge to the Car Project",
+        "slug": "u7-d17",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [
+      "37.5",
+      "37.6"
+    ],
+    "videoIds": []
+  },
+  {
+    "slug": "u7.transfer-task",
+    "statement": "I can apply every Unit 7 tool independently on the transfer task.",
+    "unit": "unit-7",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "a2070d09-45e6-4853-86a4-c353788ce235",
+        "title": "Unit 7 Transfer Task",
+        "slug": "u7-d18",
+        "kind": "mission"
+      }
+    ],
+    "coverage": "Mission evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.k1-circuit-components",
+    "statement": "I can identify the four components of a simple DC circuit (battery, switch, motor, wires) and explain what each does.",
+    "unit": "unit-8",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "a4d2690e-cc55-48e7-a9c8-daeabd823894",
+        "title": "Overview, safety zones, theme commit",
+        "slug": "u8-d01",
+        "kind": "investigation"
+      },
+      {
+        "id": "7b88e325-26c1-4447-ba66-75c7fc468751",
+        "title": "PhET circuit + soldering practice",
+        "slug": "u8-d02",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.k2-energy-chain",
+    "statement": "I can describe the energy chain that turns a 9V battery into car motion: chemical → electrical → mechanical-rotational → mechanical-translational kinetic.",
+    "unit": "unit-8",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "a4d2690e-cc55-48e7-a9c8-daeabd823894",
+        "title": "Overview, safety zones, theme commit",
+        "slug": "u8-d01",
+        "kind": "investigation"
+      },
+      {
+        "id": "7b88e325-26c1-4447-ba66-75c7fc468751",
+        "title": "PhET circuit + soldering practice",
+        "slug": "u8-d02",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.k3-gear-relationship",
+    "statement": "I can name the relationship a gear pair creates between motor RPM and axle RPM (and the inverse trade with torque).",
+    "unit": "unit-8",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "ec81c01c-f9a0-40fc-8d0d-622b5e7e24d9",
+        "title": "Mechanical advantage + wheel commit",
+        "slug": "u8-d03",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.k4-veer-cause",
+    "statement": "I can name the physical cause of a car veering left or right (asymmetric friction creating a torque about a vertical axis).",
+    "unit": "unit-8",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "a4d2690e-cc55-48e7-a9c8-daeabd823894",
+        "title": "Overview, safety zones, theme commit",
+        "slug": "u8-d01",
+        "kind": "investigation"
+      },
+      {
+        "id": "98f4345d-0661-4dd4-bccc-efecab0b2baa",
+        "title": "Axles + alignment (Build steps 4–9)",
+        "slug": "u8-d05",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.r1-ratio-reasoning-wheels",
+    "statement": "I can predict, using ratio reasoning, how a change in wheel diameter would change my car's top speed and starting effort.",
+    "unit": "unit-8",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "ec81c01c-f9a0-40fc-8d0d-622b5e7e24d9",
+        "title": "Mechanical advantage + wheel commit",
+        "slug": "u8-d03",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.r2-justify-wheel-choice",
+    "statement": "I can justify my chosen wheel set with a written prediction about race performance versus its alternatives.",
+    "unit": "unit-8",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "ec81c01c-f9a0-40fc-8d0d-622b5e7e24d9",
+        "title": "Mechanical advantage + wheel commit",
+        "slug": "u8-d03",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.r3-observation-vs-prediction",
+    "statement": "I can compare what I observed on race day to what I predicted on Day 3, and explain any difference physically.",
+    "unit": "unit-8",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "aadb0f79-6b2b-427f-a3c5-a07c8e8efb12",
+        "title": "Race + design judging + transfer task (Build step 24)",
+        "slug": "u8-d09",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.r4-three-physics-choices",
+    "statement": "I can explain three physics choices in my car (wheel size, alignment work, circuit wiring) and what would have happened if I'd chosen differently.",
+    "unit": "unit-8",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "aadb0f79-6b2b-427f-a3c5-a07c8e8efb12",
+        "title": "Race + design judging + transfer task (Build step 24)",
+        "slug": "u8-d09",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.s1-phet-series-circuit",
+    "statement": "I can build a functional series circuit on PhET (battery → switch → motor stand-in).",
+    "unit": "unit-8",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "7b88e325-26c1-4447-ba66-75c7fc468751",
+        "title": "PhET circuit + soldering practice",
+        "slug": "u8-d02",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.s2-solder-scrap",
+    "statement": "I can produce a clean soldered joint on scrap leads.",
+    "unit": "unit-8",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "7b88e325-26c1-4447-ba66-75c7fc468751",
+        "title": "PhET circuit + soldering practice",
+        "slug": "u8-d02",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.s3-solder-car-wires",
+    "statement": "I can produce a clean soldered joint on the actual car wiring.",
+    "unit": "unit-8",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "4636ba79-52aa-4703-99fe-23cd5b4fae88",
+        "title": "Solder commits + aesthetic finish begins (Build steps 16–20)",
+        "slug": "u8-d07",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.s4-axles-parallel",
+    "statement": "I can install axles parallel enough that the car rolls straight for ≥3 m without power.",
+    "unit": "unit-8",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "8fe35d9e-ab90-4078-882d-160d49d88d91",
+        "title": "Theme + chassis cut (Build steps 1–3)",
+        "slug": "u8-d04",
+        "kind": "investigation"
+      },
+      {
+        "id": "98f4345d-0661-4dd4-bccc-efecab0b2baa",
+        "title": "Axles + alignment (Build steps 4–9)",
+        "slug": "u8-d05",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.s5-install-switch",
+    "statement": "I can install a switch without breaking the chassis.",
+    "unit": "unit-8",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "e911fc57-0f55-4ba9-9a35-9a5f07f585de",
+        "title": "Gears, motor, switch, first power + RPM (Build steps 10–15)",
+        "slug": "u8-d06",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.s6-measure-axle-rpm",
+    "statement": "I can measure my car's axle RPM by timing a known-distance run and back-calculating from wheel circumference.",
+    "unit": "unit-8",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "e911fc57-0f55-4ba9-9a35-9a5f07f585de",
+        "title": "Gears, motor, switch, first power + RPM (Build steps 10–15)",
+        "slug": "u8-d06",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.s7-theme-execution",
+    "statement": "I can execute my chosen theme as a finished aesthetic on a working car.",
+    "unit": "unit-8",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "873ff1e5-901d-4e94-b7bb-9a33c7539714",
+        "title": "Finish, signature, photo, practice runs (Build steps 19–23)",
+        "slug": "u8-d08",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.k5-safety-zones",
+    "statement": "I can identify the build-space safety zones and the safe-handling rule for each tool I will use.",
+    "unit": "unit-8",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "a4d2690e-cc55-48e7-a9c8-daeabd823894",
+        "title": "Overview, safety zones, theme commit",
+        "slug": "u8-d01",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.r5-theme-commit",
+    "statement": "I can commit to a car theme and justify how it fits the project constraints and my build plan.",
+    "unit": "unit-8",
+    "domain": "reasoning",
+    "lessons": [
+      {
+        "id": "a4d2690e-cc55-48e7-a9c8-daeabd823894",
+        "title": "Overview, safety zones, theme commit",
+        "slug": "u8-d01",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "u8.s8-chassis-cut",
+    "statement": "I can transfer my chassis design to material and make accurate, safe cuts following the build steps.",
+    "unit": "unit-8",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "8fe35d9e-ab90-4078-882d-160d49d88d91",
+        "title": "Theme + chassis cut (Build steps 1–3)",
+        "slug": "u8-d04",
+        "kind": "investigation"
+      }
+    ],
+    "coverage": "Investigation evidence",
+    "nextVideo": "Demonstration optional; preserve the performance task",
+    "readings": [],
+    "videoIds": []
+  },
+  {
+    "slug": "foundations.units-quantities",
+    "statement": "I can distinguish a physical quantity from its unit and report a measurement with a number and an appropriate unit.",
+    "unit": "unit-1",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "af2fb3d2-bd76-4afd-aac5-a0c9eecb0802",
+        "title": "Units, quantities & precision",
+        "slug": "units-quantities-and-precision",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "New video lesson",
+    "nextVideo": "Published",
+    "readings": [],
+    "videoIds": [
+      "Z1qFlfqlS_E"
+    ]
+  },
+  {
+    "slug": "foundations.measurement-precision",
+    "statement": "I can report measured and calculated quantities with precision supported by the measurements.",
+    "unit": "unit-1",
+    "domain": "skill",
+    "lessons": [
+      {
+        "id": "af2fb3d2-bd76-4afd-aac5-a0c9eecb0802",
+        "title": "Units, quantities & precision",
+        "slug": "units-quantities-and-precision",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "New video lesson",
+    "nextVideo": "Published",
+    "readings": [],
+    "videoIds": [
+      "Z1qFlfqlS_E"
+    ]
+  },
+  {
+    "slug": "u1.kinematics-language",
+    "statement": "I can explain how position, velocity, and acceleration describe motion, including changes in direction.",
+    "unit": "unit-1",
+    "domain": "knowledge",
+    "lessons": [
+      {
+        "id": "eaa95227-1bc7-41e8-af7c-192bdedc8303",
+        "title": "Kinematics: the language of motion",
+        "slug": "kinematics-the-language-of-motion",
+        "kind": "lesson"
+      }
+    ],
+    "coverage": "New video lesson",
+    "nextVideo": "Published",
+    "readings": [],
+    "videoIds": [
+      "vf7X7mmJfsE"
+    ]
+  }
+]

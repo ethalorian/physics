@@ -17,6 +17,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  */
 export function useSectionProgress(lessonId: string, sectionCount: number, enabled = true, anchors: string[] = [], revision = '') {
   const { data: session } = useSession()
+  const readOnly = Boolean(session?.experience)
   const studentId = session?.user?.id
   const storageKey = `lesson-sections:v3:${studentId}:${lessonId}:${revision}`
   const [completed, setCompleted] = useState<Set<number>>(new Set())
@@ -29,22 +30,22 @@ export function useSectionProgress(lessonId: string, sectionCount: number, enabl
 
   const persistLocal = useCallback(
     (set: Set<number>) => {
-      if (!enabled || !studentId) return
+      if (readOnly || !enabled || !studentId) return
       try { localStorage.setItem(storageKey, JSON.stringify([...set])) } catch { /* private mode */ }
     },
-    [storageKey, enabled, studentId],
+    [storageKey, enabled, studentId, readOnly],
   )
 
   const persistServer = useCallback(
     (set: Set<number>) => {
-      if (!enabled || !studentId) return
+      if (readOnly || !enabled || !studentId) return
       fetch('/api/lessons/sections', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lesson_id: lessonId, completed: [...set], completed_anchors: [...set].map(i => anchors[i]).filter(Boolean), document_revision: revision }),
       }).catch(() => { /* optimistic; localStorage already holds it */ })
     },
-    [lessonId, enabled, studentId, anchors, revision],
+    [lessonId, enabled, studentId, anchors, revision, readOnly],
   )
 
   // Restore local immediately, then reconcile with the server (union, converge).
@@ -53,7 +54,7 @@ export function useSectionProgress(lessonId: string, sectionCount: number, enabl
     loadedRef.current = false
     let local = new Set<number>()
     try {
-      const raw = localStorage.getItem(storageKey)
+      const raw = readOnly ? null : localStorage.getItem(storageKey)
       if (raw) local = new Set((JSON.parse(raw) as unknown[]).filter(valid) as number[])
     } catch { /* ignore */ }
     setCompleted(local)
@@ -74,7 +75,7 @@ export function useSectionProgress(lessonId: string, sectionCount: number, enabl
       .catch(() => { loadedRef.current = true })
     return () => { active = false }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lessonId, sectionCount, enabled, studentId, storageKey, revision])
+  }, [lessonId, sectionCount, enabled, studentId, storageKey, revision, readOnly])
 
   const commit = useCallback(
     (next: Set<number>) => { persistLocal(next); persistServer(next) },

@@ -1,0 +1,11 @@
+const fs=require('fs'),path=require('path');
+const root=path.resolve(__dirname,'../..');const catalog=require(path.join(root,'src/data/physics-learning-catalog.json'));
+const inv={targets:require('./target-inventory.json')};
+const seed=require('./seed.json');
+const targets=[...inv.targets,...seed.targets.map(t=>({...t,unit_id:'unit-1'}))];
+const rows=targets.map(t=>{const matches=catalog.filter(c=>c.targets.some(x=>x.slug===t.slug));const chosen=matches.find(c=>c.source==='new')||matches.find(c=>c.kind==='lesson')||matches[0];return{slug:t.slug,statement:t.statement,unit:t.unit_id,domain:t.domain,lessons:matches.map(m=>({id:m.id,title:m.title,slug:m.slug,kind:m.kind})),coverage:matches.some(m=>m.source==='new')?'New video lesson':matches.some(m=>m.kind==='lesson')?'Existing instruction':matches.some(m=>m.kind==='investigation')?'Investigation evidence':matches.some(m=>m.kind==='mission')?'Mission evidence':'Needs a lesson',nextVideo:chosen?.kind==='lesson'&&!matches.some(m=>m.videoIds.length)?chosen.title:matches.some(m=>m.videoIds.length)?'Published':'Demonstration optional; preserve the performance task',readings:[...new Set(matches.flatMap(m=>m.readings.flatMap(r=>r.sectionIds)))],videoIds:[...new Set(matches.flatMap(m=>m.videoIds))]}});
+fs.writeFileSync(path.join(root,'src/data/physics-learning-roadmap.json'),JSON.stringify(rows,null,2));
+const quote=v=>'"'+String(v).replaceAll('"','""')+'"';
+const csv=[['Unit','Target','Learning target','Domain','Current coverage','Lessons','Hewitt sections','Video production need'],...rows.map(r=>[r.unit,r.slug,r.statement,r.domain,r.coverage,r.lessons.map(l=>l.title).join(' | '),r.readings.join(', '),r.nextVideo])].map(row=>row.map(quote).join(',')).join('\n');
+fs.mkdirSync(path.join(root,'docs/physics-learning'),{recursive:true});fs.writeFileSync(path.join(root,'docs/physics-learning/target-coverage.csv'),csv);
+console.log(JSON.stringify({targets:rows.length,unmapped:rows.filter(r=>!r.lessons.length).map(r=>r.slug),byCoverage:rows.reduce((a,r)=>(a[r.coverage]=(a[r.coverage]||0)+1,a),{})}));

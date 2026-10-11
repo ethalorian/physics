@@ -13,8 +13,10 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     // Class type chosen at import. Only honors is acted on here (cpa is the default);
     // an invalid value is ignored rather than rejected.
     const track: string | null = body.track === 'honors' || body.track === 'cpa' ? body.track : null
-    // Which curriculum the class follows (physics | trades | projects). Invalid → ignored.
-    const program: string | null = body.program === 'physics' || body.program === 'trades' || body.program === 'projects' ? body.program : null
+    // Active curricula share the physics video catalog or Trades.
+    if (body.program === 'projects') return NextResponse.json({ error: 'Project Physics is retired. Choose Physics for video lessons.' }, { status: 400 })
+    // Other invalid values retain the existing import defaults.
+    const program: string | null = body.program === 'physics' || body.program === 'trades' ? body.program : null
     console.log('📋 Import request for course:', courseId, 'track:', track ?? '(default cpa)', 'program:', program ?? '(default physics)')
 
     if (!courseId || !accessToken) {

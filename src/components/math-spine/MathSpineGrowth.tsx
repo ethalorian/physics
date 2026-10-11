@@ -6,6 +6,7 @@ import { skillEvidence, OBSERVATION_LABEL } from '@/lib/math-student-view'
 import { buildRecordsByCompetency } from './math-spine-display'
 import MathFeedbackLoop from './MathFeedbackLoop'
 import { useState } from 'react'
+import growthStyles from '@/components/growth/growth.module.css'
 
 export interface SpineCompetency {
   id: string
@@ -28,6 +29,7 @@ export interface SpineGrant {
 
 export interface MathSpineGrowthProps {
   studentName?: string
+  journal?: boolean
   competencies: SpineCompetency[]
   records: MathCompetencyRecord[]
   grants?: SpineGrant[]
@@ -35,8 +37,10 @@ export interface MathSpineGrowthProps {
   recencyWeight?: number
 }
 
-export default function MathSpineGrowth({ competencies, records, grants = [], mathPointsEarned = 0, recencyWeight = DEFAULT_RECENCY_WEIGHT }: MathSpineGrowthProps) {
+export default function MathSpineGrowth({ journal = false, competencies, records, grants = [], mathPointsEarned = 0, recencyWeight = DEFAULT_RECENCY_WEIGHT }: MathSpineGrowthProps) {
   const bySkill = buildRecordsByCompetency(records)
+  const [strandFilter, setStrandFilter] = useState<MathStrand | null>(null)
+  const activeStrand = strandFilter ?? competencies.find(c => bySkill.has(c.id))?.strand ?? competencies[0]?.strand
   const [selected, setSelected] = useState<string | null>(null)
   const [workSkill, setWorkSkill] = useState<string | null>(null)
   const [submission, setSubmission] = useState<string | undefined>()
@@ -44,13 +48,14 @@ export default function MathSpineGrowth({ competencies, records, grants = [], ma
   const evidence = skillEvidence(bySkill.get(selected ?? '') ?? [], recencyWeight)
   const assessed = competencies.filter(c => bySkill.has(c.id)).length
   function openSkill(id: string) { setSelected(id); setWorkSkill(null); setSubmission(undefined) }
-  return <section className="space-y-5 rounded-xl border bg-card p-4 sm:p-6" aria-label="My math skills">
+  return <section className={journal ? growthStyles.mathJournal : "space-y-5 rounded-xl border bg-card p-4 sm:p-6"} aria-label="My math skills">
     <div><h2 className="text-xl font-semibold">What I can do</h2><p className="mt-1 text-sm text-muted-foreground">{assessed} of {competencies.length} skills have teacher observations. Choose a skill to see the evidence and your next step.</p></div>
     {competencies.length === 0 && <p>Your skills will appear here when they are available.</p>}
-    <div className="grid gap-4 sm:grid-cols-2">{STRAND_ORDER.map(strand => {
+    {journal && <div className={growthStyles.mathFilters} role="group" aria-label="Choose a math strand">{STRAND_ORDER.filter(strand => competencies.some(c => c.strand === strand)).map(strand => <button key={strand} type="button" aria-pressed={activeStrand === strand} onClick={() => { setStrandFilter(strand); setSelected(null); setWorkSkill(null) }}>{STRAND_LABEL[strand]}</button>)}</div>}
+    <div className={journal ? 'space-y-4' : "grid gap-4 sm:grid-cols-2"}>{STRAND_ORDER.filter(strand => !journal || strand === activeStrand).map(strand => {
       const skills = competencies.filter(c => c.strand === strand).sort((a,b) => (a.sequenceOrder ?? a.orderIndex ?? 0) - (b.sequenceOrder ?? b.orderIndex ?? 0))
       if (!skills.length) return null
-      return <section key={strand} className="rounded-lg border p-3"><h3 className="mb-2 font-semibold">{STRAND_LABEL[strand]}</h3><ul className="space-y-1">{skills.map(c => {
+      return <section key={strand} className="rounded-lg border p-3"><h3 className="mb-2 font-semibold">{STRAND_LABEL[strand]}</h3><ul className={journal ? growthStyles.mathSkills : "space-y-1"}>{skills.map(c => {
         const e = skillEvidence(bySkill.get(c.id) ?? [], recencyWeight)
         return <li key={c.id}><button type="button" onClick={()=>openSkill(c.id)} aria-pressed={selected === c.id} aria-controls="math-skill-evidence" className={`min-h-11 w-full rounded-lg border p-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${selected === c.id ? 'border-primary bg-muted' : 'border-transparent hover:bg-muted'}`}>
           <span className="block text-sm font-medium">{c.code} · {c.statement}</span>
@@ -72,6 +77,6 @@ export default function MathSpineGrowth({ competencies, records, grants = [], ma
         <details><summary className="min-h-11 cursor-pointer py-3 text-sm">How the practice placement is determined</summary><p className="text-sm">{evidence.value === null ? 'No rating has been recorded. Missing evidence is not a low score.' : `Your weighted rating is ${evidence.value.toFixed(1)} out of 3. Each new observation contributes ${Math.round(recencyWeight*100)}% to the updated value; earlier evidence contributes the rest. This guides practice. A single observation is still initial evidence.`} Time alone does not lower your rating.</p></details>
       </section>}
     </div>
-    <details className="border-t pt-3"><summary className="min-h-11 cursor-pointer py-3 font-medium">Past celebrations · {mathPointsEarned} XP earned</summary><p className="mb-3 text-sm text-muted-foreground">These recognize past milestones and practice. They are not your current mastery score.</p><ul className="space-y-2 text-sm">{grants.filter(g=>g.milestone !== 'practice-rep').slice(0,6).map((g,i)=><li key={i}>{g.awardedAt && `${new Date(g.awardedAt).toLocaleDateString()} · `}{g.note ?? ({'competency-fluent':'Skill milestone reached','strand-complete':'Strand milestone reached','levelup-almost':'Progress milestone reached','spotlight':'Teacher spotlight'}[g.milestone] ?? 'Math milestone')} · +{g.points} XP</li>)}</ul></details>
+    <details className="border-t pt-3"><summary className="min-h-11 cursor-pointer py-3 font-medium">Math Spine milestones · {mathPointsEarned} XP</summary><p className="mb-3 text-sm text-muted-foreground">This is XP from recorded Math Spine milestones, not your total account XP or your current mastery score.</p><ul className="space-y-2 text-sm">{grants.filter(g=>g.milestone !== 'practice-rep').slice(0,6).map((g,i)=><li key={i}>{g.awardedAt && `${new Date(g.awardedAt).toLocaleDateString()} · `}{g.note ?? ({'competency-fluent':'Skill milestone reached','strand-complete':'Strand milestone reached','levelup-almost':'Progress milestone reached','spotlight':'Teacher spotlight'}[g.milestone] ?? 'Math milestone')} · +{g.points} XP</li>)}</ul></details>
   </section>
 }

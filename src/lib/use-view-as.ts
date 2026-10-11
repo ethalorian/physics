@@ -16,7 +16,7 @@ export function useViewAs(): { role: UserRole; realRole: UserRole; viewingAs: bo
 
   useEffect(() => { setTeacherEmail(readViewAsCookie()) }, [])
 
-  const viewingAs = realRole === 'admin' && Boolean(teacherEmail)
+  const viewingAs = !session?.experience && realRole === 'admin' && Boolean(teacherEmail)
   const role: UserRole = viewingAs ? 'teacher' : realRole
   return { role, realRole, viewingAs, teacherEmail }
 }

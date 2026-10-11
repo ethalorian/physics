@@ -1,0 +1,16 @@
+{
+  "songs": [
+    {"id":"neon-current","title":"Neon Current","genre":"Synthwave","bpm":120,"bars":36,"seed":0,"color":"#bef264","description":"The original. Warm synths, a steady heartbeat, and that familiar drop."},
+    {"id":"chrome-circuit","title":"Chrome Circuit","genre":"Electro house","bpm":138,"bars":48,"seed":1,"color":"#5ee7ef","description":"Punchy kicks, clipped bass, and bright electric hooks."},
+    {"id":"midnight-drive","title":"Midnight Drive","genre":"Breakbeat","bpm":150,"bars":48,"seed":2,"color":"#c4b5fd","description":"Syncopated drums and a late-night, neon-lit melody."},
+    {"id":"solar-flare","title":"Solar Flare","genre":"Trance","bpm":168,"bars":60,"seed":3,"color":"#fbbf24","description":"Soaring arpeggios, rising energy, and a wide-open drop."},
+    {"id":"terminal-velocity","title":"Terminal Velocity","genre":"Drum & bass","bpm":184,"bars":60,"seed":4,"color":"#f9a8d4","description":"Rapid breaks, deep bass, and the fastest track in the collection."}
+  ],
+  "levels": [
+    {"id":"easy","name":"Easy","keys":["D","F","J","K"],"fall":2.1,"hint":"More room to breathe. Single notes and gentle holds."},
+    {"id":"arcade","name":"Arcade","keys":["D","F","J","K"],"fall":1.7,"hint":"The classic mix. Taps, holds, and two-note chords."},
+    {"id":"expert","name":"Expert","keys":["D","F","J","K"],"fall":1.35,"hint":"Offbeats, quicker patterns, and less breathing room."},
+    {"id":"master","name":"Master","keys":["D","F","J","K"],"fall":1.05,"hint":"Four keys pushed further. Sixteenth-note bursts, jumps, and fast streams."},
+    {"id":"overdrive","name":"Overdrive","keys":["S","D","F","J","K","L"],"fall":0.9,"hint":"Six keys. Relentless streams and three-note chords. Keyboard recommended."}
+  ]
+}

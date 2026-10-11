@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#f6f6fb;color:#22233a;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+a{color:#4b4ba8;text-decoration:none}a:hover{color:#3a3a8a;text-decoration:underline}
+input[type=range]{accent-color:#4b4ba8;width:100%}
+</style>
+</helmet>
+<div style="min-height:100vh;font-family:'Newsreader',Georgia,serif;font-size:18px;line-height:1.55;color:#22233a;background-color:#f6f6fb;background-image:linear-gradient(rgba(75,75,168,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(75,75,168,0.08) 1px,transparent 1px);background-size:24px 24px;background-position:-1px -1px">
+
+<nav style="position:sticky;top:0;z-index:10;background:rgba(246,246,251,0.92);backdrop-filter:blur(6px);border-bottom:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase">
+  <div style="max-width:1000px;margin:0 auto;padding:12px 24px;display:flex;flex-wrap:nowrap;gap:6px 18px;align-items:center;overflow-x:auto">
+    <a href="Course Explainer - 2026-XJ.dc.html" style="display:flex;align-items:center;gap:10px;margin-right:auto;color:#22233a;text-decoration:none;min-width:0;flex:1 1 0;overflow:hidden"><svg width="28" height="28" viewBox="0 0 40 40" aria-label="Antocci Physics" style="display:block;flex-shrink:0"><circle cx="20" cy="20" r="20" fill="#4B4BA8"></circle><path d="M6 29 H11.5 L20 8.5 L28.5 29 H34" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></path><path d="M15.6 21.5 H24.4" stroke="#9FD1B3" stroke-width="2.6" stroke-linecap="round"></path><circle cx="20" cy="8.5" r="2.6" fill="#F0A58A"></circle></svg><span style="font-weight:600;white-space:nowrap;letter-spacing:0.08em;flex-shrink:0">Antocci Physics</span><span style="color:#5c5d70;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis">· Lab 04 · The derivative</span></a>
+    <a href="#secant" style="color:#5c5d70;white-space:nowrap">01 Shrink Δt</a>
+    <a href="#machine" style="color:#5c5d70;white-space:nowrap">02 x → v → a</a>
+    <a href="#algebra" style="color:#5c5d70;white-space:nowrap">03 The algebra</a>
+    <a href="#read" style="color:#5c5d70;white-space:nowrap">04 Read the chain</a>
+    <a href="#check" style="color:#5c5d70;white-space:nowrap">05 Check</a>
+  </div>
+</nav>
+
+<main style="max-width:1000px;margin:0 auto;padding:24px 24px 96px;display:flex;flex-direction:column;gap:72px">
+
+  <header data-screen-label="Hook" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;align-items:end;padding-top:40px">
+    <div>
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:16px">AP Physics · Lab notebook 04</div>
+      <h1 style="font-size:clamp(40px,6vw,64px);line-height:1.02;font-weight:500;margin:0 0 20px;letter-spacing:-0.02em;text-wrap:balance">Velocity is how fast position changes. Acceleration is how fast velocity changes.</h1>
+      <p style="font-size:20px;margin:0;max-width:52ch;text-wrap:pretty">The <strong>derivative</strong> is the tool that turns "how fast is this changing?" into a number — at a single instant, not averaged over a trip. Apply it once to position and you get velocity. Apply it again and you get acceleration.</p>
+    </div>
+    <div style="background:#ffffff;border:1px solid #d4d5e2;padding:24px;box-shadow:4px 4px 0 #e4e4f0">
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70;margin-bottom:12px">The phenomenon</div>
+      <p style="margin:0 0 12px;font-size:19px">Your car's odometer shows how far you've gone. The speedometer shows how fast you're going <em>right now</em>.</p>
+      <p style="margin:0 0 16px;font-size:19px;font-weight:600">But "right now" lasts zero seconds. How can you divide a distance by zero time?</p>
+      <p style="margin:0;color:#5c5d70;font-size:16px">You can't — but you can shrink the time interval until the answer stops changing. That limit is the derivative, and the speedometer is computing it for you.</p>
+    </div>
+  </header>
+
+  <section id="secant" data-screen-label="01 Shrink dt">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">01 · From average to instantaneous</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Shrink the interval until the answer stops changing</h2>
+    <p style="max-width:64ch;margin:0 0 24px;text-wrap:pretty">The slope of the line between two points on an x–t graph is the <em>average</em> velocity between them: Δx / Δt. Slide the second point toward the first. The line pivots, and its slope settles on one value — the slope of the <strong>tangent line</strong>, the velocity at that instant.</p>
+    <div style="background:#ffffff;border:1px solid #d4d5e2;box-shadow:4px 4px 0 #e4e4f0;padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.08em"><span style="color:#4b4ba8;white-space:nowrap">x – t · x = 0.4t² + 0.5t</span><span style="color:#5c5d70;white-space:nowrap">secant slope = Δx / Δt</span></div>
+        <svg viewBox="0 0 600 320" style="width:100%;height:auto;display:block;background:#f6f6fb;border:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace">
+          <defs><clipPath id="clipS"><rect x="44" y="8" width="544" height="282"></rect></clipPath></defs>
+          <path d="{{ sec.grid }}" stroke="#e4e4f0" stroke-width="1" fill="none"></path>
+          <line x1="44" y1="290" x2="588" y2="290" stroke="#babbcb"></line><line x1="44" y1="8" x2="44" y2="290" stroke="#babbcb"></line>
+          <g clip-path="url(#clipS)">
+            <polyline points="{{ sec.curve }}" fill="none" stroke="#4b4ba8" stroke-width="3"></polyline>
+            <line x1="{{ sec.tanX1 }}" y1="{{ sec.tanY1 }}" x2="{{ sec.tanX2 }}" y2="{{ sec.tanY2 }}" stroke="#22233a" stroke-width="1.5" stroke-dasharray="6 4" opacity="{{ sec.tanOp }}"></line>
+            <line x1="{{ sec.sX1 }}" y1="{{ sec.sY1 }}" x2="{{ sec.sX2 }}" y2="{{ sec.sY2 }}" stroke="#3e7a58" stroke-width="2.5"></line>
+          </g>
+          <line x1="{{ sec.px }}" y1="{{ sec.py }}" x2="{{ sec.qx }}" y2="{{ sec.py }}" stroke="#c9573f" stroke-width="1.5" stroke-dasharray="3 3"></line>
+          <line x1="{{ sec.qx }}" y1="{{ sec.py }}" x2="{{ sec.qx }}" y2="{{ sec.qy }}" stroke="#c9573f" stroke-width="1.5" stroke-dasharray="3 3"></line>
+          <text x="{{ sec.dtLabelX }}" y="{{ sec.dtLabelY }}" font-size="15" fill="#c9573f" text-anchor="middle" opacity="{{ sec.legOp }}">Δt</text>
+          <text x="{{ sec.dxLabelX }}" y="{{ sec.dxLabelY }}" font-size="15" fill="#c9573f" opacity="{{ sec.legOp }}">Δx</text>
+          <circle cx="{{ sec.px }}" cy="{{ sec.py }}" r="5" fill="#22233a"></circle>
+          <circle cx="{{ sec.qx }}" cy="{{ sec.qy }}" r="5" fill="#3e7a58" stroke="#f6f6fb" stroke-width="1.5"></circle>
+          <text x="40" y="294" font-size="14" fill="#5c5d70" text-anchor="end">0</text>
+          <text x="40" y="20" font-size="14" fill="#5c5d70" text-anchor="end">30</text>
+          <text x="588" y="312" font-size="14" fill="#5c5d70" text-anchor="end">8 s</text>
+          <text x="50" y="22" font-size="14" fill="#5c5d70">m</text>
+        </svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <label style="display:flex;flex-direction:column;gap:6px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px">
+          <span style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px"><span style="white-space:nowrap">instant t₀</span><span style="font-weight:600;white-space:nowrap">{{ t0Label }} s</span></span>
+          <input type="range" min="0.5" max="6" step="0.1" value="{{ t0 }}" onChange="{{ setT0 }}">
+        </label>
+        <label style="display:flex;flex-direction:column;gap:6px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px">
+          <span style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;color:#c9573f"><span style="white-space:nowrap">interval Δt</span><span style="font-weight:600;white-space:nowrap">{{ dtLabel }} s</span></span>
+          <input type="range" min="0" max="1" step="0.005" value="{{ dtU }}" onChange="{{ setDtU }}">
+        </label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button onClick="{{ shrink }}" style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;font-weight:600;padding:10px 18px;border:none;background:#22233a;color:#f6f6fb;cursor:pointer;min-height:44px;white-space:nowrap">{{ shrinkLabel }}</button>
+          <button onClick="{{ toggleTan }}" style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;padding:10px 16px;border:1px solid #22233a;background:transparent;color:#22233a;cursor:pointer;min-height:44px;white-space:nowrap">{{ tanLabel }}</button>
+        </div>
+        <div style="background:#22233a;color:#f6f6fb;padding:14px 18px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;display:flex;flex-direction:column;gap:6px">
+          <span style="color:#9fd1b3">secant  Δx / Δt = <strong style="color:#f6f6fb">{{ secSlope }}</strong> m/s</span>
+          <span style="color:#a9abc8">tangent  dx/dt = <strong style="color:#f6f6fb">{{ tanSlope }}</strong> m/s</span>
+        </div>
+        <div style="border:1px solid #d4d5e2;background:#f6f6fb">
+          <div style="display:grid;grid-template-columns:1fr 1fr;padding:8px 14px;border-bottom:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70"><span>Δt (s)</span><span>Δx / Δt (m/s)</span></div>
+          <sc-for list="{{ secTable }}" as="r" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:1fr 1fr;padding:6px 14px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;background:{{ r.bg }};color:{{ r.color }};font-weight:{{ r.weight }}"><span>{{ r.dt }}</span><span>{{ r.slope }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:24px;background:#22233a;color:#f6f6fb;padding:20px 24px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:15px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 32px">
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">THE DEFINITION</div>v = dx/dt = lim<sub style="font-size:0.7em">Δt→0</sub> Δx / Δt</div>
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">READ "dx/dt" AS</div>"the rate x changes with t, at this instant"</div>
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#9fd1b3;margin-bottom:6px">ON A GRAPH</div>the slope of the tangent line</div>
+    </div>
+  </section>
+
+  <section id="machine" data-screen-label="02 Derivative chain">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">02 · The derivative chain</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Each graph is the slope of the one above it</h2>
+    <p style="max-width:64ch;margin:0 0 24px;text-wrap:pretty">Pick a motion. Drag the time cursor and watch the tangent lines: the <em>slope</em> of the x–t tangent is the <em>height</em> of the v–t graph, and the slope of the v–t tangent is the height of a–t. Or press "Draw the derivative" and watch the lower graphs get traced out, one slope at a time.</p>
+    <div style="background:#ffffff;border:1px solid #d4d5e2;box-shadow:4px 4px 0 #e4e4f0;padding:24px;display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px">
+        <span style="color:#5c5d70;margin-right:4px">Motion</span>
+        <sc-for list="{{ fnButtons }}" as="b" hint-placeholder-count="5">
+          <button onClick="{{ b.apply }}" style="font-family:inherit;font-size:13px;padding:6px 12px;border:1px solid {{ b.border }};background:{{ b.bg }};color:{{ b.color }};cursor:pointer;white-space:nowrap">{{ b.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px">
+        <button onClick="{{ drawDeriv }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:10px 18px;border:none;background:#22233a;color:#f6f6fb;cursor:pointer;min-height:44px;white-space:nowrap">{{ drawLabel }}</button>
+        <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:4px">
+          <input type="range" min="0" max="{{ fnT }}" step="0.01" value="{{ tc }}" onChange="{{ setTc }}">
+        </div>
+        <span style="white-space:nowrap">t = <strong>{{ tcLabel }}</strong> s</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.08em"><span style="color:#4b4ba8;white-space:nowrap">x(t) · position · {{ fnEq }}</span><span style="white-space:nowrap"><span style="color:#4b4ba8">x = {{ xNow }} m</span> <span style="color:#5c5d70">· tangent slope</span> <span style="color:#3e7a58">{{ vNow }} m/s</span></span></div>
+        <svg viewBox="0 0 600 130" style="width:100%;height:auto;display:block;background:#f6f6fb;border:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace">
+          <defs><clipPath id="clipX"><rect x="44" y="8" width="544" height="110"></rect></clipPath></defs>
+          <line x1="44" y1="{{ gx.zero }}" x2="588" y2="{{ gx.zero }}" stroke="#babbcb"></line><line x1="44" y1="8" x2="44" y2="118" stroke="#babbcb"></line>
+          <g clip-path="url(#clipX)">
+            <polyline points="{{ gx.curve }}" fill="none" stroke="#4b4ba8" stroke-width="2.5"></polyline>
+            <line x1="{{ gx.tx1 }}" y1="{{ gx.ty1 }}" x2="{{ gx.tx2 }}" y2="{{ gx.ty2 }}" stroke="#3e7a58" stroke-width="2.5"></line>
+          </g>
+          <line x1="{{ cx }}" y1="8" x2="{{ cx }}" y2="118" stroke="#22233a" stroke-dasharray="3 3"></line>
+          <circle cx="{{ cx }}" cy="{{ gx.dotY }}" r="5" fill="#4b4ba8"></circle>
+          <text x="40" y="16" font-size="13" fill="#5c5d70" text-anchor="end">{{ gx.hi }}</text>
+          <text x="40" y="120" font-size="13" fill="#5c5d70" text-anchor="end">{{ gx.lo }}</text>
+        </svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.08em"><span style="color:#3e7a58;white-space:nowrap">v(t) = dx/dt · velocity</span><span style="white-space:nowrap"><span style="color:#3e7a58">v = {{ vNow }} m/s</span> <span style="color:#5c5d70">· tangent slope</span> <span style="color:#c9573f">{{ aNow }} m/s²</span></span></div>
+        <svg viewBox="0 0 600 130" style="width:100%;height:auto;display:block;background:#f6f6fb;border:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace">
+          <defs><clipPath id="clipV"><rect x="44" y="8" width="544" height="110"></rect></clipPath></defs>
+          <line x1="44" y1="{{ gv.zero }}" x2="588" y2="{{ gv.zero }}" stroke="#babbcb"></line><line x1="44" y1="8" x2="44" y2="118" stroke="#babbcb"></line>
+          <g clip-path="url(#clipV)">
+            <polyline points="{{ gv.ghost }}" fill="none" stroke="#3e7a58" stroke-width="1" stroke-dasharray="2 4" opacity="{{ ghostOp }}"></polyline>
+            <polyline points="{{ gv.curve }}" fill="none" stroke="#3e7a58" stroke-width="2.5"></polyline>
+            <line x1="{{ gv.tx1 }}" y1="{{ gv.ty1 }}" x2="{{ gv.tx2 }}" y2="{{ gv.ty2 }}" stroke="#c9573f" stroke-width="2.5"></line>
+          </g>
+          <line x1="{{ cx }}" y1="8" x2="{{ cx }}" y2="118" stroke="#22233a" stroke-dasharray="3 3"></line>
+          <circle cx="{{ cx }}" cy="{{ gv.dotY }}" r="5" fill="#3e7a58"></circle>
+          <text x="40" y="16" font-size="13" fill="#5c5d70" text-anchor="end">{{ gv.hi }}</text>
+          <text x="40" y="120" font-size="13" fill="#5c5d70" text-anchor="end">{{ gv.lo }}</text>
+        </svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 12px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.08em"><span style="color:#c9573f;white-space:nowrap">a(t) = dv/dt · acceleration</span><span style="color:#c9573f;white-space:nowrap">a = {{ aNow }} m/s²</span></div>
+        <svg viewBox="0 0 600 140" style="width:100%;height:auto;display:block;background:#f6f6fb;border:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace">
+          <defs><clipPath id="clipA"><rect x="44" y="8" width="544" height="110"></rect></clipPath></defs>
+          <line x1="44" y1="{{ ga.zero }}" x2="588" y2="{{ ga.zero }}" stroke="#babbcb"></line><line x1="44" y1="8" x2="44" y2="118" stroke="#babbcb"></line>
+          <g clip-path="url(#clipA)">
+            <polyline points="{{ ga.ghost }}" fill="none" stroke="#c9573f" stroke-width="1" stroke-dasharray="2 4" opacity="{{ ghostOp }}"></polyline>
+            <polyline points="{{ ga.curve }}" fill="none" stroke="#c9573f" stroke-width="2.5"></polyline>
+          </g>
+          <line x1="{{ cx }}" y1="8" x2="{{ cx }}" y2="118" stroke="#22233a" stroke-dasharray="3 3"></line>
+          <circle cx="{{ cx }}" cy="{{ ga.dotY }}" r="5" fill="#c9573f"></circle>
+          <text x="40" y="16" font-size="13" fill="#5c5d70" text-anchor="end">{{ ga.hi }}</text>
+          <text x="40" y="120" font-size="13" fill="#5c5d70" text-anchor="end">{{ ga.lo }}</text>
+          <text x="44" y="136" font-size="13" fill="#5c5d70">0</text>
+          <text x="588" y="136" font-size="13" fill="#5c5d70" text-anchor="end">{{ fnT }} s</text>
+        </svg>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+        <sc-for list="{{ stateCards }}" as="c" hint-placeholder-count="3">
+          <div style="padding:12px 16px;border-left:3px solid {{ c.color }};background:#f6f6fb">
+            <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70">{{ c.kicker }}</div>
+            <div style="font-size:17px;font-weight:500">{{ c.text }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="algebra" data-screen-label="03 Algebra">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">03 · The algebra of a limit</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Take the derivative of the UAM equation — by hand</h2>
+    <p style="max-width:64ch;margin:0 0 24px;text-wrap:pretty">In Lab 03 you <em>measured</em> x = x₀ + v₀t + ½at². Now run it through the definition of a derivative. Out comes v = v₀ + at — and one more time, out comes a. Step through and watch the terms cancel.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;align-items:stretch">
+      <div style="background:#22233a;color:#f6f6fb;padding:20px 24px;display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <sc-for list="{{ seqTabs }}" as="st" hint-placeholder-count="2">
+            <button onClick="{{ st.select }}" style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px;padding:6px 12px;border:1px solid #a9abc8;background:{{ st.bg }};color:{{ st.color }};cursor:pointer;white-space:nowrap">{{ st.label }}</button>
+          </sc-for>
+          <span style="margin-left:auto;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.1em;color:#a9abc8;white-space:nowrap;align-self:center">{{ frameLabel }}</span>
+        </div>
+        {{ algebra }}
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <button onClick="{{ prevFrame }}" style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px;padding:8px 14px;border:1px solid #a9abc8;background:transparent;color:#f6f6fb;cursor:pointer;min-height:40px;white-space:nowrap;opacity:{{ backOp }}">◀ Back</button>
+          <button onClick="{{ nextFrame }}" style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px;font-weight:600;padding:8px 14px;border:1px solid #a9abc8;background:#f6f6fb;color:#22233a;cursor:pointer;min-height:40px;white-space:nowrap;opacity:{{ nextOp }}">Next ▶</button>
+          <button onClick="{{ togglePlayAlg }}" style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px;padding:8px 14px;border:1px solid #a9abc8;background:transparent;color:#f6f6fb;cursor:pointer;min-height:40px;white-space:nowrap">{{ playAlgLabel }}</button>
+          <div style="display:flex;gap:6px;margin-left:auto">
+            <sc-for list="{{ frameDots }}" as="fd" hint-placeholder-count="5">
+              <button onClick="{{ fd.go }}" aria-label="frame" style="width:12px;height:12px;padding:0;border:1px solid #a9abc8;background:{{ fd.bg }};cursor:pointer"></button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px 24px;display:flex;flex-direction:column;gap:12px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70">Shortcuts you'll use</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58;text-wrap:pretty">Every rule below comes from the same limit you just stepped through. Read each row left to right: take the slope, then take it again.</p>
+        <div style="border:1px solid #d4d5e2;background:#f6f6fb">
+          <div style="display:grid;grid-template-columns:1.2fr 1.1fr 1fr;gap:0 10px;padding:8px 14px;border-bottom:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase"><span style="color:#4b4ba8">x(t)</span><span style="color:#3e7a58">v = dx/dt</span><span style="color:#c9573f">a = dv/dt</span></div>
+          <sc-for list="{{ rules }}" as="r" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:1.2fr 1.1fr 1fr;gap:0 10px;padding:8px 14px;border-bottom:1px solid #e4e4f0;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px"><span>{{ r.x }}</span><span>{{ r.v }}</span><span>{{ r.a }}</span></div>
+          </sc-for>
+        </div>
+        <p style="margin:0;font-size:15px;color:#5c5d70">Pattern for powers: bring the exponent down in front, then lower it by one. d/dt (tⁿ) = n·tⁿ⁻¹.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="read" data-screen-label="04 Read the chain">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">04 · Read the chain</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 28px;letter-spacing:-0.01em">Four things the slopes tell you</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px">
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">1</div>
+        <div style="font-size:21px;font-weight:500;margin:8px 0">Peaks mean zero.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">Wherever x–t has a peak or valley, its tangent is flat, so v = 0. Try the ball toss: at the top, v–t crosses zero.</p>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">2</div>
+        <div style="font-size:21px;font-weight:500;margin:8px 0">Curvature is acceleration.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">x–t bending upward (getting steeper) means a &gt; 0. Bending downward means a &lt; 0. A straight x–t means a = 0.</p>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">3</div>
+        <div style="font-size:21px;font-weight:500;margin:8px 0">Same sign, speeding up.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">When v and a have the same sign, speed grows. Opposite signs, speed shrinks — even if a is positive. Watch the cards under the graphs.</p>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">4</div>
+        <div style="font-size:21px;font-weight:500;margin:8px 0">Going back up is area.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">The reverse of a derivative is the area under the curve. Area under a–t gives Δv; area under v–t gives Δx — the trapezoid from Lab 03.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="check" data-screen-label="05 Check">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">05 · Check for understanding</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Five questions</h2>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:24px">
+      <p style="max-width:56ch;margin:0;text-wrap:pretty">Pick an answer; you'll get feedback immediately.</p>
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#5c5d70">Score <strong style="color:#22233a">{{ score }}</strong> / {{ total }}</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <sc-for list="{{ quiz }}" as="q" hint-placeholder-count="5">
+        <div style="background:#ffffff;border:1px solid #d4d5e2;padding:24px">
+          <div style="display:flex;gap:16px;align-items:baseline">
+            <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70;flex-shrink:0">Q{{ q.n }}</span>
+            <p style="margin:0 0 16px;font-size:19px;font-weight:500;text-wrap:pretty">{{ q.text }}</p>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+            <sc-for list="{{ q.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.pick }}" style="text-align:left;font-family:'Newsreader',Georgia,serif;font-size:17px;padding:12px 14px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.color }};cursor:pointer;display:flex;gap:10px;align-items:baseline;min-height:44px"><span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:14px;padding:12px 16px;border-left:3px solid {{ q.fbColor }};background:#f6f6fb;font-size:16px"><strong style="color:{{ q.fbColor }}">{{ q.verdict }}</strong> {{ q.feedback }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid #d4d5e2;padding-top:20px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <span>Lab 04 · The derivative · slope of the slope</span>
+    <span style="display:flex;gap:18px;flex-wrap:wrap"><a href="Kinematics Explainer.dc.html">00 · Kinematics</a><a href="Vectors and Scalars Explainer.dc.html">01 · Vectors</a><a href="Units and Dimensions Explainer.dc.html">02 · Units</a><a href="UAM Derivation Lab.dc.html">03 · UAM lab</a></span>
+  </footer>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;allowRetry&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Quiz&quot;}}">
+class Component extends DCLogic {
+  static Algebra = function Algebra(props) {
+    const root = React.useRef(null), stage = React.useRef(null), noteRef = React.useRef(null), prev = React.useRef(null), prevId = React.useRef(null), mounted = React.useRef(false);
+    React.useLayoutEffect(() => {
+      const r = root.current, st = stage.current; if (!r || !st) return;
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const els = Array.from(st.querySelectorAll('[data-k]')), changed = prevId.current !== props.id;
+      if (changed) { els.forEach(el => el.getAnimations && el.getAnimations().forEach(an => an.cancel())); r.querySelectorAll('[data-ghost]').forEach(g => g.remove()); }
+      const base = r.getBoundingClientRect(), now = {};
+      els.forEach(el => { const bb = el.getBoundingClientRect(), cs = getComputedStyle(el); now[el.dataset.k] = { x: bb.left - base.left, y: bb.top - base.top, w: bb.width, h: bb.height, html: el.innerHTML, text: el.textContent, color: cs.color, pad: cs.padding, lh: cs.lineHeight, bar: el.dataset.bar === '1' }; });
+      const old = prev.current, EASE = 'cubic-bezier(.45,0,.15,1)';
+      const ghost = (g, dur, delay) => {
+        if (reduce) return;
+        const d = document.createElement('span'); d.dataset.ghost = '1'; if (!g.bar) d.innerHTML = g.html;
+        Object.assign(d.style, { position: 'absolute', left: g.x + 'px', top: g.y + 'px', width: g.w + 'px', height: (g.bar ? 2 : g.h) + 'px', background: g.bar ? '#a9abc8' : 'transparent', color: g.color, padding: g.bar ? '0' : g.pad, lineHeight: g.lh, boxSizing: 'border-box', whiteSpace: 'nowrap', pointerEvents: 'none', display: 'block' });
+        r.appendChild(d);
+        const an = d.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(14px) scale(0.88)' }], { duration: dur, delay, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'both' });
+        an.onfinish = () => d.remove();
+      };
+      if (!mounted.current) {
+        mounted.current = true;
+        if (!reduce) els.forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 420, delay: i * 30, fill: 'backwards', easing: 'cubic-bezier(.2,.8,.2,1)' }));
+      } else if (old && changed && !reduce) {
+        Object.keys(old).filter(k => !now[k]).forEach(k => ghost(old[k], 300, 0));
+        els.forEach(el => {
+          const k = el.dataset.k, o = old[k], n = now[k];
+          if (!o) { el.animate([{ opacity: 0, transform: 'translateY(-16px) scale(0.92)' }, { opacity: 1, transform: 'none' }], { duration: 440, delay: 820, fill: 'backwards', easing: 'cubic-bezier(.2,.9,.25,1.15)' }); return; }
+          const dx = o.x - n.x, dy = o.y - n.y, sx = n.bar && n.w ? o.w / n.w : 1;
+          if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5 || Math.abs(sx - 1) > 0.01) {
+            const lift = Math.hypot(dx, dy) > 36 ? -Math.min(30, 10 + Math.abs(dx) * 0.08) : 0;
+            const kf = [0, 0.25, 0.5, 0.75, 1].map(p => { const q = 1 - p; return { offset: p, transformOrigin: 'left center', transform: 'translate(' + (dx * q) + 'px,' + (dy * q + lift * 4 * p * q) + 'px)' + (n.bar ? ' scaleX(' + (sx * q + p) + ')' : '') }; });
+            el.animate(kf, { duration: 820, delay: 200, easing: EASE, fill: 'backwards' });
+          }
+          if (o.text !== n.text) { ghost(o, 300, 120); el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 380, delay: 560, fill: 'backwards', easing: 'ease-out' }); }
+        });
+        els.forEach(el => { if (el.dataset.hl === '1') el.animate([{ backgroundColor: 'rgba(240,165,138,0)', boxShadow: 'inset 0 -2px 0 rgba(240,165,138,0)' }, { backgroundColor: 'rgba(240,165,138,0.34)', offset: 0.45 }, { backgroundColor: 'rgba(240,165,138,0.14)', boxShadow: 'inset 0 -2px 0 rgba(240,165,138,0.75)' }], { duration: 700, delay: 1000, fill: 'backwards', easing: 'ease-out' }); });
+        if (noteRef.current) noteRef.current.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 420, delay: 260, fill: 'backwards', easing: 'ease-out' });
+      }
+      prev.current = now; prevId.current = props.id;
+    });
+    const pad = t => t === '=' ? '1px 12px' : ['+', '−', '·'].includes(t) ? '1px 8px' : ['(', ')'].includes(t) ? '1px 1px' : '1px 3px';
+    const tok = t => React.createElement('span', { key: t.k, 'data-k': t.k, 'data-hl': t.hl ? '1' : '0', style: { display: 'inline-block', color: t.c, padding: pad(t.t), borderRadius: 3, background: t.hl ? 'rgba(240,165,138,0.14)' : 'transparent', boxShadow: t.hl ? 'inset 0 -2px 0 rgba(240,165,138,0.75)' : 'none', whiteSpace: 'nowrap', lineHeight: 1.3 } }, t.t, t.sub ? React.createElement('sub', { style: { fontSize: '0.5em', marginLeft: 1 } }, t.sub) : null);
+    const item = it => it.frac
+      ? React.createElement('span', { key: it.k, style: { display: 'inline-flex', flexDirection: 'column', alignItems: 'center', margin: '0 6px' } },
+          React.createElement('span', { style: { display: 'flex', alignItems: 'center' } }, it.num.map(tok)),
+          React.createElement('span', { 'data-k': it.bar, 'data-bar': '1', style: { alignSelf: 'stretch', height: 2, background: '#a9abc8', margin: '5px 0', borderRadius: 1 } }),
+          React.createElement('span', { style: { display: 'flex', alignItems: 'center' } }, it.den.map(tok)))
+      : tok(it);
+    return React.createElement('div', { ref: root, style: { position: 'relative', display: 'flex', flexDirection: 'column', gap: 14 } },
+      React.createElement('div', { style: { display: 'flex', minHeight: 124, alignItems: 'center', overflowX: 'auto', overflowY: 'hidden', padding: '10px 0' } },
+        React.createElement('div', { ref: stage, style: { display: 'flex', alignItems: 'center', flexWrap: 'nowrap', margin: '0 auto', fontFamily: "'IBM Plex Mono',ui-monospace,monospace", fontSize: 24 } }, props.frame.items.map(item))),
+      React.createElement('div', { ref: noteRef, style: { minHeight: 72, fontSize: 17, lineHeight: 1.45, color: '#d9daea', fontFamily: "'Newsreader',Georgia,serif", textWrap: 'pretty' } }, props.frame.note));
+  };
+  state = { t0: 3, dtU: 0.15, showTan: true, shrinking: false, fn: 'brake', tc: 3, traceT: null, drawing: false, seq: 0, frame: 0, algPlaying: false, answers: {} };
+  FNS = {
+    brake: { label: 'Braking car', T: 8, f: t => 12 * t - 0.75 * t * t, v: t => 12 - 1.5 * t, a: () => -1.5, eq: 'x = 12t − 0.75t²' },
+    toss: { label: 'Ball tossed up', T: 3, f: t => 15 * t - 4.9 * t * t, v: t => 15 - 9.8 * t, a: () => -9.8, eq: 'x = 15t − 4.9t²' },
+    cruise: { label: 'Constant velocity', T: 8, f: t => 2 + 3 * t, v: () => 3, a: () => 0, eq: 'x = 2 + 3t' },
+    elevator: { label: 'Elevator ride', T: 8, f: t => 10 * (3 * (t / 8) ** 2 - 2 * (t / 8) ** 3), v: t => 10 * (6 * t / 64 - 6 * t * t / 512), a: t => 10 * (6 / 64 - 12 * t / 512), eq: 'x = 10[3(t/8)² − 2(t/8)³]' },
+    spring: { label: 'Mass on a spring', T: 8, f: t => 2 * Math.sin(0.8 * t), v: t => 1.6 * Math.cos(0.8 * t), a: t => -1.28 * Math.sin(0.8 * t), eq: 'x = 2 sin(0.8t)' }
+  };
+  sf(t) { return 0.4 * t * t + 0.5 * t; }
+  componentDidMount() {
+    this._last = null;
+    const loop = ts => {
+      const dt = this._last ? (ts - this._last) / 1000 : 0; this._last = ts;
+      if (this.state.shrinking) { const u = this.state.dtU + dt / 3; if (u >= 1) this.setState({ dtU: 1, shrinking: false }); else this.setState({ dtU: u }); }
+      if (this.state.drawing) { const F = this.FNS[this.state.fn], t = (this.state.traceT ?? 0) + dt * F.T / 5; if (t >= F.T) this.setState({ traceT: null, tc: F.T, drawing: false }); else this.setState({ traceT: t, tc: t }); }
+      this._raf = requestAnimationFrame(loop);
+    };
+    this._raf = requestAnimationFrame(loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this._raf); clearInterval(this._ai); }
+  frames() {
+    if (this._FR) return this._FR;
+    const C = { x: '#f0a58a', v: '#9fd1b3', a: '#b3b6f0', d: '#e9cf98', t: '#f6f6fb', op: '#a9abc8', n: '#f6f6fb' };
+    const T = (k, t, c = 'op', hl = false) => ({ k, t, c: C[c] || c, hl });
+    const Fr = (k, bar, num, den) => ({ frac: true, k, bar, num, den });
+    const eq = T('eq', '='), dt = (hl) => T('dt', 'Δt', 'd', hl);
+    const X = [
+      { items: [T('lhs', 'v', 'v'), eq, Fr('F', 'bar', [T('dx', 'Δx', 'x')], [dt()])], note: 'Start with average velocity over a short interval Δt: how far, divided by how long.' },
+      { items: [T('lhs', 'v', 'v'), eq, Fr('F', 'bar', [T('x2', 'x(t+Δt)', 'x', 1), T('m', '−'), T('x1', 'x(t)', 'x', 1)], [dt()])], note: 'Δx is where you are at t + Δt minus where you are at t.' },
+      { items: [T('lhs', 'v', 'v'), eq, Fr('F', 'bar', [T('k1', 'v₀Δt', 'v', 1), T('p1', '+'), T('k2', 'atΔt', 'a', 1), T('p2', '+'), T('k3', '½aΔt²', 'a', 1)], [dt()])], note: 'Plug in x = x₀ + v₀t + ½at² and expand. The x₀, v₀t and ½at² terms appear in both positions and cancel. Only these three survive.' },
+      { items: [T('lhs', 'v', 'v'), eq, T('k1', 'v₀', 'v', 1), T('p1', '+'), T('k2', 'at', 'a', 1), T('p2', '+'), T('k3', '½aΔt', 'a', 1)], note: 'Divide every term by Δt. The Δt in each numerator cancels once.' },
+      { items: [T('lhs', 'v', 'v'), eq, T('d', 'dx/dt', 'x', 1), T('eq2', '='), T('k1', 'v₀', 'v'), T('p1', '+'), T('k2', 'at', 'a')], note: 'Now shrink Δt to zero. ½aΔt shrinks with it and vanishes. What remains is the instantaneous velocity — the UAM equation from Lab 03.' }
+    ];
+    const V = [
+      { items: [T('lhs', 'a', 'a'), eq, Fr('F', 'bar', [T('dv', 'Δv', 'v')], [dt()])], note: 'Do it again, one level down. Average acceleration: change in velocity over Δt.' },
+      { items: [T('lhs', 'a', 'a'), eq, Fr('F', 'bar', [T('v2', 'v(t+Δt)', 'v', 1), T('m', '−'), T('v1', 'v(t)', 'v', 1)], [dt()])], note: 'Δv is the velocity at t + Δt minus the velocity at t.' },
+      { items: [T('lhs', 'a', 'a'), eq, Fr('F', 'bar', [T('k', 'aΔt', 'a', 1)], [dt()])], note: 'Use v = v₀ + at. The v₀ terms cancel, the at terms cancel, and a·Δt is all that is left.' },
+      { items: [T('lhs', 'a', 'a'), eq, T('d', 'dv/dt', 'v', 1), T('eq2', '='), T('k', 'a', 'a', 1)], note: 'Divide by Δt. Nothing depends on Δt any more, so the limit is simply a — constant acceleration, exactly as UAM assumes.' }
+    ];
+    return (this._FR = [X, V]);
+  }
+  playAlg() {
+    clearInterval(this._ai);
+    const n = this.frames()[this.state.seq].length;
+    this.setState({ algPlaying: true, frame: this.state.frame >= n - 1 ? 0 : this.state.frame });
+    this._ai = setInterval(() => {
+      const n2 = this.frames()[this.state.seq].length;
+      if (this.state.frame >= n2 - 1) { clearInterval(this._ai); this.setState({ algPlaying: false }); }
+      else this.setState({ frame: this.state.frame + 1 });
+    }, 3400);
+  }
+  stopAlg() { clearInterval(this._ai); this.setState({ algPlaying: false }); }
+  fmt(v, d = 2) { return (Math.abs(v) < 0.005 ? 0 : v).toFixed(d); }
+  renderVals() {
+    const s = this.state;
+    // --- secant ---
+    const X0 = 44, X1 = 588, Yb = 290, Yt = 8, TM = 8, XM = 30;
+    const sx = t => X0 + (X1 - X0) * t / TM, sy = x => Yb - (Yb - Yt) * x / XM;
+    const dtv = 4 * Math.pow(10, -s.dtU * 2.6), t0 = s.t0, x0 = this.sf(t0), t1 = t0 + dtv, x1 = this.sf(t1);
+    const m = (x1 - x0) / dtv, vt = 0.8 * t0 + 0.5;
+    let curve = []; for (let i = 0; i <= 120; i++) { const t = TM * i / 120; curve.push(sx(t).toFixed(1) + ',' + sy(this.sf(t)).toFixed(1)); }
+    let grid = ''; for (let i = 1; i < 8; i++) grid += 'M' + sx(i).toFixed(1) + ',' + Yt + 'V' + Yb; for (let j = 5; j < 30; j += 5) grid += 'M' + X0 + ',' + sy(j).toFixed(1) + 'H' + X1;
+    const sec = {
+      grid, curve: curve.join(' '),
+      sX1: sx(0).toFixed(1), sY1: sy(x0 - m * t0).toFixed(1), sX2: sx(TM).toFixed(1), sY2: sy(x0 + m * (TM - t0)).toFixed(1),
+      tanX1: sx(0).toFixed(1), tanY1: sy(x0 - vt * t0).toFixed(1), tanX2: sx(TM).toFixed(1), tanY2: sy(x0 + vt * (TM - t0)).toFixed(1), tanOp: s.showTan ? 0.8 : 0,
+      px: sx(t0).toFixed(1), py: sy(x0).toFixed(1), qx: sx(t1).toFixed(1), qy: sy(x1).toFixed(1),
+      legOp: dtv > 0.35 ? 1 : 0, dtLabelX: sx(t0 + dtv / 2).toFixed(1), dtLabelY: (sy(x0) + 16).toFixed(1), dxLabelX: (sx(t1) + 6).toFixed(1), dxLabelY: ((sy(x0) + sy(x1)) / 2 + 4).toFixed(1)
+    };
+    const rows = [2, 1, 0.5, 0.1, 0.01, 0.001];
+    const nearest = rows.reduce((b, r) => Math.abs(Math.log10(r) - Math.log10(dtv)) < Math.abs(Math.log10(b) - Math.log10(dtv)) ? r : b, rows[0]);
+    const secTable = rows.map(r => { const on = r === nearest; return { dt: String(r), slope: ((this.sf(t0 + r) - x0) / r).toFixed(4), bg: on ? '#22233a' : 'transparent', color: on ? '#f6f6fb' : '#22233a', weight: on ? 600 : 400 }; })
+      .concat([{ dt: '→ 0', slope: vt.toFixed(4) + '  (tangent)', bg: '#e3efe8', color: '#3e7a58', weight: 600 }]);
+
+    // --- derivative chain ---
+    const F = this.FNS[s.fn], TT = F.T, tc = Math.min(s.tc, TT), tEnd = s.traceT ?? TT;
+    const rng = fn => { let lo = 0, hi = 0; for (let i = 0; i <= 200; i++) { const y = fn(TT * i / 200); lo = Math.min(lo, y); hi = Math.max(hi, y); } if (hi - lo < 1e-6) { hi += 1; lo -= 1; } const p = (hi - lo) * 0.1; return [lo - p, hi + p]; };
+    const G = (fn, dfn, ghostOn) => {
+      const [lo, hi] = rng(fn), gx = t => X0 + (X1 - X0) * t / TT, gy = y => 118 - 110 * (y - lo) / (hi - lo);
+      const pts = e => { const a = []; const N = 160; for (let i = 0; i <= N; i++) { const t = e * i / N; a.push(gx(t).toFixed(1) + ',' + gy(fn(t)).toFixed(1)); } return a.join(' '); };
+      const h = TT * 0.13, y0 = fn(tc), sl = dfn ? dfn(tc) : 0;
+      const r1 = v => { const r = Math.abs(v) >= 10 ? v.toFixed(0) : v.toFixed(1); return /^-?0(\.0)?$/.test(r) ? '0' : r; };
+      return { curve: pts(ghostOn ? tEnd : TT), ghost: ghostOn ? pts(TT) : '', zero: gy(0).toFixed(1), dotY: gy(y0).toFixed(1),
+        tx1: gx(tc - h).toFixed(1), ty1: gy(y0 - sl * h).toFixed(1), tx2: gx(tc + h).toFixed(1), ty2: gy(y0 + sl * h).toFixed(1),
+        hi: r1(hi - (hi - lo) / 12), lo: r1(lo + (hi - lo) / 12) };
+    };
+    const tracing = s.traceT !== null;
+    const gx = G(F.f, F.v, false), gv = G(F.v, F.a, tracing), ga = G(F.a, null, tracing);
+    const cx = (X0 + (X1 - X0) * tc / TT).toFixed(1);
+    const xN = F.f(tc), vN = F.v(tc), aN = F.a(tc), eps = 0.02;
+    const moving = vN > eps ? ['Moving forward', 'v > 0: x–t slopes upward', '#3e7a58'] : vN < -eps ? ['Moving backward', 'v < 0: x–t slopes downward', '#3e7a58'] : ['Momentarily at rest', 'v = 0: x–t tangent is flat', '#4b4ba8'];
+    const speed = Math.abs(aN) < eps ? ['Speed steady', 'a = 0'] : Math.abs(vN) < eps ? ['Turning around', 'v = 0 but a ≠ 0'] : vN * aN > 0 ? ['Speeding up', 'v and a have the same sign'] : ['Slowing down', 'v and a have opposite signs'];
+    const bend = Math.abs(aN) < eps ? ['x–t is straight here', 'no curvature → a = 0'] : aN > 0 ? ['x–t bends upward', 'concave up → a > 0'] : ['x–t bends downward', 'concave down → a < 0'];
+    const stateCards = [
+      { kicker: moving[1], text: moving[0], color: moving[2] },
+      { kicker: speed[1], text: speed[0], color: '#c9573f' },
+      { kicker: bend[1], text: bend[0], color: '#4b4ba8' }
+    ];
+    const fnButtons = Object.entries(this.FNS).map(([id, f]) => ({ label: f.label, bg: s.fn === id ? '#22233a' : 'transparent', color: s.fn === id ? '#f6f6fb' : '#22233a', border: s.fn === id ? '#22233a' : '#babbcb', apply: () => this.setState({ fn: id, tc: Math.min(s.tc, f.T), traceT: null, drawing: false }) }));
+
+    // --- algebra ---
+    const FR = this.frames(), seq = FR[s.seq], nF = seq.length, fi = Math.min(s.frame, nF - 1), fr = seq[fi];
+    const algebra = React.createElement(this.constructor.Algebra, { key: 'alg' + s.seq, frame: fr, id: s.seq + '-' + fi });
+    const seqTabs = ['x → v', 'v → a'].map((label, i) => ({ label, bg: s.seq === i ? '#f6f6fb' : 'transparent', color: s.seq === i ? '#22233a' : '#f6f6fb', select: () => { this.stopAlg(); this.setState({ seq: i, frame: 0 }); } }));
+    const frameDots = seq.map((_, i) => ({ bg: i === fi ? '#f6f6fb' : (i < fi ? '#5c5d70' : 'transparent'), go: () => { this.stopAlg(); this.setState({ frame: i }); } }));
+    const rules = [
+      { x: 'x₀  (constant)', v: '0', a: '0' },
+      { x: 'v₀t', v: 'v₀', a: '0' },
+      { x: '½at²', v: 'at', a: 'a' },
+      { x: 't³', v: '3t²', a: '6t' },
+      { x: 'A sin(ωt)', v: 'Aω cos(ωt)', a: '−Aω² sin(ωt)' }
+    ];
+
+    // --- quiz ---
+    const quizDefs = [
+      { text: 'A speedometer reads 20 m/s at t = 3 s. On the car\'s x–t graph, where does that number appear?', options: ['The height of the graph at t = 3 s', 'The slope of the tangent line at t = 3 s', 'The area under the graph up to t = 3 s', 'The slope of the line from t = 0 to t = 3 s'], correct: 1, feedback: 'Instantaneous velocity is the derivative dx/dt — the slope of the tangent at that instant. The line from 0 to 3 s gives the average velocity instead.' },
+      { text: 'At the highest point of a ball\'s x–t graph, the velocity is:', options: ['At its maximum', 'Equal to −9.8 m/s', 'Zero', 'Undefined'], correct: 2, feedback: 'At a peak the tangent is flat, so its slope — the velocity — is zero. Acceleration is still −9.8 m/s² there.' },
+      { text: 'Position is x = 2t² + 3t (meters, seconds). What is the velocity at t = 2 s?', options: ['14 m/s', '11 m/s', '7 m/s', '4 m/s'], correct: 1, feedback: 'v = dx/dt = 4t + 3. At t = 2 s, v = 11 m/s. (14 m is the position, not the velocity.)' },
+      { text: 'A v–t graph is a horizontal line at 5 m/s. The a–t graph is:', options: ['A horizontal line at 5 m/s²', 'A line with slope 5', 'A horizontal line at zero', 'A vertical line'], correct: 2, feedback: 'A horizontal line has zero slope everywhere, and the slope of v–t is the acceleration. So a = 0 at all times.' },
+      { text: 'As Δt shrinks, the secant slope Δx/Δt settles on one value because:', options: ['Δx becomes zero before Δt does', 'Zoomed in far enough, a smooth curve looks like a straight line', 'The object stops moving', 'Dividing by small numbers always gives the same answer'], correct: 1, feedback: 'Up close, a smooth x–t curve is indistinguishable from its tangent line. Δx and Δt shrink together, and their ratio approaches that line\'s slope.' }
+    ];
+    const quiz = quizDefs.map((q, qi) => {
+      const picked = s.answers[qi], answered = picked !== undefined, right = picked === q.correct;
+      return { n: qi + 1, text: q.text, answered, feedback: q.feedback, verdict: right ? 'Correct.' : 'Not quite.', fbColor: right ? '#3E7A58' : '#C2413D',
+        options: q.options.map((label, oi) => {
+          const isPick = picked === oi, isCorrect = oi === q.correct; let bg = '#f6f6fb', border = '#d4d5e2', color = '#22233a';
+          if (answered && isCorrect) { bg = '#e3efe8'; border = '#3e7a58'; } else if (answered && isPick) { bg = '#F7E3E2'; border = '#C2413D'; } else if (answered) color = '#8a8b9e';
+          return { label, letter: 'ABCD'[oi], bg, border, color, pick: () => { if (!answered || this.props.allowRetry) this.setState({ answers: { ...s.answers, [qi]: oi } }); } };
+        }) };
+    });
+    const score = quizDefs.reduce((n, q, i) => n + (s.answers[i] === q.correct ? 1 : 0), 0);
+
+    return {
+      sec, secTable, t0, t0Label: t0.toFixed(1), setT0: e => this.setState({ t0: +e.target.value }),
+      dtU: s.dtU, dtLabel: dtv >= 0.1 ? dtv.toFixed(2) : dtv.toFixed(3), setDtU: e => this.setState({ dtU: +e.target.value, shrinking: false }),
+      secSlope: m.toFixed(3), tanSlope: vt.toFixed(3),
+      shrink: () => this.setState({ dtU: s.dtU >= 0.99 ? 0 : s.dtU, shrinking: !s.shrinking }), shrinkLabel: s.shrinking ? '❚❚ Pause' : '▶ Shrink Δt',
+      toggleTan: () => this.setState({ showTan: !s.showTan }), tanLabel: s.showTan ? 'Hide tangent' : 'Show tangent',
+      fnButtons, fnEq: F.eq, fnT: TT, tc, tcLabel: tc.toFixed(2), setTc: e => this.setState({ tc: +e.target.value, traceT: null, drawing: false }),
+      drawDeriv: () => s.drawing ? this.setState({ drawing: false, traceT: null }) : this.setState({ drawing: true, traceT: 0, tc: 0 }),
+      drawLabel: s.drawing ? '❚❚ Stop' : '▶ Draw the derivative', ghostOp: tracing ? 0.5 : 0,
+      gx, gv, ga, cx, xNow: this.fmt(xN), vNow: this.fmt(vN), aNow: this.fmt(aN), stateCards,
+      algebra, seqTabs, frameDots, frameLabel: 'frame ' + (fi + 1) + ' / ' + nF, backOp: fi === 0 ? 0.4 : 1, nextOp: fi === nF - 1 ? 0.4 : 1,
+      prevFrame: () => { this.stopAlg(); this.setState(st => ({ frame: Math.max(0, Math.min(nF - 1, st.frame) - 1) })); },
+      nextFrame: () => { this.stopAlg(); this.setState(st => ({ frame: Math.min(nF - 1, st.frame + 1) })); },
+      togglePlayAlg: () => s.algPlaying ? this.stopAlg() : this.playAlg(), playAlgLabel: s.algPlaying ? '❚❚ Pause' : '▶ Play all',
+      rules, quiz, score, total: quizDefs.length
+    };
+  }
+}
+</script>
+</body>
+</html>

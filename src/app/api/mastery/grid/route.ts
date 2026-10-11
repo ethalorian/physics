@@ -1,5 +1,7 @@
-import { getPendingSavedTargets } from '@/lib/pending-lesson-work'
-import { pendingLessonSubmissions } from '@/lib/lesson-review'
+import {presentationEvidence,presentationWork} from '@/lib/presentation-evidence-server'
+import { isCatalogUnit } from '@/lib/retired-curriculum'
+import { getPendingMasteryWork } from '@/lib/pending-lesson-work'
+import { pendingLessonSubmissions, type LessonSubmission } from '@/lib/lesson-review'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -7,6 +9,8 @@ import { lessonsByTarget } from '@/lib/lesson-targets'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
 import { resolveRosterScope, getTeacherStudentGids } from '@/lib/teacher-scope'
 import { currentUnitForCourse } from '@/lib/pacing-server'
+import { readIdBatches } from '@/lib/read-id-batches'
+import { isCurrentLesson } from '@/lib/current-lesson-catalog'
 
 // GET /api/mastery/grid?unit_id=unit-1
 // Class mastery grid: every student (the teacher's roster) x every learning target
@@ -21,7 +25,7 @@ type UnitRow = { id: string; name: string; order_index: number; program: string 
 export const GET = withAuth(async (request, ctx) => {
     const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') {
-      return NextResponse.json({ error: 'Only teachers can view the grid' }, { status: 403 })
+    return NextResponse.json({ error: 'Only teachers can view the grid' }, { status: 403 })
     }
 
     const { searchParams } = new URL(request.url)
@@ -42,9 +46,10 @@ export const GET = withAuth(async (request, ctx) => {
       .select('id, name, order_index, program')
       .order('program', { ascending: true })
       .order('order_index', { ascending: true })
-    // Both programs are listed (staff see everything); `label` carries the
+    // Active catalog units from all programs are listed; `label` carries the
     // program tag so pickers make Trades units unmistakable.
     const units = ((unitRowsRaw ?? []) as UnitRow[])
+      .filter(isCatalogUnit)
       .sort((a, b) => ((a.program ?? 'physics') === 'physics' ? 0 : 1) - ((b.program ?? 'physics') === 'physics' ? 0 : 1) || a.order_index - b.order_index)
       .map((u) => ({ id: u.id, name: u.name, program: u.program ?? 'physics', label: `${(u.program ?? 'physics') === 'trades' ? 'Trades' : (u.program ?? 'physics') === 'projects' ? 'Projects' : 'Physics'} · ${u.name}` }))
 
@@ -109,7 +114,7 @@ export const GET = withAuth(async (request, ctx) => {
     // A target's work can live on several lessons (MVP day lessons share their
     // week's targets), so map target → every carrier (lib/lesson-targets).
     let targetLessons = new Map<string, string[]>()
-    let unitLessons: { id: string; content_blocks?: { blocks?: unknown[] } | null }[] = []
+    let unitLessons: { id: string; title?: string; content_blocks?: { blocks?: unknown[] } | null }[] = []
     let unitTargets: { id: string; slug: string; lesson_id: string | null }[] = []
     let allSubmissions: { user_id: string; lesson_id: string }[] = []
     {
@@ -117,31 +122,42 @@ export const GET = withAuth(async (request, ctx) => {
         .from('learning_targets')
         .select('id, slug, lesson_id')
         .eq('unit_id', unitId)
-      const { data: ul } = await supabaseAdmin.from('lessons').select('id, content_blocks').eq('unit_id', unitId)
-      unitLessons = ul ?? []
+      const { data: ul } = await supabaseAdmin.from('lessons').select('id, title, content_blocks').eq('unit_id', unitId)
+      unitLessons = (ul ?? []).filter(l => isCurrentLesson({ ...l, unit_id: unitId }))
       unitTargets = tl ?? []
       targetLessons = lessonsByTarget(
-        (ul ?? []) as { id: string; content_blocks?: { blocks?: unknown[] } | null }[],
+        unitLessons,
         (tl ?? []) as { id: string; slug: string; lesson_id: string | null }[],
       )
     }
+    // A target may still own a retained lesson row. That ownership must not put
+    // the old lesson back into a selectable review queue.
+    const currentIds = new Set(unitLessons.map(l => l.id))
+    targetLessons = new Map([...targetLessons].map(([id, lessons]) => [id, lessons.filter(lessonId => currentIds.has(lessonId))]))
     const lessonIdsForPending = [...new Set([...targetLessons.values()].flat())]
-    const pendingKeys = new Set<string>()
+    let pendingSubmissions: LessonSubmission[] = []
     if (lessonIdsForPending.length && studentIds.length) {
       const { data: submissions, error } = await supabaseAdmin.from('lesson_submissions').select('id, user_id, lesson_id, submitted_at').in('user_id', studentIds).in('lesson_id', lessonIdsForPending)
       if (error) throw error
       allSubmissions = submissions ?? []
       const ids = (submissions ?? []).map((s) => s.id)
-      const { data: reviews, error: reviewError } = ids.length ? await supabaseAdmin.from('lesson_reviews').select('submission_id').in('submission_id', ids) : { data: [], error: null }
-      if (reviewError) throw reviewError
-      for (const sub of pendingLessonSubmissions(submissions ?? [], new Set((reviews ?? []).map((r) => r.submission_id)))) pendingKeys.add(`${sub.user_id}|${sub.lesson_id}`)
+      const reviews = await readIdBatches(ids, (batch) => supabaseAdmin.from('lesson_reviews').select('submission_id').in('submission_id', batch))
+      pendingSubmissions = pendingLessonSubmissions(submissions ?? [], new Set((reviews ?? []).map((r) => r.submission_id)))
     }
     // Explicit saves are reviewable immediately; autosaved drafts never enter this queue.
-    const pending: Record<string, Record<string, boolean>> = await getPendingSavedTargets(studentIds.filter(id => own.has(id)), unitLessons, unitTargets, targetLessons, allSubmissions)
-    for (const s of students) for (const t of targets) {
-      if ((targetLessons.get(t.id) ?? []).some((id) => pendingKeys.has(`${s.id}|${id}`))) (pending[s.id] ??= {})[t.id] = true
-    }
+    const { pending, reviewQueue } = await getPendingMasteryWork(studentIds.filter(id => own.has(id)), unitLessons, unitTargets, targetLessons, allSubmissions, pendingSubmissions)
+    const lessons = unitLessons.map(l => ({ id: l.id, title: l.title ?? 'Lesson', targetIds: [...targetLessons].filter(([, ids]) => ids.includes(l.id)).map(([id]) => id) }))
 
+      const tickets=await presentationEvidence(studentIds.filter(id=>own.has(id)),targetIds,classId)
+    const ticketReviews=await readIdBatches([...new Set(tickets.map(r=>r.pulse_id))],batch=>supabaseAdmin.from('mastery_evidence_reviews').select('user_id,present_pulse_id').in('present_pulse_id',batch))
+    const reviewedTickets=new Set(ticketReviews.map(r=>r.user_id+':'+r.present_pulse_id))
+    for(const ticket of tickets){
+      const work=presentationWork(ticket),target=ticket.present_pulses.target_id
+      if(!lessons.some(l=>l.id===work.lessonId))lessons.push({id:work.lessonId,title:work.lessonTitle,targetIds:[target]})
+      if(reviewedTickets.has(ticket.user_id+':'+ticket.pulse_id))continue
+      ;(pending[ticket.user_id]??={})[target]=true
+      reviewQueue.push({studentId:ticket.user_id,targetId:target,lessonId:work.lessonId,lessonTitle:work.lessonTitle})
+    }
     return NextResponse.json({
       unitId,
       program,
@@ -150,5 +166,7 @@ export const GET = withAuth(async (request, ctx) => {
       students,
       cells,
       pending,
+      reviewQueue,
+      lessons,
     })
 })

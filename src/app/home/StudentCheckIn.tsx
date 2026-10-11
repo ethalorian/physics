@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Flame, Pencil, UserRound } from 'lucide-react'
+import { ArrowUpRight, ArrowRight, Coins, Flame, Pencil, Sparkles, Sprout, UserRound } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
 import StudentClasses from './StudentClasses'
 import type { MeBundle } from '@/app/api/avatar/me/route'
@@ -11,9 +11,15 @@ import styles from './home.module.css'
 interface StudentCheckInProps {
   name?: string
   streak?: number
+  points?: { xp: number; balance: number }
+  loading: boolean
+  focus?: string
+  action?: { href: string; label: string }
+  onGrowth?: () => void
+  growthActive?: boolean
 }
 
-export default function StudentCheckIn({ name, streak }: StudentCheckInProps) {
+export default function StudentCheckIn({ name, streak, points, loading, focus, action, onGrowth, growthActive }: StudentCheckInProps) {
   const [portrait, setPortrait] = useState<MeBundle | null>(null)
   const [avatarLoading, setAvatarLoading] = useState(true)
   const [avatarError, setAvatarError] = useState(false)
@@ -49,15 +55,28 @@ export default function StudentCheckIn({ name, streak }: StudentCheckInProps) {
 
   return (
     <section className={styles.checkIn} aria-labelledby="check-in-heading">
-      <Link href="/avatar" className={styles.portraitLink} aria-label={avatarLabel} title={avatarLabel}>
-        {hasAvatar ? <Avatar traits={portrait.traits} equipped={portrait.equipped} items={portrait.equipped_items} size={72} decorative />
-          : <UserRound aria-hidden="true" size={32} />}
-        <span className={styles.editAvatar}><Pencil size={12} aria-hidden="true" /></span>
+      <Link href="/avatar" className={styles.portraitLink} aria-label={avatarLabel}>
+        <span className={styles.portraitHalo} aria-hidden="true" />
+        {hasAvatar ? <Avatar traits={portrait.traits} equipped={portrait.equipped} items={portrait.equipped_items} size={152} className={styles.portrait} decorative />
+          : <UserRound aria-hidden="true" className={styles.portraitPlaceholder} />}
+        <Sparkles className={styles.portraitSpark} size={24} aria-hidden="true" />
       </Link>
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1"><h1 id="check-in-heading" className="text-title-2 break-words">{name ? `Hi, ${name}` : 'Your classroom'}</h1>{streak !== undefined && streak > 0 && <span className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground"><Flame size={14} aria-hidden="true" />{streak}-day streak</span>}</div>
-        <StudentClasses />
+      <div className={styles.welcome}>
+        <p className={styles.welcomeEyebrow}>Your daily check-in</p>
+        <h1 id="check-in-heading">{name ? `Hey, ${name}!` : 'Your classroom'}</h1>
+        <p className={styles.welcomeMessage}>A little practice. A new discovery.<br />More to make your own.</p>
+        <div className={styles.heroClasses}><StudentClasses /></div>
+        {streak !== undefined && streak > 0 && <span className={styles.streak}><Flame size={15} aria-hidden="true" />{streak}-day streak. Keep it going.</span>}
+        <p className={styles.welcomeFocus}>Today’s starting point<br /><strong>{focus ?? 'Find your next learning step below'}</strong></p>
       </div>
+      <div className={styles.xpDisplay} aria-label="Your earned XP and spending balance">
+        <p className={styles.xpLabel}><Sparkles size={16} aria-hidden="true" />Lifetime XP</p>
+        <p className={styles.xpTotal}>{points ? points.xp.toLocaleString() : '—'}</p>
+        <p className={styles.xpCaption}>{loading ? 'Loading your XP…' : points ? 'Earned through your work' : 'XP is unavailable right now.'}</p>
+        <Link href="/store" className={styles.balance}><Coins size={17} aria-hidden="true" /><span><strong>{points ? points.balance.toLocaleString() : '—'}</strong> XP to spend</span><ArrowUpRight size={16} aria-hidden="true" /></Link>
+      </div>
+      <Link href="/avatar" className={styles.personalize}><Pencil size={17} aria-hidden="true" />{hasAvatar ? 'Change your look' : avatarLoading || avatarError ? 'My avatar' : 'Build my avatar'}</Link>
+      <div className={styles.welcomeActions}>{action && <Link href={action.href} className={styles.startLearning}>{action.label}<ArrowRight size={17} aria-hidden="true" /></Link>}{onGrowth && <button type="button" onClick={onGrowth} aria-controls="learning-dashboard-content" aria-current={growthActive ? 'page' : undefined}>My growth<Sprout size={19} aria-hidden="true" /></button>}</div>
     </section>
   )
 }

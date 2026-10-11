@@ -1,0 +1,82 @@
+[
+  {
+    "slug": "etf26.p1.performance",
+    "unit_id": "trades-etf-1",
+    "program": "trades",
+    "prompt": "Demonstrate your working project and its tested revision. Independently interpret a supplied drawing, solve a trade calculation with units, perform a measurement/layout/inspection, and explain a changed requirement. Use the notebook and physical product; a teammate cannot supply your evidence.",
+    "rubric": {
+      "science": {
+        "description": "Explains the relevant physical behavior and the limits of the classroom model using actual tests."
+      },
+      "reasoning": {
+        "description": "Independently selects and performs a trade calculation with units and checks its reasonableness."
+      },
+      "communication": {
+        "description": "Interprets the supplied plan correctly and creates a dimensioned drawing another person can follow."
+      },
+      "transfer": {
+        "description": "Uses a checked measurement and inspection to implement, retest and explain a physical revision."
+      }
+    }
+  },
+  {
+    "slug": "etf26.p2.performance",
+    "unit_id": "trades-etf-2",
+    "program": "trades",
+    "prompt": "Demonstrate your working project and its tested revision. Independently interpret a supplied drawing, solve a trade calculation with units, perform a measurement/layout/inspection, and explain a changed requirement. Use the notebook and physical product; a teammate cannot supply your evidence.",
+    "rubric": {
+      "science": {
+        "description": "Explains the relevant physical behavior and the limits of the classroom model using actual tests."
+      },
+      "reasoning": {
+        "description": "Independently selects and performs a trade calculation with units and checks its reasonableness."
+      },
+      "communication": {
+        "description": "Interprets the supplied plan correctly and creates a dimensioned drawing another person can follow."
+      },
+      "transfer": {
+        "description": "Uses a checked measurement and inspection to implement, retest and explain a physical revision."
+      }
+    }
+  },
+  {
+    "slug": "etf26.p3.performance",
+    "unit_id": "trades-etf-3",
+    "program": "trades",
+    "prompt": "Demonstrate your working project and its tested revision. Independently interpret a supplied drawing, solve a trade calculation with units, perform a measurement/layout/inspection, and explain a changed requirement. Use the notebook and physical product; a teammate cannot supply your evidence.",
+    "rubric": {
+      "science": {
+        "description": "Explains the relevant physical behavior and the limits of the classroom model using actual tests."
+      },
+      "reasoning": {
+        "description": "Independently selects and performs a trade calculation with units and checks its reasonableness."
+      },
+      "communication": {
+        "description": "Interprets the supplied plan correctly and creates a dimensioned drawing another person can follow."
+      },
+      "transfer": {
+        "description": "Uses a checked measurement and inspection to implement, retest and explain a physical revision."
+      }
+    }
+  },
+  {
+    "slug": "etf26.p4.performance",
+    "unit_id": "trades-etf-4",
+    "program": "trades",
+    "prompt": "Demonstrate your working project and its tested revision. Independently interpret a supplied drawing, solve a trade calculation with units, perform a measurement/layout/inspection, and explain a changed requirement. Use the notebook and physical product; a teammate cannot supply your evidence.",
+    "rubric": {
+      "science": {
+        "description": "Explains the relevant physical behavior and the limits of the classroom model using actual tests."
+      },
+      "reasoning": {
+        "description": "Independently selects and performs a trade calculation with units and checks its reasonableness."
+      },
+      "communication": {
+        "description": "Interprets the supplied plan correctly and creates a dimensioned drawing another person can follow."
+      },
+      "transfer": {
+        "description": "Uses a checked measurement and inspection to implement, retest and explain a physical revision."
+      }
+    }
+  }
+]

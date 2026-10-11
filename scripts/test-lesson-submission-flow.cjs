@@ -27,7 +27,7 @@ async function load(file, name) {
 }
 let n=0; async function check(name, fn) { await fn(); console.log('PASS ' + name); n++ }
 ;(async () => {
-  const { pendingSavedTargets, getPendingSavedTargets } = await load('src/lib/pending-lesson-work.ts','pending')
+  const { pendingSavedTargets, getPendingSavedTargets, getPendingMasteryWork } = await load('src/lib/pending-lesson-work.ts','pending')
   const { LessonResponseStore } = await load('src/lib/lesson-response-store.ts','store')
   const grid = await load('src/app/api/mastery/grid/route.ts','grid')
   const lessons = ['a','b'].map(id=>({id,unit_id:'u',content_blocks:{blocks:[{id:'exit',type:'exit_ticket',targetId:'motion'},{id:'self',type:'marzano',targetId:'motion'},{id:'other',type:'question',targetId:'other'}]}}))
@@ -62,6 +62,18 @@ let n=0; async function check(name, fn) { await fn(); console.log('PASS ' + name
     tables.block_responses.push(row({id:'new',created_at:'2026-09-16T13:00:00Z'}));data=await(await grid.GET(req,ctx)).json();assert.equal(data.pending.s.t,true)
     assert.equal((await grid.GET(req,{...ctx,role:'student'})).status,403)
   })
+  await check('queue preserves lesson identity and clears only assessed targets on an unreturned submission', async()=>{
+    tables={block_responses:[row(),row({id:'r2',lesson_id:'b'})],mastery_evidence_reviews:[]};
+    let data=await getPendingMasteryWork(['s'],lessons,targets,carriers,[]);
+    assert.deepEqual(data.reviewQueue.map(i=>[i.studentId,i.targetId,i.lessonId]),[['s','t','a'],['s','t','b']]);
+    tables={block_responses:[],mastery_evidence_reviews:[review({evidence:[{submissionId:'sub-a'}]})]};
+    const submissions=[{id:'sub-a',user_id:'s',lesson_id:'a'},{id:'sub-b',user_id:'s',lesson_id:'b'}];
+    data=await getPendingMasteryWork(['s'],lessons,targets,carriers,submissions,submissions);
+    assert(!data.reviewQueue.some(i=>i.targetId==='t'&&i.submissionId==='sub-a'));
+    assert(data.reviewQueue.some(i=>i.targetId==='other'&&i.submissionId==='sub-a'));
+    assert(data.reviewQueue.some(i=>i.targetId==='t'&&i.submissionId==='sub-b'));
+    assert(data.reviewQueue.every(i=>i.submissionId&&i.lessonId));
+  });
   const response=(d={},ok=true)=>({ok,json:async()=>d})
   function memory(){const map=new Map();return{getItem:k=>map.get(k)??null,setItem:(k,v)=>map.set(k,v),removeItem:k=>map.delete(k)}}
   const loadResponse=url=>response(url.includes('/blocks?')?{responses:{}}:{drafts:{}})

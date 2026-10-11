@@ -1,0 +1,70 @@
+// Run against the isolated fixture: node scripts/test-vocab-xp.cjs --serve
+const assert = require('node:assert/strict')
+const { chromium } = require('/Users/craigantocci/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright')
+const base = 'http://127.0.0.1:3126'
+;(async () => {
+  const browser = await chromium.launch({ headless: true, channel: 'chrome' })
+  try {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, reducedMotion: 'reduce' })
+    const errors = []; page.on('pageerror', e => errors.push(e.message))
+    const fixture = async query => (await page.request.get(`${base}/fixture?${query}`)).json()
+    await fixture('reset')
+    // A hung personal-best request cannot block the score submission.
+    await page.route('**/api/student-progress/game-scores?*', route => route.abort())
+    await page.goto(base)
+    await page.getByText('Score saved', { exact: true }).waitFor()
+    assert.equal((await fixture('')).postCount, 1, 'Strict Mode sends exactly one save')
+    await page.getByText('Vocabulary XP today: 5 / 5', { exact: true }).waitFor()
+    await page.getByText('Home XP total: 105', { exact: true }).waitFor()
+    assert.equal(await page.getByText('+151 XP', { exact: true }).count(), 0)
+    await page.getByRole('button', { name: 'Play again', exact: true }).click()
+    await page.getByText('Score saved', { exact: true }).waitFor()
+    assert.equal((await fixture('')).rows.length, 2)
+    await page.getByText('Home XP total: 105', { exact: true }).waitFor()
+    await page.unroute('**/api/student-progress/game-scores?*')
+
+    await fixture('reset&fail-save')
+    await page.goto(base)
+    await page.getByRole('button', { name: 'Retry save', exact: true }).waitFor()
+    assert.equal(await page.getByText('Score saved', { exact: true }).count(), 0)
+    assert.equal(await page.getByRole('button', { name: 'Play again', exact: true }).isDisabled(), true)
+    await page.getByRole('button', { name: 'Retry save', exact: true }).click()
+    await page.getByText('Score saved', { exact: true }).waitFor()
+    assert.equal((await fixture('')).rows.length, 1)
+
+    await fixture('reset&fail-total')
+    await page.goto(base)
+    await page.getByRole('button', { name: 'Retry save', exact: true }).waitFor()
+    const before = await fixture('')
+    assert.equal(before.rows.length, 1, 'score persisted before total read failed')
+    await page.getByRole('button', { name: 'Retry save', exact: true }).click()
+    await page.getByText('Score saved', { exact: true }).waitFor()
+    const after = await fixture('')
+    assert.equal(after.rows.length, 1); assert.equal(after.rows[0].id, before.rows[0].id)
+
+    await fixture('reset')
+    await page.goto(`${base}/?missing`)
+    await page.getByText('No vocabulary set was selected. This score cannot be saved for XP.').waitFor()
+    assert.equal((await fixture('')).postCount, 0)
+
+    await page.goto(`${base}/matching`)
+    await page.getByRole('button', { name: 'Start Matching Game', exact: true }).click()
+    const words = ['motion', 'speed', 'distance', 'time']
+    for (const [i, word] of words.entries()) {
+      await page.getByText(word, { exact: true }).click()
+      await page.getByText(`Definition of ${word}`, { exact: true }).click()
+      if (i < words.length - 1) await page.getByText(new RegExp(`${i + 1} of 4 pairs matched`)).waitFor()
+    }
+    await page.getByText('Score saved', { exact: true }).waitFor()
+    await page.getByText('Home XP total: 105', { exact: true }).waitFor()
+    assert.equal((await fixture('')).rows.length, 1, 'one completed Matching game saves once')
+    await page.screenshot({ path: '/private/tmp/vocab-xp-matching-desktop.png', fullPage: true })
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.screenshot({ path: '/private/tmp/vocab-xp-matching-mobile.png', fullPage: true })
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'no mobile overflow')
+    await page.goto(`${base}/home`)
+    await page.getByRole('heading', { name: 'Home XP total: 105', exact: true }).waitFor()
+    assert.deepEqual(errors, [])
+    console.log('PASS: Matching completion, Strict Mode, independent best lookup, capped repeat, failure/retry, post-save response loss, missing set, mobile layout and fixture Home total; no page errors.')
+  } finally { await browser.close() }
+})().catch(e => { console.error(e); process.exitCode = 1 })

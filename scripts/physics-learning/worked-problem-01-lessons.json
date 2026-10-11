@@ -1,0 +1,1212 @@
+[
+  {
+    "id": "fc67d63d-a011-426b-b9f3-fd8f1ea7f501",
+    "slug": "position-and-displacement",
+    "title": "Position & displacement",
+    "before": {
+      "blocks": [
+        {
+          "id": "position-video",
+          "type": "instruction_video",
+          "title": "Position & displacement on a number line",
+          "summary": "Position is a location relative to a chosen origin. In this lesson, right is positive. Displacement is final position minus initial position: $\\Delta x=x_f-x_i$. Distance adds the lengths of all parts of a journey. A negative displacement tells you a direction; it is not a negative distance.",
+          "workshop": {
+            "stage": "Learn",
+            "pageBreakBefore": true
+          },
+          "youtubeId": "u0V8uJ5KTvo"
+        },
+        {
+          "id": "position-language",
+          "type": "prose",
+          "markdown": "**Position** describes a location. **Displacement** describes a change in location.\n\nA **scalar** has magnitude only: distance is a scalar. A **vector** has magnitude and direction: displacement is a vector. In one dimension, the sign tells you the direction."
+        },
+        {
+          "id": "position-check",
+          "type": "question",
+          "capture": true,
+          "question": {
+            "prompt": "A cart returns to where it started. Which statement must be true?",
+            "options": [
+              {
+                "id": "zero-displacement",
+                "text": "Its displacement is zero.",
+                "feedback": "Displacement compares final and initial position. The path can still have a nonzero length."
+              },
+              {
+                "id": "zero-distance",
+                "text": "Its distance traveled is zero.",
+                "feedback": "Distance adds the lengths traveled. Returning does not erase the outward trip."
+              },
+              {
+                "id": "negative-distance",
+                "text": "Its distance is negative on the return trip.",
+                "feedback": "Distance is a nonnegative length. A direction can make displacement negative, not distance."
+              }
+            ],
+            "correctOptionId": "zero-displacement"
+          },
+          "targetId": "u1.vocab-position-distance-displacement",
+          "workshop": {
+            "stage": "Check your thinking",
+            "pageBreakBefore": true
+          },
+          "evidenceRole": "practice"
+        },
+        {
+          "id": "position-model-title",
+          "type": "prose",
+          "markdown": "Choose right as positive. A cart starts at −2 m, travels to +4 m, then returns to +1 m.",
+          "workshop": {
+            "stage": "See it worked",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "position-worked",
+          "sei": {
+            "visual": {
+              "alt": "Reference: start minus 2 meters, turn at plus 4 meters, finish at plus 1 meter.",
+              "src": "/learning/position-worked-model.svg"
+            }
+          },
+          "type": "worked_example",
+          "work": "First segment: $|4-(-2)|=6$ m. Return segment: $|1-4|=3$ m.\n\nDistance: $6+3=9$ m.\n\nDisplacement: $1-(-2)=+3$ m.",
+          "given": "Initial: −2 m. Turn: +4 m. Final: +1 m. Model the trip on one straight number line, with right positive.",
+          "answer": "Distance = 9 m. Displacement = +3 m: 3 m to the right. The return trip increases distance while reducing the final displacement.",
+          "format": "problem-workspace",
+          "prompt": "Find the total distance and the displacement for the trip.",
+          "equation": "$\\Delta x=x_f-x_i$; distance = sum of segment lengths. Use the endpoints for displacement and add each segment length for distance, because the cart changes direction."
+        },
+        {
+          "id": "position-explore-title",
+          "type": "prose",
+          "markdown": "Change one position at a time. Try an out-and-back trip, then try moving only to the left.",
+          "workshop": {
+            "stage": "Explore",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "position-explorer",
+          "type": "position_explorer",
+          "title": "Distance and displacement explorer"
+        },
+        {
+          "id": "position-practice-title",
+          "type": "prose",
+          "markdown": "Use a new trip. Show your reasoning; the example above uses different numbers.",
+          "workshop": {
+            "stage": "Try it",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "position-practice",
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "frames": [
+              {
+                "text": "The displacement is ___ m because ___. The distance is ___ m.",
+                "level": 1
+              },
+              {
+                "text": "The displacement is ___ m because ___. The distance is ___ m.",
+                "level": 2
+              },
+              {
+                "text": "My evidence is ___, which means ___.",
+                "level": 3
+              }
+            ],
+            "visual": {
+              "alt": "Reference number line: start at plus 6 meters, finish at minus 2 meters; right is positive.",
+              "src": "/learning/position-model.svg"
+            },
+            "wordBank": [
+              "initial",
+              "final",
+              "negative",
+              "left",
+              "distance",
+              "displacement"
+            ]
+          },
+          "type": "gewa",
+          "prompt": "A cart moves directly from +6 m to −2 m. Find its displacement and distance traveled. State the direction of its displacement.",
+          "capture": true,
+          "targetId": "u1.vocab-position-distance-displacement",
+          "givenHint": "Record the initial and final positions with their signs.",
+          "stageHints": {
+            "plan": "Displacement compares the endpoints. Distance adds the lengths traveled. This trip has one direct segment.",
+            "work": "Write (final position) − (initial position) before combining the signed numbers. Keep the unit with your calculation.",
+            "model": "Mark +6 m and −2 m relative to the origin. State which direction you chose as positive.",
+            "answer": "Explain what the sign tells you. Report distance and displacement separately."
+          },
+          "equationHint": "Displacement = final position − initial position. Distance is the length traveled.",
+          "responseFormat": "problem-workspace",
+          "requireCompleteWork": true
+        },
+        {
+          "id": "position-explain-title",
+          "type": "prose",
+          "markdown": "Explain the idea without another calculation.",
+          "workshop": {
+            "stage": "Explain",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "position-explain",
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "frames": [
+              {
+                "text": "The displacement is ___ because ___. The distance is ___ because ___.",
+                "level": 1
+              },
+              {
+                "text": "The displacement is ___ because ___. The distance is ___ because ___.",
+                "level": 2
+              },
+              {
+                "text": "My evidence is ___, which means ___.",
+                "level": 3
+              }
+            ],
+            "visual": {
+              "alt": "A labeled diagram supporting this physics question.",
+              "src": "/learning/position-line.svg"
+            },
+            "wordBank": [
+              "start",
+              "finish",
+              "path",
+              "scalar",
+              "vector"
+            ]
+          },
+          "type": "exit_ticket",
+          "prompt": "An object travels away from its starting point and comes back. Explain why its displacement can be zero while its distance is not. Identify which quantity is a scalar and which is a vector.",
+          "targetId": "u1.vocab-position-distance-displacement"
+        },
+        {
+          "id": "position-reading",
+          "type": "reading",
+          "focus": "Read section 5.1 on page 69. Use the distinction between scalars and vectors to explain distance and displacement. Answer the three checks in your own words, then submit for teacher review.",
+          "chapter": 5,
+          "workshop": {
+            "stage": "Read & respond",
+            "pageBreakBefore": true
+          },
+          "essential": true,
+          "sectionIds": [
+            "5.1"
+          ],
+          "assignmentChecks": [
+            {
+              "prompt": "What information does a vector include that a scalar does not? Use distance and displacement as your examples.",
+              "targetId": "u1.vocab-position-distance-displacement",
+              "reference": "1 · Explain the distinction"
+            },
+            {
+              "prompt": "A student walks 3 m east, then 3 m west. Find the total distance and displacement. Explain why the two answers differ, and identify which quantity is a scalar and which is a vector.",
+              "targetId": "u1.vocab-position-distance-displacement",
+              "reference": "2 · Apply the idea"
+            },
+            {
+              "prompt": "A classmate says, “If displacement is zero, the object could not have moved.” Do you agree? Use a possible trip to support your reasoning.",
+              "targetId": "u1.vocab-position-distance-displacement",
+              "reference": "3 · Evaluate a claim"
+            }
+          ]
+        },
+        {
+          "id": "position-transfer-title",
+          "type": "prose",
+          "markdown": "**Fictional training data for 2026-XJ.** This is a one-dimensional coordinate model, not a claim about the asteroid’s real orbit.",
+          "workshop": {
+            "stage": "Apply to 2026-XJ",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "position-mission-diagram",
+          "alt": "Earth at the origin. Two fictional asteroid positions on the same axis: plus 12 million kilometers and plus 9 million kilometers.",
+          "src": "/learning/asteroid-position.svg",
+          "type": "figure"
+        },
+        {
+          "id": "position-transfer",
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "frames": [
+              {
+                "text": "Its displacement is ___ million km. The sign means ___. The two positions [do / do not] determine distance because ___.",
+                "level": 1
+              },
+              {
+                "text": "Its displacement is ___ million km. The sign means ___. The two positions [do / do not] determine distance because ___.",
+                "level": 2
+              },
+              {
+                "text": "My evidence is ___, which means ___.",
+                "level": 3
+              }
+            ],
+            "visual": {
+              "alt": "A labeled diagram supporting this physics question.",
+              "src": "/learning/asteroid-position.svg"
+            },
+            "wordBank": [
+              "reference",
+              "toward",
+              "initial",
+              "final",
+              "path"
+            ]
+          },
+          "type": "exit_ticket",
+          "prompt": "Along a chosen axis, Earth is at 0. The asteroid’s position changes from +12 million km to +9 million km. Report its displacement and explain the sign. Can those two positions alone tell you its total distance traveled? Explain.",
+          "targetId": "u1.vocab-position-distance-displacement",
+          "evidenceRole": "exit"
+        },
+        {
+          "id": "position-vocabulary",
+          "type": "vocab",
+          "terms": [],
+          "termIds": [
+            "a892cf0e-00e0-4aa5-8da5-03a59e20fe2f",
+            "2d3af579-0ee6-4f13-a922-686774c28eb3",
+            "50ca756f-2733-4c91-8d86-71589f89e01c",
+            "3f589087-3b2f-4ea0-9225-39465f92466f",
+            "1189dd38-37a0-4d4c-b827-743cbe6396f2"
+          ],
+          "referencePanel": true,
+          "vocabularySetId": "72512c75-af30-476b-8a62-05bbf14b2283"
+        }
+      ],
+      "dayType": "STANDARD",
+      "learningPath": {
+        "kind": "lesson",
+        "focus": "Describe where an object is and how its position changes. Compare distance and displacement, and distinguish scalars from vectors.",
+        "version": 1,
+        "targetSlugs": [
+          "u1.vocab-position-distance-displacement"
+        ],
+        "sourceLessonId": "fe529665-a1df-4f80-a5cc-df0d09b95210"
+      },
+      "presentation": "physics-path",
+      "schemaVersion": 1
+    },
+    "document": {
+      "blocks": [
+        {
+          "id": "position-video",
+          "type": "instruction_video",
+          "title": "Position & displacement on a number line",
+          "summary": "Position is a location relative to a chosen origin. In this lesson, right is positive. Displacement is final position minus initial position: $\\Delta x=x_f-x_i$. Distance adds the lengths of all parts of a journey. A negative displacement tells you a direction; it is not a negative distance.",
+          "workshop": {
+            "stage": "Learn",
+            "pageBreakBefore": true
+          },
+          "youtubeId": "u0V8uJ5KTvo"
+        },
+        {
+          "id": "position-language",
+          "type": "prose",
+          "markdown": "**Position** describes a location. **Displacement** describes a change in location.\n\nA **scalar** has magnitude only: distance is a scalar. A **vector** has magnitude and direction: displacement is a vector. In one dimension, the sign tells you the direction."
+        },
+        {
+          "id": "position-check",
+          "type": "question",
+          "capture": true,
+          "question": {
+            "prompt": "A cart returns to where it started. Which statement must be true?",
+            "options": [
+              {
+                "id": "zero-displacement",
+                "text": "Its displacement is zero.",
+                "feedback": "Displacement compares final and initial position. The path can still have a nonzero length."
+              },
+              {
+                "id": "zero-distance",
+                "text": "Its distance traveled is zero.",
+                "feedback": "Distance adds the lengths traveled. Returning does not erase the outward trip."
+              },
+              {
+                "id": "negative-distance",
+                "text": "Its distance is negative on the return trip.",
+                "feedback": "Distance is a nonnegative length. A direction can make displacement negative, not distance."
+              }
+            ],
+            "correctOptionId": "zero-displacement"
+          },
+          "targetId": "u1.vocab-position-distance-displacement",
+          "workshop": {
+            "stage": "Check your thinking",
+            "pageBreakBefore": true
+          },
+          "evidenceRole": "practice"
+        },
+        {
+          "id": "wp01-position-video",
+          "type": "instruction_video",
+          "youtubeId": "B51oRJa9MSM",
+          "title": "Distance vs. displacement on a number line · Worked Problem 01",
+          "durationSeconds": 167,
+          "targetId": "u1.vocab-position-distance-displacement",
+          "workshop": {
+            "stage": "Watch a worked problem",
+            "pageBreakBefore": true
+          },
+          "summary": "Follow the trip +2 m → +8 m → −3 m using Problem → Model → Plan → Work → Answer. Pause at 1:40, just before Work, and try the calculation. Resume to compare your method and interpret the sign."
+        },
+        {
+          "id": "wp01-position-reference",
+          "type": "callout",
+          "variant": "tip",
+          "title": "Distance and displacement method",
+          "teachingMoment": {
+            "phase": "reference",
+            "title": "Distance and displacement method"
+          },
+          "markdown": "**Problem:** Name the quantities you need.\n\n**Model:** Choose a positive direction, label the positions, and draw every leg.\n\n**Plan:** For distance, add the lengths of all legs: $d=|x_1-x_0|+|x_2-x_1|+\\cdots$. For displacement, use only the endpoints: $\\Delta x=x_f-x_i$. Use $y$ for a vertical axis.\n\n**Work:** Substitute signed positions; take magnitudes for distance.\n\n**Answer:** Include meters and interpret the displacement sign. Check $d\\geq|\\Delta x|$.\n\nVideo chapters: 0:00 Problem · 0:30 Model · 1:04 Plan · 1:40 Work · 2:20 Answer.\n\n[Watch Worked Problem 01 on YouTube](https://www.youtube.com/watch?v=B51oRJa9MSM) · [Worked Problems: Kinematics playlist](https://www.youtube.com/playlist?list=PLZKwzUFM2PaM)"
+        },
+        {
+          "id": "wp01-position-solution",
+          "type": "worked_example",
+          "format": "problem-workspace",
+          "teachingMoment": {
+            "phase": "reference",
+            "title": "Open the video’s worked solution"
+          },
+          "prompt": "A student starts at +2 m, walks to a fountain at +8 m, then to a locker at −3 m. Find distance and displacement.",
+          "given": "Use a straight x-axis with right positive. Mark start +2 m, turn +8 m, and finish −3 m. Draw the two legs in order.",
+          "equation": "Distance adds the magnitude of each leg. Displacement compares only the endpoints: $\\Delta x=x_f-x_i$.",
+          "work": "First leg: $|8-2|=6$ m. Second leg: $|-3-8|=11$ m. Distance: $6+11=17$ m. Displacement: $-3-2=-5$ m.",
+          "answer": "Distance = 17 m. Displacement = −5 m: the student finishes 5 m to the left of where she started. The return leg adds distance; it does not subtract distance."
+        },
+        {
+          "id": "position-model-title",
+          "type": "prose",
+          "markdown": "Choose right as positive. A cart starts at −2 m, travels to +4 m, then returns to +1 m.",
+          "workshop": {
+            "stage": "See it worked",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "position-worked",
+          "sei": {
+            "visual": {
+              "alt": "Reference: start minus 2 meters, turn at plus 4 meters, finish at plus 1 meter.",
+              "src": "/learning/position-worked-model.svg"
+            }
+          },
+          "type": "worked_example",
+          "work": "First segment: $|4-(-2)|=6$ m. Return segment: $|1-4|=3$ m.\n\nDistance: $6+3=9$ m.\n\nDisplacement: $1-(-2)=+3$ m.",
+          "given": "Initial: −2 m. Turn: +4 m. Final: +1 m. Model the trip on one straight number line, with right positive.",
+          "answer": "Distance = 9 m. Displacement = +3 m: 3 m to the right. The return trip increases distance while reducing the final displacement.",
+          "format": "problem-workspace",
+          "prompt": "Find the total distance and the displacement for the trip.",
+          "equation": "$\\Delta x=x_f-x_i$; distance = sum of segment lengths. Use the endpoints for displacement and add each segment length for distance, because the cart changes direction."
+        },
+        {
+          "id": "position-explore-title",
+          "type": "prose",
+          "markdown": "Change one position at a time. Try an out-and-back trip, then try moving only to the left.",
+          "workshop": {
+            "stage": "Explore",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "position-explorer",
+          "type": "position_explorer",
+          "title": "Distance and displacement explorer"
+        },
+        {
+          "id": "position-practice-title",
+          "type": "prose",
+          "markdown": "Use a new trip. Show your reasoning; the example above uses different numbers.",
+          "workshop": {
+            "stage": "Try it",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "position-practice",
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "frames": [
+              {
+                "text": "The displacement is ___ m because ___. The distance is ___ m.",
+                "level": 1
+              },
+              {
+                "text": "The displacement is ___ m because ___. The distance is ___ m.",
+                "level": 2
+              },
+              {
+                "text": "My evidence is ___, which means ___.",
+                "level": 3
+              }
+            ],
+            "visual": {
+              "alt": "Reference number line: start at plus 6 meters, finish at minus 2 meters; right is positive.",
+              "src": "/learning/position-model.svg"
+            },
+            "wordBank": [
+              "initial",
+              "final",
+              "negative",
+              "left",
+              "distance",
+              "displacement"
+            ]
+          },
+          "type": "gewa",
+          "prompt": "A cart moves directly from +6 m to −2 m. Find its displacement and distance traveled. State the direction of its displacement.",
+          "capture": true,
+          "targetId": "u1.vocab-position-distance-displacement",
+          "givenHint": "Record the initial and final positions with their signs.",
+          "stageHints": {
+            "plan": "Displacement compares the endpoints. Distance adds the lengths traveled. This trip has one direct segment.",
+            "work": "Write (final position) − (initial position) before combining the signed numbers. Keep the unit with your calculation.",
+            "model": "Mark +6 m and −2 m relative to the origin. State which direction you chose as positive.",
+            "answer": "Explain what the sign tells you. Report distance and displacement separately."
+          },
+          "equationHint": "Displacement = final position − initial position. Distance is the length traveled.",
+          "responseFormat": "problem-workspace",
+          "requireCompleteWork": true
+        },
+        {
+          "id": "wp01-position-turnaround",
+          "type": "gewa",
+          "capture": true,
+          "responseFormat": "problem-workspace",
+          "requireCompleteWork": true,
+          "targetId": "u1.vocab-position-distance-displacement",
+          "evidenceRole": "practice",
+          "prompt": "A student starts at x = +1 m, walks along a straight hallway to x = +7 m, then turns and walks to x = −2 m. Choose right as positive. Find the total distance and displacement, and explain the direction of the displacement.",
+          "referenceBlockIds": [
+            "wp01-position-reference"
+          ],
+          "workshop": {
+            "stage": "Practice 1 · A new turnaround",
+            "pageBreakBefore": true
+          },
+          "stageHints": {
+            "model": "Draw a number line. Mark +1 m as start, +7 m as the turn, and −2 m as finish. Draw one arrow for each leg.",
+            "plan": "Add the lengths of both legs for distance. For displacement, compare only the initial and final positions.",
+            "work": "Write final minus initial for each leg. Use each leg’s magnitude when adding distance, and keep meters with your values.",
+            "answer": "Report both quantities with units. Explain what the displacement sign means for your chosen positive direction."
+          },
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "wordBank": [
+              "initial",
+              "final",
+              "leg",
+              "distance",
+              "displacement",
+              "direction"
+            ],
+            "frames": [
+              {
+                "level": 1,
+                "text": "The total distance is ___ m. The displacement is ___ m, which means ___. They differ because ___."
+              }
+            ]
+          },
+          "note": "Teacher solution — Practice 1 · A new turnaround. Model: +1 m → +7 m → −2 m; positive right. Plan: sum the magnitude of every leg for distance; Δx = xf − xi for displacement. Work: signed leg changes = +6 m, −9 m. Distance = 6 + 9 = 15 m. Displacement = (−2) − (+1) = −3 m. Answer: The student finishes 3 m left of the starting point. Adding signed leg changes gives displacement, not distance. Review the model, plan, arithmetic, units, and interpretation; a completed save alone is not evidence of correctness."
+        },
+        {
+          "id": "wp01-position-return",
+          "type": "gewa",
+          "capture": true,
+          "responseFormat": "problem-workspace",
+          "requireCompleteWork": true,
+          "targetId": "u1.vocab-position-distance-displacement",
+          "evidenceRole": "practice",
+          "prompt": "A cart starts at x = −4 m, rolls directly to x = +3 m, then returns to x = −4 m. Choose right as positive. Find distance and displacement. Explain why returning to the start does not erase the distance traveled.",
+          "referenceBlockIds": [
+            "wp01-position-reference"
+          ],
+          "workshop": {
+            "stage": "Practice 2 · Back to the start",
+            "pageBreakBefore": true
+          },
+          "stageHints": {
+            "model": "Show both legs, even though the initial and final positions share the same point.",
+            "plan": "Which calculation depends on the whole route? Which depends only on the endpoints?",
+            "work": "Write final minus initial for each leg. Use each leg’s magnitude when adding distance, and keep meters with your values.",
+            "answer": "Report both quantities with units. Explain what the displacement sign means for your chosen positive direction."
+          },
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "wordBank": [
+              "initial",
+              "final",
+              "leg",
+              "distance",
+              "displacement",
+              "direction"
+            ],
+            "frames": [
+              {
+                "level": 1,
+                "text": "The total distance is ___ m. The displacement is ___ m, which means ___. They differ because ___."
+              }
+            ]
+          },
+          "note": "Teacher solution — Practice 2 · Back to the start. Model: −4 m → +3 m → −4 m; positive right. Plan: sum the magnitude of every leg for distance; Δx = xf − xi for displacement. Work: signed leg changes = +7 m, −7 m. Distance = 7 + 7 = 14 m. Displacement = (−4) − (−4) = 0 m. Answer: The displacement is zero because the endpoints coincide. There is no net direction, but both 7 m legs count toward distance. Review the model, plan, arithmetic, units, and interpretation; a completed save alone is not evidence of correctness."
+        },
+        {
+          "id": "wp01-position-three-legs",
+          "type": "gewa",
+          "capture": true,
+          "responseFormat": "problem-workspace",
+          "requireCompleteWork": true,
+          "targetId": "u1.vocab-position-distance-displacement",
+          "evidenceRole": "practice",
+          "prompt": "A robot moves on one straight track through these positions in order: +5 m → −1 m → +2 m → −3 m. It moves directly between each listed position. Right is positive. Find its total distance and displacement. Show a model and a plan before calculating, then check that the distance is at least as large as the magnitude of the displacement.",
+          "referenceBlockIds": [
+            "wp01-position-reference"
+          ],
+          "workshop": {
+            "stage": "Practice 3 · Plan a longer trip",
+            "pageBreakBefore": true
+          },
+          "stageHints": {
+            "model": "Label each stop in order and count the legs. A table or a number-line sketch can organize the route.",
+            "plan": "Choose which positions each quantity needs. Explain your choice before doing the arithmetic.",
+            "work": "Write final minus initial for each leg. Use each leg’s magnitude when adding distance, and keep meters with your values.",
+            "answer": "Report both quantities with units. Explain what the displacement sign means for your chosen positive direction."
+          },
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "wordBank": [
+              "initial",
+              "final",
+              "leg",
+              "distance",
+              "displacement",
+              "direction"
+            ],
+            "frames": [
+              {
+                "level": 1,
+                "text": "The total distance is ___ m. The displacement is ___ m, which means ___. They differ because ___."
+              }
+            ]
+          },
+          "note": "Teacher solution — Practice 3 · Plan a longer trip. Model: +5 m → −1 m → +2 m → −3 m; positive right. Plan: sum the magnitude of every leg for distance; Δx = xf − xi for displacement. Work: signed leg changes = −6 m, +3 m, −5 m. Distance = 6 + 3 + 5 = 14 m. Displacement = (−3) − (+5) = −8 m. Answer: The robot finishes 8 m left of its start. The check is 14 m ≥ |−8 m|; changes of direction add distance without increasing the net change by the same amount. Review the model, plan, arithmetic, units, and interpretation; a completed save alone is not evidence of correctness."
+        },
+        {
+          "id": "position-explain-title",
+          "type": "prose",
+          "markdown": "Explain the idea without another calculation.",
+          "workshop": {
+            "stage": "Explain",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "position-explain",
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "frames": [
+              {
+                "text": "The displacement is ___ because ___. The distance is ___ because ___.",
+                "level": 1
+              },
+              {
+                "text": "The displacement is ___ because ___. The distance is ___ because ___.",
+                "level": 2
+              },
+              {
+                "text": "My evidence is ___, which means ___.",
+                "level": 3
+              }
+            ],
+            "visual": {
+              "alt": "A labeled diagram supporting this physics question.",
+              "src": "/learning/position-line.svg"
+            },
+            "wordBank": [
+              "start",
+              "finish",
+              "path",
+              "scalar",
+              "vector"
+            ]
+          },
+          "type": "exit_ticket",
+          "prompt": "An object travels away from its starting point and comes back. Explain why its displacement can be zero while its distance is not. Identify which quantity is a scalar and which is a vector.",
+          "targetId": "u1.vocab-position-distance-displacement"
+        },
+        {
+          "id": "position-reading",
+          "type": "reading",
+          "focus": "Read section 5.1 on page 69. Use the distinction between scalars and vectors to explain distance and displacement. Answer the three checks in your own words, then submit for teacher review.",
+          "chapter": 5,
+          "workshop": {
+            "stage": "Read & respond",
+            "pageBreakBefore": true
+          },
+          "essential": true,
+          "sectionIds": [
+            "5.1"
+          ],
+          "assignmentChecks": [
+            {
+              "prompt": "What information does a vector include that a scalar does not? Use distance and displacement as your examples.",
+              "targetId": "u1.vocab-position-distance-displacement",
+              "reference": "1 · Explain the distinction"
+            },
+            {
+              "prompt": "A student walks 3 m east, then 3 m west. Find the total distance and displacement. Explain why the two answers differ, and identify which quantity is a scalar and which is a vector.",
+              "targetId": "u1.vocab-position-distance-displacement",
+              "reference": "2 · Apply the idea"
+            },
+            {
+              "prompt": "A classmate says, “If displacement is zero, the object could not have moved.” Do you agree? Use a possible trip to support your reasoning.",
+              "targetId": "u1.vocab-position-distance-displacement",
+              "reference": "3 · Evaluate a claim"
+            }
+          ]
+        },
+        {
+          "id": "position-transfer-title",
+          "type": "prose",
+          "markdown": "**Fictional training data for 2026-XJ.** This is a one-dimensional coordinate model, not a claim about the asteroid’s real orbit.",
+          "workshop": {
+            "stage": "Apply to 2026-XJ",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "position-mission-diagram",
+          "alt": "Earth at the origin. Two fictional asteroid positions on the same axis: plus 12 million kilometers and plus 9 million kilometers.",
+          "src": "/learning/asteroid-position.svg",
+          "type": "figure"
+        },
+        {
+          "id": "position-transfer",
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "frames": [
+              {
+                "text": "Its displacement is ___ million km. The sign means ___. The two positions [do / do not] determine distance because ___.",
+                "level": 1
+              },
+              {
+                "text": "Its displacement is ___ million km. The sign means ___. The two positions [do / do not] determine distance because ___.",
+                "level": 2
+              },
+              {
+                "text": "My evidence is ___, which means ___.",
+                "level": 3
+              }
+            ],
+            "visual": {
+              "alt": "A labeled diagram supporting this physics question.",
+              "src": "/learning/asteroid-position.svg"
+            },
+            "wordBank": [
+              "reference",
+              "toward",
+              "initial",
+              "final",
+              "path"
+            ]
+          },
+          "type": "exit_ticket",
+          "prompt": "Along a chosen axis, Earth is at 0. The asteroid’s position changes from +12 million km to +9 million km. Report its displacement and explain the sign. Can those two positions alone tell you its total distance traveled? Explain.",
+          "targetId": "u1.vocab-position-distance-displacement",
+          "evidenceRole": "exit"
+        },
+        {
+          "id": "position-vocabulary",
+          "type": "vocab",
+          "terms": [],
+          "termIds": [
+            "a892cf0e-00e0-4aa5-8da5-03a59e20fe2f",
+            "2d3af579-0ee6-4f13-a922-686774c28eb3",
+            "50ca756f-2733-4c91-8d86-71589f89e01c",
+            "3f589087-3b2f-4ea0-9225-39465f92466f",
+            "1189dd38-37a0-4d4c-b827-743cbe6396f2"
+          ],
+          "referencePanel": true,
+          "vocabularySetId": "72512c75-af30-476b-8a62-05bbf14b2283"
+        }
+      ],
+      "dayType": "STANDARD",
+      "learningPath": {
+        "kind": "lesson",
+        "focus": "Describe where an object is and how its position changes. Compare distance and displacement, and distinguish scalars from vectors.",
+        "version": 1,
+        "targetSlugs": [
+          "u1.vocab-position-distance-displacement"
+        ],
+        "sourceLessonId": "fe529665-a1df-4f80-a5cc-df0d09b95210"
+      },
+      "presentation": "physics-path",
+      "schemaVersion": 1
+    },
+    "estimatedTime": 35
+  },
+  {
+    "id": "c1f8c609-88ad-4d42-93ce-25ae2b0c8206",
+    "slug": "video-6-the-sign-is-the-direction-position-vectors-in-1d",
+    "title": "The sign is the direction: position vectors in 1D",
+    "before": {
+      "blocks": [
+        {
+          "id": "video-maoz-9mGWyk",
+          "type": "instruction_video",
+          "title": "The sign is the direction: position vectors in 1D",
+          "summary": "In one dimension, a sign supplies direction along the chosen axis. A position x = −3 m has magnitude |x| = 3 m. A vertical coordinate can use y with up positive. A negative position is a location, not proof that an object is moving in the negative direction.",
+          "targetId": "u1.vocab-position-distance-displacement",
+          "workshop": {
+            "stage": "Watch & understand",
+            "pageBreakBefore": true
+          },
+          "youtubeId": "maoz-9mGWyk"
+        },
+        {
+          "id": "scope-maoz-9mGWyk",
+          "type": "prose",
+          "markdown": "Signed horizontal and vertical coordinates; magnitude versus position."
+        },
+        {
+          "id": "check-maoz-9mGWyk",
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "frames": [
+              {
+                "text": "I notice ___. This means ___ because ___.",
+                "level": 1
+              },
+              {
+                "text": "My reasoning is ___, supported by ___.",
+                "level": 3
+              }
+            ],
+            "visual": {
+              "alt": "Reference model for interpreting measurements, positions and direction.",
+              "src": "/learning/video-position.svg"
+            },
+            "wordBank": [
+              "quantity",
+              "unit",
+              "position",
+              "change",
+              "direction",
+              "evidence"
+            ]
+          },
+          "type": "question",
+          "capture": true,
+          "question": {
+            "prompt": "An object is at x = −3 m. What can you conclude from this position alone?",
+            "options": [
+              {
+                "id": "A",
+                "text": "It is 3 m from the origin on the negative side.",
+                "feedback": "The sign gives the side of the origin and the magnitude gives the distance from it."
+              },
+              {
+                "id": "B",
+                "text": "It is moving left.",
+                "feedback": "You need how position changes over time to determine the direction of motion."
+              },
+              {
+                "id": "C",
+                "text": "Its distance from the origin is −3 m.",
+                "feedback": "Distance is nonnegative. The position is negative; its magnitude is 3 m."
+              }
+            ],
+            "correctOptionId": "A"
+          },
+          "targetId": "u1.vocab-position-distance-displacement",
+          "workshop": {
+            "stage": "Check your thinking",
+            "pageBreakBefore": true
+          },
+          "evidenceRole": "practice"
+        },
+        {
+          "id": "explain-maoz-9mGWyk",
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "frames": [
+              {
+                "text": "I notice ___. This means ___ because ___.",
+                "level": 1
+              },
+              {
+                "text": "My reasoning is ___, supported by ___.",
+                "level": 3
+              }
+            ],
+            "visual": {
+              "alt": "Reference model for interpreting measurements, positions and direction.",
+              "src": "/learning/video-position.svg"
+            },
+            "wordBank": [
+              "quantity",
+              "unit",
+              "position",
+              "change",
+              "direction",
+              "evidence"
+            ]
+          },
+          "type": "exit_ticket",
+          "prompt": "With up positive, a probe moves from y = +7 m to y = +2 m. Find its displacement, state the direction of its motion, and distinguish that direction from the sign of its final position.",
+          "capture": true,
+          "targetId": "u1.vocab-position-distance-displacement",
+          "workshop": {
+            "stage": "Apply & explain",
+            "pageBreakBefore": true
+          },
+          "evidenceRole": "exit"
+        },
+        {
+          "id": "vocabulary-maoz-9mGWyk",
+          "type": "vocab",
+          "terms": [],
+          "termIds": [
+            "c6c76086-a031-4192-9fcf-752ca1e5c412",
+            "ab455a29-8b74-4c7e-8a73-4b90d4767d4c",
+            "d070596c-3121-4ba4-bf39-10da65dcf234",
+            "69ae4851-896c-4e97-b96b-6f05835f5e53"
+          ],
+          "referencePanel": true,
+          "vocabularySetId": "13ec25f1-fe24-4e69-ada7-d2589105bdd2"
+        }
+      ],
+      "dayType": "STANDARD",
+      "learningPath": {
+        "kind": "lesson",
+        "focus": "What does the sign tell you—and what does it not tell you?",
+        "version": 1,
+        "foundations": false,
+        "targetSlugs": [
+          "u1.vocab-position-distance-displacement"
+        ]
+      },
+      "presentation": "physics-path",
+      "schemaVersion": 1
+    },
+    "document": {
+      "blocks": [
+        {
+          "id": "video-maoz-9mGWyk",
+          "type": "instruction_video",
+          "title": "The sign is the direction: position vectors in 1D",
+          "summary": "In one dimension, a sign supplies direction along the chosen axis. A position x = −3 m has magnitude |x| = 3 m. A vertical coordinate can use y with up positive. A negative position is a location, not proof that an object is moving in the negative direction.",
+          "targetId": "u1.vocab-position-distance-displacement",
+          "workshop": {
+            "stage": "Watch & understand",
+            "pageBreakBefore": true
+          },
+          "youtubeId": "maoz-9mGWyk"
+        },
+        {
+          "id": "scope-maoz-9mGWyk",
+          "type": "prose",
+          "markdown": "Signed horizontal and vertical coordinates; magnitude versus position."
+        },
+        {
+          "id": "wp01-signs-video",
+          "type": "instruction_video",
+          "youtubeId": "B51oRJa9MSM",
+          "title": "Distance vs. displacement on a number line · Worked Problem 01",
+          "durationSeconds": 167,
+          "targetId": "u1.vocab-position-distance-displacement",
+          "workshop": {
+            "stage": "Watch a worked problem",
+            "pageBreakBefore": true
+          },
+          "summary": "Follow the trip +2 m → +8 m → −3 m using Problem → Model → Plan → Work → Answer. Pause at 1:40, just before Work, and try the calculation. Resume to compare your method and interpret the sign."
+        },
+        {
+          "id": "wp01-signs-reference",
+          "type": "callout",
+          "variant": "tip",
+          "title": "Distance and displacement method",
+          "teachingMoment": {
+            "phase": "reference",
+            "title": "Distance and displacement method"
+          },
+          "markdown": "**Problem:** Name the quantities you need.\n\n**Model:** Choose a positive direction, label the positions, and draw every leg.\n\n**Plan:** For distance, add the lengths of all legs: $d=|x_1-x_0|+|x_2-x_1|+\\cdots$. For displacement, use only the endpoints: $\\Delta x=x_f-x_i$. Use $y$ for a vertical axis.\n\n**Work:** Substitute signed positions; take magnitudes for distance.\n\n**Answer:** Include meters and interpret the displacement sign. Check $d\\geq|\\Delta x|$.\n\nVideo chapters: 0:00 Problem · 0:30 Model · 1:04 Plan · 1:40 Work · 2:20 Answer.\n\n[Watch Worked Problem 01 on YouTube](https://www.youtube.com/watch?v=B51oRJa9MSM) · [Worked Problems: Kinematics playlist](https://www.youtube.com/playlist?list=PLZKwzUFM2PaM)"
+        },
+        {
+          "id": "wp01-signs-solution",
+          "type": "worked_example",
+          "format": "problem-workspace",
+          "teachingMoment": {
+            "phase": "reference",
+            "title": "Open the video’s worked solution"
+          },
+          "prompt": "A student starts at +2 m, walks to a fountain at +8 m, then to a locker at −3 m. Find distance and displacement.",
+          "given": "Use a straight x-axis with right positive. Mark start +2 m, turn +8 m, and finish −3 m. Draw the two legs in order.",
+          "equation": "Distance adds the magnitude of each leg. Displacement compares only the endpoints: $\\Delta x=x_f-x_i$.",
+          "work": "First leg: $|8-2|=6$ m. Second leg: $|-3-8|=11$ m. Distance: $6+11=17$ m. Displacement: $-3-2=-5$ m.",
+          "answer": "Distance = 17 m. Displacement = −5 m: the student finishes 5 m to the left of where she started. The return leg adds distance; it does not subtract distance."
+        },
+        {
+          "id": "check-maoz-9mGWyk",
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "frames": [
+              {
+                "text": "I notice ___. This means ___ because ___.",
+                "level": 1
+              },
+              {
+                "text": "My reasoning is ___, supported by ___.",
+                "level": 3
+              }
+            ],
+            "visual": {
+              "alt": "Reference model for interpreting measurements, positions and direction.",
+              "src": "/learning/video-position.svg"
+            },
+            "wordBank": [
+              "quantity",
+              "unit",
+              "position",
+              "change",
+              "direction",
+              "evidence"
+            ]
+          },
+          "type": "question",
+          "capture": true,
+          "question": {
+            "prompt": "An object is at x = −3 m. What can you conclude from this position alone?",
+            "options": [
+              {
+                "id": "A",
+                "text": "It is 3 m from the origin on the negative side.",
+                "feedback": "The sign gives the side of the origin and the magnitude gives the distance from it."
+              },
+              {
+                "id": "B",
+                "text": "It is moving left.",
+                "feedback": "You need how position changes over time to determine the direction of motion."
+              },
+              {
+                "id": "C",
+                "text": "Its distance from the origin is −3 m.",
+                "feedback": "Distance is nonnegative. The position is negative; its magnitude is 3 m."
+              }
+            ],
+            "correctOptionId": "A"
+          },
+          "targetId": "u1.vocab-position-distance-displacement",
+          "workshop": {
+            "stage": "Check your thinking",
+            "pageBreakBefore": true
+          },
+          "evidenceRole": "practice"
+        },
+        {
+          "id": "wp01-signs-negative-positions",
+          "type": "gewa",
+          "capture": true,
+          "responseFormat": "problem-workspace",
+          "requireCompleteWork": true,
+          "targetId": "u1.vocab-position-distance-displacement",
+          "evidenceRole": "practice",
+          "prompt": "A cart follows the route x = −6 m → −2 m → −5 m, moving directly between each stop. Right is positive. Find distance and displacement. Its final position is negative: does that make its total displacement negative? Use your calculation to explain.",
+          "referenceBlockIds": [
+            "wp01-signs-reference"
+          ],
+          "workshop": {
+            "stage": "Practice 1 · Negative position, positive change",
+            "pageBreakBefore": true
+          },
+          "stageHints": {
+            "model": "Put all three positions left of zero, then draw the motion arrows in order.",
+            "plan": "The sign of final position tells you which side of the origin it is on. To find the sign of displacement, compare final with initial position.",
+            "work": "Write final minus initial for each leg. Use each leg’s magnitude when adding distance, and keep meters with your values.",
+            "answer": "Report both quantities with units. Explain what the displacement sign means for your chosen positive direction."
+          },
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "wordBank": [
+              "initial",
+              "final",
+              "leg",
+              "distance",
+              "displacement",
+              "direction"
+            ],
+            "frames": [
+              {
+                "level": 1,
+                "text": "The total distance is ___ m. The displacement is ___ m, which means ___. They differ because ___."
+              }
+            ]
+          },
+          "note": "Teacher solution — Practice 1 · Negative position, positive change. Model: −6 m → −2 m → −5 m; positive right. Plan: sum the magnitude of every leg for distance; Δx = xf − xi for displacement. Work: signed leg changes = +4 m, −3 m. Distance = 4 + 3 = 7 m. Displacement = (−5) − (−6) = +1 m. Answer: The final position is −5 m, but displacement is +1 m: the cart finishes 1 m to the right of where it started. Its final leg is leftward; that is different from its total displacement. Review the model, plan, arithmetic, units, and interpretation; a completed save alone is not evidence of correctness."
+        },
+        {
+          "id": "wp01-signs-vertical",
+          "type": "gewa",
+          "capture": true,
+          "responseFormat": "problem-workspace",
+          "requireCompleteWork": true,
+          "targetId": "u1.vocab-position-distance-displacement",
+          "evidenceRole": "practice",
+          "prompt": "A lift moves directly from y = +2 m to y = −4 m, then to y = +1 m. Up is positive. Find its total distance and displacement. State the direction of the last leg and the direction of the total displacement, and explain why they differ.",
+          "referenceBlockIds": [
+            "wp01-signs-reference"
+          ],
+          "workshop": {
+            "stage": "Practice 2 · Use a vertical axis",
+            "pageBreakBefore": true
+          },
+          "stageHints": {
+            "model": "Turn the number line vertically. Label up as positive and mark the three positions.",
+            "plan": "Use Δy = yf − yi for the whole trip. The direction of the final leg depends on a different pair of positions.",
+            "work": "Write final minus initial for each leg. Use each leg’s magnitude when adding distance, and keep meters with your values.",
+            "answer": "Report both quantities with units. Explain what the displacement sign means for your chosen positive direction."
+          },
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "wordBank": [
+              "initial",
+              "final",
+              "leg",
+              "distance",
+              "displacement",
+              "direction"
+            ],
+            "frames": [
+              {
+                "level": 1,
+                "text": "The total distance is ___ m. The displacement is ___ m, which means ___. They differ because ___."
+              }
+            ]
+          },
+          "note": "Teacher solution — Practice 2 · Use a vertical axis. Model: +2 m → −4 m → +1 m; positive up. Plan: sum the magnitude of every leg for distance; Δy = yf − yi for displacement. Work: signed leg changes = −6 m, +5 m. Distance = 6 + 5 = 11 m. Displacement = (+1) − (+2) = −1 m. Answer: The last leg is 5 m upward, while total displacement is −1 m (1 m down from the start). A positive final position does not imply positive total displacement. Review the model, plan, arithmetic, units, and interpretation; a completed save alone is not evidence of correctness."
+        },
+        {
+          "id": "explain-maoz-9mGWyk",
+          "sei": {
+            "modes": [
+              "text",
+              "sketch"
+            ],
+            "frames": [
+              {
+                "text": "I notice ___. This means ___ because ___.",
+                "level": 1
+              },
+              {
+                "text": "My reasoning is ___, supported by ___.",
+                "level": 3
+              }
+            ],
+            "visual": {
+              "alt": "Reference model for interpreting measurements, positions and direction.",
+              "src": "/learning/video-position.svg"
+            },
+            "wordBank": [
+              "quantity",
+              "unit",
+              "position",
+              "change",
+              "direction",
+              "evidence"
+            ]
+          },
+          "type": "exit_ticket",
+          "prompt": "With up positive, a probe moves from y = +7 m to y = +2 m. Find its displacement, state the direction of its motion, and distinguish that direction from the sign of its final position.",
+          "capture": true,
+          "targetId": "u1.vocab-position-distance-displacement",
+          "workshop": {
+            "stage": "Apply & explain",
+            "pageBreakBefore": true
+          },
+          "evidenceRole": "exit"
+        },
+        {
+          "id": "vocabulary-maoz-9mGWyk",
+          "type": "vocab",
+          "terms": [],
+          "termIds": [
+            "c6c76086-a031-4192-9fcf-752ca1e5c412",
+            "ab455a29-8b74-4c7e-8a73-4b90d4767d4c",
+            "d070596c-3121-4ba4-bf39-10da65dcf234",
+            "69ae4851-896c-4e97-b96b-6f05835f5e53"
+          ],
+          "referencePanel": true,
+          "vocabularySetId": "13ec25f1-fe24-4e69-ada7-d2589105bdd2"
+        }
+      ],
+      "dayType": "STANDARD",
+      "learningPath": {
+        "kind": "lesson",
+        "focus": "What does the sign tell you—and what does it not tell you?",
+        "version": 1,
+        "foundations": false,
+        "targetSlugs": [
+          "u1.vocab-position-distance-displacement"
+        ]
+      },
+      "presentation": "physics-path",
+      "schemaVersion": 1
+    },
+    "estimatedTime": 25
+  }
+]

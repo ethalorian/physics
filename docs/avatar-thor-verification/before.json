@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "viking-helmet",
+    "slot": "head",
+    "name": "Thor's winged Viking helmet",
+    "cost_xp": 750,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -42,-14 Q -48,-58 0,-60 Q 48,-58 42,-14 Z\" fill=\"#B5B7BE\"/><rect x=\"-44\" y=\"-14\" width=\"88\" height=\"4\" rx=\"1.5\" fill=\"#6E707A\"/><path d=\"M -16,-14 Q 0,-26 16,-14\" fill=\"none\" stroke=\"#D8A547\" stroke-width=\"2.4\" stroke-linecap=\"round\"/><path d=\"M 0,-60 L 0,-14\" stroke=\"#6E707A\" stroke-width=\"2\"/><circle cx=\"0\" cy=\"-60\" r=\"3.4\" fill=\"#D8A547\"/><path d=\"M -36,-26 Q -52,-44 -68,-32 Q -62,-26 -58,-20 Q -50,-16 -38,-14 Z\" fill=\"#B8B0A0\"/><path d=\"M -36,-28 Q -54,-44 -70,-32 Q -64,-28 -60,-24 Q -56,-28 -52,-22 Q -48,-26 -44,-20 Q -40,-24 -38,-16 Z\" fill=\"#F2EDDE\" stroke=\"#B8B0A0\" stroke-width=\"0.6\"/><path d=\"M 36,-26 Q 52,-44 68,-32 Q 62,-26 58,-20 Q 50,-16 38,-14 Z\" fill=\"#B8B0A0\"/><path d=\"M 36,-28 Q 54,-44 70,-32 Q 64,-28 60,-24 Q 56,-28 52,-22 Q 48,-26 44,-20 Q 40,-24 38,-16 Z\" fill=\"#F2EDDE\" stroke=\"#B8B0A0\" stroke-width=\"0.6\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "tuck",
+      "fit_head": true
+    }
+  }
+]

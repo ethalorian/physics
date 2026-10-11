@@ -136,7 +136,7 @@ function ClassCockpit() {
       {tab === 'Overview' && (
           <div className="flex flex-col gap-4">
             <LessonReleasePanel key={courseId} courseId={courseId} compact />
-            <div className={styles.sectionHeading}><h2>At a glance</h2><span>{me?.dayN && me?.dayM ? `Pacing · Day ${Math.min(me.dayN, me.dayM)} of ${me.dayM}${me.onPace ? ' · On pace' : ''}` : 'Class activity and follow-up'}</span></div>
+            <div className={styles.sectionHeading}><h2>At a glance</h2><span>{me?.dayN && me?.dayM ? `Calendar pacing · Day ${Math.min(me.dayN, me.dayM)} of ${me.dayM}${me.onPace ? ' · On pace' : ''}` : 'Class activity and follow-up'}</span></div>
             <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
               {/* needs attention */}
               <div className="rounded-xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>

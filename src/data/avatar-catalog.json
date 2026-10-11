@@ -42,7 +42,7 @@
     "cost_xp": 1200,
     "unlock_target_id": null,
     "unlock_min_level": null,
-    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,75 -42,90 L -34,94 L -33,113 L 33,113 L 34,94 L 42,90 Q 44,75 33,68 L 10,59 Z\" fill=\"#C8243F\" stroke=\"#63263A\" stroke-width=\"1.5\"/><path d=\"M -30,70 L -24,113 L -33,113 L -34,94 L -42,90 Z M 30,70 L 24,113 L 33,113 L 34,94 L 42,90 Z\" fill=\"#2A3F7A\"/><path d=\"M -14,67 L -14,113 M 0,62 L 0,113 M 14,67 L 14,113 M -26,80 Q 0,87 26,80 M -26,94 Q 0,101 26,94\" fill=\"none\" stroke=\"#63263A\" stroke-width=\"1.2\"/><ellipse cx=\"0\" cy=\"89\" rx=\"4\" ry=\"6\" fill=\"#271F33\"/><path d=\"M -2,86 L -10,81 M 2,86 L 10,81 M -3,90 L -12,90 M 3,90 L 12,90 M -2,93 L -9,99 M 2,93 L 9,99\" stroke=\"#271F33\" stroke-width=\"2\"/>",
+    "svg_layer": "<path d=\"M -11,59 Q -24,61 -35,69 Q -44,75 -43,91 L -34,97 L -33,113 L 33,113 L 34,97 L 43,91 Q 44,75 35,69 Q 24,61 11,59 Z\" fill=\"#D93645\" stroke=\"#65263C\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/><path d=\"M -29,69 L -21,80 L -19,86 L -22,113 L -33,113 L -34,96 L -42,91 L -41,84 L -33,87 L -28,81 Z M 29,69 L 21,80 L 19,86 L 22,113 L 33,113 L 34,96 L 42,91 L 41,84 L 33,87 L 28,81 Z\" fill=\"#234D85\"/><path d=\"M -40,87 L -34,90 L -30,86 L -28,111 L -33,113 L -34,97 L -42,91 Z M 40,87 L 34,90 L 30,86 L 28,111 L 33,113 L 34,97 L 42,91 Z\" fill=\"#17345E\"/><path d=\"M -26,84 L -24,109 M 26,84 L 24,109\" fill=\"none\" stroke=\"#4B7BA8\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M -21,85 Q -10,94 0,89 Q 10,94 21,85 L 20,110 L -20,110 Z\" fill=\"#BC293D\"/><path d=\"M -31,69 Q -20,64 -11,64 M 11,64 Q 20,64 31,69 M -18,77 Q -10,71 -3,74 M 3,74 Q 10,71 18,77\" fill=\"none\" stroke=\"#F66A70\" stroke-width=\"1.6\" stroke-linecap=\"round\"/><g fill=\"none\" stroke=\"#70253B\" stroke-width=\"0.85\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M 0,64 L 0,112 M -9,63 Q -11,79 -10,112 M 9,63 Q 11,79 10,112 M -19,65 Q -20,73 -19,81 M 19,65 Q 20,73 19,81 M -28,67 L -35,79 L -42,84 M 28,67 L 35,79 L 42,84\"/><path d=\"M -28,70 Q -24,73 -20,71 Q -15,76 -10,73 Q -5,77 0,74 Q 5,77 10,73 Q 15,76 20,71 Q 24,73 28,70 M -22,80 Q -16,85 -10,81 Q -5,85 0,82 Q 5,85 10,81 Q 16,85 22,80 M -20,92 Q -15,97 -10,93 Q -5,97 0,94 Q 5,97 10,93 Q 15,97 20,92 M -21,103 Q -15,108 -10,104 Q -5,108 0,105 Q 5,108 10,104 Q 15,108 21,103 M -35,71 Q -32,76 -28,77 M -40,77 Q -37,82 -32,83 M 35,71 Q 32,76 28,77 M 40,77 Q 37,82 32,83\"/></g><path d=\"M -5,84 L -12,78 L -12,72 M 5,84 L 12,78 L 12,72 M -5,87 L -16,82 L -19,75 M 5,87 L 16,82 L 19,75 M -5,90 L -16,92 L -19,102 M 5,90 L 16,92 L 19,102 M -4,94 L -11,101 L -12,109 M 4,94 L 11,101 L 12,109\" fill=\"none\" stroke=\"#172031\" stroke-width=\"2.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M 0,79 Q 5,79 4,85 L 6,90 Q 6,96 0,100 Q -6,96 -6,90 L -4,85 Q -5,79 0,79 Z\" fill=\"#172031\"/><path d=\"M -2,79 L -4,76 M 2,79 L 4,76\" stroke=\"#172031\" stroke-width=\"1.5\" stroke-linecap=\"round\"/><path d=\"M -21,112 L 21,112\" stroke=\"#8A2338\" stroke-width=\"2\"/>",
     "z_order": 11,
     "enabled": true,
     "render_options": {}
@@ -138,7 +138,7 @@
     "cost_xp": 750,
     "unlock_target_id": null,
     "unlock_min_level": null,
-    "svg_layer": "<path d=\"M -42,-14 Q -48,-58 0,-60 Q 48,-58 42,-14 Z\" fill=\"#B5B7BE\"/><rect x=\"-44\" y=\"-14\" width=\"88\" height=\"4\" rx=\"1.5\" fill=\"#6E707A\"/><path d=\"M -16,-14 Q 0,-26 16,-14\" fill=\"none\" stroke=\"#D8A547\" stroke-width=\"2.4\" stroke-linecap=\"round\"/><path d=\"M 0,-60 L 0,-14\" stroke=\"#6E707A\" stroke-width=\"2\"/><circle cx=\"0\" cy=\"-60\" r=\"3.4\" fill=\"#D8A547\"/><path d=\"M -36,-26 Q -52,-44 -68,-32 Q -62,-26 -58,-20 Q -50,-16 -38,-14 Z\" fill=\"#B8B0A0\"/><path d=\"M -36,-28 Q -54,-44 -70,-32 Q -64,-28 -60,-24 Q -56,-28 -52,-22 Q -48,-26 -44,-20 Q -40,-24 -38,-16 Z\" fill=\"#F2EDDE\" stroke=\"#B8B0A0\" stroke-width=\"0.6\"/><path d=\"M 36,-26 Q 52,-44 68,-32 Q 62,-26 58,-20 Q 50,-16 38,-14 Z\" fill=\"#B8B0A0\"/><path d=\"M 36,-28 Q 54,-44 70,-32 Q 64,-28 60,-24 Q 56,-28 52,-22 Q 48,-26 44,-20 Q 40,-24 38,-16 Z\" fill=\"#F2EDDE\" stroke=\"#B8B0A0\" stroke-width=\"0.6\"/>",
+    "svg_layer": "<g transform=\"scale(0.94,0.94)\"><path d=\"M 37,-27 Q 39,-49 62,-75 L 62,-63 L 69,-69 Q 68,-51 59,-39 L 64,-42 Q 61,-27 44,-17 Z\" fill=\"#B8C8D7\" stroke=\"#41536A\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M 42,-31 Q 42,-47 59,-68 Q 55,-47 42,-31 Z\" fill=\"#F1F6FA\"/><path d=\"M 45,-30 Q 57,-44 65,-60 Q 62,-43 51,-32 L 58,-34 Q 53,-26 44,-22 Z\" fill=\"#E6EFF6\"/><path d=\"M 41,-25 Q 53,-38 61,-56 M 47,-28 L 57,-32\" fill=\"none\" stroke=\"#7C94AB\" stroke-width=\"1.1\" stroke-linecap=\"round\"/><path d=\"M 40,-33 Q 43,-50 57,-66\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"1.1\" stroke-linecap=\"round\"/></g><g transform=\"scale(-0.94,0.94)\"><path d=\"M 37,-27 Q 39,-49 62,-75 L 62,-63 L 69,-69 Q 68,-51 59,-39 L 64,-42 Q 61,-27 44,-17 Z\" fill=\"#B8C8D7\" stroke=\"#41536A\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M 42,-31 Q 42,-47 59,-68 Q 55,-47 42,-31 Z\" fill=\"#F1F6FA\"/><path d=\"M 45,-30 Q 57,-44 65,-60 Q 62,-43 51,-32 L 58,-34 Q 53,-26 44,-22 Z\" fill=\"#E6EFF6\"/><path d=\"M 41,-25 Q 53,-38 61,-56 M 47,-28 L 57,-32\" fill=\"none\" stroke=\"#7C94AB\" stroke-width=\"1.1\" stroke-linecap=\"round\"/><path d=\"M 40,-33 Q 43,-50 57,-66\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"1.1\" stroke-linecap=\"round\"/></g><path d=\"M -44,-14 Q -48,-49 -23,-58 Q 0,-69 23,-58 Q 48,-49 44,-14 L 40,5 L 34,-2 L 35,-13 Q 0,-23 -35,-13 L -34,-2 L -40,5 Z\" fill=\"#AABBCB\" stroke=\"#40516A\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/><path d=\"M -39,-21 Q -39,-47 -19,-55 L -11,-57 Q -27,-43 -28,-20 Z\" fill=\"#E7EFF4\"/><path d=\"M 11,-57 L 19,-55 Q 39,-47 39,-21 L 28,-20 Q 27,-43 11,-57 Z\" fill=\"#7D93AC\"/><path d=\"M -10,-58 Q 0,-63 10,-58 L 8,-29 L 0,-19 L -8,-29 Z\" fill=\"#D6E1EA\"/><path d=\"M -2,-59 L -3,-30 L 0,-25 L 3,-30 L 2,-59 Z\" fill=\"#F9FCFC\"/><path d=\"M -43,-19 Q -22,-23 -8,-18 L 0,-12 L 8,-18 Q 22,-23 43,-19 L 42,-12 Q 21,-17 8,-12 L 0,-6 L -8,-12 Q -21,-17 -42,-12 Z\" fill=\"#50657C\" stroke=\"#35485E\" stroke-width=\"0.7\" stroke-linejoin=\"round\"/><path d=\"M -40,-18 Q -22,-21 -9,-16 L 0,-10 L 9,-16 Q 22,-21 40,-18\" fill=\"none\" stroke=\"#E1ECF4\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/><path d=\"M -6,-35 L 0,-43 L 6,-35 L 0,-24 Z\" fill=\"#C39A4D\" stroke=\"#665839\" stroke-width=\"0.8\"/><path d=\"M -3,-35 L 0,-39 L 3,-35 L 0,-29 Z\" fill=\"#F1D38C\"/><g fill=\"#DAE6EF\" stroke=\"#536B82\" stroke-width=\"0.9\"><circle cx=\"-39\" cy=\"-24\" r=\"4.4\"/><circle cx=\"39\" cy=\"-24\" r=\"4.4\"/></g><path d=\"M -41,-25 L -38,-27 M 37,-25 L 40,-27\" stroke=\"#FFFFFF\" stroke-width=\"1.1\" stroke-linecap=\"round\"/>",
     "z_order": 130,
     "enabled": true,
     "render_options": {
@@ -153,7 +153,7 @@
     "cost_xp": 800,
     "unlock_target_id": null,
     "unlock_min_level": null,
-    "svg_layer": "<path d=\"M -48,-2 Q -48,-60 0,-60 Q 48,-60 48,-2 Q 48,32 28,44 L 12,68 L -12,68 L -28,44 Q -48,32 -48,-2 Z\" fill=\"#C8243F\"/><g stroke=\"#7E2A12\" stroke-width=\"0.7\" fill=\"none\" stroke-linecap=\"round\"><path d=\"M 0,-58 L 0,68\"/><path d=\"M -10,-56 Q -16,-2 -8,68\"/><path d=\"M 10,-56 Q 16,-2 8,68\"/><path d=\"M -28,-48 Q -38,-2 -22,44\"/><path d=\"M 28,-48 Q 38,-2 22,44\"/></g><g stroke=\"#7E2A12\" stroke-width=\"0.7\" fill=\"none\" stroke-linecap=\"round\"><path d=\"M -36,-34 Q -10,-30 0,-34 Q 10,-30 36,-34\"/><path d=\"M -42,14 Q -20,18 0,14 Q 20,18 42,14\"/><path d=\"M -34,32 Q -12,36 0,32 Q 12,36 34,32\"/><path d=\"M -20,52 Q -8,56 0,52 Q 8,56 20,52\"/></g><path d=\"M -10,-12 Q -20,-14 -28,-6 Q -30,4 -18,6 Q -8,6 -8,-4 Z\" fill=\"#FFFFFF\" stroke=\"#7E2A12\" stroke-width=\"1.4\"/><path d=\"M 10,-12 Q 20,-14 28,-6 Q 30,4 18,6 Q 8,6 8,-4 Z\" fill=\"#FFFFFF\" stroke=\"#7E2A12\" stroke-width=\"1.4\"/>",
+    "svg_layer": "<path d=\"M 0,-62 C -31,-62 -51,-44 -51,-12 L -51,25 Q -51,45 -31,50 L -13,68 L 13,68 L 31,50 Q 51,45 51,25 L 51,-12 C 51,-44 31,-62 0,-62 Z\" fill=\"#D93645\" stroke=\"#70263B\" stroke-width=\"1.2\"/><path d=\"M -44,-36 Q -51,-22 -48,24 Q -47,42 -30,47 L -11,66 L -5,66 L -20,42 Q -35,27 -36,5 Q -40,-20 -34,-45 Z M 44,-36 Q 51,-22 48,24 Q 47,42 30,47 L 11,66 L 5,66 L 20,42 Q 35,27 36,5 Q 40,-20 34,-45 Z\" fill=\"#B6273D\"/><path d=\"M -35,-38 Q -23,-58 0,-58 Q 18,-58 31,-45 Q 12,-53 -5,-49 Q -23,-46 -35,-38 Z\" fill=\"#F35B63\" fill-opacity=\"0.65\"/><g fill=\"none\" stroke=\"#75263C\" stroke-width=\"1.05\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M 0,-61 L 0,67 M 0,-7 Q -13,-30 -23,-56 M 0,-7 Q 13,-30 23,-56 M 0,-7 Q -26,-27 -42,-40 M 0,-7 Q 26,-27 42,-40 M 0,-7 L -50,-10 M 0,-7 L 50,-10 M 0,-7 Q -25,10 -50,27 M 0,-7 Q 25,10 50,27 M 0,-7 Q -17,26 -30,49 M 0,-7 Q 17,26 30,49 M 0,-7 Q -7,35 -12,66 M 0,-7 Q 7,35 12,66\"/><path d=\"M -42,-39 Q -30,-41 -22,-50 Q -10,-46 0,-50 Q 10,-46 22,-50 Q 30,-41 42,-39 M -49,-22 Q -35,-23 -28,-31 Q -20,-30 -13,-35 Q -6,-30 0,-34 Q 6,-30 13,-35 Q 20,-30 28,-31 Q 35,-23 49,-22 M -50,8 Q -38,7 -28,2 Q -16,4 0,-7 Q 16,4 28,2 Q 38,7 50,8 M -45,32 Q -32,27 -21,29 Q -14,19 -8,21 Q 0,17 8,21 Q 14,19 21,29 Q 32,27 45,32 M -31,48 Q -21,39 -13,43 Q -7,35 0,39 Q 7,35 13,43 Q 21,39 31,48 M -17,61 Q -8,52 0,57 Q 8,52 17,61\"/></g><path d=\"M -39,-22 Q -28,-15 -8,-7 Q -6,7 -17,13 Q -27,17 -34,9 Q -40,2 -39,-22 Z M 39,-22 Q 28,-15 8,-7 Q 6,7 17,13 Q 27,17 34,9 Q 40,2 39,-22 Z\" fill=\"#172031\" stroke=\"#742C3F\" stroke-width=\"0.7\" stroke-linejoin=\"round\"/><path d=\"M -35,-16 Q -25,-12 -12,-4 Q -11,5 -19,9 Q -26,12 -31,6 Q -35,0 -35,-16 Z M 35,-16 Q 25,-12 12,-4 Q 11,5 19,9 Q 26,12 31,6 Q 35,0 35,-16 Z\" fill=\"#F9FCEF\"/><path d=\"M -34,-7 Q -30,6 -23,7 Q -17,7 -12,1 Q -14,8 -21,10 Q -30,13 -33,2 Z M 34,-7 Q 30,6 23,7 Q 17,7 12,1 Q 14,8 21,10 Q 30,13 33,2 Z\" fill=\"#C9DFE4\"/><path d=\"M -32,-12 L -22,-8 M 32,-12 L 22,-8\" stroke=\"#FFFFFF\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>",
     "z_order": 130,
     "enabled": true,
     "render_options": {
@@ -437,5 +437,764 @@
     "z_order": 140,
     "enabled": true,
     "render_options": {}
+  },
+  {
+    "slug": "flash-suit",
+    "slot": "body",
+    "name": "Flash suit",
+    "cost_xp": 1200,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,75 -42,91 L -34,96 L -33,113 L 33,113 L 34,96 L 42,91 Q 44,75 33,68 L 10,59 Z\" fill=\"#C92735\" stroke=\"#7F2030\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/><path d=\"M -32,70 L -25,80 L -26,105 L -33,110 L -34,95 L -40,89 Z M 32,70 L 25,80 L 26,105 L 33,110 L 34,95 L 40,89 Z\" fill=\"#9E2133\"/><path d=\"M -10,60 Q 0,72 10,60 M -19,71 L -21,99 M 19,71 L 21,99\" fill=\"none\" stroke=\"#EF5960\" stroke-width=\"1.4\"/><circle cx=\"0\" cy=\"86\" r=\"12.5\" fill=\"#FFF8E7\" stroke=\"#A46B20\" stroke-width=\"1.3\"/><path d=\"M 5,71 L -7,87 L -1,87 L -6,101 L 9,82 L 2,83 Z\" fill=\"#F4CA42\" stroke=\"#B98222\" stroke-width=\"0.7\" stroke-linejoin=\"round\"/><path d=\"M -34,103 L -20,106 L -15,102 L -3,107 L 3,107 L 15,102 L 20,106 L 34,103 L 33,110 L 20,113 L 15,109 L 4,113 L -4,113 L -15,109 L -20,113 L -33,110 Z\" fill=\"#F4CA42\"/><path d=\"M -41,84 L -34,88 L -30,84 L -31,91 L -36,94 L -42,90 Z M 41,84 L 34,88 L 30,84 L 31,91 L 36,94 L 42,90 Z\" fill=\"#F4CA42\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "flash-mask",
+    "slot": "head",
+    "name": "Flash mask",
+    "cost_xp": 800,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -49,-2 Q -50,-62 0,-62 Q 50,-62 49,-2 L 49,20 Q 44,42 27,49 L 12,68 L -12,68 L -27,49 Q -44,42 -49,20 Z M 0,7 Q 12,16 26,14 L 24,29 Q 17,42 0,45 Q -17,42 -24,29 L -26,14 Q -12,16 0,7 Z\" fill=\"#C92735\" fill-rule=\"evenodd\"/><path d=\"M -38,-34 Q -29,-52 -9,-55 M 9,-55 Q 29,-52 38,-34\" fill=\"none\" stroke=\"#EF5960\" stroke-width=\"2.3\" stroke-linecap=\"round\"/><path d=\"M 0,-60 L 0,-17 M -43,10 Q -40,32 -28,40 M 43,10 Q 40,32 28,40\" fill=\"none\" stroke=\"#A02031\" stroke-width=\"1.3\"/><path d=\"M -32,-10 Q -21,-16 -7,-7 L -10,3 Q -23,7 -30,0 Z M 32,-10 Q 21,-16 7,-7 L 10,3 Q 23,7 30,0 Z\" fill=\"#FFF9E9\" stroke=\"#8B2330\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M 0,7 Q 12,16 26,14 L 24,29 Q 17,42 0,45 Q -17,42 -24,29 L -26,14 Q -12,16 0,7 Z\" fill=\"none\" stroke=\"#8B2330\" stroke-width=\"1.1\"/><circle cx=\"-46\" cy=\"0\" r=\"7\" fill=\"#B47C21\"/><circle cx=\"46\" cy=\"0\" r=\"7\" fill=\"#B47C21\"/><path d=\"M -44,-8 L -51,-29 L -53,-17 L -62,-21 L -54,-3 L -51,-10 L -46,7 Z M 44,-8 L 51,-29 L 53,-17 L 62,-21 L 54,-3 L 51,-10 L 46,7 Z\" fill=\"#F5CB40\" stroke=\"#AF781B\" stroke-width=\"1\" stroke-linejoin=\"round\"/><path d=\"M -50,-20 L -47,-5 M 50,-20 L 47,-5\" stroke=\"#FFF0A3\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "hide",
+      "covers_ears": true,
+      "covers_neck": true
+    }
+  },
+  {
+    "slug": "piccolo",
+    "slot": "pin",
+    "name": "Piccolo",
+    "cost_xp": 250,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<g transform=\"translate(0, 88) rotate(-20)\"><rect x=\"-39\" y=\"-3.5\" width=\"79\" height=\"7\" rx=\"2.5\" fill=\"#29262A\" stroke=\"#E7E5DF\" stroke-width=\"1.4\"/><rect x=\"-40\" y=\"-3.5\" width=\"27\" height=\"7\" rx=\"2.2\" fill=\"#B7C4CA\" stroke=\"#526773\" stroke-width=\"0.8\"/><path d=\"M -38,-2 L -15,-2\" stroke=\"#FFFFFF\" stroke-width=\"1.3\" stroke-linecap=\"round\"/><ellipse cx=\"-28\" cy=\"-1\" rx=\"5.4\" ry=\"3.1\" fill=\"#E7EFF1\" stroke=\"#748996\" stroke-width=\"0.8\"/><ellipse cx=\"-28\" cy=\"-1\" rx=\"2.7\" ry=\"1.35\" fill=\"#344552\"/><path d=\"M -13,-3.5 L -13,3.5 M 38,-3.5 L 38,3.5\" stroke=\"#EFF3F1\" stroke-width=\"2.5\"/><path d=\"M -9,-2 L 34,-2\" stroke=\"#A9BAC3\" stroke-width=\"1.1\"/><g fill=\"#DBE5E8\" stroke=\"#687E8C\" stroke-width=\"0.7\"><circle cx=\"-7\" cy=\"0\" r=\"2.7\"/><circle cx=\"1\" cy=\"0\" r=\"2.7\"/><circle cx=\"9\" cy=\"0\" r=\"2.7\"/><circle cx=\"17\" cy=\"0\" r=\"2.7\"/><circle cx=\"25\" cy=\"0\" r=\"2.7\"/><circle cx=\"33\" cy=\"0\" r=\"2.7\"/></g><path d=\"M -7,-2 L -7,-5 L 1,-5 L 1,-2 M 9,-2 L 9,-5 L 17,-5 L 17,-2 M 25,-2 L 25,-5 L 33,-5 L 33,-2\" fill=\"none\" stroke=\"#DAE4E8\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M 11,3 L 11,6 L 20,6 L 22,3\" fill=\"none\" stroke=\"#CCDADF\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g>",
+    "z_order": 140,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "half-rim-glasses",
+    "slot": "eyewear",
+    "name": "Black half-rim glasses",
+    "cost_xp": 150,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -31,-8 Q -19,-11 -6,-7 L -8,4 Q -9,8 -15,9 L -24,9 Q -29,8 -30,3 Z M 31,-8 Q 19,-11 6,-7 L 8,4 Q 9,8 15,9 L 24,9 Q 29,8 30,3 Z\" fill=\"#E7F1F4\" fill-opacity=\"0.1\" stroke=\"#AAB6BD\" stroke-width=\"0.65\"/><path d=\"M -34,-11 Q -18,-14 -4,-10 Q 0,-8 4,-10 Q 18,-14 34,-11 L 34,-6 L 31,-5 L 30,-9 Q 18,-11 7,-8 L 5,3 L 3,2 L 4,-7 Q 0,-9 -4,-7 L -3,2 L -5,3 L -7,-8 Q -18,-11 -30,-9 L -31,-5 L -34,-6 Z\" fill=\"#24262A\"/><path d=\"M -33,-9 L -39,-12 M 33,-9 L 39,-12\" stroke=\"#24262A\" stroke-width=\"2.3\" stroke-linecap=\"round\"/>",
+    "z_order": 120,
+    "enabled": true,
+    "render_options": {
+      "fit_eyes": true
+    }
+  },
+  {
+    "slug": "batman-cowl",
+    "slot": "head",
+    "name": "Batman cowl",
+    "cost_xp": 800,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -51,17 L -49,-20 L -35,-68 L -24,-57 C -16,-63 16,-63 24,-57 L 35,-68 L 49,-20 L 51,17 L 50,30 Q 48,46 29,51 L 15,68 L -15,68 L -29,51 Q -48,46 -50,30 Z M -25,13 L -8,13 L 0,18 L 8,13 L 25,13 L 23,30 Q 15,43 0,44 Q -15,43 -23,30 Z\" fill=\"#171E2A\" fill-rule=\"evenodd\" stroke=\"#101621\" stroke-width=\"1.2\" stroke-linejoin=\"round\"/><path d=\"M -35,-63 L -29,-43 L -43,-21 Z M 35,-63 L 29,-43 L 43,-21 Z\" fill=\"#3D4E63\"/><path d=\"M -24,-47 Q 0,-64 24,-47 L 18,-29 Q 0,-39 -18,-29 Z\" fill=\"#283547\"/><path d=\"M -39,-22 L -28,-31 L -13,-29 L -6,-17 L -29,-22 L -42,-13 Z M 39,-22 L 28,-31 L 13,-29 L 6,-17 L 29,-22 L 42,-13 Z\" fill=\"#3C4C61\"/><path d=\"M -46,-11 L -36,4 L -29,10 L -29,32 L -40,36 L -46,23 Z M 46,-11 L 36,4 L 29,10 L 29,32 L 40,36 L 46,23 Z\" fill=\"#293648\"/><path d=\"M -35,-13 L -8,-6 L -13,1 Q -25,5 -32,-4 Z M 35,-13 L 8,-6 L 13,1 Q 25,5 32,-4 Z\" fill=\"#F3FBFF\" stroke=\"#0C111A\" stroke-width=\"2\" stroke-linejoin=\"round\"/><path d=\"M -31,-10 L -11,-5 L -14,-2 Z M 31,-10 L 11,-5 L 14,-2 Z\" fill=\"#BBD3E4\"/><path d=\"M 0,-22 L -7,9 L 0,15 Z\" fill=\"#3B4B60\"/><path d=\"M 0,-22 L 7,9 L 0,15 Z\" fill=\"#0E1520\"/><path d=\"M -39,12 L -36,28 L -28,34 M 39,12 L 36,28 L 28,34 M -20,51 L -11,62 L 11,62 L 20,51\" fill=\"none\" stroke=\"#45536A\" stroke-width=\"1.2\" stroke-linecap=\"round\"/><path d=\"M -19,-48 Q 0,-58 19,-48\" fill=\"none\" stroke=\"#4C5D72\" stroke-width=\"1.2\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "hide",
+      "covers_ears": true,
+      "covers_neck": true
+    }
+  },
+  {
+    "slug": "batman-suit",
+    "slot": "body",
+    "name": "Batman suit & cape",
+    "cost_xp": 1200,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -12,51 Q -28,54 -40,65 L -61,114 Q -50,102 -41,114 Q -31,102 -22,115 L 22,115 Q 31,102 41,114 Q 50,102 61,114 L 40,65 Q 28,54 12,51 Z\" fill=\"#151D2B\" stroke=\"#0D1420\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/><path d=\"M -10,41 L 10,41 L 13,65 L -13,65 Z\" fill=\"#1C2636\"/><path d=\"M -33,64 L -53,107 Q -46,104 -41,111 L -27,71 Z M 33,64 L 53,107 Q 46,104 41,111 L 27,71 Z\" fill=\"#25364D\"/><path d=\"M -38,71 L -47,97 M 38,71 L 47,97 M -24,81 L -30,102 M 24,81 L 30,102\" stroke=\"#43536A\" stroke-width=\"1\" stroke-linecap=\"round\"/><path d=\"M -12,59 L -32,68 Q -43,72 -42,88 L -35,94 L -33,113 L 33,113 L 35,94 L 42,88 Q 43,72 32,68 L 12,59 Z\" fill=\"#626C7C\" stroke=\"#202936\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/><path d=\"M -31,72 L -23,79 L -24,96 L -31,103 L -35,91 L -39,87 Z M 31,72 L 23,79 L 24,96 L 31,103 L 35,91 L 39,87 Z\" fill=\"#3B4658\"/><path d=\"M -18,69 L -3,74 L -2,88 L -19,89 L -23,81 Z M 18,69 L 3,74 L 2,88 L 19,89 L 23,81 Z\" fill=\"#7D8899\"/><path d=\"M -18,93 L -2,92 L -2,100 L -17,100 Z M 18,93 L 2,92 L 2,100 L 17,100 Z\" fill=\"#737E8F\"/><path d=\"M -21,91 L -4,90 M 4,90 L 21,91 M 0,94 L 0,99\" fill=\"none\" stroke=\"#414D60\" stroke-width=\"1.2\" stroke-linecap=\"round\"/><path d=\"M -14,54 L -29,64 L -35,78 L -22,71 L -13,68 L 0,72 L 13,68 L 22,71 L 35,78 L 29,64 L 14,54 Z\" fill=\"#1C2636\"/><path d=\"M -25,65 L -15,60 M 25,65 L 15,60\" stroke=\"#526179\" stroke-width=\"1.2\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"82\" rx=\"18\" ry=\"10\" fill=\"#E7B94F\" stroke=\"#303644\" stroke-width=\"1.3\"/><path d=\"M -15,78 Q -11,82 -6,80 L -3,79 L -2,75 L 0,77 L 2,75 L 3,79 L 6,80 Q 11,82 15,78 Q 15,84 11,87 Q 8,82 5,86 Q 2,83 0,90 Q -2,83 -5,86 Q -8,82 -11,87 Q -15,84 -15,78 Z\" fill=\"#161E2A\"/><path d=\"M -41,84 L -32,88 L -32,99 L -40,95 L -44,96 L -43,91 L -47,91 L -44,87 L -48,85 L -43,82 Z M 41,84 L 32,88 L 32,99 L 40,95 L 44,96 L 43,91 L 47,91 L 44,87 L 48,85 L 43,82 Z\" fill=\"#192334\" stroke=\"#111A27\" stroke-width=\"0.8\" stroke-linejoin=\"round\"/><path d=\"M -40,87 L -35,90 L -35,95 M 40,87 L 35,90 L 35,95\" fill=\"none\" stroke=\"#52647D\" stroke-width=\"1\" stroke-linecap=\"round\"/><path d=\"M -33,101 Q 0,106 33,101 L 33,110 Q 0,115 -33,110 Z\" fill=\"#AD7628\" stroke=\"#664C26\" stroke-width=\"1\"/><path d=\"M -32,102 Q 0,107 32,102\" fill=\"none\" stroke=\"#F5D478\" stroke-width=\"1.4\"/><g fill=\"#D8A447\" stroke=\"#795A2A\" stroke-width=\"0.7\"><rect x=\"-30\" y=\"101\" width=\"8\" height=\"11\" rx=\"1.5\"/><rect x=\"-19\" y=\"102\" width=\"8\" height=\"11\" rx=\"1.5\"/><rect x=\"11\" y=\"102\" width=\"8\" height=\"11\" rx=\"1.5\"/><rect x=\"22\" y=\"101\" width=\"8\" height=\"11\" rx=\"1.5\"/></g><path d=\"M -29,103 L -23,103 M -18,104 L -12,104 M 12,104 L 18,104 M 23,103 L 29,103\" stroke=\"#FFE6A0\" stroke-width=\"1.2\" stroke-linecap=\"round\"/><g fill=\"#8B6428\"><circle cx=\"-26\" cy=\"107\" r=\"0.8\"/><circle cx=\"-15\" cy=\"108\" r=\"0.8\"/><circle cx=\"15\" cy=\"108\" r=\"0.8\"/><circle cx=\"26\" cy=\"107\" r=\"0.8\"/></g><rect x=\"-8\" y=\"102\" width=\"16\" height=\"12\" rx=\"2.2\" fill=\"#E5B651\" stroke=\"#725022\" stroke-width=\"1\"/><rect x=\"-5.5\" y=\"104.5\" width=\"11\" height=\"7\" rx=\"1\" fill=\"#A7772E\"/><path d=\"M -4,105 L 4,105 L 4,110\" fill=\"none\" stroke=\"#F9D785\" stroke-width=\"1\"/><path d=\"M -1,104 L -1,112\" stroke=\"#F1CB71\" stroke-width=\"2\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {
+      "covers_neck": true
+    }
+  },
+  {
+    "slug": "batman-utility-belt",
+    "slot": "pin",
+    "name": "Batman utility belt",
+    "cost_xp": 250,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -33,101 Q 0,106 33,101 L 33,110 Q 0,115 -33,110 Z\" fill=\"#AD7628\" stroke=\"#664C26\" stroke-width=\"1\"/><path d=\"M -32,102 Q 0,107 32,102\" fill=\"none\" stroke=\"#F5D478\" stroke-width=\"1.4\"/><g fill=\"#D8A447\" stroke=\"#795A2A\" stroke-width=\"0.7\"><rect x=\"-30\" y=\"101\" width=\"8\" height=\"11\" rx=\"1.5\"/><rect x=\"-19\" y=\"102\" width=\"8\" height=\"11\" rx=\"1.5\"/><rect x=\"11\" y=\"102\" width=\"8\" height=\"11\" rx=\"1.5\"/><rect x=\"22\" y=\"101\" width=\"8\" height=\"11\" rx=\"1.5\"/></g><path d=\"M -29,103 L -23,103 M -18,104 L -12,104 M 12,104 L 18,104 M 23,103 L 29,103\" stroke=\"#FFE6A0\" stroke-width=\"1.2\" stroke-linecap=\"round\"/><g fill=\"#8B6428\"><circle cx=\"-26\" cy=\"107\" r=\"0.8\"/><circle cx=\"-15\" cy=\"108\" r=\"0.8\"/><circle cx=\"15\" cy=\"108\" r=\"0.8\"/><circle cx=\"26\" cy=\"107\" r=\"0.8\"/></g><rect x=\"-8\" y=\"102\" width=\"16\" height=\"12\" rx=\"2.2\" fill=\"#E5B651\" stroke=\"#725022\" stroke-width=\"1\"/><rect x=\"-5.5\" y=\"104.5\" width=\"11\" height=\"7\" rx=\"1\" fill=\"#A7772E\"/><path d=\"M -4,105 L 4,105 L 4,110\" fill=\"none\" stroke=\"#F9D785\" stroke-width=\"1\"/><path d=\"M -1,104 L -1,112\" stroke=\"#F1CB71\" stroke-width=\"2\"/>",
+    "z_order": 140,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "batarang",
+    "slot": "pin",
+    "name": "Batarang",
+    "cost_xp": 250,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<g transform=\"translate(0, 96) rotate(-14)\"><path d=\"M -35,-10 Q -23,0 -9,-4 L -5,-6 L -3,-13 L 0,-9 L 3,-13 L 5,-6 L 9,-4 Q 23,0 35,-10 Q 33,3 23,10 Q 20,0 12,6 Q 7,1 0,13 Q -7,1 -12,6 Q -20,0 -23,10 Q -33,3 -35,-10 Z\" fill=\"#1B293B\" stroke=\"#B9C9D9\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/><path d=\"M -31,-6 Q -21,2 -10,-1 L -5,-3 M 31,-6 Q 21,2 10,-1 L 5,-3\" fill=\"none\" stroke=\"#718CA6\" stroke-width=\"1.3\" stroke-linecap=\"round\"/><path d=\"M -31,-4 Q -29,2 -24,6 Q -21,-1 -12,3 L -7,0 L -2,4 L 0,10 Q -8,-1 -12,5 Q -20,-1 -23,8 Q -29,3 -31,-4 Z\" fill=\"#425E78\"/><path d=\"M 0,-7 L -4,-3 L 0,6 L 4,-3 Z\" fill=\"#516A84\"/><path d=\"M -2,-4 L 0,-5 L 2,-4\" stroke=\"#B6CADB\" stroke-width=\"0.8\" fill=\"none\"/></g>",
+    "z_order": 140,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "thor-suit",
+    "slot": "body",
+    "name": "Thor armor & cape",
+    "cost_xp": 1200,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,53 Q -28,56 -38,65 Q -46,89 -56,114 Q -31,110 -18,115 L 18,115 Q 31,110 56,114 Q 46,89 38,65 Q 28,56 10,53 Z\" fill=\"#AE2A40\" stroke=\"#6F2136\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M -33,64 Q -40,88 -49,111 L -37,109 L -23,68 Z M 33,64 Q 40,88 49,111 L 37,109 L 23,68 Z\" fill=\"#E04B56\"/><path d=\"M -26,71 L -34,107 M 26,71 L 34,107\" stroke=\"#F2797E\" stroke-width=\"1.2\" stroke-linecap=\"round\"/><path d=\"M -11,59 L -32,67 Q -44,72 -43,88 L -35,95 L -33,113 L 33,113 L 35,95 L 43,88 Q 44,72 32,67 L 11,59 Q 0,69 -11,59 Z\" fill=\"#243950\" stroke=\"#1D293B\" stroke-width=\"1.4\" stroke-linejoin=\"round\"/><path d=\"M -10,63 L -22,70 L -23,99 L -17,111 L -3,111 L -3,69 Z M 10,63 L 22,70 L 23,99 L 17,111 L 3,111 L 3,69 Z\" fill=\"#3A536C\"/><path d=\"M -28,68 Q -40,73 -39,84 L -33,91 L -26,87 L -24,74 Z M 28,68 Q 40,73 39,84 L 33,91 L 26,87 L 24,74 Z\" fill=\"#9BADC0\"/><g fill=\"none\" stroke=\"#60788F\" stroke-width=\"1\"><path d=\"M -36,75 Q -34,80 -31,76 Q -29,80 -26,77 M -39,80 Q -36,84 -33,80 Q -31,85 -28,81 M -37,85 Q -34,89 -31,85 M 36,75 Q 34,80 31,76 Q 29,80 26,77 M 39,80 Q 36,84 33,80 Q 31,85 28,81 M 37,85 Q 34,89 31,85\"/></g><path d=\"M -39,87 L -30,91 L -31,102 L -40,97 Z M 39,87 L 30,91 L 31,102 L 40,97 Z\" fill=\"#60788F\" stroke=\"#233B53\" stroke-width=\"1\"/><path d=\"M -38,90 L -33,93 M -38,94 L -33,97 M 38,90 L 33,93 M 38,94 L 33,97\" stroke=\"#D2DFE9\" stroke-width=\"1.2\" stroke-linecap=\"round\"/><path d=\"M -28,68 L -23,76 M 28,68 L 23,76 M 0,72 L 0,106\" stroke=\"#879DB2\" stroke-width=\"1.2\" stroke-linecap=\"round\"/><path d=\"M -33,109 Q 0,114 33,109 L 33,114 L -33,114 Z\" fill=\"#6E849A\" stroke=\"#263C54\" stroke-width=\"0.8\"/><path d=\"M -27,110 Q 0,114 27,110\" stroke=\"#BFCCD8\" stroke-width=\"0.8\" fill=\"none\"/><circle cx=\"-14\" cy=\"75\" r=\"7\" fill=\"#B8C8D7\" stroke=\"#31475F\" stroke-width=\"1.2\"/><circle cx=\"-14\" cy=\"75\" r=\"5.2\" fill=\"#DFE9EF\" stroke=\"#8FA4B9\" stroke-width=\"0.65\"/><path d=\"M -17.5,74 Q -14,70.1 -10.5,74\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"1.1\" stroke-linecap=\"round\"/><path d=\"M -17.15,77 Q -14,79.55 -10.85,77\" fill=\"none\" stroke=\"#7E97AD\" stroke-width=\"0.8\" stroke-linecap=\"round\"/><circle cx=\"14\" cy=\"75\" r=\"7\" fill=\"#B8C8D7\" stroke=\"#31475F\" stroke-width=\"1.2\"/><circle cx=\"14\" cy=\"75\" r=\"5.2\" fill=\"#DFE9EF\" stroke=\"#8FA4B9\" stroke-width=\"0.65\"/><path d=\"M 10.5,74 Q 14,70.1 17.5,74\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"1.1\" stroke-linecap=\"round\"/><path d=\"M 10.85,77 Q 14,79.55 17.15,77\" fill=\"none\" stroke=\"#7E97AD\" stroke-width=\"0.8\" stroke-linecap=\"round\"/><circle cx=\"-13\" cy=\"90\" r=\"6.3\" fill=\"#B8C8D7\" stroke=\"#31475F\" stroke-width=\"1.2\"/><circle cx=\"-13\" cy=\"90\" r=\"4.5\" fill=\"#DFE9EF\" stroke=\"#8FA4B9\" stroke-width=\"0.65\"/><path d=\"M -16.15,89 Q -13,85.59 -9.85,89\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"1.1\" stroke-linecap=\"round\"/><path d=\"M -15.835,92 Q -13,94.095 -10.165,92\" fill=\"none\" stroke=\"#7E97AD\" stroke-width=\"0.8\" stroke-linecap=\"round\"/><circle cx=\"13\" cy=\"90\" r=\"6.3\" fill=\"#B8C8D7\" stroke=\"#31475F\" stroke-width=\"1.2\"/><circle cx=\"13\" cy=\"90\" r=\"4.5\" fill=\"#DFE9EF\" stroke=\"#8FA4B9\" stroke-width=\"0.65\"/><path d=\"M 9.85,89 Q 13,85.59 16.15,89\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"1.1\" stroke-linecap=\"round\"/><path d=\"M 10.165,92 Q 13,94.095 15.835,92\" fill=\"none\" stroke=\"#7E97AD\" stroke-width=\"0.8\" stroke-linecap=\"round\"/><circle cx=\"-12\" cy=\"104\" r=\"5.4\" fill=\"#B8C8D7\" stroke=\"#31475F\" stroke-width=\"1.2\"/><circle cx=\"-12\" cy=\"104\" r=\"3.6000000000000005\" fill=\"#DFE9EF\" stroke=\"#8FA4B9\" stroke-width=\"0.65\"/><path d=\"M -14.7,103 Q -12,100.22 -9.3,103\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"1.1\" stroke-linecap=\"round\"/><path d=\"M -14.43,106 Q -12,107.51 -9.57,106\" fill=\"none\" stroke=\"#7E97AD\" stroke-width=\"0.8\" stroke-linecap=\"round\"/><circle cx=\"12\" cy=\"104\" r=\"5.4\" fill=\"#B8C8D7\" stroke=\"#31475F\" stroke-width=\"1.2\"/><circle cx=\"12\" cy=\"104\" r=\"3.6000000000000005\" fill=\"#DFE9EF\" stroke=\"#8FA4B9\" stroke-width=\"0.65\"/><path d=\"M 9.3,103 Q 12,100.22 14.7,103\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"1.1\" stroke-linecap=\"round\"/><path d=\"M 9.57,106 Q 12,107.51 14.43,106\" fill=\"none\" stroke=\"#7E97AD\" stroke-width=\"0.8\" stroke-linecap=\"round\"/><path d=\"M -11,59 Q 0,70 11,59\" fill=\"none\" stroke=\"#AEBFD0\" stroke-width=\"2\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "mjolnir",
+    "slot": "pin",
+    "name": "Mjölnir — Thor’s hammer",
+    "cost_xp": 350,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<g transform=\"translate(21,82) rotate(-26)\"><path d=\"M -3,26 Q -11,35 -2,35 Q 8,35 4,26\" fill=\"none\" stroke=\"#6E4637\" stroke-width=\"2.2\" stroke-linecap=\"round\"/><rect x=\"-3.8\" y=\"-4\" width=\"7.6\" height=\"33\" rx=\"1.4\" fill=\"#85523C\" stroke=\"#493932\" stroke-width=\"1\"/><path d=\"M -3,3 L 3,0 M -3,9 L 3,6 M -3,15 L 3,12 M -3,21 L 3,18 M -3,27 L 3,24\" stroke=\"#D3A075\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><rect x=\"-4.5\" y=\"-3\" width=\"9\" height=\"5\" rx=\"1\" fill=\"#BCCBD5\" stroke=\"#536C82\" stroke-width=\"0.8\"/><rect x=\"-4.5\" y=\"26\" width=\"9\" height=\"3.5\" rx=\"1\" fill=\"#BCCBD5\" stroke=\"#536C82\" stroke-width=\"0.8\"/><path d=\"M -23,-21 L -17,-26 L 18,-26 L 24,-20 L 24,-5 L 18,0 L -18,0 L -23,-5 Z\" fill=\"#A7B9C8\" stroke=\"#40566E\" stroke-width=\"1.3\" stroke-linejoin=\"round\"/><path d=\"M -23,-21 L -17,-26 L 18,-26 L 13,-21 Z\" fill=\"#EBF3F8\"/><path d=\"M 13,-21 L 18,-26 L 24,-20 L 24,-5 L 18,0 L 13,-5 Z\" fill=\"#708BA2\"/><path d=\"M -23,-21 L -18,-17 L -18,-5 L -23,-5 Z\" fill=\"#CFDDE6\"/><path d=\"M -18,-5 L 13,-5 L 18,0 L -18,0 L -23,-5 Z\" fill=\"#829BAF\"/><path d=\"M -18,-19 L 12,-19 L 12,-6 L -18,-6 Z\" fill=\"#BDCDD9\"/><path d=\"M -18,-20 L 13,-20 M -20,-18 L -20,-7 M 16,-19 L 20,-16 L 20,-7\" fill=\"none\" stroke=\"#F4FAFD\" stroke-width=\"1.2\" stroke-linecap=\"round\"/><path d=\"M -13,-16 L -13,-10 L -9,-10 M -13,-13 L -10,-16 M -3,-17 L -6,-12 L -2,-12 L -5,-7 M 3,-10 L 6,-16 L 9,-10 M 4,-12 L 8,-12\" fill=\"none\" stroke=\"#718CA2\" stroke-width=\"0.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></g>",
+    "z_order": 140,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-witch-hat",
+    "slot": "head",
+    "name": "Moon witch hat",
+    "cost_xp": 200,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -38,-20 L -17,-48 Q -8,-69 9,-65 L 29,-55 L 15,-54 L 7,-43 L 34,-19 Z\" fill=\"#443057\" stroke=\"#281F39\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -17,-46 Q -4,-59 9,-61 L 20,-56 L 10,-54 L 1,-41 L 22,-21 L -20,-19 Z\" fill=\"#65507E\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-16\" rx=\"58\" ry=\"10\" fill=\"#30253F\" stroke=\"#211B30\" stroke-width=\"1.2\"/><path d=\"M -53,-17 Q -20,-25 5,-21 Q 27,-18 51,-20\" fill=\"none\" stroke=\"#81679A\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,-27 Q 0,-21 28,-27 L 34,-18 Q 0,-11 -38,-19 Z\" fill=\"#AC733D\" stroke=\"#553C34\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-8\" y=\"-27\" width=\"16\" height=\"12\" rx=\"2\" fill=\"#E8BE66\" stroke=\"#4D3942\" stroke-width=\"1\"/><rect x=\"-4.5\" y=\"-24\" width=\"9\" height=\"6\" rx=\"0.6\" fill=\"#6D4A43\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M 0,-26 L 0,-16\" fill=\"none\" stroke=\"#F8D985\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "tuck",
+      "fit_head": true
+    }
+  },
+  {
+    "slug": "spooky-witch-robe",
+    "slot": "body",
+    "name": "Moon witch robe",
+    "cost_xp": 350,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -13,56 L -34,66 L -49,112 L -25,115 L 25,115 L 49,112 L 34,66 L 13,56 Z\" fill=\"#2F2346\" stroke=\"#251C38\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#59416F\" stroke=\"#2C223D\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,60 L -22,70 L -10,86 L 0,72 L 10,86 L 22,70 L 10,60 L 0,68 Z\" fill=\"#80608F\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -33,75 L -38,96 M 33,75 L 38,96 M 0,76 L 0,109\" fill=\"none\" stroke=\"#B393B6\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,98 Q 0,105 32,98 L 32,104 Q 0,111 -32,104 Z\" fill=\"#2A233A\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-5\" y=\"100\" width=\"10\" height=\"8\" rx=\"1\" fill=\"#D8AE5F\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M 15,79 Q 4,79 6,87 Q 11,95 17,88 Q 8,90 11,83 Z\" fill=\"#F5D88C\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-17,88) scale(0.5)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E6C978\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(20,109) scale(0.35)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E6C978\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-ghost-hood",
+    "slot": "head",
+    "name": "Friendly ghost hood",
+    "cost_xp": 220,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M 0,-62 C -31,-62 -51,-44 -51,-12 L -51,25 Q -51,45 -31,50 L -13,68 L 13,68 L 31,50 Q 51,45 51,25 L 51,-12 C 51,-44 31,-62 0,-62 Z\" fill=\"#F2F4EC\" stroke=\"#8295A9\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -46,22 Q -46,45 -55,66 Q -40,59 -30,69 Q -16,59 -7,67 Q 5,59 17,68 Q 30,58 42,68 L 55,65 Q 46,43 46,22 L 32,43 L -32,43 Z\" fill=\"#F2F4EC\" stroke=\"#8295A9\" stroke-width=\"1.1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -42,-26 Q -45,7 -38,35 M 40,-28 Q 47,13 39,43 M -24,48 L -29,59 M 25,48 L 31,59\" fill=\"none\" stroke=\"#CCD9E2\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-19\" cy=\"-5\" rx=\"9\" ry=\"13\" fill=\"#29364C\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"19\" cy=\"-5\" rx=\"9\" ry=\"13\" fill=\"#29364C\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-16\" cy=\"-9\" rx=\"2.6\" ry=\"4\" fill=\"#DCEFF2\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"22\" cy=\"-9\" rx=\"2.6\" ry=\"4\" fill=\"#DCEFF2\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"27\" rx=\"7\" ry=\"9\" fill=\"#43536B\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-30\" cy=\"15\" rx=\"5\" ry=\"2.5\" fill=\"#D3E1E7\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"30\" cy=\"15\" rx=\"5\" ry=\"2.5\" fill=\"#D3E1E7\" stroke=\"none\" stroke-width=\"1\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "hide",
+      "covers_ears": true,
+      "covers_neck": true
+    }
+  },
+  {
+    "slug": "spooky-ghost-sheet",
+    "slot": "body",
+    "name": "Flowing ghost sheet",
+    "cost_xp": 280,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -12,56 Q -38,60 -44,79 L -53,109 L -39,104 L -29,115 L -16,107 L -3,115 L 12,106 L 28,115 L 40,105 L 53,110 L 44,79 Q 38,60 12,56 Z\" fill=\"#F2F4EC\" stroke=\"#8295A9\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,74 L -39,98 M -20,80 L -26,105 M 0,77 L -2,104 M 19,79 L 26,105 M 32,74 L 39,98\" fill=\"none\" stroke=\"#CFDCE4\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -15,65 Q 0,73 15,65\" fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-skull-mask",
+    "slot": "head",
+    "name": "Smiling skeleton mask",
+    "cost_xp": 250,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M 0,-62 C -31,-62 -51,-44 -51,-12 L -51,25 Q -51,45 -31,50 L -13,68 L 13,68 L 31,50 Q 51,45 51,25 L 51,-12 C 51,-44 31,-62 0,-62 Z\" fill=\"#EDE7D7\" stroke=\"#686C79\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -43,-26 Q -48,0 -39,15 L -30,19 L -28,37 L -13,47 L -10,64 L 10,64 L 13,47 L 28,37 L 30,19 L 39,15 Q 48,0 43,-26 L 36,9 L 23,14 L 21,32 L -21,32 L -23,14 L -36,9 Z\" fill=\"#C9C8C3\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-20\" cy=\"-7\" rx=\"13\" ry=\"15\" fill=\"#303042\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"20\" cy=\"-7\" rx=\"13\" ry=\"15\" fill=\"#303042\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-17\" cy=\"-12\" rx=\"4\" ry=\"3\" fill=\"#777C94\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"23\" cy=\"-12\" rx=\"4\" ry=\"3\" fill=\"#777C94\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -4,12 L -7,21 L 0,18 L 7,21 L 4,12 Z\" fill=\"#565568\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-20\" y=\"28\" width=\"40\" height=\"13\" rx=\"5\" fill=\"#4B4B5D\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"-17.7\" y=\"27\" width=\"5.4\" height=\"11\" rx=\"1.5\" fill=\"#FAF2DC\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"-10.2\" y=\"27\" width=\"5.4\" height=\"11\" rx=\"1.5\" fill=\"#FAF2DC\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"-2.7\" y=\"27\" width=\"5.4\" height=\"11\" rx=\"1.5\" fill=\"#FAF2DC\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"4.8\" y=\"27\" width=\"5.4\" height=\"11\" rx=\"1.5\" fill=\"#FAF2DC\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"12.3\" y=\"27\" width=\"5.4\" height=\"11\" rx=\"1.5\" fill=\"#FAF2DC\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -12,-49 Q 0,-54 12,-49 M -24,49 L -11,59 M 24,49 L 11,59\" fill=\"none\" stroke=\"#FFFAE9\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "hide",
+      "covers_ears": true,
+      "covers_neck": true
+    }
+  },
+  {
+    "slug": "spooky-skeleton-suit",
+    "slot": "body",
+    "name": "Skeleton suit",
+    "cost_xp": 320,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#292A3B\" stroke=\"#191D2E\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -31,71 L -24,84 L -26,108 M 31,71 L 24,84 L 26,108\" fill=\"none\" stroke=\"#434658\" stroke-width=\"1.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-2.6\" y=\"67\" width=\"5.2\" height=\"36\" rx=\"2\" fill=\"#EBE6D7\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -3,76 Q -13,71 -23,75 Q -23,83 -4,82 M 3,76 Q 13,71 23,75 Q 23,83 4,82\" fill=\"none\" stroke=\"#EAE5D6\" stroke-width=\"3.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -3,85 Q -13,80 -21,84 Q -23,92 -4,91 M 3,85 Q 13,80 21,84 Q 23,92 4,91\" fill=\"none\" stroke=\"#EAE5D6\" stroke-width=\"3.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -3,94 Q -13,89 -19,93 Q -23,101 -4,100 M 3,94 Q 13,89 19,93 Q 23,101 4,100\" fill=\"none\" stroke=\"#EAE5D6\" stroke-width=\"3.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -17,106 L -8,102 L 0,106 L 8,102 L 17,106 L 13,112 L 0,109 L -13,112 Z\" fill=\"#E9E1D0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -35,76 L -37,86 M 35,76 L 37,86\" fill=\"none\" stroke=\"#E9E1D0\" stroke-width=\"4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-35\" cy=\"76\" rx=\"2.8\" ry=\"2.8\" fill=\"#E9E1D0\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"35\" cy=\"76\" rx=\"2.8\" ry=\"2.8\" fill=\"#E9E1D0\" stroke=\"none\" stroke-width=\"1\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-pumpkin-mask",
+    "slot": "head",
+    "name": "Jack-o’-lantern mask",
+    "cost_xp": 260,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M 0,-62 C -31,-62 -51,-44 -51,-12 L -51,25 Q -51,45 -31,50 L -13,68 L 13,68 L 31,50 Q 51,45 51,25 L 51,-12 C 51,-44 31,-62 0,-62 Z\" fill=\"#DA722F\" stroke=\"#8C452C\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-1\" rx=\"46\" ry=\"55\" fill=\"#E58A35\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"-1\" rx=\"29\" ry=\"55\" fill=\"#F2A446\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"-1\" rx=\"13\" ry=\"55\" fill=\"#F8B756\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -5,-57 L -6,-68 L 2,-68 L 7,-59 L 4,-54 Z\" fill=\"#61734A\" stroke=\"#3C523B\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 4,-59 Q 16,-67 22,-57 Q 12,-53 4,-59 Z\" fill=\"#87A252\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -30,-17 L -10,-9 L -29,1 Z M 30,-17 L 10,-9 L 29,1 Z M 0,2 L -6,12 L 6,12 Z\" fill=\"#493549\" stroke=\"#A44E29\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -30,19 Q 0,43 30,19 L 25,35 L 18,34 L 16,40 L 6,41 L 4,35 L -4,35 L -6,41 L -16,40 L -18,34 L -25,35 Z\" fill=\"#493549\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -26,-12 L -17,-9 L -26,-5 M 26,-12 L 17,-9 L 26,-5\" fill=\"none\" stroke=\"#FFDB74\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -23,51 L -11,65 L 11,65 L 23,51\" fill=\"none\" stroke=\"#AF552D\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "hide",
+      "covers_ears": true,
+      "covers_neck": true
+    }
+  },
+  {
+    "slug": "spooky-pumpkin-outfit",
+    "slot": "body",
+    "name": "Pumpkin patch outfit",
+    "cost_xp": 300,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#D87834\" stroke=\"#8F4A30\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -18,66 Q -28,92 -19,111 M 18,66 Q 28,92 19,111 M -5,67 Q -11,90 -7,112 M 5,67 Q 11,90 7,112\" fill=\"none\" stroke=\"#F4AB50\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -11,57 L -27,67 L -15,69 L -11,80 L 0,70 L 11,80 L 15,69 L 27,67 L 11,57 L 0,64 Z\" fill=\"#54754A\" stroke=\"#34573C\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -35,78 L -34,89 M 35,78 L 34,89\" fill=\"none\" stroke=\"#EDA147\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -11,89 L -3,94 L -12,96 M 11,89 L 3,94 L 12,96 M -13,102 Q 0,112 13,102\" fill=\"none\" stroke=\"#764431\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-mummy-mask",
+    "slot": "head",
+    "name": "Moonlit mummy mask",
+    "cost_xp": 240,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M 0,-62 C -31,-62 -51,-44 -51,-12 L -51,25 Q -51,45 -31,50 L -13,68 L 13,68 L 31,50 Q 51,45 51,25 L 51,-12 C 51,-44 31,-62 0,-62 Z\" fill=\"#DAD2B9\" stroke=\"#837C70\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -40,-39 Q 0,-60 40,-39 L 46,-23 Q 0,-39 -46,-23 Z\" fill=\"#F3EAD0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -49,-13 Q 0,-24 49,-13 L 50,10 Q 0,19 -50,10 Z\" fill=\"#343845\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-19\" cy=\"-1\" rx=\"8\" ry=\"4.5\" fill=\"#EACB7B\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"19\" cy=\"-1\" rx=\"8\" ry=\"4.5\" fill=\"#EACB7B\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-18\" cy=\"-2\" rx=\"2\" ry=\"2\" fill=\"#FFEEBF\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"20\" cy=\"-2\" rx=\"2\" ry=\"2\" fill=\"#FFEEBF\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -48,17 L 48,5 L 48,22 L -42,39 Z\" fill=\"#F2E8CB\" stroke=\"#B2A88F\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -48,6 L 48,30 L 38,44 L -44,21 Z\" fill=\"#E3D8B8\" stroke=\"#AFA38A\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -28,40 L 30,47 L 16,64 L -14,64 Z\" fill=\"#F0E5C9\" stroke=\"#B7AB90\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -45,-28 L 39,-47 M -29,-52 L 46,-31 M -27,33 L 27,42 M -12,51 L 20,56\" fill=\"none\" stroke=\"#AA9F86\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -35,-33 L 18,-45 M -36,16 L 12,29\" fill=\"none\" stroke=\"#FFF4D8\" stroke-width=\"1.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "hide",
+      "covers_ears": true,
+      "covers_neck": true
+    }
+  },
+  {
+    "slug": "spooky-mummy-wraps",
+    "slot": "body",
+    "name": "Mummy wraps",
+    "cost_xp": 300,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#DCD2B6\" stroke=\"#857C68\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -30,68 L 31,81 L 37,91 L -36,79 Z M -33,91 L 34,77 L 35,89 L -33,103 Z M -33,107 L 32,94 L 33,107 L 1,113 L -32,113 Z\" fill=\"#F0E7CB\" stroke=\"#B4A98E\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -28,85 L 30,100 M -33,71 L 29,87 M -25,108 L 26,99 M -39,83 L -34,89 M 34,72 L 39,79\" fill=\"none\" stroke=\"#A69C83\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 16,98 L 30,104 L 38,115 L 25,112 Z\" fill=\"#EFE5C8\" stroke=\"#A69C83\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-werewolf-mask",
+    "slot": "head",
+    "name": "Moonlight werewolf mask",
+    "cost_xp": 280,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -48,-16 L -44,-67 L -22,-44 M 48,-16 L 44,-67 L 22,-44\" fill=\"#856047\" stroke=\"#483D39\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 0,-62 C -31,-62 -51,-44 -51,-12 L -51,25 Q -51,45 -31,50 L -13,68 L 13,68 L 31,50 Q 51,45 51,25 L 51,-12 C 51,-44 31,-62 0,-62 Z\" fill=\"#856047\" stroke=\"#483D39\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -45,-25 L -54,-8 L -49,-7 L -55,12 L -49,11 L -52,29 L -42,27 L -32,44 L -15,42 L 0,50 L 15,42 L 32,44 L 42,27 L 52,29 L 49,11 L 55,12 L 49,-7 L 54,-8 L 45,-25 L 35,13 L 0,30 L -35,13 Z\" fill=\"#A47D57\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -41,-59 L -38,-32 L -28,-42 Z M 41,-59 L 38,-32 L 28,-42 Z\" fill=\"#D9AC83\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -33,-12 Q -21,-18 -9,-10 M 33,-12 Q 21,-18 9,-10\" fill=\"none\" stroke=\"#4C3C35\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-20\" cy=\"-3\" rx=\"9\" ry=\"7\" fill=\"#EAC36D\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"20\" cy=\"-3\" rx=\"9\" ry=\"7\" fill=\"#EAC36D\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-19\" cy=\"-3\" rx=\"2.5\" ry=\"5\" fill=\"#393136\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"19\" cy=\"-3\" rx=\"2.5\" ry=\"5\" fill=\"#393136\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"24\" rx=\"24\" ry=\"18\" fill=\"#E5C6A0\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -10,16 Q 0,11 10,16 L 0,25 Z\" fill=\"#423536\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 0,24 L 0,29 Q -9,38 -16,28 M 0,29 Q 9,38 16,28\" fill=\"none\" stroke=\"#574038\" stroke-width=\"1.7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -12,30 L -10,37 L -7,33 M 12,30 L 10,37 L 7,33\" fill=\"#FFF4D8\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "hide",
+      "covers_ears": true,
+      "covers_neck": true
+    }
+  },
+  {
+    "slug": "spooky-werewolf-shirt",
+    "slot": "body",
+    "name": "Werewolf plaid shirt",
+    "cost_xp": 330,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#874454\" stroke=\"#443341\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,72 L 32,72 M -37,83 L 37,83 M -33,96 L 33,96 M -32,108 L 32,108 M -24,70 L -24,111 M 24,70 L 24,111\" fill=\"none\" stroke=\"#BA7680\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -35,76 L 35,76 M -35,100 L 35,100 M -29,70 L -29,111 M 29,70 L 29,111\" fill=\"none\" stroke=\"#51384C\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -11,59 L -18,74 L -11,79 L -13,94 L 0,89 L 13,94 L 11,79 L 18,74 L 11,59 Z\" fill=\"#A47D57\" stroke=\"#58473B\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,63 L -4,71 L 0,66 L 4,71 L 10,63 L 7,82 L 0,87 L -7,82 Z\" fill=\"#D9B88D\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -41,85 L -45,94 L -39,92 L -36,99 L -33,92 M 41,85 L 45,94 L 39,92 L 36,99 L 33,92\" fill=\"#A47D57\" stroke=\"#58473B\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"101\" rx=\"1.4\" ry=\"1.4\" fill=\"#D8C4B0\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"109\" rx=\"1.4\" ry=\"1.4\" fill=\"#D8C4B0\" stroke=\"none\" stroke-width=\"1\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-monster-mask",
+    "slot": "head",
+    "name": "Stitched monster mask",
+    "cost_xp": 260,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<rect x=\"-60\" y=\"18\" width=\"15\" height=\"10\" rx=\"2\" fill=\"#98AAB8\" stroke=\"#536777\" stroke-width=\"1\"/><rect x=\"45\" y=\"18\" width=\"15\" height=\"10\" rx=\"2\" fill=\"#98AAB8\" stroke=\"#536777\" stroke-width=\"1\"/><rect x=\"-62\" y=\"16\" width=\"5\" height=\"14\" rx=\"1\" fill=\"#CFDBDF\" stroke=\"#536777\" stroke-width=\"1\"/><rect x=\"57\" y=\"16\" width=\"5\" height=\"14\" rx=\"1\" fill=\"#CFDBDF\" stroke=\"#536777\" stroke-width=\"1\"/><path d=\"M 0,-62 C -31,-62 -51,-44 -51,-12 L -51,25 Q -51,45 -31,50 L -13,68 L 13,68 L 31,50 Q 51,45 51,25 L 51,-12 C 51,-44 31,-62 0,-62 Z\" fill=\"#8FAE78\" stroke=\"#4E7256\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -46,-15 L -49,-31 Q -42,-61 0,-62 Q 42,-61 49,-31 L 46,-15 L 37,-28 L 26,-24 L 17,-30 L 7,-25 L -3,-31 L -15,-25 L -25,-29 L -37,-23 Z\" fill=\"#34303F\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -39,-39 Q -20,-52 5,-51 M 15,-48 L 34,-39\" fill=\"none\" stroke=\"#585263\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,-13 L -10,-13 M 10,-13 L 32,-13\" fill=\"none\" stroke=\"#4C514A\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-20\" cy=\"-3\" rx=\"8\" ry=\"7\" fill=\"#F0EACB\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"20\" cy=\"-3\" rx=\"8\" ry=\"7\" fill=\"#F0EACB\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-18\" cy=\"-2\" rx=\"3\" ry=\"3\" fill=\"#34403F\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"18\" cy=\"-2\" rx=\"3\" ry=\"3\" fill=\"#34403F\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -2,7 L -5,17 L 4,17\" fill=\"none\" stroke=\"#64895E\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -18,28 Q 0,39 18,28 M -10,29 L -12,35 M 0,32 L 0,37 M 10,29 L 12,35\" fill=\"none\" stroke=\"#47644E\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 24,-24 L 37,-15 M 27,-25 L 25,-19 M 33,-21 L 31,-15 M -37,9 L -30,22 M -39,13 L -32,10 M -35,20 L -28,17\" fill=\"none\" stroke=\"#486B50\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -29,44 L -12,61 L 12,61 L 29,44\" fill=\"none\" stroke=\"#739769\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "hide",
+      "covers_ears": true,
+      "covers_neck": true
+    }
+  },
+  {
+    "slug": "spooky-monster-jacket",
+    "slot": "body",
+    "name": "Patched monster jacket",
+    "cost_xp": 320,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#65516E\" stroke=\"#392F46\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -11,59 L -18,71 L -12,82 L -8,113 L 8,113 L 12,82 L 18,71 L 11,59 Z\" fill=\"#9BB381\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -13,60 L -27,71 L -20,80 L -25,86 L -10,111 L -11,78 M 13,60 L 27,71 L 20,80 L 25,86 L 10,111 L 11,78\" fill=\"#86718B\" stroke=\"#44364F\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-30\" y=\"91\" width=\"13\" height=\"13\" rx=\"1\" fill=\"#B28663\" stroke=\"#463D43\" stroke-width=\"0.8\"/><path d=\"M -28,93 L -19,101 M -27,100 L -20,94 M 18,91 L 28,95 M 21,90 L 20,96 M 26,92 L 25,98\" fill=\"none\" stroke=\"#E2BD8E\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"6\" cy=\"92\" rx=\"1.5\" ry=\"1.5\" fill=\"#D0B084\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"6\" cy=\"103\" rx=\"1.5\" ry=\"1.5\" fill=\"#D0B084\" stroke=\"none\" stroke-width=\"1\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-scarecrow-mask",
+    "slot": "head",
+    "name": "Harvest scarecrow mask",
+    "cost_xp": 250,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M 0,-62 C -31,-62 -51,-44 -51,-12 L -51,25 Q -51,45 -31,50 L -13,68 L 13,68 L 31,50 Q 51,45 51,25 L 51,-12 C 51,-44 31,-62 0,-62 Z\" fill=\"#C59B68\" stroke=\"#79593D\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -47,3 L -60,-4 M -48,10 L -60,12 M -47,18 L -59,26 M 47,3 L 60,-4 M 48,10 L 60,12 M 47,18 L 59,26\" fill=\"none\" stroke=\"#D8B064\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -44,-31 L -35,-62 Q -5,-69 31,-62 L 44,-31 Z\" fill=\"#AD8248\" stroke=\"#6B523A\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -29,-58 L -23,-38 M -13,-62 L -10,-38 M 5,-63 L 7,-38 M 23,-59 L 28,-38\" fill=\"none\" stroke=\"#E0BD74\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -43,-38 Q 0,-31 42,-38 L 45,-30 Q 0,-22 -45,-30 Z\" fill=\"#77543D\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-28\" rx=\"58\" ry=\"8\" fill=\"#C6A15F\" stroke=\"#755939\" stroke-width=\"1.1\"/><path d=\"M -51,-28 Q 0,-20 51,-28\" fill=\"none\" stroke=\"#E7CC8B\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-19\" cy=\"-2\" rx=\"7\" ry=\"7\" fill=\"#55433C\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"19\" cy=\"-2\" rx=\"7\" ry=\"7\" fill=\"#55433C\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-17\" cy=\"-4\" rx=\"1.4\" ry=\"1.4\" fill=\"#E6C795\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"21\" cy=\"-4\" rx=\"1.4\" ry=\"1.4\" fill=\"#E6C795\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -3,8 L -9,19 L 6,17 Z\" fill=\"#CA7748\" stroke=\"#845337\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -27,24 Q 0,45 27,24 M -21,26 L -24,32 M -11,32 L -13,38 M 0,34 L 0,40 M 11,32 L 13,38 M 21,26 L 24,32\" fill=\"none\" stroke=\"#694B39\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -40,3 L -32,7 M -39,12 L -31,16 M -36,1 L -40,17 M 31,9 L 41,13 M 31,18 L 39,22 M 37,6 L 33,24\" fill=\"none\" stroke=\"#A27D50\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "hide",
+      "covers_ears": true,
+      "covers_neck": true
+    }
+  },
+  {
+    "slug": "spooky-scarecrow-overalls",
+    "slot": "body",
+    "name": "Scarecrow overalls",
+    "cost_xp": 300,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#9E6749\" stroke=\"#5C443C\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -36,76 L -25,79 M -39,84 L -28,87 M 36,76 L 25,79 M 39,84 L 28,87\" fill=\"none\" stroke=\"#D3A26B\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -19,66 L -12,67 L -12,80 L 12,80 L 12,67 L 19,66 L 22,92 L 30,111 L -30,111 L -22,92 Z\" fill=\"#516C85\" stroke=\"#334B64\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-11\" y=\"85\" width=\"22\" height=\"17\" rx=\"2\" fill=\"#63809A\" stroke=\"#334B64\" stroke-width=\"1\"/><path d=\"M -8,88 L 8,88 M -7,101 L -6,112 M 7,101 L 6,112\" fill=\"none\" stroke=\"#A5B8C2\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-15\" cy=\"79\" rx=\"2\" ry=\"2\" fill=\"#D4AD69\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"15\" cy=\"79\" rx=\"2\" ry=\"2\" fill=\"#D4AD69\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"18\" y=\"98\" width=\"9\" height=\"10\" rx=\"0\" fill=\"#B8867C\" stroke=\"#DFC2A5\" stroke-width=\"0.8\"/><path d=\"M -42,87 L -47,96 M -39,90 L -42,99 M 42,87 L 47,96 M 39,90 L 42,99\" fill=\"none\" stroke=\"#D8B064\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-cat-hood",
+    "slot": "head",
+    "name": "Midnight black cat hood",
+    "cost_xp": 250,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -48,-15 L -40,-67 L -17,-47 M 48,-15 L 40,-67 L 17,-47\" fill=\"#333744\" stroke=\"#202633\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 0,-62 C -31,-62 -51,-44 -51,-12 L -51,25 Q -51,45 -31,50 L -13,68 L 13,68 L 31,50 Q 51,45 51,25 L 51,-12 C 51,-44 31,-62 0,-62 Z\" fill=\"#333744\" stroke=\"#202633\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -38,-57 L -39,-31 L -25,-43 Z M 38,-57 L 39,-31 L 25,-43 Z\" fill=\"#AA7F90\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -40,16 Q -26,38 0,43 Q 26,38 40,16 L 33,41 L 13,61 L -13,61 L -33,41 Z\" fill=\"#4D5262\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-21\" cy=\"-6\" rx=\"13\" ry=\"9\" fill=\"#B0C977\" stroke=\"#1F2734\" stroke-width=\"1\"/><ellipse cx=\"21\" cy=\"-6\" rx=\"13\" ry=\"9\" fill=\"#B0C977\" stroke=\"#1F2734\" stroke-width=\"1\"/><ellipse cx=\"-20\" cy=\"-6\" rx=\"2.5\" ry=\"8\" fill=\"#29303C\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"20\" cy=\"-6\" rx=\"2.5\" ry=\"8\" fill=\"#29303C\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-17\" cy=\"-9\" rx=\"2\" ry=\"2\" fill=\"#EFF1C8\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"24\" cy=\"-9\" rx=\"2\" ry=\"2\" fill=\"#EFF1C8\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -6,12 Q 0,9 6,12 L 0,18 Z\" fill=\"#D9A2AF\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 0,18 L 0,23 Q -6,29 -11,23 M 0,23 Q 6,29 11,23\" fill=\"none\" stroke=\"#D1D7DF\" stroke-width=\"1.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -16,17 L -41,12 M -16,22 L -43,23 M 16,17 L 41,12 M 16,22 L 43,23\" fill=\"none\" stroke=\"#D1D7DF\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "hide",
+      "covers_ears": true,
+      "covers_neck": true
+    }
+  },
+  {
+    "slug": "spooky-cat-suit",
+    "slot": "body",
+    "name": "Black cat suit & tail",
+    "cost_xp": 300,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M 32,106 Q 58,115 55,87 Q 53,72 44,77 Q 39,81 44,85\" fill=\"none\" stroke=\"#343947\" stroke-width=\"8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 51,107 Q 59,95 50,82\" fill=\"none\" stroke=\"#656B7D\" stroke-width=\"1.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#363B49\" stroke=\"#202633\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -13,70 Q 0,77 13,70 L 17,93 Q 13,112 0,111 Q -13,112 -17,93 Z\" fill=\"#9096A2\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -12,63 Q 0,72 12,63\" fill=\"none\" stroke=\"#A56885\" stroke-width=\"4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"72\" rx=\"4\" ry=\"4\" fill=\"#E2BE71\" stroke=\"#98773A\" stroke-width=\"0.8\"/><path d=\"M 0,73 L 0,76\" fill=\"none\" stroke=\"#7B5E37\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -36,83 L -33,87 M -38,87 L -35,91 M 36,83 L 33,87 M 38,87 L 35,91\" fill=\"none\" stroke=\"#8C95A4\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-pirate-hat",
+    "slot": "head",
+    "name": "Haunted pirate tricorn",
+    "cost_xp": 240,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -56,-18 Q -62,-38 -52,-48 L -28,-37 Q -15,-67 0,-63 Q 15,-67 28,-37 L 52,-48 Q 62,-38 56,-18 Q 0,-4 -56,-18 Z\" fill=\"#343344\" stroke=\"#202535\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -52,-42 L -29,-31 Q 0,-43 29,-31 L 52,-42 L 51,-22 Q 0,-13 -51,-22 Z\" fill=\"#504859\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -54,-43 L -29,-33 Q 0,-48 29,-33 L 54,-43\" fill=\"none\" stroke=\"#D5B57A\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -42,-17 Q 0,-24 42,-17 L 41,-11 Q 0,-17 -41,-11 Z\" fill=\"#9F5368\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-34\" rx=\"8\" ry=\"7\" fill=\"#E9DEC5\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"-5\" y=\"-30\" width=\"10\" height=\"6\" rx=\"1\" fill=\"#E9DEC5\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-3\" cy=\"-35\" rx=\"2\" ry=\"2\" fill=\"#3C3246\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"3\" cy=\"-35\" rx=\"2\" ry=\"2\" fill=\"#3C3246\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -2,-28 L -2,-25 M 2,-28 L 2,-25\" fill=\"none\" stroke=\"#726879\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "tuck",
+      "fit_head": true
+    }
+  },
+  {
+    "slug": "spooky-pirate-coat",
+    "slot": "body",
+    "name": "Haunted pirate coat",
+    "cost_xp": 380,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#41415D\" stroke=\"#272C43\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,59 L -16,70 L -11,113 L 11,113 L 16,70 L 10,59 Z\" fill=\"#D6D0BC\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -14,60 L -28,71 L -19,84 L -23,110 L -9,113 L -10,80 M 14,60 L 28,71 L 19,84 L 23,110 L 9,113 L 10,80\" fill=\"#66607A\" stroke=\"#292D44\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -18,66 L -23,73 L -15,86 M 18,66 L 23,73 L 15,86\" fill=\"none\" stroke=\"#D6B674\" stroke-width=\"1.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,98 Q 0,94 32,98 L 32,105 Q 0,101 -32,105 Z\" fill=\"#A74F68\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -17,64 L 21,111\" fill=\"none\" stroke=\"#725240\" stroke-width=\"6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -18,64 L 20,111\" fill=\"none\" stroke=\"#C89C67\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"2\" y=\"86\" width=\"9\" height=\"10\" rx=\"1\" fill=\"#D6B674\" stroke=\"#6B5240\" stroke-width=\"0.7\"/><ellipse cx=\"-26\" cy=\"88\" rx=\"1.6\" ry=\"1.6\" fill=\"#D8BC7C\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-26\" cy=\"96\" rx=\"1.6\" ry=\"1.6\" fill=\"#D8BC7C\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-26\" cy=\"108\" rx=\"1.6\" ry=\"1.6\" fill=\"#D8BC7C\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"26\" cy=\"88\" rx=\"1.6\" ry=\"1.6\" fill=\"#D8BC7C\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"26\" cy=\"96\" rx=\"1.6\" ry=\"1.6\" fill=\"#D8BC7C\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"26\" cy=\"108\" rx=\"1.6\" ry=\"1.6\" fill=\"#D8BC7C\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -42,85 L -32,89 L -33,96 L -42,92 M 42,85 L 32,89 L 33,96 L 42,92\" fill=\"#A74F68\" stroke=\"#D6B674\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-broom",
+    "slot": "pin",
+    "name": "Moon witch broom",
+    "cost_xp": 180,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<g transform=\"translate(0,92) rotate(-22)\"><path d=\"M -42,0 Q -14,-3 27,0\" fill=\"none\" stroke=\"#71513D\" stroke-width=\"4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -39,-1 Q -13,-4 25,-1\" fill=\"none\" stroke=\"#BE9360\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 23,-4 Q 35,-5 45,-13 L 43,-5 L 47,-5 L 44,1 L 47,5 L 42,6 L 44,12 Q 34,5 23,4 Z\" fill=\"#CEA257\" stroke=\"#856239\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 29,-2 L 40,-7 M 28,0 L 43,0 M 29,2 L 40,7\" fill=\"none\" stroke=\"#F2D28A\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"22\" y=\"-5\" width=\"6\" height=\"10\" rx=\"1\" fill=\"#8E5A65\" stroke=\"#573F47\" stroke-width=\"0.8\"/></g>",
+    "z_order": 140,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-candy-bucket",
+    "slot": "pin",
+    "name": "Pumpkin candy bucket",
+    "cost_xp": 160,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<g transform=\"translate(18,94)\"><path d=\"M -15,-6 Q -18,-29 0,-28 Q 18,-29 15,-6\" fill=\"none\" stroke=\"#77503D\" stroke-width=\"2.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -12,-6 L -14,-16 L -8,-20 L -3,-8\" fill=\"#BC82AE\" stroke=\"#65566F\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 0,-8 L 3,-20 L 10,-18 L 7,-6\" fill=\"#A2C68E\" stroke=\"#5B795B\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"3\" rx=\"19\" ry=\"16\" fill=\"#E58B35\" stroke=\"#98562E\" stroke-width=\"1.2\"/><ellipse cx=\"0\" cy=\"3\" rx=\"11\" ry=\"16\" fill=\"#F7AF49\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"-9\" rx=\"16\" ry=\"4\" fill=\"#9E542F\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -12,-2 L -5,2 L -13,5 M 12,-2 L 5,2 L 13,5 M -10,9 Q 0,17 10,9\" fill=\"#654032\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -6,-10 L -7,-16 M 3,-10 L 4,-15\" fill=\"none\" stroke=\"#F5E1C5\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g>",
+    "z_order": 140,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-cauldron",
+    "slot": "pin",
+    "name": "Bubbling cauldron",
+    "cost_xp": 190,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<g transform=\"translate(0,95)\"><path d=\"M -14,12 L -17,18 M 14,12 L 17,18\" fill=\"none\" stroke=\"#303448\" stroke-width=\"4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-20\" cy=\"0\" rx=\"5\" ry=\"7\" fill=\"none\" stroke=\"#66708A\" stroke-width=\"2\"/><ellipse cx=\"20\" cy=\"0\" rx=\"5\" ry=\"7\" fill=\"none\" stroke=\"#66708A\" stroke-width=\"2\"/><path d=\"M -18,-8 L 18,-8 Q 27,17 0,18 Q -27,17 -18,-8 Z\" fill=\"#3D4158\" stroke=\"#252C41\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-8\" rx=\"20\" ry=\"5\" fill=\"#737A90\" stroke=\"#292D43\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"-9\" rx=\"16\" ry=\"3.5\" fill=\"#ADCE78\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -12,-13 Q -19,-19 -11,-25 M 4,-13 Q -3,-20 6,-26\" fill=\"none\" stroke=\"#A9C897\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"11\" cy=\"-18\" rx=\"3\" ry=\"3\" fill=\"#B9D995\" stroke=\"#698961\" stroke-width=\"0.7\"/><ellipse cx=\"-2\" cy=\"-21\" rx=\"2\" ry=\"2\" fill=\"#D1E9AE\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -15,1 Q -17,10 -7,13\" fill=\"none\" stroke=\"#7A8399\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(5,5) scale(0.8)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#C6B578\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g></g>",
+    "z_order": 140,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-spider-brooch",
+    "slot": "pin",
+    "name": "Amethyst spider brooch",
+    "cost_xp": 120,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<g transform=\"translate(-18,86)\"><path d=\"M -3,-3 L -11,-9 L -15,-6 M -5,0 L -15,-2 L -17,2 M -5,3 L -14,6 L -15,11 M -3,6 L -8,12 L -7,16 M 3,-3 L 11,-9 L 15,-6 M 5,0 L 15,-2 L 17,2 M 5,3 L 14,6 L 15,11 M 3,6 L 8,12 L 7,16\" fill=\"none\" stroke=\"#53516B\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"3\" rx=\"7\" ry=\"9\" fill=\"#655078\" stroke=\"#BDA1C9\" stroke-width=\"0.9\"/><path d=\"M 0,-4 L 5,2 L 0,10 L -5,2 Z\" fill=\"#A284B5\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-7\" rx=\"4\" ry=\"4\" fill=\"#48475D\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-1\" cy=\"-8\" rx=\"1\" ry=\"1\" fill=\"#DAC6E3\" stroke=\"none\" stroke-width=\"1\"/></g>",
+    "z_order": 140,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-bat-bow-tie",
+    "slot": "pin",
+    "name": "Velvet bat bow tie",
+    "cost_xp": 110,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<g transform=\"translate(0,75)\"><g transform=\"translate(0,0) scale(1.8)\"><path d=\"M -12,-4 Q -8,0 -3,-2 L -2,-5 L 0,-3 L 2,-5 L 3,-2 Q 8,0 12,-4 Q 12,2 8,5 Q 5,1 3,4 L 0,7 L -3,4 Q -5,1 -8,5 Q -12,2 -12,-4 Z\" fill=\"#342B48\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><path d=\"M -20,-6 L -8,-1 L -14,5 M 20,-6 L 8,-1 L 14,5\" fill=\"none\" stroke=\"#86688F\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"1\" rx=\"4\" ry=\"6\" fill=\"#976679\" stroke=\"#D8ACAB\" stroke-width=\"0.8\"/></g>",
+    "z_order": 140,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-lantern",
+    "slot": "pin",
+    "name": "Haunted lantern",
+    "cost_xp": 180,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<g transform=\"translate(24,92)\"><ellipse cx=\"0\" cy=\"-21\" rx=\"6\" ry=\"7\" fill=\"none\" stroke=\"#6A6472\" stroke-width=\"2\"/><path d=\"M -13,-12 L -7,-19 L 7,-19 L 13,-12 Z\" fill=\"#535368\" stroke=\"#30364B\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-11\" y=\"-12\" width=\"22\" height=\"27\" rx=\"2\" fill=\"#E8B663\" stroke=\"#42475B\" stroke-width=\"1.5\"/><rect x=\"-7\" y=\"-8\" width=\"14\" height=\"19\" rx=\"1\" fill=\"#F7DA8A\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M 1,-4 Q 6,3 3,6 Q 2,0 -1,2 Q -4,6 0,10 Q -10,5 1,-4 Z\" fill=\"#F8F0BB\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -11,-12 L 11,15 M 11,-12 L -11,15 M 0,-12 L 0,15\" fill=\"none\" stroke=\"#626579\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-13\" y=\"13\" width=\"26\" height=\"4\" rx=\"1\" fill=\"#535368\" stroke=\"#30364B\" stroke-width=\"1\"/><path d=\"M -8,-17 L 6,-17\" fill=\"none\" stroke=\"#ADB0BE\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g>",
+    "z_order": 140,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-pirate-eye-patch",
+    "slot": "eyewear",
+    "name": "Pirate eye patch",
+    "cost_xp": 100,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -37,-14 L 35,10\" fill=\"none\" stroke=\"#383341\" stroke-width=\"2.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -31,-7 Q -20,-16 -8,-7 L -10,5 Q -19,16 -28,5 Z\" fill=\"#3C3547\" stroke=\"#221F31\" stroke-width=\"1.1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -27,-6 Q -21,-10 -15,-6\" fill=\"none\" stroke=\"#70677F\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 120,
+    "enabled": true,
+    "render_options": {
+      "fit_eyes": true
+    }
+  },
+  {
+    "slug": "spooky-graveyard",
+    "slot": "background",
+    "name": "Moonlit graveyard",
+    "cost_xp": 180,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<rect x=\"-120\" y=\"-120\" width=\"240\" height=\"260\" rx=\"0\" fill=\"#282840\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"-120\" y=\"24\" width=\"240\" height=\"116\" rx=\"0\" fill=\"#454259\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-43\" cy=\"-57\" rx=\"26\" ry=\"26\" fill=\"#D7D5B7\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-34\" cy=\"-64\" rx=\"22\" ry=\"22\" fill=\"#282840\" stroke=\"none\" stroke-width=\"1\"/><g transform=\"translate(-62,-80) scale(0.45)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(-19,-91) scale(0.3)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(47,-79) scale(0.35)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(65,-41) scale(0.5)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(-63,-24) scale(0.3)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(27,-65) scale(0.25)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><path d=\"M -120,76 Q -38,42 5,71 Q 52,49 120,73 L 120,140 L -120,140 Z\" fill=\"#363A4A\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -76,114 L -76,75 Q -65,61 -54,75 L -54,114 Z M 49,113 L 49,83 Q 61,70 73,83 L 73,113 Z\" fill=\"#6F7580\" stroke=\"#252E40\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -65,78 L -65,94 M -71,84 L -59,84 M 61,85 L 61,99 M 56,90 L 66,90\" fill=\"none\" stroke=\"#A6AAAB\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -120,114 Q -57,92 0,110 Q 48,98 120,107 L 120,140 L -120,140 Z\" fill=\"#29313E\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(52,-12) scale(0.55)\"><path d=\"M -12,-4 Q -8,0 -3,-2 L -2,-5 L 0,-3 L 2,-5 L 3,-2 Q 8,0 12,-4 Q 12,2 8,5 Q 5,1 3,4 L 0,7 L -3,4 Q -5,1 -8,5 Q -12,2 -12,-4 Z\" fill=\"#121E31\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(-60,17) scale(0.35)\"><path d=\"M -12,-4 Q -8,0 -3,-2 L -2,-5 L 0,-3 L 2,-5 L 3,-2 Q 8,0 12,-4 Q 12,2 8,5 Q 5,1 3,4 L 0,7 L -3,4 Q -5,1 -8,5 Q -12,2 -12,-4 Z\" fill=\"#121E31\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g>",
+    "z_order": 0,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-haunted-castle",
+    "slot": "background",
+    "name": "Haunted castle",
+    "cost_xp": 200,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<rect x=\"-120\" y=\"-120\" width=\"240\" height=\"260\" rx=\"0\" fill=\"#333047\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"39\" cy=\"-60\" rx=\"29\" ry=\"29\" fill=\"#C8BCC8\" stroke=\"none\" stroke-width=\"1\"/><g transform=\"translate(-62,-80) scale(0.45)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(-19,-91) scale(0.3)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(47,-79) scale(0.35)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(65,-41) scale(0.5)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(-63,-24) scale(0.3)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(27,-65) scale(0.25)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><path d=\"M -79,113 L -79,-9 L -67,-9 L -67,-33 L -50,-33 L -50,-9 L -42,-9 L -42,39 L 37,39 L 37,-18 L 45,-18 L 45,-42 L 63,-42 L 63,-18 L 76,-18 L 76,114 Z\" fill=\"#545066\" stroke=\"#26293E\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -83,-9 L -59,-47 L -37,-9 Z M 33,-18 L 54,-58 L 80,-18 Z\" fill=\"#29293D\" stroke=\"#212337\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-64\" y=\"7\" width=\"5\" height=\"12\" rx=\"2\" fill=\"#E3BE73\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"-54\" y=\"7\" width=\"5\" height=\"12\" rx=\"2\" fill=\"#E3BE73\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"49\" y=\"0\" width=\"5\" height=\"12\" rx=\"2\" fill=\"#E3BE73\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"60\" y=\"0\" width=\"5\" height=\"12\" rx=\"2\" fill=\"#E3BE73\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"-68\" y=\"47\" width=\"8\" height=\"17\" rx=\"3\" fill=\"#DBC187\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"54\" y=\"35\" width=\"8\" height=\"17\" rx=\"3\" fill=\"#DBC187\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -120,106 Q -56,80 0,106 Q 59,88 120,108 L 120,140 L -120,140 Z\" fill=\"#292F3D\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-43,-71) scale(0.6)\"><path d=\"M -12,-4 Q -8,0 -3,-2 L -2,-5 L 0,-3 L 2,-5 L 3,-2 Q 8,0 12,-4 Q 12,2 8,5 Q 5,1 3,4 L 0,7 L -3,4 Q -5,1 -8,5 Q -12,2 -12,-4 Z\" fill=\"#1D2436\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(66,-86) scale(0.4)\"><path d=\"M -12,-4 Q -8,0 -3,-2 L -2,-5 L 0,-3 L 2,-5 L 3,-2 Q 8,0 12,-4 Q 12,2 8,5 Q 5,1 3,4 L 0,7 L -3,4 Q -5,1 -8,5 Q -12,2 -12,-4 Z\" fill=\"#1D2436\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g>",
+    "z_order": 0,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "spooky-pumpkin-patch",
+    "slot": "background",
+    "name": "Twilight pumpkin patch",
+    "cost_xp": 160,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<rect x=\"-120\" y=\"-120\" width=\"240\" height=\"260\" rx=\"0\" fill=\"#51465D\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-43\" cy=\"-61\" rx=\"22\" ry=\"22\" fill=\"#F0D7A0\" stroke=\"none\" stroke-width=\"1\"/><g transform=\"translate(-62,-80) scale(0.45)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(-19,-91) scale(0.3)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(47,-79) scale(0.35)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(65,-41) scale(0.5)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(-63,-24) scale(0.3)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(27,-65) scale(0.25)\"><path d=\"M 0,-6 L 2,-2 L 6,-2 L 3,1 L 4,6 L 0,3 L -4,6 L -3,1 L -6,-2 L -2,-2 Z\" fill=\"#E8DFC0\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><path d=\"M -120,55 Q -65,21 0,55 Q 65,23 120,51 L 120,140 L -120,140 Z\" fill=\"#536253\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -76,43 L -76,93 M -61,40 L -61,89 M 54,37 L 54,89 M 71,38 L 71,90 M -83,57 L -47,57 M 43,53 L 81,53\" fill=\"none\" stroke=\"#AF9A75\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -120,105 Q -61,67 0,102 Q 65,67 120,107 L 120,140 L -120,140 Z\" fill=\"#3F5045\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-60,90) scale(1.2)\"><ellipse cx=\"-5\" cy=\"0\" rx=\"8\" ry=\"10\" fill=\"#BF6938\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"5\" cy=\"0\" rx=\"8\" ry=\"10\" fill=\"#BF6938\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"0\" rx=\"7\" ry=\"11\" fill=\"#E29443\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -1,-9 L -2,-16 L 3,-17 L 3,-9 Z\" fill=\"#697147\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -6,-2 L -1,0 L -6,2 M 6,-2 L 1,0 L 6,2 M -5,5 Q 0,9 5,5\" fill=\"#553C38\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(61,94) scale(1.05)\"><ellipse cx=\"-5\" cy=\"0\" rx=\"8\" ry=\"10\" fill=\"#BF6938\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"5\" cy=\"0\" rx=\"8\" ry=\"10\" fill=\"#BF6938\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"0\" rx=\"7\" ry=\"11\" fill=\"#E29443\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -1,-9 L -2,-16 L 3,-17 L 3,-9 Z\" fill=\"#697147\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -6,-2 L -1,0 L -6,2 M 6,-2 L 1,0 L 6,2 M -5,5 Q 0,9 5,5\" fill=\"#553C38\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(-46,116) scale(0.8)\"><ellipse cx=\"-5\" cy=\"0\" rx=\"8\" ry=\"10\" fill=\"#BF6938\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"5\" cy=\"0\" rx=\"8\" ry=\"10\" fill=\"#BF6938\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"0\" rx=\"7\" ry=\"11\" fill=\"#E29443\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -1,-9 L -2,-16 L 3,-17 L 3,-9 Z\" fill=\"#697147\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -6,-2 L -1,0 L -6,2 M 6,-2 L 1,0 L 6,2 M -5,5 Q 0,9 5,5\" fill=\"#553C38\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(45,118) scale(0.8)\"><ellipse cx=\"-5\" cy=\"0\" rx=\"8\" ry=\"10\" fill=\"#BF6938\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"5\" cy=\"0\" rx=\"8\" ry=\"10\" fill=\"#BF6938\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"0\" rx=\"7\" ry=\"11\" fill=\"#E29443\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -1,-9 L -2,-16 L 3,-17 L 3,-9 Z\" fill=\"#697147\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -6,-2 L -1,0 L -6,2 M 6,-2 L 1,0 L 6,2 M -5,5 Q 0,9 5,5\" fill=\"#553C38\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(50,-59) scale(0.65)\"><path d=\"M -12,-4 Q -8,0 -3,-2 L -2,-5 L 0,-3 L 2,-5 L 3,-2 Q 8,0 12,-4 Q 12,2 8,5 Q 5,1 3,4 L 0,7 L -3,4 Q -5,1 -8,5 Q -12,2 -12,-4 Z\" fill=\"#292A3F\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g>",
+    "z_order": 0,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-football-uniform",
+    "slot": "body",
+    "name": "FHS football uniform",
+    "cost_xp": 300,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -11,59 L -34,65 Q -48,70 -45,86 L -35,96 L -33,113 L 33,113 L 35,96 L 45,86 Q 48,70 34,65 L 11,59 Q 0,72 -11,59 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -34,66 L -25,72 L -29,77 L -41,74 M 34,66 L 25,72 L 29,77 L 41,74\" fill=\"#708090\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -41,78 L -31,82 M 41,78 L 31,82\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,60 Q 0,73 10,60\" fill=\"none\" stroke=\"#708090\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-21.73,77) scale(0.82)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H5V1.3H3.2V5.7H5V7H0V5.7H1.8V1.3H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M0,0H5V1.4H3.25V7H1.75V1.4H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(18,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V5H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(24,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(30,0)\"><path d=\"M0,0H4L5,1V3L4.4,3.5L5,4V6L4,7H0ZM1.4,1.3V2.9H3.6V1.3ZM1.4,4.1V5.7H3.6V4.1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(36,0)\"><path d=\"M0,0H1.4V5.6H3.6V0H5V6L4,7H1L0,6Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(42,0)\"><path d=\"M0,0H4L5,1V3.4L3.8,4.3L5.3,7H3.6L2.2,4.4H1.4V7H0ZM1.4,1.3V3.1H3.6V1.3Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(48,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V4.3H2.6V3H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><g transform=\"translate(-14.850000000000001,89) scale(2.7)\"><g transform=\"translate(0,0)\"><path d=\"M1.2,0H3.5V5.6H5V7H0V5.6H2V1.5H0.6V0.8Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M1,0H4L5,1V3L1.4,5.3V5.6H5V7H0V4.6L3.6,2.5V1.4H1.4V2.3H0V1Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -32,74 L -27,85 L -29,107 M 32,74 L 27,85 L 29,107 M -17,111 L 17,111\" fill=\"none\" stroke=\"#741A2C\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -41,85 L -34,89 M 41,85 L 34,89\" fill=\"none\" stroke=\"#708090\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-basketball-uniform",
+    "slot": "body",
+    "name": "FHS basketball uniform",
+    "cost_xp": 280,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,59 L -22,64 Q -18,79 -30,86 L -30,113 L 30,113 L 30,86 Q 18,79 22,64 L 10,59 Q 0,75 -10,59 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -21,65 Q -16,78 -29,86 M 21,65 Q 16,78 29,86\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,60 Q 0,73 10,60\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-21.73,80) scale(0.82)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H5V1.3H3.2V5.7H5V7H0V5.7H1.8V1.3H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M0,0H5V1.4H3.25V7H1.75V1.4H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(18,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V5H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(24,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(30,0)\"><path d=\"M0,0H4L5,1V3L4.4,3.5L5,4V6L4,7H0ZM1.4,1.3V2.9H3.6V1.3ZM1.4,4.1V5.7H3.6V4.1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(36,0)\"><path d=\"M0,0H1.4V5.6H3.6V0H5V6L4,7H1L0,6Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(42,0)\"><path d=\"M0,0H4L5,1V3.4L3.8,4.3L5.3,7H3.6L2.2,4.4H1.4V7H0ZM1.4,1.3V3.1H3.6V1.3Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(48,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V4.3H2.6V3H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><g transform=\"translate(-14.024999999999999,91) scale(2.55)\"><g transform=\"translate(0,0)\"><path d=\"M1,0H4L5,1V3L1.4,5.3V5.6H5V7H0V4.6L3.6,2.5V1.4H1.4V2.3H0V1Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H4L5,1V3L4.4,3.5L5,4V6L4,7H0V5.6H3.6V4.2H1.3V2.8H3.6V1.4H0Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -27,90 L -27,110 M 27,90 L 27,110\" fill=\"none\" stroke=\"#708090\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-baseball-uniform",
+    "slot": "body",
+    "name": "FHS baseball uniform",
+    "cost_xp": 270,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -12,61 L -34,70 L -40,86 L -34,91 L -27,75 M 12,61 L 34,70 L 40,86 L 34,91 L 27,75\" fill=\"#9E1B32\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -9,60 Q 0,69 9,60 M 0,66 L 0,113\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 0,68 L 0,113\" fill=\"none\" stroke=\"#9E1B32\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-21.994999999999997,76) scale(0.83)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H5V1.3H3.2V5.7H5V7H0V5.7H1.8V1.3H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M0,0H5V1.4H3.25V7H1.75V1.4H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(18,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V5H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(24,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(30,0)\"><path d=\"M0,0H4L5,1V3L4.4,3.5L5,4V6L4,7H0ZM1.4,1.3V2.9H3.6V1.3ZM1.4,4.1V5.7H3.6V4.1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(36,0)\"><path d=\"M0,0H1.4V5.6H3.6V0H5V6L4,7H1L0,6Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(42,0)\"><path d=\"M0,0H4L5,1V3.4L3.8,4.3L5.3,7H3.6L2.2,4.4H1.4V7H0ZM1.4,1.3V3.1H3.6V1.3Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(48,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V4.3H2.6V3H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><ellipse cx=\"0\" cy=\"70\" rx=\"1\" ry=\"1\" fill=\"#D4DBDE\" stroke=\"#414D5B\" stroke-width=\"0.35\"/><ellipse cx=\"0\" cy=\"89\" rx=\"1\" ry=\"1\" fill=\"#D4DBDE\" stroke=\"#414D5B\" stroke-width=\"0.35\"/><ellipse cx=\"0\" cy=\"99\" rx=\"1\" ry=\"1\" fill=\"#D4DBDE\" stroke=\"#414D5B\" stroke-width=\"0.35\"/><ellipse cx=\"0\" cy=\"109\" rx=\"1\" ry=\"1\" fill=\"#D4DBDE\" stroke=\"#414D5B\" stroke-width=\"0.35\"/><g transform=\"translate(17,0)\"><g transform=\"translate(-5.25,92) scale(2.1)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4L2.3,7H0.7L3.4,1.4H0Z\" fill=\"#F6F5F2\" stroke=\"#9E1B32\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g></g><path d=\"M -41,85 L -34,89 M 41,85 L 34,89\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,74 L -27,85 L -29,107 M 32,74 L 27,85 L 29,107 M -17,111 L 17,111\" fill=\"none\" stroke=\"#617180\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-softball-uniform",
+    "slot": "body",
+    "name": "FHS softball uniform",
+    "cost_xp": 270,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -12,61 L -33,68 Q -42,73 -41,88 L -34,91 L -28,75 M 12,61 L 33,68 Q 42,73 41,88 L 34,91 L 28,75\" fill=\"#708090\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -13,61 L -25,76 M 13,61 L 25,76\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,60 Q 0,73 10,60\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-22.79,77) scale(0.86)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H5V1.3H3.2V5.7H5V7H0V5.7H1.8V1.3H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M0,0H5V1.4H3.25V7H1.75V1.4H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(18,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V5H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(24,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(30,0)\"><path d=\"M0,0H4L5,1V3L4.4,3.5L5,4V6L4,7H0ZM1.4,1.3V2.9H3.6V1.3ZM1.4,4.1V5.7H3.6V4.1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(36,0)\"><path d=\"M0,0H1.4V5.6H3.6V0H5V6L4,7H1L0,6Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(42,0)\"><path d=\"M0,0H4L5,1V3.4L3.8,4.3L5.3,7H3.6L2.2,4.4H1.4V7H0ZM1.4,1.3V3.1H3.6V1.3Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(48,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V4.3H2.6V3H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><g transform=\"translate(-6.5,91) scale(2.6)\"><g transform=\"translate(0,0)\"><path d=\"M1,0H4L5,1V3L4.4,3.5L5,4V6L4,7H1L0,6V4L0.6,3.5L0,3V1ZM1.4,1.3V2.8H3.6V1.3ZM1.4,4.2V5.7H3.6V4.2Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -31,107 L -13,111 M 31,107 L 13,111\" fill=\"none\" stroke=\"#708090\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -41,85 L -34,89 M 41,85 L 34,89\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-soccer-uniform",
+    "slot": "body",
+    "name": "FHS soccer uniform",
+    "cost_xp": 260,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -34,68 L -24,77 L -25,111 L -33,113 L -34,94 L -41,90 M 34,68 L 24,77 L 25,111 L 33,113 L 34,94 L 41,90\" fill=\"#708090\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -12,60 L 0,69 L 12,60\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-21.73,79) scale(0.82)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H5V1.3H3.2V5.7H5V7H0V5.7H1.8V1.3H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M0,0H5V1.4H3.25V7H1.75V1.4H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(18,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V5H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(24,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(30,0)\"><path d=\"M0,0H4L5,1V3L4.4,3.5L5,4V6L4,7H0ZM1.4,1.3V2.9H3.6V1.3ZM1.4,4.1V5.7H3.6V4.1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(36,0)\"><path d=\"M0,0H1.4V5.6H3.6V0H5V6L4,7H1L0,6Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(42,0)\"><path d=\"M0,0H4L5,1V3.4L3.8,4.3L5.3,7H3.6L2.2,4.4H1.4V7H0ZM1.4,1.3V3.1H3.6V1.3Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(48,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V4.3H2.6V3H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><g transform=\"translate(-13.2,91) scale(2.4)\"><g transform=\"translate(0,0)\"><path d=\"M1.2,0H3.5V5.6H5V7H0V5.6H2V1.5H0.6V0.8Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M1,0H4L5,1V6L4,7H1L0,6V1ZM1.4,1.4V5.6H3.6V1.4Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -34,70 L -27,74 M 34,70 L 27,74\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"1.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -41,85 L -34,89 M 41,85 L 34,89\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,74 L -27,85 L -29,107 M 32,74 L 27,85 L 29,107 M -17,111 L 17,111\" fill=\"none\" stroke=\"#741A2C\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-volleyball-uniform",
+    "slot": "body",
+    "name": "FHS volleyball uniform",
+    "cost_xp": 260,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,59 L -24,65 L -20,79 L 20,79 L 24,65 L 10,59 Q 0,70 -10,59 Z\" fill=\"#9E1B32\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -30,72 L -27,89 L -32,105 M 30,72 L 27,89 L 32,105\" fill=\"none\" stroke=\"#9E1B32\" stroke-width=\"5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,60 Q 0,73 10,60\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-7.225,69) scale(0.85)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V2.8H4L5,3.8V6L4,7H1L0,6V5H1.4V5.6H3.6V4.2H1L0,3.2V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><g transform=\"translate(-7,88) scale(2.8)\"><g transform=\"translate(0,0)\"><path d=\"M1,0H5V1.4H1.4V2.8H4L5,3.8V6L4,7H1L0,6V1ZM1.4,4.1V5.6H3.6V4.1Z\" fill=\"#F6F5F2\" stroke=\"#9E1B32\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -25,108 Q 0,113 25,108\" fill=\"none\" stroke=\"#9E1B32\" stroke-width=\"2.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -41,85 L -34,89 M 41,85 L 34,89\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-hockey-uniform",
+    "slot": "body",
+    "name": "FHS hockey sweater",
+    "cost_xp": 320,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -34,66 L -47,87 L -38,99 L -34,97 L -34,114 L 34,114 L 34,97 L 38,99 L 47,87 L 34,66 L 10,59 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -34,72 L -43,84 L -36,90 L -28,78 M 34,72 L 43,84 L 36,90 L 28,78\" fill=\"#708090\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -40,85 L -34,90 M 40,85 L 34,90\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,60 L -7,73 L 7,73 L 10,60 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -5,64 L 5,67 M 5,64 L -5,67 M -5,68 L 5,71 M 5,68 L -5,71\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-18.275,81) scale(2.15)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V2.8H4L5,3.8V6L4,7H1L0,6V5H1.4V5.6H3.6V4.2H1L0,3.2V1Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><rect x=\"-33\" y=\"101\" width=\"66\" height=\"8\" rx=\"0\" fill=\"#708090\" stroke=\"none\" stroke-width=\"1\"/><rect x=\"-33\" y=\"109\" width=\"66\" height=\"3\" rx=\"0\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -32,74 L -27,85 L -29,107 M 32,74 L 27,85 L 29,107 M -17,111 L 17,111\" fill=\"none\" stroke=\"#741A2C\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-track-uniform",
+    "slot": "body",
+    "name": "FHS track & field uniform",
+    "cost_xp": 240,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -11,60 L -21,63 Q -14,80 -29,86 L -31,113 L 31,113 L 29,86 Q 14,80 21,63 L 11,60 Q 0,74 -11,60 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -20,65 Q -13,79 -28,86 M 20,65 Q 13,79 28,86\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,60 Q 0,73 10,60\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-22.259999999999998,81) scale(0.84)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H5V1.3H3.2V5.7H5V7H0V5.7H1.8V1.3H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M0,0H5V1.4H3.25V7H1.75V1.4H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(18,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V5H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(24,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(30,0)\"><path d=\"M0,0H4L5,1V3L4.4,3.5L5,4V6L4,7H0ZM1.4,1.3V2.9H3.6V1.3ZM1.4,4.1V5.7H3.6V4.1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(36,0)\"><path d=\"M0,0H1.4V5.6H3.6V0H5V6L4,7H1L0,6Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(42,0)\"><path d=\"M0,0H4L5,1V3.4L3.8,4.3L5.3,7H3.6L2.2,4.4H1.4V7H0ZM1.4,1.3V3.1H3.6V1.3Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(48,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V4.3H2.6V3H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><rect x=\"-13\" y=\"94\" width=\"26\" height=\"16\" rx=\"1\" fill=\"#F6F5F2\" stroke=\"#414D5B\" stroke-width=\"0.6\"/><g transform=\"translate(-9.35,96) scale(1.7)\"><g transform=\"translate(0,0)\"><path d=\"M1,0H4L5,1V6L4,7H1L0,6V1ZM1.4,1.4V5.6H3.6V1.4Z\" fill=\"#9E1B32\" stroke=\"none\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M1.2,0H3.5V5.6H5V7H0V5.6H2V1.5H0.6V0.8Z\" fill=\"#9E1B32\" stroke=\"none\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -30,96 L -22,113 M 30,96 L 22,113\" fill=\"none\" stroke=\"#A5B0BA\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-cross-country-uniform",
+    "slot": "body",
+    "name": "FHS cross-country uniform",
+    "cost_xp": 240,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -11,60 L -21,63 Q -15,79 -29,86 L -31,113 L 31,113 L 29,86 Q 15,79 21,63 L 11,60 Q 0,74 -11,60 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -20,65 Q -14,79 -28,86 M 20,65 Q 14,79 28,86\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,60 Q 0,73 10,60\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-22.259999999999998,80) scale(0.84)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H5V1.3H3.2V5.7H5V7H0V5.7H1.8V1.3H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M0,0H5V1.4H3.25V7H1.75V1.4H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(18,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V5H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(24,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(30,0)\"><path d=\"M0,0H4L5,1V3L4.4,3.5L5,4V6L4,7H0ZM1.4,1.3V2.9H3.6V1.3ZM1.4,4.1V5.7H3.6V4.1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(36,0)\"><path d=\"M0,0H1.4V5.6H3.6V0H5V6L4,7H1L0,6Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(42,0)\"><path d=\"M0,0H4L5,1V3.4L3.8,4.3L5.3,7H3.6L2.2,4.4H1.4V7H0ZM1.4,1.3V3.1H3.6V1.3Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(48,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V4.3H2.6V3H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><g transform=\"translate(-9.9,94) scale(1.8)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H1.6L2.5,2.1L3.4,0H5L3.3,3.5L5,7H3.4L2.5,4.9L1.6,7H0L1.7,3.5Z\" fill=\"#F6F5F2\" stroke=\"#9E1B32\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V5H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"#9E1B32\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -25,111 L -14,108 L -5,111 L 5,108 L 15,111 L 25,108\" fill=\"none\" stroke=\"#9E1B32\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-lacrosse-uniform",
+    "slot": "body",
+    "name": "FHS lacrosse uniform",
+    "cost_xp": 280,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,67 L -23,75 L -28,87 L -41,87 M 32,67 L 23,75 L 28,87 L 41,87\" fill=\"#708090\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -35,72 L -28,75 M -38,76 L -31,79 M 35,72 L 28,75 M 38,76 L 31,79\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"1.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,60 Q 0,73 10,60\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-21.994999999999997,76) scale(0.83)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H5V1.3H3.2V5.7H5V7H0V5.7H1.8V1.3H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M0,0H5V1.4H3.25V7H1.75V1.4H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(18,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V5H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(24,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(30,0)\"><path d=\"M0,0H4L5,1V3L4.4,3.5L5,4V6L4,7H0ZM1.4,1.3V2.9H3.6V1.3ZM1.4,4.1V5.7H3.6V4.1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(36,0)\"><path d=\"M0,0H1.4V5.6H3.6V0H5V6L4,7H1L0,6Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(42,0)\"><path d=\"M0,0H4L5,1V3.4L3.8,4.3L5.3,7H3.6L2.2,4.4H1.4V7H0ZM1.4,1.3V3.1H3.6V1.3Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(48,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V4.3H2.6V3H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><ellipse cx=\"-17\" cy=\"84\" rx=\"0.55\" ry=\"0.55\" fill=\"#B54355\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-17\" cy=\"88\" rx=\"0.55\" ry=\"0.55\" fill=\"#B54355\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-8\" cy=\"84\" rx=\"0.55\" ry=\"0.55\" fill=\"#B54355\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"-8\" cy=\"88\" rx=\"0.55\" ry=\"0.55\" fill=\"#B54355\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"1\" cy=\"84\" rx=\"0.55\" ry=\"0.55\" fill=\"#B54355\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"1\" cy=\"88\" rx=\"0.55\" ry=\"0.55\" fill=\"#B54355\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"10\" cy=\"84\" rx=\"0.55\" ry=\"0.55\" fill=\"#B54355\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"10\" cy=\"88\" rx=\"0.55\" ry=\"0.55\" fill=\"#B54355\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"19\" cy=\"84\" rx=\"0.55\" ry=\"0.55\" fill=\"#B54355\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"19\" cy=\"88\" rx=\"0.55\" ry=\"0.55\" fill=\"#B54355\" stroke=\"none\" stroke-width=\"1\"/><g transform=\"translate(-12.649999999999999,93) scale(2.3)\"><g transform=\"translate(0,0)\"><path d=\"M1.2,0H3.5V5.6H5V7H0V5.6H2V1.5H0.6V0.8Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M1.2,0H3.5V5.6H5V7H0V5.6H2V1.5H0.6V0.8Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -32,74 L -27,85 L -29,107 M 32,74 L 27,85 L 29,107 M -17,111 L 17,111\" fill=\"none\" stroke=\"#741A2C\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-tennis-uniform",
+    "slot": "body",
+    "name": "FHS tennis uniform",
+    "cost_xp": 250,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -33,80 L 33,80 L 33,88 L -33,88 Z\" fill=\"#9E1B32\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -9,60 L -16,70 L -4,75 L 0,66 L 4,75 L 16,70 L 9,60 Z\" fill=\"#F6F5F2\" stroke=\"#414D5B\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-1\" y=\"68\" width=\"2\" height=\"13\" rx=\"0\" fill=\"#9E1B32\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"74\" rx=\"0.8\" ry=\"0.8\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"1\"/><g transform=\"translate(-20.935000000000002,82) scale(0.79)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H5V1.3H3.2V5.7H5V7H0V5.7H1.8V1.3H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M0,0H5V1.4H3.25V7H1.75V1.4H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(18,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V5H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(24,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(30,0)\"><path d=\"M0,0H4L5,1V3L4.4,3.5L5,4V6L4,7H0ZM1.4,1.3V2.9H3.6V1.3ZM1.4,4.1V5.7H3.6V4.1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(36,0)\"><path d=\"M0,0H1.4V5.6H3.6V0H5V6L4,7H1L0,6Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(42,0)\"><path d=\"M0,0H4L5,1V3.4L3.8,4.3L5.3,7H3.6L2.2,4.4H1.4V7H0ZM1.4,1.3V3.1H3.6V1.3Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(48,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V5.6H3.6V4.3H2.6V3H5V6L4,7H1L0,6V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.22\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -32,110 L 32,110\" fill=\"none\" stroke=\"#9E1B32\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -41,85 L -34,89 M 41,85 L 34,89\" fill=\"none\" stroke=\"#9E1B32\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,74 L -27,85 L -29,107 M 32,74 L 27,85 L 29,107 M -17,111 L 17,111\" fill=\"none\" stroke=\"#607080\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-golf-uniform",
+    "slot": "body",
+    "name": "FHS golf polo",
+    "cost_xp": 250,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,60 L -16,70 L -4,73 L 0,65 L 4,73 L 16,70 L 10,60 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-1\" y=\"67\" width=\"2\" height=\"18\" rx=\"0\" fill=\"#A5B0BA\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"73\" rx=\"0.7\" ry=\"0.7\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"0\" cy=\"79\" rx=\"0.7\" ry=\"0.7\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"1\"/><g transform=\"translate(11.879999999999999,79) scale(0.72)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.2\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.2\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V2.8H4L5,3.8V6L4,7H1L0,6V5H1.4V5.6H3.6V4.2H1L0,3.2V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.2\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -29,93 L 29,93 M -30,97 L 30,97\" fill=\"none\" stroke=\"#708090\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -41,85 L -34,89 M 41,85 L 34,89\" fill=\"none\" stroke=\"#708090\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,74 L -27,85 L -29,107 M 32,74 L 27,85 L 29,107 M -17,111 L 17,111\" fill=\"none\" stroke=\"#741A2C\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-cheer-uniform",
+    "slot": "body",
+    "name": "FHS cheer uniform",
+    "cost_xp": 280,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,59 L -24,65 L -22,80 L -29,90 L -31,113 L 31,113 L 29,90 L 22,80 L 24,65 L 10,59 Q 0,72 -10,59 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -24,75 L 0,86 L 24,75 L 24,82 L 0,93 L -24,82 Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -23,81 L 0,91 L 23,81\" fill=\"none\" stroke=\"#708090\" stroke-width=\"2.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-13.175,94) scale(1.55)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.16\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.16\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V2.8H4L5,3.8V6L4,7H1L0,6V5H1.4V5.6H3.6V4.2H1L0,3.2V1Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.16\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -10,60 Q 0,73 10,60\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -30,109 L 30,109\" fill=\"none\" stroke=\"#708090\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-varsity-jacket",
+    "slot": "body",
+    "name": "FHS varsity jacket",
+    "cost_xp": 320,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -28,67 Q -44,71 -42,90 L -34,95 L -24,80 Z M 28,67 Q 44,71 42,90 L 34,95 L 24,80 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"0.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -9,60 Q 0,70 9,60\" fill=\"none\" stroke=\"#708090\" stroke-width=\"4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -9,60 Q 0,70 9,60\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 0,68 L 0,113\" fill=\"none\" stroke=\"#A5B0BA\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"75\" rx=\"1.2\" ry=\"1.2\" fill=\"#F6F5F2\" stroke=\"#414D5B\" stroke-width=\"0.4\"/><ellipse cx=\"0\" cy=\"84\" rx=\"1.2\" ry=\"1.2\" fill=\"#F6F5F2\" stroke=\"#414D5B\" stroke-width=\"0.4\"/><ellipse cx=\"0\" cy=\"93\" rx=\"1.2\" ry=\"1.2\" fill=\"#F6F5F2\" stroke=\"#414D5B\" stroke-width=\"0.4\"/><ellipse cx=\"0\" cy=\"102\" rx=\"1.2\" ry=\"1.2\" fill=\"#F6F5F2\" stroke=\"#414D5B\" stroke-width=\"0.4\"/><ellipse cx=\"0\" cy=\"110\" rx=\"1.2\" ry=\"1.2\" fill=\"#F6F5F2\" stroke=\"#414D5B\" stroke-width=\"0.4\"/><g transform=\"translate(10.25,77) scale(2.3)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#708090\" stroke-width=\"0.3\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><g transform=\"translate(-21.525,79) scale(0.65)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.1\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.1\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V2.8H4L5,3.8V6L4,7H1L0,6V5H1.4V5.6H3.6V4.2H1L0,3.2V1Z\" fill=\"#F6F5F2\" stroke=\"none\" stroke-width=\"0.1\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -26,98 L -13,94 M 26,98 L 13,94\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-33\" y=\"107\" width=\"66\" height=\"6\" rx=\"0\" fill=\"#708090\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -31,109 L 31,109\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -41,85 L -34,89 M 41,85 L 34,89\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-warmup-jacket",
+    "slot": "body",
+    "name": "FHS team warm-up jacket",
+    "cost_xp": 280,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -10,59 L -33,68 Q -44,74 -42,90 L -34,95 L -33,113 L 33,113 L 34,95 L 42,90 Q 44,74 33,68 L 10,59 Q 0,70 -10,59 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1.25\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -10,59 L -34,68 L -28,78 L -8,70 L 8,70 L 28,78 L 34,68 L 10,59 Z\" fill=\"#9E1B32\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -34,73 L -37,86 M 34,73 L 37,86\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"2.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M 0,63 L 0,113\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-2\" y=\"75\" width=\"4\" height=\"5\" rx=\"1\" fill=\"#414D5B\" stroke=\"none\" stroke-width=\"1\"/><g transform=\"translate(8.35,81) scale(0.9)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#9E1B32\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#9E1B32\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V2.8H4L5,3.8V6L4,7H1L0,6V5H1.4V5.6H3.6V4.2H1L0,3.2V1Z\" fill=\"#F6F5F2\" stroke=\"#9E1B32\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -30,95 L -12,103 M 30,95 L 12,103\" fill=\"none\" stroke=\"#414D5B\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,109 L 32,109\" fill=\"none\" stroke=\"#9E1B32\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -41,85 L -34,89 M 41,85 L 34,89\" fill=\"none\" stroke=\"#9E1B32\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 11,
+    "enabled": true,
+    "render_options": {}
+  },
+  {
+    "slug": "fhs-baseball-cap",
+    "slot": "head",
+    "name": "FHS baseball cap",
+    "cost_xp": 180,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -43,-12 Q -47,-54 0,-59 Q 47,-54 43,-12 L 39,-8 Q 0,-17 -39,-8 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -8,-56 Q -24,-42 -24,-16 M 8,-56 Q 24,-42 24,-16\" fill=\"none\" stroke=\"#B54355\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-57\" rx=\"4\" ry=\"2.3\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"0.6\"/><ellipse cx=\"-29\" cy=\"-31\" rx=\"1.3\" ry=\"1.3\" fill=\"#A5B0BA\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"29\" cy=\"-31\" rx=\"1.3\" ry=\"1.3\" fill=\"#A5B0BA\" stroke=\"none\" stroke-width=\"1\"/><g transform=\"translate(-17.85,-41) scale(2.1)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#741A2C\" stroke-width=\"0.15\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#741A2C\" stroke-width=\"0.15\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V2.8H4L5,3.8V6L4,7H1L0,6V5H1.4V5.6H3.6V4.2H1L0,3.2V1Z\" fill=\"#F6F5F2\" stroke=\"#741A2C\" stroke-width=\"0.15\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -41,-19 Q 0,-25 41,-19 Q 54,-14 36,-13 Q 0,-10 -36,-13 Q -54,-14 -41,-19 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -36,-18 Q 0,-21 36,-18\" fill=\"none\" stroke=\"#A5B0BA\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "tuck",
+      "fit_head": true
+    }
+  },
+  {
+    "slug": "fhs-football-helmet",
+    "slot": "head",
+    "name": "FHS football helmet",
+    "cost_xp": 350,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -49,2 Q -51,-61 0,-62 Q 51,-61 49,2 L 47,25 L 37,30 L 34,13 L 37,-9 Q 0,-20 -37,-9 L -34,13 L -37,30 L -47,25 Z\" fill=\"#9E1B32\" stroke=\"#414D5B\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -39,-29 Q -30,-50 -12,-54 M 12,-54 Q 30,-50 39,-29\" fill=\"none\" stroke=\"#B54355\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -4,-60 L -5,-43 L 5,-43 L 4,-60 Z\" fill=\"#708090\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-18.275,-40) scale(2.15)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#741A2C\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#741A2C\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V2.8H4L5,3.8V6L4,7H1L0,6V5H1.4V5.6H3.6V4.2H1L0,3.2V1Z\" fill=\"#F6F5F2\" stroke=\"#741A2C\" stroke-width=\"0.18\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><ellipse cx=\"-44\" cy=\"10\" rx=\"6.5\" ry=\"6.5\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1\"/><ellipse cx=\"44\" cy=\"10\" rx=\"6.5\" ry=\"6.5\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1\"/><ellipse cx=\"-44\" cy=\"10\" rx=\"2.8\" ry=\"2.8\" fill=\"#414D5B\" stroke=\"none\" stroke-width=\"1\"/><ellipse cx=\"44\" cy=\"10\" rx=\"2.8\" ry=\"2.8\" fill=\"#414D5B\" stroke=\"none\" stroke-width=\"1\"/><path d=\"M -41,12 L -33,33 Q 0,42 33,33 L 41,12 M -33,-2 L -29,30 M 33,-2 L 29,30 M -36,12 Q 0,19 36,12 M -30,28 Q 0,34 30,28\" fill=\"none\" stroke=\"#708090\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -32,11 Q 0,17 32,11 M -26,27 Q 0,32 26,27\" fill=\"none\" stroke=\"#CBD2D7\" stroke-width=\"0.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "tuck",
+      "fit_head": true,
+      "covers_ears": true
+    }
+  },
+  {
+    "slug": "fhs-hockey-helmet",
+    "slot": "head",
+    "name": "FHS hockey helmet",
+    "cost_xp": 320,
+    "unlock_target_id": null,
+    "unlock_min_level": null,
+    "svg_layer": "<path d=\"M -48,-6 Q -51,-58 0,-61 Q 51,-58 48,-6 L 47,19 L 38,22 L 34,-7 Q 0,-20 -34,-7 L -38,22 L -47,19 Z\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -40,-21 Q -34,-49 -11,-53 M 11,-53 Q 34,-49 40,-21\" fill=\"none\" stroke=\"#A5B0BA\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -6,-59 L -8,-44 L 8,-44 L 6,-59 Z\" fill=\"#9E1B32\" stroke=\"none\" stroke-width=\"1\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(-17.424999999999997,-40) scale(2.05)\"><g transform=\"translate(0,0)\"><path d=\"M0,0H5V1.4H1.5V3H4.2V4.4H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#414D5B\" stroke-width=\"0.15\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(6,0)\"><path d=\"M0,0H1.5V2.8H3.5V0H5V7H3.5V4.2H1.5V7H0Z\" fill=\"#F6F5F2\" stroke=\"#414D5B\" stroke-width=\"0.15\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g><g transform=\"translate(12,0)\"><path d=\"M1,0H4L5,1V2H3.6V1.4H1.4V2.8H4L5,3.8V6L4,7H1L0,6V5H1.4V5.6H3.6V4.2H1L0,3.2V1Z\" fill=\"#F6F5F2\" stroke=\"#414D5B\" stroke-width=\"0.15\" stroke-linejoin=\"round\" fill-rule=\"evenodd\"/></g></g><path d=\"M -32,-28 L -28,-33 M -25,-36 L -21,-40 M 32,-28 L 28,-33 M 25,-36 L 21,-40\" fill=\"none\" stroke=\"#414D5B\" stroke-width=\"2.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -42,-10 Q 0,-22 42,-10\" fill=\"none\" stroke=\"#9E1B32\" stroke-width=\"3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -40,-8 Q 0,-18 40,-8 L 37,14 Q 0,23 -37,14 Z\" fill=\"#D8E6ED\" fill-opacity=\"0.2\" stroke=\"#A5B0BA\" stroke-width=\"1.3\"/><path d=\"M -31,-7 Q -14,-12 -2,-11\" fill=\"none\" stroke=\"#F6F5F2\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M -43,19 L -28,39 L 28,39 L 43,19\" fill=\"none\" stroke=\"#414D5B\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><rect x=\"-9\" y=\"36\" width=\"18\" height=\"7\" rx=\"2\" fill=\"#708090\" stroke=\"#414D5B\" stroke-width=\"1\"/>",
+    "z_order": 130,
+    "enabled": true,
+    "render_options": {
+      "hair": "tuck",
+      "fit_head": true,
+      "covers_ears": true
+    }
   }
 ]

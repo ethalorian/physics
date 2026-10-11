@@ -3,6 +3,8 @@
 import { useMemo, useState } from 'react'
 import { Search } from 'lucide-react'
 import { InlineMath } from '@/components/MathMarkdown'
+import Link from 'next/link'
+import vectorReferences from '@/data/vector-references.json'
 import {
   PHYSICS_FORMULAS,
   FORMULA_CATEGORIES,
@@ -162,6 +164,25 @@ export default function ReferenceSheetPage() {
           </div>
         </section>
       </div>
+      <section className="mt-8 space-y-4" aria-label="Vector lesson references">
+        <SectionHeading>Vector lesson references</SectionHeading>
+        <p className="text-sm text-muted-foreground">Supplemental references for Videos 13–15. These extend the course lessons and are not part of the MCAS reference sheet above.</p>
+        <div className="grid gap-4 lg:grid-cols-3">
+          {vectorReferences.filter(reference => !needle || JSON.stringify(reference).toLowerCase().includes(needle)).map(reference => (
+            <article key={reference.sequence} className="min-w-0 rounded-2xl border bg-card p-4">
+              <h3 className="font-semibold">{reference.title}</h3>
+              <dl className="mt-4 space-y-4">
+                {reference.formulas.map(formula => <div key={formula.latex}>
+                  <dt className="overflow-x-auto pb-1"><InlineMath math={formula.latex} /></dt>
+                  <dd className="mt-1 text-sm text-muted-foreground">{formula.meaning}</dd>
+                </div>)}
+              </dl>
+              <p className="mt-4 text-sm text-muted-foreground">{reference.note}</p>
+              <Link className="mt-3 inline-flex min-h-11 items-center text-sm text-primary underline" href={'/lessons/' + reference.slug}>Video {reference.sequence} lesson</Link>
+            </article>
+          ))}
+        </div>
+      </section>
     </div>
   )
 }

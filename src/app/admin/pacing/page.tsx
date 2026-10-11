@@ -339,7 +339,7 @@ function GuideEditor({ onSaved }: { onSaved?: () => void }) {
           <div className="flex items-center gap-2 mb-2">
             <select value={program} onChange={(e) => { setProgram(e.target.value as Program); setEdits({}); setUnitEdits({}) }}
               className="text-sm rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
-              {(Object.keys(PROGRAM_LABEL) as Program[]).map((p) => <option key={p} value={p}>{PROGRAM_LABEL[p]}</option>)}
+              {(['physics', 'trades'] as Program[]).map((p) => <option key={p} value={p}>{PROGRAM_LABEL[p]}</option>)}
             </select>
             <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
               {items ? `${units.reduce((n, u) => n + (u.allotted_days ?? 0), 0)} window days · ${items.filter((i) => i.kind === 'lesson').length} lessons` : ''}
@@ -538,7 +538,7 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
         <label className="text-sm">
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Program</div>
           <select value={program} onChange={(e) => changeProgram(e.target.value as Program)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
-            {(Object.keys(PROGRAM_LABEL) as Program[]).map((p) => <option key={p} value={p}>{PROGRAM_LABEL[p]}</option>)}
+            {(['physics', 'trades'] as Program[]).map((p) => <option key={p} value={p}>{PROGRAM_LABEL[p]}</option>)}
           </select>
         </label>
         <div className="text-sm">

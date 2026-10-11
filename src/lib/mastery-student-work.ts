@@ -1,3 +1,4 @@
+import {presentationPulseId,presentationStudentWork} from '@/lib/presentation-evidence-server'
 import { evidenceContext } from "@/lib/mastery-evidence";
 import { evidenceWithLinks } from "@/lib/lesson-evidence-links";
 import { authorizeLesson } from "@/lib/lesson-access";
@@ -8,12 +9,12 @@ import type { AuthContext } from "@/lib/api-auth";
 import type { NextRequest } from "next/server";
 import { createHash } from "node:crypto";
 import { resolveTargetStudent } from "@/lib/teacher-scope";
+import { isCurrentLesson } from '@/lib/current-lesson-catalog';
 
 // GET /api/mastery/student-work?user_id=<students.id>&unit_id=unit-1
 // Feeds the rate-from-work drawer: the student's submitted block work across the
 // unit's lessons (latest per block) + their mastery rating history per target.
 
-type UnitRow = { id: string; name: string };
 type LessonRow = {
   id: string;
   title: string;
@@ -86,23 +87,23 @@ export async function getMasteryStudentWork(
   }
   const userId = resolved.userId;
 
-  // Unit name bridges to lessons.unit (display string == units.name).
-  const { data: unitRows } = await supabaseAdmin
-    .from("units")
-    .select("id, name")
-    .eq("id", unitId);
-  const unitName = ((unitRows ?? []) as UnitRow[])[0]?.name ?? null;
+  const requestedPulse=presentationPulseId(requestedLesson)
+  if(requestedLesson?.startsWith('presentation:')){
+    if(!isStaff||!requestedPulse||requestedSubmission)return NextResponse.json({error:'Presentation evidence unavailable.'},{status:403})
+    const data=await presentationStudentWork(userId,unitId,targetId,requestedPulse)
+    return data.work.length?NextResponse.json(data):NextResponse.json({error:'Presentation response not found.'},{status:404})
+  }
 
-  // Lessons in the unit
-  let lessons: LessonRow[] = [];
-  if (unitName) {
-    const { data: lessonRows } = await supabaseAdmin
+  // Stable unit IDs keep saved video evidence discoverable when display names change.
+  const { data: lessonRows, error: lessonError } = await supabaseAdmin
       .from("lessons")
       .select("id, title, lesson_number, content_blocks")
-      .eq("unit", unitName)
+      .eq("unit_id", unitId)
       .order("lesson_number", { ascending: true });
-    lessons = (lessonRows ?? []) as LessonRow[];
-  }
+  if (lessonError) throw lessonError;
+  let lessons = (lessonRows ?? []).filter(l => isCurrentLesson({ ...l, unit_id: unitId })) as LessonRow[];
+  if (requestedLesson && !lessons.some(l => l.id === requestedLesson))
+    return NextResponse.json({ error: "Lesson is not available in the current catalog" }, { status: 404 });
   if (!isStaff) {
     const allowed: LessonRow[] = [];
     for (const lesson of lessons) {
@@ -228,6 +229,10 @@ export async function getMasteryStudentWork(
         (raw as { id?: string }).id === b.block_id,
     );
     const context = evidenceContext(block);
+    // Submission snapshots intentionally omit teacher notes. Retrieve private
+    // review guidance from the authored document without changing the snapshot.
+    const authoredBlock = currentDocument?.blocks?.find(raw => raw && typeof raw === 'object' && (raw as {id?: string}).id === b.block_id) as {note?: unknown} | undefined;
+    const teacherGuidance = block && typeof block === 'object' && 'note' in block ? block.note : authoredBlock?.note;
     const attributed = [
       ...context.targets,
       ...(b.target_id ? [b.target_id] : []),
@@ -254,6 +259,7 @@ export async function getMasteryStudentWork(
         )
         .digest("hex"),
       prompt: context.prompt || null,
+      ...(isStaff && typeof teacherGuidance === 'string' ? { teacherGuidance } : {}),
       targetLinked: attributed.length > 0,
 
       lessonTitle:
@@ -274,6 +280,7 @@ export async function getMasteryStudentWork(
       unlinked: !b.lesson_id,
     });
   }
+  if(isStaff&&!requestedLesson&&!requestedSubmission){const presentation=await presentationStudentWork(userId,unitId,targetId);work.push(...presentation.work)}
   const reviewIds = [...latestSub.values()].map((s) => s.id);
   const { data: reviews, error: reviewError } = reviewIds.length
     ? await supabaseAdmin

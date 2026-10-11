@@ -1,3 +1,4 @@
+import {reviewPresentationEvidence,presentationReviewDTO} from '@/lib/presentation-evidence-server'
 import { NextRequest, NextResponse } from "next/server";
 import { withAuth } from "@/lib/api-auth";
 import { supabaseAdmin } from "@/lib/supabase";
@@ -6,8 +7,8 @@ import { getMasteryStudentWork } from "@/lib/mastery-student-work";
 import {
   summarizeEvidence,
   validateEvidenceDecisions,
+  validateEvidenceKeys,
 } from "@/lib/evidence-rating";
-import { targetIdsForLesson } from "@/lib/lesson-targets";
 
 export const POST = withAuth(async (request, ctx) => {
   if (!["teacher", "admin"].includes(ctx.role))
@@ -16,6 +17,7 @@ export const POST = withAuth(async (request, ctx) => {
       { status: 403 },
     );
   const body = await request.json();
+  if(typeof body.lessonId==='string'&&body.lessonId.startsWith('presentation:'))return reviewPresentationEvidence(body,ctx)
   const { userId, unitId, targetId, lessonId, requestId } = body;
   if (
     ![userId, unitId, targetId, lessonId, requestId].every(
@@ -35,7 +37,7 @@ export const POST = withAuth(async (request, ctx) => {
   // A retry returns the original committed review, even if newer work has arrived.
   const { data: prior, error: priorError } = await supabaseAdmin
     .from("mastery_evidence_reviews")
-    .select("id,user_id,target_id,lesson_id,reviewer_email,overall_level,mean")
+    .select("*")
     .eq("id", requestId)
     .maybeSingle();
   if (priorError) throw priorError;
@@ -54,6 +56,7 @@ export const POST = withAuth(async (request, ctx) => {
       id: prior.id,
       level: prior.overall_level,
       mean: prior.mean,
+      review: prior,
     });
   }
   const message = typeof body.message === "string" ? body.message.trim() : "";
@@ -69,6 +72,10 @@ export const POST = withAuth(async (request, ctx) => {
     target_id: targetId,
     lesson_id: lessonId,
   }).toString();
+  if (body.submissionId) {
+    if (typeof body.submissionId !== "string") return NextResponse.json({ error: "Invalid submission." }, { status: 400 });
+    url.searchParams.set("submission_id", body.submissionId);
+  }
   const workResponse = await getMasteryStudentWork(new NextRequest(url), ctx);
   if (!workResponse.ok) return workResponse;
   const data = await workResponse.json();
@@ -84,9 +91,13 @@ export const POST = withAuth(async (request, ctx) => {
     targetLinked: boolean;
   };
   const work: Work[] = data.work ?? [];
-  let decisions;
+  const mode = body.mode ?? "evidence";
+  if (!["target", "evidence"].includes(mode) || (mode === "target" && ![1, 2, 3].includes(body.level)))
+    return NextResponse.json({ error: "Choose a mastery rating of 1, 2, or 3." }, { status: 422 });
+  let decisions: ReturnType<typeof validateEvidenceDecisions> = [];
   try {
-    decisions = validateEvidenceDecisions(
+    if (mode === "target") validateEvidenceKeys(body.evidenceKeys, work.map(w => w.evidenceKey));
+    else decisions = validateEvidenceDecisions(
       body.decisions,
       work.map((w) => w.evidenceKey),
     );
@@ -99,18 +110,16 @@ export const POST = withAuth(async (request, ctx) => {
       { error: "Learning target not found." },
       { status: 422 },
     );
-  const summary = summarizeEvidence(decisions);
+  const summary = mode === "target" ? { level: body.level as number, mean: null, count: work.length } : summarizeEvidence(decisions);
   const snapshot = work.map((w) => ({
     ...w,
-    ...decisions.find((d) => d.key === w.evidenceKey),
+    key: w.evidenceKey,
+    ...(mode === "evidence" ? decisions.find((d) => d.key === w.evidenceKey) : {}),
   }));
-  const submissionIds = [
-    ...new Set(work.map((w) => w.submissionId).filter(Boolean)),
-  ];
-  const requirements = await targetIdsForLesson(lessonId);
-  const feedback = `Overall rating: ${summary.level} / 3 (${summary.level === 1 ? "Not yet" : summary.level === 2 ? "Almost" : "Got it"}).\nEvidence average: ${summary.mean!.toFixed(2)} / 3 from ${summary.count} rated responses, equally weighted and rounded to the nearest level.${message ? `\n\n${message}` : ""}`;
+  const explanation = mode === "target" ? "Teacher assessment of the learning target, based on the linked lesson evidence." : `Evidence average: ${summary.mean!.toFixed(2)} / 3 from ${summary.count} rated responses, equally weighted and rounded to the nearest level.`;
+  const feedback = `Overall rating: ${summary.level} / 3 (${summary.level === 1 ? "Not yet" : summary.level === 2 ? "Almost" : "Got it"}).\n${explanation}${message ? `\n\n${message}` : ""}`;
   const { data: saved, error } = await supabaseAdmin.rpc(
-    "submit_mastery_evidence_review",
+    "submit_mastery_review",
     {
       p_id: requestId,
       p_user: userId,
@@ -119,8 +128,9 @@ export const POST = withAuth(async (request, ctx) => {
       p_lesson: lessonId,
       p_evidence: snapshot,
       p_message: feedback,
-      p_submissions: submissionIds,
-      p_required_targets: requirements,
+      p_mode: mode,
+      p_level: mode === "target" ? body.level : null,
+      p_note: message,
     },
   );
   if (error) throw error;
@@ -139,14 +149,14 @@ export const GET = withAuth(async (request, ctx) => {
   let query = supabaseAdmin
     .from("mastery_evidence_reviews")
     .select(
-      "id,target_id,lesson_id,evidence,overall_level,mean,message,created_at",
+      "id,target_id,lesson_id,present_pulse_id,evidence,overall_level,mean,message,created_at,rating_mode,note",
     )
     .eq("user_id", userId)
     .order("created_at", { ascending: false })
-    .limit(50);
+    .limit(250);
   if (url.searchParams.get("target_id"))
     query = query.eq("target_id", url.searchParams.get("target_id"));
   const { data, error } = await query;
   if (error) throw error;
-  return NextResponse.json({ reviews: data ?? [] });
+  return NextResponse.json({ reviews: (data ?? []).map(presentationReviewDTO) });
 });

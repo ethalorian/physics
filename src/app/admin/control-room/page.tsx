@@ -1,11 +1,18 @@
 "use client"
+import ClassAssignedWork from "@/components/admin/ClassAssignedWork"
+import {ProblemStageDisplay} from '@/components/blocks/ProblemStageInput'
+import {PROBLEM_STAGES,lessonProblemAnswer} from '@/lib/problem-response'
 
 import MasteryReviewDesk from '@/components/admin/MasteryReviewDesk'
+import { filterReviewQueue, reviewItemKey, type MasteryReviewItem } from '@/lib/mastery-review-queue'
 
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
-import LessonContextLinks from '@/components/admin/LessonContextLinks'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { assessmentView, assessmentCenterHref, assessmentScopeHref } from '@/lib/assessment-center'
+import dynamic from 'next/dynamic'
+import StudentWorkHeader from '@/components/admin/StudentWorkHeader'
+import styles from './student-work.module.css'
+import { useCallback, useEffect, useMemo, useRef, useState, Suspense, type CSSProperties } from 'react'
 import LessonReviewQueue from '@/components/admin/LessonReviewQueue'
 import { InlineMath } from '@/components/MathMarkdown'
 import { toLatex } from '@/components/blocks/EquationSandbox'
@@ -13,6 +20,11 @@ import MathControlRoom from '@/components/math-spine/MathControlRoom'
 import TeacherDailyMathTask from '@/components/math-spine/TeacherDailyMathTask'
 import { StrokeShapes, type Stroke } from '@/lib/draw/strokes'
 import { useClassScope } from '@/lib/use-class-scope'
+
+const VideoProgressDashboard = dynamic(() => import('@/components/admin/video-progress/VideoProgressDashboard'))
+const QuizTeacher = dynamic(() => import('@/components/quizzes/QuizTeacher'))
+const TeacherReadings = dynamic(() => import('@/components/readings/TeacherReadings'))
+const VocabControlRoom = dynamic(() => import('@/components/admin/VocabControlRoom'))
 
 // ---------------------------------------------------------------------------
 // Types (mirror /api/mastery/grid and /api/mastery/student-work)
@@ -28,6 +40,8 @@ interface GridData {
   students: Student[]
   cells: Record<string, Record<string, Cell>>
   pending?: Record<string, Record<string, boolean>>
+  reviewQueue?: MasteryReviewItem[]
+  lessons?: { id: string; title: string; targetIds: string[] }[]
 }
 interface WorkItem { prompt?: string | null; targetLinked?: boolean; lessonTitle: string; lessonId?: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string; responseMode?: string | null; scaffoldsUsed?: string[]; evidenceSource?: string | null; confidence?: string | null; role?: string | null }
 interface RecordItem { target_id: string; level: number; observed_at: string; evidence_source?: string | null }
@@ -50,9 +64,8 @@ function cellStyle(b: 0 | 1 | 2 | 3): CSSProperties {
   return { background: 'var(--muted)', color: 'var(--muted-foreground)', border: '1px dashed var(--border)' }
 }
 const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Got it')
-// Colorblind-safe shape encoding of the band, so color is never the only signal.
-// ●=Got it(3) · ◐=Almost(2) · ○=Not yet(1) · –=not rated(0).
-const bandGlyph = (b: 0 | 1 | 2 | 3) => (b === 3 ? '●' : b === 2 ? '◐' : b === 1 ? '○' : '–')
+// Show the actual average; color still follows the mastery band.
+const averageLabel = (value: number | null | undefined) => value == null ? '–' : value.toFixed(2)
 
 
 
@@ -89,6 +102,7 @@ function StrokesSvg({ strokes, label }: { strokes: StrokeShape[]; label: string 
 function ResponseView({ response, prompt }: { response: unknown; prompt?: string | null }) {
   if (response && typeof response === 'object') {
     const o = response as Record<string, unknown>
+    if(o.format==='problem-workspace'){const responses=lessonProblemAnswer(o);return <div className="space-y-4">{PROBLEM_STAGES.map(k=><section key={k}><h4 className="font-semibold capitalize">{k}</h4><ProblemStageDisplay value={responses[k]} label={k.charAt(0).toUpperCase()+k.slice(1)}/></section>)}{Array.isArray(o.hintsUsed)&&o.hintsUsed.length>0&&<p className="text-xs text-muted-foreground">Hints used: {o.hintsUsed.map(String).join(', ')}. Support use is context, not a mastery penalty.</p>}</div>}
     // SEI captures: { text | strokes, mode } and the inline question { optionId, explain }.
     if ('text' in o && typeof o.text === 'string' && !('given' in o)) return <div><p className="text-sm whitespace-pre-wrap">{o.text}</p>{Array.isArray(o.strokes) && o.strokes.length > 0 && <StrokesSvg strokes={o.strokes as StrokeShape[]} label="Student drawing" />}</div>
     if (('optionId' in o || 'explain' in o) && !('given' in o)) {
@@ -125,8 +139,10 @@ function ResponseView({ response, prompt }: { response: unknown; prompt?: string
               {verdict === 'match' ? '✓ answer matches the equation' : verdict === 'mismatch' ? '✗ answer doesn\u2019t match the equation' : '— not auto-checkable (teacher judges)'}
             </span>
           )}
-          {field('given', 'Given')}
-          {field('equation', 'Equation')}
+          {field('given', o.format === 'problem-workspace' ? 'Model · knowns and assumptions' : 'Given')}
+          {Array.isArray(o.modelStrokes) && o.modelStrokes.length > 0 && <StrokesSvg strokes={o.modelStrokes as StrokeShape[]} label="Student model drawing"/>}
+          {field('equation', o.format === 'problem-workspace' ? 'Plan · relationship and approach' : 'Equation')}
+          {o.format === 'problem-workspace' && Array.isArray(o.hintsUsed) && o.hintsUsed.length > 0 && <p className="text-xs text-muted-foreground">Hints used: {o.hintsUsed.map(String).join(', ')}. Support use is context, not a mastery penalty.</p>}
           {steps.length > 0 && (
             <div className="text-sm" style={{ marginBottom: 4 }}>
               <b style={{ color: 'var(--secondary-foreground)' }}>Algebra trail ({steps.length} move{steps.length > 1 ? 's' : ''}):</b>
@@ -231,85 +247,124 @@ function ResponseView({ response, prompt }: { response: unknown; prompt?: string
   return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{String(response)}</p>
 }
 
-export default function ControlRoomPage() {
+export default function StudentWorkCenter() { return <Suspense fallback={<p className="p-6">Loading Student work…</p>}><ControlRoom /></Suspense> }
+
+function ControlRoom() {
+  const params = useSearchParams(), router = useRouter()
+  const view = assessmentView(params.get('view'))
+  const [reviewVersion, setReviewVersion] = useState(0)
   const gridRequestVersion = useRef(0)
-  const [grid, setGrid] = useState<GridData | null>(null)
-  const [unitId, setUnitId] = useState('unit-1')
-  const [lessonFilter, setLessonFilter] = useState('')
+  const [gridData, setGrid] = useState<GridData | null>(null)
+  const [loadedScope, setLoadedScope] = useState<string | null>(null)
+  const [unitId, setUnitId] = useState(params.get('unit') || 'unit-1')
+  const [lessonFilter, setLessonFilter] = useState(params.get('lesson') ?? '')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [gridError, setGridError] = useState<string | null>(null)
 
-  const [sel, setSel] = useState<{ studentId: string; targetId: string } | null>(null)
+  const [sel, setSel] = useState<{ studentId: string; targetId: string; lessonId?: string; submissionId?: string | null } | null>(null)
   const workRequestVersion = useRef(0)
   const [work, setWork] = useState<WorkData | null>(null)
   const [workLoading, setWorkLoading] = useState(false)
   const [queue, setQueue] = useState<QueueItem[]>([])
-  const [nameFilter, setNameFilter] = useState('')
+  const nameFilter = params.get('q') ?? ''
+  const setNameFilter = (value: string) => {
+    const p = new URLSearchParams(window.location.search)
+    if (value) p.set('q', value); else p.delete('q')
+    window.history.replaceState(null, '', '?' + p)
+  }
 
   // Lesson completion grading (the old Aspen gradebook flow) is retired —
-  // lessons are engagement, mastery is the grade. Views: targets + math spine.
-  const [view, setView] = useState<'mastery' | 'math'>('mastery')
+  // Lessons are engagement; target, vocabulary, and math reviews live here.
+
   // Student-first grading: keys we've graded this session (so the queue and
   // roster shrink immediately, before the server refresh lands).
   const [gradedKeys, setGradedKeys] = useState<Set<string>>(new Set())
+  const [skippedKeys, setSkippedKeys] = useState<Set<string>>(new Set())
   // Class/section scope. Aspen's gradebook is partitioned by section, so the
   // grade copy must be filterable to one class. The scope is SHARED with
   // analytics, roster, and pacing via localStorage (use-class-scope) — pick a
   // class in any of them and it carries here. The per-class deep-link
   // (?class=&label=) still wins and updates the shared scope.
-  const { classId, classLabel, setClassScope } = useClassScope()
+  const { classId: storedClassId, classLabel, setClassScope, ready } = useClassScope()
+  const classId = params.has('class') ? params.get('class') || null : storedClassId
   const [classes, setClasses] = useState<{ id: string; label: string; teacher: string | null; program: string }[]>([])
   // Admin-only teacher filter: '' = all teachers. Teachers never see the
   // dropdown (their /api/courses only returns their own classes).
-  const [targetFilter, setTargetFilter] = useState('')
-  const [teacherFilter, setTeacherFilter] = useState('')
+  const [targetFilter, setTargetFilter] = useState(params.get('target') ?? '')
+  const teacherFilter = params.get('teacher') ?? ''
+  const [classError, setClassError] = useState('')
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search)
-    if (sp.get('unit')) setUnitId(sp.get('unit')!)
+    setUnitId(sp.get('unit') || 'unit-1')
     setLessonFilter(sp.get('lesson') ?? '')
     setTargetFilter(sp.get('target') ?? '')
     if (sp.get('view') === 'app-wide') setClassScope(null, null)
-    const deepLinked = sp.get('class')
-    if (deepLinked) setClassScope(deepLinked, sp.get('label'))
-  }, [setClassScope])
+
+    if (sp.has('class')) setClassScope(sp.get('class') || null, sp.get('label'))
+  }, [setClassScope, params])
   useEffect(() => {
     fetch('/api/courses')
-      .then((r) => r.json())
+      .then(async r => { if (!r.ok) throw new Error('Classes could not be loaded. Refresh to try again.'); return r.json() })
       .then((d: { courses?: { id: string; name: string; section: string | null; teacher_email?: string | null; program?: string | null }[] }) => {
         setClasses((d.courses ?? []).map((c) => ({ id: c.id, label: c.section ? `${c.name} · ${c.section}` : c.name, teacher: c.teacher_email ?? null, program: c.program ?? 'physics' })))
       })
-      .catch(() => {})
+      .catch(e => setClassError(e.message))
   }, [])
   // The teacher param only matters with no class picked (the server ignores it
   // otherwise), but sending both keeps the URL an honest mirror of the UI.
   const classQuery = (classId ? `&class=${encodeURIComponent(classId)}` : '') + (teacherFilter ? `&teacher=${encodeURIComponent(teacherFilter)}` : '')
+  const grid = loadedScope === classQuery && gridData?.unitId === unitId ? gridData : null
   const teachers = [...new Set(classes.map((c) => c.teacher).filter((t): t is string => Boolean(t)))].sort()
-  const visibleClasses = teacherFilter ? classes.filter((c) => c.teacher === teacherFilter) : classes
-  const teacherName = (email: string) => email.split('@')[0].replace(/[._]/g, ' ')
   const pickClass = (id: string) => {
-    setClassScope(id || null, id ? (classes.find((c) => c.id === id)?.label ?? null) : null)
+    closeDrawer()
+    setClassScope(id || null, id ? (classes.find(c => c.id === id)?.label ?? null) : null)
+    router.push(assessmentScopeHref(params.toString(), 'class', id), { scroll: false })
+  }
+  const pickUnit = (id: string) => {
+    closeDrawer(); setUnitId(id); setLessonFilter(''); setTargetFilter('')
+    router.push(assessmentScopeHref(params.toString(), 'unit', id), { scroll: false })
+  }
+  const pickTeacher = (teacher: string) => {
+    const p = new URLSearchParams(assessmentScopeHref(params.toString(), 'class', '').split('?')[1])
+    if (teacher) p.set('teacher', teacher); else p.delete('teacher')
+    setClassScope(null); closeDrawer(); router.push('?' + p, { scroll: false })
   }
 
-  const loadGrid = useCallback((unit: string) => {
+  const changeLesson = (id: string) => {
+    setLessonFilter(id); setTargetFilter(''); closeDrawer()
+    const p = new URLSearchParams(window.location.search)
+    if (id) p.set('lesson', id); else p.delete('lesson')
+    p.delete('target'); p.delete('submission'); p.set('unit', unitId)
+    router.push('?' + p, { scroll: false })
+  }
+  const loadGrid = useCallback((unit: string, quiet = false) => {
     const version = ++gridRequestVersion.current
-    setLoading(true)
-    setError(null)
+    if (!quiet) setLoading(true)
+    setGridError(null)
     fetch(`/api/mastery/grid?unit_id=${encodeURIComponent(unit)}${classQuery}`)
       .then((r) => r.json())
       .then((d: GridData & { error?: string }) => {
         if (version !== gridRequestVersion.current) return
-        if (d.error) setError(d.error)
+        if (d.error) setGridError(d.error)
         else {
-          setGrid(targetFilter ? { ...d, targets: d.targets.filter(t => t.id === targetFilter) } : d)
+          setGrid(d); setLoadedScope(classQuery)
           // unit_id=auto resolved server-side to the unit this class is in.
-          if (d.unitId && d.unitId !== unit) setUnitId(d.unitId)
+          if (d.unitId && d.unitId !== unit) {
+            setUnitId(d.unitId)
+            const p = new URLSearchParams(window.location.search); p.set('unit', d.unitId)
+            window.history.replaceState(null, '', '?' + p)
+          }
         }
         setLoading(false)
       })
-      .catch(() => { if (version === gridRequestVersion.current) { setError('Could not load the grid'); setLoading(false) } })
-  }, [classQuery, targetFilter])
+      .catch(() => { if (version === gridRequestVersion.current) { setGridError('Could not refresh target reviews. The last loaded ratings are still shown.'); setLoading(false) } })
+  }, [classQuery])
 
-  useEffect(() => { loadGrid(unitId) }, [unitId, loadGrid])
+  // Embedded quiz/reading reviews write mastery too; revisiting this tab must
+  // pick up those ratings rather than retaining the grid from before grading.
+  const invalidateGrid = useCallback(() => { gridRequestVersion.current++ }, [])
+  useEffect(() => { if (ready && view !== 'assignments') loadGrid(unitId); return invalidateGrid }, [unitId, loadGrid, view, ready, invalidateGrid])
   // Picking a class moves the unit to the one THAT class is working in — a Trades
   // or Project Physics class never sits on physics unit-1 (its program's units only).
   const classProgram = classId ? (classes.find((c) => c.id === classId)?.program ?? null) : null
@@ -326,7 +381,7 @@ export default function ControlRoomPage() {
       .then((d: { queue?: QueueItem[] }) => setQueue(d.queue ?? []))
       .catch(() => {})
   }, [classQuery])
-  useEffect(() => { loadQueue(unitId) }, [unitId, loadQueue])
+  useEffect(() => { if (ready && (view === 'mastery' || view === 'lessons')) loadQueue(unitId) }, [unitId, loadQueue, view, ready])
 
   // Per-student "last signed in" for the roster (so each student shows when they
   // were last active, right in the grids).
@@ -342,22 +397,39 @@ export default function ControlRoomPage() {
       })
       .catch(() => {})
   }, [classQuery])
-  useEffect(() => { loadPresence() }, [loadPresence])
+  useEffect(() => { if (ready && view === 'mastery') loadPresence() }, [loadPresence, ready, view])
   const seenTag = (gid: string) => {
     const iso = presence.get(gid)?.lastSeenAt ?? null
     return <span className="text-overline" style={{ marginLeft: 6, color: lastSeenColor(iso) }} title={iso ? `Last signed in ${new Date(iso).toLocaleString()}` : 'No recorded sign-in yet'}>{lastSeenLabel(iso)}</span>
   }
 
-  const openCell = useCallback((studentId: string, targetId: string) => {
+  const openCell = useCallback((studentId: string, targetId: string, context?: { lessonId?: string; submissionId?: string | null }) => {
     if (grid?.students.find(s => s.id === studentId)?.ratable === false) return
     const version = ++workRequestVersion.current
-    setSel({ studentId, targetId }); setWork(null); setError(null); setWorkLoading(true)
-    fetch(`/api/mastery/student-work?user_id=${encodeURIComponent(studentId)}&unit_id=${encodeURIComponent(unitId)}&target_id=${encodeURIComponent(targetId)}`)
+    const pending = grid?.reviewQueue?.find(item => item.studentId === studentId && item.targetId === targetId && (!lessonFilter || item.lessonId === lessonFilter))
+    const selectedContext = context ?? pending ?? (lessonFilter ? { lessonId: lessonFilter } : {})
+    setSel({ studentId, targetId, ...selectedContext }); setWork(null); setError(null); setWorkLoading(true)
+    const params = new URLSearchParams({ user_id: studentId, unit_id: unitId, target_id: targetId })
+    if (selectedContext.lessonId) params.set('lesson_id', selectedContext.lessonId)
+    if (selectedContext.submissionId) params.set('submission_id', selectedContext.submissionId)
+    fetch(`/api/mastery/student-work?${params}`)
       .then(async r => { const data = await r.json(); if (!r.ok) throw new Error(data.error ?? 'Could not load work'); return data })
       .then((data: WorkData) => { if (version === workRequestVersion.current) { setWork(data); setWorkLoading(false) } })
       .catch(e => { if (version === workRequestVersion.current) { setError(e.message); setWorkLoading(false) } })
-  }, [unitId, grid])
+  }, [unitId, grid, lessonFilter])
   const closeDrawer = useCallback(() => { workRequestVersion.current++; setSel(null); setWork(null) }, [])
+
+  // Old bookmarks must not keep a removed lesson selected or make an empty
+  // lesson view look as though no current student work exists.
+  useEffect(() => {
+    if (loading || grid?.unitId !== unitId || !lessonFilter || grid.lessons?.some(l => l.id === lessonFilter)) return
+    setLessonFilter(''); setTargetFilter(''); closeDrawer()
+    const p = new URLSearchParams(window.location.search)
+    p.delete('lesson'); p.delete('target')
+    router.replace('?' + p, { scroll: false })
+  }, [loading, grid, unitId, lessonFilter, closeDrawer, router])
+
+  useEffect(() => { closeDrawer(); setGradedKeys(new Set()); setSkippedKeys(new Set()) }, [unitId, classQuery, closeDrawer])
 
   // ---- student-first grading flow ------------------------------------------
   // Visible students in display order (roster order + name filter).
@@ -368,165 +440,87 @@ export default function ControlRoomPage() {
     [grid, nameFilter]
   )
   const rosterForView = masteryStudents
-
-  type PendingCell = { targetId: string }
-  // A student's still-pending target cells, newest grades excluded.
-  const pendingCellsFor = useCallback((sid: string, exclude?: string): PendingCell[] => {
-    if (!grid) return []
-    // View-only students (not on YOUR roster) never enter the grading walk.
-    if (grid.students.find((s) => s.id === sid)?.ratable === false) return []
-    return grid.targets
-      .filter((t) => grid.pending?.[sid]?.[t.id]
-        && `m:${sid}:${t.id}` !== exclude && !gradedKeys.has(`m:${sid}:${t.id}`))
-      .map((t) => ({ targetId: t.id }))
-  }, [grid, gradedKeys])
-
-  const studentPendingCount = useCallback((sid: string) => pendingCellsFor(sid).length, [pendingCellsFor])
-
-  const pendingStudents = useMemo(
-    () => rosterForView.filter((s) => studentPendingCount(s.id) > 0),
-    [rosterForView, studentPendingCount]
-  )
-  const totalPendingInView = useMemo(
-    () => pendingStudents.reduce((n, s) => n + studentPendingCount(s.id), 0),
-    [pendingStudents, studentPendingCount]
-  )
-
-  // "Grade pending" launcher: open the first pending student's first pending cell.
-  const startGradingPending = useCallback(() => {
-    setGradedKeys(new Set())
-    const first = pendingStudents[0]
-    if (first) openCell(first.id, pendingCellsFor(first.id)[0]?.targetId)
-  }, [pendingStudents, pendingCellsFor, openCell])
+  const selectedLesson = grid?.lessons?.find(l => l.id === lessonFilter)
+  const visibleTargets = (grid?.targets ?? []).filter(t => (!targetFilter || t.id === targetFilter) && (!selectedLesson || selectedLesson.targetIds.includes(t.id)))
+  const reviewQueue = filterReviewQueue(loading ? [] : grid?.reviewQueue ?? [], {
+    studentIds: rosterForView.map(s => s.id), targetIds: visibleTargets.map(t => t.id),
+    lessonId: lessonFilter, excluded: new Set([...gradedKeys, ...skippedKeys]),
+  })
+  const inboxUpdated = useCallback(() => { loadGrid(unitId, true) }, [loadGrid, unitId])
+  const clearEvidenceFilters = () => {
+    setSkippedKeys(new Set()); setLessonFilter(''); setTargetFilter(''); closeDrawer()
+    const p = new URLSearchParams(window.location.search)
+    for (const key of ['q', 'lesson', 'target', 'older', 'source', 'submission']) p.delete(key)
+    router.replace('?' + p, { scroll: false })
+  }
+  const pendingStudents = rosterForView.filter(s => reviewQueue.some(item => item.studentId === s.id))
+  const totalPendingInView = reviewQueue.length
+  const startGradingPending = () => {
+    const first = reviewQueue[0]
+    if (first) openCell(first.studentId, first.targetId, first)
+  }
 
   // The queue is demoted to a collapsed "Priority" strip: only the truly urgent
   // (aged 48h+ or self-flagged "Not yet"). Everything else is walked by the one
   // "Grade pending" CTA, so the queue is no longer a competing second door.
-  const priorityQueue = queue.filter((q) => q.aged || q.needsHelp)
+  const priorityQueue = queue.filter(q => !lessonFilter && (q.aged || q.needsHelp) && reviewQueue.some(item => item.studentId === q.studentId))
 
+  const usesUnit = view === 'mastery' || view === 'lessons' || view === 'vocabulary'
+  const visibleStudents = (grid?.students ?? []).filter(s => s.name.toLowerCase().includes(nameFilter.toLowerCase()))
+  const ratedCells = visibleStudents.reduce((sum, student) => sum + visibleTargets.filter(target => grid?.cells[student.id]?.[target.id]?.value != null).length, 0)
+  const totalCells = visibleStudents.length * visibleTargets.length
+  const gradebookPositions = useRef<Record<string, { top: number; left: number }>>({})
+  const gradebookPositionKey = `${classQuery}:${unitId}:${lessonFilter}:${targetFilter}:${nameFilter}`
+  const restoreGradebookPosition = useCallback((element: HTMLDivElement | null) => {
+    const position = gradebookPositions.current[gradebookPositionKey]
+    if (element && position) { element.scrollTop = position.top; element.scrollLeft = position.left }
+  }, [gradebookPositionKey])
+  const unitLabel = grid?.units.find(unit => unit.id === unitId)?.name ?? (unitId === 'auto' ? 'Current unit' : unitId)
   return (
-    <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      {targetFilter && <p className="my-3 rounded border p-3 text-sm">Showing the selected target. <button className="min-h-11 underline" onClick={() => { setTargetFilter(''); const p = new URLSearchParams(window.location.search); p.delete('target'); window.history.replaceState(null, '', '?' + p) }}>Show all targets</button></p>}
-      <LessonContextLinks courseId={classId} lessonId={lessonFilter} unitId={unitId} /><LessonReviewQueue lessonId={lessonFilter} onClearLesson={() => setLessonFilter('')} onRateTarget={openCell} unitId={unitId} classQuery={classQuery} onReviewed={() => { loadGrid(unitId); loadQueue(unitId) }} renderResponse={(response) => <ResponseView response={response} />} />
-      {/* toolbar — title · tabs · scope · unit · filter · one CTA on a single
-          compact line, so the grid is the first paint on a laptop */}
-      <div className="flex items-center gap-2 flex-wrap mb-1">
-        <h1 className="text-xl font-semibold tracking-tight" style={{ marginRight: 4 }}>Class mastery</h1>
-        <Button asChild variant="outline" className="min-h-12"><Link href="/admin/xp-terms">Term XP requirements</Link></Button>
-        <Button asChild variant="outline" className="min-h-12"><Link href="/admin/observe">Classroom observations</Link></Button>
-        {/* tabs: mastery (targets) vs lessons (completion) vs math (spine); the
-            active tab carries its keyboard contract so the scheme is visible
-            before the drawer opens */}
-        {([['mastery', 'Mastery (targets)', 'keys 1·2·3 rate'], ['math', 'Math (spine)', '']] as const).map(([v, label, hint]) => {
-          const active = view === v
-          const toGrade = 0
-          return (
-            <button key={v} onClick={() => setView(v)}
-              className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold"
-              style={{ border: '1px solid var(--border)', background: active ? 'var(--primary)' : 'var(--card)', color: active ? 'var(--primary-foreground)' : 'var(--foreground)' }}>
-              {label}
-              {toGrade > 0 && (
-                <span className="inline-flex items-center justify-center text-overline"
-                  style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 'var(--radius-sm)', background: active ? 'var(--primary-foreground)' : 'var(--destructive)',
-                    color: active ? 'var(--primary)' : 'white' }}>
-                  {toGrade}
-                </span>
-              )}
-              {active && hint && (
-                <span className="text-overline" style={{ opacity: 0.85, paddingLeft: 8, borderLeft: '1px solid color-mix(in oklch, var(--primary-foreground) 35%, transparent)', whiteSpace: 'nowrap' }}>
-                  {hint}
-                </span>
-              )}
-            </button>
-          )
-        })}
-        <span className="flex-1" style={{ minWidth: 4 }} />
-        <input
-          value={nameFilter}
-          onChange={(e) => setNameFilter(e.target.value)}
-          placeholder="Filter students…"
-          className="rounded-lg text-sm px-3 py-2"
-          style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', width: 150 }}
-        />
-        {teachers.length > 1 && (
-          <select
-            value={teacherFilter}
-            onChange={(e) => {
-              const t = e.target.value
-              setTeacherFilter(t)
-              // A class belonging to another teacher can't stay scoped.
-              if (t && classId && classes.find((c) => c.id === classId)?.teacher !== t) pickClass('')
-            }}
-            title="Monitor one teacher's classes (admin)"
-            className="rounded-lg text-sm px-3 py-2"
-            style={{ border: `1px solid ${teacherFilter ? 'color-mix(in oklch, var(--primary) 45%, var(--border))' : 'var(--border)'}`, background: 'var(--card)', color: 'var(--foreground)', textTransform: 'capitalize' }}
-          >
-            <option value="">All teachers</option>
-            {teachers.map((t) => (
-              <option key={t} value={t}>{teacherName(t)}</option>
-            ))}
-          </select>
-        )}
-        {classes.length > 0 && (
-          <select
-            value={classId ?? ''}
-            onChange={(e) => pickClass(e.target.value)}
-            title={classId
-              ? `Scoped to ${classLabel || 'one class'}`
-              : 'Scope to one class/section'}
-            className="rounded-lg text-sm px-3 py-2"
-            style={{ border: `1px solid ${classId ? 'color-mix(in oklch, var(--primary) 45%, var(--border))' : 'var(--border)'}`, background: 'var(--card)', color: 'var(--foreground)' }}
-          >
-            <option value="">{teacherFilter ? `All of ${teacherName(teacherFilter)}’s students` : teachers.length > 1 ? 'All students' : 'All my students'}</option>
-            {teachers.length > 1 && !teacherFilter
-              ? teachers.map((t) => (
-                  <optgroup key={t} label={teacherName(t)}>
-                    {classes.filter((c) => c.teacher === t).map((c) => (
-                      <option key={c.id} value={c.id}>{c.label}</option>
-                    ))}
-                  </optgroup>
-                ))
-              : visibleClasses.map((c) => (
-                  <option key={c.id} value={c.id}>{c.label}</option>
-                ))}
-          </select>
-        )}
-        <select
-          value={unitId}
-          onChange={(e) => setUnitId(e.target.value)}
-          className="rounded-lg text-sm px-3 py-2"
-          style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
-        >
-          {unitId === 'auto' && <option value="auto">Finding this class’s unit…</option>}
-          {(() => {
-            const all = grid?.units ?? [{ id: 'unit-1', name: 'Unit 1', program: 'physics' }]
-            // A scoped class sees only its program's units; unscoped, group by program.
-            const list = classProgram ? all.filter((u) => (u.program ?? 'physics') === classProgram) : all
-            const programs = [...new Set(list.map((u) => u.program ?? 'physics'))]
-            const label = (p: string) => (p === 'trades' ? 'Trades Physics' : p === 'projects' ? 'Project Physics (MVP)' : 'Physics')
-            if (programs.length <= 1) return list.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)
-            return programs.map((p) => (
-              <optgroup key={p} label={label(p)}>
-                {list.filter((u) => (u.program ?? 'physics') === p).map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
-              </optgroup>
-            ))
-          })()}
-        </select>
-        {/* the single launcher — every pending cell is walked from here */}
-        {view !== 'math' && (
-          <button
-            onClick={startGradingPending}
-            disabled={totalPendingInView === 0}
-            title={totalPendingInView
-              ? `${pendingStudents.length} student${pendingStudents.length === 1 ? '' : 's'} with work to grade — all of one student, then the next.`
-              : 'Nothing pending to grade in this view.'}
-            className="inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-bold disabled:opacity-50"
-            style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: totalPendingInView ? 'pointer' : 'default' }}
-          >
-            {totalPendingInView ? `Grade ${totalPendingInView} pending` : 'Grade pending'}
-          </button>
-        )}
-      </div>
+    <div className={styles.workspace}>
+      <StudentWorkHeader view={view} search={params.toString()} classId={classId}
+        classLabel={classes.find(c => c.id === classId)?.label ?? classLabel}
+        classes={classes} teachers={teachers} teacher={teacherFilter} onTeacherChange={pickTeacher}
+        unitId={unitId} units={grid?.units ?? [{ id: unitId, name: unitLabel }]} program={classProgram}
+        onClassChange={pickClass} onUnitChange={pickUnit} onNavigate={closeDrawer} />
+      {classError && <p role="alert" className="my-3 text-sm text-destructive">{classError}</p>}
+      <section className={styles.content} aria-label="Current student work view">
+      {(usesUnit || view === 'videos') && <div className={styles.filters}>
+        <label>Find a student<input value={nameFilter} onChange={e => setNameFilter(e.target.value)} placeholder="Name…" type="search" /></label>
+        {view === 'mastery' && <label>Lesson<select value={lessonFilter} onChange={e => changeLesson(e.target.value)}>
+          <option value="">All lessons</option>{grid?.lessons?.map(lesson => <option key={lesson.id} value={lesson.id}>{lesson.title}</option>)}
+        </select></label>}
+        {(nameFilter || lessonFilter || targetFilter) && <button className={styles.clear} onClick={clearEvidenceFilters}>Clear filters</button>}
+        {(view === 'mastery' || view === 'lessons') && <button className={styles.review} onClick={startGradingPending} disabled={loading || !!gridError || totalPendingInView === 0}
+          title={`${pendingStudents.length} student${pendingStudents.length === 1 ? '' : 's'} with target evidence awaiting review`}>
+          {loading ? 'Loading reviews…' : totalPendingInView ? `Review ${totalPendingInView} pending` : 'No pending target reviews'}
+        </button>}
+      </div>}
+      {(view === 'mastery' || view === 'lessons') && targetFilter && <p className={styles.filterNotice}>Filtered to one learning target. <button onClick={() => { setTargetFilter(''); const p = new URLSearchParams(window.location.search); p.delete('target'); router.replace('?' + p, { scroll: false }) }}>Show all targets</button></p>}
+      {view === 'mastery' && <>
+        <div className={styles.summary} aria-label="Gradebook summary">
+          <div><strong>{loading || gridError ? '—' : visibleStudents.length}</strong><span>students in view</span></div>
+          <div><strong>{loading || gridError ? '—' : totalPendingInView}</strong><span>target reviews waiting</span></div>
+          <div><strong>{loading || gridError || !totalCells ? '—' : `${Math.round(ratedCells / totalCells * 100)}%`}</strong><span>student targets rated</span></div>
+        </div>
+        <div className={styles.gridHeading}><div><h2>Class gradebook</h2><p>{unitLabel} · Select a cell to see the evidence and record mastery.</p></div>
+          <Link href={assessmentCenterHref('lessons', null, classId, params.toString())}>Open lesson inbox →</Link>
+        </div>
+      </>}
+      {view === 'lessons' && <>
+        <LessonReviewQueue refreshVersion={reviewVersion} lessonId={lessonFilter} lessons={grid?.unitId === unitId ? grid.lessons ?? [] : []}
+          targetReviews={(grid?.unitId === unitId ? grid.reviewQueue ?? [] : []).filter(item => !gradedKeys.has(reviewItemKey(item)) && grid?.students.some(student => student.id === item.studentId && student.ratable !== false))}
+          visibleTargetReviews={reviewQueue.length} nameFilter={nameFilter} targetFiltered={!!targetFilter}
+          onLessonChange={changeLesson} onClearFilters={clearEvidenceFilters} onDataChanged={inboxUpdated}
+          onRateTarget={openCell} unitId={unitId} classQuery={classQuery}
+          onReviewed={() => { loadGrid(unitId, true); loadQueue(unitId) }} renderResponse={response => <ResponseView response={response} />} />
+      </>}
+      {view === 'assignments' && <ClassAssignedWork key={classId ?? 'none'} classId={classId} />}
+      {view === 'videos' && <VideoProgressDashboard key={classId ?? 'none'} classId={classId} nameFilter={nameFilter} />}
+      {view === 'quizzes' && <QuizTeacher embedded classId={classId} onClassChange={pickClass} />}
+      {view === 'readings' && <TeacherReadings embedded classId={classId} onClassChange={pickClass} />}
+
+      {view === 'vocabulary' && unitId !== 'auto' && <VocabControlRoom key={`${classId}:${unitId}:${teacherFilter}`} classId={classId} unitId={unitId} teacher={teacherFilter} nameFilter={nameFilter} onSaved={() => loadGrid(unitId)} />}
 
       {/* math spine — cross-cutting competencies + warm-up review. The daily
           math-fluency rating lives here (its own tab, not the top stack) so the
@@ -549,7 +543,7 @@ export default function ControlRoomPage() {
 
       {/* Priority strip — demoted + collapsed; only aged 48h+ or self-flagged
           "Not yet". The full pending set is walked by "Grade pending" above. */}
-      {view === 'mastery' && priorityQueue.length > 0 && (
+      {view === 'lessons' && priorityQueue.length > 0 && (
         <details className="rounded-xl border mt-4" style={{ borderColor: 'color-mix(in oklch, var(--reward) 35%, var(--border))', background: 'color-mix(in oklch, var(--reward) 8%, transparent)' }}>
           <summary className="text-overline" style={{ cursor: 'pointer', listStyle: 'none', padding: '10px 14px', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted-foreground)' }}>
             Priority · {priorityQueue.length} aged or flagged
@@ -562,8 +556,8 @@ export default function ControlRoomPage() {
                 {q.needsHelp && <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'color-mix(in oklch, var(--reward) 26%, transparent)', color: 'var(--reward-foreground)' }}>self: Not yet</span>}
                 <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{q.count} item{q.count === 1 ? '' : 's'} · waiting {q.oldestAgeHours}h</span>
                 <button
-                  onClick={() => { const target = pendingCellsFor(q.studentId)[0]?.targetId ?? grid?.targets[0]?.id; if (target) openCell(q.studentId, target) }}
-                  disabled={!grid || grid.targets.length === 0}
+                  onClick={() => { const item = reviewQueue.find(item => item.studentId === q.studentId); if (item) openCell(item.studentId, item.targetId, item) }}
+                  disabled={!reviewQueue.some(item => item.studentId === q.studentId)}
                   className="text-xs font-bold rounded-lg px-3 py-1.5 disabled:opacity-50"
                   style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
                 >
@@ -575,43 +569,45 @@ export default function ControlRoomPage() {
         </details>
       )}
 
+      {usesUnit && gridError && <div role="alert" className="text-sm rounded-md px-3 py-2 my-3" style={{ background: 'var(--secondary)', color: 'var(--destructive)' }}>{gridError} <button className="min-h-11 underline" onClick={() => loadGrid(unitId, true)}>Retry target reviews</button></div>}
       {error && <div className="text-sm rounded-md px-3 py-2 my-3" style={{ background: 'var(--secondary)', color: 'var(--destructive)' }}>{error}</div>}
-      {loading && <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>Loading the grid…</p>}
+      {view === 'mastery' && loading && <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>Loading the grid…</p>}
 
       {view === 'mastery' && !loading && grid && grid.students.length === 0 && (
         <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>No students on your roster yet.</p>
       )}
 
       {view === 'mastery' && !loading && grid && grid.students.length > 0 && (
-        <div className="rounded-xl border mt-4 overflow-x-auto" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-          <table style={{ borderCollapse: 'separate', borderSpacing: 6, padding: 8 }}>
+        <div className={styles.gradebook} ref={restoreGradebookPosition} onScroll={e => { gradebookPositions.current[gradebookPositionKey] = { top: e.currentTarget.scrollTop, left: e.currentTarget.scrollLeft } }} tabIndex={0} role="region" aria-label="Class mastery gradebook, scroll horizontally for more targets" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+          <table><caption className="sr-only">Average mastery on a 1–3 scale by student and learning target. A dot marks evidence awaiting review.</caption>
             <thead>
               <tr>
-                <th className="text-caption" style={{ position: 'sticky', left: 0, zIndex: 2, background: 'var(--card)', textAlign: 'left', padding: '4px 10px', color: 'var(--muted-foreground)' }}>Student</th>
-                {grid.targets.map((t, i) => (
-                  <th className="text-overline" key={t.id} title={t.statement} style={{ color: 'var(--muted-foreground)', padding: '4px 2px', minWidth: 46 }}>
-                    T{i + 1}
+                <th scope="col" className="text-caption" style={{ position: 'sticky', left: 0, zIndex: 2, background: 'var(--card)', textAlign: 'left', padding: '4px 10px', color: 'var(--muted-foreground)' }}>Student</th>
+                {visibleTargets.map((t, i) => (
+                  <th scope="col" className={styles.targetHeading} key={t.id} title={t.statement} style={{ color: 'var(--muted-foreground)', padding: '4px 2px', minWidth: 46 }}>
+                    <span>T{(grid?.targets.findIndex(target => target.id === t.id) ?? i) + 1}</span><small>{t.statement}</small>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {grid.students.filter((s) => s.name.toLowerCase().includes(nameFilter.toLowerCase())).map((s) => (
+              {visibleStudents.map((s) => (
                 <tr key={s.id}>
-                  <td className="text-caption" style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', padding: '4px 10px', whiteSpace: 'nowrap' }}>{s.name}{seenTag(s.id)}</td>
-                  {grid.targets.map((t) => {
+                  <th scope="row" className="text-caption" style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', padding: '4px 10px', whiteSpace: 'nowrap', textAlign: 'left', fontWeight: 500 }}>{s.name}{seenTag(s.id)}</th>
+                  {visibleTargets.map((t) => {
                     const c = grid.cells[s.id]?.[t.id]
                     const b = band(c?.value ?? null)
+                    const average = averageLabel(c?.value)
                     return (
                       <td key={t.id} style={{ padding: 0 }}>
                         <button
                           onClick={() => openCell(s.id, t.id)}
-                          title={`${s.name} · ${t.statement}${b ? ` · ${levelWord(b)} (${b})` : ' · not rated'}`}
-                          aria-label={`${s.name}, ${t.statement}: ${b ? `${levelWord(b)} (${b})` : 'not rated'}`}
-                          className="grid place-items-center text-title-3"
-                          style={{ width: 40, height: 38, borderRadius: 'var(--radius-sm)', cursor: 'pointer', ...cellStyle(b) }}
+                          title={`${s.name} · ${t.statement}${b ? ` · Average ${average} / 3 · ${levelWord(b)}` : ' · not rated'}`}
+                          aria-label={`${s.name}, ${t.statement}: ${b ? `average ${average} out of 3, ${levelWord(b)}` : 'not rated'}`}
+                          disabled={s.ratable === false} className={styles.masteryCell}
+                          style={cellStyle(b)}
                         >
-                          {bandGlyph(b)}
+                          {average}{reviewQueue.some(item => item.studentId === s.id && item.targetId === t.id) && <span className={styles.pendingDot} aria-label="Evidence awaiting review" />}
                         </button>
                       </td>
                     )
@@ -625,17 +621,19 @@ export default function ControlRoomPage() {
 
       {view === 'mastery' && !loading && grid && (
         <div className="flex gap-4 flex-wrap mt-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
-          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(3) }}>{bandGlyph(3)}</span> Got it (3)</span>
-          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(2) }}>{bandGlyph(2)}</span> Almost (2)</span>
-          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(1) }}>{bandGlyph(1)}</span> Not yet (1)</span>
-          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(0) }}>{bandGlyph(0)}</span> Not rated</span>
-          <span style={{ marginLeft: 'auto' }}>Cells show shape + color — hover a cell for the level, a header for the target.</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(3) }}>{'3'}</span> Got it (3)</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(2) }}>{'2'}</span> Almost (2)</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(1) }}>{'1'}</span> Not yet (1)</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(0) }}>{'–'}</span> Not rated</span>
+          <span>Cells show the average on a 1–3 scale.</span>
+          <span>● Corner dot = evidence awaiting review</span>
         </div>
       )}
 
-      {/* Lesson-completion gradebook removed — lessons are engagement, mastery is the grade. */}
+      {view === 'mastery' && !loading && !gridError && grid && grid.students.length > 0 && visibleStudents.length === 0 && <p className={styles.filterNotice}>No students match “{nameFilter}”. <button onClick={() => setNameFilter('')}>Show all students</button></p>}
+      </section>
 
-      {sel && grid && <MasteryReviewDesk studentId={sel.studentId} targetId={sel.targetId} unitId={unitId} students={rosterForView} targets={grid.targets} work={work} loading={workLoading} loadError={error} onSelect={openCell} onClose={closeDrawer} onSaved={() => { loadGrid(unitId); loadQueue(unitId) }} pendingCount={studentPendingCount} renderResponse={w => <ResponseView response={w.response} prompt={w.prompt}/>} />}
+      {sel && grid && <MasteryReviewDesk studentId={sel.studentId} targetId={sel.targetId} initialLessonId={sel.lessonId} submissionId={sel.submissionId} unitId={unitId} students={rosterForView} targets={grid.targets} work={work} loading={workLoading} loadError={error} currentMastery={grid.cells[sel.studentId]?.[sel.targetId]?.value} reviewQueue={reviewQueue} onSelect={openCell} onClose={closeDrawer} onSaved={item => { setReviewVersion(v => v + 1); setGradedKeys(previous => new Set(previous).add(reviewItemKey(item))); loadGrid(unitId); loadQueue(unitId) }} onReturned={() => { setReviewVersion(v => v + 1); loadGrid(unitId); loadQueue(unitId) }} onSkip={item => setSkippedKeys(previous => new Set(previous).add(reviewItemKey(item)))} renderResponse={w => <ResponseView response={w.response} prompt={w.prompt}/>} />}
     </div>
   )
 }

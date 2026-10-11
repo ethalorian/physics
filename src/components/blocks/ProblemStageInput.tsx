@@ -1,0 +1,12 @@
+'use client'
+import {useId,type ReactNode} from 'react'
+import dynamic from 'next/dynamic'
+import {StrokesSvg} from '@/lib/draw/strokes'
+import {stageResponse,type ProblemStageResponse} from '@/lib/problem-response'
+import s from './ProblemStageInput.module.css'
+const PaintPad=dynamic(()=>import('@/components/blocks/PaintPad'),{ssr:false,loading:()=> <p role="status">Opening drawing tools…</p>})
+export function ProblemStageDisplay({value,label,renderText}:{value:ProblemStageResponse|undefined;label:string;renderText?:(text:string)=>ReactNode}){const response=stageResponse(value);return <div className={s.stack}>{response.text.trim()&&<div className={s.response}>{renderText ? renderText(response.text) : response.text}</div>}{response.strokes.length>0&&<StrokesSvg strokes={response.strokes} maxWidth={900} ariaLabel={`${label} drawing`}/>} {!response.text.trim()&&!response.strokes.length&&<p className={s.muted}>No response</p>}</div>}
+export default function ProblemStageInput({label,help,value,onChange,disabled=false}:{label:string;help:string;value?:ProblemStageResponse;onChange:(v:ProblemStageResponse)=>void;disabled?:boolean}){
+ const id=useId(),response=stageResponse(value),drawing=response.mode==='drawing'
+ return <fieldset className={s.stack} disabled={disabled} aria-label={`${label} response`}><legend className={s.answerTitle}>{label}</legend><p className={s.muted}>{help}</p><div className={s.actions} role="group" aria-label={`${label} input options`}><button type="button" className={drawing?s.secondary:s.button} aria-pressed={!drawing} onClick={()=>onChange({...response,mode:'text'})}>Text</button><button type="button" className={drawing?s.button:s.secondary} aria-pressed={drawing} onClick={()=>onChange({...response,mode:'drawing'})}>Draw</button></div>{drawing&&<div inert={disabled||undefined}><PaintPad workshop value={response.strokes} onChange={strokes=>{if(!disabled)onChange({...response,strokes})}}/></div>}<label className={s.field} htmlFor={id}>{drawing?'Written description (optional)':`${label} text`}<textarea id={id} aria-label={`${label} text`} rows={drawing?2:label==='Work'?5:3} maxLength={10000} value={response.text} onChange={e=>onChange({...response,text:e.target.value})}/></label><p className={s.muted}>Text, drawing, or both count as your response. Switching tools keeps both.{!drawing&&response.strokes.length>0?' Your drawing is saved—choose Draw to view or edit it.':''}</p></fieldset>
+}

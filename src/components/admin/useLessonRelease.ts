@@ -63,7 +63,7 @@ export function useLessonRelease() {
     setError('')
     version.current++
     try {
-      await releaseRequest(
+      const saved = await releaseRequest(
         `/api/classes/${encodeURIComponent(courseId)}/windows`,
         {
           method: 'POST',
@@ -74,7 +74,8 @@ export function useLessonRelease() {
       setData((d) => {
         if (!d) return d
         const windows = { ...d.windows }
-        if (!win.open_at && !win.close_at)
+        if (saved.window) windows[`${courseId}|${lessonId}`] = saved.window as ReleaseWindow
+        else if (!win.open_at && !win.close_at)
           delete windows[`${courseId}|${lessonId}`]
         else windows[`${courseId}|${lessonId}`] = win
         return { ...d, windows }

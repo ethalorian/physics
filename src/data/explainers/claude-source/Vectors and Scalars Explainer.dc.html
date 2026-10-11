@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#f6f6fb;color:#22233a;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+a{color:#4b4ba8;text-decoration:none}a:hover{color:#3a3a8a;text-decoration:underline}
+input[type=range]{accent-color:#4b4ba8;width:100%}
+</style>
+</helmet>
+<div style="min-height:100vh;font-family:'Newsreader',Georgia,serif;font-size:18px;line-height:1.55;color:#22233a;background-color:#f6f6fb;background-image:linear-gradient(rgba(75,75,168,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(75,75,168,0.08) 1px,transparent 1px);background-size:24px 24px;background-position:-1px -1px">
+
+<nav style="position:sticky;top:0;z-index:10;background:rgba(246,246,251,0.92);backdrop-filter:blur(6px);border-bottom:1px solid #d4d5e2;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.06em;text-transform:uppercase">
+  <div style="max-width:1000px;margin:0 auto;padding:12px 24px;display:flex;flex-wrap:nowrap;gap:6px 18px;align-items:center;overflow-x:auto">
+    <a href="Course Explainer - 2026-XJ.dc.html" style="display:flex;align-items:center;gap:10px;margin-right:auto;color:#22233a;text-decoration:none;min-width:0;flex:1 1 0;overflow:hidden"><svg width="28" height="28" viewBox="0 0 40 40" aria-label="Antocci Physics" style="display:block;flex-shrink:0"><circle cx="20" cy="20" r="20" fill="#4B4BA8"></circle><path d="M6 29 H11.5 L20 8.5 L28.5 29 H34" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></path><path d="M15.6 21.5 H24.4" stroke="#9FD1B3" stroke-width="2.6" stroke-linecap="round"></path><circle cx="20" cy="8.5" r="2.6" fill="#F0A58A"></circle></svg><span style="font-weight:600;white-space:nowrap;letter-spacing:0.08em;flex-shrink:0">Antocci Physics</span><span style="color:#5c5d70;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis">· Unit 0 · Vectors &amp; scalars</span></a>
+    <a href="#two" style="color:#5c5d70;white-space:nowrap">01 Two numbers</a>
+    <a href="#walk" style="color:#5c5d70;white-space:nowrap">02 Walk it</a>
+    <a href="#which" style="color:#5c5d70;white-space:nowrap">03 Which one?</a>
+    <a href="#why" style="color:#5c5d70;white-space:nowrap">04 Why vectors</a>
+    <a href="#scalars" style="color:#5c5d70;white-space:nowrap">05 When scalars</a>
+    <a href="#check" style="color:#5c5d70;white-space:nowrap">06 Check</a>
+  </div>
+</nav>
+
+<main style="max-width:1000px;margin:0 auto;padding:24px 24px 96px;display:flex;flex-direction:column;gap:72px">
+
+  <header data-screen-label="Hook" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px;align-items:end;padding-top:40px">
+    <div>
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:16px">AP Physics · Lab notebook 01</div>
+      <h1 style="font-size:clamp(40px,6vw,64px);line-height:1.02;font-weight:500;margin:0 0 20px;letter-spacing:-0.02em;text-wrap:balance">Some questions need a number. Others need an arrow.</h1>
+      <p style="font-size:20px;margin:0;max-width:52ch;text-wrap:pretty">Physics keeps two kinds of quantities on purpose. Scalars answer <em>how much</em>. Vectors answer <em>how much, and which way</em>. Neither is "more correct" — the trick is knowing which question you're asking.</p>
+    </div>
+    <div style="background:#ffffff;border:1px solid #d4d5e2;padding:24px;box-shadow:4px 4px 0 #e4e4f0">
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70;margin-bottom:12px">The phenomenon</div>
+      <p style="margin:0 0 12px;font-size:19px">A runner finishes one 400 m lap of the track in 60 s and stops exactly where she started.</p>
+      <p style="margin:0 0 16px;font-size:19px;font-weight:600">Her coach says she averaged 6.7 m/s. Her GPS says her average velocity was zero. Who's right?</p>
+      <p style="margin:0;color:#5c5d70;font-size:16px">Both. The coach asked how hard she worked. The GPS asked where she ended up. Different questions, different kinds of quantity.</p>
+    </div>
+  </header>
+
+  <section id="two" data-screen-label="01 Two numbers">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">01 · Two kinds of quantity</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">An odometer and a compass</h2>
+    <p style="max-width:64ch;margin:0 0 28px;text-wrap:pretty">Your car carries both. The odometer only counts up — it doesn't care which way you drove. The GPS arrow only cares which way you're pointed and how fast. Each instrument throws away information the other keeps.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+      <div style="border:1px solid #d4d5e2;background:#ffffff;padding:24px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70;margin-bottom:8px">Scalar · a magnitude</div>
+        <div style="font-size:24px;font-weight:500;margin-bottom:12px">"How much?"</div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#3e3f58;margin-bottom:12px">distance · speed · time · mass · energy · temperature</div>
+        <ul style="margin:0;padding-left:20px;font-size:17px;color:#3e3f58;display:flex;flex-direction:column;gap:6px">
+          <li>One number and a unit. 400 m. 6.7 m/s.</li>
+          <li>Adds like ordinary arithmetic: 3 + 4 = 7.</li>
+          <li>Can't be negative when it's a size (distance, speed).</li>
+          <li>Cares about the <em>path</em>, not the endpoints.</li>
+        </ul>
+      </div>
+      <div style="border:1px solid #d4d5e2;background:#ffffff;padding:24px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#3e7a58;margin-bottom:8px">Vector · a magnitude and a direction</div>
+        <div style="font-size:24px;font-weight:500;margin-bottom:12px">"How much, and which way?"</div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#3e3f58;margin-bottom:12px">displacement · velocity · acceleration · force · momentum</div>
+        <ul style="margin:0;padding-left:20px;font-size:17px;color:#3e3f58;display:flex;flex-direction:column;gap:6px">
+          <li>An arrow: length is the size, orientation is the direction.</li>
+          <li>Adds tip‑to‑tail: 3 + 4 can be anything from 1 to 7.</li>
+          <li>Sign (or angle) is part of the value: −5 m/s means "5 m/s, the other way."</li>
+          <li>Cares about <em>endpoints</em>, not the path between them.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="walk" data-screen-label="02 Walk it">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">02 · Walk a path</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Watch the two numbers come apart</h2>
+    <p style="max-width:64ch;margin:0 0 24px;text-wrap:pretty">The walker moves at a steady 4 m/s. The odometer (distance) and the arrow from start to walker (displacement) begin identical. Press play and watch when — and why — they diverge.</p>
+    <div style="background:#ffffff;border:1px solid #d4d5e2;box-shadow:4px 4px 0 #e4e4f0;padding:24px;display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px">
+        <span style="color:#5c5d70;margin-right:4px">Paths</span>
+        <sc-for list="{{ paths }}" as="p" hint-placeholder-count="4">
+          <button onClick="{{ p.apply }}" style="font-family:inherit;font-size:13px;padding:6px 12px;border:1px solid {{ p.border }};background:{{ p.bg }};color:{{ p.color }};cursor:pointer;white-space:nowrap">{{ p.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start">
+        <svg viewBox="0 0 400 300" style="width:100%;height:auto;display:block;background:#f6f6fb;border:1px solid #d4d5e2;background-image:linear-gradient(rgba(75,75,168,0.10) 1px,transparent 1px),linear-gradient(90deg,rgba(75,75,168,0.10) 1px,transparent 1px);background-size:10% 13.333%;font-family:'IBM Plex Mono',ui-monospace,monospace">
+          <defs>
+            <marker id="arrowTeal" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#3e7a58"></path></marker>
+            <marker id="arrowInk" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#22233a"></path></marker>
+          </defs>
+          <polyline points="{{ pathPts }}" fill="none" stroke="#d4d5e2" stroke-width="2" stroke-dasharray="4 4"></polyline>
+          <polyline points="{{ walkedPts }}" fill="none" stroke="#4b4ba8" stroke-width="3"></polyline>
+          <sc-if value="{{ showDisp }}" hint-placeholder-val="{{ true }}">
+            <line x1="{{ startX }}" y1="{{ startY }}" x2="{{ dispEndX }}" y2="{{ dispEndY }}" stroke="#3e7a58" stroke-width="2.5" marker-end="url(#arrowTeal)"></line>
+          </sc-if>
+          <line x1="{{ walkerX }}" y1="{{ walkerY }}" x2="{{ velEndX }}" y2="{{ velEndY }}" stroke="#22233a" stroke-width="2" marker-end="url(#arrowInk)"></line>
+          <circle cx="{{ startX }}" cy="{{ startY }}" r="5" fill="#f6f6fb" stroke="#22233a" stroke-width="2"></circle>
+          <circle cx="{{ walkerX }}" cy="{{ walkerY }}" r="7" fill="#4b4ba8"></circle>
+          <text x="{{ startLabelX }}" y="{{ startLabelY }}" font-size="10" fill="#5c5d70">start</text>
+          <text x="8" y="292" font-size="9" fill="#5c5d70">1 square = 4 m</text>
+        </svg>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div style="border:1px solid #d4d5e2;padding:14px;background:#f6f6fb">
+              <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70">Scalar · distance</div>
+              <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:30px;font-weight:600;color:#4b4ba8;line-height:1.2">{{ distLabel }}<span style="font-size:14px;font-weight:400;color:#5c5d70"> m</span></div>
+              <div style="font-size:14px;color:#5c5d70">odometer, only counts up</div>
+            </div>
+            <div style="border:1px solid #d4d5e2;padding:14px;background:#f6f6fb">
+              <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#3e7a58">Vector · displacement</div>
+              <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:30px;font-weight:600;color:#3e7a58;line-height:1.2">{{ dispLabel }}<span style="font-size:14px;font-weight:400;color:#5c5d70"> m</span></div>
+              <div style="font-size:14px;color:#5c5d70">{{ dispDirLabel }}</div>
+            </div>
+            <div style="border:1px solid #d4d5e2;padding:14px;background:#f6f6fb">
+              <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70">Scalar · speed</div>
+              <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:30px;font-weight:600;color:#22233a;line-height:1.2">{{ speedLabel }}<span style="font-size:14px;font-weight:400;color:#5c5d70"> m/s</span></div>
+              <div style="font-size:14px;color:#5c5d70">never changes here</div>
+            </div>
+            <div style="border:1px solid #d4d5e2;padding:14px;background:#f6f6fb">
+              <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70">Vector · velocity</div>
+              <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:30px;font-weight:600;color:#22233a;line-height:1.2">{{ speedLabel }}<span style="font-size:14px;font-weight:400;color:#5c5d70"> m/s {{ velDirLabel }}</span></div>
+              <div style="font-size:14px;color:#5c5d70">changes every time she turns</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px">
+            <button onClick="{{ togglePlay }}" style="font-family:inherit;font-size:14px;font-weight:600;padding:10px 20px;border:none;background:#22233a;color:#f6f6fb;cursor:pointer;min-width:110px">{{ playLabel }}</button>
+            <button onClick="{{ reset }}" style="font-family:inherit;font-size:14px;padding:10px 16px;border:1px solid #22233a;background:transparent;color:#22233a;cursor:pointer">Reset</button>
+            <span style="white-space:nowrap">t = <strong>{{ tLabel }}</strong> s</span>
+          </div>
+          <input type="range" min="0" max="{{ totalLen }}" step="0.1" value="{{ s }}" onChange="{{ setS }}">
+          <div style="padding:12px 16px;border-left:3px solid #3e7a58;background:#f6f6fb;font-size:16px">{{ walkInsight }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="which" data-screen-label="03 Which one">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">03 · Which quantity answers the question?</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">The question picks the tool</h2>
+    <p style="max-width:64ch;margin:0 0 24px;text-wrap:pretty">For each real question, decide: does the answer change if you reverse the direction? If not, a scalar is enough. If it does, you need the vector. Tap your pick.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
+      <sc-for list="{{ sorts }}" as="q" hint-placeholder-count="6">
+        <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px;display:flex;flex-direction:column;gap:12px">
+          <p style="margin:0;font-size:19px;font-weight:500;text-wrap:pretty">{{ q.text }}</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <button onClick="{{ q.pickScalar }}" style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px;padding:10px;border:1px solid {{ q.sBorder }};background:{{ q.sBg }};color:{{ q.sColor }};cursor:pointer;min-height:44px">{{ q.scalarLabel }}</button>
+            <button onClick="{{ q.pickVector }}" style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:13px;padding:10px;border:1px solid {{ q.vBorder }};background:{{ q.vBg }};color:{{ q.vColor }};cursor:pointer;min-height:44px">{{ q.vectorLabel }}</button>
+          </div>
+          <sc-if value="{{ q.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:10px 14px;border-left:3px solid {{ q.fbColor }};background:#f6f6fb;font-size:15px"><strong style="color:{{ q.fbColor }}">{{ q.verdict }}</strong> {{ q.why }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="why" data-screen-label="04 Why vectors">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">04 · Why physics is written in vectors</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Because directions add, cancel, and split</h2>
+    <p style="max-width:64ch;margin:0 0 28px;text-wrap:pretty">If scalars are simpler, why does almost every law of mechanics use vectors? Because the world does things scalars can't describe.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:32px">
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">1</div>
+        <div style="font-size:22px;font-weight:500;margin:8px 0">Effects cancel.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">Walk 5 m east, then 5 m west. Distance says 10 m; you're standing where you started. Two forces of 100 N on a rope in a tug‑of‑war can produce zero motion. Only arrows can add up to nothing.</p>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">2</div>
+        <div style="font-size:22px;font-weight:500;margin:8px 0">The laws point somewhere.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">F = ma isn't "a push makes speed." It's "a push <em>this way</em> makes acceleration <em>this way</em>." Gravity pulls down, not "9.8." A car rounding a bend at constant speed is still accelerating — its velocity vector is turning. Speed alone would miss it entirely.</p>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:40px;font-weight:600;color:#d4d5e2;line-height:1">3</div>
+        <div style="font-size:22px;font-weight:500;margin:8px 0">Hard problems split into easy ones.</div>
+        <p style="margin:0;font-size:17px;color:#3e3f58;text-wrap:pretty">A thrown ball's velocity is one arrow, but it's two independent stories: constant horizontal motion and free fall vertically. Components let you solve each with the one‑dimensional kinematics you already know, then recombine.</p>
+      </div>
+    </div>
+    <div style="background:#ffffff;border:1px solid #d4d5e2;box-shadow:4px 4px 0 #e4e4f0;padding:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start">
+      <div>
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#5c5d70;margin-bottom:8px">Try it · deflect an asteroid</div>
+        <p style="margin:0 0 16px;font-size:17px;text-wrap:pretty">An asteroid is heading straight for Earth. You get one rocket burn — a fixed amount of extra speed. Adding speeds as scalars says "it just goes faster." The vector sum says whether Earth is still in the way.</p>
+        <div style="display:flex;flex-direction:column;gap:14px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px">
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="display:flex;justify-content:space-between;color:#4b4ba8"><span>asteroid speed (toward Earth)</span><span style="font-weight:600">{{ astV }} km/s</span></span>
+            <input type="range" min="4" max="12" step="0.5" value="{{ astV }}" onChange="{{ setAstV }}">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="display:flex;justify-content:space-between;color:#3e7a58"><span>rocket burn Δv</span><span style="font-weight:600">{{ pushV }} km/s</span></span>
+            <input type="range" min="0" max="4" step="0.25" value="{{ pushV }}" onChange="{{ setPushV }}">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="display:flex;justify-content:space-between;color:#3e7a58"><span>burn direction</span><span style="font-weight:600">{{ pushDeg }}°</span></span>
+            <input type="range" min="0" max="360" step="5" value="{{ pushDeg }}" onChange="{{ setPushDeg }}">
+          </label>
+        </div>
+        <div style="margin-top:16px;background:#22233a;color:#f6f6fb;padding:14px 18px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;display:flex;flex-direction:column;gap:6px">
+          <span style="color:#a9abc8">scalar sum &nbsp; {{ astV }} + {{ pushV }} = <strong style="color:#f6f6fb">{{ scalarSum }}</strong> km/s — no verdict possible</span>
+          <span style="color:#9fd1b3">vector sum &nbsp; |v| = <strong style="color:#f6f6fb">{{ resMag }}</strong> km/s, heading {{ resDeg }}°</span>
+          <span style="font-weight:600;color:{{ outcomeColor }}">{{ outcome }}</span>
+          <span>{{ boatInsight }}</span>
+        </div>
+      </div>
+      <svg viewBox="0 0 400 300" style="width:100%;height:auto;display:block;background:#f6f6fb;border:1px solid #d4d5e2;background-image:linear-gradient(rgba(75,75,168,0.10) 1px,transparent 1px),linear-gradient(90deg,rgba(75,75,168,0.10) 1px,transparent 1px);background-size:4% 5.333%;font-family:'IBM Plex Mono',ui-monospace,monospace">
+        <defs>
+          <marker id="arrowRust" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#4b4ba8"></path></marker>
+          <marker id="arrowTeal2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#3e7a58"></path></marker>
+          <marker id="arrowInk2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#22233a"></path></marker>
+        </defs>
+        <line x1="{{ trackX1 }}" y1="{{ trackY1 }}" x2="{{ trackX2 }}" y2="{{ trackY2 }}" stroke="{{ pathColor }}" stroke-width="1.5" stroke-dasharray="4 4"></line>
+        <circle cx="330" cy="150" r="14" fill="#c9573f" opacity="0.85"></circle>
+        <text x="330" y="176" font-size="10" fill="#c9573f" text-anchor="middle">Earth</text>
+        <line x1="70" y1="150" x2="{{ bEndX }}" y2="{{ bEndY }}" stroke="#4b4ba8" stroke-width="3" marker-end="url(#arrowRust)"></line>
+        <line x1="{{ bEndX }}" y1="{{ bEndY }}" x2="{{ rEndX }}" y2="{{ rEndY }}" stroke="#3e7a58" stroke-width="3" marker-end="url(#arrowTeal2)"></line>
+        <line x1="70" y1="150" x2="{{ rEndX }}" y2="{{ rEndY }}" stroke="#22233a" stroke-width="3" stroke-dasharray="6 4" marker-end="url(#arrowInk2)"></line>
+        <circle cx="70" cy="150" r="6" fill="#22233a"></circle>
+        <text x="70" y="136" font-size="10" fill="#22233a" text-anchor="middle">asteroid</text>
+        <rect x="6" y="250" width="160" height="44" fill="#f6f6fb" opacity="0.9"></rect>
+        <text x="10" y="264" font-size="10" fill="#4b4ba8">— asteroid velocity</text>
+        <text x="10" y="278" font-size="10" fill="#3e7a58">— rocket burn Δv</text>
+        <text x="10" y="292" font-size="10" fill="#22233a">- - new velocity &amp; path</text>
+        <text x="394" y="292" font-size="9" fill="#5c5d70" text-anchor="end">1 square = 1 km/s</text>
+      </svg>
+    </div>
+  </section>
+
+  <section id="scalars" data-screen-label="05 When scalars">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">05 · When the scalar is the right tool</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Direction isn't always information</h2>
+    <p style="max-width:64ch;margin:0 0 28px;text-wrap:pretty">Vectors carry more, but more isn't free. When the physics genuinely doesn't depend on direction, the scalar is not a shortcut — it's the honest answer, and it makes the math simpler.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:20px;font-weight:600;margin-bottom:8px">K = ½mv²</div>
+        <div style="font-weight:600;margin-bottom:4px">Energy uses speed</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58">Squaring erases the sign. A ball thrown up at 10 m/s and one thrown down at 10 m/s have identical kinetic energy. Energy bookkeeping is scalar — that's what makes it so powerful.</p>
+      </div>
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:20px;font-weight:600;margin-bottom:8px">W<sub>f</sub> = −f·d</div>
+        <div style="font-weight:600;margin-bottom:4px">Friction eats distance</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58">Heat lost to friction depends on how far you slid, not where you ended up. Drive a full lap and the tires still wore down. Path‑dependent costs are scalar.</p>
+      </div>
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:20px;font-weight:600;margin-bottom:8px">t = d / v</div>
+        <div style="font-weight:600;margin-bottom:4px">Fuel, fares, and time</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58">A marathon is 42.2 km whichever way the course winds. Gas burned, fare charged, minutes elapsed — all track distance and speed, never displacement.</p>
+      </div>
+      <div style="background:#ffffff;border:1px solid #d4d5e2;padding:20px">
+        <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:20px;font-weight:600;margin-bottom:8px">|v| ≤ 30 m/s</div>
+        <div style="font-weight:600;margin-bottom:4px">Limits and thresholds</div>
+        <p style="margin:0;font-size:16px;color:#3e3f58">The speed limit, the sound barrier, escape speed — a threshold on a magnitude. The radar gun doesn't ask which way you were heading.</p>
+      </div>
+    </div>
+    <div style="margin-top:24px;background:#22233a;color:#f6f6fb;padding:20px 24px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:15px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 32px">
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">THE RULE</div>Reverse the direction. Does the answer change?</div>
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#a9abc8;margin-bottom:6px">NO</div>Scalar. Distance, speed, energy.</div>
+      <div><div style="font-size:11px;letter-spacing:0.1em;color:#9fd1b3;margin-bottom:6px">YES</div>Vector. Displacement, velocity, force.</div>
+    </div>
+  </section>
+
+  <section id="check" data-screen-label="06 Check">
+    <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#4b4ba8;margin-bottom:12px">06 · Check for understanding</div>
+    <h2 style="font-size:36px;font-weight:500;margin:0 0 16px;letter-spacing:-0.01em">Five questions</h2>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:24px">
+      <p style="max-width:56ch;margin:0;text-wrap:pretty">Pick an answer; you'll get feedback immediately.</p>
+      <div style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:14px;color:#5c5d70">Score <strong style="color:#22233a">{{ score }}</strong> / {{ total }}</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <sc-for list="{{ quiz }}" as="q" hint-placeholder-count="5">
+        <div style="background:#ffffff;border:1px solid #d4d5e2;padding:24px">
+          <div style="display:flex;gap:16px;align-items:baseline">
+            <span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70;flex-shrink:0">Q{{ q.n }}</span>
+            <p style="margin:0 0 16px;font-size:19px;font-weight:500;text-wrap:pretty">{{ q.text }}</p>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+            <sc-for list="{{ q.options }}" as="o" hint-placeholder-count="4">
+              <button onClick="{{ o.pick }}" style="text-align:left;font-family:'Newsreader',Georgia,serif;font-size:17px;padding:12px 14px;border:1px solid {{ o.border }};background:{{ o.bg }};color:{{ o.color }};cursor:pointer;display:flex;gap:10px;align-items:baseline;min-height:44px"><span style="font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ q.answered }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:14px;padding:12px 16px;border-left:3px solid {{ q.fbColor }};background:#f6f6fb;font-size:16px"><strong style="color:{{ q.fbColor }}">{{ q.verdict }}</strong> {{ q.feedback }}</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid #d4d5e2;padding-top:20px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:12px;color:#5c5d70;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <span>Unit 0 · Vectors &amp; scalars · the question picks the tool</span>
+    <a href="Kinematics Explainer.dc.html">← Lab notebook 00 · Kinematics</a>
+  </footer>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;playbackSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0.5,&quot;max&quot;:3,&quot;step&quot;:0.5,&quot;unit&quot;:&quot;×&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Walk demo&quot;},&quot;allowRetry&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Quiz&quot;}}">
+class Component extends DCLogic {
+  state = { path: 'lap', s: 0, playing: false, astV: 8, pushV: 1, pushDeg: 90, sorts: {}, answers: {} };
+  SPEED = 4;
+  PATHS = {
+    lap: { label: 'One lap of a track', pts: [[8, 22], [32, 22], [32, 8], [8, 8], [8, 22]] },
+    outback: { label: 'Out and back', pts: [[6, 15], [34, 15], [6, 15]] },
+    L: { label: 'Around the block', pts: [[6, 24], [30, 24], [30, 6]] },
+    straight: { label: 'Straight line', pts: [[6, 15], [34, 15]] }
+  };
+  componentDidMount() {
+    this._last = null;
+    const loop = (ts) => {
+      if (this.state.playing) {
+        const dt = this._last ? (ts - this._last) / 1000 : 0; this._last = ts;
+        const L = this.totalLen(); let s = this.state.s + dt * this.SPEED * (this.props.playbackSpeed ?? 1);
+        if (s >= L) this.setState({ s: L, playing: false }); else this.setState({ s });
+      } else this._last = null;
+      this._raf = requestAnimationFrame(loop);
+    };
+    this._raf = requestAnimationFrame(loop);
+  }
+  componentWillUnmount() { cancelAnimationFrame(this._raf); }
+  pts() { return this.PATHS[this.state.path].pts; }
+  segLens() { const p = this.pts(); return p.slice(1).map((q, i) => Math.hypot(q[0] - p[i][0], q[1] - p[i][1])); }
+  totalLen() { return this.segLens().reduce((a, b) => a + b, 0); }
+  posAt(s) {
+    const p = this.pts(), lens = this.segLens(); let acc = 0;
+    for (let i = 0; i < lens.length; i++) {
+      if (s <= acc + lens[i] || i === lens.length - 1) {
+        const f = Math.min(1, Math.max(0, (s - acc) / lens[i])), a = p[i], b = p[i + 1];
+        return { x: a[0] + (b[0] - a[0]) * f, y: a[1] + (b[1] - a[1]) * f, dir: [(b[0] - a[0]) / lens[i], (b[1] - a[1]) / lens[i]], seg: i };
+      }
+      acc += lens[i];
+    }
+  }
+  compass(dx, dy) {
+    if (Math.hypot(dx, dy) < 1e-6) return '—';
+    const ang = (Math.atan2(-dy, dx) * 180 / Math.PI + 360) % 360;
+    const names = ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'];
+    return names[Math.round(ang / 45) % 8];
+  }
+  renderVals() {
+    const s = this.state, SC = 10, L = this.totalLen(), cur = this.posAt(s.s), start = this.pts()[0];
+    const px = p => (p[0] * SC).toFixed(1), py = p => (p[1] * SC).toFixed(1);
+    const walkedPts = (() => { const p = this.pts(); const out = [p[0]]; let acc = 0; const lens = this.segLens(); for (let i = 0; i < lens.length; i++) { if (acc + lens[i] <= s.s) out.push(p[i + 1]); else break; acc += lens[i]; } out.push([cur.x, cur.y]); return out.map(q => px(q) + ',' + py(q)).join(' '); })();
+    const dx = cur.x - start[0], dy = cur.y - start[1], dispMag = Math.hypot(dx, dy);
+    const paths = Object.entries(this.PATHS).map(([id, p]) => ({
+      label: p.label, bg: s.path === id ? '#22233a' : 'transparent', color: s.path === id ? '#f6f6fb' : '#22233a', border: s.path === id ? '#22233a' : '#babbcb',
+      apply: () => this.setState({ path: id, s: 0, playing: false })
+    }));
+    let walkInsight = 'Distance and displacement agree — so far she has only walked straight.';
+    if (s.path === 'straight') walkInsight = 'On a straight path the two never separate. Every step adds to both.';
+    else if (cur.seg > 0 && dispMag > 0.5) walkInsight = `She has walked ${s.s.toFixed(0)} m but is only ${dispMag.toFixed(0)} m from the start. The odometer counts every step; the arrow only cares where she is now.`;
+    if (s.s >= L - 0.01 && dispMag < 0.5) walkInsight = `Back at the start: ${L.toFixed(0)} m of distance, 0 m of displacement. Average speed 4 m/s; average velocity zero. Both true.`;
+
+    const th = s.pushDeg * Math.PI / 180, bx = s.astV, by = 0, pxv = s.pushV * Math.cos(th), pyv = s.pushV * Math.sin(th), rx = bx + pxv, ry = by + pyv;
+    const resMag = Math.hypot(rx, ry), resDeg = ((Math.atan2(ry, rx) * 180 / Math.PI) + 360) % 360, scalarSum = s.astV + s.pushV;
+    const V = 16, cx = 70, cy = 150, EX = 330, EY = 150, ER = 14;
+    // closest approach of the new straight-line path to Earth's centre
+    const ux = rx / (resMag || 1), uy = -ry / (resMag || 1), ddx = EX - cx, ddy = EY - cy, along = ddx * ux + ddy * uy, perp = Math.abs(ddx * uy - ddy * ux);
+    const hits = resMag > 0.05 && along > 0 && perp <= ER;
+    const missRadii = perp / ER;
+    const outcome = resMag < 0.05 ? 'Asteroid stopped dead.' : hits ? 'IMPACT — Earth is still on the path.' : along > 0 ? `MISS — clears Earth by ${missRadii.toFixed(1)} Earth radii.` : 'MISS — now moving away from Earth.';
+    const outcomeColor = hits ? '#f0a58a' : '#9fd1b3', pathColor = hits ? '#C2413D' : '#3E7A58';
+    const ext = 600, trackX2 = (cx + ux * ext).toFixed(1), trackY2 = (cy + uy * ext).toFixed(1);
+    let boatInsight = 'With no burn, the asteroid just keeps coming. Try the same Δv at 0° and at 90°.';
+    if (s.pushV > 0 && hits) boatInsight = `A ${s.pushV} km/s burn changed the speed to ${resMag.toFixed(1)} km/s but not the outcome. Direction, not magnitude, is what saves the planet.`;
+    else if (s.pushV > 0 && !hits) boatInsight = `Same ${s.pushV} km/s of Δv, different direction — and the path swings clear. The scalar sum (${scalarSum.toFixed(1)} km/s) could never have told you that.`;
+
+    const sortDefs = [
+      { text: 'How much gas will the road trip burn?', ans: 0, s: 'Distance & speed', v: 'Displacement & velocity', why: 'Fuel is spent for every kilometer driven, whichever way the road turns. Reverse the route and the answer is the same.' },
+      { text: 'Will the outfielder be under the ball when it lands?', ans: 1, s: 'Speed', v: 'Velocity', why: 'The ball\'s speed alone can\'t say where it comes down. Direction decides everything here.' },
+      { text: 'Is the driver over the speed limit?', ans: 0, s: 'Speed', v: 'Velocity', why: 'The limit is a threshold on a magnitude. Heading north or south at 40 m/s is equally illegal.' },
+      { text: 'Where will the hurricane be in 24 hours?', ans: 1, s: 'Speed', v: 'Velocity', why: 'Forecasting position needs a direction of travel. 20 km/h is useless without "west‑northwest."' },
+      { text: 'How much kinetic energy does the puck have?', ans: 0, s: 'Speed', v: 'Velocity', why: 'K = ½mv² squares the speed; the direction cancels out. A puck going left or right at 10 m/s has identical energy.' },
+      { text: 'Will the two skaters collide?', ans: 1, s: 'Speed', v: 'Velocity', why: 'Two people at 5 m/s can be racing toward each other or skating in parallel. Only the arrows tell you which.' }
+    ];
+    const sorts = sortDefs.map((q, i) => {
+      const pick = s.sorts[i], answered = pick !== undefined, right = pick === q.ans;
+      const style = (which) => {
+        const isCorrect = which === q.ans, isPick = which === pick;
+        if (!answered) return { bg: 'transparent', border: '#babbcb', color: '#22233a' };
+        if (isCorrect) return { bg: '#e3efe8', border: '#3e7a58', color: '#22233a' };
+        if (isPick) return { bg: '#F7E3E2', border: '#C2413D', color: '#22233a' };
+        return { bg: 'transparent', border: '#d4d5e2', color: '#8a8b9e' };
+      };
+      const S = style(0), Vv = style(1);
+      return {
+        text: q.text, scalarLabel: 'Scalar · ' + q.s, vectorLabel: 'Vector · ' + q.v, answered, why: q.why,
+        verdict: right ? 'Right.' : (q.ans === 0 ? 'Scalar, actually.' : 'Vector, actually.'), fbColor: right ? '#3E7A58' : '#C2413D',
+        sBg: S.bg, sBorder: S.border, sColor: S.color, vBg: Vv.bg, vBorder: Vv.border, vColor: Vv.color,
+        pickScalar: () => this.setState({ sorts: { ...s.sorts, [i]: 0 } }), pickVector: () => this.setState({ sorts: { ...s.sorts, [i]: 1 } })
+      };
+    });
+
+    const quizDefs = [
+      { text: 'A car drives 30 km north, then 30 km south, in exactly one hour. Its average speed and average velocity are:', options: ['60 km/h and 60 km/h', '60 km/h and 0', '0 and 60 km/h north', '30 km/h and 30 km/h'], correct: 1, feedback: 'Average speed = total distance / time = 60 km/h. Average velocity = displacement / time = 0 / 1 h = 0. Same trip, two honest answers.' },
+      { text: 'Two identical balls are thrown at 12 m/s — one straight up, one straight down. At the instant of release:', options: ['They have the same velocity and the same kinetic energy', 'They have different velocities and different kinetic energies', 'They have different velocities but the same kinetic energy', 'They have the same velocity but different kinetic energies'], correct: 2, feedback: 'Velocity is a vector — up and down are different values. Kinetic energy ½mv² depends only on speed, so it\'s identical. This is exactly why energy problems are often easier than force problems.' },
+      { text: 'A plane flies at 200 km/h east through the air while the wind blows 50 km/h north. Its speed over the ground is:', options: ['150 km/h', '200 km/h', 'about 206 km/h', '250 km/h'], correct: 2, feedback: 'The two velocities are perpendicular, so they add tip‑to‑tail: √(200² + 50²) ≈ 206 km/h. Adding the scalars (250) or subtracting them (150) both get it wrong.' },
+      { text: 'Which situation is best described by a scalar?', options: ['The push needed to start a stalled car', 'The wear on a tire after a 500 km drive', 'The direction a compass needle settles', 'The change in a satellite\'s position over one orbit'], correct: 1, feedback: 'Tire wear accumulates with every meter rolled, regardless of direction — a path‑dependent, scalar cost. The others all depend on which way.' },
+      { text: 'Why is Newton\'s second law written as a vector equation, ΣF = ma (as vectors)?', options: ['Because forces are always larger than accelerations', 'Because a force changes the object\'s acceleration in the direction the force points, and forces in different directions can cancel', 'Because vectors are more precise than scalars', 'Because acceleration can\'t be negative'], correct: 1, feedback: 'Direction is the content of the law. Two equal forces in opposite directions produce zero acceleration — a fact no scalar equation can express.' }
+    ];
+    const quiz = quizDefs.map((q, qi) => {
+      const picked = s.answers[qi], answered = picked !== undefined, right = picked === q.correct;
+      return {
+        n: qi + 1, text: q.text, answered, feedback: q.feedback, verdict: right ? 'Correct.' : 'Not quite.', fbColor: right ? '#3E7A58' : '#C2413D',
+        options: q.options.map((label, oi) => {
+          const isPick = picked === oi, isCorrect = oi === q.correct;
+          let bg = '#f6f6fb', border = '#d4d5e2', color = '#22233a';
+          if (answered && isCorrect) { bg = '#e3efe8'; border = '#3e7a58'; } else if (answered && isPick) { bg = '#F7E3E2'; border = '#C2413D'; } else if (answered) color = '#8a8b9e';
+          return { label, letter: 'ABCD'[oi], bg, border, color, pick: () => { if (!answered || this.props.allowRetry) this.setState({ answers: { ...s.answers, [qi]: oi } }); } };
+        })
+      };
+    });
+    const score = quizDefs.reduce((n, q, i) => n + (s.answers[i] === q.correct ? 1 : 0), 0);
+
+    return {
+      paths, pathPts: this.pts().map(p => px(p) + ',' + py(p)).join(' '), walkedPts,
+      startX: px(start), startY: py(start), startLabelX: (start[0] * SC + 10).toFixed(1), startLabelY: (start[1] * SC + 4).toFixed(1),
+      walkerX: (cur.x * SC).toFixed(1), walkerY: (cur.y * SC).toFixed(1),
+      dispEndX: (cur.x * SC).toFixed(1), dispEndY: (cur.y * SC).toFixed(1), showDisp: dispMag > 0.3,
+      velEndX: (cur.x * SC + cur.dir[0] * 28).toFixed(1), velEndY: (cur.y * SC + cur.dir[1] * 28).toFixed(1),
+      distLabel: s.s.toFixed(0), dispLabel: dispMag.toFixed(0), dispDirLabel: dispMag > 0.3 ? 'pointing ' + this.compass(dx, dy) + ' from start' : 'back where she started',
+      speedLabel: this.SPEED.toFixed(0), velDirLabel: this.compass(cur.dir[0], cur.dir[1]),
+      tLabel: (s.s / this.SPEED).toFixed(1), s: s.s, totalLen: L.toFixed(1), walkInsight,
+      togglePlay: () => this.setState({ playing: !s.playing, s: s.s >= L - 0.01 ? 0 : s.s }),
+      reset: () => this.setState({ s: 0, playing: false }),
+      setS: e => this.setState({ s: +e.target.value, playing: false }),
+      playLabel: s.playing ? '❚❚ Pause' : (s.s >= L - 0.01 ? '↺ Replay' : '▶ Play'),
+      astV: s.astV, pushV: s.pushV, pushDeg: s.pushDeg,
+      setAstV: e => this.setState({ astV: +e.target.value }), setPushV: e => this.setState({ pushV: +e.target.value }), setPushDeg: e => this.setState({ pushDeg: +e.target.value }),
+      bEndX: (cx + bx * V).toFixed(1), bEndY: (cy - by * V).toFixed(1), rEndX: (cx + rx * V).toFixed(1), rEndY: (cy - ry * V).toFixed(1),
+      trackX1: cx, trackY1: cy, trackX2, trackY2, outcome, outcomeColor, pathColor,
+      scalarSum: scalarSum.toFixed(1), resMag: resMag.toFixed(1), resDeg: resMag < 0.05 ? '—' : resDeg.toFixed(0), boatInsight,
+      sorts, quiz, score, total: quizDefs.length
+    };
+  }
+}
+</script>
+</body>
+</html>

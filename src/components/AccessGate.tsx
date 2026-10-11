@@ -28,7 +28,7 @@ export default function AccessGate({ children }: { children: React.ReactNode }) 
   const email = session.user.email
   // Staff bypass: session role OR the email allowlist (covers the owner's
   // personal admin address, which isn't on a school domain).
-  const isStaff = (session.user.role && session.user.role !== 'student') || getUserRole(email) !== 'student'
+  const isStaff = (session.user.role ?? getUserRole(email)) !== 'student'
   if (isStaff) return <>{children}</>
 
   if (!isSchoolStudentEmail(email)) return <SchoolAccountModal email={email} />

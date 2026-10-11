@@ -120,7 +120,7 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
   if (exact) return <div className="text-sm">{exactLabel} · <a className="underline" href={new URLSearchParams(location.search).get('task_id') ? `/vocabulary/work?task_id=${new URLSearchParams(location.search).get('task_id')}` : '/vocabulary/work'}>Back to words</a></div>
   if (loading) return <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading vocab…</div>
   if (units.length === 0 && lessons.length === 0) {
-    return <div className="rounded-lg border p-3 text-sm" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>No vocabulary published yet — a teacher needs to add lesson vocab first.</div>
+    return <div className="rounded-lg border p-3 text-sm" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>No vocabulary is open for your class yet. Your teacher can open a lesson or assign words.</div>
   }
 
   return (

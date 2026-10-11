@@ -5,10 +5,10 @@ export const constantVelocityDef: SimDefinition = {
   slug: 'constant-velocity',
   title: 'Constant velocity motion',
   level: 'Intro',
-  summary: 'Control a walker along a track and collect position data over time. Watch how steady speed makes a straight position-time line.',
+  summary: 'Control a survey rover along a track and collect position data over time. Watch how steady speed makes a straight position-time line.',
   canvasHeight: 230,
   params: [
-    { key: 'speed', label: 'Walking speed', type: 'slider', min: 0.5, max: 3, step: 0.1, unit: 'm/s', default: 1 },
+    { key: 'speed', label: 'Travel speed', type: 'slider', min: 0.5, max: 3, step: 0.1, unit: 'm/s', default: 1 },
     {
       key: 'direction', label: 'Direction', type: 'select', live: true, default: 'stopped',
       options: [
@@ -19,7 +19,7 @@ export const constantVelocityDef: SimDefinition = {
     },
   ],
   readouts: [
-    { key: 'time', label: 'Time', unit: 's', precision: 0 },
+    { key: 'time', label: 'Time', unit: 's', precision: 2 },
     { key: 'position', label: 'Position', unit: 'm', precision: 2 },
     { key: 'velocity', label: 'Velocity', unit: 'm/s', precision: 1, color: 'var(--primary)' },
   ],

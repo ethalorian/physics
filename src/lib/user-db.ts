@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { experienceDatabaseFetch } from './experience-db-fetch'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { supabaseAdmin } from '@/lib/supabase'
 
@@ -60,7 +61,7 @@ export function getScopedDb(ctx: { userId: string; email: string }): SupabaseCli
   const token = mintSupabaseToken(ctx.email)
   if (!token) return supabaseAdmin
   return createClient(SUPABASE_URL, ANON_KEY, {
-    global: { headers: { Authorization: `Bearer ${token}` } },
+    global: { fetch: experienceDatabaseFetch, headers: { Authorization: `Bearer ${token}` } },
     auth: { persistSession: false, autoRefreshToken: false },
   })
 }

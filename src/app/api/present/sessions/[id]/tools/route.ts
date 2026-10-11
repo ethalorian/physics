@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { presentationForActor, teachingTools } from '@/lib/presentation-tools-server'
-import { PULSE_OPTIONS, uncalledStudents, type PulseKind } from '@/lib/presentation-tools'
+import { validPulseDraft, uncalledStudents } from '@/lib/presentation-tools'
 
 export const GET = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
   const session = await presentationForActor((await ctx.params).id, ctx)
@@ -28,12 +28,13 @@ export const POST = withRole<{ id: string }>(['teacher', 'admin'], async (reques
   const roster = await teachingTools(session, false)
   if (body.student_id && !roster.roster.some(s => s.id === body.student_id)) return NextResponse.json({ error: 'Student is not in this class' }, { status: 403 })
   if (action === 'pulse') {
-    if (typeof body.kind !== 'string' || !Object.hasOwn(PULSE_OPTIONS, body.kind) || typeof body.anonymous !== 'boolean') return NextResponse.json({ error: 'Invalid pulse check' }, { status: 400 })
-    if (session.poll_block_id) return NextResponse.json({ error: 'Close the lesson poll before a pulse check' }, { status: 409 })
-    const closed = await supabaseAdmin.from('present_pulses').update({ status: 'closed' }).eq('session_id', session.id).eq('status', 'open')
-    if (closed.error) throw closed.error
-    const result = await supabaseAdmin.from('present_pulses').insert({ session_id: session.id, kind: body.kind as PulseKind, anonymous: body.anonymous }).select('id').single()
-    if (result.error) throw result.error
+    if(!validPulseDraft(body))return NextResponse.json({error:'Enter a question and 2–6 different answer choices.'},{status:400})
+    const result=await supabaseAdmin.rpc('launch_present_pulse',{p_session:session.id,p_kind:body.kind,p_anonymous:body.anonymous,p_required:body.required===true,p_prompt:['custom','warmup','exit_ticket','solo'].includes(String(body.kind))?String(body.prompt).trim():null,p_target:typeof body.target_id==='string'?body.target_id:null,p_options:body.kind==='custom'?(body.options as string[]).map(o=>o.trim()):null})
+    if(result.error)return NextResponse.json({error:result.error.message},{status:409})
+  } else if(action==='lock_pulse'||action==='reveal_pulse'){
+    if(action==='lock_pulse'&&typeof body.locked!=='boolean')return NextResponse.json({error:'Choose whether responses are paused.'},{status:400})
+    const result=await supabaseAdmin.from('present_pulses').update(action==='reveal_pulse'?{locked:true,revealed:true}:{locked:body.locked,revealed:false}).eq('session_id',session.id).eq('status','open')
+    if(result.error)throw result.error
   } else if (action === 'close_pulse') {
     const result = await supabaseAdmin.from('present_pulses').update({ status: 'closed' }).eq('session_id', session.id).eq('status', 'open')
     if (result.error) throw result.error

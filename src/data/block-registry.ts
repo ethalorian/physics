@@ -1,3 +1,5 @@
+import {completeProblemAnswer} from '@/lib/problem-response'
+import { notebookAuthoringIssues } from '@/lib/interactive-notebook'
 import { numericCell } from '@/components/blocks/data-plot'
 import type { BlockType, ContentBlock } from './content-blocks'
 
@@ -6,6 +8,8 @@ export interface FieldDef { key: string; label: string; kind: FieldKind; options
 export interface BlockDef { type: BlockType; label: string; group: 'Teach' | 'Practice'; capture?: boolean; fields: FieldDef[] }
 
 export const BLOCK_DEFS: BlockDef[] = [
+  { type: 'instruction_video', label: 'Instruction video', group: 'Teach', fields: [{ key: 'title', label: 'Video title', kind: 'text' }, { key: 'youtubeId', label: 'YouTube video ID', kind: 'text' }, { key: 'summary', label: 'Key ideas / text alternative', kind: 'textarea' }, { key: 'durationSeconds', label: 'Verified video length in seconds (for watch XP)', kind: 'number' }, { key: 'transcript', label: 'Verified transcript (optional)', kind: 'textarea' }] },
+  { type: 'position_explorer', label: 'Position and displacement explorer', group: 'Teach', fields: [{ key: 'title', label: 'Title', kind: 'text' }] },
   { type: 'question', label: 'Checkpoint question', group: 'Practice', capture: true, fields: [{ key: 'question', label: 'Question and feedback', kind: 'question' }] },
   { type: 'self_assessment', label: 'Self-assessment', group: 'Practice', capture: true, fields: [{ key: 'targetIds', label: 'Learning target IDs', kind: 'stringlist' }] },
   { type: 'transfer_prompt', label: 'Transfer task', group: 'Practice', capture: true, fields: [{ key: 'masteryTaskSlug', label: 'Mastery task slug', kind: 'text' }] },
@@ -91,6 +95,7 @@ export const BLOCK_DEFS: BlockDef[] = [
   ] },
   { type: 'gewa', label: 'GEWA solve', group: 'Practice', capture: true, fields: [
     { key: 'prompt', label: 'Problem prompt', kind: 'textarea' },
+    { key: 'responseFormat', label: 'Response format', kind: 'select', options: ['equation-bank', 'problem-workspace'] },
     { key: 'requireCompleteWork', label: 'Require given, work trail and answer units', kind: 'toggle' },
     { key: 'givenHint', label: 'Given hint', kind: 'text' },
     { key: 'equationHint', label: 'Equation hint', kind: 'text' },
@@ -161,7 +166,7 @@ export const RESPONSE_RULES: Partial<Record<BlockType, (response: unknown, block
     return ids.length > 0 && ids.every((id) => rating(obj(v)[id]))
   },
   equation_sandbox: (v) => Array.isArray(obj(v).lines) && (obj(v).lines as unknown[]).some(text),
-  gewa: (v, b) => !(b?.type === 'gewa' && b.requireCompleteWork) ? text(obj(v).answer) && (text(obj(v).equationId) || text(obj(v).equation)) : text(obj(v).given) && text(obj(v).answer) && /[a-zA-Z°%]/.test(String(obj(v).answer).replace(/[eE][+-]?\d+/g, '')) && (text(obj(v).equationId) || text(obj(v).equation)) && (text(obj(v).work) || Object.keys(obj(obj(v).substitutions)).length > 0),
+  gewa: (v, b) => obj(v).format==='problem-workspace' ? completeProblemAnswer(v) : !(b?.type === 'gewa' && b.requireCompleteWork) ? text(obj(v).answer) && (text(obj(v).equationId) || text(obj(v).equation)) : text(obj(v).given) && text(obj(v).answer) && /[a-zA-Z°%]/.test(String(obj(v).answer).replace(/[eE][+-]?\d+/g, '')) && (text(obj(v).equationId) || text(obj(v).equation)) && (text(obj(v).work) || Object.keys(obj(obj(v).substitutions)).length > 0),
   data_table: (v, b) => {
     const rows = obj(v).rows;
     const required = b?.type === 'data_table' ? b.minRows ?? 1 : 1;
@@ -186,6 +191,7 @@ export function createBlock(type: string, id: string): ContentBlock {
   if (!def) throw new Error(`Unknown block type: ${type}`)
   const data: Record<string, unknown> = {}
   for (const field of def.fields) {
+    if (field.key === 'durationSeconds') continue
     if (['stringlist', 'numberlist', 'terms'].includes(field.kind)) data[field.key] = []
     else if (field.kind === 'number') data[field.key] = 1
     else if (field.kind === 'select') data[field.key] = field.options?.[0]
@@ -206,6 +212,14 @@ export interface BlockIssue { blockId?: string; message: string }
 export function validateBlockDocument(value: unknown, publishing = false): BlockIssue[] {
   const doc = obj(value), issues: BlockIssue[] = []
   if (doc.schemaVersion !== 1 || !Array.isArray(doc.blocks)) return [{ message: 'Use a version 1 lesson with a blocks array.' }]
+  issues.push(...notebookAuthoringIssues(doc as unknown as import('./content-blocks').BlockDocument, publishing).map(message => ({message})))
+  if (doc.teachingPlans !== undefined && (!Array.isArray(doc.teachingPlans) || doc.teachingPlans.length > 64 || doc.teachingPlans.some(raw => { const ref=obj(raw); return typeof ref.unitId!=='string' || !/^[a-z0-9][a-z0-9-]*$/.test(ref.unitId) || !Number.isInteger(ref.day) || Number(ref.day)<0 }))) issues.push({message:'Choose valid teacher plan links with a unit and a whole-number day.'})
+  if (doc.learningPath !== undefined) {
+    const path = obj(doc.learningPath)
+    if (path.version !== 1 || !['lesson','investigation','mission'].includes(String(path.kind)) || typeof path.focus !== 'string' || !Array.isArray(path.targetSlugs) || !path.targetSlugs.every(text) || (path.foundations !== undefined && typeof path.foundations !== 'boolean')) issues.push({message:'Choose a valid learning-path collection, focus, and target list.'})
+    if (doc.presentation !== 'physics-path') issues.push({message:'Learning-path settings need the learning-path presentation.'})
+    if (publishing && (!text(path.focus) || !Array.isArray(path.targetSlugs) || !path.targetSlugs.length)) issues.push({message:'Add a lesson focus and select at least one learning target before publishing.'})
+  }
   const ids = new Set<string>()
   for (const raw of doc.blocks) {
     const b = obj(raw), id = typeof b.id === 'string' ? b.id : undefined
@@ -221,8 +235,12 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
       if (['stringlist', 'terms', 'numberlist'].includes(field.kind) && !Array.isArray(v)) add(`${field.label} must be a list.`)
       if (field.kind === 'number' && (typeof v !== 'number' || !Number.isFinite(v))) add(`${field.label} must be a number.`)
     }
+    if (b.type==='instruction_video' && (publishing || b.youtubeId) && !/^[A-Za-z0-9_-]{11}$/.test(String(b.youtubeId??''))) add('Use an 11-character YouTube video ID.');
+    if (b.type==='instruction_video' && b.durationSeconds!==undefined && (typeof b.durationSeconds!=='number' || !Number.isInteger(b.durationSeconds) || b.durationSeconds<15 || b.durationSeconds>14400)) add('Verified video length must be 15–14400 seconds.');
+    if (b.type==='instruction_video' && b.startSeconds!==undefined && (typeof b.startSeconds!=='number' || !Number.isFinite(b.startSeconds) || b.startSeconds<0)) add('Video start time must be a nonnegative number.');
     if (b.type==='math_mission' && (publishing || b.competencyCode) && !/^(NS[12]|PR[12]|QE[1-4]|SM[12]|GV[1-3])$/.test(String(b.competencyCode??''))) add('Choose a valid math competency code: NS1–2, PR1–2, QE1–4, SM1–2, or GV1–3.');
     if (b.studentDirections !== undefined && (!Array.isArray(b.studentDirections) || !b.studentDirections.every(text))) add('Directions must be a list of nonempty steps.')
+    if (b.type === 'gewa' && b.responseFormat !== undefined && !['problem-workspace','equation-bank'].includes(String(b.responseFormat))) add('Choose a problem workspace or equation bank.')
     if (b.type === 'data_table' && b.analysisMode !== undefined && !['record','pattern'].includes(String(b.analysisMode))) add('Choose record or pattern table mode.')
     if (b.vocational !== undefined) {
       const connections = obj(b.vocational)
@@ -233,7 +251,7 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
     }
     if (!publishing) continue
     const required: Partial<Record<BlockType, string[]>> = {
-      target: ['statement'], prose: ['markdown'], asteroid_thread: ['connection'], worked_example: ['prompt'], callout: ['markdown'], sentence_frame: ['frame'],
+      instruction_video: ['title','youtubeId','summary'], position_explorer: ['title'], target: ['statement'], prose: ['markdown'], asteroid_thread: ['connection'], worked_example: ['prompt'], callout: ['markdown'], sentence_frame: ['frame'],
       lab_notebook: ['instruction'], sketch: ['instruction'], sim_embed: ['simulationSlug'], math_mission: ['competencyCode'], deck: ['src', 'title'], animation_3d: ['animationSlug'],
       gewa: ['prompt'], exit_ticket: ['prompt'], observation: ['patternPrompt', 'interpretPrompt'], figure: ['src', 'alt'], transfer_prompt: ['masteryTaskSlug'], marzano: ['targetId'],
     }
@@ -249,6 +267,10 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
     }
     if (def.type === 'data_table' && (!Array.isArray(b.columns) || !b.columns.length || !b.columns.every(text) || !Number.isInteger(b.rows) || Number(b.rows) < 1)) add('Add column headings and at least one row.')
     if (def.type === 'data_table' && b.minRows !== undefined && (!Number.isInteger(b.minRows) || Number(b.minRows) < 1)) add('Required readings must be a positive whole number.')
+    if(def.type==='reading'&&b.assignmentChecks!==undefined){
+      const checks=b.assignmentChecks
+      if(!Array.isArray(checks)||checks.length<1||checks.length>30||checks.some(q=>!q||typeof q!=='object'||typeof q.reference!=='string'||!q.reference.trim()||typeof q.prompt!=='string'||!q.prompt.trim()||typeof q.targetId!=='string'||!q.targetId.trim()))add('Reading assignments need 1–30 questions with a prompt, reference, and target.')
+    }
     if (['reading', 'concept_exercise'].includes(def.type) && (!Number.isInteger(b.chapter) || Number(b.chapter) < 1)) add('Choose a chapter number.')
   }
   return issues

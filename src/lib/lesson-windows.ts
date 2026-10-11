@@ -6,7 +6,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 // row → the lesson is closed for that class. Teachers own windows for their
 // classes; admins own only the global published flag.
 
-export interface LessonWindow { course_id: string; lesson_id: string; open_at: string | null; close_at: string | null }
+export interface LessonWindow { course_id: string; lesson_id: string; open_at: string | null; close_at: string | null; due_at?: string | null }
 
 function within(w: { open_at: string | null; close_at: string | null }, now: number): boolean {
   const openOk = !w.open_at || now >= new Date(w.open_at).getTime()
@@ -18,7 +18,7 @@ function within(w: { open_at: string | null; close_at: string | null }, now: num
 // equals course_students.student_id, so we query enrollments directly.
 async function getStudentCourseIds(studentId: string): Promise<string[]> {
   if (!studentId) return []
-  const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', studentId)
+  const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', studentId).eq('enrollment_state', 'ACTIVE')
   return [...new Set(((cs ?? []) as { course_id: string }[]).map((r) => String(r.course_id)))]
 }
 
@@ -58,10 +58,11 @@ export async function getStudentLessonGate(
 // never-released lessons stay invisible (no spoilers).
 // If the student is in several classes, the most permissive window wins:
 // open > scheduled (earliest open) > closed (latest close).
-export type LessonWindowStatus =
+export type LessonWindowStatus = { due_at?: string | null } & (
   | { state: 'open'; opened_at: string | null; closes_at: string | null }
   | { state: 'scheduled'; opens_at: string }
   | { state: 'closed'; closed_at: string | null }
+)
 
 export async function getStudentLessonWindowStatuses(
   studentId: string,
@@ -72,12 +73,12 @@ export async function getStudentLessonWindowStatuses(
 
   const { data } = await supabaseAdmin
     .from('lesson_class_windows')
-    .select('course_id, lesson_id, open_at, close_at')
+    .select('course_id, lesson_id, open_at, close_at, due_at')
     .in('course_id', courseIds)
 
   const out: Record<string, LessonWindowStatus> = {}
   for (const w of (data ?? []) as LessonWindow[]) {
-    const next = statusOf(w, now)
+    const next = { ...statusOf(w, now), due_at: w.due_at ?? null }
     const prev = out[w.lesson_id]
     if (!prev || rank(next) > rank(prev) || tieBreak(prev, next)) out[w.lesson_id] = next
   }

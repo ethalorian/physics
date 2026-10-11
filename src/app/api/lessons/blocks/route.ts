@@ -134,8 +134,11 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
           const capture = blockById.get(blockId)
           if (capture && isBlockComplete(capture, response)) done.add(blockId)
         }
-        const pct = Math.round((done.size / captureIds.length) * 100)
-        const completed = pct >= 100
+        // For physics lessons, reserving the final step for submission prevents a
+        // save (or XP award) from claiming that the lesson has been turned in.
+        const needsSubmission = lessonRow.content_blocks?.presentation === 'physics-path'
+        const pct = Math.round((done.size / (captureIds.length + (needsSubmission ? 1 : 0))) * 100)
+        const completed = !needsSubmission && pct >= 100
         await supabaseAdmin.from('lesson_progress').upsert(
           {
             user_id: ctx.userId,

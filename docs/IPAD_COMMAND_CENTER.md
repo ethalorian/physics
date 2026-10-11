@@ -1,5 +1,7 @@
 # iPad Command Center
 
+For the current navigation and setup, see [iPad teaching journey](IPAD_TEACHING_JOURNEY_2026-09-23.md). The implementation history below describes the earlier interface.
+
 Launch `/admin/command-center` from the teacher dashboard or staff navigation.
 
 ## Classroom setup

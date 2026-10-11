@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { useVocabAssignmentLink } from '@/components/vocabulary/useVocabAssignmentLink'
 import Link from 'next/link'
 import { Trophy, Sparkles, RotateCcw, ArrowLeft, Star } from 'lucide-react'
+import type { VocabXpStatus } from '@/lib/xp-policy'
 
 // Shared end-of-game screen for every arcade game. It performs the ONE uniform
 // save (POST to vocabulary_game_scores) so the score flows into XP, streak,
@@ -71,45 +73,65 @@ function fireConfetti() {
 }
 
 export default function ArcadeEndScreen({ gameType, gameTitle, vocabularySetId, score, maxScore, accuracy, detail, accent = 'var(--primary)', onPlayAgain }: Props) {
+  const { assignmentHref, assigned } = useVocabAssignmentLink()
   const [isBest, setIsBest] = useState(false)
   const [prevBest, setPrevBest] = useState<number | null>(null)
-  const saved = useRef(false)
+  const [xp, setXp] = useState<VocabXpStatus | null>(null)
+  const [saveError, setSaveError] = useState('')
+  const [retry, setRetry] = useState(0)
+  const submission = useRef<{ key: string; id: string; promise: Promise<VocabXpStatus> | null } | null>(null)
 
   useEffect(() => {
-    if (saved.current) return
-    saved.current = true
-    let cancelled = false
-    ;(async () => {
-      try {
-        // prior best for this game (before saving the new score)
-        let best = 0
-        try {
-          const r = await fetch(`/api/student-progress/game-scores?game_type=${encodeURIComponent(gameType)}`)
-          if (r.ok) {
-            const rows = (await r.json()) as { score?: number }[]
-            best = Array.isArray(rows) ? rows.reduce((m, x) => Math.max(m, x.score ?? 0), 0) : 0
-          }
-        } catch { /* ignore */ }
-        if (cancelled) return
-        setPrevBest(best)
-        const beat = score > best
-        setIsBest(beat)
-        if (beat && score > 0) fireConfetti()
-
-        // the uniform save (needs a vocabulary set id; skip if absent)
-        if (vocabularySetId) {
-          await fetch('/api/student-progress/game-scores', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ vocabulary_set_id: vocabularySetId, game_type: gameType, score, max_score: maxScore ?? score }),
-          })
-        }
-      } catch (e) {
-        console.error('Arcade score save failed:', e)
+    let active = true
+    setXp(null)
+    setSaveError('')
+    if (!vocabularySetId) {
+      setSaveError('No vocabulary set was selected. This score cannot be saved for XP.')
+      return
+    }
+    const key = JSON.stringify([gameType, vocabularySetId, score, maxScore, accuracy])
+    if (submission.current?.key !== key) submission.current = { key, id: crypto.randomUUID(), promise: null }
+    const game = submission.current
+    // Reuse the in-flight request across React effect cleanup/replay. Saving
+    // starts immediately; a slow personal-best lookup cannot prevent it.
+    game.promise ??= (async () => {
+      const r = await fetch('/api/student-progress/game-scores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        signal: AbortSignal.timeout(15000),
+        body: JSON.stringify({ event_id: game.id, vocabulary_set_id: vocabularySetId, game_type: gameType, score, max_score: maxScore ?? score, accuracy }),
+      })
+      const result = await r.json()
+      if (!r.ok || !result.xp || ![result.xp.dailyEarned, result.xp.dailyCap, result.xp.lifetimeEarned].every(Number.isFinite)) {
+        throw new Error('The score or XP total could not be confirmed.')
       }
+      return result.xp as VocabXpStatus
     })()
-    return () => { cancelled = true }
-  }, [gameType, vocabularySetId, score, maxScore])
+    game.promise.then(result => { if (active) { setXp(result); window.dispatchEvent(new CustomEvent('xp-updated')) } }).catch(() => {
+      if (active) setSaveError('Save not confirmed. Retry to save this game and check your XP; retries will not count it twice.')
+    })
+    return () => { active = false }
+  }, [gameType, vocabularySetId, score, maxScore, accuracy, retry])
+
+  useEffect(() => {
+    let active = true
+    const id = submission.current?.id
+    setIsBest(false)
+    setPrevBest(null)
+    fetch(`/api/student-progress/game-scores?game_type=${encodeURIComponent(gameType)}`, { signal: AbortSignal.timeout(15000) })
+      .then(async r => {
+        if (!r.ok) return
+        const rows = await r.json() as { id: string; score?: number }[]
+        if (!active || !Array.isArray(rows)) return
+        const best = rows.filter(row => row.id !== id).reduce((m, row) => Math.max(m, row.score ?? 0), 0)
+        setPrevBest(best)
+        setIsBest(score > best)
+      }).catch(() => { /* A personal-best lookup must not block saving. */ })
+    return () => { active = false }
+  }, [gameType, vocabularySetId, score, maxScore, accuracy])
+
+  useEffect(() => { if (xp && isBest && score > 0) fireConfetti() }, [xp, isBest, score])
 
   return (
     <Card className="max-w-md mx-auto items-center gap-0 p-6 text-center">
@@ -118,11 +140,24 @@ export default function ArcadeEndScreen({ gameType, gameTitle, vocabularySetId, 
       </div>
       <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{gameTitle} complete</div>
       <div className="text-5xl font-bold mt-1" style={{ color: accent }}>{score.toLocaleString()}</div>
-      <div className="inline-flex items-center gap-1.5 text-sm mt-1" style={{ color: 'var(--success)' }}>
-        <Star size={15} /> +{score.toLocaleString()} XP
+      <div className="text-sm text-muted-foreground">Game points</div>
+      <div role="status" aria-live="polite" className="mt-3 space-y-1 text-sm">
+        {xp ? <>
+          <div className="text-success">Score saved</div>
+          <div className="inline-flex items-center gap-1.5"><Star size={15} /> Vocabulary XP today: {xp.dailyEarned} / {xp.dailyCap}</div>
+          <div className="text-muted-foreground">Total XP earned: {xp.lifetimeEarned.toLocaleString()}</div>
+          <p className="text-xs text-muted-foreground">{xp.dailyEarned >= xp.dailyCap ? 'Daily vocabulary game XP limit reached. More games still count toward your personal best. Assigned checks earn their own XP.' : `All vocabulary games share a ${xp.dailyCap} XP daily limit.`}</p>
+        </> : saveError ? <>
+          <p className="text-destructive">{saveError}</p>
+          {vocabularySetId && <Button variant="outline" onClick={() => {
+            if (submission.current) submission.current.promise = null
+            setSaveError('')
+            setRetry(n => n + 1)
+          }}>Retry save</Button>}
+        </> : <p className="text-muted-foreground">Saving score and checking XP…</p>}
       </div>
 
-      {isBest && score > 0 && (
+      {xp && isBest && score > 0 && (
         <div className="inline-flex items-center gap-1.5 text-sm font-medium rounded-full px-3 py-1 mt-3" style={{ background: 'color-mix(in oklch, var(--reward) 18%, transparent)', color: 'var(--foreground)' }}>
           <Sparkles size={15} /> New personal best!
         </div>
@@ -138,11 +173,11 @@ export default function ArcadeEndScreen({ gameType, gameTitle, vocabularySetId, 
       )}
 
       <div className="flex items-center gap-2 justify-center mt-5">
-        <Button onClick={onPlayAgain}>
+        <Button onClick={onPlayAgain} disabled={Boolean(vocabularySetId) && !xp}>
           <RotateCcw size={15} /> Play again
         </Button>
-        <Link href="/vocabulary/work" className="inline-flex items-center gap-1.5 text-sm rounded-lg border px-4 py-2" style={{ borderColor: 'var(--border)' }}>
-          <ArrowLeft size={15} /> Assignments
+        <Link href={assignmentHref} className="inline-flex items-center gap-1.5 text-sm rounded-lg border px-4 py-2" style={{ borderColor: 'var(--border)' }}>
+          <ArrowLeft size={15} /> {assigned ? 'Return to assignment & check' : 'Assignments'}
         </Link>
       </div>
     </Card>

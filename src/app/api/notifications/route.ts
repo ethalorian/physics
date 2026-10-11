@@ -61,9 +61,9 @@ export const GET = withAuth(async (_req, ctx) => {
 
   // 3. Math points
   try {
-    const { data } = await supabaseAdmin.from('math_spine_point_grants').select('id, points, note, awarded_at').eq('user_id', me).order('awarded_at', { ascending: false }).limit(8)
+    const { data } = await supabaseAdmin.from('math_spine_point_grants').select('id, points, note, awarded_at').eq('user_id', me).gt('points', 0).order('awarded_at', { ascending: false }).limit(8)
     for (const r of (data ?? []) as { id: string; points: number; note: string | null; awarded_at: string }[]) {
-      items.push({ id: `math:${r.id}`, type: 'math', title: 'Math points earned', detail: r.note ? `+${r.points} · ${r.note}` : `+${r.points}`, at: r.awarded_at, href: '/dashboard/math-spine', unread: isUnread(r.awarded_at) })
+      items.push({ id: `math:${r.id}`, type: 'math', title: 'Math XP earned', detail: r.note ? `+${r.points} · ${r.note}` : `+${r.points}`, at: r.awarded_at, href: '/dashboard/math-spine', unread: isUnread(r.awarded_at) })
     }
   } catch { /* ignore */ }
 

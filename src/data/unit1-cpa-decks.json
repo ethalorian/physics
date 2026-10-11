@@ -1,0 +1,134 @@
+[
+  {
+    "day": 1,
+    "title": "The briefing: notice, question, predict",
+    "slides": 15,
+    "src": "/decks/unit-1-cpa/day-01.html"
+  },
+  {
+    "day": 2,
+    "title": "Where are you? How far did you travel?",
+    "slides": 14,
+    "src": "/decks/unit-1-cpa/day-02.html"
+  },
+  {
+    "day": 3,
+    "title": "Velocity: how fast and which way?",
+    "slides": 15,
+    "src": "/decks/unit-1-cpa/day-03.html"
+  },
+  {
+    "day": 4,
+    "title": "Velocity graphs and direction arrows",
+    "slides": 15,
+    "src": "/decks/unit-1-cpa/day-04.html"
+  },
+  {
+    "day": 5,
+    "title": "Predict a position, show a range",
+    "slides": 15,
+    "src": "/decks/unit-1-cpa/day-05.html"
+  },
+  {
+    "day": 6,
+    "title": "Add arrows one direction at a time",
+    "slides": 14,
+    "src": "/decks/unit-1-cpa/day-06.html"
+  },
+  {
+    "day": 7,
+    "title": "Acceleration: changing velocity",
+    "slides": 14,
+    "src": "/decks/unit-1-cpa/day-07.html"
+  },
+  {
+    "day": 8,
+    "title": "Choose a motion method",
+    "slides": 16,
+    "src": "/decks/unit-1-cpa/day-08.html"
+  },
+  {
+    "day": 9,
+    "title": "Inertia: motion does not need a net push",
+    "slides": 15,
+    "src": "/decks/unit-1-cpa/day-09.html"
+  },
+  {
+    "day": 10,
+    "title": "Forces come from interactions",
+    "slides": 15,
+    "src": "/decks/unit-1-cpa/day-10.html"
+  },
+  {
+    "day": 11,
+    "title": "Cart lab: change the mass",
+    "slides": 14,
+    "src": "/decks/unit-1-cpa/day-11.html"
+  },
+  {
+    "day": 12,
+    "title": "Cart lab: change the driving force",
+    "slides": 14,
+    "src": "/decks/unit-1-cpa/day-12.html"
+  },
+  {
+    "day": 13,
+    "title": "Net force first, acceleration second",
+    "slides": 16,
+    "src": "/decks/unit-1-cpa/day-13.html"
+  },
+  {
+    "day": 14,
+    "title": "Interaction pairs: two different objects",
+    "slides": 15,
+    "src": "/decks/unit-1-cpa/day-14.html"
+  },
+  {
+    "day": 15,
+    "title": "Draw a free-body diagram",
+    "slides": 16,
+    "src": "/decks/unit-1-cpa/day-15.html"
+  },
+  {
+    "day": 16,
+    "title": "Use the diagram to predict a change",
+    "slides": 15,
+    "src": "/decks/unit-1-cpa/day-16.html"
+  },
+  {
+    "day": 17,
+    "title": "Friction: before and during sliding",
+    "slides": 15,
+    "src": "/decks/unit-1-cpa/day-17.html"
+  },
+  {
+    "day": 18,
+    "title": "Equilibrium: find the missing balance",
+    "slides": 14,
+    "src": "/decks/unit-1-cpa/day-18.html"
+  },
+  {
+    "day": 19,
+    "title": "Workshop: find and fix the reasoning",
+    "slides": 16,
+    "src": "/decks/unit-1-cpa/day-19.html"
+  },
+  {
+    "day": 20,
+    "title": "Build a complete prediction",
+    "slides": 15,
+    "src": "/decks/unit-1-cpa/day-20.html"
+  },
+  {
+    "day": 21,
+    "title": "Transfer task: make a plan",
+    "slides": 11,
+    "src": "/decks/unit-1-cpa/day-21.html"
+  },
+  {
+    "day": 22,
+    "title": "Transfer task: defend, revise, submit",
+    "slides": 11,
+    "src": "/decks/unit-1-cpa/day-22.html"
+  }
+]

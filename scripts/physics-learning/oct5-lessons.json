@@ -1,0 +1,744 @@
+[
+  {
+    "youtubeId": "E0CpXzmViwQ",
+    "sequence": 13,
+    "lessonId": "4f6755eb-601b-43ca-ae8b-6469e86fc277",
+    "existingTarget": true,
+    "target": {
+      "id": "bfc9af19-f1ee-4bdd-9102-1d07d45dcb53",
+      "slug": "u1.vectors-tip-to-tail",
+      "statement": "I can add two vectors tip-to-tail and break a vector into components with simple trig.",
+      "domain": "skill",
+      "unit_id": "unit-1",
+      "program": "physics",
+      "content_strand": "motion-kinematics"
+    },
+    "title": "Adding vectors graphically: the tip-to-tail method",
+    "slug": "video-13-adding-vectors-graphically-the-tip-to-tail-method",
+    "duration": 234,
+    "description": "How can several movements combine into one displacement?",
+    "document": {
+      "schemaVersion": 1,
+      "presentation": "physics-path",
+      "dayType": "STANDARD",
+      "learningPath": {
+        "version": 1,
+        "kind": "lesson",
+        "focus": "How can several movements combine into one displacement?",
+        "targetSlugs": [
+          "u1.vectors-tip-to-tail"
+        ],
+        "foundations": false
+      },
+      "blocks": [
+        {
+          "id": "video-E0CpXzmViwQ",
+          "type": "instruction_video",
+          "youtubeId": "E0CpXzmViwQ",
+          "title": "Adding vectors graphically: the tip-to-tail method",
+          "summary": "Draw each vector to a common scale and place its tail at the previous tip without changing its length or direction. The resultant runs from the first tail to the last tip. Measure its magnitude and direction. Reordering the vectors leaves the resultant unchanged; subtracting a vector means adding its opposite.",
+          "durationSeconds": 234,
+          "targetId": "u1.vectors-tip-to-tail",
+          "workshop": {
+            "stage": "Watch & understand",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "scope-E0CpXzmViwQ",
+          "type": "prose",
+          "markdown": "Scaled tip-to-tail addition, resultant magnitude and direction, and subtraction by reversing a vector. Trigonometric components are taught in Video 14."
+        },
+        {
+          "id": "vocabulary-E0CpXzmViwQ",
+          "type": "vocab",
+          "terms": [
+            {
+              "term": "tip-to-tail",
+              "definition": "A vector-addition method that places each new tail at the previous tip, keeping each vector’s magnitude and direction."
+            },
+            {
+              "term": "resultant",
+              "definition": "The single vector equal to a vector sum; in a tip-to-tail diagram, it runs from the first tail to the last tip."
+            },
+            {
+              "term": "scale drawing",
+              "definition": "A diagram in which each drawn length represents a fixed amount of a physical quantity."
+            },
+            {
+              "term": "negative vector",
+              "definition": "A vector with the same magnitude as the original but the opposite direction."
+            },
+            {
+              "term": "commutative",
+              "definition": "Unchanged when the order is reversed. Vector addition is commutative: A + B = B + A."
+            }
+          ],
+          "referencePanel": true
+        },
+        {
+          "id": "worked-E0CpXzmViwQ",
+          "type": "worked_example",
+          "format": "problem-workspace",
+          "prompt": "Draw the displacement for a trip 3 m east, then 4 m north.",
+          "given": "Use 1 square = 1 m, with east right and north up.",
+          "equation": "R = A + B; |R| = √(3² + 4²) m.",
+          "work": "Draw A three squares right. From its tip, draw B four squares up. Join the first tail to the last tip. The resultant measures five squares. Its direction is approximately 53° north of east. Sliding an arrow to place it tip to tail must preserve its length and direction.",
+          "answer": "The displacement is 5 m at approximately 53° north of east. The distance traveled is 7 m.",
+          "workshop": {
+            "stage": "See it worked",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "check-E0CpXzmViwQ",
+          "type": "question",
+          "capture": true,
+          "targetId": "u1.vectors-tip-to-tail",
+          "evidenceRole": "practice",
+          "sei": {
+            "visual": {
+              "src": "/learning/video-vector-addition.svg",
+              "alt": "A vector 3 meters east followed tip to tail by 4 meters north has a resultant 5 meters long from the first tail to the final tip."
+            },
+            "frames": [
+              {
+                "level": 1,
+                "text": "I notice ___. This means ___ because ___."
+              },
+              {
+                "level": 3,
+                "text": "My reasoning is ___, supported by ___."
+              }
+            ],
+            "wordBank": [
+              "tip-to-tail",
+              "resultant",
+              "scale drawing",
+              "negative vector",
+              "commutative"
+            ],
+            "modes": [
+              "text",
+              "sketch"
+            ]
+          },
+          "workshop": {
+            "stage": "Check your thinking",
+            "pageBreakBefore": true
+          },
+          "question": {
+            "prompt": "A probe moves 6 km east, then 8 km north. Which arrow represents its resultant displacement?",
+            "options": [
+              {
+                "id": "A",
+                "text": "An arrow from the original start to the final position, 10 km long.",
+                "feedback": "The start-to-finish arrow is the resultant. Its magnitude is √(6² + 8²) = 10 km."
+              },
+              {
+                "id": "B",
+                "text": "An arrow 14 km long pointing northeast.",
+                "feedback": "14 km is the path distance. Perpendicular displacements do not add as ordinary magnitudes."
+              },
+              {
+                "id": "C",
+                "text": "An arrow from the final position back to the start.",
+                "feedback": "This reverses the displacement: the resultant points from the first tail to the last tip."
+              }
+            ],
+            "correctOptionId": "A"
+          }
+        },
+        {
+          "id": "check-E0CpXzmViwQ-2",
+          "type": "question",
+          "capture": true,
+          "targetId": "u1.vectors-tip-to-tail",
+          "evidenceRole": "practice",
+          "sei": {
+            "visual": {
+              "src": "/learning/video-vector-addition.svg",
+              "alt": "A vector 3 meters east followed tip to tail by 4 meters north has a resultant 5 meters long from the first tail to the final tip."
+            },
+            "frames": [
+              {
+                "level": 1,
+                "text": "I notice ___. This means ___ because ___."
+              },
+              {
+                "level": 3,
+                "text": "My reasoning is ___, supported by ___."
+              }
+            ],
+            "wordBank": [
+              "tip-to-tail",
+              "resultant",
+              "scale drawing",
+              "negative vector",
+              "commutative"
+            ],
+            "modes": [
+              "text",
+              "sketch"
+            ]
+          },
+          "question": {
+            "prompt": "To draw A − B using tip-to-tail addition, what should you do with B?",
+            "options": [
+              {
+                "id": "A",
+                "text": "Keep its direction and double its length.",
+                "feedback": "That constructs A + 2B."
+              },
+              {
+                "id": "B",
+                "text": "Reverse its direction, keep its length, and add it to A.",
+                "feedback": "The negative vector −B has the same magnitude and opposite direction, so A − B = A + (−B)."
+              },
+              {
+                "id": "C",
+                "text": "Rotate it 90° and add it to A.",
+                "feedback": "The negative vector points 180° from B, not 90°."
+              }
+            ],
+            "correctOptionId": "B"
+          }
+        },
+        {
+          "id": "explain-E0CpXzmViwQ",
+          "type": "exit_ticket",
+          "capture": true,
+          "targetId": "u1.vectors-tip-to-tail",
+          "evidenceRole": "exit",
+          "prompt": "A probe travels 8 km east, 6 km north, then 8 km west. Draw the three arrows tip to tail with a stated scale. Mark the resultant and report its magnitude and direction. Compare the displacement with total distance. Explain why changing the order of these three movements does not change the resultant.",
+          "sei": {
+            "visual": {
+              "src": "/learning/video-vector-addition.svg",
+              "alt": "A vector 3 meters east followed tip to tail by 4 meters north has a resultant 5 meters long from the first tail to the final tip."
+            },
+            "frames": [
+              {
+                "level": 1,
+                "text": "I notice ___. This means ___ because ___."
+              },
+              {
+                "level": 3,
+                "text": "My reasoning is ___, supported by ___."
+              }
+            ],
+            "wordBank": [
+              "tip-to-tail",
+              "resultant",
+              "scale drawing",
+              "negative vector",
+              "commutative"
+            ],
+            "modes": [
+              "text",
+              "sketch"
+            ]
+          },
+          "workshop": {
+            "stage": "Apply & explain",
+            "pageBreakBefore": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "youtubeId": "uH-NE-LlybM",
+    "sequence": 14,
+    "lessonId": "ce8c5bd3-aea1-4c31-b817-2107c0390ca2",
+    "existingTarget": true,
+    "target": {
+      "id": "bfc9af19-f1ee-4bdd-9102-1d07d45dcb53",
+      "slug": "u1.vectors-tip-to-tail",
+      "statement": "I can add two vectors tip-to-tail and break a vector into components with simple trig.",
+      "domain": "skill",
+      "unit_id": "unit-1",
+      "program": "physics",
+      "content_strand": "motion-kinematics"
+    },
+    "title": "Vector components: breaking vectors into x and y",
+    "slug": "video-14-vector-components-breaking-vectors-into-x-and-y",
+    "duration": 242,
+    "description": "How do components turn vector addition into arithmetic?",
+    "document": {
+      "schemaVersion": 1,
+      "presentation": "physics-path",
+      "dayType": "STANDARD",
+      "learningPath": {
+        "version": 1,
+        "kind": "lesson",
+        "focus": "How do components turn vector addition into arithmetic?",
+        "targetSlugs": [
+          "u1.vectors-tip-to-tail"
+        ],
+        "foundations": false
+      },
+      "blocks": [
+        {
+          "id": "video-uH-NE-LlybM",
+          "type": "instruction_video",
+          "youtubeId": "uH-NE-LlybM",
+          "title": "Vector components: breaking vectors into x and y",
+          "summary": "Resolve a vector into signed components along chosen axes. With the angle measured from positive x, Ax = A cos θ and Ay = A sin θ. Add or subtract matching components, then recover magnitude with the Pythagorean theorem. Use the component signs to choose the correct quadrant when finding direction.",
+          "durationSeconds": 242,
+          "targetId": "u1.vectors-tip-to-tail",
+          "workshop": {
+            "stage": "Watch & understand",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "scope-uH-NE-LlybM",
+          "type": "prose",
+          "markdown": "Trigonometric decomposition, signed components, component addition and subtraction, and reconstructing magnitude and direction."
+        },
+        {
+          "id": "vocabulary-uH-NE-LlybM",
+          "type": "vocab",
+          "terms": [
+            {
+              "term": "component",
+              "definition": "The signed projection of a vector onto a chosen coordinate axis."
+            },
+            {
+              "term": "resolve",
+              "definition": "To express a vector as components along chosen axes."
+            },
+            {
+              "term": "reference angle",
+              "definition": "An angle measured from a stated axis or direction; it determines which component is adjacent or opposite."
+            },
+            {
+              "term": "quadrant",
+              "definition": "One of the four regions of the xy plane, identified by the signs of x and y."
+            },
+            {
+              "term": "unit vector",
+              "definition": "A vector of magnitude one that identifies a direction, such as x̂ or ŷ."
+            }
+          ],
+          "referencePanel": true
+        },
+        {
+          "id": "worked-uH-NE-LlybM",
+          "type": "worked_example",
+          "format": "problem-workspace",
+          "prompt": "Add A = (6, 8) m and B = (−2, −5) m.",
+          "given": "Positive x is east and positive y is north. Add only components along the same axis.",
+          "equation": "Rx = Ax + Bx; Ry = Ay + By; |R| = √(Rx² + Ry²).",
+          "work": "Rx = 6 + (−2) = 4 m. Ry = 8 + (−5) = 3 m.\n\n|R| = √(4² + 3²) = 5 m. Both components are positive, so R points northeast. θ = tan⁻¹(3/4) ≈ 37° from positive x. For other quadrants, use the signs to correct the direction; the inverse-tangent ratio alone can be ambiguous.",
+          "answer": "R = (4, 3) m: magnitude 5 m at approximately 37° north of east.",
+          "workshop": {
+            "stage": "See it worked",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "check-uH-NE-LlybM",
+          "type": "question",
+          "capture": true,
+          "targetId": "u1.vectors-tip-to-tail",
+          "evidenceRole": "practice",
+          "sei": {
+            "visual": {
+              "src": "/learning/video-vector-components.svg",
+              "alt": "A vector A makes angle theta from positive x. Its horizontal component is A cos theta and its vertical component is A sin theta. Component signs identify the quadrant."
+            },
+            "frames": [
+              {
+                "level": 1,
+                "text": "I notice ___. This means ___ because ___."
+              },
+              {
+                "level": 3,
+                "text": "My reasoning is ___, supported by ___."
+              }
+            ],
+            "wordBank": [
+              "component",
+              "resolve",
+              "reference angle",
+              "quadrant",
+              "unit vector"
+            ],
+            "modes": [
+              "text",
+              "sketch"
+            ]
+          },
+          "workshop": {
+            "stage": "Check your thinking",
+            "pageBreakBefore": true
+          },
+          "question": {
+            "prompt": "A 10 N vector points 30° above positive x. Which pair gives its components? Use cos 30° ≈ 0.866 and sin 30° = 0.5.",
+            "options": [
+              {
+                "id": "A",
+                "text": "Ax = 5.0 N, Ay = 8.66 N",
+                "feedback": "The angle is measured from x, so the x-component is adjacent and uses cosine."
+              },
+              {
+                "id": "B",
+                "text": "Ax = 8.66 N, Ay = 5.0 N",
+                "feedback": "Ax = 10 cos 30° ≈ 8.66 N and Ay = 10 sin 30° = 5.0 N."
+              },
+              {
+                "id": "C",
+                "text": "Ax = 10 N, Ay = 10 N",
+                "feedback": "Each component is a projection. Giving both the full magnitude would produce a larger resultant."
+              }
+            ],
+            "correctOptionId": "B"
+          }
+        },
+        {
+          "id": "check-uH-NE-LlybM-2",
+          "type": "question",
+          "capture": true,
+          "targetId": "u1.vectors-tip-to-tail",
+          "evidenceRole": "practice",
+          "sei": {
+            "visual": {
+              "src": "/learning/video-vector-components.svg",
+              "alt": "A vector A makes angle theta from positive x. Its horizontal component is A cos theta and its vertical component is A sin theta. Component signs identify the quadrant."
+            },
+            "frames": [
+              {
+                "level": 1,
+                "text": "I notice ___. This means ___ because ___."
+              },
+              {
+                "level": 3,
+                "text": "My reasoning is ___, supported by ___."
+              }
+            ],
+            "wordBank": [
+              "component",
+              "resolve",
+              "reference angle",
+              "quadrant",
+              "unit vector"
+            ],
+            "modes": [
+              "text",
+              "sketch"
+            ]
+          },
+          "question": {
+            "prompt": "A vector has components (−3, +4) m. Which description is correct?",
+            "options": [
+              {
+                "id": "A",
+                "text": "Magnitude −5 m, pointing southeast.",
+                "feedback": "A magnitude cannot be negative. Negative x and positive y point northwest."
+              },
+              {
+                "id": "B",
+                "text": "Magnitude 7 m, pointing northwest.",
+                "feedback": "Adding absolute components gives 7 m, but the resultant length follows the Pythagorean theorem."
+              },
+              {
+                "id": "C",
+                "text": "Magnitude 5 m, pointing northwest.",
+                "feedback": "√((−3)² + 4²) = 5 m. The signs identify the quadrant."
+              }
+            ],
+            "correctOptionId": "C"
+          }
+        },
+        {
+          "id": "explain-uH-NE-LlybM",
+          "type": "exit_ticket",
+          "capture": true,
+          "targetId": "u1.vectors-tip-to-tail",
+          "evidenceRole": "exit",
+          "prompt": "A = (−6, 8) m and B = (2, −5) m. Calculate R = A + B and S = A − B. For R, find the magnitude and direction, naming the quadrant and reference axis. Explain why the signs must be checked before accepting the angle returned by a calculator.",
+          "sei": {
+            "visual": {
+              "src": "/learning/video-vector-components.svg",
+              "alt": "A vector A makes angle theta from positive x. Its horizontal component is A cos theta and its vertical component is A sin theta. Component signs identify the quadrant."
+            },
+            "frames": [
+              {
+                "level": 1,
+                "text": "I notice ___. This means ___ because ___."
+              },
+              {
+                "level": 3,
+                "text": "My reasoning is ___, supported by ___."
+              }
+            ],
+            "wordBank": [
+              "component",
+              "resolve",
+              "reference angle",
+              "quadrant",
+              "unit vector"
+            ],
+            "modes": [
+              "text",
+              "sketch"
+            ]
+          },
+          "workshop": {
+            "stage": "Apply & explain",
+            "pageBreakBefore": true
+          }
+        }
+      ]
+    }
+  },
+  {
+    "youtubeId": "pwbD3H8R0BU",
+    "sequence": 15,
+    "lessonId": "3392a816-8f39-4ff0-aa76-58dae632c0a3",
+    "existingTarget": false,
+    "target": {
+      "id": "7526a98b-18e2-43c1-852e-149077bbaeae",
+      "slug": "u1.vector-products",
+      "statement": "I can distinguish and calculate dot and cross products for vectors in a plane, explain their directions and units, and connect them to work and torque.",
+      "domain": "reasoning",
+      "unit_id": "unit-1",
+      "program": "physics",
+      "content_strand": "motion-kinematics",
+      "order_index": 13
+    },
+    "title": "Dot product vs. cross product: what they mean",
+    "slug": "video-15-dot-product-vs-cross-product-what-they-mean",
+    "duration": 264,
+    "description": "Why do two ways of multiplying vectors produce different kinds of results?",
+    "document": {
+      "schemaVersion": 1,
+      "presentation": "physics-path",
+      "dayType": "STANDARD",
+      "learningPath": {
+        "version": 1,
+        "kind": "lesson",
+        "focus": "Why do two ways of multiplying vectors produce different kinds of results?",
+        "targetSlugs": [
+          "u1.vector-products"
+        ],
+        "foundations": false
+      },
+      "blocks": [
+        {
+          "id": "video-pwbD3H8R0BU",
+          "type": "instruction_video",
+          "youtubeId": "pwbD3H8R0BU",
+          "title": "Dot product vs. cross product: what they mean",
+          "summary": "The dot product A · B = AB cos θ is a scalar measuring alignment. The cross product has magnitude AB sin θ and a perpendicular direction given by the right-hand rule. In the xy plane, the dot product is AxBx + AyBy and the z-component of the cross product is AxBy − AyBx. Work uses a dot product; torque uses a cross product.",
+          "durationSeconds": 264,
+          "targetId": "u1.vector-products",
+          "workshop": {
+            "stage": "Watch & understand",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "scope-pwbD3H8R0BU",
+          "type": "prose",
+          "markdown": "Interpret and calculate dot and cross products for planar vectors, including angle, sign, right-hand-rule direction, work, and torque examples."
+        },
+        {
+          "id": "vocabulary-pwbD3H8R0BU",
+          "type": "vocab",
+          "terms": [
+            {
+              "term": "dot product",
+              "definition": "A scalar product of two vectors: A · B = |A||B| cos θ, where θ is the angle between them."
+            },
+            {
+              "term": "cross product",
+              "definition": "A vector perpendicular to both input vectors, with magnitude |A||B| sin θ and direction set by their order and the right-hand rule."
+            },
+            {
+              "term": "right-hand rule",
+              "definition": "Curl the fingers of the right hand from the first vector toward the second through the smaller angle; the thumb gives the cross-product direction."
+            },
+            {
+              "term": "work",
+              "definition": "Energy transferred by a force through displacement. For a constant force, W = F · Δr."
+            },
+            {
+              "term": "torque",
+              "definition": "The turning effect of a force about a pivot: τ = r × F, where r points from the pivot to the point where the force acts."
+            }
+          ],
+          "referencePanel": true
+        },
+        {
+          "id": "worked-pwbD3H8R0BU",
+          "type": "worked_example",
+          "format": "problem-workspace",
+          "prompt": "Compare A · B and A × B for A = (4, 1) m and B = (2, 3) m.",
+          "given": "Both vectors lie in the xy plane; +z points out of the page.",
+          "equation": "A · B = AxBx + AyBy; (A × B)z = AxBy − AyBx.",
+          "work": "Dot: (4 m)(2 m) + (1 m)(3 m) = 11 m², a scalar.\n\nCross: (4 m)(3 m) − (1 m)(2 m) = +10 m² in the z direction. Its magnitude is 10 m², pointing out of the page. B × A would point into the page. The product units are m² because both inputs have units of length.",
+          "answer": "A · B = 11 m². A × B = (0, 0, 10) m². Dot measures alignment; cross measures oriented area.",
+          "workshop": {
+            "stage": "See it worked",
+            "pageBreakBefore": true
+          }
+        },
+        {
+          "id": "check-pwbD3H8R0BU",
+          "type": "question",
+          "capture": true,
+          "targetId": "u1.vector-products",
+          "evidenceRole": "practice",
+          "sei": {
+            "visual": {
+              "src": "/learning/video-vector-products.svg",
+              "alt": "Dot product: AB cos theta, a scalar. Cross product: magnitude AB sin theta, direction perpendicular by the right-hand rule. In the xy plane, its z-component is AxBy minus AyBx."
+            },
+            "frames": [
+              {
+                "level": 1,
+                "text": "I notice ___. This means ___ because ___."
+              },
+              {
+                "level": 3,
+                "text": "My reasoning is ___, supported by ___."
+              }
+            ],
+            "wordBank": [
+              "dot product",
+              "cross product",
+              "right-hand rule",
+              "work",
+              "torque"
+            ],
+            "modes": [
+              "text",
+              "sketch"
+            ]
+          },
+          "workshop": {
+            "stage": "Check your thinking",
+            "pageBreakBefore": true
+          },
+          "question": {
+            "prompt": "Two nonzero vectors are perpendicular. Which statement is correct?",
+            "options": [
+              {
+                "id": "A",
+                "text": "Their dot product is zero; their cross-product magnitude is the product of their magnitudes.",
+                "feedback": "cos 90° = 0 and sin 90° = 1. The cross-product direction is perpendicular to both vectors."
+              },
+              {
+                "id": "B",
+                "text": "Their cross product is zero; their dot product is the product of their magnitudes.",
+                "feedback": "That describes parallel vectors pointing the same way."
+              },
+              {
+                "id": "C",
+                "text": "Both products are zero.",
+                "feedback": "Only the dot product vanishes for perpendicular nonzero vectors."
+              }
+            ],
+            "correctOptionId": "A"
+          }
+        },
+        {
+          "id": "check-pwbD3H8R0BU-2",
+          "type": "question",
+          "capture": true,
+          "targetId": "u1.vector-products",
+          "evidenceRole": "practice",
+          "sei": {
+            "visual": {
+              "src": "/learning/video-vector-products.svg",
+              "alt": "Dot product: AB cos theta, a scalar. Cross product: magnitude AB sin theta, direction perpendicular by the right-hand rule. In the xy plane, its z-component is AxBy minus AyBx."
+            },
+            "frames": [
+              {
+                "level": 1,
+                "text": "I notice ___. This means ___ because ___."
+              },
+              {
+                "level": 3,
+                "text": "My reasoning is ___, supported by ___."
+              }
+            ],
+            "wordBank": [
+              "dot product",
+              "cross product",
+              "right-hand rule",
+              "work",
+              "torque"
+            ],
+            "modes": [
+              "text",
+              "sketch"
+            ]
+          },
+          "question": {
+            "prompt": "With +x to the right, +y up, and +z out of the page, A = (2, 0) m and B = (0, 3) m. What is A × B?",
+            "options": [
+              {
+                "id": "A",
+                "text": "A scalar equal to 6 m².",
+                "feedback": "A cross product is a vector, not a scalar."
+              },
+              {
+                "id": "B",
+                "text": "A vector of magnitude 6 m² pointing into the page.",
+                "feedback": "That is B × A. Reversing the order reverses the direction."
+              },
+              {
+                "id": "C",
+                "text": "A vector of magnitude 6 m² pointing out of the page.",
+                "feedback": "AxBy − AyBx = 2 × 3 − 0 = +6 m², so the vector points along +z."
+              }
+            ],
+            "correctOptionId": "C"
+          }
+        },
+        {
+          "id": "explain-pwbD3H8R0BU",
+          "type": "exit_ticket",
+          "capture": true,
+          "targetId": "u1.vector-products",
+          "evidenceRole": "exit",
+          "prompt": "A constant 20 N force acts 60° above a 3 m horizontal displacement. Calculate its work using cos 60° = 0.5. Separately, a 20 N upward force acts 0.30 m to the right of a pivot: find the torque magnitude and direction using +z out of the page. Explain why work is a scalar in joules and torque is a vector reported in N·m.",
+          "sei": {
+            "visual": {
+              "src": "/learning/video-vector-products.svg",
+              "alt": "Dot product: AB cos theta, a scalar. Cross product: magnitude AB sin theta, direction perpendicular by the right-hand rule. In the xy plane, its z-component is AxBy minus AyBx."
+            },
+            "frames": [
+              {
+                "level": 1,
+                "text": "I notice ___. This means ___ because ___."
+              },
+              {
+                "level": 3,
+                "text": "My reasoning is ___, supported by ___."
+              }
+            ],
+            "wordBank": [
+              "dot product",
+              "cross product",
+              "right-hand rule",
+              "work",
+              "torque"
+            ],
+            "modes": [
+              "text",
+              "sketch"
+            ]
+          },
+          "workshop": {
+            "stage": "Apply & explain",
+            "pageBreakBefore": true
+          }
+        }
+      ]
+    }
+  }
+]

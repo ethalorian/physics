@@ -15,3 +15,19 @@ test('recall normalization ignores casing and whitespace',()=>assert.equal(norma
 test('report pagination includes evidence beyond server row limits',async()=>{const data=Array.from({length:1201},(_,i)=>i);assert.equal((await vocabRows((a,b)=>Promise.resolve({data:data.slice(a,b+1),error:null}))).length,1201)})
 
 test('crossing midnight alone does not establish retention',()=>{const p=summarizeWords({...task,term_ids:['a']},[check('1','2026-09-01T23:59:00Z'),check('2','2026-09-02T00:01:00Z')]);assert.equal(p.retained,false)})
+
+test('reports saved rounds separately from the checks still required for every word',()=>{
+ const first={id:'1',completed_at:'2026-09-01',result:[...check('1','2026-09-01').result!,...check('1','2026-09-01',true,'b').result!]}
+ const p=summarizeWords({...task,min_checks:5},[first,{id:'pending',completed_at:null,result:null}])
+ assert.equal(p.completedChecks,1);assert.equal(p.checksRemaining,4);assert.equal(p.complete,false)
+ const partial=summarizeWords(task,[first,check('2','2026-09-02')])
+ assert.equal(partial.completedChecks,2);assert.equal(partial.checksRemaining,1);assert.equal(partial.complete,false)
+})
+
+test('review reminders do not undo completion, and enough checks still require accuracy',()=>{
+ const one={...task,term_ids:['a']}
+ const done=summarizeWords(one,[check('1','2026-09-01'),check('2','2026-09-02')],Date.parse('2026-09-30'))
+ assert.equal(done.complete,true);assert.equal(done.reviewDue,true);assert.equal(done.checksRemaining,0)
+ const low=summarizeWords(one,[check('1','2026-09-01'),check('2','2026-09-02',false)])
+ assert.equal(low.checksRemaining,0);assert.equal(low.complete,false)
+})

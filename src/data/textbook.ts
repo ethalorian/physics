@@ -103,6 +103,8 @@ export function textbookChapter(n: number): TextbookChapter | undefined {
 /** Object key inside the `textbook` bucket for a chapter. Matches the file
  *  names produced by scripts/strip-teacher-column.py (cpNN.pdf) so the
  *  student-edition folder can be dragged into the bucket as-is. */
-export function textbookObjectPath(n: number): string {
-  return `cp${String(n).padStart(2, '0')}.pdf`
+export type TextbookLanguage = 'en' | 'es' | 'pt'
+
+export function textbookObjectPath(n: number, language: TextbookLanguage = 'en'): string {
+  return `${language === 'en' ? '' : `${language}/`}cp${String(n).padStart(2, '0')}.pdf`
 }

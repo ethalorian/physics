@@ -1,3 +1,4 @@
+import { withLessonPresentationDeck } from '@/data/lesson-decks'
 import { NextResponse } from 'next/server'
 import type { AuthContext } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -9,6 +10,7 @@ import { filterDocumentForViewer, isLessonVisible, type Viewer } from '@/lib/tra
 import type { GlossaryEntry } from '@/components/MathMarkdown'
 import type { BlockDocument } from '@/data/content-blocks'
 import { submissionStatus } from '@/lib/lesson-review'
+import { physicsProblemFormat } from '@/lib/physics-problem-format'
 
 export interface AccessibleLesson {
   id: string; slug: string; title: string; published: boolean; unit_id: string | null
@@ -22,13 +24,15 @@ type Access = { ok: true; lesson: AccessibleLesson; viewer: Viewer; document: Bl
 /** A-4: the same publication, enrollment, program, track and window gates on every surface. */
 export async function authorizeLesson(actor: Actor, lessonId: string, write = false, liveEvidence = false): Promise<Access> {
   const deny = (error: string, status: number): Access => ({ ok: false, response: NextResponse.json({ error }, { status }) })
-  const staff = actor.realRole === 'admin' || actor.realRole === 'teacher' || await canEditArea(actor.email, 'lessons', false)
+  const observer = actor.realRole === 'observer'
+  const staff = observer || actor.realRole === 'admin' || actor.realRole === 'teacher' || await canEditArea(actor.email, 'lessons', false)
   if (write && (actor.realRole !== 'student' || staff)) return deny('Lesson previews are read-only. Use a student account to submit work.', 403)
   if (!staff && actor.realRole !== 'student') return deny('Forbidden', 403)
   const { data, error } = await supabaseAdmin.from('lessons').select('*').eq('id', lessonId).maybeSingle()
   if (error) throw error
   if (!data) return deny('Lesson not found', 404)
   const lesson = data as AccessibleLesson
+  if (observer && !lesson.published) return deny('Lesson not found', 404)
   let viewer: Viewer = { role: 'admin' }
   if (!staff) {
     const [enrollment, track, program, unitPrograms, gate] = await Promise.all([
@@ -44,7 +48,8 @@ export async function authorizeLesson(actor: Actor, lessonId: string, write = fa
     if (state.locked) return { ok: false, response: NextResponse.json({ error: 'Submitted work is locked until your teacher reviews this lesson.', ...state }, { status: 409 }) }
   }
   const doc = lesson.content_blocks && Array.isArray(lesson.content_blocks.blocks) ? lesson.content_blocks : null
-  let document = doc ? filterDocumentForViewer(await hydrateLessonDocument(doc, lesson.unit_id), viewer) : null
+  let document = doc ? filterDocumentForViewer(await hydrateLessonDocument(withLessonPresentationDeck(doc, lesson, viewer.track), lesson.unit_id), viewer) : null
+  if(document)document=physicsProblemFormat(lesson.id,document)
   if (document && lesson.unit_id) {
     const { data: rewards, error: rewardError } = await supabaseAdmin.rpc('lesson_reward_map', { p_lesson: lessonId, p_track: viewer.track === 'honors' ? 'honors' : 'cpa' })
     if (rewardError) throw rewardError

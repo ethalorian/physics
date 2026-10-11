@@ -1,0 +1,61 @@
+{
+  "sourceId": "units",
+  "sourceHash": "d3a5a9bf7138b63bbfec5ab9dd0ec6e705044171a4a06cb7f5dd4f92100c24d1",
+  "questions": [
+    {
+      "text": "Which pair has the same dimensions?",
+      "options": [
+        "Force and energy",
+        "Impulse and momentum",
+        "Power and work",
+        "Pressure and force"
+      ],
+      "correct": 1,
+      "feedback": "Impulse is F·Δt = (M L T⁻²)(T) = M L T⁻¹; momentum is m·v = M · L T⁻¹. Identical — which is exactly why impulse changes momentum."
+    },
+    {
+      "text": "A student derives that the speed of a wave on a string is v = √(T/μ), where T is tension (N) and μ is mass per length (kg/m). Does it pass a dimension check?",
+      "options": [
+        "No — the units come out as kg",
+        "No — the units come out as m/s²",
+        "Yes — √(N ÷ kg/m) = √(m²/s²) = m/s",
+        "Can't tell without knowing the string"
+      ],
+      "correct": 2,
+      "feedback": "N ÷ (kg/m) = (kg·m/s²)(m/kg) = m²/s². Square root: m/s. The formula is dimensionally sound (and correct)."
+    },
+    {
+      "text": "The Mars Climate Orbiter was lost because two teams used different units for:",
+      "options": [
+        "Distance to Mars",
+        "Thruster impulse (force × time)",
+        "Fuel mass",
+        "Orbital period"
+      ],
+      "correct": 1,
+      "feedback": "One system output pound‑force·seconds; the other expected newton·seconds. Same dimension (M L T⁻¹), different unit, factor of 4.45 — enough to drop the orbit into the atmosphere."
+    },
+    {
+      "text": "Which of these is a base SI unit?",
+      "options": [
+        "Newton",
+        "Joule",
+        "Kilogram",
+        "Liter"
+      ],
+      "correct": 2,
+      "feedback": "The kilogram is defined directly. Newton and joule are named recipes of kg, m and s; the liter isn't SI at all (it's 10⁻³ m³)."
+    },
+    {
+      "text": "You need a time, and the problem gives you a height h (m) and g (m/s²). Before any algebra, the combination that yields seconds is:",
+      "options": [
+        "h · g",
+        "g / h",
+        "√(h / g)",
+        "√(g / h)"
+      ],
+      "correct": 2,
+      "feedback": "m ÷ (m/s²) = s², and a square root gives s. Dimensional analysis hands you the form of the answer — the actual √(2h/g) just adds the number."
+    }
+  ]
+}

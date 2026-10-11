@@ -1,0 +1,1701 @@
+{
+  "edition": "college-physics-ap-2e",
+  "title": "College Physics for AP® Courses 2e",
+  "sourceUrl": "https://openstax.org/details/books/college-physics-ap-courses-2e",
+  "updated": "2026-10-11",
+  "guidance": "Honors uses both books: Hewitt for the assigned conceptual treatment and OpenStax for the corresponding model, equations, and examples. The OpenStax selections supplement the existing Honors Hewitt assignments. Page numbers are printed book pages. Read only the named section or excerpt when a boundary page is shared.",
+  "assignments": {
+    "1/1": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "1.2",
+          "from": 19,
+          "to": 21
+        },
+        {
+          "section": "1.3",
+          "from": 27,
+          "to": 29
+        }
+      ],
+      "focus": "Identify a measurable claim, its units, and the uncertainty in the asteroid briefing. Read the named excerpts only."
+    },
+    "1/2": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "2.1",
+          "from": 42,
+          "to": 44
+        },
+        {
+          "section": "2.3",
+          "from": 47,
+          "to": 50
+        }
+      ],
+      "focus": "Distinguish position, distance, displacement, speed, and velocity; use an origin and a positive direction."
+    },
+    "1/3": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "2.2",
+          "from": 45,
+          "to": 47
+        },
+        {
+          "section": "2.3",
+          "from": 47,
+          "to": 50
+        }
+      ],
+      "focus": "Explain how direction and the sign of displacement distinguish velocity from speed."
+    },
+    "1/4": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "2.8",
+          "from": 84,
+          "to": 91
+        }
+      ],
+      "focus": "Connect position-time slope, velocity-time slope, and signed area. Use class notes for the signed-area method."
+    },
+    "1/5": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "2.5",
+          "from": 62,
+          "to": 65
+        }
+      ],
+      "focus": "Use the constant-velocity special case before the acceleration equations. Track initial position, signs, and elapsed time."
+    },
+    "1/6": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "3.2",
+          "from": 109,
+          "to": 113
+        },
+        {
+          "section": "3.3",
+          "from": 117,
+          "to": 123
+        }
+      ],
+      "focus": "Compare head-to-tail addition with component addition; explain how the resultant is reconstructed."
+    },
+    "1/7": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "2.4",
+          "from": 51,
+          "to": 56
+        }
+      ],
+      "focus": "Interpret acceleration as a change in velocity; distinguish the direction of motion from the direction of acceleration."
+    },
+    "1/8": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "2.5",
+          "from": 62,
+          "to": 72
+        },
+        {
+          "section": "2.6",
+          "from": 73,
+          "to": 75
+        }
+      ],
+      "focus": "Choose a constant-acceleration equation from knowns and unknowns, then check signs and units. Revisit the worked example closest to today's problem."
+    },
+    "1/9": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "4.2",
+          "from": 160,
+          "to": 161
+        }
+      ],
+      "focus": "Explain rest and constant velocity using zero net force; distinguish inertia from a force."
+    },
+    "1/10": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "4.1",
+          "from": 159,
+          "to": 160
+        },
+        {
+          "section": "4.5",
+          "from": 171,
+          "to": 175
+        }
+      ],
+      "focus": "Identify the object and the agent for each normal, tension, and weight force in a diagram."
+    },
+    "1/11": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "4.3",
+          "from": 161,
+          "to": 166
+        }
+      ],
+      "focus": "Before the lab, predict how acceleration changes when mass changes at fixed net force. Afterward, compare that prediction with the measured trend."
+    },
+    "1/12": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "4.3",
+          "from": 161,
+          "to": 166
+        }
+      ],
+      "focus": "Before the lab, predict the acceleration-force graph at fixed mass; connect its slope to the system mass."
+    },
+    "1/13": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "4.6",
+          "from": 180,
+          "to": 182
+        }
+      ],
+      "focus": "Follow the force-problem strategy: choose the system, draw forces, resolve components, and apply the net-force equation."
+    },
+    "1/14": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "4.4",
+          "from": 167,
+          "to": 170
+        }
+      ],
+      "focus": "Identify third-law pairs on different objects and distinguish them from balanced forces on one object."
+    },
+    "1/15": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "4.5",
+          "from": 171,
+          "to": 179
+        }
+      ],
+      "focus": "Build free-body diagrams with weight, normal force, and tension; label only forces acting on the selected object."
+    },
+    "1/16": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "4.7",
+          "from": 182,
+          "to": 186
+        }
+      ],
+      "focus": "Connect force components to the net force and acceleration. Use today's supported examples for any unfamiliar geometry."
+    },
+    "1/17": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "5.1",
+          "from": 212,
+          "to": 218
+        }
+      ],
+      "focus": "Compare static and kinetic friction and explain why the normal force need not equal the weight."
+    },
+    "1/18": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "9.1",
+          "from": 386,
+          "to": 388
+        }
+      ],
+      "focus": "Apply the first equilibrium condition in each direction. Constant velocity is also translational equilibrium."
+    },
+    "1/19": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "2.8",
+          "from": 84,
+          "to": 91
+        },
+        {
+          "section": "4.6",
+          "from": 180,
+          "to": 182
+        }
+      ],
+      "focus": "Choose the graph or force subsection that addresses your feedback; explain the correction in your own words."
+    },
+    "1/20": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "4.2",
+          "from": 160,
+          "to": 161
+        },
+        {
+          "section": "4.3",
+          "from": 161,
+          "to": 166
+        },
+        {
+          "section": "4.4",
+          "from": 167,
+          "to": 170
+        }
+      ],
+      "focus": "Use the three laws to justify the motion model and its limits in the 2026-XJ explanation; no new section."
+    },
+    "2/1": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "6.5",
+          "from": 261,
+          "to": 264
+        }
+      ],
+      "focus": "Introduce universal gravitation as the interaction that can change an asteroid's velocity; distinguish it from inertia."
+    },
+    "2/2": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "2.7",
+          "from": 75,
+          "to": 80
+        }
+      ],
+      "focus": "Set a positive direction for free fall and state the near-Earth, negligible-air-resistance assumptions."
+    },
+    "2/3": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "4.3",
+          "from": 161,
+          "to": 166
+        }
+      ],
+      "focus": "Focus on Mass and Weight. Distinguish kilograms from newtons and explain why weight depends on the local gravitational field."
+    },
+    "2/4": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "6.5",
+          "from": 261,
+          "to": 266
+        }
+      ],
+      "focus": "Identify the two masses and center-to-center separation; explain the inverse-square relation before calculating."
+    },
+    "2/5": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "6.5",
+          "from": 261,
+          "to": 266
+        }
+      ],
+      "focus": "Work through the gravitation examples with scientific notation and units; compare ratio reasoning with direct substitution."
+    },
+    "2/6": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "6.5",
+          "from": 264,
+          "to": 268
+        }
+      ],
+      "focus": "Connect gravitational force per unit mass to field strength. Use the course notes to represent the field with arrows."
+    },
+    "2/7": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "6.5",
+          "from": 264,
+          "to": 268
+        }
+      ],
+      "focus": "Replace altitude with distance from Earth's center and explain why g changes with location."
+    },
+    "2/8": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "2.7",
+          "from": 75,
+          "to": 80
+        },
+        {
+          "section": "1.3",
+          "from": 27,
+          "to": 29
+        }
+      ],
+      "focus": "Before the free-fall lab, revisit the model and measurement uncertainty; compare the fitted acceleration with the model afterward."
+    },
+    "2/9": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "3.4",
+          "from": 124,
+          "to": 127
+        }
+      ],
+      "focus": "Identify independent horizontal and vertical components linked by the same elapsed time."
+    },
+    "2/10": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "3.4",
+          "from": 127,
+          "to": 129
+        }
+      ],
+      "focus": "Follow the horizontal-launch example; calculate fall time from vertical motion before using horizontal velocity."
+    },
+    "2/11": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "3.4",
+          "from": 129,
+          "to": 132
+        }
+      ],
+      "focus": "Resolve an angled launch into components and keep the shared time; state whether launch and landing heights are equal."
+    },
+    "2/12": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "6.2",
+          "from": 249,
+          "to": 252
+        },
+        {
+          "section": "6.3",
+          "from": 253,
+          "to": 257
+        }
+      ],
+      "focus": "Explain inward acceleration and identify the real interaction supplying the centripetal force."
+    },
+    "2/13": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "6.6",
+          "from": 269,
+          "to": 271
+        }
+      ],
+      "focus": "Connect circular orbital motion with gravity. Use the class cannon model to explain continuous falling."
+    },
+    "2/14": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "6.6",
+          "from": 269,
+          "to": 275
+        }
+      ],
+      "focus": "Distinguish Kepler's three laws and apply the period-radius relationship under the stated orbital assumptions."
+    },
+    "2/15": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "6.5",
+          "from": 261,
+          "to": 268
+        },
+        {
+          "section": "6.6",
+          "from": 269,
+          "to": 275
+        }
+      ],
+      "focus": "Use orbit models to discuss what the given data constrain; orbital size alone does not establish an Earth-encounter date."
+    },
+    "3/1": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "8.1",
+          "from": 344,
+          "to": 346
+        }
+      ],
+      "focus": "Introduce momentum as a vector and compare how mass and velocity affect an impact or a proposed nudge."
+    },
+    "3/2": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "8.1",
+          "from": 344,
+          "to": 346
+        }
+      ],
+      "focus": "Calculate signed momentum and distinguish momentum from force and speed."
+    },
+    "3/3": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "8.2",
+          "from": 347,
+          "to": 350
+        }
+      ],
+      "focus": "Connect impulse to change in momentum and the force-time graph; identify average force and interaction time."
+    },
+    "3/4": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "8.2",
+          "from": 347,
+          "to": 350
+        }
+      ],
+      "focus": "Explain how a longer stopping time changes average force for the same momentum change."
+    },
+    "3/5": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "8.3",
+          "from": 350,
+          "to": 354
+        }
+      ],
+      "focus": "Choose the interacting system and check external impulse before applying momentum conservation to recoil or separation."
+    },
+    "3/6": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "8.4",
+          "from": 354,
+          "to": 356
+        },
+        {
+          "section": "8.5",
+          "from": 356,
+          "to": 360
+        }
+      ],
+      "focus": "Distinguish elastic, inelastic, and perfectly inelastic collisions. Momentum conservation and kinetic-energy conservation are different claims."
+    },
+    "3/7": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "8.3",
+          "from": 350,
+          "to": 354
+        },
+        {
+          "section": "1.3",
+          "from": 27,
+          "to": 29
+        }
+      ],
+      "focus": "Plan how to compare total momentum before and after the collision while accounting for measurement uncertainty."
+    },
+    "3/8": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "8.5",
+          "from": 356,
+          "to": 360
+        }
+      ],
+      "focus": "Use the shared final velocity in a stick-together collision; explain the system choice and sign convention."
+    },
+    "3/9": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "8.4",
+          "from": 354,
+          "to": 356
+        }
+      ],
+      "focus": "Use the one-dimensional elastic-collision model and check both momentum and the speed-dependent energy condition."
+    },
+    "3/10": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "8.6",
+          "from": 361,
+          "to": 365
+        }
+      ],
+      "focus": "Apply momentum conservation separately in perpendicular directions; use components for glancing collisions."
+    },
+    "3/11": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "8.2",
+          "from": 347,
+          "to": 350
+        },
+        {
+          "section": "8.3",
+          "from": 350,
+          "to": 354
+        }
+      ],
+      "focus": "Use impulse and system momentum as the model for the DART case. Mission measurements and ejecta details come from the assigned case-study sources."
+    },
+    "3/12": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "8.2",
+          "from": 347,
+          "to": 350
+        }
+      ],
+      "focus": "Distinguish momentum change from average force; stopping time and interaction details are needed before making a damage claim."
+    },
+    "3/13": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "8.3",
+          "from": 350,
+          "to": 354
+        },
+        {
+          "section": "8.6",
+          "from": 361,
+          "to": 365
+        }
+      ],
+      "focus": "Choose the one- or two-dimensional momentum model supported by the asteroid data and state its limits."
+    },
+    "4/1": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "7.2",
+          "from": 290,
+          "to": 294
+        }
+      ],
+      "focus": "Explain why the speed-squared dependence of kinetic energy adds information beyond momentum."
+    },
+    "4/2": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "7.1",
+          "from": 287,
+          "to": 290
+        }
+      ],
+      "focus": "Identify the force component along displacement; distinguish scientific work from effort."
+    },
+    "4/3": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "7.1",
+          "from": 287,
+          "to": 290
+        }
+      ],
+      "focus": "Determine positive, negative, or zero work from the force-displacement angle."
+    },
+    "4/4": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "7.2",
+          "from": 290,
+          "to": 294
+        }
+      ],
+      "focus": "Connect net work with the change in kinetic energy, keeping initial and final states explicit."
+    },
+    "4/5": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "7.2",
+          "from": 290,
+          "to": 294
+        }
+      ],
+      "focus": "Follow a work-energy example, identify the system, and check the conclusion against a force-based approach."
+    },
+    "4/6": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "7.2",
+          "from": 290,
+          "to": 294
+        },
+        {
+          "section": "1.3",
+          "from": 27,
+          "to": 29
+        }
+      ],
+      "focus": "Before the lab, connect measured work with the predicted kinetic-energy change; use uncertainty when evaluating agreement."
+    },
+    "4/7": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "7.3",
+          "from": 295,
+          "to": 300
+        }
+      ],
+      "focus": "Choose a gravitational potential-energy reference and apply mgh only where the gravitational field is approximately constant."
+    },
+    "4/8": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "7.3",
+          "from": 295,
+          "to": 300
+        },
+        {
+          "section": "6.5",
+          "from": 264,
+          "to": 268
+        }
+      ],
+      "focus": "Compare the near-Earth energy model with the distance dependence of gravity. Use the course notes for the extension to changing g."
+    },
+    "4/9": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "7.4",
+          "from": 301,
+          "to": 302
+        },
+        {
+          "section": "6.5",
+          "from": 264,
+          "to": 268
+        }
+      ],
+      "focus": "Review conservative-force and gravitational-field ideas. The derivation and application of U = -GMm/r come from the course notes; these excerpts provide the foundation."
+    },
+    "4/10": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "7.4",
+          "from": 301,
+          "to": 305
+        },
+        {
+          "section": "7.6",
+          "from": 310,
+          "to": 313
+        }
+      ],
+      "focus": "Define the system and account for each energy store before using conservation of mechanical or total energy."
+    },
+    "4/11": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "10.4",
+          "from": 438,
+          "to": 443
+        }
+      ],
+      "focus": "Include rotational kinetic energy when a body rolls; compare with sliding and pendulum models. Focus on the energy accounting."
+    },
+    "4/12": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "7.3",
+          "from": 295,
+          "to": 300
+        },
+        {
+          "section": "7.4",
+          "from": 301,
+          "to": 305
+        }
+      ],
+      "focus": "Use energy bar charts for the roller coaster and pendulum; distinguish height above a reference from distance along a path."
+    },
+    "4/13": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "7.5",
+          "from": 305,
+          "to": 309
+        }
+      ],
+      "focus": "Predict how friction changes mechanical energy in the ramp lab and identify where the transferred energy goes."
+    },
+    "4/14": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "16.1",
+          "from": 723,
+          "to": 727
+        }
+      ],
+      "focus": "Apply Hooke's law within its linear range; interpret the slope of a force-extension graph."
+    },
+    "4/15": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "7.4",
+          "from": 301,
+          "to": 305
+        }
+      ],
+      "focus": "Focus on spring potential energy and its quadratic dependence on extension or compression."
+    },
+    "4/16": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "7.7",
+          "from": 314,
+          "to": 318
+        }
+      ],
+      "focus": "Connect average power to energy transferred per time and distinguish power from energy."
+    },
+    "4/17": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "8.4",
+          "from": 354,
+          "to": 356
+        },
+        {
+          "section": "8.5",
+          "from": 356,
+          "to": 360
+        }
+      ],
+      "focus": "Compare kinetic energy before and after a collision while retaining momentum as a separate conservation check."
+    },
+    "4/18": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "7.5",
+          "from": 305,
+          "to": 309
+        },
+        {
+          "section": "14.1",
+          "from": 618,
+          "to": 620
+        }
+      ],
+      "focus": "Track mechanical energy into internal energy and distinguish heat transfer from temperature."
+    },
+    "4/19": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "7.2",
+          "from": 290,
+          "to": 294
+        },
+        {
+          "section": "7.9",
+          "from": 323,
+          "to": 325
+        }
+      ],
+      "focus": "Compare energy scales and units. Use the course's supplied TNT conversion and impact assumptions; energy equivalence is not a complete damage model."
+    },
+    "4/20": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "7.6",
+          "from": 310,
+          "to": 313
+        },
+        {
+          "section": "6.5",
+          "from": 264,
+          "to": 268
+        }
+      ],
+      "focus": "Set up energy conservation and the changing gravitational field. Use course notes for the inverse-r potential and escape-speed derivation."
+    },
+    "4/21": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "7.2",
+          "from": 290,
+          "to": 294
+        },
+        {
+          "section": "7.6",
+          "from": 310,
+          "to": 313
+        }
+      ],
+      "focus": "Build an asteroid energy budget with explicit initial and final states and stated transfer assumptions."
+    },
+    "5/1": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "13.1",
+          "from": 566,
+          "to": 569
+        },
+        {
+          "section": "14.1",
+          "from": 618,
+          "to": 620
+        }
+      ],
+      "focus": "Distinguish temperature, internal energy, and heat as energy transfer; compare particle-scale and macroscopic descriptions."
+    },
+    "5/2": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "14.2",
+          "from": 620,
+          "to": 625
+        }
+      ],
+      "focus": "Use mass, specific heat, and temperature change to model energy transfer; keep temperature difference separate from absolute temperature."
+    },
+    "5/3": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "14.4",
+          "from": 632,
+          "to": 633
+        },
+        {
+          "section": "14.5",
+          "from": 633,
+          "to": 635
+        },
+        {
+          "section": "14.6",
+          "from": 639,
+          "to": 641
+        },
+        {
+          "section": "14.7",
+          "from": 644,
+          "to": 647
+        }
+      ],
+      "focus": "Compare conduction, convection, and radiation using the named introductory excerpts; detailed transfer-rate calculations are not assigned here."
+    },
+    "5/4": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "14.3",
+          "from": 626,
+          "to": 632
+        }
+      ],
+      "focus": "Explain latent heat and constant temperature during a phase change; distinguish phase change from warming within one phase."
+    },
+    "5/5": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "14.2",
+          "from": 620,
+          "to": 625
+        }
+      ],
+      "focus": "Set up energy gained and lost in the calorimetry system and identify heat exchange with the surroundings as a source of discrepancy."
+    },
+    "5/6": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "13.4",
+          "from": 589,
+          "to": 595
+        }
+      ],
+      "focus": "Connect molecular motion with pressure and temperature; use absolute temperature in the kinetic model."
+    },
+    "5/7": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "15.1",
+          "from": 665,
+          "to": 669
+        }
+      ],
+      "focus": "Use the book's first-law sign convention and identify heat into the system and work done by the system."
+    },
+    "5/8": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "15.3",
+          "from": 678,
+          "to": 680
+        },
+        {
+          "section": "15.6",
+          "from": 694,
+          "to": 697
+        }
+      ],
+      "focus": "Describe one-way energy transfers and entropy change for the system plus surroundings; avoid equating entropy only with visible messiness."
+    },
+    "5/9": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "15.3",
+          "from": 680,
+          "to": 684
+        },
+        {
+          "section": "15.4",
+          "from": 685,
+          "to": 689
+        }
+      ],
+      "focus": "Read engine energy-flow diagrams and compare actual efficiency with an ideal limit; use kelvin where required."
+    },
+    "5/10": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "5.2",
+          "from": 219,
+          "to": 223
+        },
+        {
+          "section": "14.3",
+          "from": 626,
+          "to": 632
+        }
+      ],
+      "focus": "Use drag and phase-change ideas to organize the atmospheric-entry model. Use the course sources for compression, ablation, and atmospheric details."
+    },
+    "5/11": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "14.2",
+          "from": 620,
+          "to": 625
+        },
+        {
+          "section": "14.7",
+          "from": 644,
+          "to": 648
+        }
+      ],
+      "focus": "Connect assumed energy partitions with heating and radiation. These models alone do not determine an injury or damage radius."
+    },
+    "6/1": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "24.3",
+          "from": 1147,
+          "to": 1150
+        }
+      ],
+      "focus": "Locate visible light in the electromagnetic spectrum and explain why reflected or emitted light can carry evidence about an asteroid."
+    },
+    "6/2": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "16.2",
+          "from": 728,
+          "to": 730
+        },
+        {
+          "section": "16.9",
+          "from": 750,
+          "to": 753
+        }
+      ],
+      "focus": "Identify amplitude, period, frequency, and wavelength; distinguish medium motion from propagation."
+    },
+    "6/3": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "16.9",
+          "from": 750,
+          "to": 753
+        }
+      ],
+      "focus": "Use wave speed = frequency × wavelength and explain what changes when the source or medium changes."
+    },
+    "6/4": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "25.2",
+          "from": 1177,
+          "to": 1179
+        },
+        {
+          "section": "16.10",
+          "from": 753,
+          "to": 756
+        }
+      ],
+      "focus": "Apply the reflection law to light and superposition to reflected waves; use class boundary models for transmission and pulse inversion."
+    },
+    "6/5": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "25.3",
+          "from": 1180,
+          "to": 1185
+        }
+      ],
+      "focus": "Measure angles from the normal and connect refraction with speed changes before using Snell's law."
+    },
+    "6/6": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "27.2",
+          "from": 1270,
+          "to": 1273
+        }
+      ],
+      "focus": "Use Huygens's principle to explain diffraction; compare wavelength with an opening or obstacle size."
+    },
+    "6/7": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "16.10",
+          "from": 753,
+          "to": 758
+        }
+      ],
+      "focus": "Add displacements to explain constructive and destructive interference and standing waves."
+    },
+    "6/8": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "17.1",
+          "from": 776,
+          "to": 778
+        },
+        {
+          "section": "17.2",
+          "from": 778,
+          "to": 782
+        }
+      ],
+      "focus": "Model sound as a longitudinal disturbance; distinguish pitch from amplitude and intensity."
+    },
+    "6/9": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "17.2",
+          "from": 778,
+          "to": 782
+        },
+        {
+          "section": "17.5",
+          "from": 793,
+          "to": 798
+        }
+      ],
+      "focus": "Relate sound speed, frequency, and wavelength and use boundary conditions to explain resonance in air columns."
+    },
+    "6/10": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "17.2",
+          "from": 778,
+          "to": 782
+        },
+        {
+          "section": "17.5",
+          "from": 793,
+          "to": 798
+        }
+      ],
+      "focus": "Before the sound lab, connect the measured timing or resonance pattern to wave speed and identify likely measurement uncertainty."
+    },
+    "6/11": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "17.3",
+          "from": 783,
+          "to": 788
+        },
+        {
+          "section": "17.4",
+          "from": 788,
+          "to": 793
+        }
+      ],
+      "focus": "Distinguish intensity from decibel level and explain Doppler shifts using relative motion."
+    },
+    "6/12": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "24.3",
+          "from": 1147,
+          "to": 1154
+        }
+      ],
+      "focus": "Compare spectrum bands using frequency, wavelength, and propagation speed; emphasize the spectrum diagram and the assigned technologies."
+    },
+    "6/13": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "25.2",
+          "from": 1177,
+          "to": 1179
+        }
+      ],
+      "focus": "Construct a plane-mirror image and explain the reflection angle and apparent image location."
+    },
+    "6/14": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "25.6",
+          "from": 1196,
+          "to": 1202
+        }
+      ],
+      "focus": "Use qualitative ray diagrams for converging and diverging lenses; calculations beyond today's targets are enrichment."
+    },
+    "6/15": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "17.4",
+          "from": 788,
+          "to": 793
+        },
+        {
+          "section": "24.3",
+          "from": 1147,
+          "to": 1150
+        }
+      ],
+      "focus": "Use Doppler reasoning and electromagnetic-wave speed as background. Read the course radar model for the round-trip distance and two-way frequency-shift relation."
+    },
+    "6/16": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "14.7",
+          "from": 644,
+          "to": 648
+        }
+      ],
+      "focus": "Use thermal-radiation ideas to interpret changes in emitted light; course observations supply the meteor context and limits of a color-based inference."
+    },
+    "6/17": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "16.9",
+          "from": 750,
+          "to": 753
+        },
+        {
+          "section": "16.11",
+          "from": 759,
+          "to": 762
+        }
+      ],
+      "focus": "Connect propagation, travel time, and intensity; use the supplied medium properties and state what the idealized wave model leaves out."
+    },
+    "7/1": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "18.1",
+          "from": 833,
+          "to": 837
+        },
+        {
+          "section": "18.2",
+          "from": 838,
+          "to": 841
+        }
+      ],
+      "focus": "Distinguish charge from current; use charge conservation and conductor/insulator models."
+    },
+    "7/2": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "18.4",
+          "from": 846,
+          "to": 848
+        }
+      ],
+      "focus": "Apply inverse-square reasoning to electric forces and track charge signs separately from force magnitude."
+    },
+    "7/3": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "18.5",
+          "from": 848,
+          "to": 850
+        },
+        {
+          "section": "18.6",
+          "from": 850,
+          "to": 853
+        }
+      ],
+      "focus": "Define electric field with a positive test charge and read field direction and relative strength from diagrams."
+    },
+    "7/4": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "19.1",
+          "from": 881,
+          "to": 886
+        }
+      ],
+      "focus": "Explain potential difference as energy transferred per unit charge; distinguish voltage from force and current."
+    },
+    "7/5": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "20.1",
+          "from": 925,
+          "to": 930
+        }
+      ],
+      "focus": "Connect current with charge flow per time; distinguish conventional current from electron drift."
+    },
+    "7/6": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "20.2",
+          "from": 931,
+          "to": 933
+        },
+        {
+          "section": "20.3",
+          "from": 934,
+          "to": 936
+        }
+      ],
+      "focus": "Apply Ohm's law to an ohmic component and explain how material and geometry affect resistance."
+    },
+    "7/7": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "21.1",
+          "from": 974,
+          "to": 977
+        }
+      ],
+      "focus": "Read Resistors in Series only; explain the common current and voltage division. Stop at Resistors in Parallel."
+    },
+    "7/8": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "21.1",
+          "from": 977,
+          "to": 980
+        }
+      ],
+      "focus": "Read Resistors in Parallel; explain shared voltage and branch-current addition."
+    },
+    "7/9": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "21.1",
+          "from": 980,
+          "to": 984
+        }
+      ],
+      "focus": "Reduce a combination network step by step and check each branch against series/parallel conditions."
+    },
+    "7/10": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "21.4",
+          "from": 998,
+          "to": 1002
+        }
+      ],
+      "focus": "Connect ammeters and voltmeters correctly before the lab; use the lab's low-voltage equipment procedure."
+    },
+    "7/11": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "20.4",
+          "from": 939,
+          "to": 942
+        }
+      ],
+      "focus": "Distinguish power from energy and relate electrical power to current, voltage, and resistance under the model's assumptions."
+    },
+    "7/12": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "22.1",
+          "from": 1029,
+          "to": 1031
+        },
+        {
+          "section": "22.3",
+          "from": 1035,
+          "to": 1036
+        }
+      ],
+      "focus": "Describe magnetic poles and field-line direction; distinguish a field model from the path of a moving object."
+    },
+    "7/13": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "22.2",
+          "from": 1031,
+          "to": 1035
+        },
+        {
+          "section": "22.9",
+          "from": 1052,
+          "to": 1055
+        }
+      ],
+      "focus": "Connect current with magnetic fields around wires and coils; focus on directions and field patterns before formulas."
+    },
+    "7/14": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "23.1",
+          "from": 1081,
+          "to": 1083
+        },
+        {
+          "section": "23.2",
+          "from": 1083,
+          "to": 1086
+        }
+      ],
+      "focus": "Identify a change in magnetic flux and explain induced emf and Lenz's law without confusing field strength with flux change."
+    },
+    "7/15": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "22.8",
+          "from": 1048,
+          "to": 1051
+        },
+        {
+          "section": "23.5",
+          "from": 1093,
+          "to": 1096
+        }
+      ],
+      "focus": "Compare motors and generators by tracing the energy transfer and the role of torque or induction."
+    },
+    "7/16": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "23.2",
+          "from": 1083,
+          "to": 1086
+        },
+        {
+          "section": "22.3",
+          "from": 1035,
+          "to": 1036
+        }
+      ],
+      "focus": "Use induction for the explicitly hypothetical field-change model. Consult the course sources for Earth's magnetosphere; these excerpts do not establish impact-driven grid damage."
+    },
+    "7/17": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "23.6",
+          "from": 1097,
+          "to": 1098
+        }
+      ],
+      "focus": "Explain back emf in a running motor and why a stall-current estimate differs from operating current; connect to the car design constraints."
+    },
+    "8/1": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "22.8",
+          "from": 1048,
+          "to": 1051
+        },
+        {
+          "section": "20.4",
+          "from": 939,
+          "to": 942
+        }
+      ],
+      "focus": "Trace energy from the low-voltage source through the motor to the car; the project packet governs tools and build safety."
+    },
+    "8/2": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "20.2",
+          "from": 931,
+          "to": 933
+        },
+        {
+          "section": "21.4",
+          "from": 998,
+          "to": 1002
+        }
+      ],
+      "focus": "Check the circuit model and measurement connections before supervised soldering; follow the project safety procedure."
+    },
+    "8/3": {
+      "mode": "read",
+      "selections": [
+        {
+          "section": "9.5",
+          "from": 400,
+          "to": 404
+        },
+        {
+          "section": "6.1",
+          "from": 245,
+          "to": 249
+        }
+      ],
+      "focus": "Compare wheel-and-axle mechanical advantage with rotational speed and rim speed; use the actual gear and wheel dimensions."
+    },
+    "8/4": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "9.3",
+          "from": 392,
+          "to": 397
+        }
+      ],
+      "focus": "Use center-of-gravity and stability ideas to explain chassis choices. Focused reference for the build; no additional problem set."
+    },
+    "8/5": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "5.1",
+          "from": 212,
+          "to": 218
+        }
+      ],
+      "focus": "Use friction and contact-force ideas to explain alignment and rolling losses. Read only the subsection needed for your test result."
+    },
+    "8/6": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "6.1",
+          "from": 245,
+          "to": 249
+        },
+        {
+          "section": "23.6",
+          "from": 1097,
+          "to": 1098
+        }
+      ],
+      "focus": "Connect measured RPM with angular and rim speed; use back emf to explain the difference between a running and stalled motor."
+    },
+    "8/7": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "20.2",
+          "from": 931,
+          "to": 933
+        }
+      ],
+      "focus": "Use the circuit model to diagnose continuity and unintended resistance; the supervised tool procedure remains the safety reference."
+    },
+    "8/8": {
+      "mode": "review",
+      "selections": [
+        {
+          "section": "2.3",
+          "from": 47,
+          "to": 50
+        },
+        {
+          "section": "20.4",
+          "from": 939,
+          "to": 942
+        }
+      ],
+      "focus": "Select the speed and electrical-energy ideas needed to defend your measured design choices. No new reading during tomorrow's assessment."
+    },
+    "1/21": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "1/22": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "2/16": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "2/17": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "3/14": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "3/15": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "4/22": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "4/23": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "5/12": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "5/13": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "6/18": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "6/19": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "7/18": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "7/19": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    },
+    "8/9": {
+      "mode": "assessment",
+      "selections": [],
+      "focus": "No new OpenStax reading during the transfer assessment. Use only the references permitted in the assessment plan; revisit a focused section after feedback."
+    }
+  }
+}

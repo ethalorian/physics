@@ -44,7 +44,7 @@ const UNIT_ORDER = ['unit-1', 'unit-2', 'unit-3', 'unit-4', 'unit-5', 'unit-6', 
 export default function AdminSimulationsPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const userRole = getUserRole(session?.user?.email)
+  const userRole = (session?.user?.role ?? getUserRole(session?.user?.email))
 
   const [simulations, setSimulations] = useState<Simulation[]>([])
   const [loading, setLoading] = useState(true)
@@ -198,19 +198,24 @@ export default function AdminSimulationsPage() {
           Back to Admin
         </Button>
 
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <h1 className="text-3xl font-bold mb-2">Physics Simulations Management</h1>
             <p className="text-muted-foreground">
               Manage interactive physics simulations and labs
             </p>
           </div>
-          <Button asChild variant="outline">
-            <a href="/admin/simulations/analytics">
-              <BarChart3 className="h-4 w-4 mr-2" />
-              View Analytics
-            </a>
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button asChild variant="outline" className="min-h-11">
+              <a href="/admin/simulations/activities">Guided activities & class access</a>
+            </Button>
+            <Button asChild variant="outline" className="min-h-11">
+              <a href="/admin/simulations/analytics">
+                <BarChart3 className="h-4 w-4 mr-2" />
+                View Analytics
+              </a>
+            </Button>
+          </div>
         </div>
       </div>
 

@@ -1,0 +1,55 @@
+Course Plans presentations — October 2, 2026
+
+Teacher flow
+Open Teach, select Class → Unit → Course Plans day, and choose Present deck.
+The default mode shares the deck and slide position between iPad and projector.
+Course Plans “Present deck” and the day deck’s “iPad Teach” link open that day.
+A CPA class selects its CPA deck; an Honors class selects its Honors deck.
+A presentation keeps its selected edition when resumed, even if the class track changes later.
+Days without authored decks remain visible but cannot be launched.
+
+On the classroom computer, join the running presentation and open the projector
+window. Keep the connection page open while controlling from the iPad.
+Mirror this iPad remains an alternative display setup. “Present on this device
+only” and rehearsal deliberately create no shared session.
+
+Implementation
+The session has exactly one source: lesson_id OR plan_unit_id + plan_day +
+plan_track. Plan sessions have no lesson foreign key and do not depend on lesson
+publication, student access windows, lesson numbering, or student block anchors.
+The day catalog comes from the same authored plan data as Course Plans.
+Existing explicit lesson sessions and their publication/ownership gates remain
+compatible. Plan controls retain slides, blackout, timer, projector confirmation,
+reconnection and private notes. Lesson activities are not shown for plan sessions.
+The sidebar Teach link no longer carries a remembered student lesson. Resume
+teaching includes the stored plan unit/day. The slide preview now scales within
+its container at iPad and split-screen widths.
+
+Validation
+- API checks: 44 Unit 1 choices, class ownership, invalid/no-deck days, independent
+  plan launch, correct and pinned edition, document authorization, remote controls,
+  projector acknowledgments, notes, end/history, legacy session compatibility.
+- PostgreSQL: migration preserves existing rows/FK/RLS; accepts a plan without a
+  lesson; rejects missing or mixed source, invalid day, and invalid/null edition.
+- Browser: real CPA Day 13 and Honors Day 21 HTML; separate iPad/computer contexts;
+  Course Plans deep link; slide jump, next/back, projector keyboard; failed request
+  recovery; refresh and reconnect; blank/timer; private notes/recap; finish blanks
+  the projector; portrait, landscape and split-screen; no browser errors.
+- TypeScript, affected-file ESLint, style and brand audits passed.
+- Production schema applied with Supabase migration name course_plan_presentations,
+  remote version 20261002140807. RLS remains enabled; zero anon/authenticated table
+  grants; no new security advisor findings.
+
+Release isolation
+Built from the current production source snapshot, with only the task changes
+applied. The manifest check compares all 2,722 original source files to avoid
+including unrelated working-tree changes. The 44 Unit 1 deck HTML changes only
+add the unit/day to the iPad Teach link; deck visuals and animations are preserved.
+
+Published release
+Live: https://www.antocciphysics.com/admin/command-center
+Deployment: dpl_J85PoM6P2fvrSej3arQPjBkYynNF
+Candidate matched all 69 task files; production baseline was unchanged before promotion.
+Live Teach route requires sign-in, as expected. This browser had no signed-in teacher
+account, so authenticated interaction verification used the local browser fixture
+with the actual UI/decks and separately tested API handlers.

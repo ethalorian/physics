@@ -23,6 +23,7 @@ import { TeachingStage, FitTeachingContent } from '@/components/present/Teaching
 import TeachingBlockContent, { blockMode } from '@/components/present/TeachingBlockContent'
 import { teachingCue } from '@/lib/teaching-content'
 import { buildSlides } from '@/lib/present-auto-slides'
+import BrandLogo from '@/components/BrandLogo'
 
 const W = 1600, H = 900
 
@@ -106,7 +107,7 @@ export default function AutoDeckPage() {
   const stageChildren = slides.map((sl, i) => (
     <section key={i} data-label={sl.label} data-section-anchor={sl.anchor ?? undefined} data-speaker-notes={sl.notes} style={{ display: i === index ? 'block' : 'none', position: 'absolute', inset: 0 }}>
       <TeachingStage location={lessonLocation(sl.blocks[0]?.id, lesson?.content_blocks?.blocks ?? [])} embedded lesson={lesson?.title ?? 'Today’s lesson'} mode={i === 0 ? 'Let’s investigate' : blockMode(sl.blocks[0])} footer={<>{i + 1} / {slides.length} · {teachingCue(sl.blocks[0])}</>}>
-        {sl.blocks[0] ? <TeachingToolContext.Provider value={{role:'projector',states:command.state?.session.teaching_tool_state??{}}}><TeachingBlockContent seiEnabled={teaching.state?.tools?.sei_enabled ?? false} block={sl.blocks[0]} lessonId={lessonId} referenceBlocks={lesson?.content_blocks?.blocks ?? []} /></TeachingToolContext.Provider> : <FitTeachingContent><div className="teach-intro lesson-chapter" style={{ minHeight: 660 }}><div><p className="teach-eyebrow">Today’s investigation</p><h1 className="teach-headline lesson-chapter-title">{sl.title}</h1><p className="teach-subtitle">Explore the ideas.<br />Find the evidence.<br />Build your explanation.</p></div><div className="teach-orbit" aria-hidden>φ</div></div></FitTeachingContent>}
+        {sl.blocks[0] ? <TeachingToolContext.Provider value={{role:'projector',states:command.state?.session.teaching_tool_state??{}}}><TeachingBlockContent seiEnabled={teaching.state?.tools?.sei_enabled ?? false} block={sl.blocks[0]} lessonId={lessonId} referenceBlocks={lesson?.content_blocks?.blocks ?? []} /></TeachingToolContext.Provider> : <FitTeachingContent><div className="teach-intro lesson-chapter" style={{ minHeight: 660 }}><div><p className="teach-eyebrow">Today’s investigation</p><h1 className="teach-headline lesson-chapter-title">{sl.title}</h1><p className="teach-subtitle">Explore the ideas.<br />Find the evidence.<br />Build your explanation.</p></div><BrandLogo size={280} decorative /></div></FitTeachingContent>}
       </TeachingStage>
     </section>
   ))

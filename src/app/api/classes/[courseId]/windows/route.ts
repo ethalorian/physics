@@ -1,67 +1,43 @@
 import { NextResponse } from 'next/server'
-import { withAuth, type AuthContext } from '@/lib/api-auth'
+import { withRole, type AuthContext } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { appliesToClass, validateReleaseWindow } from '@/lib/lesson-release'
+import { appliesToClass, type ReleaseWindow } from '@/lib/lesson-release'
 import { releaseLessons } from '@/lib/lesson-release-server'
 import { getCourseWindows } from '@/lib/lesson-windows'
+import { isSameIdentity } from '@/lib/identity-aliases'
+import { lessonWorkSchedule, sameLessonSchedule } from '@/lib/lesson-work-schedule'
 
-// Per-class lesson open/close windows. Only the OWNING teacher (or that teacher
-// via admin) manages a class's windows — admins don't reach into per-class
-// release (they own the global published flag instead).
-
-async function assertOwner(
-  ctx: AuthContext<{ courseId: string }>,
-  courseId: string,
-): Promise<{ ok: true; email: string } | { ok: false; status: number }> {
-  if (ctx.role !== 'admin' && ctx.role !== 'teacher') return { ok: false, status: 403 }
-  const { data: course, error } = await supabaseAdmin.from('courses').select('teacher_email').eq('id', courseId).maybeSingle()
-  if (error) throw error
-  if (!course) return { ok: false, status: 404 }
-  if (ctx.role === 'teacher' && course.teacher_email !== ctx.scopeEmail) return { ok: false, status: 403 }
-  return { ok: true, email: ctx.scopeEmail }
+async function ownedCourse(ctx:AuthContext<{courseId:string}>,courseId:string){
+  const {data,error}=await supabaseAdmin.from('courses').select('teacher_email,program,track').eq('id',courseId).is('archived_at',null).maybeSingle()
+  if(error)throw error
+  return data&&(ctx.role==='admin'||isSameIdentity(ctx.scopeEmail,data.teacher_email))?data:null
 }
-
-export const GET = withAuth<{ courseId: string }>(async (_request, ctx) => {
-    const { courseId } = await ctx.params
-    const auth = await assertOwner(ctx, courseId)
-    if (!auth.ok) return NextResponse.json({ error: 'Forbidden' }, { status: auth.status })
-    return NextResponse.json({ windows: await getCourseWindows(courseId) })
+export const GET=withRole<{courseId:string}>(['teacher','admin'],async(_req,ctx)=>{
+  const {courseId}=await ctx.params
+  if(!await ownedCourse(ctx,courseId))return NextResponse.json({error:'Choose your own class.'},{status:403})
+  return NextResponse.json({windows:await getCourseWindows(courseId)})
 })
 
-// POST { lesson_id, open_at, close_at } — set/clear a window. To OPEN a lesson
-// now, send open_at = now (close_at null). Clearing both removes the row, which
-// now means the lesson is CLOSED for this class (closed-by-default).
-export const POST = withAuth<{ courseId: string }>(async (request, ctx) => {
-    const { courseId } = await ctx.params
-    const auth = await assertOwner(ctx, courseId)
-    if (!auth.ok) return NextResponse.json({ error: 'Forbidden' }, { status: auth.status })
-
-    const body = await request.json().catch(() => null)
-    if (!body || typeof body !== 'object') return NextResponse.json({ error: 'Invalid schedule.' }, { status: 400 })
-    const lessonId: string | undefined = body.lesson_id
-    if (!lessonId || typeof lessonId !== 'string') return NextResponse.json({ error: 'lesson_id required' }, { status: 400 })
-    const openAt = body.open_at ?? null
-    const closeAt = body.close_at ?? null
-    const invalid = validateReleaseWindow(openAt, closeAt)
-    if (invalid) return NextResponse.json({ error: invalid }, { status: 422 })
-
-    if (!openAt && !closeAt) {
-      const { error } = await supabaseAdmin.from('lesson_class_windows').delete().eq('course_id', courseId).eq('lesson_id', lessonId)
-      if (error) throw error
-      return NextResponse.json({ ok: true, cleared: true })
-    }
-
-    const [lessons, course] = await Promise.all([releaseLessons(), supabaseAdmin.from('courses').select('program, track').eq('id', courseId).single()])
-    if (course.error) throw course.error
-    const lesson = lessons.find(l => l.id === lessonId)
-    if (!lesson || !appliesToClass(lesson, course.data)) return NextResponse.json({ error: 'This lesson is not published for this class’s curriculum and track.' }, { status: 422 })
-
-    const { error } = await supabaseAdmin
-      .from('lesson_class_windows')
-      .upsert(
-        { course_id: courseId, lesson_id: lessonId, open_at: openAt, close_at: closeAt, set_by: auth.email, updated_at: new Date().toISOString() },
-        { onConflict: 'course_id,lesson_id' },
-      )
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json({ ok: true })
+// Due dates describe expectations. Only open_at / close_at grant student access.
+export const POST=withRole<{courseId:string}>(['teacher','admin'],async(req,ctx)=>{
+  if(ctx.viewingAsTeacher)return NextResponse.json({error:'Return to your own account before changing assignments.'},{status:403})
+  const {courseId}=await ctx.params,course=await ownedCourse(ctx,courseId)
+  if(!course)return NextResponse.json({error:'Choose your own class.'},{status:403})
+  const body=await req.json().catch(()=>null)
+  if(!body||typeof body!=='object'||Array.isArray(body)||typeof body.lesson_id!=='string')return NextResponse.json({error:'Choose a lesson and schedule.'},{status:400})
+  const {data:existing,error}=await supabaseAdmin.from('lesson_class_windows').select('open_at,close_at,due_at,updated_at').eq('course_id',courseId).eq('lesson_id',body.lesson_id).maybeSingle()
+  if(error)throw error
+  if('expected' in body&&(!body.expected||typeof body.expected==='object')&&!sameLessonSchedule(body.expected as ReleaseWindow|null,existing))return NextResponse.json({error:'This schedule changed in another window. Refresh before saving.'},{status:409})
+  let window
+  try{window=lessonWorkSchedule(body,existing)}catch(e){return NextResponse.json({error:(e as Error).message},{status:422})}
+  const lesson=(await releaseLessons()).find(l=>l.id===body.lesson_id)
+  if(!lesson||!appliesToClass(lesson,course))return NextResponse.json({error:'This lesson is not published for this class’s curriculum and track.'},{status:422})
+  const row={course_id:courseId,lesson_id:body.lesson_id,...window,set_by:ctx.email,updated_at:new Date().toISOString()}
+  // Existing editors clear both dates to close. Preserve homework deadlines and
+  // history for the work overview while continuing to deny student access.
+  const query=existing?supabaseAdmin.from('lesson_class_windows').update(row).eq('course_id',courseId).eq('lesson_id',body.lesson_id).eq('updated_at',existing.updated_at):supabaseAdmin.from('lesson_class_windows').insert(row)
+  const saved=await query.select('open_at,close_at,due_at').maybeSingle()
+  if(saved.error?.code==='23505'||!saved.error&&!saved.data)return NextResponse.json({error:'This schedule changed in another window. Refresh before saving.'},{status:409})
+  if(saved.error)throw saved.error
+  return NextResponse.json({ok:true,window:saved.data})
 })

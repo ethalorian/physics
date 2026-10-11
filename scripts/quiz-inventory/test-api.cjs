@@ -1,0 +1,20 @@
+const assert=require('node:assert/strict'),{createFixture,id}=require('./fixture.cjs');
+(async()=>{
+ const f=await createFixture('/private/tmp/quiz-inventory-api'),{fx,seed}=f;
+ f.role('anonymous');assert.equal((await f.call('manage','GET')).status,401);
+ f.role('student');assert.equal((await f.call('manage','GET')).status,403);assert.equal((await f.call('manage','POST',{action:'delete'})).status,403);
+ f.role('teacher');assert.equal((await f.call('manage','GET',{},id(11))).status,404);
+ let preview=await(await f.call('manage','GET')).json();assert.equal(preview.impact.work,0);
+ fx.context.viewingAsTeacher=true;assert.equal((await f.call('manage','POST',{action:'rename',version:1,title:'New title'})).status,403);fx.context.viewingAsTeacher=false;
+ assert.equal((await f.call('manage','POST',{action:'delete',version:1,title:seed.title})).status,400);
+ assert.equal((await f.call('manage','POST',{action:'rename',version:1,title:'New title',course_id:id(6)})).status,400);
+ assert.equal((await f.call('manage','POST',{action:'rename',version:1,title:'New title'})).status,200);
+ assert.equal((await f.call('manage','POST',{action:'delete',version:1,title:preview.title,fingerprint:preview.fingerprint})).status,409);
+ preview=await(await f.call('manage','GET')).json();fx.rows.quiz_work.push({quiz_id:seed.id,user_id:id(2),state:'in_progress',version:1});
+ assert.equal((await f.call('manage','POST',{action:'delete',version:preview.version,title:preview.title,fingerprint:preview.fingerprint})).status,409);
+ fx.rows.quiz_assignments.find(q=>q.id===id(12)).deleted_at=new Date().toISOString();
+ const inventory=await(await f.call('list','GET',{},seed.id,'?inventory=1')).json();assert.equal(inventory.quizzes.length,2);assert.equal(inventory.quizzes.find(q=>q.id===seed.id).work_count,1);assert.deepEqual(inventory.quizzes[0].unit_ids,['unit-1']);assert.equal(inventory.inventory.units[0].name,'Motion');
+ assert.equal((await(await f.call('list','GET')).json()).quizzes.length,1);
+ preview=await(await f.call('manage','GET')).json();assert.equal((await f.call('manage','POST',{action:'delete',version:preview.version,title:preview.title,fingerprint:preview.fingerprint})).status,200);assert(!fx.rows.quiz_assignments.some(q=>q.id===seed.id));assert.equal(fx.rows.quiz_work.length,0);assert(fx.rows.quiz_assignments.some(q=>q.id===id(11)));
+ console.log('PASS: inventory metadata and removed drafts, auth and course isolation, read-only protection, strict deletion input, rename, stale impact conflicts, scoped deletion. Database effects are checked separately in test-db.sql.');
+})().catch(e=>{console.error(e);process.exitCode=1});

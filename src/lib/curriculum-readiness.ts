@@ -25,6 +25,7 @@ export function lessonReadiness(doc: BlockDocument | null, targets: CatalogTarge
   if (!doc?.blocks?.length) return [...issues, { message: 'Add student activities.', severity: 'error' as const }]
   issues.push(...seiLint(doc.blocks, vocab))
   const keys = new Set(targets.flatMap(t => [t.id, t.slug]))
+  for (const ref of doc.learningPath?.targetSlugs ?? []) if (!keys.has(ref)) issues.push({ message: `Unknown learning-path target: ${ref}`, severity: 'error' })
   for (const b of doc.blocks) {
     if(b.type==='vocab' && !b.termIds && !b.terms?.length)issues.push({blockId:b.id,message:'Select canonical vocabulary words or import the inline definitions.',severity:'error'})
     if ((b.type==='vocab'||b.type==='lesson_vocab') && b.termIds) {

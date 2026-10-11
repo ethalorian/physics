@@ -11,7 +11,7 @@ export function answerGuide(block: ContentBlock): { title: string; parts: string
     case 'lab_notebook': return { title: 'Lab notebook', parts: ['Sketch / diagram', ...(block.fields?.length ? block.fields : ['What I did', 'What I observed', 'What it means'])] }
     case 'observation': return { title: 'Observation', parts: ['Describe the pattern', 'Explain what it means'] }
     case 'data_table': return { title: 'Data & reasoning', parts: [`Complete ${block.minRows ?? 1} data reading${(block.minRows ?? 1) === 1 ? '' : 's'}`, 'Choose the pattern', 'Explain what it means'] }
-    case 'gewa': return { title: 'Physics solution', parts: ['Given values', 'Equation', 'Work / substitutions', 'Answer & units'] }
+    case 'gewa': return { title: 'Physics solution', parts: block.responseFormat === 'problem-workspace' ? ['Model', 'Plan', 'Work', 'Answer & meaning'] : ['Given values', 'Equation', 'Work / substitutions', 'Answer & units'] }
     case 'equation_sandbox': return { title: 'Equation work', parts: ['Enter your equation steps'] }
     case 'sketch': return { title: 'Sketch response', parts: ['Draw or describe your answer', ...(block.prompts ?? [])] }
     case 'exit_ticket': return { title: 'Exit ticket', parts: ['Respond to the exit question'] }

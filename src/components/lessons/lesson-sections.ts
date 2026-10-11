@@ -58,6 +58,8 @@ function proseTitle(markdown: string): string | null {
  * so every section names itself.
  */
 export function deriveSectionTitle(page: LessonPage, index: number, pageCount: number): string {
+  const authoredStage = page.blocks.find(b => b.workshop?.stage)?.workshop?.stage
+  if (authoredStage) return clip(authoredStage)
   const isLast = index === pageCount - 1
   for (const b of page.blocks) {
     const t = blockTitle(b)

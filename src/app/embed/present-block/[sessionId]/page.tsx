@@ -11,6 +11,7 @@ import { lessonLocation } from '@/components/lessons/LessonVisualIdentity'
 import { TeachingStage } from '@/components/present/TeachingStage'
 import TeachingBlockContent, { blockMode } from '@/components/present/TeachingBlockContent'
 import { commandRequest, type CommandLesson } from '@/lib/classroom-command'
+import type { TeachingToolCommand } from '@/lib/teaching-tool-spec'
 
 /** Shared student-visible block content, with evidence reads and writes disabled. */
 export default function ProjectedBlockPage() {
@@ -34,9 +35,17 @@ export default function ProjectedBlockPage() {
   const block = lesson?.content_blocks.blocks.find(b => b.id === blockId && b.type !== 'deck')
   const parts = block ? projectedBlockPages(block) : []
   const shown = parts[Math.min(part, parts.length - 1)]
-  return <div data-projected-sei={String(teaching.state?.tools?.sei_enabled ?? false)} data-projected-block-ready={shown && !error ? `${blockId}:${part}` : undefined}>
-    <TeachingStage location={lessonLocation(blockId, lesson?.content_blocks.blocks ?? [])} lesson={lesson?.title ?? 'Today’s lesson'} mode={blockMode(shown)} footer={<>{parts.length > 1 ? `Screen ${Math.min(part + 1, parts.length)} of ${parts.length} · ` : ''}{teachingCue(shown)}</>}>
-      {error ? <p role="alert">{error}</p> : !lesson ? <p>Loading lesson block…</p> : !shown ? <p>This block is unavailable for the selected class.</p> : <TeachingToolContext.Provider value={{role:'projector',states:command.state?.session.teaching_tool_state??{}}}><TeachingBlockContent seiEnabled={teaching.state?.tools?.sei_enabled ?? false} key={shown.id + ':' + part} block={shown} lessonId={lesson.id} referenceBlocks={lesson.content_blocks.blocks} /></TeachingToolContext.Provider>}
+  const live = command.state?.session
+  const interactive = shown?.teachingTool?.kind === 'physics-explainer' && Boolean(shown.teachingTool.source)
+    && live?.status === 'live' && live.projected_block_id === blockId && !live.blackout
+    && !live.poll_block_id && !command.state?.lobby && teaching.state?.pulse?.status !== 'open'
+  const updateTool = (value: TeachingToolCommand) => {
+    if (!interactive || value.block_id !== blockId) return Promise.resolve(false)
+    return command.patch({ teaching_tool: value, expected_command_revision: live.command_revision })
+  }
+  return <div data-projected-tool-state={JSON.stringify(command.state?.session.teaching_tool_state?.[blockId] ?? null)} data-projected-sei={String(teaching.state?.tools?.sei_enabled ?? false)} data-projected-block-ready={shown && !error ? `${blockId}:${part}` : undefined}>
+    <TeachingStage original={shown?.teachingTool?.kind==='physics-explainer'&&!!shown.teachingTool.source} location={lessonLocation(blockId, lesson?.content_blocks.blocks ?? [])} lesson={lesson?.title ?? 'Today’s lesson'} mode={blockMode(shown)} footer={<>{parts.length > 1 ? `Screen ${Math.min(part + 1, parts.length)} of ${parts.length} · ` : ''}{teachingCue(shown)}</>}>
+      {error ? <p role="alert">{error}</p> : !lesson ? <p>Loading lesson block…</p> : !shown ? <p>This block is unavailable for the selected class.</p> : <TeachingToolContext.Provider value={{role:'projector',states:command.state?.session.teaching_tool_state??{},busy:command.busy,command:interactive?updateTool:undefined}}><TeachingBlockContent seiEnabled={teaching.state?.tools?.sei_enabled ?? false} key={shown.id + ':' + part} block={shown} lessonId={lesson.id} referenceBlocks={lesson.content_blocks.blocks} /></TeachingToolContext.Provider>}
     </TeachingStage>
   </div>
 }

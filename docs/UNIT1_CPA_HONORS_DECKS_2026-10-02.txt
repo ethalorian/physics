@@ -1,0 +1,33 @@
+Unit 1 CPA and Honors release — 2026-10-02
+
+LIVE
+CPA: https://www.antocciphysics.com/decks/unit-1-cpa/index.html
+Honors: https://www.antocciphysics.com/decks/unit-1-teaching/index.html
+Deployment: dpl_5zhfDLfQTdkF1xcNPz33PasrP99y
+Previous: dpl_8rHF6pv4t4skYsGfvxzhfAVbHB15
+
+SCOPE
+22 separate CPA decks (320 slides). Honors retains all 421 original slides with their teaching copy and diagram label values, plus 44 visual introductions (465 total). Shared illustrations, scientific diagrams, animation controls, readable step sequences.
+
+Class track is passed through the real presentation resolver and teacher plan launch. Canonical lesson identity is still required. Existing student evidence blocks are preserved, old slide indices remain cleared, and only existing validated anchors drive student follow mode. CPA transfer decks scaffold the assigned task without exposing its numerical solution.
+
+VALIDATION
+All 785 slides: no clipping, missing images, SVG text out of bounds, overlapping SVG labels, or browser runtime errors.
+44 decks: real iPad bridge metadata, notes, next/previous/jump, and server-acknowledged classroom navigation passed.
+Playback: finite animation, pause/reset/replay/scrub, teacher notes, print completion, and reduced motion passed. Tablet/phone viewports have no horizontal page overflow.
+Focused unit tests: 8 passed. Resolver fixture covers CPA/Honors/untyped classes and publication/track gates.
+TypeScript passed with an 8 GiB Node heap (the initial default 2 GiB heap was insufficient). Style and brand audits passed. Vercel production build passed; existing lint warnings remain.
+Release reconstructed from 2,669 verified production source files with scoped overlays; unrelated working-tree changes were excluded. A generated tsconfig.tsbuildinfo changed during type checking. All 122 overlaid source/asset files matched the deployment manifest.
+All 86 live public deck files and assets hash-verified at www.antocciphysics.com. Live browser smoke test passed. The temporary vercel.app URL had an environment certificate error; no TLS bypass was used.
+
+ARTWORK
+Built-in image_gen: crate-pull.png and block-ramp.png. Exact final prompts saved in src/data/deck-sources/unit-1-teaching/art/CPA-Honors-prompts.txt and in the planning archive under Source/art. Conceptual images; scientific labels and numerical diagrams are authored separately.
+
+REBUILD
+node scripts/build-unit1-teaching-decks.mjs
+node scripts/test-unit1-editions.cjs
+./node_modules/.bin/tsx --test src/data/lesson-decks.test.ts src/lib/physics-explainer.test.ts
+node scripts/test-deck-controls-browser.cjs
+
+ARCHIVE
+/Users/craigantocci/Documents/Claude/Projects/Physics Curriculum Planning/Unit 1 CPA and Honors/Unit-1-CPA-and-Honors.zip

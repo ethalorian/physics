@@ -16,6 +16,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import MathWorkReview from './MathWorkReview'
 import styles from './MathControlRoom.module.css'
+import { ReviewRatings, ReviewFeedback, ReviewQueueRail, ReviewStudentBar } from "@/components/review/ReviewDeskControls"
 import type { MathResponse } from '@/lib/math-response'
 
 
@@ -71,6 +72,7 @@ function stateOf(cell: Cell): RungState | null {
 type SnapshotSort = 'name' | 'progress' | 'needs-me'
 const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Got it')
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+const CHECKED_REVISION_REPLY = 'I have checked your response. Your next step is a fresh independent check on this skill.'
 
 export default function MathControlRoom({ classId, teacher }: { classId?: string | null; teacher?: string | null }) {
   // class + (admin-only) teacher scope, as one query string.
@@ -151,6 +153,10 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
 
   const pendingSubs = subs.filter(s => s.status === 'pending' || s.revision?.status === 'pending')
   const activeSub = pendingSubs.find(s => s.id === submissionId) ?? pendingSubs[0] ?? null
+  // A checked correction needs an explicit next step, not another typed message.
+  // Practice and help still need the teacher's specific instructions.
+  const revisionMessage = fbText.trim() || (revisionOutcome === 'fresh-check' ? CHECKED_REVISION_REPLY : '')
+  const revisionReady = !!revisionOutcome && !!revisionMessage
   const draftId = activeSub?.id
   const loadedDraft = useRef<string | null>(null)
   useEffect(() => {
@@ -249,12 +255,13 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   async function rate(submission: Submission, competencyId: string, level: 1 | 2 | 3 | null) {
     if (!sel || savingKey) return
     const key = `${submission.id}:${competencyId}:${level}`
+    setFlash(null)
     setSavingKey(key)
     try {
       const res = await fetch(submission.revision?.status === 'pending' ? '/api/math-spine/revision' : '/api/math-spine/warmup-review', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ submission_id: submission.id, competency_id: competencyId, level, message: fbText, request_revision: requestRevision, next_step: revisionOutcome, action: submission.revision?.status === 'pending' ? 'acknowledge' : undefined }),
+        body: JSON.stringify({ submission_id: submission.id, competency_id: competencyId, level, message: submission.revision?.status === 'pending' ? revisionMessage : fbText, request_revision: requestRevision, next_step: revisionOutcome, action: submission.revision?.status === 'pending' ? 'acknowledge' : undefined }),
       })
       const d = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(d.error || 'Save failed')
@@ -498,32 +505,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
         <>
           <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
           <div className={styles.drawer} role="dialog" aria-modal="true" aria-label="Review math work" style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1440px, 100vw)', zIndex: 100, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
-            {/* roster rail — students with warm-ups to review; greyed when done */}
-            <div className={`hidden xl:flex ${styles.roster}`} style={{ width: 212, flexShrink: 0, borderRight: '1px solid var(--border)', flexDirection: 'column', minHeight: 0 }}>
-              <div className={styles.queueHeading}><span className={styles.queueMark} aria-hidden="true">✦</span><strong>Your review queue</strong><p>{queue.length > 0 ? `${queue.length} students to go` : 'All caught up'}</p><div className={styles.sessionCount} aria-live="polite">✓ {reviewsSaved} reviews saved this session</div></div>
-              <div style={{ overflowY: 'auto', flex: 1, padding: '4px 0' }}>
-                {grid.students.filter((st) => st.ratable !== false).sort((a, b) => Number(queue.some(q => q.studentId === b.id)) - Number(queue.some(q => q.studentId === a.id))).map((st) => {
-                  const qc = queue.find((q) => q.studentId === st.id)?.count ?? 0
-                  const done = qc === 0
-                  const active = sel.studentId === st.id
-                  return (
-                    <button
-                      key={st.id}
-                      aria-current={active ? 'true' : undefined}
-                      onClick={() => openStudent(st.id, st.name)}
-                      disabled={savingKey !== null}
-                      title={st.name}
-                      style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', textAlign: 'left', padding: '10px 14px', border: 'none', borderLeft: `2px solid ${active ? 'var(--reward)' : 'transparent'}`, background: active ? 'color-mix(in oklch, var(--reward) 14%, transparent)' : 'transparent', color: 'var(--foreground)', opacity: done ? 0.45 : 1, cursor: done ? 'default' : 'pointer' }}
-                    >
-                      <span className={styles.initials} aria-hidden="true">{st.name.split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('')}</span>
-                      <span className="text-sm" style={{ flex: 1, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{st.name}<small className={styles.studentStatus}>{active ? 'Reviewing now' : done ? 'Reviewed · open history' : `${qc} to review`}</small></span>
-                      {done ? <span className="text-caption" style={{ color: 'var(--success)' }}>✓</span>
-                        : <span className="text-overline" style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 'var(--radius-sm)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{qc}</span>}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
+            <ReviewQueueRail students={grid.students} counts={Object.fromEntries(queue.map(q => [q.studentId, q.count]))} activeId={sel.studentId} savedCount={reviewsSaved} disabled={savingKey !== null || !!nextGate} onSelect={id => { const student = grid.students.find(s => s.id === id); if (student) openStudent(id, student.name) }} />
             {/* content column */}
             <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}>
 
@@ -573,26 +555,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                       ) : sel && isViewOnly(sel.studentId) ? (
                         <div className="text-sm rounded-lg py-2.5 px-3" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>View only — their teacher rates this</div>
                       ) : (
-                        <div className={styles.ratings}>
-                          {[1, 2, 3].map((lv) => {
-                            return (
-                              <button
-                                key={lv}
-                                disabled={savingKey !== null}
-                                onClick={() => setSelectedLevel(lv as 1 | 2 | 3)}
-                                aria-pressed={selectedLevel === lv}
-                                className={[styles.rating, 'text-sm'].filter(Boolean).join(' ')}
-                                aria-label={`${lv} · ${levelWord(lv)}`}
-                                style={{
-                                  padding: '12px', cursor: 'pointer', border: selectedLevel === lv ? '2px solid currentColor' : '2px solid transparent',
-                                  background: lv === 1 ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : lv === 2 ? 'color-mix(in oklch, var(--reward) 22%, transparent)' : 'color-mix(in oklch, var(--success) 14%, transparent)',
-                                  color: lv === 1 ? 'var(--destructive)' : lv === 2 ? 'var(--reward-foreground)' : 'var(--success)' }}
-                              >
-                                <span className={styles.ratingKey} aria-hidden="true">{lv}</span><span className={styles.ratingCopy}><strong>{levelWord(lv)}</strong><small>{lv === 1 ? 'With mathematical support' : lv === 2 ? 'Independent in a routine context' : 'Transfers and explains why'}</small></span><kbd className={styles.shortcut}>{lv}</kbd>
-                              </button>
-                            )
-                          })}
-                        </div>
+                        <ReviewRatings math value={selectedLevel} disabled={savingKey !== null} onChange={setSelectedLevel} />
                       )}
                     </div>
                   )
@@ -601,9 +564,9 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                   <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Shortcut: <b>1 · 2 · 3</b> to select. Your review saves when you continue.</p>
                 )}
 </section>}
-                <div className={styles.paper}><div className={styles.paperHeading}><span>STUDENT WORK</span><span aria-hidden="true">✎</span></div><WarmupAnswer sub={activeSub} /></div>
+                <div className={styles.paper}><div className={styles.paperHeading}><span>{activeSub.revision ? activeSub.revision.needs_help ? 'STUDENT HELP REQUEST' : 'STUDENT CORRECTION' : 'STUDENT WORK'}</span><span aria-hidden="true">✎</span></div>{activeSub.revision ? <><p className="mb-3 whitespace-pre-wrap">{activeSub.revision.message}</p><MathWorkReview key={activeSub.revision.id} value={activeSub.revision.response_json} /></> : <WarmupAnswer sub={activeSub} />}</div>
                 {activeSub.feedback?.map((f,i) => <p key={i} className="my-3 rounded border p-3"><b>Your feedback:</b> {f.message}</p>)}
-                {activeSub.revision && <section className="mt-4 border-t pt-4"><h4 className="font-bold">Student response {activeSub.revision.needs_help ? '· asks for help' : '· correction'}</h4><p className="my-2 whitespace-pre-wrap">{activeSub.revision.message}</p><MathWorkReview key={activeSub.revision.id} value={activeSub.revision.response_json} /></section>}
+                {activeSub.revision && <section className="mt-4 border-t pt-4" aria-label="Original submission"><h4 className="mb-3 font-bold">Original submission</h4><WarmupAnswer sub={activeSub} /></section>}
               </div>
 
               {/* right: the teacher's two acts — rate it, then say something
@@ -615,34 +578,23 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                 <div className={styles.responseNav}><button type="button" aria-label="Previous response" disabled={responseIndex <= 0 || savingKey !== null} onClick={()=>setSubmissionId(pendingSubs[responseIndex-1].id)}>← Previous</button><span>{responseIndex+1} / {pendingSubs.length}</span><button type="button" aria-label="Next response" disabled={responseIndex >= pendingSubs.length-1 || savingKey !== null} onClick={()=>setSubmissionId(pendingSubs[responseIndex+1].id)}>Next →</button></div>
                 <div className={styles.feedback}>
                   <details className={styles.guidance}><summary>Rating guidance</summary><p>Language access is not a penalty. One observation is evidence, not proof of lasting fluency. Use a later independent task to confirm transfer.</p></details>
-                  <h4 className={styles.step}><span>3</span> Written feedback <kbd>F</kbd></h4>
-                  <label className="block text-sm font-semibold" htmlFor="math-review-note">{activeSub.revision ? 'Reply and explain the next step' : 'Feedback and next step'}</label>
-                  <div className={styles.starters} aria-label="Feedback starters">{['Explain your thinking', 'Try another way', 'Let’s talk it through'].map((starter, index) => <button type="button" key={starter} disabled={savingKey !== null} onClick={() => { const prompts = ['Explain how you chose your approach.', 'Can you show another way to solve this?', 'Let’s talk through your approach together.']; setFbText(text => text.trim() ? `${text}\n${prompts[index]}` : prompts[index]); document.getElementById('math-review-note')?.focus() }}>{starter}<span aria-hidden="true"> +</span></button>)}</div>
-                  <textarea id="math-review-note" rows={5} maxLength={2000} disabled={savingKey !== null} value={fbText} onChange={e => { setFbText(e.target.value); try { sessionStorage.setItem('math-review:' + activeSub.id, JSON.stringify({message:e.target.value,level:selectedLevel,revision:requestRevision,outcome:revisionOutcome})) } catch {} }} className={styles.note} placeholder="What went well? What should they try next?" />
-                  <p className="text-xs text-muted-foreground">{activeSub.revision || requestRevision ? 'A message is required so the student knows what to do.' : 'Optional · shared with the student when you save.'}</p>
-                  {activeSub.revision && <label className="block text-sm font-semibold">What happens next?<select value={revisionOutcome} onChange={e=>setRevisionOutcome(e.target.value)} disabled={savingKey !== null} className="mt-1 min-h-11 w-full rounded border bg-background p-2"><option value="">Choose a next step</option><option value="fresh-check">Ready for a fresh independent check</option><option value="practice">Work on the next step with this feedback</option><option value="help">Connect with me for help</option></select></label>}
+                  {activeSub.revision && <section aria-label="Respond to the resubmission"><h4 className={styles.step}><span>2</span> Choose the next step</h4><label className="block text-sm font-semibold">What happens next?<select value={revisionOutcome} onChange={e=>setRevisionOutcome(e.target.value)} disabled={savingKey !== null} className="mt-1 min-h-11 w-full rounded border bg-background p-2"><option value="">Choose a next step</option><option value="fresh-check">Ready for a fresh independent check</option><option value="practice">Work on the next step with this feedback</option><option value="help">Connect with me for help</option></select></label>{revisionOutcome === 'fresh-check' && !fbText.trim() && <p className="mt-3 rounded-lg border bg-muted p-3 text-sm"><strong>Reply the student will receive:</strong> {CHECKED_REVISION_REPLY}</p>}</section>}
+                  <ReviewFeedback id="math-review-note" value={fbText} onChange={setFbText} disabled={savingKey !== null} required={activeSub.revision ? revisionOutcome !== 'fresh-check' : requestRevision} label={activeSub.revision ? revisionOutcome === 'fresh-check' ? 'Personalize the reply (optional)' : 'Reply and explain the next step' : 'Feedback and next step'} />
                   {!activeSub.revision && <label className={styles.revisionRequest}><input type="checkbox" disabled={savingKey !== null} checked={requestRevision} onChange={e => setRequestRevision(e.target.checked)} /> Ask for a correction, explanation, or help request</label>}
                   {!activeSub.revision && <button type="button" className={styles.defer} disabled={savingKey !== null} onClick={() => { setSelectedLevel(null); setRequestRevision(true) }}>Need more evidence before rating</button>}
                 </div>
                 </div>
                 <div className={styles.actions}>
                   <p className="text-xs text-muted-foreground">1 / 2 / 3 rate · ← → responses · Shift + ← → students · F feedback · ⌘ / Ctrl + Enter save</p>
-                  <p className="text-xs text-muted-foreground" role="status">{activeSub.revision ? 'Reply and choose what happens next.' : requestRevision ? (fbText.trim() ? 'Ready to send a request for more evidence.' : 'Add a next step to request a response.') : selectedLevel ? `${levelWord(selectedLevel)} selected · ready to save` : 'Choose a rating to continue.'}</p>
-                  <button data-math-save type="button" className="min-h-11 w-full rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50" disabled={savingKey !== null || (activeSub.revision ? (!fbText.trim() || !revisionOutcome) : (!selectedLevel && !requestRevision) || (requestRevision && !fbText.trim()))} onClick={() => rate(activeSub, activeSub.competency_id, selectedLevel)}>{savingKey ? 'Saving…' : activeSub.revision ? 'Send reply and next step' : 'Save review and continue'}</button>
+                  <p className="text-xs text-muted-foreground" role="status">{activeSub.revision ? !revisionOutcome ? 'Choose a next step to continue.' : !revisionMessage ? 'Add a message explaining the practice or help the student needs.' : 'Ready to acknowledge this response and continue reviewing.' : requestRevision ? (fbText.trim() ? 'Ready to send a request for more evidence.' : 'Add a next step to request a response.') : selectedLevel ? `${levelWord(selectedLevel)} selected · ready to save` : 'Choose a rating to continue.'}</p>
+                  <button data-math-save type="button" className="min-h-11 w-full rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50" disabled={savingKey !== null || (activeSub.revision ? !revisionReady : (!selectedLevel && !requestRevision) || (requestRevision && !fbText.trim()))} onClick={() => rate(activeSub, activeSub.competency_id, selectedLevel)}>{savingKey ? 'Saving…' : activeSub.revision ? 'Acknowledge & continue' : 'Save review and continue'}</button>
                   {activeSub.revision && <p className="text-xs text-muted-foreground">Acknowledging a coached correction adds no fluency rating. Check independence on a later task.</p>}
                   {flash && <p role="status" className="text-sm">{flash}</p>}
                 </div>
               </div>
               </div>
             )}
-            <footer className={styles.studentBar} aria-label="Active student">
-              <div className={styles.studentIdentity}>
-              <p className={styles.eyebrow}>✦ The review desk <span>Warm-up · {queue.length} students remaining</span></p>
-              <h3 className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{sel.name}</h3>
-              </div>
-              <div className={styles.studentNav}><button type="button" aria-label="Previous student" disabled={!previousStudent || savingKey !== null} onClick={() => previousStudent && openStudent(previousStudent.id, previousStudent.name)}>← Previous student <small>Shift + ←</small></button><button type="button" aria-label="Next student" disabled={!nextStudent || savingKey !== null} onClick={() => nextStudent && openStudent(nextStudent.id, nextStudent.name)}>Next student → <small>{nextStudent?.name ?? 'End of queue'} · Shift + →</small></button></div>
-              <button aria-label="Close math review" className={[styles.close, 'text-title-1'].filter(Boolean).join(' ')} onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', lineHeight: 1, cursor: 'pointer' }}>×</button>
-            </footer>
+            <ReviewStudentBar name={sel.name} context={`Warm-up · ${queue.length} students remaining`} previous={previousStudent} next={nextStudent} disabled={savingKey !== null || !!nextGate} onSelect={id => { const student = reviewRoster.find(s => s.id === id); if (student) openStudent(id, student.name) }} onClose={closeDrawer} />
             {nextGate && (
               <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'color-mix(in oklch, var(--background) 94%, transparent)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
                 <div className={styles.savedSeal} aria-hidden="true">✓</div><div className="text-caption" style={{ color: 'var(--success)' }}>Review saved. One more next step delivered.</div><div className={styles.sessionCount}>{reviewsSaved} reviews saved this session</div>

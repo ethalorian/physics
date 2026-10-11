@@ -1,0 +1,75 @@
+TAP version 13
+# Subtest: watch telemetry excludes nonfinite, negative and out-of-range positions
+ok 1 - watch telemetry excludes nonfinite, negative and out-of-range positions
+  ---
+  duration_ms: 0.603125
+  ...
+# Subtest: a delayed answer response cannot erase a video reward from the visible total
+ok 2 - a delayed answer response cannot erase a video reward from the visible total
+  ---
+  duration_ms: 0.414917
+  ...
+# Subtest: drawing-only work counts in all four lesson stages and survives validation
+ok 3 - drawing-only work counts in all four lesson stages and survives validation
+  ---
+  duration_ms: 1.774667
+  ...
+# Subtest: legacy lesson text and original model drawings still open
+ok 4 - legacy lesson text and original model drawings still open
+  ---
+  duration_ms: 0.19075
+  ...
+# Subtest: drawings and text can be mixed; an empty section still needs evidence
+ok 5 - drawings and text can be mixed; an empty section still needs evidence
+  ---
+  duration_ms: 0.166125
+  ...
+# Subtest: quiz saves and submissions retain vector drawings and written context
+ok 6 - quiz saves and submissions retain vector drawings and written context
+  ---
+  duration_ms: 0.357292
+  ...
+# Subtest: malformed drawing marks and nonfinite coordinates are rejected by both paths
+ok 7 - malformed drawing marks and nonfinite coordinates are rejected by both paths
+  ---
+  duration_ms: 0.168958
+  ...
+# Subtest: video and practice answers agree with independently calculated paths
+ok 8 - video and practice answers agree with independently calculated paths
+  ---
+  duration_ms: 0.788167
+  ...
+# Subtest: both published lesson updates preserve every existing block and add valid, targeted practice
+ok 9 - both published lesson updates preserve every existing block and add valid, targeted practice
+  ---
+  duration_ms: 2.009292
+  ...
+# Subtest: students get examples and hints but never private practice solutions
+ok 10 - students get examples and hints but never private practice solutions
+  ---
+  duration_ms: 0.852084
+  ...
+# Subtest: practice saves require all reasoning stages and do not auto-grade correctness
+ok 11 - practice saves require all reasoning stages and do not auto-grade correctness
+  ---
+  duration_ms: 0.338583
+  ...
+# Subtest: existing reviewed submissions stay reviewed and concept-map identity and access stay unchanged
+ok 12 - existing reviewed submissions stay reviewed and concept-map identity and access stay unchanged
+  ---
+  duration_ms: 0.961667
+  ...
+# Subtest: partial installations or missing insertion points fail before changing content
+ok 13 - partial installations or missing insertion points fail before changing content
+  ---
+  duration_ms: 0.279792
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 184.987125

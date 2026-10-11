@@ -1,0 +1,54 @@
+// Synthetic UI fixture only. Database state transitions and API authorization
+// are independently exercised by test-textbook-readings-db/api.cjs.
+const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'../..'),out=process.env.READING_OUTPUT||'/private/tmp/textbook-reading-browser';fs.mkdirSync(out,{recursive:true});
+const pkg=n=>require(root+'/node_modules/'+n);
+const id=n=>`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`,course={id:id(1),name:'Physics · Period 2',section:null,program:'physics'},target={id:id(3),slug:'u1.vocab-position-distance-displacement',statement:'I can distinguish speed from velocity and use evidence to explain motion.',unit_id:'unit-1',program:'physics',domain:'reasoning'};
+const acceleration={...target,id:id(101),slug:'u1.acceleration-rate-of-change',statement:'I can define acceleration as the rate of change of velocity and calculate it from velocity-time data.'},freefall={...target,id:id(102),slug:'u2.free-fall-g',unit_id:'unit-2',statement:'I can describe free fall as constant acceleration g and calculate fall times for short drops.'};
+const catalog={courses:[course],units:[{id:'unit-1',name:'Motion & Forces',program:'physics'},{id:'unit-2',name:'Gravity',program:'physics'}],targets:[target,acceleration,freefall],readOnly:false},assignments=[],work=[],submissions=[],reviews=[],students=[{id:id(2),name:'Alex Rivera'},{id:id(4),name:'Jordan Lee'}];
+let server,failSave=false,saveDelay=0,mastery=0;
+const lesson=require('./seed.json').lessons.find(l=>l.slug==='position-and-displacement'),reading=lesson.content_blocks.blocks.find(b=>b.type==='reading');
+target.statement='I can distinguish scalar and vector quantities and describe distance and displacement.';
+assignments.push({id:id(10),origin_key:'lesson:'+lesson.id+':'+reading.id,course_id:course.id,title:'Position & displacement · Read & respond',chapter:5,reading:'Section 5.1 · printed p. 69',section_ids:['5.1'],instructions:reading.focus,questions:reading.assignmentChecks.map((q,i)=>({id:id(20+i),reference:q.reference,prompt:q.prompt,target_id:target.id})),due_at:null,status:'published',version:1,created_at:new Date().toISOString()});
+(async()=>{
+ const mocks={
+ 'next/dynamic':`import React,{lazy,Suspense}from'react';export default function dynamic(loader,options){const C=lazy(loader);return function Dynamic(p){const F=options?.loading;return <Suspense fallback={F?<F/>:null}><C {...p}/></Suspense>}}`,
+ 'next/link':`import React from 'react';export default function Link({prefetch,href,onClick,...p}){return <a {...p} href={href} onClick={e=>{onClick?.(e);if(!e.defaultPrevented&&!p.target){e.preventDefault();history.pushState(null,'',href);window.dispatchEvent(new Event('route'))}}}/>}`,
+ 'next/navigation':`export const useRouter=()=>({push:p=>{history.pushState(null,'',p);window.dispatchEvent(new Event('route'))},replace:p=>{history.replaceState(null,'',p);window.dispatchEvent(new Event('route'))}});export const useSearchParams=()=>new URLSearchParams(location.search);`,
+ };
+ await pkg('esbuild').build({stdin:{contents:`import React,{useState,useEffect}from'react';import{createRoot}from'react-dom/client';import Teacher from './src/components/readings/TeacherReadings';import Student from './src/components/readings/StudentReadings';import Work from './src/components/readings/ReadingStudentWork';import Inbox from './src/components/readings/ReadingReviewInbox';import ReadingCard from './src/components/readings/LessonReadingCard';import seed from './scripts/physics-learning/seed.json';
+ const lesson=seed.lessons.find(l=>l.slug==='position-and-displacement'),reading=lesson.content_blocks.blocks.find(b=>b.type==='reading');
+ const role=new URLSearchParams(location.search).get('qa-role')||sessionStorage.getItem('qa-role')||'student';sessionStorage.setItem('qa-role',role);
+ const originalFetch=window.fetch;window.fetch=(url,opts={})=>originalFetch(url,{...opts,headers:{...opts.headers,'x-fixture-role':role}});
+ function App(){const[url,setUrl]=useState(location.pathname+location.search);useEffect(()=>{const f=()=>setUrl(location.pathname+location.search);window.addEventListener('route',f);return()=>window.removeEventListener('route',f)},[]);return <><div style={{padding:12,background:'var(--secondary)',color:'var(--foreground)',fontSize:13}}>Journey test · Synthetic student and class · {role} · <button onClick={()=>document.documentElement.classList.toggle('dark')}>Toggle dark theme</button> · <a href='/home?qa-role=student'>Student home</a> · <a href='/admin/control-room?qa-role=teacher'>Teacher inbox</a></div>{url.startsWith('/admin/control-room')?<main style={{maxWidth:1000,margin:'auto',padding:24}}><h1>Teacher control room · reading inbox</h1><Inbox/></main>:url.startsWith('/admin')?<Teacher/>:url.startsWith('/readings/')?<Work key={location.pathname} id={location.pathname.split('/')[2]}/>:url.startsWith('/lessons/')?<main style={{maxWidth:900,margin:'auto',padding:24}}><h1>Position & displacement · Read & respond</h1><ReadingCard block={reading} lessonId={lesson.id}/></main>:<main style={{maxWidth:1000,margin:'auto',padding:24}}><h1>Student home</h1><a href='/lessons/position-and-displacement'>Continue position lesson</a><Student compact/></main>}</>}createRoot(document.getElementById('root')).render(<App/>);`,resolveDir:root,loader:'tsx'},bundle:true,format:'esm',jsx:'automatic',outfile:out+'/app.js',define:{'process.env.NODE_ENV':'"development"'},plugins:[{name:'fixture',setup(b){b.onResolve({filter:/.*/},a=>mocks[a.path]?{path:a.path,namespace:'fixture'}:undefined);b.onLoad({filter:/.*/,namespace:'fixture'},a=>({contents:mocks[a.path],loader:'tsx',resolveDir:root}))}}]});
+ const css=await pkg('postcss')([pkg('@tailwindcss/postcss/dist/index.js')({base:root})]).process(fs.readFileSync(root+'/src/app/globals.css','utf8'),{from:root+'/src/app/globals.css'});fs.writeFileSync(out+'/style.css',css.css+'\n'+fs.readFileSync(out+'/app.css','utf8'));
+ if(process.env.READING_BUILD_ONLY==='1')return;
+ server=http.createServer(async(req,res)=>{
+  res.setHeader('Cache-Control','no-store');const u=new URL(req.url,'http://local'),staff=req.headers['x-fixture-role']==='teacher',json=(d,status=200)=>{res.statusCode=status;res.setHeader('Content-Type','application/json');res.end(JSON.stringify(d))};
+  if(u.pathname==='/api/qa-status')return json({mastery,submissions:submissions.length,reviews:reviews.length,work});
+  if(u.pathname==='/api/readings/from-lesson')return json({assignment:{...assignments[0],id:require('crypto').randomUUID(),status:'draft',version:0},courses:[course]});
+  if(u.pathname==='/api/readings/catalog')return json(catalog);
+  if(u.pathname==='/api/readings'&&req.method==='GET')return json({review_counts:Object.fromEntries(assignments.map(a=>[a.id,work.filter(w=>w.assignment_id===a.id&&w.state==='submitted').length])),assignments:assignments.filter(a=>staff||a.status!=='draft'),work:staff?[]:work.filter(w=>w.user_id===id(2)),courses:[course],staff});
+  let body={};if(req.method==='POST'){let raw='';for await(const chunk of req)raw+=chunk;body=JSON.parse(raw)}
+  if(u.pathname==='/api/readings'&&req.method==='POST'){const a={...body,version:body.version+1,created_at:new Date().toISOString()},idx=assignments.findIndex(x=>x.id===a.id);if(idx>=0)assignments[idx]=a;else assignments.push(a);return json({assignment:a},201)}
+  if(u.pathname.startsWith('/api/readings/')){
+   const a=assignments.find(a=>a.id===u.pathname.split('/')[3]);if(!a)return json({error:'Unavailable'},404);
+   if(req.method==='GET')return json({lesson_slug:'position-and-displacement',assignment:a,staff,students:staff?students:[],work:work.filter(w=>w.assignment_id===a.id&&(staff||w.user_id===id(2))),submissions:submissions.filter(s=>s.assignment_id===a.id&&(staff||s.user_id===id(2))),reviews,targets:catalog.targets});
+   if(body.action==='review'){const s=submissions.find(s=>s.id===body.submission_id),w=work.find(w=>w.user_id===s.user_id&&w.assignment_id===a.id);if(w.state!=='submitted')return json({error:'Already reviewed'},409);const review={id:body.request_id,submission_id:s.id,decision:body.decision,ratings:body.ratings,note:body.note,reviewed_at:new Date().toISOString()};reviews.push(review);w.state=body.decision;w.version++;if(body.decision==='rated')mastery+=Object.keys(body.ratings).length;return json({review})}
+   if(body.action==='archive'){a.status='archived';a.version++;return json({ok:true})}
+   if(body.action==='save'&&failSave){failSave=false;return json({error:'Could not save. Please retry.'},503)}
+   if(saveDelay&&body.action==='save')await new Promise(r=>setTimeout(r,saveDelay));
+   let w=work.find(w=>w.assignment_id===a.id&&w.user_id===id(2));if(!w){w={assignment_id:a.id,user_id:id(2),state:'in_progress',answers:{},version:0,submission_id:null};work.push(w)}
+   if(w.version!==body.version)return json({error:'Your work changed in another window. Reload before continuing; keep a copy of any unsaved answers.'},409);
+   if(['submitted','rated'].includes(w.state))return json({error:'Already submitted'},409);
+   w.answers=body.answers;w.version++;w.updated_at=new Date().toISOString();
+   if(body.action==='submit'){w.state='submitted';w.submission_id=body.request_id;submissions.push({id:body.request_id,assignment_id:a.id,user_id:id(2),answers:structuredClone(body.answers),snapshot:structuredClone(a),submitted_at:new Date().toISOString()})}
+   return json({work:w});
+  }
+  if(u.pathname.startsWith('/api/textbook/')){const chapter=Number(u.pathname.split('/').pop()),dir=process.env.READING_PDF_DIR||'/Users/craigantocci/Desktop/Current/Conc. Text teachers copy/student-edition',file=path.join(dir,`cp${String(chapter).padStart(2,'0')}.pdf`);if(!fs.existsSync(file))return json({error:'Set READING_PDF_DIR to the student-edition PDFs for real page-preview verification.'},404);res.setHeader('Content-Type','application/pdf');return res.end(fs.readFileSync(file))}
+  if(u.pathname==='/pdfjs-dist/build/pdf.worker.min.mjs'){res.setHeader('Content-Type','text/javascript');return res.end(fs.readFileSync(root+'/node_modules/pdfjs-dist/build/pdf.worker.min.mjs'))}
+  if(['/app.js','/style.css'].includes(u.pathname)){res.setHeader('Content-Type',u.pathname.endsWith('.js')?'text/javascript':'text/css');return res.end(fs.readFileSync(out+u.pathname))}
+  res.setHeader('Content-Type','text/html');res.end('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/style.css"></head><body><div id="root"></div><script type="module" src="/app.js"></script></body></html>');
+ });
+ server.listen(4391,'127.0.0.1',()=>console.log('Journey fixture: http://127.0.0.1:4391 · synthetic data only'));
+})().catch(e=>{console.error(e);process.exitCode=1});

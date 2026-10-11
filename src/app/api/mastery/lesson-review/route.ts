@@ -3,11 +3,15 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { teacherCanAccessStudent } from '@/lib/teacher-scope'
+import { isCurrentLesson } from '@/lib/current-lesson-catalog'
 
 // Reviewing is an explicit acknowledgement; it never creates a mastery score.
 export const POST = withAuth(async (request, ctx) => {
   if (ctx.role !== 'teacher' && ctx.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  if(ctx.viewingAsTeacher)return NextResponse.json({error:'Switch back to your own account before reviewing work.'},{status:403})
   const body = await request.json()
+  if(body.feedback!==undefined&&(typeof body.feedback!=='string'||body.feedback.length>3000))return NextResponse.json({error:'Keep feedback within 3,000 characters.'},{status:400})
+  if(body.action==='return'&&(typeof body.feedback!=='string'||!body.feedback.trim()))return NextResponse.json({error:'Add feedback and a next step before returning the lesson.'},{status:400})
   const isEvidence = typeof body.response_id === 'string'
   const id = isEvidence ? body.response_id : body.submission_id
   if (typeof id !== 'string' || !id) return NextResponse.json({ error: 'A submission_id or response_id is required.' }, { status: 400 })
@@ -37,7 +41,7 @@ export const POST = withAuth(async (request, ctx) => {
   }
   const { error: reviewError } = isEvidence
     ? await supabaseAdmin.from('lesson_evidence_reviews').upsert({ response_id: row.id, reviewer_email: ctx.scopeEmail }, { onConflict: 'response_id', ignoreDuplicates: true })
-    : await supabaseAdmin.from('lesson_reviews').upsert({ submission_id: row.id, user_id: row.user_id, lesson_id: row.lesson_id, reviewer_email: ctx.scopeEmail }, { onConflict: 'submission_id', ignoreDuplicates: true })
+    : await supabaseAdmin.from('lesson_reviews').upsert({ submission_id: row.id, user_id: row.user_id, lesson_id: row.lesson_id, reviewer_email: ctx.scopeEmail, feedback: typeof body.feedback==='string'?body.feedback.trim():'' }, { onConflict: 'submission_id', ignoreDuplicates: true })
   if (reviewError) throw reviewError
   return NextResponse.json({ reviewed: true })
 })
@@ -53,6 +57,8 @@ export const GET = withAuth(async (request, ctx) => {
   ])
   if (lessonError) throw lessonError
   if (targetError) throw targetError
-  const carriers = lessonsByTarget(lessons ?? [], targets ?? [])
-  return NextResponse.json({ lessons: (lessons ?? []).map((l) => ({ id: l.id, title: l.title })), targets: (targets ?? []).map((t) => ({ id: t.id, statement: t.statement, lessonIds: carriers.get(t.id) ?? [] })) })
+  const current = (lessons ?? []).filter(l => isCurrentLesson({ ...l, unit_id: unitId }))
+  const currentIds = new Set(current.map(l => l.id))
+  const carriers = lessonsByTarget(current, targets ?? [])
+  return NextResponse.json({ lessons: current.map((l) => ({ id: l.id, title: l.title })), targets: (targets ?? []).map((t) => ({ id: t.id, statement: t.statement, lessonIds: (carriers.get(t.id) ?? []).filter(id => currentIds.has(id)) })) })
 })

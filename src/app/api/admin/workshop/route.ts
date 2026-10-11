@@ -1,3 +1,5 @@
+import { isCatalogUnit } from '@/lib/retired-curriculum'
+import { currentLessonIds } from '@/lib/current-lesson-catalog-server'
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin as db } from '@/lib/supabase'
@@ -26,17 +28,18 @@ export const GET = withRole('admin', async (request) => {
   let uq = db.from('units').select('id, name, order_index, program, allotted_days').order('order_index')
   if (selected) uq = uq.eq('program', selected.program ?? 'physics')
   const ur = await uq; if (ur.error) throw ur.error
-  const units = ur.data ?? [], unitIds = units.map(u => u.id)
+  const units = (ur.data ?? []).filter(isCatalogUnit), unitIds = units.map(u => u.id)
   if (targetUnit && !unitIds.includes(targetUnit)) return NextResponse.json({ error: 'This unit is outside the selected class curriculum.' }, { status: 404 })
   // Only summaries on the shelf; only the selected unit on drilldown.
   const scope = targetUnit ? [targetUnit] : unitIds
-  const [lr, tr, pr] = await Promise.all([
+  const [lr, tr, pr, currentIds] = await Promise.all([
     db.from('lesson_catalog_summary').select('*').in('unit_id', scope).order('lesson_number'),
     db.from('learning_targets').select('id, slug, statement, unit_id, lesson_id').in('unit_id', scope).eq('exclude_from_growth', false).order('order_index'),
     db.from('section_pacing').select('course_id, current_unit_id, current_lesson_id, updated_at').in('course_id', selected ? [selected.id] : courses.map(c => c.id)),
+    currentLessonIds(scope),
   ])
   for (const r of [lr, tr, pr]) if (r.error) throw r.error
-  const lessons = ((lr.data ?? []) as CatalogLesson[]).filter(l => !selected || viewerCanSeeGate({ role: 'student', track: selected.track }, l.visibility_track))
+  const lessons = ((lr.data ?? []) as CatalogLesson[]).filter(l => currentIds.has(l.id) && (!selected || viewerCanSeeGate({ role: 'student', track: selected.track }, l.visibility_track)))
   const targets = (tr.data ?? []) as CatalogTarget[], pacing = pr.data ?? []
   const rr = await db.from('review_catalog_summary').select('*').in('target_id', targets.map(t => t.id)); if (rr.error) throw rr.error
   const reviews = rr.data ?? []

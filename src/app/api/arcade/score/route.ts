@@ -58,7 +58,7 @@ export const POST = withAuth(async (request, ctx) => {
   }
   // Protocol-2 cabinets can retry after a response is lost or payout fails. Ownership was
   // checked above; an already finished run is immutable and grants no new XP here.
-  const acknowledgedSave = ['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle'].includes(play.game_slug)
+  const acknowledgedSave = ['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle', 'pulse', 'mic-check'].includes(play.game_slug)
   if (acknowledgedSave && play.status === 'finished' && final === true) {
     return NextResponse.json({ ok: true, score: play.score, finished: true, alreadySaved: true })
   }

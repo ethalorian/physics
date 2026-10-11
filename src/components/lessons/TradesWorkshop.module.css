@@ -74,3 +74,16 @@
 .manySteps button { flex:0 0 180px; scroll-snap-align:start; }
 @media(max-width:560px) { .manySteps button { flex-basis:130px; } .steps { overflow-x:auto; } }
 .stageHeader .targetLine { margin-top:12px; font-size:16px; padding-left:12px; border-left:3px solid var(--primary); color:var(--muted-foreground); }
+.projectWorkshop .stageHeader h2 { font-size:clamp(28px,3vw,38px); }
+.projectWorkshop .stageHeader p { font-size:18px; }
+.projectWorkshop .steps button { padding:10px; font-size:15px; gap:8px; }
+.projectWorkshop .steps small { font-size:11px; }
+.projectWorkshop .footer { padding:12px 0; }
+.benchDirections { margin:24px 0; padding:clamp(18px,3vw,32px); border:1px solid var(--border); border-radius:16px; background:var(--card); }
+.benchDirections h3 { margin:0 0 20px; font-size:26px; }
+.benchDirections ol { margin:0; padding-left:1.8em; max-width:85ch; list-style:decimal; }
+.benchDirections li { padding-left:8px; margin:0 0 16px; font-size:18px; line-height:1.65; }
+.benchDirections li:last-child { margin-bottom:0; }
+.benchDirections li::marker { color:var(--primary); font-weight:800; }
+@media(min-width:1000px) { .projectWorkshop .manySteps { display:grid;grid-template-columns:repeat(6,minmax(0,1fr)); } }
+@media(max-width:560px) { .projectWorkshop .footer { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:8px 0; } .projectWorkshop .footer span { display:none; } .projectWorkshop .footer button,.projectWorkshop .footer a { padding:10px; min-height:44px; text-align:center; font-size:14px; } }

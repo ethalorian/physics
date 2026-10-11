@@ -2,7 +2,10 @@
 import { PEDAGOGY } from '@/lib/palette'
 import responseStyles from '@/components/lessons/WorkshopResponses.module.css'
 
+import McasQuestion from '@/components/mcas/McasQuestion'
 import BlockGuidance from './BlockGuidance'
+import InstructionVideo from './InstructionVideo'
+import PositionExplorer from './PositionExplorer'
 import TeachingToolRenderer from '@/components/teaching-tools/TeachingToolRenderer'
 import WorkshopPeerCheck from '@/components/lessons/WorkshopPeerCheck'
 import { useAssignedTrade } from '@/components/lessons/TradeContext'
@@ -18,9 +21,11 @@ import PaintPad from './PaintPad'
 import PhysicsDiagram from './PhysicsDiagram'
 import type { ConceptValue } from './ConceptExercise'
 import GewaInteractive, { type GewaValue } from './GewaInteractive'
+import ProblemWorkspace, { WorkedProblemExample } from './ProblemWorkspace'
 import EquationSandbox, { type SandboxValue } from './EquationSandbox'
 import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
 import DeckPresentCard from './DeckPresentCard'
+import LessonReadingCard from '@/components/readings/LessonReadingCard'
 import { usePresentLive } from '@/components/lessons/PresentLiveProvider'
 import { useBlockResponses, type BlockResponseMap, type SaveMeta, type DraftFn } from './useBlockResponses'
 import { useDraft } from './useDraft'
@@ -29,8 +34,6 @@ import { useLanguageProfile } from '@/components/lessons/LanguageProfileProvider
 import type { InlineQuestion, SeiFrame } from '@/data/content-blocks'
 import MissionLessonLink from '@/components/math-missions/MissionLessonLink'
 import { SIM_COMPONENTS } from '@/components/simulations/registry'
-import { textbookChapter } from '@/data/textbook'
-import { TEXTBOOK_SECTIONS, sectionPageRange } from '@/data/textbook-sections'
 import {
   Target, Orbit, BookA, Calculator, MessageSquareQuote, FlaskConical, Sigma,
   Pencil, Gauge, Ticket, PencilRuler, Table, Eye, HelpCircle, ClipboardCheck,
@@ -118,7 +121,7 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
 }
 // Blocks that read best as clean editorial content — no colored shell.
 // `deck` draws its own presenter card (teacher-only; students never receive it).
-const BARE: Set<BlockType> = new Set(['prose', 'callout', 'lesson_vocab', 'figure', 'deck'])
+const BARE: Set<BlockType> = new Set(['prose', 'callout', 'lesson_vocab', 'figure', 'deck', 'reading'])
 
 function BlockShell({ meta, done, capture, children, hideHeading = false }: { hideHeading?: boolean; meta: Meta; done?: boolean; capture?: boolean; children: ReactNode }) {
   const accent = ACCENT[meta.domain]
@@ -258,10 +261,12 @@ function SelfAssessment({ b, saved, save, onDraft, targets }: { b: Extract<Conte
 // lesson) and a separate document (a sim crash can't take down the lesson). The
 // embedded SimLab posts its real height back so the frame sizes to fit — no more
 // fixed 640px clipping. (Sims not yet migrated keep the fallback height.)
-function SimEmbed({ slug }: { slug: string }) {
+function SimEmbed({ slug, lessonId, blockId }: { slug: string; lessonId: string; blockId: string }) {
+  const frameRef = useRef<HTMLIFrameElement>(null)
   const [height, setHeight] = useState(560)
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
+      if(e.origin !== window.location.origin || e.source !== frameRef.current?.contentWindow) return
       const d = e.data
       if (d && d.type === 'sim-embed-height' && d.slug === slug && typeof d.height === 'number') {
         setHeight(Math.max(240, Math.ceil(d.height)))
@@ -281,7 +286,8 @@ function SimEmbed({ slug }: { slug: string }) {
   return (
     <div className="rounded-lg overflow-hidden" style={{ border: `1px solid ${C.hairline}` }}>
       <iframe
-        src={`/embed/sim/${slug}`}
+        ref={frameRef}
+        src={`/embed/sim/${slug}?lesson=${encodeURIComponent(lessonId)}&block=${encodeURIComponent(blockId)}`}
         title={`Simulation: ${slug}`}
         loading="lazy"
         style={{ width: '100%', height, border: 'none', display: 'block', background: 'var(--card)' }}
@@ -582,7 +588,7 @@ function ObservationCapture({ b, saved, save, onDraft }: { b: Extract<ContentBlo
   </div>;
 }
 
-function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: string, glossary?: GlossaryEntry[], draft: DraftFn = () => {}, targets?: TargetInfo[]) {
+function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: string, glossary?: GlossaryEntry[], draft: DraftFn = () => {}, targets?: TargetInfo[], readOnly = false) {
   const onDraft = (v: unknown) => draft(b.id, b.type, v)
   switch (b.type) {
     case 'target':
@@ -630,7 +636,12 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
         </div>
       )
     case 'worked_example':
+      if (b.format === 'problem-workspace') return <WorkedProblemExample block={b}/>
       return <GewaWorkedExample prompt={b.prompt} given={b.given} equation={b.equation} work={b.work} answer={b.answer} />
+    case 'instruction_video':
+      return <InstructionVideo block={b}/>
+    case 'position_explorer':
+      return <PositionExplorer title={b.title}/>
     case 'procedure': {
       const start = b.startNumber ?? 1
       return (
@@ -654,9 +665,9 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       }
       return <SentenceFrameView frame={b.frame} frames={b.frames ?? b.sei?.frames} wordBank={b.wordBank ?? b.sei?.wordBank} sei={b.sei} />
     case 'sim_embed':
-      return <SimEmbed slug={b.simulationSlug} />
+      return <SimEmbed slug={b.simulationSlug} lessonId={lessonId} blockId={b.id} />
     case 'deck':
-      return <DeckPresentCard src={b.src} title={b.title} />
+      return <DeckPresentCard lessonId={lessonId} title={b.title} />
     case 'animation_3d':
       return <Animation3DView slug={b.animationSlug} caption={b.caption} />
     case 'equation_visualizer':
@@ -675,6 +686,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       if (b.workshop?.peerCheck) return <WorkshopPeerCheck value={saved} onDraft={onDraft} onSave={v=>save(b.id,b.type,v,{target_id:b.targetId,evidence_source:'exit_ticket',response_mode:'text'})} />
       return <SeiTextCapture sei={b.sei} prompt={b.prompt} fallbackFrame={b.frame} talkFirst={b.talkFirst} value={saved} onDraft={onDraft} onSave={(r, scaffolds, mode) => save(b.id, 'exit_ticket', r, { response_mode: mode, scaffolds_used: scaffolds, target_id: b.targetId, evidence_source: 'exit_ticket' })} />
     case 'gewa':
+      if (b.responseFormat === 'problem-workspace') return <ProblemWorkspace block={b} readOnly={readOnly} value={saved as GewaValue | undefined} onDraft={onDraft} onSave={(v, scaffolds)=>save(b.id,'gewa',v,{response_mode:Object.values(v.responses??{}).some(r=>typeof r==='object'&&r.strokes.length)?'sketch':'text',scaffolds_used:scaffolds})}/>
       return <GewaInteractive sei={b.sei} prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} equationOptions={b.equationOptions} equationIds={b.equationIds} solveFor={b.solveFor} equationCategories={b.equationCategories} value={saved as GewaValue | undefined} onDraft={onDraft} onSave={(v, scaffolds) => save(b.id, 'gewa', v, { response_mode: 'text', scaffolds_used: scaffolds })} />
     case 'equation_sandbox':
       return <EquationSandbox prompt={b.prompt} variables={b.variables} value={saved as SandboxValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'equation_sandbox', v)} />
@@ -741,48 +753,8 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       return <ConceptExercise chapter={b.chapter} sectionIds={b.sectionIds} value={saved as ConceptValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'concept_exercise', v)} />
     case 'self_assessment':
       return <SelfAssessment b={b} saved={saved} save={save} onDraft={onDraft} targets={targets} />
-    case 'reading': {
-      // Homework reading from Conceptual Physics. Everything but the ids is
-      // looked up; malformed authored references stay visible as an actionable notice.
-      const chap = textbookChapter(b.chapter)
-      const index = TEXTBOOK_SECTIONS[b.chapter]
-      const secs = (b.sectionIds ?? []).map((id) => index?.sections.find((s) => s.id === id)).filter((s): s is NonNullable<typeof s> => !!s)
-      const missing = (b.sectionIds ?? []).filter(id => !secs.some(section => section.id === id))
-      if (!chap || missing.length) return <p role="alert" className="rounded-lg border p-3 text-sm">This reading reference needs a teacher correction: {!chap ? `chapter ${b.chapter}` : missing.join(', ')}. Ask your teacher for the assigned pages.</p>
-      const range = sectionPageRange(secs.map((s) => s.id))
-      const checks = secs.filter((s) => s.conceptCheck)
-      return (
-        <div>
-          <div className="text-sm" style={{ color: C.muted }}>
-            <span style={{ fontStyle: 'italic' }}>Conceptual Physics</span>{chap ? <> · Chapter {b.chapter}: <span style={{ color: C.indigo, fontWeight: 500 }}>{chap.title}</span></> : null}
-            {range && <> · pp. {range.from}{range.to > range.from ? `–${range.to}` : ''}</>}
-          </div>
-          {b.focus && <p className="text-sm mt-1.5" style={{ color: C.indigo }}>{b.focus}</p>}
-          {secs.length > 0 && (
-            <ul className="mt-2 space-y-0.5 text-sm" style={{ color: C.indigo }}>
-              {secs.map((s) => <li key={s.id}><span className="tabular-nums font-medium">{s.id}</span> {s.title} <span style={{ color: C.muted }}>· p. {s.page}</span></li>)}
-            </ul>
-          )}
-          <Link href={`/textbook?ch=${b.chapter}`} className="inline-flex items-center gap-1.5 mt-3 rounded-full px-3 py-1.5 text-xs font-bold"
-            style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
-            <BookText className="h-3.5 w-3.5" /> Open Chapter {b.chapter} in the Textbook
-          </Link>
-          {checks.length > 0 && (
-            <div className="rounded-lg p-3 mt-3" style={{ background: C.tint }}>
-              <div className="text-xs font-semibold uppercase tracking-wide" style={{ color: C.muted }}>Concept Check — answer in your notebook (not collected)</div>
-              <ol className="mt-1.5 space-y-1 text-sm list-decimal pl-5" style={{ color: C.indigo }}>
-                {checks.map((s) => <li key={s.id}><span style={{ color: C.muted }}>{s.id} · </span>{s.conceptCheck}</li>)}
-              </ol>
-            </div>
-          )}
-          {b.thinkAndSolve && b.thinkAndSolve.length > 0 && (
-            <p className="text-sm mt-2" style={{ color: C.indigo }}>
-              <span className="font-medium">Think and Solve</span> (end of chapter): problems {b.thinkAndSolve.join(', ')}. Show GIVEN / EQUATION / WORK / ANSWER.
-            </p>
-          )}
-        </div>
-      )
-    }
+    case 'reading':
+      return <LessonReadingCard block={b} lessonId={lessonId}/>
     default:
       return null
   }
@@ -814,9 +786,10 @@ function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, sel
     )
     return meta && !BARE.has(b.type) ? <BlockShell meta={meta} done={false} capture hideHeading={responseGuided}>{held}</BlockShell> : held
   }
-  const body = renderBody(b, saved, trackedSave, lessonId, glossary, draft, targets)
+  const rendered = renderBody(b, saved, trackedSave, lessonId, glossary, draft, targets, readOnly)
+  const body = b.mcasId ? <><McasQuestion id={b.mcasId}/>{rendered}</> : rendered
   if (body === null) return null
-  if (b.workshop && isCaptureBlock(b)) return <div className={responseStyles.response}>
+  if ((b.workshop || (b.type === 'gewa' && b.responseFormat === 'problem-workspace')) && isCaptureBlock(b)) return <div className={responseStyles.response}>
     <fieldset disabled={readOnly || saveStatus === 'saving'} className="min-w-0 border-0 p-0 m-0">{body}</fieldset>
     {saveStatus !== 'idle' && <p role={saveStatus === 'error' ? 'alert' : 'status'} className="mt-3">{saveStatus === 'saving' ? 'Saving…' : saveStatus === 'error' ? 'Not saved. Try the Save button again; your work is still here.' : isDraft ? 'Changes need saving.' : 'Saved for your teacher.'}</p>}
   </div>
@@ -852,7 +825,7 @@ class BlockBoundary extends Component<{ label?: string; children: ReactNode }, {
 }
 
 export default function BlockRenderer({
-  blocks, referenceBlocks, lessonId, responses: extResponses, hydrated, save: extSave, draft: extDraft, targets, glossary, readOnly = false, readOnlyExceptBlockId, trackBadges = false, selfRatingHold = null, showResponseGuide = false, hideBlockHeadings = false,
+  blocks, referenceBlocks, lessonId, responses: extResponses, hydrated, save: extSave, draft: extDraft, targets, glossary, readOnly = false, readOnlyExceptBlockId, trackBadges = false, selfRatingHold = null, showResponseGuide = false, hideBlockHeadings = false, collapseReferences = true,
 }: {
   /** Student lesson response headings and direct navigation anchors. */
   showResponseGuide?: boolean
@@ -863,6 +836,8 @@ export default function BlockRenderer({
   blocks: ContentBlock[]
   /** Full filtered lesson for authored visual references across sections. */
   referenceBlocks?: ContentBlock[]
+  /** Keep references visible inside the physics reader's reading and vocabulary section. */
+  collapseReferences?: boolean
   /** Display shared block content with all evidence I/O disabled. */
   readOnly?: boolean
   /** Only the currently authorized live poll stays answerable during a submission lock. */
@@ -896,7 +871,8 @@ export default function BlockRenderer({
       {blocks.map((b) => {
         const guided = showResponseGuide && isCaptureBlock(b)
         const guide = guided ? answerGuide(b) : null
-        const ReferenceContainer = b.referencePanel && !b.essential ? 'details' : 'div'
+        const collapsedReference = collapseReferences && b.referencePanel && !b.essential
+        const ReferenceContainer = collapsedReference ? 'details' : 'div'
         const responseNumber = (referenceBlocks ?? blocks).filter(isCaptureBlock).findIndex(block => block.id === b.id) + 1
         const gate = trackBadges && (b.visibilityTrack === 'cpa' || b.visibilityTrack === 'honors') ? b.visibilityTrack : null
         const gateColor = gate === 'honors' ? 'var(--reward)' : 'var(--success)'
@@ -909,19 +885,20 @@ export default function BlockRenderer({
                 {gate === 'honors' ? 'Honors only' : 'CPA only'}
               </span>
             )}
-            {b.evidenceRole && <p className="mb-2 text-sm font-medium">{b.requiredForCompletion===false ? 'Optional practice · save if useful' : b.evidenceRole==='diagnostic'?'Diagnostic checkpoint':b.evidenceRole==='main'?'Main work artifact':'Individual exit'}</p>}
+            {b.evidenceRole && <p className="mb-2 text-sm font-medium">{b.requiredForCompletion===false ? 'Optional practice · save if useful' : b.evidenceRole==='diagnostic'?'Diagnostic checkpoint':b.evidenceRole==='main'?'Main work artifact':b.evidenceRole==='practice'?'Practice check':'Individual exit'}</p>}
             {guide && <div className={answerStyles.responseHeading}>
               <div><span className={`${answerStyles.responseEyebrow} lesson-response-badge`}>{readOnly && b.id !== readOnlyExceptBlockId ? 'YOUR SAVED WORK' : 'YOUR RESPONSE'} {String(responseNumber).padStart(2, '0')}</span><strong>{guide.title}</strong>{typeof b.xp === 'number' && b.xp > 0 && <span className={answerStyles.blockXp}>{b.xp} XP · earn once</span>}<span className={answerStyles.responseState}>{answerStatus(b, responses)}</span></div>
               <p>{readOnly && b.id !== readOnlyExceptBlockId ? 'Review your response below.' : 'Answer in the area below. Check each part before moving on.'}</p>
               <ul aria-label="Response parts">{guide.parts.map((part, i) => <li key={i}>{part}</li>)}</ul>
             </div>}
+            {!guide && isCaptureBlock(b) && typeof b.xp === 'number' && b.xp > 0 && <p className="mb-3 text-sm font-semibold text-primary">{b.xp} XP · Earn once for a complete saved answer.</p>}
             <BlockBoundary label={b.type}>
               {b.referenceBlockIds?.map(id => {
                 const reference = (referenceBlocks ?? blocks).find(v => v.id === id && v.id !== b.id && !isCaptureBlock(v) && v.type !== 'deck')
                 return reference ? <details key={id} className="mb-3 rounded-lg border p-3"><summary className="min-h-11 cursor-pointer font-semibold">Open shared reference · {'title' in reference && reference.title ? String(reference.title) : 'Case data'}</summary><RenderedBlock responseGuided readOnly saved={undefined} b={reference} save={async () => false} lessonId={lessonId} /></details> : null
               })}
               {b.type === 'data_table' && b.sourceRows?.length ? <div className="mb-4 overflow-x-auto rounded-lg border p-3"><p className="mb-2 font-semibold">Supplied readings · use these as your source</p><table className="w-full text-left"><thead><tr>{b.columns.map(c => <th key={c} className="p-2">{c}</th>)}</tr></thead><tbody>{b.sourceRows.map((row,i) => <tr key={i}>{row.map((v,j) => <td key={j} className="border-t p-2">{v}</td>)}</tr>)}</tbody></table></div> : null}
-              <ReferenceContainer>{b.referencePanel && !b.essential && <summary className="min-h-11 cursor-pointer rounded-lg border p-3 font-semibold">{b.teachingMoment?.title ?? 'Open background and reference'}</summary>}<RenderedBlock responseGuided={guided || hideBlockHeadings} visualReference={(referenceBlocks ?? blocks).find((v) => v.id === b.sei?.visualBlockId && v.id !== b.id && ['figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'sketch'].includes(v.type))} readOnly={readOnly && b.id !== readOnlyExceptBlockId} b={b} saved={responses[b.id]?.response ?? (b.workshop?.seedFrom ? responses[b.workshop.seedFrom]?.response : undefined)} isDraft={responses[b.id]?.draft} save={save} draft={draft} targets={targets} lessonId={lessonId} glossary={glossary} selfRatingHold={selfRatingHold} /></ReferenceContainer>
+              <ReferenceContainer>{collapsedReference && <summary className="min-h-11 cursor-pointer rounded-lg border p-3 font-semibold">{b.teachingMoment?.title ?? 'Open background and reference'}</summary>}<RenderedBlock responseGuided={guided || hideBlockHeadings} visualReference={(referenceBlocks ?? blocks).find((v) => v.id === b.sei?.visualBlockId && v.id !== b.id && ['figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'sketch'].includes(v.type))} readOnly={readOnly && b.id !== readOnlyExceptBlockId} b={b} saved={responses[b.id]?.response ?? (b.workshop?.seedFrom ? responses[b.workshop.seedFrom]?.response : undefined)} isDraft={responses[b.id]?.draft} save={save} draft={draft} targets={targets} lessonId={lessonId} glossary={glossary} selfRatingHold={selfRatingHold} /></ReferenceContainer>
             </BlockBoundary>
           </div>
         )

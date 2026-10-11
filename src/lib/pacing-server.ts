@@ -1,3 +1,5 @@
+import { isCatalogUnit } from '@/lib/retired-curriculum'
+import { CURRENT_LESSON_FIELDS, isCurrentLesson } from '@/lib/current-lesson-catalog'
 import { supabaseAdmin } from '@/lib/supabase'
 import { buildPlan, PlanItem, UnitRow, LessonRow } from '@/lib/pacing'
 import { RotationCalendar, isBlock, type MeetingPattern, type Block } from '@/lib/rotation'
@@ -37,7 +39,7 @@ export async function loadUnits(program: Program): Promise<UnitMeta[]> {
     .select('id, order_index, name, allotted_days, default_start_date')
     .eq('program', program)
     .order('order_index', { ascending: true })
-  return (data ?? []) as UnitMeta[]
+  return ((data ?? []) as UnitMeta[]).filter(isCatalogUnit)
 }
 
 // The plan for ONE program. Lessons are matched to units by unit_id.
@@ -46,9 +48,9 @@ export async function loadPlanItems(program: Program): Promise<PlanItem[]> {
   if (units.length === 0) return []
   const { data: lessons } = await supabaseAdmin
     .from('lessons')
-    .select('id, title, unit_id, lesson_number, planned_days, transfer_core')
+    .select(`id,title,lesson_number,planned_days,transfer_core,${CURRENT_LESSON_FIELDS}`)
     .in('unit_id', units.map((u) => u.id))
-  return buildPlan(units, (lessons ?? []) as LessonRow[])
+  return buildPlan(units, (lessons ?? []).filter(l => isCurrentLesson({ ...l, program })) as LessonRow[])
 }
 
 // Which program a course follows (courses.program, default physics).

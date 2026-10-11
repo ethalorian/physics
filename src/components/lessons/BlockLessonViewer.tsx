@@ -2,12 +2,19 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import { notebookQuestions } from '@/lib/interactive-notebook'
 import styles from './LessonViewer.module.css'
+import { LessonReadingPreview } from '@/components/readings/LessonReadingContext'
 import { lessonIdentityStyles, lessonNumber } from './LessonVisualIdentity'
 import AnswerChecklist from './AnswerChecklist'
 import LessonAvatar from './LessonAvatar'
 import LessonXp from './LessonXp'
+import { LessonVideoXpContext } from './LessonVideoXpContext'
 import TradesWorkshopView from './TradesWorkshopView'
+import PhysicsPathView from './PhysicsPathView'
+import LessonMasteryTargets from './LessonMasteryTargets'
+import { physicsProblemFormat } from '@/lib/physics-problem-format'
 import TeachingToolRenderer, { TeachingToolContext } from '@/components/teaching-tools/TeachingToolRenderer'
 import { useCommandSession } from '@/components/present/useCommandSession'
 import { answerAnchor, answerGuide, answerStatus } from './lesson-answer-guide'
@@ -23,20 +30,25 @@ import type { GlossaryEntry } from '@/components/MathMarkdown'
 import { useBlockResponses } from '@/components/blocks/useBlockResponses'
 import { LanguageProfileProvider, LanguageDial } from '@/components/lessons/LanguageProfileProvider'
 import { PresentLiveProvider, usePresentLive, useTimerLeft, fmtTimer } from '@/components/lessons/PresentLiveProvider'
-import PresentLiveLayer from '@/components/present/PresentLiveLayer'
+import LessonTeachLink from '@/components/admin/LessonTeachLink'
 import { documentRevision, sectionAnchor, sectionIndexForAnchor } from '@/lib/lesson-anchors'
 import { Radio, Timer } from 'lucide-react'
 import { calibrationCopy, doneTallies, firstLockedIndex, gateNote, pageBlockedBy, sectionTarget, splitHelpRuns } from '@/components/lessons/stepped'
 import { Lock, Lightbulb } from 'lucide-react'
-import { BlockDocument, isCaptureBlock, isRequiredCaptureBlock, isBlockComplete, paginateBlocks, pageHasVisual, type DeckBlock } from '@/data/content-blocks'
+import { BlockDocument, isCaptureBlock, isRequiredCaptureBlock, isBlockComplete, paginateBlocks, pageHasVisual } from '@/data/content-blocks'
 import { Home, ChevronLeft, ChevronRight, Clock, Sparkles, FlaskConical, BookOpen, Wrench, Rocket, Layers, Check, Pencil, PencilRuler, Eye, Compass, Sigma, type LucideIcon } from 'lucide-react'
 
 interface NavLink { slug: string; title: string }
+const InteractiveNotebook = dynamic(() => import('./InteractiveNotebook'), { ssr: false, loading: () => <p role="status">Loading notebook…</p> })
 
 interface BlockLessonViewerProps {
   /** Staff preview: badge CPA-only / Honors-only blocks. Students never get this. */
   staffView?: boolean
   preview?: boolean
+  snapshot?: { responses: BlockResponseMap; feedback?: string; locked: boolean; submitted: boolean; completedAnchors?: string[]; revision?: string }
+  previewReturnHref?: string
+  previewProfile?: import('@/lib/sei').LanguageProfile | null
+  previewLive?: import('./PresentLiveProvider').LiveSession
   previewTargets?: {slug:string;statement:string;self:number|null;teacher:number|null;delta:number|null}[]
   previewFlags?: { experience: 'classic' | 'stepped'; gateCheckpoints: boolean }
   previewAnswerKeys?: Record<string, string>
@@ -63,21 +75,31 @@ const DAY_META: Record<string, { label: string; Icon: LucideIcon }> = {
 
 export default function BlockLessonViewer(props: BlockLessonViewerProps) {
   const { data: session } = useSession()
+  const preview = !!(props.preview || props.snapshot)
+  const [navigationNotice,setNavigationNotice] = useState('')
   // The language profile + scaffold dial are shared by every block on the page.
   // P-4/P-5 · students poll the live presentation (follow mode + open polls); staff drive it.
   return (
-    <LanguageProfileProvider preview={props.preview}>
-      <PresentLiveProvider lessonId={props.lesson.id} enabled={!props.staffView && !props.preview}>
-        <BlockLessonViewerInner key={`${props.lesson.id}:${session?.user?.id ?? "anonymous"}:${props.preview ? "preview" : "student"}`} {...props} />
+    <div onClickCapture={event=>{if(!preview)return;const link=(event.target as HTMLElement).closest('a');if(!link)return;const href=link.getAttribute('href')??'';if(href.startsWith('#')||href===(props.previewReturnHref??'/admin/lessons/'+props.lesson.id))return;event.preventDefault();event.stopPropagation();setNavigationNotice('This link opens another area of the app. Exit preview to use it.')}}>
+    {navigationNotice&&<p role="status" className="sticky top-0 z-20 rounded-lg border bg-card p-3 text-sm">{navigationNotice}<button className="ml-3 min-h-11 underline" onClick={()=>setNavigationNotice('')}>Dismiss</button></p>}
+    <LessonReadingPreview.Provider value={preview}><LanguageProfileProvider preview={preview} previewProfile={props.previewProfile}>
+      <PresentLiveProvider lessonId={props.lesson.id} enabled={!props.staffView && !preview} simulation={preview?props.previewLive:undefined}>
+        <BlockLessonViewerInner key={`${props.lesson.id}:${session?.user?.id ?? "anonymous"}:${props.preview ? "preview" : "student"}`} {...props} preview={preview} />
       </PresentLiveProvider>
-    </LanguageProfileProvider>
+    </LanguageProfileProvider></LessonReadingPreview.Provider></div>
   )
 }
 
-function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = false, previewTargets, previewFlags, previewAnswerKeys = {} }: BlockLessonViewerProps) {
-  const [teachingSessionId,setTeachingSessionId] = useState<string|null>(null)
+function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = false, previewTargets, previewFlags, previewAnswerKeys = {}, snapshot, previewReturnHref }: BlockLessonViewerProps) {
+  const session = useSession().data
+  const inspection = Boolean(session?.experience)
+  const observer = session?.user?.role === 'observer'
+  const previewLabel = observer ? 'Observer preview' : 'Teacher preview'
+  const exitHref = previewReturnHref ?? `/admin/lessons/${lesson.id}`
+  const [teachingSessionId] = useState<string|null>(null)
   const teachingCommand = useCommandSession(staffView?teachingSessionId:null)
-  const blocks = useMemo(() => lesson.content_blocks?.blocks ?? [], [lesson.content_blocks])
+  const blocks = useMemo(() => lesson.content_blocks ? physicsProblemFormat(lesson.id,lesson.content_blocks).blocks : [], [lesson.id,lesson.content_blocks])
+  const notebookChecks = useMemo(() => lesson.content_blocks ? notebookQuestions({ ...lesson.content_blocks, blocks }) : null, [lesson.content_blocks, blocks])
   const dayType = lesson.content_blocks?.dayType
   const day = dayType ? DAY_META[dayType] : undefined
   const trim = (s: string) => (s.length > 28 ? s.slice(0, 27) + '…' : s)
@@ -109,24 +131,25 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
   // fills as the student saves interactive blocks.
   const store = useBlockResponses(lesson.id, !preview && !staffView)
   const { draft: persistDraft, save: persistSave } = store
-  const [playResponses, setPlayResponses] = useState<BlockResponseMap>({})
+  const [playResponses, setPlayResponses] = useState<BlockResponseMap>(snapshot?.responses ?? {})
   const responses = preview ? playResponses : store.responses
   const responsesLoaded = preview || staffView || store.loaded
   const draftState = preview ? 'idle' : store.draftState
   const xpSession = preview ? 0 : store.xpEarned
   const draft: DraftFn = useCallback((id, type, response) => {
+    if (snapshot) return
     if (preview) setPlayResponses((prev) => ({ ...prev, [id]: { response, created_at: new Date().toISOString(), draft: true } }))
     else if (!staffView) persistDraft(id, type, response)
-  }, [preview, staffView, persistDraft])
+  }, [preview, staffView, persistDraft, snapshot])
   const save = useCallback(async (id: string, type: string, response: unknown, meta?: SaveMeta) => {
-    if (staffView) return false
+    if (staffView || snapshot) return false
     if (!preview) return persistSave(id, type, response, meta)
     const key = previewAnswerKeys[id]
     const checked = key && response && typeof response === 'object'
       ? { ...response, autoCheck: (response as { optionId?: string }).optionId === key ? 'match' : 'mismatch' } : response
     setPlayResponses((prev) => ({ ...prev, [id]: { response: checked, created_at: new Date().toISOString() } }))
     return true
-  }, [preview, staffView, previewAnswerKeys, persistSave])
+  }, [preview, staffView, previewAnswerKeys, persistSave, snapshot])
   // Drafts are shown (the student sees what they typed) but never COUNT: gates,
   // progress, tallies and the exit-ticket hold read only explicit saves.
   const committed = useMemo(() => Object.fromEntries(Object.entries(responses).filter(([, v]) => !v.draft)), [responses])
@@ -156,14 +179,17 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
   const storageKey = `lesson-page:v3:${store.studentId}:${lesson.id}`
   const [pageIdx, setPageIdx] = useState(0)
   const [pendingAnswer, setPendingAnswer] = useState<string | null>(null)
-  const [submissionLocked, setSubmissionLocked] = useState(false)
+  const [submissionLocked, setSubmissionLocked] = useState(snapshot?.locked ?? false)
+  const [submissionStatusLoaded, setSubmissionStatusLoaded] = useState(preview || staffView)
+  const [submissionAt,setSubmissionAt]=useState<string|null>(null)
+  const [reviewFeedback,setReviewFeedback]=useState(snapshot?.feedback ?? '')
   useEffect(() => {
-    if (preview || staffView) return
+    if (preview || staffView || (stepped && !notebookChecks && lesson.content_blocks?.presentation==='physics-path')) return
     let active = true
-    fetch(`/api/lessons/submit?lesson_id=${lesson.id}`).then(r => r.ok ? r.json() : null).then(d => { if (active && d) setSubmissionLocked(Boolean(d.locked)) }).catch(() => {})
+    fetch(`/api/lessons/submit?lesson_id=${lesson.id}`).then(r => r.ok ? r.json() : null).then(d => { if (active && d) {setSubmissionLocked(Boolean(d.locked));setSubmitted(Boolean(d.submittedAt)&&Boolean(d.locked));setSubmissionAt(d.submittedAt??null);setReviewFeedback(d.feedback??'');setSubmissionStatusLoaded(true)} }).catch(() => {})
     return () => { active = false }
-  }, [lesson.id, preview, staffView])
-  const [submitted, setSubmitted] = useState(false)
+  }, [lesson.id, preview, staffView, stepped, notebookChecks, lesson.content_blocks?.presentation])
+  const [submitted, setSubmitted] = useState(snapshot?.submitted ?? false)
   useEffect(() => {
     if (preview || !store.studentId) return
     try {
@@ -209,12 +235,18 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
     <strong>{live.session.pollRevealed ? 'Live question · results revealed' : live.session.pollLocked ? 'Live question · responses paused' : 'Live question open'}</strong>
     {isLocked(pollPage) ? <p>Finish the current checkpoint to open the question in step {pollPage + 1}.</p> : <button type="button" className="ml-2 min-h-11 rounded-lg border px-3 font-semibold" onClick={() => openAnswer(pollPage, live.session!.pollBlockId!)}>Open this question · step {pollPage + 1}</button>}
   </div> : null
-  const deckBlock = useMemo(() => (blocks.find((b) => b.type === 'deck') as DeckBlock | undefined) ?? null, [blocks])
 
   // Per-section completion (the honest progress thread): explicit "Got it"
   // checkpoints, persisted per lesson. A section also reads done once passed.
-  const { markComplete, isComplete } = useSectionProgress(lesson.id, pageCount, !preview && !staffView, anchors, revision)
+  const { markComplete, isComplete: locallyComplete } = useSectionProgress(lesson.id, pageCount, !preview && !staffView, anchors, revision)
+  const isComplete = (index:number) => snapshot ? snapshot.revision===revision && !!snapshot.completedAnchors?.includes(anchors[index]) : locallyComplete(index)
   const sectionDone = (i: number) => pages[i]?.hasCapture ? pages[i].captureBlocks.filter(isRequiredCaptureBlock).every((b) => isBlockComplete(b, committed[b.id]?.response)) : isComplete(i)
+  useEffect(() => {
+    if (!notebookChecks || preview || staffView || !responsesLoaded || submissionLocked) return
+    pages.forEach((section, index) => {
+      if (section.hasCapture && section.captureBlocks.filter(isRequiredCaptureBlock).every(block => isBlockComplete(block, committed[block.id]?.response))) markComplete(index)
+    })
+  }, [notebookChecks, pages, committed, preview, staffView, responsesLoaded, submissionLocked, markComplete])
 
   // Whole-lesson task progress (the "tasks saved" bar).
   const interactive = useMemo(() => blocks.filter(isRequiredCaptureBlock), [blocks])
@@ -259,24 +291,78 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
   </div>
   if (!responsesLoaded) return <p role="status" className="p-6">Loading your saved work…</p>
 
+  const videoXp = { lessonId: lesson.id, enabled: !preview && !staffView && !snapshot, onXpTotal: store.recordXpTotal }
+
+  if (stepped && notebookChecks && lesson.content_blocks?.interactiveNotebook) {
+    const mappedIds = new Set(notebookChecks.map(block => block.id))
+    const extraBlocks = blocks.filter(block => block.id !== lesson.content_blocks!.interactiveNotebook!.sourceBlockId && !mappedIds.has(block.id))
+    const readOnly = inspection || !!snapshot || staffView || submissionLocked || !submissionStatusLoaded
+    const readyToSubmit = interactive.every(block => isBlockComplete(block, responses[block.id]?.response))
+    return <LessonVideoXpContext.Provider value={videoXp}><main className="mx-auto w-full max-w-6xl space-y-5 px-3 pb-24 sm:px-5" data-interactive-notebook="units">
+      <header className="space-y-2 py-2"><div className="flex flex-wrap items-center justify-between gap-3"><Link className="inline-flex min-h-11 items-center text-sm underline" href={preview || staffView ? exitHref : '/lessons'}>{(preview || staffView) && !observer ? 'Back to lesson workspace' : 'Back to lessons'}</Link><h1 className="text-xl font-semibold">{lesson.title}</h1><span className="text-sm text-muted-foreground">{doneTasks} of {totalTasks} tasks saved</span></div>
+        {(preview || staffView) && <p className="rounded-lg border bg-secondary p-3 text-sm" role="status">{snapshot ? 'Read-only student lesson · showing saved work' : staffView ? `${previewLabel} · answers are read-only` : 'Student preview · answers and submission are temporary'}</p>}
+        <details><summary className="min-h-11 cursor-pointer text-sm font-medium">Learning targets & language support</summary><div className="space-y-3 py-3"><LanguageDial/><p className="text-sm text-muted-foreground">Practice feedback helps you check your thinking; your teacher reviews the submitted work.</p><LessonMasteryTargets snapshot={!!snapshot} preview={preview || staffView} targets={viewerTargets}/></div></details>
+      </header>
+      {!submissionStatusLoaded && <p role="status" className="text-sm">Checking whether this work is editable. If this message remains, <button type="button" className="min-h-11 underline" onClick={() => window.location.reload()}>reload submission status</button>.</p>}
+      {reviewFeedback && <section aria-label="Teacher feedback" className="rounded-xl border bg-card p-4"><h2 className="font-semibold">Your teacher’s feedback</h2><p className="mt-2 whitespace-pre-wrap text-sm">{reviewFeedback}</p></section>}
+      {live.session && <p className="text-sm text-muted-foreground">Your notebook answers stay independent of the classroom demonstration.</p>}
+      {liveQuestionLink}
+      <InteractiveNotebook questions={notebookChecks} responses={responses} draft={draft} save={save} readOnly={readOnly} draftState={draftState}/>
+      <details className="rounded-xl border bg-card p-4" open={live.session?.pollBlockId && mappedIds.has(live.session.pollBlockId) ? true : undefined}><summary className="min-h-11 cursor-pointer font-medium">Question list & learning supports</summary><p className="mb-4 text-sm text-muted-foreground">These are the same questions and saved answers as the notebook. Use this view for live questions or if the notebook cannot load.</p><BlockRenderer key={submissionLocked ? 'locked' : 'open'} blocks={notebookChecks} referenceBlocks={blocks} lessonId={lesson.id} responses={responses} hydrated save={save} draft={draft} targets={viewerTargets} glossary={glossary} readOnly={readOnly} readOnlyExceptBlockId={!inspection && !staffView && !snapshot && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined}/></details>
+      {extraBlocks.length > 0 && <section aria-label="Finish the lesson" className="space-y-4"><h2 className="text-xl font-semibold">Finish the lesson</h2><BlockRenderer key={submissionLocked ? 'locked' : 'open'} blocks={extraBlocks} referenceBlocks={blocks} lessonId={lesson.id} responses={responses} hydrated save={save} draft={draft} targets={viewerTargets} glossary={glossary} readOnly={readOnly}/></section>}
+      <section aria-label="Submit notebook" className="space-y-3 rounded-xl border bg-card p-5">
+        {!readyToSubmit && !readOnly && <p className="text-sm">Answer all five checks and complete the reflection before submitting. Draft answers will be saved when you submit.</p>}
+        {snapshot || staffView ? <p className="text-sm">Read-only view · submission is disabled.</p> : preview ? <button type="button" className="min-h-11 rounded-lg bg-primary px-4 text-primary-foreground disabled:opacity-50" disabled={!readyToSubmit || submitted} onClick={async () => { for (const block of blocks) if (responses[block.id]?.draft) await save(block.id, block.type, responses[block.id].response); setSubmitted(true); setSubmissionLocked(true) }}>{submitted ? 'Preview submitted' : 'Submit preview'}</button> : <SubmitLessonButton lessonId={lesson.id} blocked={!readyToSubmit} complete={allTasksDone} prepare={() => store.savePending(blocks)} onChange={state => { setSubmitted(Boolean(state.submittedAt) && state.locked); setSubmissionLocked(state.locked) }}/>}
+        {submissionLocked && <p role="status" className="text-sm">Submitted work is locked until your teacher reviews it.</p>}
+      </section>
+    </main></LessonVideoXpContext.Provider>
+  }
+
+  if (stepped && lesson.content_blocks?.presentation === 'physics-path' && page) {
+    const supportBlocks = blocks.filter(b => b.referencePanel && !isCaptureBlock(b))
+    const missing = interactive.filter(b=>!isBlockComplete(b,responses[b.id]?.response))
+    const firstUnsaved = interactive.find(b=>!isBlockComplete(b,committed[b.id]?.response))
+    const changedAfterSubmission = Boolean(submissionAt && (pendingBlocks.length || Object.values(responses).some(r=>Date.parse(r.created_at)>Date.parse(submissionAt))))
+    const finishTitle = !preview && !staffView && !submissionStatusLoaded ? 'Checking submission status…' : submissionLocked || submitted ? 'Submitted for teacher review' : submissionAt ? changedAfterSubmission ? 'Changes not submitted' : 'Submitted · reviewed' : allTasksDone ? 'Answers saved · not submitted' : 'Lesson not submitted'
+    const finishPanel = observer ? <section className="mb-5 rounded-xl border bg-card p-5 text-sm" aria-label="Observer access"><h2 className="font-semibold">Observer preview</h2><p className="mt-2">Explore the lesson and watch its videos. Answers and submissions are read-only.</p></section> : <section id="lesson-submission" tabIndex={-1} aria-label="Lesson submission" className="mb-5 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-primary/30 bg-primary/5 p-5">
+      <div className="min-w-0 flex-1 space-y-2"><h2 className="text-lg font-semibold" role="status">{staffView?previewLabel:finishTitle}</h2>
+        <p className="text-sm">{doneTasks} of {totalTasks} required responses saved.</p>
+        {!submissionLocked && !submitted && <p className="max-w-xl text-sm text-muted-foreground">Complete the responses, then submit your lesson for teacher review. Saving answers and earning XP do not submit it.</p>}
+        {firstUnsaved && !submissionLocked && !submitted && <button type="button" className="min-h-11 text-sm font-semibold text-primary underline" onClick={()=>openAnswer(pages.findIndex(p=>p.blocks.some(b=>b.id===firstUnsaved.id)),firstUnsaved.id)}>Go to next response →</button>}
+      </div>
+      {staffView||snapshot?<p className="text-sm">Read-only preview · submissions are disabled.</p>:preview?<button type="button" className="min-h-11 rounded-lg bg-primary px-4 text-primary-foreground disabled:opacity-50" disabled={missing.length>0||submitted} onClick={async()=>{for(const b of blocks)if(responses[b.id]?.draft)await save(b.id,b.type,responses[b.id].response);setSubmitted(true);setSubmissionLocked(true)}}>{submitted?'Preview submitted':'Submit preview'}</button>:<SubmitLessonButton lessonId={lesson.id} blocked={missing.length>0} blockedReason={`Complete ${missing.length} remaining required response${missing.length===1?'':'s'} to submit.`} prepare={()=>store.savePending(blocks)} onChange={st=>{setSubmissionStatusLoaded(true);setReviewFeedback(st.feedback??'');setSubmissionAt(st.submittedAt);setSubmitted(Boolean(st.submittedAt)&&st.locked);setSubmissionLocked(st.locked)}}/>}
+    </section>
+    return <LessonVideoXpContext.Provider value={videoXp}><PhysicsPathView previewLabel={previewLabel} preview={preview} title={lesson.title} focus={lesson.content_blocks.learningPath?.focus ?? ''} pages={pages} current={pageIdx} done={doneTasks} total={totalTasks} staff={staffView} onGo={breakAway} isLocked={isLocked}
+      next={()=>{if(!page.hasCapture)void markComplete(pageIdx);breakAway(pageIdx+1)}}
+      toolbar={<LanguageDial/>}
+      mastery={<>{!observer&&<LessonXp blocks={blocks} earned={preview || staffView || !store.loaded ? undefined : xpSession}/>}<LessonMasteryTargets snapshot={!!snapshot} preview={preview||staffView} targets={preview ? viewerTargets : viewerTargets?.map(t=>({...t,teacher:exp?.mastery[t.slug]??null}))}/></>}
+      follow={<>{finishPanel}{reviewFeedback&&!submissionLocked&&<section aria-label="Teacher feedback" className="mb-5 rounded-xl border border-primary/30 bg-primary/5 p-5"><h2 className="font-semibold">Your teacher’s feedback</h2><p className="mt-2 whitespace-pre-wrap text-sm">{reviewFeedback}</p><p className="mt-2 text-sm text-muted-foreground">Revise your saved answers, then submit the lesson again.</p></section>}{liveQuestionLink}{!staffView && live.session ? <button type="button" className="mb-4 min-h-11 text-sm text-primary underline" onClick={()=>{live.setFollow(!live.follow);if(!live.follow&&liveSection!==null)goTo(liveSection)}}>{live.follow?'Following teacher':'Rejoin teacher'}{timerLeft!==null?' · '+fmtTimer(timerLeft):''}</button> : null}</>}
+      support={supportBlocks.length ? <section aria-label="Reading and vocabulary" className="mt-8 space-y-5 border-t pt-6"><h3 className="text-lg font-semibold">Reading & vocabulary</h3><BlockRenderer blocks={supportBlocks} referenceBlocks={blocks} lessonId={lesson.id} readOnly glossary={glossary} collapseReferences={false}/></section> : null}
+      submit={observer ? <p className="mt-5 text-sm text-muted-foreground">Observer preview · answers and submission are read-only.</p> : <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-sm"><span>{submissionLocked||submitted?'Submitted for teacher review.':allTasksDone?'Your responses are saved. Submit the lesson to turn it in.':'Continue through the lesson and complete each required response.'}</span><button type="button" className="min-h-11 rounded-lg border px-4 font-semibold" onClick={()=>{const panel=document.getElementById('lesson-submission');panel?.focus({preventScroll:true});panel?.scrollIntoView({behavior:'smooth',block:'center'})}}>{submissionLocked||submitted?'View submission status':'Finish & submit ↑'}</button></div>}>
+      <BlockRenderer key={submissionLocked?'submitted':'editable'} hideBlockHeadings blocks={page.blocks.filter(b=>!b.referencePanel)} referenceBlocks={blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} readOnly={inspection||!!snapshot||staffView||submissionLocked||(!preview&&!submissionStatusLoaded)} readOnlyExceptBlockId={!inspection && !staffView&&submissionLocked?live.session?.pollBlockId??undefined:undefined}/>
+    </PhysicsPathView></LessonVideoXpContext.Provider>
+  }
+
   if (stepped && lesson.content_blocks?.presentation === 'trades-workshop' && page) {
     const opener = page.blocks.find(b => b.teachingTool)
-    return <TeachingToolContext.Provider value={staffView&&teachingCommand.state?{role:'teacher',states:teachingCommand.state.session.teaching_tool_state??{},busy:teachingCommand.busy,command:c=>teachingCommand.patch({teaching_tool:c,expected_command_revision:teachingCommand.state!.session.command_revision})}:null}><TradesWorkshopView title={lesson.title} pages={pages} current={pageIdx} responses={responses} staff={staffView} locked={submissionLocked} done={doneTasks} total={totalTasks} onGo={breakAway} isLocked={isLocked}
-      toolbar={staffView && !preview && presentLive ? <PresentLiveLayer onSessionChange={setTeachingSessionId} lessonId={lesson.id} lessonTitle={lesson.title} pages={pages} sections={sections} deck={deckBlock} onSectionChange={i=>{if(!isLocked(i))setPageIdx(i)}}/> : <span>Teacher preview</span>}
-      follow={<>{liveQuestionLink}{!staffView && live.session ? <button type="button" onClick={()=>{live.setFollow(!live.follow);if(!live.follow&&liveSection!==null)goTo(liveSection)}}>{live.follow?'Following teacher':'Rejoin teacher'}{timerLeft!==null?' · '+fmtTimer(timerLeft):''}</button> : null}</>}
-      scene={<>{teachingCommand.error && <p role="alert">{teachingCommand.error}</p>}{opener ? <TeachingToolRenderer key={opener.id} block={opener}/> : null}<BlockRenderer hideBlockHeadings blocks={page.blocks.filter(b=>b!==opener && !page.captureBlocks.includes(b))} referenceBlocks={blocks} lessonId={lesson.id} readOnly /></>}
-      task={<BlockRenderer hideBlockHeadings blocks={page.captureBlocks} referenceBlocks={blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} readOnly={staffView||submissionLocked} readOnlyExceptBlockId={!staffView&&submissionLocked?live.session?.pollBlockId??undefined:undefined} />}
+    const referenceBlocks = page.blocks.filter(b => b !== opener && !page.captureBlocks.includes(b))
+    const illustrated = opener?.teachingTool?.kind === 'case-board' && opener.teachingTool.frames[0]?.image?.startsWith('/trades-etf/workshop/')
+    return <LessonVideoXpContext.Provider value={videoXp}><TeachingToolContext.Provider value={staffView&&teachingCommand.state?{role:'teacher',states:teachingCommand.state.session.teaching_tool_state??{},busy:teachingCommand.busy,command:c=>teachingCommand.patch({teaching_tool:c,expected_command_revision:teachingCommand.state!.session.command_revision})}:null}><TradesWorkshopView preview={preview} exitHref={exitHref} title={lesson.title} pages={pages} current={pageIdx} responses={responses} staff={staffView} locked={submissionLocked} done={doneTasks} total={totalTasks} onGo={breakAway} isLocked={isLocked}
+      toolbar={staffView && !observer && !preview && presentLive ? <LessonTeachLink lessonId={lesson.id}/> : <span>{previewLabel}</span>}
+      follow={<>{reviewFeedback&&!submissionLocked&&<section aria-label="Teacher feedback" className="mb-5 rounded-xl border border-primary/30 bg-primary/5 p-5"><h2 className="font-semibold">Your teacher’s feedback</h2><p className="mt-2 whitespace-pre-wrap text-sm">{reviewFeedback}</p><p className="mt-2 text-sm text-muted-foreground">Revise your saved answers, then submit the lesson again.</p></section>}{liveQuestionLink}{!staffView && live.session ? <button type="button" onClick={()=>{live.setFollow(!live.follow);if(!live.follow&&liveSection!==null)goTo(liveSection)}}>{live.follow?'Following teacher':'Rejoin teacher'}{timerLeft!==null?' · '+fmtTimer(timerLeft):''}</button> : null}</>}
+      scene={<>{teachingCommand.error && <p role="alert">{teachingCommand.error}</p>}{opener ? <TeachingToolRenderer key={opener.id} block={opener}/> : null}{referenceBlocks.length > 0 && (illustrated ? <details key={opener?.id} open={opener?.workshop?.stage === 'Brief'} className="my-6 rounded-xl border bg-card p-5"><summary className="min-h-11 cursor-pointer font-semibold">{opener?.workshop?.stage === 'Plan' ? 'Worked solution and reference' : 'Materials, finished work and reference'}</summary><BlockRenderer hideBlockHeadings blocks={referenceBlocks} referenceBlocks={blocks} lessonId={lesson.id} readOnly /></details> : <BlockRenderer hideBlockHeadings blocks={referenceBlocks} referenceBlocks={blocks} lessonId={lesson.id} readOnly />)}</>}
+      task={<BlockRenderer hideBlockHeadings blocks={page.captureBlocks} referenceBlocks={blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} readOnly={inspection||!!snapshot||staffView||submissionLocked} readOnlyExceptBlockId={!inspection && !staffView&&submissionLocked?live.session?.pollBlockId??undefined:undefined} />}
       submit={!staffView && isLast ? <>
         {submissionLocked ? <p>This lesson was submitted. Your teacher can return it if you need to work on the rebuilt activity; your earlier submission is kept.</p> : <p>Submit your work when you are ready for review. Changed answers are saved when you submit. Your teacher checks the work; practice attempts do not become grades.</p>}
         {pendingBlocks.length>0 && <p role="status">Your changed responses will be saved when you submit.</p>}
-        {preview ? <button type="button" disabled={!allTasksDone||pendingBlocks.length>0||submitted} onClick={()=>setSubmitted(true)}>{submitted?'Preview submitted':'Submit workshop (preview)'}</button> : <SubmitLessonButton lessonId={lesson.id} prepare={() => store.savePending(blocks)} complete={allTasksDone} onChange={st=>{setSubmitted(Boolean(st.submittedAt));setSubmissionLocked(st.locked)}}/>}
+        {preview ? <button type="button" disabled={!!snapshot||!allTasksDone||pendingBlocks.length>0||submitted} onClick={()=>setSubmitted(true)}>{submitted?'Preview submitted':'Submit workshop (preview)'}</button> : <SubmitLessonButton lessonId={lesson.id} prepare={() => store.savePending(blocks)} complete={allTasksDone} onChange={st=>{setSubmitted(Boolean(st.submittedAt)&&st.locked);setSubmissionLocked(st.locked)}}/>}
         {submitted && <p role="status">Submitted · awaiting your teacher’s review. {xpSession} XP earned.</p>}
       </> : null}
-    /></TeachingToolContext.Provider>
+    /></TeachingToolContext.Provider></LessonVideoXpContext.Provider>
   }
 
   return (
-    <div className={`${styles.viewer} mx-auto px-4 pb-28`} style={{ maxWidth: 1240, color: 'var(--foreground)' }}>
+    <LessonVideoXpContext.Provider value={videoXp}><div className={`${styles.viewer} mx-auto px-4 pb-28`} style={{ maxWidth: 1240, color: 'var(--foreground)' }}>
       <style>{lessonIdentityStyles}</style>
       <div className="lg:grid lg:gap-8" style={{ gridTemplateColumns: 'minmax(0, 1fr) 256px' }}>
         {/* main reading column */}
@@ -290,7 +376,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
               <div className={styles.identity}>
               {!staffView && !preview && <LessonAvatar />}
               <div className="min-w-0">
-                <Link href="/home" className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                <Link href={preview ? exitHref : "/home"} className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
                   <ChevronLeft size={14} /> Home
                 </Link>
                 <div className="flex items-center gap-2 mt-0.5">
@@ -319,7 +405,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                 )}
                 {/* quick-peek at the reference sheet without losing your place */}
                 <a
-                  href="/reference"
+                  href={preview ? exitHref : "/reference"}
                   target="_blank"
                   rel="noopener"
                   title="Open the reference sheet in a new tab"
@@ -329,7 +415,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                   <Sigma size={11} /> Reference
                 </a>
                 {staffView && !preview && presentLive && (
-                  <PresentLiveLayer lessonId={lesson.id} lessonTitle={lesson.title} pages={pages} sections={sections} deck={deckBlock} onSectionChange={(i) => { if (!isLocked(i)) setPageIdx(i) }} />
+                  <LessonTeachLink lessonId={lesson.id}/>
                 )}
               </div>
             </div>
@@ -470,7 +556,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
             <div className={styles.workspaceLabel}><span>{page?.hasCapture ? 'THE ACTIVITY' : 'EXPLORE THE IDEA'}</span><span>STEP {lessonNumber(pageIdx + 1)}</span></div>
             {page && stepped ? (
               splitHelpRuns(page.blocks).map((run, ri) => {
-                if (!run.help) return <BlockRenderer showResponseGuide referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} key={ri} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
+                if (!run.help) return <BlockRenderer showResponseGuide referenceBlocks={blocks} readOnly={inspection || !!snapshot || staffView || submissionLocked} readOnlyExceptBlockId={!inspection && !staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} key={ri} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
                 // S-4 · help drawer: open by default unless the student already rates Almost / Got it on the section's target.
                 const t = sectionTarget(page)
                 const level = t ? exp?.mastery[t] : undefined
@@ -481,12 +567,12 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                       <Lightbulb size={15} /> Help & worked example
                       <span className="text-xs font-normal" style={{ color: 'var(--muted-foreground)' }}>· open or close</span>
                     </summary>
-                    <div className="px-4 pb-3"><BlockRenderer showResponseGuide referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} /></div>
+                    <div className="px-4 pb-3"><BlockRenderer showResponseGuide referenceBlocks={blocks} readOnly={inspection || !!snapshot || staffView || submissionLocked} readOnlyExceptBlockId={!inspection && !staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} /></div>
                   </details>
                 )
               })
             ) : page ? (
-              <BlockRenderer showResponseGuide referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={page.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
+              <BlockRenderer showResponseGuide referenceBlocks={blocks} readOnly={inspection || !!snapshot || staffView || submissionLocked} readOnlyExceptBlockId={!inspection && !staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={page.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
             ) : (
               <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>This lesson does not have content yet.</p>
             )}
@@ -525,8 +611,8 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                   return <li key={b.id}><button type="button" className="underline" onClick={() => breakAway(Math.min(index, Math.max(0, lockedFrom - 1)))}>Section {index + 1}: {sections[index]?.title}</button></li>
                 })}</ul>
               </div>}
-              {preview ? <button type="button" disabled={!allTasksDone || pendingBlocks.length > 0 || submitted} onClick={() => setSubmitted(true)} className="rounded-lg bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50">{submitted ? 'Preview submitted' : 'Submit lesson (preview)'}</button> :
-                <SubmitLessonButton lessonId={lesson.id} prepare={() => store.savePending(blocks)} complete={allTasksDone} onChange={(st) => { setSubmitted(Boolean(st.submittedAt)); setSubmissionLocked(st.locked) }} />}
+              {preview ? <button type="button" disabled={!!snapshot||!allTasksDone || pendingBlocks.length > 0 || submitted} onClick={() => setSubmitted(true)} className="rounded-lg bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50">{submitted ? 'Preview submitted' : 'Submit lesson (preview)'}</button> :
+                <SubmitLessonButton lessonId={lesson.id} prepare={() => store.savePending(blocks)} complete={allTasksDone} onChange={(st) => { setSubmitted(Boolean(st.submittedAt)&&st.locked); setSubmissionLocked(st.locked) }} />}
             </div>
           )}
 
@@ -585,13 +671,13 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
 
             {isLast ? (
               !submitted && !staffView ? (
-                <Link href="/home" className="text-sm underline">Leave without submitting</Link>
+                <Link href={preview ? exitHref : "/home"} className="text-sm underline">Leave without submitting</Link>
               ) : nav?.next ? (
                 <Link href={`/lessons/${nav.next.slug}`} className="inline-flex items-center gap-1.5 rounded-2xl px-5 py-2.5 text-sm font-bold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', boxShadow: '0 8px 22px -8px color-mix(in oklch, var(--primary) 70%, transparent)' }}>
                   Next: {trim(nav.next.title)} <ChevronRight size={16} />
                 </Link>
               ) : (
-                <Link href="/home" className="inline-flex items-center gap-1.5 rounded-2xl px-5 py-2.5 text-sm font-bold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', boxShadow: '0 8px 22px -8px color-mix(in oklch, var(--primary) 70%, transparent)' }}>
+                <Link href={preview ? exitHref : "/home"} className="inline-flex items-center gap-1.5 rounded-2xl px-5 py-2.5 text-sm font-bold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', boxShadow: '0 8px 22px -8px color-mix(in oklch, var(--primary) 70%, transparent)' }}>
                   Finish <ChevronRight size={16} />
                 </Link>
               )
@@ -614,7 +700,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
 
           {/* quiet home link */}
           <div className="mt-4 text-center">
-            <Link href="/home" className="inline-flex items-center gap-1.5 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+            <Link href={preview ? exitHref : "/home"} className="inline-flex items-center gap-1.5 text-xs" style={{ color: 'var(--muted-foreground)' }}>
               <Home size={13} /> Back to home
             </Link>
           </div>
@@ -628,6 +714,6 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
         </aside>
 
       </div>
-    </div>
+    </div></LessonVideoXpContext.Provider>
   )
 }
