@@ -10,8 +10,8 @@ test('school history excludes today, weekends, holidays, and pre-enrollment days
 test('school dates and planning deadlines stay Eastern across midnight and DST', () => {
  assert.equal(deadlineDay('2026-10-08T01:00:00Z'), '2026-10-07')
  assert.equal(deadlineDay('2026-10-08'), '2026-10-08')
- assert.deepEqual(weekDates('2026-11-01'), ['2026-10-26','2026-10-27','2026-10-28','2026-10-29','2026-10-30'])
- assert.deepEqual(weekDates('2026-11-01',1), ['2026-11-02','2026-11-03','2026-11-04','2026-11-05','2026-11-06'])
+ assert.deepEqual(weekDates('2026-11-01'), ['2026-10-26','2026-10-27','2026-10-28','2026-10-29','2026-10-30','2026-10-31','2026-11-01'])
+ assert.deepEqual(weekDates('2026-11-01',1), ['2026-11-02','2026-11-03','2026-11-04','2026-11-05','2026-11-06','2026-11-07','2026-11-08'])
  assert.equal(validPlanDate('2026-02-30'),false)
  assert.equal(validPlanDate('2028-02-29'),true)
 })

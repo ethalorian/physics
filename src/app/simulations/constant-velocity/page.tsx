@@ -1,8 +1,3 @@
-"use client"
-
-import SimLab from '@/components/simulations/lab/SimLab'
-import { constantVelocityDef } from './def'
-
-export default function ConstantVelocityLab() {
-  return <SimLab def={constantVelocityDef} />
-}
+'use client'
+import SimulationActivity from '@/components/simulations/SimulationActivity'
+export default function Simulation(){return <SimulationActivity id="constant-velocity"/>}

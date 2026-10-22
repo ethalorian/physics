@@ -1,3 +1,4 @@
+import { ownerEmailsFor } from '@/lib/identity-aliases'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -15,7 +16,7 @@ export const GET = withAuth(async (_req, ctx) => {
     bountyRoster(ctx.scopeEmail),
     bountyRows((from, to) => supabaseAdmin.from('xp_challenges')
       .select('id, title, kind, game_slug, metric, target, bonus_xp, starts_on, ends_on, period, active, is_global, created_at')
-      .eq('teacher_email', ctx.scopeEmail).order('created_at', { ascending: false }).order('id').range(from, to)),
+      .in('teacher_email', ownerEmailsFor(ctx.scopeEmail)).order('created_at', { ascending: false }).order('id').range(from, to)),
     bountyRows((from, to) => supabaseAdmin.from('arcade_games').select('slug, name, enabled')
       .order('sort_order').order('slug').range(from, to)),
   ])
@@ -97,10 +98,10 @@ export const POST = withAuth(async (request, ctx) => {
     ...[...studentIds].map(id => ({ challenge_id: challenge.id, course_id: null, student_id: id })),
   ])
   if (assignmentError) {
-    await supabaseAdmin.from('xp_challenges').delete().eq('id', challenge.id).eq('teacher_email', ctx.scopeEmail)
+    await supabaseAdmin.from('xp_challenges').delete().eq('id', challenge.id).in('teacher_email', ownerEmailsFor(ctx.scopeEmail))
     throw assignmentError
   }
-  const { error: activationError } = await supabaseAdmin.from('xp_challenges').update({ active: true }).eq('id', challenge.id).eq('teacher_email', ctx.scopeEmail)
+  const { error: activationError } = await supabaseAdmin.from('xp_challenges').update({ active: true }).eq('id', challenge.id).in('teacher_email', ownerEmailsFor(ctx.scopeEmail))
   if (activationError) throw activationError
   return NextResponse.json({ ok: true, id: challenge.id }, { status: 201 })
 })
@@ -110,7 +111,7 @@ export const PUT = withAuth(async (request, ctx) => {
   const b = await request.json().catch(() => null)
   if (!b || !uuid.test(b.id) || typeof b.active !== 'boolean') return bad('Valid id and active state required')
   const { data, error } = await supabaseAdmin.from('xp_challenges').update({ active: b.active })
-    .eq('id', b.id).eq('teacher_email', ctx.scopeEmail).select('id').maybeSingle()
+    .eq('id', b.id).in('teacher_email', ownerEmailsFor(ctx.scopeEmail)).select('id').maybeSingle()
   if (error) throw error
   if (!data) return bad('Bounty not found', 404)
   return NextResponse.json({ ok: true })
@@ -121,7 +122,7 @@ export const DELETE = withAuth(async (request, ctx) => {
   const id = new URL(request.url).searchParams.get('id')
   if (!id || !uuid.test(id)) return bad('Valid id required')
   const { data, error } = await supabaseAdmin.from('xp_challenges').delete()
-    .eq('id', id).eq('teacher_email', ctx.scopeEmail).select('id').maybeSingle()
+    .eq('id', id).in('teacher_email', ownerEmailsFor(ctx.scopeEmail)).select('id').maybeSingle()
   if (error) throw error
   if (!data) return bad('Bounty not found', 404)
   return NextResponse.json({ ok: true })

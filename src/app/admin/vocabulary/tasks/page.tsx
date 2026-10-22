@@ -1,13 +1,8 @@
-"use client"
-import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
-import { usePermissions } from '@/hooks/usePermissions'
-import VocabLearningBoard from '@/components/vocabulary/VocabLearningBoard'
-
-export default function VocabularyTasksPage() {
-  const { status } = useSession()
-  const { userRole } = usePermissions()
-  if (status === 'loading') return <p className="p-6" role="status">Loading vocabulary tasks…</p>
-  if (userRole !== 'admin' && userRole !== 'teacher') redirect('/home')
-  return <VocabLearningBoard />
+import { legacyWorkspaceHref } from '@/lib/teaching-navigation'
+export default async function LegacyPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const values = await searchParams
+  const search = new URLSearchParams()
+  for (const [key, value] of Object.entries(values)) if (typeof value === 'string') search.set(key, value)
+  redirect(legacyWorkspaceHref('/admin/vocabulary/tasks', search.toString()))
 }

@@ -11,11 +11,27 @@ if (process.argv.includes('--css')) {
 const config = ts.parseJsonConfigFileContent(
   ts.readConfigFile('tsconfig.json', ts.sys.readFile).config, ts.sys, '.',
 )
-const files = config.fileNames.filter(file => file.startsWith('src/') || file.startsWith('scripts/'))
+function scriptFiles(dir) {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+    const file = path.join(dir, entry.name)
+    return entry.isDirectory() ? scriptFiles(file) : /\.(?:cjs|mjs|js)$/.test(file) ? [file] : []
+  })
+}
+const files = [...new Set([
+  ...config.fileNames.filter(file => file.startsWith('src/') || file.startsWith('scripts/')),
+  ...scriptFiles('scripts'),
+])]
 const edges = new Map()
 for (const file of files) {
-  const imports = ts.preProcessFile(fs.readFileSync(file, 'utf8'), true, true).importedFiles
-  edges.set(path.resolve(file), imports.flatMap(({ fileName }) => {
+  const content = fs.readFileSync(file, 'utf8')
+  const imports = ts.preProcessFile(content, true, true).importedFiles.map(i => i.fileName)
+  // Browser harnesses embed imports in template strings; game builds use string
+  // entryPoints. These are real consumers even though tsc does not include .cjs.
+  if (file.startsWith('scripts/')) {
+    for (const match of content.matchAll(/['"]((?:\.\/)?src\/[^'"\s]+|@\/[^'"\s]+)['"]/g)) imports.push(match[1])
+  }
+  edges.set(path.resolve(file), imports.flatMap(fileName => {
+    if (/^(?:\.\/)?src\//.test(fileName)) fileName = './' + path.relative(path.dirname(file), fileName.replace(/^\.\//, ''))
     const resolved = ts.resolveModuleName(fileName, file, config.options, ts.sys).resolvedModule
     return resolved ? [path.resolve(resolved.resolvedFileName)] : []
   }))
@@ -29,7 +45,7 @@ function visit(file) {
 // Treat all route files, maintenance scripts, tests and middleware as entry points.
 // This deliberately preserves potentially externally invoked routes and scripts.
 for (const file of files) {
-  if (file.startsWith('src/app/') || file.startsWith('scripts/') || /\.test\./.test(file) || file === 'src/middleware.ts') {
+  if (file.startsWith('src/app/') || file.startsWith('scripts/') || /\.test\./.test(file) || ['src/middleware.ts', 'src/instrumentation.ts', 'src/instrumentation-client.ts'].includes(file)) {
     visit(path.resolve(file))
   }
 }

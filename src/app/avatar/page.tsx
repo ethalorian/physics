@@ -1,183 +1,194 @@
 'use client'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import Link from 'next/link'
-import { Check, Save, Sparkles, RotateCcw } from 'lucide-react'
+import { useSession } from 'next-auth/react'
+import { ArrowLeft, BookOpen, Check, Glasses, Image as ImageIcon, Save, Scissors, Shirt, Smile, Sparkles, Trash2, Undo2, Users } from 'lucide-react'
+import { announceAvatarChange } from '@/lib/avatar/portrait-store'
 import Avatar from '@/components/avatar/Avatar'
 import AvatarGallery from '@/components/avatar/AvatarGallery'
-import { Button } from '@/components/ui/button'
-import { TRAIT_OPTIONS, TRAIT_LABELS, ITEM_SLOTS, SLOT_LABELS, withDefaults, type AvatarTraits, type AvatarBundle, type CatalogEntry, type EquippedItems, type ItemSlot, type SavedLook } from '@/lib/avatar/types'
+import AvatarStage from '@/components/avatar/AvatarStage'
+import { KNOB_TRAITS, SLOT_LABELS, withDefaults, type AvatarTraits, type AvatarBundle, type CatalogEntry, type EquippedItems, type ItemSlot, type SavedLook } from '@/lib/avatar/types'
 import { STARTER_LOOKS } from '@/lib/avatar/presets'
-import { SKIN, HAIR, SHIRT, EYE } from '@/lib/avatar/palette'
+import { ItemDetail, ItemTile, StyleBrief, STYLE_BRIEFS, TraitPicker } from './StudioControls'
+import styles from './avatar-studio.module.css'
 
-const GROUPS: { name: string; keys: (keyof AvatarTraits)[] }[] = [
-  { name: 'Identity', keys: ['skin', 'face'] },
-  { name: 'Hair', keys: ['hair_style', 'hair_color', 'fabric_color', 'facial_hair_color'] },
-  { name: 'Face', keys: ['eyes', 'eye_color', 'brows', 'mouth', 'nose', 'freckles', 'cheek_blush'] },
-  { name: 'Style', keys: ['shirt_style', 'shirt_color'] },
-  { name: 'Fine-tune', keys: ['eye_spacing', 'eye_scale', 'eye_tilt', 'brow_height', 'mouth_width'] },
+const SECTIONS = [
+  { id: 'face', name: 'Face', icon: Smile }, { id: 'hair', name: 'Hair', icon: Scissors },
+  { id: 'outfit', name: 'Outfit', icon: Shirt }, { id: 'accessories', name: 'Extras', icon: Glasses },
+  { id: 'scene', name: 'Scene', icon: ImageIcon },
+] as const
+type Section = typeof SECTIONS[number]['id'] | 'looks' | 'gallery'
+type Collection = 'all' | 'everyday' | 'costume' | 'sport'
+const ACCESSORIES: ItemSlot[] = ['head', 'eyewear', 'pin', 'facial_hair', 'ears', 'mouth']
+const FACE_GROUPS: { name: string; traits: (keyof AvatarTraits)[] }[] = [
+  { name: 'Identity', traits: ['skin', 'face'] },
+  { name: 'Expression', traits: ['eyes', 'eye_color', 'brows', 'mouth'] },
+  { name: 'Details', traits: ['nose', 'freckles', 'cheek_blush'] },
 ]
-type Tab = 'identity' | 'items' | 'looks' | 'gallery'
 interface Draft { traits: AvatarTraits; equipped: EquippedItems; alias: string; saved_looks: SavedLook[] }
-const fromBundle = (b: AvatarBundle): Draft => ({ traits: withDefaults(b.traits), equipped: b.equipped, alias: b.alias ?? '', saved_looks: b.saved_looks })
-const nice = (s: string) => s.replaceAll('_', ' ')
+interface DraftHistory { present: Draft; past: Draft[] }
+type DraftAction = { type: 'change'; update: (draft: Draft) => Draft } | { type: 'reset'; draft: Draft } | { type: 'undo' }
+function draftReducer(state: DraftHistory, action: DraftAction): DraftHistory {
+  if (action.type === 'reset') return { present: action.draft, past: [] }
+  if (action.type === 'undo') return state.past.length ? { present: state.past[state.past.length - 1], past: state.past.slice(0, -1) } : state
+  const next = action.update(state.present)
+  return JSON.stringify(next) === JSON.stringify(state.present) ? state : { present: next, past: [...state.past.slice(-39), state.present] }
+}
+const fromBundle = (bundle: AvatarBundle): Draft => ({ traits: withDefaults(bundle.traits), equipped: bundle.equipped, alias: bundle.alias ?? '', saved_looks: bundle.saved_looks })
+function collectionOf(item: CatalogEntry): Collection {
+  return item.slug.startsWith('fhs-') ? 'sport' : /spooky-|vampire|dracula|night-bat|spiderman|batman|flash-|thor-/.test(item.slug) ? 'costume' : 'everyday'
+}
 async function getBundle(): Promise<AvatarBundle> {
-  const r = await fetch('/api/avatar', { cache: 'no-store' }); const d = await r.json()
-  if (!r.ok || !Array.isArray(d.catalog) || !Array.isArray(d.owned) || !Number.isInteger(d.revision) || typeof d.user_id !== 'string') throw new Error(d.error ?? 'Could not load your avatar.')
-  return d
+  const response = await fetch('/api/avatar', { cache: 'no-store' }), data = await response.json()
+  if (!response.ok || !Array.isArray(data.catalog) || !Array.isArray(data.owned) || !Number.isInteger(data.revision) || typeof data.user_id !== 'string') throw new Error(data.error ?? 'Could not load your avatar.')
+  return data
 }
 export default function AvatarPage() {
-  const [initial, setInitial] = useState<AvatarBundle | null>(null)
-  const [error, setError] = useState('')
-  const load = useCallback(async () => { setError(''); try { setInitial(await getBundle()) } catch (e) { setError(e instanceof Error ? e.message : 'Could not load your avatar.') } }, [])
+  const { data: session, status } = useSession()
+  const userId = status === 'authenticated' ? session?.user?.id : undefined
+  if (!userId) return <p role="status">{status === 'unauthenticated' ? 'Sign in to customize your avatar.' : 'Loading your avatar…'}</p>
+  return <AvatarAccount key={userId} userId={userId} />
+}
+function AvatarAccount({ userId }: { userId: string }) {
+  const [initial, setInitial] = useState<AvatarBundle | null>(null), [error, setError] = useState('')
+  const load = useCallback(async () => {
+    setError('')
+    try { const next = await getBundle(); if (next.user_id === userId) setInitial(next) }
+    catch (error) { setError(error instanceof Error ? error.message : 'Could not load your avatar.') }
+  }, [userId])
   useEffect(() => { void load() }, [load])
-  if (!initial) return <main className="mx-auto max-w-5xl p-5">{error ? <div role="alert">{error} <Button onClick={load}>Retry</Button></div> : <p role="status">Loading your avatar…</p>}</main>
-  return <AvatarEditor initial={initial} />
+  if (!initial || initial.user_id !== userId) return <main className={styles.studio}>{error ? <div role="alert">{error} <button type="button" className={styles.primary} onClick={load}>Retry</button></div> : <p role="status">Opening your dressing room…</p>}</main>
+  return <AvatarEditor key={userId} initial={initial} />
 }
 function AvatarEditor({ initial }: { initial: AvatarBundle }) {
   const [bundle, setBundle] = useState(initial)
-  const [draft, setDraft] = useState<Draft>(() => fromBundle(initial))
-  const [tab, setTab] = useState<Tab>('identity')
-  const [group, setGroup] = useState(0)
-  const [slot, setSlot] = useState<ItemSlot>('body')
-  const [tryOn, setTryOn] = useState<CatalogEntry | null>(null)
-  const [busy, setBusy] = useState(false)
-  const busyRef = useRef(false)
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
-  const [conflict, setConflict] = useState(false)
-  const [lookName, setLookName] = useState('')
+  const [history, dispatch] = useReducer(draftReducer, { present: fromBundle(initial), past: [] })
+  const draft = history.present
+  const [section, setSection] = useState<Section>(initial.setup_completed ? 'outfit' : 'face')
+  const [closeUp, setCloseUp] = useState(!initial.setup_completed)
+  const [faceGroup, setFaceGroup] = useState(0), [accessorySlot, setAccessorySlot] = useState<ItemSlot>('head')
+  const [query, setQuery] = useState(''), [filter, setFilter] = useState<'all' | 'owned' | 'available'>('all')
+  const [collection, setCollection] = useState<Collection>('all'), [brief, setBrief] = useState(0)
+  const [tryOnSlug, setTryOnSlug] = useState<string | null>(null), [lookName, setLookName] = useState('')
+  const [busy, setBusy] = useState(false), busyRef = useRef(false)
+  const [message, setMessage] = useState(''), [error, setError] = useState(''), [conflict, setConflict] = useState(false)
   const dirty = JSON.stringify(draft) !== JSON.stringify(fromBundle(bundle))
+  const slot: ItemSlot = section === 'scene' ? 'background' : section === 'accessories' ? accessorySlot : 'body'
+  const isWardrobe = ['outfit', 'accessories', 'scene'].includes(section)
+  const tryOn = bundle.catalog.find(item => item.slug === tryOnSlug)
+  const selectedItem = tryOn ?? (isWardrobe ? bundle.catalog.find(item => item.slug === draft.equipped[slot]) : undefined)
   const previewEquipped = tryOn ? { ...draft.equipped, [tryOn.slot]: tryOn.slug } : draft.equipped
-  const edit = (key: keyof AvatarTraits, value: string) => { setDraft(p => ({ ...p, traits: { ...p.traits, [key]: value } })); setMessage('') }
+  const wardrobeItems = bundle.catalog.filter(item => item.slot === slot && item.name.toLowerCase().includes(query.trim().toLowerCase()) && (collection === 'all' || section !== 'outfit' || collectionOf(item) === collection) && (filter === 'all' || (filter === 'owned' ? item.state === 'owned' : ['affordable', 'unlock_available', 'staff_free'].includes(item.state))))
+  const changeDraft = (update: (draft: Draft) => Draft) => { dispatch({ type: 'change', update }); setMessage('') }
+  const edit = (key: keyof AvatarTraits, value: string) => changeDraft(draft => ({ ...draft, traits: { ...draft.traits, [key]: value } }))
+  const remove = (slot: ItemSlot) => { changeDraft(draft => { const equipped = { ...draft.equipped }; delete equipped[slot]; return { ...draft, equipped } }); setTryOnSlug(null) }
+  const chooseSection = (next: Section) => { setSection(next); setTryOnSlug(null); setCloseUp(next === 'face' || next === 'hair'); setQuery(''); setFilter('all'); setCollection('all') }
+  const discard = () => { dispatch({ type: 'reset', draft: fromBundle(bundle) }); setTryOnSlug(null); setError(conflict ? 'Your saved avatar changed elsewhere. Reload it to continue.' : ''); setMessage('Back to your saved look.') }
   useEffect(() => {
-    const prevent = (e: BeforeUnloadEvent) => { if (dirty) { e.preventDefault(); e.returnValue = '' } }
+    const prevent = (event: BeforeUnloadEvent) => { if (dirty) { event.preventDefault(); event.returnValue = '' } }
     window.addEventListener('beforeunload', prevent)
     return () => window.removeEventListener('beforeunload', prevent)
   }, [dirty])
   const reload = async () => {
     if (busyRef.current) return
     busyRef.current = true; setBusy(true); setError('')
-    try { const b = await getBundle(); setBundle(b); setDraft(fromBundle(b)); setConflict(false); setTryOn(null); setMessage('Loaded your saved avatar.') }
-    catch (e) { setError(e instanceof Error ? e.message : 'Could not reload.') }
+    try {
+      const next = await getBundle()
+      if (next.user_id !== initial.user_id) throw new Error('Your signed-in account changed. Reload this page to continue.')
+      setBundle(next); dispatch({ type: 'reset', draft: fromBundle(next) }); setConflict(false); setTryOnSlug(null); setMessage('Loaded your saved avatar.')
+    } catch (error) { setError(error instanceof Error ? error.message : 'Could not reload.') }
     finally { busyRef.current = false; setBusy(false) }
   }
   const save = async () => {
-    if (busyRef.current || conflict) return
+    if (busyRef.current || conflict || tryOn) return
     busyRef.current = true; setBusy(true); setError(''); setMessage('Saving…')
     try {
-      const r = await fetch('/api/avatar', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...draft, revision: bundle.revision, complete: true }) })
-      const d = await r.json()
-      if (!r.ok) { if (d.conflict) setConflict(true); throw new Error(d.error ?? 'Could not save. Your draft is still here.') }
-      const saved = { ...bundle, ...d, alias: draft.alias || null, traits: withDefaults(d.traits) }
-      setBundle(saved); setDraft(fromBundle(saved)); setMessage('Saved.'); window.dispatchEvent(new Event('avatar-updated'))
-    } catch (e) { setMessage(''); setError(e instanceof Error ? e.message : 'Could not save. Your draft is still here.') }
+      const response = await fetch('/api/avatar', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...draft, revision: bundle.revision, complete: true }) })
+      const data = await response.json()
+      if (!response.ok) { if (data.conflict) setConflict(true); throw new Error(data.error ?? 'Could not save. Your draft is still here.') }
+      const saved = { ...bundle, ...data, alias: draft.alias || null, traits: withDefaults(data.traits) }
+      setBundle(saved); dispatch({ type: 'reset', draft: fromBundle(saved) }); setMessage('Saved. Ready for your next lesson.'); announceAvatarChange()
+    } catch (error) { setMessage(''); setError(error instanceof Error ? error.message : 'Could not save. Your draft is still here.') }
     finally { busyRef.current = false; setBusy(false) }
   }
   const buy = async (item: CatalogEntry) => {
     if (busyRef.current) return
     busyRef.current = true; setBusy(true); setError(''); setMessage('')
     try {
-      const r = await fetch('/api/avatar/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: item.slug }) })
-      const d = await r.json()
-      if (!r.ok) throw new Error(d.error ?? 'Could not get this item. Retry safely.')
-      // Update ownership immediately so a failed refresh cannot hide delivery.
-      setBundle(b => ({ ...b, owned: [...new Set([...b.owned, item.slug])], balance: d.balance ?? b.balance, catalog: b.catalog.map(i => i.slug === item.slug ? { ...i, state: 'owned' } : i) }))
-      setDraft(p => ({ ...p, equipped: { ...p.equipped, [item.slot]: item.slug } }))
-      setTryOn(null); setMessage(`${item.name} is yours. Save changes to wear it everywhere.`)
+      const response = await fetch('/api/avatar/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: item.slug }) }), data = await response.json()
+      if (!response.ok) throw new Error(data.error ?? 'Could not get this item. Retry safely.')
+      // Ownership is not draft history: Undo must never imply a refund.
+      setBundle(bundle => ({ ...bundle, owned: [...new Set([...bundle.owned, item.slug])], balance: data.balance ?? bundle.balance, catalog: bundle.catalog.map(entry => entry.slug === item.slug ? { ...entry, state: 'owned' } : entry) }))
+      changeDraft(draft => ({ ...draft, equipped: { ...draft.equipped, [item.slot]: item.slug } }))
+      setTryOnSlug(null); setMessage(`${item.name} is yours. Save your look to wear it everywhere.`)
       const fresh = await getBundle()
-      setBundle(b => ({ ...b, catalog: fresh.catalog, owned: fresh.owned, balance: fresh.balance }))
-    } catch (e) { setError(e instanceof Error ? e.message : 'Could not complete the purchase. Retry safely.') }
+      if (fresh.user_id !== initial.user_id) throw new Error('Your signed-in account changed. Reload this page to continue.')
+      setBundle(bundle => ({ ...bundle, catalog: fresh.catalog, owned: fresh.owned, balance: fresh.balance }))
+    } catch (error) { setError(error instanceof Error ? error.message : 'Could not complete the purchase. Retry safely.') }
     finally { busyRef.current = false; setBusy(false) }
   }
-  return <main className="mx-auto max-w-6xl space-y-5 p-4 pb-24 sm:p-6">
-    <div className="flex flex-wrap items-center justify-between gap-3">
-      <div><h1 className="text-2xl font-bold">My avatar</h1><p className="text-sm text-muted-foreground">Make it yours. Identity options are always free.</p></div>
-      <Link href="/home" onClick={e => { if (dirty) { e.preventDefault(); setError('Save or discard your changes before going home.') } }} className="inline-flex min-h-11 items-center text-sm underline">Home</Link>
-    </div>
-    <div className="grid grid-cols-1 gap-5 md:grid-cols-[260px_minmax(0,1fr)]">
-      <aside className="self-start rounded-2xl border bg-card p-4 md:sticky md:top-4">
-        <div className="flex items-center justify-center gap-3 md:flex-col">
-          <Avatar traits={draft.traits} equipped={previewEquipped} items={bundle.catalog} size={190} />
-          <div className="flex flex-col items-center gap-2"><div className="h-10 w-10 overflow-hidden rounded-full bg-secondary"><Avatar traits={draft.traits} equipped={previewEquipped} items={bundle.catalog} size={40} crop="head" decorative /></div><span className="text-xs text-muted-foreground">Menu preview</span></div>
+  const saveLabel = busy ? 'Working…' : tryOn ? 'Finish try-on first' : bundle.setup_completed ? 'Save my look' : 'Finish & save avatar'
+  const saveDisabled = busy || conflict || !!tryOn || (!dirty && bundle.setup_completed)
+  const heading = { face: 'All the little details.', hair: 'Good hair. Every day.', outfit: 'Find your next favorite.', accessories: 'Make it unmistakably you.', scene: 'Set the scene.', looks: 'Your personal lookbook.', gallery: 'Meet the cast.' }[section]
+  return <main className={styles.studio}>
+    <header className={styles.header}>
+      <div><p className={styles.eyebrow}>THE TEACHER’S PHYSICS · AVATAR STUDIO</p><h1>The dressing room<span>.</span></h1><p>A new look for every chapter.</p></div>
+      <div className={styles.headerActions}>
+        <details className={styles.wallet}><summary><Sparkles size={16} />{bundle.isStaff ? 'Staff wardrobe' : `${bundle.balance.toLocaleString()} XP`}</summary><p>{bundle.isStaff ? 'Catalog items are free for staff.' : `${bundle.lifetimeEarned.toLocaleString()} lifetime XP earned. Spending XP keeps your rankings and goal progress intact.`}</p></details>
+        <Link href="/home" onClick={event => { if (dirty) { event.preventDefault(); setError('Save or discard your changes before going home.') } }}><ArrowLeft size={15} />Home</Link>
+      </div>
+    </header>
+    <div className={styles.layout}>
+      <aside className={styles.preview}>
+        <AvatarStage key={section === 'face' || section === 'hair' ? 'details' : 'figure'} traits={draft.traits} equipped={previewEquipped} items={bundle.catalog} name={draft.alias || bundle.name?.split(' ')[0] || 'Your avatar'} closeUp={closeUp} onCloseUp={setCloseUp} trying={tryOn?.name} />
+        <div className={styles.saveBar}>
+          <button type="button" className={styles.undo} disabled={busy || (!history.past.length && !tryOn)} onClick={() => { if (tryOn) setTryOnSlug(null); else dispatch({ type: 'undo' }); setMessage('Last change undone.') }}><Undo2 size={17} />Undo</button>
+          <button type="button" className={styles.primary} onClick={save} disabled={saveDisabled}><Save size={16} />{saveLabel}</button>
         </div>
-        {tryOn && <div className="my-3 rounded-lg border p-2 text-sm">Trying {tryOn.name}.<Button variant="ghost" onClick={() => setTryOn(null)}>End try-on</Button></div>}
-        {!bundle.isStaff && <p className="text-center text-sm text-muted-foreground">{bundle.lifetimeEarned.toLocaleString()} lifetime XP earned · Purchases keep your rankings and goal progress intact.</p>}
-        <p className="mt-3 text-center font-semibold">{bundle.isStaff ? 'All catalog items are free for staff' : `${bundle.balance.toLocaleString()} XP to spend`}</p>
-        <div className="mt-4 space-y-2 border-t pt-4">
-          <Button className="min-h-11 w-full" onClick={save} disabled={busy || conflict || (!dirty && bundle.setup_completed)}><Save size={16} />{busy ? 'Working…' : bundle.setup_completed ? 'Save changes' : 'Finish & save avatar'}</Button>
-          {dirty && <Button variant="ghost" className="min-h-11 w-full" disabled={busy} onClick={() => { setDraft(fromBundle(bundle)); setTryOn(null); setError(''); setMessage('Draft discarded.') }}><RotateCcw size={15} />Discard changes</Button>}
-          <p role="status" aria-live="polite" className="text-center text-sm text-muted-foreground">{message || (dirty ? 'Unsaved changes' : 'Your saved avatar')}</p>
-        </div>
+        <p className={styles.saveStatus} role="status" aria-live="polite">{message || (tryOn ? 'Try it freely. Choose Wear or Buy to keep it.' : dirty ? 'Your new look is a draft.' : 'Your look is saved.')}</p>
+        <div className={styles.previewFoot}><span>Appearance changes are always free.</span>{dirty && <button type="button" disabled={busy} onClick={discard}>Discard draft</button>}</div>
       </aside>
-      <div className="min-w-0 space-y-4">
-        {error && <div role="alert" className="rounded-xl border border-destructive p-3 text-sm">{error}{conflict && <Button variant="outline" className="mt-2" disabled={busy} onClick={reload}>Discard draft & load saved avatar</Button>}</div>}
-        <nav aria-label="Avatar sections" className="flex flex-wrap gap-2">
-          {(['identity', 'items', 'looks', 'gallery'] as Tab[]).map(t => <Button key={t} variant={tab === t ? 'default' : 'outline'} aria-pressed={tab === t} className="min-h-11" onClick={() => { setTab(t); setTryOn(null) }}>{({ identity: 'Appearance', items: 'Wardrobe', looks: 'Saved looks', gallery: 'Class gallery' })[t]}</Button>)}
-        </nav>
-        {tab === 'gallery' ? <AvatarGallery /> : <fieldset disabled={busy} className="min-w-0 space-y-5">
-          {tab === 'identity' && <>
-            {!bundle.setup_completed && <p className="rounded-xl bg-secondary p-4 text-sm">Start with a look or choose your own features. You can keep the defaults. Finish & save when you are ready.</p>}
-            <details className="rounded-xl border p-3"><summary className="cursor-pointer py-2 font-semibold">Starting looks</summary><p className="py-2 text-xs text-muted-foreground">Applies free appearance traits. All details remain editable.</p><div className="grid grid-cols-2 gap-2 sm:grid-cols-3">{STARTER_LOOKS.map(p => <Button key={p.name} variant="outline" className="h-auto flex-col py-3" onClick={() => setDraft(d => ({ ...d, traits: p.traits }))}><Avatar traits={p.traits} size={60} crop="head" decorative />{p.name}</Button>)}</div></details>
-            <div className="flex flex-wrap gap-2" aria-label="Appearance groups">{GROUPS.map((g, i) => <Button key={g.name} variant={group === i ? 'secondary' : 'ghost'} aria-pressed={group === i} onClick={() => setGroup(i)} className="min-h-11">{g.name}</Button>)}</div>
-            {GROUPS[group].keys.filter(k => (k !== 'fabric_color' || draft.traits.hair_style === 'hijab') && (k !== 'facial_hair_color' || !!draft.equipped.facial_hair)).map(k => <TraitPicker key={k} trait={k} traits={draft.traits} onChange={v => edit(k, v)} />)}
-            <div className="flex justify-between"><Button variant="outline" disabled={group === 0} onClick={() => setGroup(g => g - 1)}>Previous group</Button><Button variant="outline" disabled={group === GROUPS.length - 1} onClick={() => setGroup(g => g + 1)}>Next group</Button></div>
-            <section className="space-y-3 rounded-xl border p-4" aria-label="Display name and sharing">
-              <label className="block text-sm font-semibold" htmlFor="avatar-name">Display name</label>
-              <input id="avatar-name" maxLength={32} value={draft.alias} placeholder={bundle.name?.split(' ')[0] || 'Your first name'} onChange={e => setDraft(p => ({ ...p, alias: e.target.value }))} className="min-h-11 w-full rounded-lg border bg-background px-3" />
-              <p className="text-xs text-muted-foreground">Used in the gallery and leaderboard. Leave blank for your first name in the gallery and your roster name elsewhere.</p>
-              <p className="text-xs text-muted-foreground">Your avatar is automatically shared in your class gallery. Your classmates, their teachers, and school administrators can see your avatar and display name. Appreciation totals are visible only to you.</p>
-            </section>
+      <div className={styles.editor}>
+        <div className={styles.secondaryNav}><span>MAKE YOURSELF AT HOME</span><div><button type="button" disabled={busy} aria-pressed={section === 'looks'} onClick={() => chooseSection('looks')}><BookOpen size={16} />Lookbook <span>{draft.saved_looks.length}/6</span></button><button type="button" disabled={busy} aria-pressed={section === 'gallery'} onClick={() => chooseSection('gallery')}><Users size={16} />Class gallery</button></div></div>
+        <nav aria-label="Avatar sections" className={styles.nav}>{SECTIONS.map(({ id, name, icon: Icon }) => <button type="button" key={id} disabled={busy} aria-pressed={section === id} onClick={() => chooseSection(id)}><Icon size={20} /><span>{name}</span></button>)}</nav>
+        {error && <div role="alert" className={styles.error}>{error}{conflict && <button type="button" className={styles.textButton} disabled={busy} onClick={reload}>Discard draft & load saved avatar</button>}</div>}
+        <div className={styles.sectionHeading}><div><p className={styles.eyebrow}>{section === 'looks' ? 'THE LOOKBOOK' : section === 'gallery' ? 'YOUR CLASS' : 'YOUR STYLE, YOUR RULES'}</p><h2>{heading}</h2></div>{(section === 'face' || section === 'hair') && <span className={styles.freeBadge}>All free</span>}</div>
+        {section === 'gallery' ? <AvatarGallery /> : <fieldset disabled={busy} className={styles.workspace}>
+          {section === 'face' && <>
+            <div className={styles.pills} role="group" aria-label="Face groups">{FACE_GROUPS.map((group, index) => <button key={group.name} type="button" aria-pressed={faceGroup === index} onClick={() => setFaceGroup(index)}>{group.name}</button>)}</div>
+            {FACE_GROUPS[faceGroup].traits.map(key => <TraitPicker key={key} trait={key} traits={draft.traits} onChange={value => edit(key, value)} />)}
+            <details className={styles.disclosure}><summary>Fine-tune your features</summary>{KNOB_TRAITS.map(key => <TraitPicker key={key} trait={key} traits={draft.traits} onChange={value => edit(key, value)} />)}</details>
+            <details className={styles.disclosure}><summary>Start with a complete look</summary><p>Free appearance presets. Your wardrobe stays equipped.</p><div className={styles.presetGrid}>{STARTER_LOOKS.map(look => <button key={look.name} type="button" onClick={() => changeDraft(draft => ({ ...draft, traits: look.traits }))}><Avatar traits={look.traits} size={65} crop="head" decorative /><span>{look.name}</span></button>)}</div></details>
+            <details className={styles.disclosure}><summary>Your name & sharing</summary><label htmlFor="avatar-name">Display name</label><input id="avatar-name" maxLength={32} value={draft.alias} placeholder={bundle.name?.split(' ')[0] || 'Your first name'} onChange={event => changeDraft(draft => ({ ...draft, alias: event.target.value }))} /><p>Leave blank to use your first name in the gallery and your roster name elsewhere.</p><p>Your class gallery shares your avatar and display name with classmates, their teachers, and school administrators. Appreciation totals are visible only to you.</p></details>
           </>}
-          {tab === 'items' && <>
-            <div className="flex flex-wrap gap-2">{ITEM_SLOTS.map(s => <Button key={s} variant={s === slot ? 'secondary' : 'ghost'} aria-pressed={s === slot} onClick={() => { setSlot(s); setTryOn(null) }} className="min-h-11">{SLOT_LABELS[s]}</Button>)}</div>
-            {draft.equipped[slot] && <Button variant="outline" onClick={() => { setDraft(p => { const equipped = { ...p.equipped }; delete equipped[slot]; return { ...p, equipped } }); setTryOn(null) }}>Remove {SLOT_LABELS[slot].toLowerCase()}</Button>}
-            <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-              {bundle.catalog.filter(i => i.slot === slot).map(i => <ItemCard key={i.slug} item={i} traits={draft.traits} equipped={draft.equipped} items={bundle.catalog} selected={draft.equipped[slot] === i.slug} balance={bundle.balance} onTry={() => setTryOn(i)} onEquip={() => { setDraft(p => ({ ...p, equipped: { ...p.equipped, [i.slot]: i.slug } })); setTryOn(null) }} onBuy={() => buy(i)} />)}
-            </div>
+          {section === 'hair' && <>
+            {draft.equipped.head && <p className={styles.notice}>Your headwear may cover your hairstyle. <button type="button" onClick={() => remove('head')}>Remove headwear</button></p>}
+            <TraitPicker trait={draft.traits.hair_style === 'hijab' ? 'fabric_color' : 'hair_color'} traits={draft.traits} onChange={value => edit(draft.traits.hair_style === 'hijab' ? 'fabric_color' : 'hair_color', value)} />
+            <TraitPicker trait="hair_style" traits={draft.traits} onChange={value => edit('hair_style', value)} />
+            {draft.equipped.facial_hair && <TraitPicker trait="facial_hair_color" traits={draft.traits} onChange={value => edit('facial_hair_color', value)} />}
           </>}
-          {tab === 'looks' && <section className="space-y-4">
-            <p className="text-sm text-muted-foreground">Save up to six looks with your appearance and owned items. Switching looks creates a draft; Save changes applies it everywhere.</p>
-            <label htmlFor="look-name" className="block text-sm font-semibold">Name this look</label>
-            <div className="flex flex-wrap gap-2"><input id="look-name" value={lookName} onChange={e => setLookName(e.target.value)} maxLength={32} placeholder="e.g. Lab day" className="min-h-11 min-w-0 flex-1 rounded-lg border bg-background px-3" /><Button disabled={!lookName.trim() || draft.saved_looks.length >= 6} onClick={() => { setDraft(p => ({ ...p, saved_looks: [...p.saved_looks, { name: lookName.trim(), traits: p.traits, equipped: p.equipped }] })); setLookName(''); setMessage('Look added to your draft. Save changes to keep it.') }}><Sparkles size={16} />Keep this look</Button></div>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">{draft.saved_looks.map((look, index) => <div key={index} className="flex flex-col items-center gap-2 rounded-xl border p-3"><Avatar traits={look.traits} equipped={look.equipped} items={bundle.catalog} size={100} decorative /><p className="max-w-full truncate text-sm font-semibold">{look.name}</p><Button variant="outline" onClick={() => setDraft(p => ({ ...p, traits: withDefaults(look.traits), equipped: look.equipped }))}>Use look</Button><Button variant="ghost" aria-label={`Delete ${look.name}`} onClick={() => setDraft(p => ({ ...p, saved_looks: p.saved_looks.filter((_, i) => i !== index) }))}>Delete</Button></div>)}</div>
-          </section>}
+          {isWardrobe && <>
+            {section === 'outfit' && <div className={styles.pills} role="group" aria-label="Outfit collection">{([['all', 'All outfits'], ['everyday', 'Everyday'], ['costume', 'Costume edit'], ['sport', 'School spirit']] as const).map(([value, label]) => <button type="button" key={value} aria-pressed={collection === value} onClick={() => { setCollection(value); setTryOnSlug(null) }}>{label}</button>)}</div>}
+            {section === 'accessories' && <div className={styles.pills} role="group" aria-label="Accessory category">{ACCESSORIES.map(value => <button type="button" key={value} aria-pressed={slot === value} onClick={() => { setAccessorySlot(value); setTryOnSlug(null); setQuery('') }}>{SLOT_LABELS[value]}</button>)}</div>}
+            <div className={styles.wardrobeTools}><label><span className={styles.srOnly}>Search {SLOT_LABELS[slot].toLowerCase()}</span><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder={`Find ${SLOT_LABELS[slot].toLowerCase()}…`} /></label><div className={styles.pills} role="group" aria-label="Wardrobe filter">{([['all', 'All'], ['owned', 'Mine'], ['available', 'Get now']] as const).map(([value, label]) => <button type="button" key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>{label}</button>)}</div></div>
+            {section === 'outfit' && <details className={styles.disclosure}><summary>Free essentials · shirts & colors</summary>{draft.equipped.body && <p className={styles.notice}>Your outfit covers your base shirt. <button type="button" onClick={() => remove('body')}>Wear my base shirt</button></p>}<TraitPicker trait="shirt_style" traits={draft.traits} onChange={value => edit('shirt_style', value)} /><TraitPicker trait="shirt_color" traits={draft.traits} onChange={value => edit('shirt_color', value)} /></details>}
+            {slot === 'facial_hair' && <TraitPicker trait="facial_hair_color" traits={draft.traits} onChange={value => edit('facial_hair_color', value)} />}
+            {selectedItem && <ItemDetail item={selectedItem} wearing={draft.equipped[selectedItem.slot] === selectedItem.slug} trying={!!tryOn} balance={bundle.balance} onEquip={() => { changeDraft(draft => ({ ...draft, equipped: { ...draft.equipped, [selectedItem.slot]: selectedItem.slug } })); setTryOnSlug(null) }} onBuy={() => buy(selectedItem)} onClose={() => setTryOnSlug(null)} onRemove={() => remove(selectedItem.slot)} />}
+            <div className={styles.results}><span>{wardrobeItems.length} {wardrobeItems.length === 1 ? 'find' : 'finds'}</span><span>Tap a tile to try it on</span></div>
+            {wardrobeItems.length ? <div className={styles.itemGrid} data-scenes={section === 'scene'}>{wardrobeItems.map(item => <ItemTile key={item.slug} item={item} traits={draft.traits} equipped={draft.equipped} items={bundle.catalog} selected={selectedItem?.slug === item.slug} wearing={draft.equipped[slot] === item.slug} onTry={() => { setTryOnSlug(item.slug); setMessage('') }} />)}</div> : <div className={styles.empty}><p>No matches in this part of your wardrobe.</p><button type="button" className={styles.textButton} onClick={() => { setQuery(''); setFilter('all'); setCollection('all') }}>Show all {SLOT_LABELS[slot].toLowerCase()}</button></div>}
+            <StyleBrief index={brief} onNext={() => setBrief(index => (index + 1) % STYLE_BRIEFS.length)} onBrowse={() => { chooseSection('outfit'); setCollection(STYLE_BRIEFS[brief].collection) }} />
+          </>}
+          {section === 'looks' && <>
+            <p className={styles.intro}>Keep up to six favorites. Try a look with one tap, then save it to wear it in your lessons.</p>
+            <div className={styles.keepLook}><label htmlFor="look-name">Give this look a name</label><div><input id="look-name" value={lookName} onChange={event => setLookName(event.target.value)} maxLength={32} placeholder="Lab day, moon explorer, Friday…" /><button type="button" className={styles.primary} disabled={!lookName.trim() || draft.saved_looks.length >= 6} onClick={() => { changeDraft(draft => draft.saved_looks.length >= 6 ? draft : ({ ...draft, saved_looks: [...draft.saved_looks, { name: lookName.trim(), traits: draft.traits, equipped: draft.equipped }] })); setLookName(''); setMessage('Look added. Save your changes to keep it.') }}><Sparkles size={16} />Keep look</button></div>{draft.saved_looks.length >= 6 && <p>Your lookbook is full. Remove a look to make room for a new one.</p>}</div>
+            <div className={styles.lookGrid}>{draft.saved_looks.map((look, index) => {
+              const active = JSON.stringify(withDefaults(look.traits)) === JSON.stringify(draft.traits) && JSON.stringify(look.equipped) === JSON.stringify(draft.equipped)
+              return <article key={index} className={styles.lookCard}><button type="button" aria-label={`Use look: ${look.name}`} aria-pressed={active} onClick={() => { changeDraft(draft => ({ ...draft, traits: withDefaults(look.traits), equipped: look.equipped })); setCloseUp(false) }}><span className={styles.lookNumber}>LOOK / {String(index + 1).padStart(2, '0')}</span><Avatar traits={look.traits} equipped={look.equipped} items={bundle.catalog} size={106} crop="figure" decorative /><strong>{look.name}</strong><span className={styles.lookUse}>{active ? <><Check size={12} />In your mirror</> : 'Try this look →'}</span></button><button type="button" className={styles.deleteLook} aria-label={`Delete ${look.name}`} onClick={() => changeDraft(draft => ({ ...draft, saved_looks: draft.saved_looks.filter((_, position) => position !== index) }))}><Trash2 size={14} /></button></article>
+            })}{draft.saved_looks.length < 6 && <div className={styles.lookPlaceholder}><BookOpen size={27} /><p>Your next favorite<br />belongs here.</p></div>}</div>
+          </>}
         </fieldset>}
       </div>
     </div>
-    {dirty && <div className="fixed inset-x-0 bottom-0 z-20 flex items-center justify-between gap-3 border-t bg-card p-3 md:hidden"><span className="text-sm">Unsaved changes</span><Button className="min-h-11" disabled={busy || conflict} onClick={save}>Save avatar changes</Button></div>}
+    <div className={styles.mobileSave}><button type="button" className={styles.undo} disabled={busy || (!history.past.length && !tryOn)} onClick={() => { if (tryOn) setTryOnSlug(null); else dispatch({ type: 'undo' }); setMessage('Last change undone.') }}><Undo2 size={17} />Undo</button><button type="button" className={styles.primary} disabled={saveDisabled} onClick={save}><Save size={16} />{saveLabel}</button></div>
   </main>
-}
-function swatch(trait: keyof AvatarTraits, value: string): string | null {
-  if (trait === 'skin') return SKIN[value as keyof typeof SKIN]?.color
-  if (trait === 'hair_color' || trait === 'facial_hair_color') return HAIR[value as keyof typeof HAIR]?.main ?? null
-  if (trait === 'shirt_color' || trait === 'fabric_color') return SHIRT[value as keyof typeof SHIRT]
-  if (trait === 'eye_color') return EYE[value as keyof typeof EYE]
-  return null
-}
-function TraitPicker({ trait, traits, onChange }: { trait: keyof AvatarTraits; traits: AvatarTraits; onChange: (v: string) => void }) {
-  return <section className="space-y-3 rounded-xl border bg-card p-3" aria-label={TRAIT_LABELS[trait]}>
-    <h2 className="text-sm font-semibold">{TRAIT_LABELS[trait]} <span className="font-normal capitalize text-muted-foreground">· {nice(traits[trait])}</span></h2>
-    <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5">{TRAIT_OPTIONS[trait].map(value => {
-      const color = swatch(trait, value); const selected = traits[trait] === value
-      return <button type="button" key={value} aria-pressed={selected} aria-label={`${TRAIT_LABELS[trait]}: ${nice(value)}`} className={`relative flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl border px-1 py-2 text-xs capitalize focus-visible:outline-2 focus-visible:outline-primary ${selected ? 'border-primary bg-secondary' : 'border-border'}`} onClick={() => onChange(value)}>
-        {color ? <span className="h-7 w-7 rounded-full border border-border" style={{ background: color }} /> : <Avatar traits={{ ...traits, [trait]: value }} size={50} crop={trait === 'shirt_style' ? 'medium' : 'head'} decorative />}
-        {nice(value)}{selected && <Check size={13} className="absolute right-1 top-1" />}
-      </button>
-    })}</div>
-  </section>
-}
-function ItemCard({ item, traits, equipped, items, selected, balance, onTry, onEquip, onBuy }: { item: CatalogEntry; traits: AvatarTraits; equipped: EquippedItems; items: CatalogEntry[]; selected: boolean; balance: number; onTry: () => void; onEquip: () => void; onBuy: () => void }) {
-  const owned = item.state === 'owned'; const locked = item.state === 'locked_until_mastery'
-  const canBuy = !owned && !locked && (item.state !== 'too_expensive' || balance >= (item.cost_xp ?? Infinity))
-  return <article className={`flex min-w-0 flex-col items-center rounded-xl border bg-card p-3 ${selected ? 'border-primary' : ''}`}>
-    <Avatar traits={traits} equipped={{ ...equipped, [item.slot]: item.slug }} items={items} size={100} crop="medium" decorative />
-    <h3 className="text-center text-sm font-semibold">{item.name}</h3>
-    <p className="my-1 text-center text-xs text-muted-foreground">{owned ? (item.enabled === false ? 'Owned · retired from shop' : 'Owned') : item.state === 'staff_free' ? 'Free for staff' : item.unlock_target_id ? 'Earned through mastery' : `${item.cost_xp ?? '—'} XP`}</p>
-    {item.unlock_target_id && !owned && <p className="my-2 text-center text-xs text-muted-foreground">{item.target_statement}<br />Level {(item.unlock_progress ?? 0).toFixed(1)} / {Number(item.unlock_min_level ?? 2.5).toFixed(1)}</p>}
-    <div className="mt-auto flex w-full flex-col gap-2 pt-2">
-      <Button variant="outline" className="min-h-11" onClick={onTry}>Try on</Button>
-      {owned ? <Button className="min-h-11" disabled={selected} onClick={onEquip}>{selected ? 'Selected' : 'Wear'}</Button> : <Button className="min-h-11" disabled={!canBuy} onClick={onBuy}>{item.state === 'staff_free' ? 'Add & wear' : item.state === 'unlock_available' ? 'Claim & wear' : locked ? 'Keep learning' : `Buy · ${item.cost_xp} XP`}</Button>}
-      {!owned && !locked && !canBuy && <p className="text-center text-xs text-muted-foreground">Need {Math.max(0, (item.cost_xp ?? 0) - balance)} more XP</p>}
-    </div>
-  </article>
 }

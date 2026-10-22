@@ -1,7 +1,3 @@
-"use client"
-import SimLab from '@/components/simulations/lab/SimLab'
-import { asteroidTrajectoryDef } from './def'
-
-export default function AsteroidTrajectorySimulation() {
-  return <SimLab def={asteroidTrajectoryDef} />
-}
+'use client'
+import SimulationActivity from '@/components/simulations/SimulationActivity'
+export default function Simulation(){return <SimulationActivity id="asteroid-trajectory"/>}

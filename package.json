@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "prebuild": "npm run audit:styles && npm run audit:brand",
+    "prebuild": "npm run audit:styles && npm run audit:brand && npm run build:game-avatars",
+    "build:game-avatars": "node scripts/mic-check/build.cjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
@@ -80,6 +81,7 @@
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
     "server-only": "^0.0.1",
+    "sharp": "0.34.4",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.160.1"

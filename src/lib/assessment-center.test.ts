@@ -11,7 +11,7 @@ test('gradebook is the landing view and lesson inbox has a distinct route', () =
 test('moving between tools retains scope and filters but cannot open the previous assessment detail', () => {
   const p = query(assessmentCenterHref('quizzes', null, 'class-a', 'unit=unit-2&lesson=motion&q=Sam&id=reading-1&student=s1&lesson_id=l1&block_id=b1&generate=1&quizTab=gradebook'))
   assert.equal(p.get('class'), 'class-a'); assert.equal(p.get('unit'), 'unit-2')
-  assert.equal(p.get('q'), 'Sam'); assert.equal(p.get('lesson'), 'motion'); assert.equal(p.get('quizTab'), 'gradebook')
+  assert.equal(p.get('q'), 'Sam'); assert.equal(p.has('lesson'), false); assert.equal(p.get('quizTab'), 'gradebook')
   for (const key of ['id', 'student', 'lesson_id', 'block_id', 'generate']) assert.equal(p.has(key), false)
 })
 test('all classes is explicit so a stored class cannot silently replace it', () => {

@@ -1,8 +1,3 @@
 'use client'
-
-import SimLab from '@/components/simulations/lab/SimLab'
-import { measurementPrecisionDef } from './def'
-
-export default function MeasurementPrecisionSimulation() {
-  return <SimLab def={measurementPrecisionDef} />
-}
+import SimulationActivity from '@/components/simulations/SimulationActivity'
+export default function Simulation(){return <SimulationActivity id="measurement-precision"/>}

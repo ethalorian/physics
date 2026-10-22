@@ -269,7 +269,7 @@ export default function EscapeRoom({
           <div className="flex flex-wrap justify-center gap-3 mb-4">
             {group.map((mate, i) => (
               <div key={i} className="flex flex-col items-center gap-1" style={{ width: 52 }}>
-                <Avatar traits={mate.traits} equipped={mate.equipped} items={avatarItems} size={42} crop="head" />
+                <Avatar traits={mate.traits} equipped={mate.equipped} items={avatarItems} size={42} crop="portrait" />
                 <span className="text-overline truncate w-full text-center" title={mate.alias}>{mate.alias}{mate.isMe ? ' (you)' : ''}</span>
               </div>
             ))}

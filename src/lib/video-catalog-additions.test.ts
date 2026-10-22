@@ -30,7 +30,7 @@ test('new captures feed the exact target without sending answer keys to students
   const doc=createVideoLesson(a.youtubeId)!
   assert.deepEqual(lessonTargetReferences(doc),[a.target.slug])
   const captures=doc.blocks.filter(b=>'capture' in b && b.capture)
-  assert.equal(captures.length,3)
+  assert.equal(captures.length,5)
   assert.ok(captures.every(b=>b.targetId===a.target.slug))
   const safe=filterDocumentForViewer(doc,{role:'student',track:'cpa'})
   assert.ok(!JSON.stringify(safe).includes('correctOptionId'))

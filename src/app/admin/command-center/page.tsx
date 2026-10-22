@@ -1,4 +1,5 @@
 'use client'
+import { teachingHref } from '@/lib/teaching-navigation'
 import DeckActivities from '@/components/present/DeckActivities'
 import type { DeckActivity } from '@/lib/deck-activities'
 import TeachingPoll from '@/components/present/TeachingPoll'
@@ -114,7 +115,7 @@ export default function CommandCenterPage() {
   }, [])
   useEffect(() => {
     if (state?.session.status !== 'ended' || !presentation?.session) return
-    setFinished({ id: state.session.id, title: presentation?.lesson?.title ?? 'Presentation' })
+    setFinished({ id: state.session.id, title: presentation?.lesson?.title ?? 'Guided activity' })
     setConfirmEnd(false); setShowContent(false); setShowConnection(false)
     setPresentation(null); setLessonId(''); setNotice('')
     setActiveSessions(old => old.filter(s => s.id !== state.session.id))
@@ -133,7 +134,7 @@ export default function CommandCenterPage() {
     const controller = new AbortController()
     const refresh = () => commandRequest<{ sessions: typeof activeSessions }>('/api/present/sessions?active=1', { signal: controller.signal })
       .then(d => { if (!controller.signal.aborted) setActiveSessions(d.sessions) })
-      .catch(e => { if (!controller.signal.aborted) setError(`Could not find live presentations. ${e.message}`) })
+      .catch(e => { if (!controller.signal.aborted) setError(`Could not find live guided sessions. ${e.message}`) })
     void refresh()
     const timer = setInterval(refresh, 5000)
     return () => { controller.abort(); clearInterval(timer) }
@@ -171,9 +172,9 @@ export default function CommandCenterPage() {
     try {
       await commandRequest('/api/present/sessions/' + encodeURIComponent(id), { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'ended' }) })
       setActiveSessions(old => old.filter(s => s.id !== id))
-      setNotice('Presentation ended. Saved notes and student work are kept.')
+      setNotice('Guided session ended. Saved notes and student work are kept.')
       setRetry(n => n + 1)
-    } catch (e) { setError(e instanceof Error ? e.message : 'Could not end the presentation.') }
+    } catch (e) { setError(e instanceof Error ? e.message : 'Could not end the guided session.') }
     finally { ending.current = false; setEndingId('') }
   }
   async function start() {
@@ -199,7 +200,7 @@ export default function CommandCenterPage() {
       if (state.lobby) await commandRequest('/api/lobby/sessions/' + state.lobby.id, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'closed' }) })
       if (teaching.state?.pulse?.status === 'open' && !await teaching.action({ action: 'close_pulse' })) return
       await patch({ status: 'ended', poll_block_id: null, timer_seconds: null, blackout: false })
-    } catch (e) { setError(e instanceof Error ? e.message : 'Could not finish the presentation. Please retry.') }
+    } catch (e) { setError(e instanceof Error ? e.message : 'Could not finish the guided session. Please retry.') }
     finally { ending.current = false; setEndingId('') }
   }
   const projectorPath = presentation?.session ? `/admin/projector?session=${encodeURIComponent(presentation.session.id)}` : ''
@@ -246,10 +247,10 @@ export default function CommandCenterPage() {
   const screenStatus = state && teaching.state ? projectorStatus(state, teaching.state, clock) : 'Checking projector…'
   const screenConnected = screenStatus === 'Projector confirmed' || screenStatus === 'Waiting for projector'
   const activityOpen = Boolean(state?.lobby || state?.session.poll_block_id || teaching.state?.pulse?.status === 'open')
-  const position = explainer?`Explainer section · ${explainerIndex+1} of ${blockScreens}`:projected ? `Lesson content · ${(state?.session.projected_block_page ?? 0) + 1} of ${blockScreens}` : `Slide ${current + 1} of ${slides.length || '…'}`
-  const screenLabel = state?.session.blackout ? 'Screen is blank' : state?.lobby ? 'Group activity' : teaching.state?.pulse?.status === 'open' ? 'Pulse check' : state?.session.poll_block_id ? 'Live poll' : explainerFrame?explainerFrame.title:projected ? 'Lesson content' : slides[current]?.label ?? 'Loading slides…'
+  const position = explainer?`Explainer section · ${explainerIndex+1} of ${blockScreens}`:projected ? `Lesson content · ${(state?.session.projected_block_page ?? 0) + 1} of ${blockScreens}` : `Step ${current + 1} of ${slides.length || '…'}`
+  const screenLabel = state?.session.blackout ? 'Screen is blank' : state?.lobby ? 'Group activity' : teaching.state?.pulse?.status === 'open' ? 'Pulse check' : state?.session.poll_block_id ? 'Live poll' : explainerFrame?explainerFrame.title:projected ? 'Lesson content' : slides[current]?.label ?? 'Loading activity steps…'
   const controlBusy = busy || Boolean(endingId)
-  const tabs = [{ id: 'teach', label: 'Teach', icon: MonitorPlay }, { id: 'activities', label: 'Activities', icon: Radio }, { id: 'students', label: 'Students', icon: Users }, { id: 'notes', label: 'Notes', icon: StickyNote }]
+  const tabs = [{ id: 'teach', label: 'Guide practice', icon: MonitorPlay }, { id: 'activities', label: 'Activities', icon: Radio }, { id: 'students', label: 'Students', icon: Users }, { id: 'notes', label: 'Notes', icon: StickyNote }]
   function attach(session: typeof activeSessions[number]) {
     setMirror(display==='mirror')
     setFinished(null); setNotice(''); setView('teach'); setShowConnection(!tablet)
@@ -259,55 +260,55 @@ export default function CommandCenterPage() {
     else setLessonId(key)
     setAttachVersion(n => n + 1)
   }
-  if(!initialized)return <p role="status" className="p-6">Preparing Teach…</p>
-  if (!staff) return <p className="p-6">Teach is available to teachers and administrators.</p>
-  if(mirror && (!live || !state || !presentation?.lesson))return <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-6 text-center"><h1 className="text-2xl font-semibold">{starting?'Connecting presentation…':'Presentation is not running'}</h1><p>Stop mirroring before returning to private teacher controls.</p><Button className="min-h-12" disabled={starting} onClick={()=>setMirror(false)}>Mirroring stopped · return to workspace</Button></main>
+  if(!initialized)return <p role="status" className="p-6">Preparing guided problem solving…</p>
+  if (!staff) return <p className="p-6">Guided problem solving is available to teachers and administrators.</p>
+  if(mirror && (!live || !state || !presentation?.lesson))return <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-6 text-center"><h1 className="text-2xl font-semibold">{starting?'Connecting guided session…':'Guided session is not running'}</h1><p>Stop mirroring before returning to private teacher controls.</p><Button className="min-h-12" disabled={starting} onClick={()=>setMirror(false)}>Mirroring stopped · return to workspace</Button></main>
   if ((local || (mirror && live && state)) && presentation?.lesson) {
     const shown=local??state!
     return <TeachingDisplay presentation={presentation} slides={slides} live={shown} tools={local?null:teaching.state} rehearsal={!!local&&mode==='rehearse'} busy={!local&&controlBusy} error={local?'':connectionError||error||teaching.error} onFinish={local?undefined:()=>void end()} onGo={index=>{if(local){setLocal({...local,session:{...local.session,current_slide:index,current_anchor:slides[index]?.anchor??null}})}else go(index)}} onPatch={values=>{if(local)setLocal({...local,session:{...local.session,...values}});else {const {timer_ends_at,...rest}=values;void patch({...rest,...('timer_ends_at' in values?{timer_seconds:timer_ends_at?Math.max(1,Math.round((Date.parse(timer_ends_at)-Date.now())/1000)):null}:{})})}}} onExit={()=>{setLocal(null);setMirror(false);const url=new URL(window.location.href);url.searchParams.delete('display');window.history.replaceState(window.history.state,'',url)}}/>
   }
   return <div className={styles.page}>
     {!live && <header className={styles.setupHeader}>
-      <Button asChild variant="ghost" className="min-h-12"><Link href={role === 'admin' ? '/admin/home' : '/admin/classes'}><ArrowLeft size={18} />Teacher home</Link></Button>
-      <div className="text-overline text-primary">Teach</div>
-      <h1 className="text-title-1">Ready to teach.</h1>
-      <p className="text-muted-foreground">Choose your class, unit, and Course Plans day to present its deck.</p><Button asChild variant="outline" className="min-h-12"><a href="/explainers/claude/index.html" target="_blank" rel="noopener noreferrer">Browse original explainers</a></Button>
+      <Button asChild variant="ghost" className="min-h-12"><Link href={teachingHref('live', courseId, unitId || 'auto', planTarget(lessonId)?.plan_day)}><ArrowLeft size={18} />Live classroom</Link></Button>
+      <div className="text-overline text-primary">Worksheets & practice</div>
+      <h1 className="text-title-1">Guided problem solving</h1>
+      <p className="text-muted-foreground">Choose a course day to guide students through worksheet and practice problems, discuss their approaches, and build explanations together.</p><Button asChild variant="outline" className="min-h-12"><a href="/explainers/claude/index.html" target="_blank" rel="noopener noreferrer">Browse original explainers</a></Button>
     </header>}
     {(error || connectionError || teaching.error) && <div role="alert" className="rounded-xl border border-destructive p-3 text-destructive">{error || connectionError || teaching.error}{!live && <Button className="ml-2 min-h-12" variant="outline" onClick={() => setRetry(n => n + 1)}>Try again</Button>}</div>}
     {notice && <p role="status" className="break-words">{notice}</p>}
     {!live && finished && <Card className="gap-4 p-6 border-primary/30">
       <Check size={28} className="text-primary" aria-hidden />
-      <div><h2 className="text-title-2">Presentation finished</h2><p className="mt-1">{conceptTitle(finished.title)}</p></div>
+      <div><h2 className="text-title-2">Guided session finished</h2><p className="mt-1">{conceptTitle(finished.title)}</p></div>
       <p className="text-muted-foreground">The classroom screen is blank. Your teaching notes and student responses are saved.</p>
-      <div className="flex flex-wrap gap-3"><Button asChild className="min-h-12"><Link href={`/admin/command-center/recap?session=${finished.id}`}>View saved notes</Link></Button><Button variant="outline" className="min-h-12" onClick={() => { setFinished(null); setView('teach') }}>Present another day</Button></div>
+      <div className="flex flex-wrap gap-3"><Button asChild className="min-h-12"><Link href={`/admin/command-center/recap?session=${finished.id}`}>View saved notes</Link></Button><Button variant="outline" className="min-h-12" onClick={() => { setFinished(null); setView('teach') }}>Guide another activity</Button></div>
     </Card>}
     {!live && !finished && <div className={styles.setup}>
       {activeSessions.length > 0 && <Card className="gap-4 border-primary/30 p-5">
-        <div><p className="text-overline text-primary">Continue teaching</p><h2 className="mt-1 text-title-2">Presentations already running</h2><p className="mt-1 text-muted-foreground">Pick up where you left off, on this device.</p></div>
+        <div><p className="text-overline text-primary">Continue guided practice</p><h2 className="mt-1 text-title-2">Guided sessions in progress</h2><p className="mt-1 text-muted-foreground">Pick up where you left off, on this device.</p></div>
         {activeSessions.map(s => <div key={s.id} className={styles.resume}>
-          <div><strong>{courses.find(c => c.id === s.course_id)?.name ?? 'Live presentation'}{courses.find(c => c.id === s.course_id)?.section ? ` · ${courses.find(c => c.id === s.course_id)?.section}` : ''}</strong><p className="text-sm text-muted-foreground">{conceptTitle(lessons.find(l => l.id === presentationKey(s))?.title ?? 'Presentation in progress')} · Slide {s.current_slide + 1}</p></div>
-          <Button className="min-h-12" disabled={locked || Boolean(endingId) || !courses.some(c => c.id === s.course_id)} onClick={() => attach(s)}>Control this presentation</Button>
-          <details><summary className="min-h-11 cursor-pointer content-center text-sm text-muted-foreground">Options</summary><Button variant="outline" className="min-h-12" disabled={Boolean(endingId)} onClick={() => endListed(s.id)}>{endingId === s.id ? 'Ending…' : 'End presentation'}</Button></details>
+          <div><strong>{courses.find(c => c.id === s.course_id)?.name ?? 'Live guided practice'}{courses.find(c => c.id === s.course_id)?.section ? ` · ${courses.find(c => c.id === s.course_id)?.section}` : ''}</strong><p className="text-sm text-muted-foreground">{conceptTitle(lessons.find(l => l.id === presentationKey(s))?.title ?? 'Guided activity in progress')} · Step {s.current_slide + 1}</p></div>
+          <Button className="min-h-12" disabled={locked || Boolean(endingId) || !courses.some(c => c.id === s.course_id)} onClick={() => attach(s)}>Resume guided session</Button>
+          <details><summary className="min-h-11 cursor-pointer content-center text-sm text-muted-foreground">Options</summary><Button variant="outline" className="min-h-12" disabled={Boolean(endingId)} onClick={() => endListed(s.id)}>{endingId === s.id ? 'Ending…' : 'End guided session'}</Button></details>
         </div>)}
       </Card>}
       <Card className="gap-5 p-5 sm:p-6">
-        <div><p className="text-overline text-primary">{activeSessions.length ? 'Or present another day' : 'Start here'}</p><h2 className="mt-1 text-title-2">What are you teaching?</h2></div>
+        <div><p className="text-overline text-primary">{activeSessions.length ? 'Or guide another activity' : 'Start here'}</p><h2 className="mt-1 text-title-2">What will students work through?</h2></div>
         <fieldset disabled={locked || Boolean(presentation?.session)} className="grid min-w-0 gap-4 sm:grid-cols-2">
           <label className="min-w-0 text-sm font-medium">Class<select aria-label="Class" className={fieldClass + ' mt-2'} value={courseId} onChange={e => {setAttachVersion(0);setCourseId(e.target.value);context.remember({classId:e.target.value,lessonId:''})}}><option value="">Choose class</option>{courses.map(c => <option key={c.id} value={c.id}>{c.name}{c.section ? ' · '+c.section : ''}</option>)}</select></label>
           <label className="min-w-0 text-sm font-medium">Unit<select aria-label="Unit" className={fieldClass+' mt-2'} value={unitId} onChange={e=>{setUnitId(e.target.value);setLessonId('');setPresentation(null);setAttachVersion(0);setSearch('')}}><option value="">Choose unit</option>{[...new Map(lessons.map(p=>[p.unit_id,p.unit])).entries()].map(([id,title])=><option key={id} value={id}>{title}</option>)}</select></label>
           <label className="text-sm">Find a day<input className={fieldClass+' mt-2'} value={search} onChange={e=>setSearch(e.target.value)} placeholder="Day number or topic"/></label>
-          <label className="min-w-0 text-sm font-medium">Course Plans day<select aria-label="Course Plans day" className={fieldClass+' mt-2'} value={lessonId} onChange={e=>{setAttachVersion(0);setPresentation(null);setLessonId(e.target.value);setError('');context.remember({classId:courseId,lessonId:''})}}><option value="">Choose day</option>{lessons.filter(p=>p.unit_id===unitId&&(p.id===lessonId||('Day '+p.day+' '+p.title).toLowerCase().includes(search.toLowerCase()))).map(p=><option key={p.id} value={p.id} disabled={!p.deck}>{conceptTitle(p.title).match(/^Day \d+/i)?conceptTitle(p.title):`Day ${p.day} — ${conceptTitle(p.title)}`}{!p.deck?' · deck not available':''}</option>)}</select></label>
+          <label className="min-w-0 text-sm font-medium">Course day<select aria-label="Course day" className={fieldClass+' mt-2'} value={lessonId} onChange={e=>{setAttachVersion(0);setPresentation(null);setLessonId(e.target.value);setError('');context.remember({classId:courseId,lessonId:''})}}><option value="">Choose day</option>{lessons.filter(p=>p.unit_id===unitId&&(p.id===lessonId||('Day '+p.day+' '+p.title).toLowerCase().includes(search.toLowerCase()))).map(p=><option key={p.id} value={p.id} disabled={!p.deck}>{conceptTitle(p.title).match(/^Day \d+/i)?conceptTitle(p.title):`Day ${p.day} — ${conceptTitle(p.title)}`}{!p.deck?' · guided activity not available':''}</option>)}</select></label>
         </fieldset>
-        {!loading && courseId && !lessons.length && <p>No Course Plans days are available for this class yet.</p>}
-        {courseId && lessons.length>0 && <p className="text-sm text-muted-foreground">{unitId.startsWith('trades-etf-')?'ETF':track==='honors'?'Honors':'CPA'} decks · Days match Course Plans. Days without a deck are marked unavailable.</p>}
+        {!loading && courseId && !lessons.length && <p>No course days are available for this class yet.</p>}
+        {courseId && lessons.length>0 && <p className="text-sm text-muted-foreground">{unitId.startsWith('trades-etf-')?'ETF':track==='honors'?'Honors':'CPA'} guided activities · Paired with the worksheets and practice in the course guide. Days without an activity are marked unavailable.</p>}
         {courseId && <div className="flex flex-wrap gap-2">{history.filter(h=>h.plan_unit_id&&lessons.some(p=>p.id===presentationKey(h)&&p.deck)).slice(0,3).map(h=><Button key={h.id} variant="outline" onClick={()=>{setAttachVersion(0);setUnitId(h.plan_unit_id!);setLessonId(presentationKey(h));setSearch('')}}>Recent: {conceptTitle(lessons.find(p=>p.id===presentationKey(h))?.title??'Day '+h.plan_day)}</Button>)}</div>}
-        {presentation?.lesson && <section className="space-y-3 rounded-xl border p-4"><h3 className="font-semibold">{conceptTitle(presentation.lesson.title)}</h3><p className="text-sm">{isPlan?(presentation.plan?.plan_unit_id?.startsWith('trades-etf-')?'ETF':presentation.plan?.plan_track==='honors'?'Honors':'CPA')+' presentation deck':'Existing lesson presentation'} · {presentation.session?'Live session running':'Ready to present'}</p>{isPlan&&<Link className="inline-block min-h-11 py-2 underline" href={'/admin/teacher/plans?'+new URLSearchParams({class:courseId,unit:unitId,day:String(planTarget(lessonId)?.plan_day??1)})}>View this Course Plans day</Link>}<LivePreview lesson={presentation.lesson} deck={presentation.deck} live={rehearsalState(lessonId,courseId)} tools={null} binding={slides[0]?.binding}/></section>}
-        <fieldset className="space-y-3"><legend className="font-semibold">Display setup</legend>{[['computer','Control a classroom computer'],['mirror','Mirror this iPad']].map(([value,label])=><label key={value} className="flex min-h-11 items-center gap-3"><input type="radio" name="display" value={value} checked={display===value} onChange={()=>{setDisplay(value);try{localStorage.setItem('teaching-display',value)}catch{}}}/>{label}</label>)}<p className="text-sm text-muted-foreground">{display==='mirror'?'Opens a presentation-only screen with touch controls. Stop mirroring before returning to private teacher controls.':'Open the projector window on the classroom computer. Keep its connection page open, then control the same presentation on the iPad.'}</p></fieldset>
-        <label className="text-sm font-medium">Teaching mode<select className={fieldClass+' mt-2'} value={mode} onChange={e=>setMode(e.target.value as typeof mode)}><option value="rehearse">Rehearse · nothing saved</option><option value="slides">Present on this device only</option><option value="live">Present deck · sync iPad and projector</option></select></label>
-        <Button className="min-h-14 text-base" disabled={!courseId || !lessonId || locked || !presentation || Boolean(presentation.session)||!slides.length} onClick={start}><MonitorPlay size={20} />{loading ? 'Loading deck…' : starting ? 'Starting…' : presentation?.session ? 'Connecting to presentation…' : mode==='rehearse'?'Start rehearsal':mode==='slides'?'Present on this device':'Present deck'}</Button>
-        <p className="text-sm text-muted-foreground">{mode==='live'?'Your iPad and classroom computer control the same deck and slide position.':'Opens on this device only. Choose “Present deck · sync iPad and projector” to control another screen.'}</p>
+        {presentation?.lesson && <section className="space-y-3 rounded-xl border p-4"><h3 className="font-semibold">{conceptTitle(presentation.lesson.title)}</h3><p className="text-sm">{isPlan?(presentation.plan?.plan_unit_id?.startsWith('trades-etf-')?'ETF':presentation.plan?.plan_track==='honors'?'Honors':'CPA')+' guided activity':'Lesson problem-solving activity'} · {presentation.session?'Live session running':'Ready for guided practice'}</p>{isPlan&&<Link className="inline-block min-h-11 py-2 underline" href={'/admin/control-room?view=guide&'+new URLSearchParams({class:courseId,unit:unitId,day:String(planTarget(lessonId)?.plan_day??1)})}>Read this course guide</Link>}<LivePreview lesson={presentation.lesson} deck={presentation.deck} live={rehearsalState(lessonId,courseId)} tools={null} binding={slides[0]?.binding}/></section>}
+        <fieldset className="space-y-3"><legend className="font-semibold">Display setup</legend>{[['computer','Control a classroom computer'],['mirror','Mirror this iPad']].map(([value,label])=><label key={value} className="flex min-h-11 items-center gap-3"><input type="radio" name="display" value={value} checked={display===value} onChange={()=>{setDisplay(value);try{localStorage.setItem('teaching-display',value)}catch{}}}/>{label}</label>)}<p className="text-sm text-muted-foreground">{display==='mirror'?'Opens the shared activity screen with touch controls. Stop mirroring before returning to private teacher controls.':'Open the projector window on the classroom computer. Keep its connection page open, then guide the same activity from the iPad.'}</p></fieldset>
+        <label className="text-sm font-medium">Activity mode<select className={fieldClass+' mt-2'} value={mode} onChange={e=>setMode(e.target.value as typeof mode)}><option value="rehearse">Try it first · nothing saved</option><option value="slides">Guide on this device only</option><option value="live">Live guided practice · sync classroom screen</option></select></label>
+        <Button className="min-h-14 text-base" disabled={!courseId || !lessonId || locked || !presentation || Boolean(presentation.session)||!slides.length} onClick={start}><MonitorPlay size={20} />{loading ? 'Loading activity…' : starting ? 'Starting…' : presentation?.session ? 'Connecting to guided session…' : mode==='rehearse'?'Try the activity':mode==='slides'?'Guide on this device':'Start guided session'}</Button>
+        <p className="text-sm text-muted-foreground">{mode==='live'?'Your iPad and classroom computer stay on the same activity step. Guide students as they work through their worksheets and practice.':'Opens on this device only. Choose “Live guided practice · sync classroom screen” to control another screen.'}</p>
       </Card>
-      {history.length > 0 && <details className="rounded-xl border p-4"><summary className="min-h-11 cursor-pointer content-center font-semibold">Previous teaching notes</summary><div className="mt-3 grid gap-2">{history.map(h => <Button key={h.id} asChild variant="outline" className="h-auto min-h-12 justify-start whitespace-normal"><Link href={`/admin/command-center/recap?session=${h.id}`}>{lessons.find(l => l.id === presentationKey(h))?.title ?? (h.plan_day?'Day '+h.plan_day:'Presentation')} · {new Date(h.created_at).toLocaleString()}</Link></Button>)}</div></details>}
+      {history.length > 0 && <details className="rounded-xl border p-4"><summary className="min-h-11 cursor-pointer content-center font-semibold">Previous teaching notes</summary><div className="mt-3 grid gap-2">{history.map(h => <Button key={h.id} asChild variant="outline" className="h-auto min-h-12 justify-start whitespace-normal"><Link href={`/admin/command-center/recap?session=${h.id}`}>{lessons.find(l => l.id === presentationKey(h))?.title ?? (h.plan_day?'Day '+h.plan_day:'Guided activity')} · {new Date(h.created_at).toLocaleString()}</Link></Button>)}</div></details>}
     </div>}
     {live && state && lesson && <Tabs value={view} onValueChange={value => { setView(value); setShowConnection(false) }} className="gap-4">
       <div className={styles.remote} id="deck-controls">
@@ -316,11 +317,11 @@ export default function CommandCenterPage() {
           <Button variant="outline" className="min-h-12" aria-expanded={showConnection} onClick={() => setShowConnection(v => !v)}><Settings2 size={17} /><span className={styles.connectionLabel}>{screenConnected ? 'Screen connected' : 'Connect screen'}</span></Button>
           <Button ref={finishButton} variant="ghost" className="min-h-12" onClick={() => setConfirmEnd(true)}>Finish</Button>
         </div>
-        <Button className="min-h-12" variant="outline" onClick={()=>setMirror(true)}>Open presentation-only display</Button>
+        <Button className="min-h-12" variant="outline" onClick={()=>setMirror(true)}>Open classroom activity display</Button>
         <div className={styles.controls}>
-          <Button aria-label="Previous slide" variant="outline" className="min-h-14" disabled={controlBusy || activityOpen || (projected ? !(explainer?explainerIndex:state.session.projected_block_page ?? 0) : current === 0)} onClick={() => explainer?explainerGo(explainerIndex-1):projected ? patch({ projected_block_page: (state.session.projected_block_page ?? 0) - 1 }) : go(current - 1)}><ChevronLeft size={22} /></Button>
+          <Button aria-label="Previous step" variant="outline" className="min-h-14" disabled={controlBusy || activityOpen || (projected ? !(explainer?explainerIndex:state.session.projected_block_page ?? 0) : current === 0)} onClick={() => explainer?explainerGo(explainerIndex-1):projected ? patch({ projected_block_page: (state.session.projected_block_page ?? 0) - 1 }) : go(current - 1)}><ChevronLeft size={22} /></Button>
           <div className="min-w-0 text-center"><p className="text-sm font-semibold">{position}</p><p className="truncate text-sm text-muted-foreground">{screenLabel}</p></div>
-          <Button aria-label="Next slide" className="min-h-14" disabled={controlBusy || activityOpen || (projected ? (explainer?explainerIndex:state.session.projected_block_page ?? 0) >= blockScreens - 1 : !slides.length || current >= slides.length - 1)} onClick={() => explainer?explainerGo(explainerIndex+1):projected ? patch({ projected_block_page: (state.session.projected_block_page ?? 0) + 1 }) : go(current + 1)}>Next <ChevronRight size={22} /></Button>
+          <Button aria-label="Next step" className="min-h-14" disabled={controlBusy || activityOpen || (projected ? (explainer?explainerIndex:state.session.projected_block_page ?? 0) >= blockScreens - 1 : !slides.length || current >= slides.length - 1)} onClick={() => explainer?explainerGo(explainerIndex+1):projected ? patch({ projected_block_page: (state.session.projected_block_page ?? 0) + 1 }) : go(current + 1)}>Next <ChevronRight size={22} /></Button>
           <Button variant="outline" className={styles.blank} disabled={controlBusy} aria-pressed={state.session.blackout} onClick={() => patch({ blackout: !state.session.blackout })}>{state.session.blackout ? 'Show screen' : 'Blank screen'}</Button>
           <label className={styles.timer}><span className="sr-only">Class timer</span><select aria-label="Class timer" value="" disabled={controlBusy} onChange={e => { if (e.target.value) void patch({ timer_seconds: Number(e.target.value) || null }) }}><option value="">{left !== null ? fmtTimer(left) : 'Timer'}</option>{[1,3,5,10].map(m => <option key={m} value={m * 60}>{m} min</option>)}<option value="0">Clear timer</option></select></label>
         </div>
@@ -329,11 +330,11 @@ export default function CommandCenterPage() {
       </div>
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground"><p role="status">{screenStatus}</p><span>Only the classroom preview is shown to students.</span></div>
       <TabsContent value="teach" forceMount hidden={view !== 'teach' || showConnection} className="mt-0 space-y-4">
-        {!screenConnected && !showConnection && <div className={styles.connectPrompt}><div><strong>Connect your classroom screen</strong><p className="mt-1 text-sm text-muted-foreground">{tablet ? 'Open Teach on the classroom computer and choose this running presentation.' : 'Open the projector window on this computer, then take your iPad.'}</p></div><Button className="min-h-12" onClick={() => setShowConnection(true)}>Set up screen</Button></div>}
+        {!screenConnected && !showConnection && <div className={styles.connectPrompt}><div><strong>Connect your classroom screen</strong><p className="mt-1 text-sm text-muted-foreground">{tablet ? 'Open Guided problem solving on the classroom computer and resume this session.' : 'Open the projector window on this computer, then take your iPad.'}</p></div><Button className="min-h-12" onClick={() => setShowConnection(true)}>Set up screen</Button></div>}
         <div className={explainer?.source ? styles.explainerStage : styles.teachingStage}>
           {explainer?.source ? <div className="min-w-0 space-y-4">
             <div className="flex flex-wrap gap-2">
-              {explainerFrame?.discussion&&<Button className="min-h-12" disabled={controlBusy||activityOpen} onClick={()=>{setDiscussionChoice({blockId:projected?.id,frame:explainerIndex,source:'lesson',key:Date.now()});setView('activities')}}>Discuss this slide in groups</Button>}
+              {explainerFrame?.discussion&&<Button className="min-h-12" disabled={controlBusy||activityOpen} onClick={()=>{setDiscussionChoice({blockId:projected?.id,frame:explainerIndex,source:'lesson',key:Date.now()});setView('activities')}}>Discuss this step in groups</Button>}
               <Button variant="outline" className="min-h-12" disabled={controlBusy||activityOpen} onClick={()=>{setDiscussionChoice({source:'textbook',key:Date.now()});setView('activities')}}>Launch a textbook question</Button>
             </div>
             <div hidden={activityOpen}><TeachingToolControls document={lesson.content_blocks} session={state.session} busy={controlBusy || activityOpen} patch={patch} /></div>
@@ -343,15 +344,15 @@ export default function CommandCenterPage() {
             </details>
           </div> : <LivePreview lesson={lesson} deck={presentation?.deck ?? null} live={state} tools={teaching.state} binding={slides[current]?.binding} />}
           <div className="space-y-4 min-w-0">
-            <label className="block text-sm font-medium">Go to a slide<select aria-label="Jump to slide" className={fieldClass + ' mt-2'} disabled={controlBusy || activityOpen || !slides.length} value={current} onChange={e => go(Number(e.target.value))}>{slides.map((s,i) => <option key={i} value={i}>{i + 1}. {s.label}</option>)}</select></label>
-            <div className={styles.speakerNotes}><p className="text-overline text-muted-foreground">Your speaker notes · private</p><p className="mt-2 whitespace-pre-wrap text-sm">{explainerFrame ? `Discussion: ${explainerFrame.prompt}${explainerFrame.reasoning?'\n\nExpected reasoning: '+explainerFrame.reasoning:''}${explainerFrame.discussion ? '\n\nDebrief: '+explainerFrame.discussion.debrief : ''}` : slides[current]?.notes || 'No speaker notes for this slide.'}</p></div>
+            <label className="block text-sm font-medium">Go to a step<select aria-label="Jump to activity step" className={fieldClass + ' mt-2'} disabled={controlBusy || activityOpen || !slides.length} value={current} onChange={e => go(Number(e.target.value))}>{slides.map((s,i) => <option key={i} value={i}>{i + 1}. {s.label}</option>)}</select></label>
+            <div className={styles.speakerNotes}><p className="text-overline text-muted-foreground">Your facilitation notes · private</p><p className="mt-2 whitespace-pre-wrap text-sm">{explainerFrame ? `Discussion: ${explainerFrame.prompt}${explainerFrame.reasoning?'\n\nExpected reasoning: '+explainerFrame.reasoning:''}${explainerFrame.discussion ? '\n\nDebrief: '+explainerFrame.discussion.debrief : ''}` : slides[current]?.notes || 'No facilitation notes for this step.'}</p></div>
             {!projected && slides[current + 1] && <p className="text-sm text-muted-foreground"><strong>Up next</strong> · {slides[current + 1].label}</p>}
-            {!explainer?.source&&lesson.content_blocks.blocks.some(b=>b.teachingTool?.kind==='physics-explainer')&&<label className="block text-sm font-medium">Open an explainer<select aria-label="Open an explainer" className={fieldClass+' mt-2'} disabled={controlBusy||activityOpen} value={explainer?projected?.id:''} onChange={e=>{if(e.target.value)void patch({projected_block_id:e.target.value,blackout:false,poll_block_id:null})}}><option value="">Choose a presentation…</option>{lesson.content_blocks.blocks.filter(b=>b.teachingTool?.kind==='physics-explainer').map(b=><option key={b.id} value={b.id}>{b.teachingMoment?.title}</option>)}</select></label>}
-            {!explainer?.source&&explainerFrame?.discussion&&<Button className="min-h-12 w-full" disabled={controlBusy||activityOpen} onClick={()=>{setDiscussionChoice({blockId:projected?.id,frame:explainerIndex,source:'lesson',key:Date.now()});setView('activities')}}>Discuss this slide in groups</Button>}
+            {!explainer?.source&&lesson.content_blocks.blocks.some(b=>b.teachingTool?.kind==='physics-explainer')&&<label className="block text-sm font-medium">Open an explainer<select aria-label="Open an explainer" className={fieldClass+' mt-2'} disabled={controlBusy||activityOpen} value={explainer?projected?.id:''} onChange={e=>{if(e.target.value)void patch({projected_block_id:e.target.value,blackout:false,poll_block_id:null})}}><option value="">Choose an explainer…</option>{lesson.content_blocks.blocks.filter(b=>b.teachingTool?.kind==='physics-explainer').map(b=><option key={b.id} value={b.id}>{b.teachingMoment?.title}</option>)}</select></label>}
+            {!explainer?.source&&explainerFrame?.discussion&&<Button className="min-h-12 w-full" disabled={controlBusy||activityOpen} onClick={()=>{setDiscussionChoice({blockId:projected?.id,frame:explainerIndex,source:'lesson',key:Date.now()});setView('activities')}}>Discuss this step in groups</Button>}
             <Button variant="outline" className="min-h-12 w-full" onClick={()=>setView('activities')}>Launch a poll or lobby</Button>
             {!isPlan&&!explainer?.source&&<Button variant="outline" className="min-h-12 w-full" disabled={controlBusy||activityOpen} onClick={()=>{setDiscussionChoice({source:'textbook',key:Date.now()});setView('activities')}}>Launch a textbook question</Button>}
             {!isPlan&&<Button ref={contentButton} variant="outline" className="min-h-12 w-full" onClick={() => setShowContent(true)}><BookOpen size={18} />Show lesson content</Button>}
-            {projected && <Button variant="outline" className="min-h-12 w-full" disabled={controlBusy || activityOpen} onClick={() => go(current)}>Return to deck · slide {current + 1}</Button>}
+            {projected && <Button variant="outline" className="min-h-12 w-full" disabled={controlBusy || activityOpen} onClick={() => go(current)}>Return to guided activity · step {current + 1}</Button>}
             {!isPlan&&<div className="flex items-center justify-between gap-2"><span id="remote-sei-label" className="text-sm font-medium">SEI supports</span><Button role="switch" aria-labelledby="remote-sei-label" aria-checked={teaching.state?.tools?.sei_enabled ?? false} variant={teaching.state?.tools?.sei_enabled ? 'default' : 'outline'} className="min-h-12 min-w-20" disabled={controlBusy || teaching.busy || !teaching.state} onClick={() => teaching.action({ action: 'sei_supports', enabled: !teaching.state?.tools?.sei_enabled })}>{teaching.state?.tools?.sei_enabled ? 'On' : 'Off'}</Button></div>}
           </div>
         </div>
@@ -364,19 +365,19 @@ export default function CommandCenterPage() {
       </TabsContent>}
       {teaching.state && <TeachingTools key={state.session.id} view={showConnection ? 'connection' : view} live={state} state={teaching.state} busy={controlBusy || teaching.busy} action={teaching.action} patch={patch} />}
       <Dialog open={showContent} onOpenChange={setShowContent}><DialogContent className={styles.dialog} onCloseAutoFocus={event => { event.preventDefault(); contentButton.current?.focus() }}>
-        <DialogTitle>Show lesson content</DialogTitle><DialogDescription>Choose a prompt, visual, or teaching tool. Your slide position is saved.</DialogDescription>
+        <DialogTitle>Show lesson content</DialogTitle><DialogDescription>Choose a prompt, visual, or teaching tool. Your activity position is saved.</DialogDescription>
         {connectionError && <p role="alert" className="text-destructive">{connectionError}</p>}
         <ProjectionPanel lesson={lesson} live={state} pulseOpen={teaching.state?.pulse?.status === 'open'} busy={controlBusy} patch={async body => { const saved = await patch(body); if (saved) setShowContent(false); return saved }} />
       </DialogContent></Dialog>
       <Dialog open={confirmEnd} onOpenChange={setConfirmEnd}><DialogContent className={styles.dialog} onCloseAutoFocus={event => { event.preventDefault(); finishButton.current?.focus() }}>
-        <DialogTitle>Finish teaching?</DialogTitle><DialogDescription>This blanks the classroom screen and closes the current activity, poll, and timer. Your teaching notes and student responses stay saved.</DialogDescription>
+        <DialogTitle>Finish guided practice?</DialogTitle><DialogDescription>This blanks the classroom screen and closes the current activity, poll, and timer. Your teaching notes and student responses stay saved.</DialogDescription>
         {(error || connectionError || teaching.error) && <p role="alert" className="text-destructive">{error || connectionError || teaching.error}</p>}
-        <div className="flex flex-wrap gap-3"><Button variant="destructive" className="min-h-12" disabled={controlBusy || teaching.busy} onClick={end}>{endingId ? 'Finishing…' : 'End presentation now'}</Button><Button variant="outline" className="min-h-12" disabled={Boolean(endingId)} onClick={() => setConfirmEnd(false)}>Keep teaching</Button></div>
+        <div className="flex flex-wrap gap-3"><Button variant="destructive" className="min-h-12" disabled={controlBusy || teaching.busy} onClick={end}>{endingId ? 'Finishing…' : 'End guided session now'}</Button><Button variant="outline" className="min-h-12" disabled={Boolean(endingId)} onClick={() => setConfirmEnd(false)}>Keep guiding</Button></div>
       </DialogContent></Dialog>
     </Tabs>}
     <div hidden={!live || !showConnection} className={styles.connectionPanel}>
-      <div className="flex items-center justify-between gap-3"><h2 className="text-title-2">Classroom screen</h2><Button variant="outline" className="min-h-12" onClick={() => setShowConnection(false)}>Back to teaching</Button></div>
-      {tablet ? <p>On your classroom computer, open <strong>Teach / Command Center</strong>, choose <strong>Control this presentation</strong>, then <strong>Open projector window</strong>. Keep that page open while you teach from this iPad.</p> : <p>Open the deck on your classroom display. Keep this page open; the iPad connects to the same presentation.</p>}
+      <div className="flex items-center justify-between gap-3"><h2 className="text-title-2">Classroom screen</h2><Button variant="outline" className="min-h-12" onClick={() => setShowConnection(false)}>Back to guided practice</Button></div>
+      {tablet ? <p>On your classroom computer, open <strong>Guided problem solving</strong>, choose <strong>Resume guided session</strong>, then <strong>Open projector window</strong>. Keep that page open while you teach from this iPad.</p> : <p>Open the activity on your classroom display. Keep this page open; the iPad connects to the same guided session.</p>}
       {bridgeId && <ProjectorConnection key={bridgeId} sessionId={bridgeId} compact />}
       <div className="flex flex-wrap gap-3"><Button variant="outline" className="min-h-12" disabled={teaching.busy || !live} onClick={() => teaching.action({ action: 'reconnect' })}>Reconnect projector</Button><Button variant="outline" className="min-h-12" onClick={copyLink}>Copy projector link</Button></div>
       <p className="text-sm text-muted-foreground">If the projector window was closed, reopen it on the computer. Use an extended display to keep teacher controls private.</p>

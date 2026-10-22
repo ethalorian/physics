@@ -1,0 +1,42 @@
+// Render the real teacher/student views with the shared rules; no student records are changed.
+const fs = require('node:fs'), os = require('node:os'), path = require('node:path');
+const root = path.resolve(__dirname, '..'), out = fs.mkdtempSync(path.join(os.tmpdir(), 'choice-requirements-'));
+const source = `
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import assert from 'node:assert/strict';
+import {ChoiceGradebook} from './src/components/choices/ChoiceTeacher';
+import ChoiceCalendar from './src/components/choices/ChoiceCalendar';
+import {sectionProgress} from './src/lib/choice-calendar';
+const section={id:'s',course_id:'c',title:'Three choices with a lab',opens_at:'2026-10-26T12:00:00Z',due_at:'2026-10-30T19:00:00Z',required_count:3,category_minimums:{Lab:1},points_per_choice:10,published:true,version:1,options:['a','b','c','lab','extra'].map(id=>({id,title:id==='lab'?'Cart lab':id,category:id==='lab'?'Lab':'Independent',lab:id==='lab',targetIds:[],steps:id==='lab'?[]:[{id,sourceId:id,kind:'reading',title:id,href:'/readings/'+id,followUp:false}]}))};
+const after=Date.parse('2026-10-30T19:01:00Z'),before=Date.parse('2026-10-29T19:00:00Z');
+const selected=id=>({section_id:'s',option_id:id,user_id:'student',selected:true,planned_on:'2026-10-28',lab_completed_at:null,swap_requested:false,score:8});
+const evidence=Object.fromEntries(['a','b','c'].map(id=>['reading:'+id,{attempted:true,submitted:true,earned:8,possible:10}]));
+const data=(selections,proof=evidence,now=after)=>({staff:true,readOnly:false,courses:[{id:'c',name:'Physics'}],courseId:'c',sections:[section],roster:[{id:'student',name:'Example student'}],selections,slots:[],bookings:[],evidence:{student:proof},progress:{student:{s:sectionProgress(section,selections,proof,now)}}});
+const noSave=async()=>null;
+const teacher=d=>renderToStaticMarkup(<ChoiceGradebook section={section} data={d} save={noSave} busy={false}/>);
+const student=d=>renderToStaticMarkup(<ChoiceCalendar data={{...d,staff:false,readOnly:true}} loading={false} error={false} refresh={()=>{}} dates={['2026-10-28']} courseId="c"/>);
+const skipped=data(['a','b','c'].map(selected));
+let html=teacher(skipped),cells=html.match(/<td[\\s\\S]*?<\\/td>/g);
+assert(cells[3].includes('Missing')&&!cells[3].includes('EX'),'skipped lab is missing, never exempt');
+assert(cells[4].includes('EX'),'unused optional activity stays exempt');
+assert(cells[5].includes('Incomplete')&&cells[5].includes('3/3 activities completed')&&cells[5].includes('1 Lab still required'),'section status includes unmet category');
+assert.equal((html.match(/>0\\/10</g)||[]).length,1,'one requirement zero');
+html=student(skipped);
+assert(html.includes('Choice section incomplete')&&html.includes('1 Lab choice still required.'),'student sees the unmet requirement');
+assert(html.includes('aria-label="Choice requirements met"')&&html.includes('aria-valuenow="2"'),'student progress is not full before lab');
+assert(html.includes('Missing · Required choice'),'student lab card is missing');
+const early=data(['a','b','c'].map(selected),evidence,before);html=teacher(early);
+assert(!html.includes('>0/10<'),'no penalty before deadline');
+const partial=data(['a','b'].map(selected),{'reading:a':evidence['reading:a'],'reading:b':evidence['reading:b']});
+html=teacher(partial);assert.equal((html.match(/>0\\/10</g)||[]).length,1,'missing count and lab share one zero');
+const done=data([...['a','b','c'].map(selected),{...selected('lab'),lab_completed_at:'2026-10-31T13:30:00Z'}]);
+html=teacher(done);assert(html.includes('>Complete</strong>')&&!html.includes('>Incomplete<'),'late completion restores complete status');
+assert(!html.includes('>0/10<'),'late lab completion clears requirement zero');
+html=student(done);assert(html.includes('Choice section complete')&&html.includes('aria-valuenow="3"'),'student completion indicator is full once category is met');
+console.log('PASS: skipped lab Missing, explicit Incomplete status, one zero, optional EX, student requirements progress, before-deadline behavior, and late completion.');
+`;
+(async()=>{
+  await require('esbuild').build({stdin:{contents:source,resolveDir:root,loader:'tsx'},bundle:true,platform:'node',format:'cjs',jsx:'automatic',outfile:out+'/verify.cjs',plugins:[{name:'link',setup(b){b.onResolve({filter:/^next\/link$/},()=>({path:'link',namespace:'fixture'}));b.onLoad({filter:/.*/,namespace:'fixture'},()=>({contents:"import React from 'react';export default function Link(p){return <a {...p}/>}",loader:'tsx',resolveDir:root}));}}]});
+  require(out+'/verify.cjs');
+})().catch(e=>{console.error(e);process.exitCode=1});

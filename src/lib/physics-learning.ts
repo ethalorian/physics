@@ -15,7 +15,7 @@ const byId=new Map(catalog.map(entry=>[entry.id,entry]))
  * Only safe metadata leaves the server. Call after track filtering. */
 export function physicsLearningEntry(lesson:{id:string;title:string;slug:string;unit_id?:string|null;content_blocks?:BlockDocument|null}, targets?:PhysicsTarget[]):PhysicsLearningEntry|undefined {
   const existing=byId.get(lesson.id), document=lesson.content_blocks, path=document?.learningPath
-  if(!existing&&!path&&!/^unit-[1-8]$/.test(lesson.unit_id??''))return undefined
+  if(!existing&&!path&&!document?.reflection&&!/^unit-[1-8]$/.test(lesson.unit_id??''))return undefined
   const blocks=document?.blocks, refs=new Set(lessonTargetReferences(document))
   const assigned=targets?.filter(t=>refs.has(t.slug)||refs.has(t.id)||t.lesson_id===lesson.id)
   const foundations=path?.foundations??(existing?.unitId==='foundations')
@@ -28,7 +28,7 @@ export function physicsLearningEntry(lesson:{id:string;title:string;slug:string;
     hasSimulation:blocks?blocks.some(b=>b.type==='sim_embed'||b.type==='position_explorer'):existing?.hasSimulation??false,
     hasWorkedExample:blocks?blocks.some(b=>b.type==='worked_example'):existing?.hasWorkedExample??false,
     videoIds:blocks?[...new Set(blocks.flatMap(b=>b.type==='instruction_video'&&/^[A-Za-z0-9_-]{11}$/.test(b.youtubeId)?[b.youtubeId]:[]))]:existing?.videoIds??[],
-    source:document?path&&document.presentation==='physics-path'?'new':'existing':existing?.source??'existing',
+    source:document?(path&&document.presentation==='physics-path')||document.reflection?'new':'existing':existing?.source??'existing',
     ...(existing&&'replaces' in existing&&typeof existing.replaces==='string'?{replaces:existing.replaces}:{})
   }
 }

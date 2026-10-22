@@ -1,0 +1,3318 @@
+{
+  "version": 1,
+  "timeZone": "America/New_York",
+  "epoch": "2026-01-01",
+  "selection": "Continuous calendar-day offset modulo 365; includes weekends and leap day; repeats only after all 365 selections.",
+  "entries": [
+    {
+      "id": "suzuki-beginner",
+      "kind": "traditional-saying",
+      "text": "In the beginner’s mind there are many possibilities, but in the expert’s there are few.",
+      "credit": "Shunryu Suzuki",
+      "source": "Zen Mind, Beginner’s Mind · opening line",
+      "url": "https://www.sfzc.org/about/san-francisco-zen-center-lineage/zen-mind-beginners-mind",
+      "treatment": "quotation"
+    },
+    {
+      "id": "original-001",
+      "kind": "original-reflection",
+      "text": "Look closely. The ordinary has not finished surprising you.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-108",
+      "kind": "original-reflection",
+      "text": "Unclench one small part of the day.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-215",
+      "kind": "original-reflection",
+      "text": "A falling leaf is part of a living season.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-322",
+      "kind": "original-riddle",
+      "text": "Can you step outside the moment in which you are stepping?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-089",
+      "kind": "original-riddle",
+      "text": "What does an open hand still hold?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-196",
+      "kind": "original-reflection",
+      "text": "Bring a little more patience to the next encounter.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-303",
+      "kind": "original-riddle",
+      "text": "Can the scent of a flower be inside a fence?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-070",
+      "kind": "original-riddle",
+      "text": "How long does a moment last when you stop counting it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-177",
+      "kind": "original-reflection",
+      "text": "A shared task can begin with a single generous action.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-284",
+      "kind": "original-reflection",
+      "text": "Watch how light finds the smallest opening.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-051",
+      "kind": "original-riddle",
+      "text": "What is different when you say, “I wonder”?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-158",
+      "kind": "original-reflection",
+      "text": "The smallest sound can bring you back to where you are.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-265",
+      "kind": "original-riddle",
+      "text": "Can the shadow of a ladder reach the roof?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-032",
+      "kind": "original-reflection",
+      "text": "Try looking at a familiar problem without its usual label.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 7,
+      "text": "A newcomer asks Jōshū for instruction. Have you eaten your porridge? Yes. Then go wash your bowl.",
+      "id": "gateless-07-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 7 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 7. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#7._趙州洗缽",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-139",
+      "kind": "original-reflection",
+      "text": "Let something familiar be interesting again.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-246",
+      "kind": "original-reflection",
+      "text": "The work becomes clearer when you attend to one part at a time.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-013",
+      "kind": "original-reflection",
+      "text": "A leaf turns. The afternoon changes without an announcement.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-120",
+      "kind": "original-riddle",
+      "text": "Who decides which moments are worth noticing?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-227",
+      "kind": "original-reflection",
+      "text": "Work with the question in front of you, one honest step at a time.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-334",
+      "kind": "original-riddle",
+      "text": "What is missing from a moment before you compare it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-101",
+      "kind": "original-riddle",
+      "text": "If you let go of the description, does the flower disappear?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-208",
+      "kind": "original-reflection",
+      "text": "Enjoy the blossom without asking it to remain.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-315",
+      "kind": "original-reflection",
+      "text": "You do not need a perfect mood to notice one good detail.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-082",
+      "kind": "original-riddle",
+      "text": "What becomes possible when you stop pulling on the sprout?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-189",
+      "kind": "original-reflection",
+      "text": "Notice the work someone did before you arrived.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-296",
+      "kind": "original-reflection",
+      "text": "Notice how the smallest plant makes use of a little light.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-063",
+      "kind": "original-reflection",
+      "text": "A pause can be part of the work.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-170",
+      "kind": "original-riddle",
+      "text": "How much kindness fits into a small gesture?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 19,
+      "text": "Jōshū asks, What is the Way? Nansen replies: the ordinary mind.",
+      "id": "gateless-19-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 19 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 19. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#19._平常是道",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-277",
+      "kind": "original-riddle",
+      "text": "When you draw a line in water, which side are you on?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-044",
+      "kind": "original-reflection",
+      "text": "The first explanation need not be the last.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-151",
+      "kind": "original-riddle",
+      "text": "Where does an echo wait before it returns?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-258",
+      "kind": "original-reflection",
+      "text": "A reflection shows a face, but cannot tell its whole story.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-025",
+      "kind": "original-reflection",
+      "text": "Notice how the same room changes when you grow quiet.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-132",
+      "kind": "original-riddle",
+      "text": "Where does the extraordinary hide in an ordinary room?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-239",
+      "kind": "original-reflection",
+      "text": "An unfinished solution can still contain a useful insight.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-006",
+      "kind": "original-reflection",
+      "text": "Let the sound finish before you reach for its name.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-113",
+      "kind": "original-reflection",
+      "text": "Washing a cup can be the whole task for a moment.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-220",
+      "kind": "original-reflection",
+      "text": "You can treasure a moment without asking it to repeat.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-327",
+      "kind": "original-reflection",
+      "text": "Meet the task where it is, and yourself where you are.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-094",
+      "kind": "original-reflection",
+      "text": "The page can turn before every sentence feels perfect.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-201",
+      "kind": "original-riddle",
+      "text": "Where does a ripple go when the water grows still?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-308",
+      "kind": "original-reflection",
+      "text": "There is no need to improve the view before noticing it.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 6,
+      "text": "The Buddha lifts a flower before the assembly. Everyone is silent. Mahākāśyapa smiles.",
+      "id": "gateless-06-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 6 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 6. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#6._世尊拈花",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-075",
+      "kind": "original-reflection",
+      "text": "Not every useful effort makes a visible mark today.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-182",
+      "kind": "original-riddle",
+      "text": "Does a candle lose its place when another light appears?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-289",
+      "kind": "original-reflection",
+      "text": "Snow arrives quietly and changes the outline of everything.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-056",
+      "kind": "original-reflection",
+      "text": "Begin with a little less certainty and a little more attention.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-163",
+      "kind": "original-riddle",
+      "text": "If the room grows quiet, what becomes louder inside you?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-270",
+      "kind": "original-reflection",
+      "text": "A boundary can guide your attention without containing the whole world.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-037",
+      "kind": "original-reflection",
+      "text": "Set down your prediction long enough to see what happens.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-144",
+      "kind": "original-reflection",
+      "text": "A quiet response may carry a great deal of care.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-251",
+      "kind": "original-reflection",
+      "text": "Take the next step with care rather than certainty.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-018",
+      "kind": "original-reflection",
+      "text": "Hold your attention gently; a clenched hand cannot feel much.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-125",
+      "kind": "original-reflection",
+      "text": "Try giving a routine action a fresh moment of attention.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-232",
+      "kind": "original-riddle",
+      "text": "What changes when you replace judgment with observation?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-339",
+      "kind": "original-riddle",
+      "text": "A traveler searched the garden for quiet. What changed when the traveler stopped searching?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-106",
+      "kind": "original-reflection",
+      "text": "There is room to reconsider what once felt certain.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 12,
+      "text": "Every day Zuigan calls to himself: Master! He answers: Yes! Stay awake! Yes!",
+      "id": "gateless-12-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 12 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 12. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#12._巖喚主人",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-213",
+      "kind": "original-riddle",
+      "text": "What stays with a river that keeps moving?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-320",
+      "kind": "original-reflection",
+      "text": "Name one thing you can actually notice right now.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-087",
+      "kind": "original-reflection",
+      "text": "Leave a little space between yourself and your first reaction.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-194",
+      "kind": "original-riddle",
+      "text": "What grows when you make room for another voice?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-301",
+      "kind": "original-reflection",
+      "text": "Morning light finds a new angle on familiar things.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-068",
+      "kind": "original-reflection",
+      "text": "Return to the difficult passage with a gentler pace.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-175",
+      "kind": "original-reflection",
+      "text": "There is more to a person than the part you met today.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-282",
+      "kind": "original-riddle",
+      "text": "Where does the sky end in a drop of rain?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-049",
+      "kind": "original-reflection",
+      "text": "Let surprise revise your picture of the world.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-156",
+      "kind": "original-reflection",
+      "text": "Hear the whole question before choosing your answer.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-263",
+      "kind": "original-riddle",
+      "text": "What does a circle leave outside itself?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-030",
+      "kind": "original-riddle",
+      "text": "What does an empty page know about your next sentence?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-137",
+      "kind": "original-reflection",
+      "text": "The day is made of moments small enough to meet.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-244",
+      "kind": "original-riddle",
+      "text": "What does careful effort look like when nobody is watching?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 29,
+      "text": "Two monks argue: the wind moves; the flag moves. Huineng says it is their mind that moves.",
+      "id": "gateless-29-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 29 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 29. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#29._非風非幡",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-011",
+      "kind": "original-riddle",
+      "text": "Does a familiar path become new when you notice it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-118",
+      "kind": "original-reflection",
+      "text": "The simple act of arriving deserves your attention.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-225",
+      "kind": "original-reflection",
+      "text": "Practice is a conversation with what you do not yet understand.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-332",
+      "kind": "original-reflection",
+      "text": "Let this small pause belong to itself.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-099",
+      "kind": "original-reflection",
+      "text": "A pause gives an impulse somewhere to soften.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-206",
+      "kind": "original-reflection",
+      "text": "The day does not stay still while we describe it.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-313",
+      "kind": "original-riddle",
+      "text": "If you search for “now,” when will you find it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-080",
+      "kind": "original-reflection",
+      "text": "Work steadily enough to notice what the work is teaching.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-187",
+      "kind": "original-reflection",
+      "text": "Some days, generosity sounds like “Take your time.”",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-294",
+      "kind": "original-riddle",
+      "text": "Can the rain tell where the garden ends?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-061",
+      "kind": "original-riddle",
+      "text": "Does the river measure how long a stone takes to soften?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-168",
+      "kind": "original-reflection",
+      "text": "Allow the world a moment to speak first.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-275",
+      "kind": "original-riddle",
+      "text": "Can you point to “here” without standing somewhere?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-042",
+      "kind": "original-riddle",
+      "text": "What might your answer be hiding from your question?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 37,
+      "text": "Asked why Bodhidharma came from the West, Jōshū answers: the cypress tree in the courtyard.",
+      "id": "gateless-37-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 37 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 37. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#37._庭前柏樹",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-149",
+      "kind": "original-reflection",
+      "text": "Listen for what changes beneath repeated words.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-256",
+      "kind": "original-reflection",
+      "text": "Let the question turn around and look at you.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-023",
+      "kind": "original-riddle",
+      "text": "What can a moment offer when you ask nothing of it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-130",
+      "kind": "original-reflection",
+      "text": "Leave your place ready for the next person.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-237",
+      "kind": "original-reflection",
+      "text": "The next attempt can be different in one small, thoughtful way.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-004",
+      "kind": "original-reflection",
+      "text": "Give this small task the whole of your attention.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-111",
+      "kind": "original-reflection",
+      "text": "You can care deeply without gripping every outcome.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-218",
+      "kind": "original-reflection",
+      "text": "The end of a task makes space for something else to begin.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-325",
+      "kind": "original-riddle",
+      "text": "When you remember to be present, who was away?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-092",
+      "kind": "original-riddle",
+      "text": "Can you keep a wave by closing your hands around it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-199",
+      "kind": "original-reflection",
+      "text": "Every arrival changes the room a little.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-306",
+      "kind": "original-riddle",
+      "text": "Does the first falling leaf know it is autumn?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-073",
+      "kind": "original-riddle",
+      "text": "If nothing seems to change, what are you using to look?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-180",
+      "kind": "original-reflection",
+      "text": "You can disagree and still leave the door open.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 18,
+      "text": "What is Buddha? a monk asks. Tōzan answers: three jin of flax.",
+      "id": "gateless-18-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 18 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 18. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#18._洞山三斤",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-287",
+      "kind": "original-reflection",
+      "text": "The garden offers a different detail to every careful look.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-054",
+      "kind": "original-riddle",
+      "text": "Where does a new idea enter a crowded mind?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-161",
+      "kind": "original-reflection",
+      "text": "There is generosity in an unhurried conversation.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-268",
+      "kind": "original-reflection",
+      "text": "The name of a thing is useful; the thing has more to offer.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-035",
+      "kind": "original-reflection",
+      "text": "An honest question is already an opening.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-142",
+      "kind": "original-riddle",
+      "text": "What do you hear when you stop rehearsing your reply?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-249",
+      "kind": "original-reflection",
+      "text": "You can acknowledge the difficulty and still explore it.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-016",
+      "kind": "original-reflection",
+      "text": "Let your eyes rest before asking them to search.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-123",
+      "kind": "original-riddle",
+      "text": "What does a chair offer without saying a word?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-230",
+      "kind": "original-reflection",
+      "text": "Notice the part that became clearer, even if the whole remains difficult.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-337",
+      "kind": "original-riddle",
+      "text": "When a lantern lights the path, does it need to know the destination?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-104",
+      "kind": "original-riddle",
+      "text": "What can leave your hands without leaving you empty?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-211",
+      "kind": "original-reflection",
+      "text": "There is room to outgrow an old description of yourself.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-318",
+      "kind": "original-reflection",
+      "text": "The whole day does not need to fit into this minute.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 1,
+      "text": "A monk asks Jōshū whether a dog has Buddha-nature. Jōshū answers: Mu.",
+      "id": "gateless-01-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 1 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 1. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#1._趙州狗子",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-085",
+      "kind": "original-reflection",
+      "text": "Set down the argument you are having with yesterday.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-192",
+      "kind": "original-reflection",
+      "text": "Let a small act of care stay small; it still matters.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-299",
+      "kind": "original-reflection",
+      "text": "A stone can be ordinary and full of things to notice.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-066",
+      "kind": "original-reflection",
+      "text": "The kettle warms before it sings.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-173",
+      "kind": "original-riddle",
+      "text": "Can helping someone else change the path under your own feet?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-280",
+      "kind": "original-reflection",
+      "text": "Look for what changes when your point of view changes.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-047",
+      "kind": "original-reflection",
+      "text": "Walk into the lesson with a question still open.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-154",
+      "kind": "original-riddle",
+      "text": "What can a quiet room tell you without words?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-261",
+      "kind": "original-riddle",
+      "text": "If the map contains the road, why do you still need to walk?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-028",
+      "kind": "original-reflection",
+      "text": "There is more here than your first glance found.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-135",
+      "kind": "original-riddle",
+      "text": "What happens between reaching for the cup and lifting it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-242",
+      "kind": "original-reflection",
+      "text": "Try again with curiosity about what will happen.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-009",
+      "kind": "original-reflection",
+      "text": "Notice the light on something you usually walk past.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-116",
+      "kind": "original-reflection",
+      "text": "Place the book down as carefully as you picked it up.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 19,
+      "part": "verse",
+      "text": "Spring flowers, autumn moon; summer breeze, winter snow. Without needless concerns hanging over the heart, each is a good season.",
+      "id": "gateless-19-verse",
+      "kind": "traditional-verse",
+      "credit": "Gateless Gate 19 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 19 · Wumen’s verse. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#19._平常是道",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-223",
+      "kind": "original-reflection",
+      "text": "Give yourself room to become someone you have not met yet.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-330",
+      "kind": "original-reflection",
+      "text": "You can be here without having everything settled.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-097",
+      "kind": "original-reflection",
+      "text": "Yesterday’s weather does not need a place in your backpack.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-204",
+      "kind": "original-riddle",
+      "text": "Are you the same listener at the end of a story?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-311",
+      "kind": "original-reflection",
+      "text": "Feel the support beneath you before reaching for the next thing.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-078",
+      "kind": "original-reflection",
+      "text": "The space between attempts can teach you something too.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-185",
+      "kind": "original-riddle",
+      "text": "What can you offer that cannot be placed on a desk?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-292",
+      "kind": "original-reflection",
+      "text": "The moonlit path is still the path you walked at noon.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-059",
+      "kind": "original-reflection",
+      "text": "Allow the next step to be small enough to take.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-166",
+      "kind": "original-riddle",
+      "text": "Who owns a song while everyone is listening?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-273",
+      "kind": "original-riddle",
+      "text": "Does a question get smaller when you carry it longer?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-040",
+      "kind": "original-reflection",
+      "text": "Let the question breathe before filling the silence.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-147",
+      "kind": "original-reflection",
+      "text": "You do not have to fill every pause to belong in it.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-254",
+      "kind": "original-reflection",
+      "text": "A different angle can reveal what effort alone did not.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 23,
+      "text": "Without thinking good or evil, what is your original face at this very moment?",
+      "id": "gateless-23-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 23 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 23. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#23._不思善惡",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-021",
+      "kind": "original-reflection",
+      "text": "Meet the morning before deciding what kind of day it is.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-128",
+      "kind": "original-reflection",
+      "text": "Notice the hands that helped make this ordinary day possible.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-235",
+      "kind": "original-riddle",
+      "text": "Is understanding something you collect, or something you practice?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-002",
+      "kind": "original-riddle",
+      "text": "Before you call it a leaf, what do you see?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-109",
+      "kind": "original-reflection",
+      "text": "Some doors open when we stop leaning against them.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-216",
+      "kind": "original-riddle",
+      "text": "When ice becomes water, what has it lost?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-323",
+      "kind": "original-reflection",
+      "text": "A gentle return is still a return.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-090",
+      "kind": "original-reflection",
+      "text": "Let a passing mistake remain a passing mistake.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-197",
+      "kind": "original-reflection",
+      "text": "The light on the wall will not stay. You can notice it now.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-304",
+      "kind": "original-reflection",
+      "text": "The space between branches is part of the view.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-071",
+      "kind": "original-reflection",
+      "text": "A slow discovery is still a discovery.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-178",
+      "kind": "original-reflection",
+      "text": "Let kindness be specific enough to use.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-285",
+      "kind": "original-riddle",
+      "text": "What does the pond hold without reaching for it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-052",
+      "kind": "original-reflection",
+      "text": "Familiar things are patient with our new questions.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 16,
+      "text": "The world is so vast. Why put on your ceremonial robe when the bell rings?",
+      "id": "gateless-16-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 16 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 16. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#16._鐘聲七條",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-159",
+      "kind": "original-reflection",
+      "text": "Some understanding begins with letting someone be heard.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-266",
+      "kind": "original-reflection",
+      "text": "Try seeing the problem from the place you usually overlook.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-033",
+      "kind": "original-riddle",
+      "text": "When certainty loosens, what becomes visible?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-140",
+      "kind": "original-reflection",
+      "text": "There is room for wonder beside the homework.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-247",
+      "kind": "original-riddle",
+      "text": "Which is more useful now: a quick verdict or a closer look?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-014",
+      "kind": "original-riddle",
+      "text": "What arrives before your description of it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-121",
+      "kind": "original-reflection",
+      "text": "Let the sound of your pencil bring you back to the page.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-228",
+      "kind": "original-reflection",
+      "text": "A correction is a place where learning becomes visible.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-335",
+      "kind": "original-reflection",
+      "text": "Bring one scattered piece of your attention back to the room.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-102",
+      "kind": "original-reflection",
+      "text": "You need not follow every thought to its destination.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-209",
+      "kind": "original-reflection",
+      "text": "Change often arrives before the words for it.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-316",
+      "kind": "original-riddle",
+      "text": "Where are you while you are waiting to arrive?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-083",
+      "kind": "original-reflection",
+      "text": "Give yourself time to hear the quieter answer.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-190",
+      "kind": "original-reflection",
+      "text": "The person beside you is carrying a day you cannot entirely see.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 20,
+      "text": "Why can a person of great strength not lift a foot?",
+      "id": "gateless-20-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 20 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 20. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#20._大力量人",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-297",
+      "kind": "original-riddle",
+      "text": "When the branch moves, where is the wind?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-064",
+      "kind": "original-riddle",
+      "text": "What changes when waiting becomes listening?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-171",
+      "kind": "original-reflection",
+      "text": "A patient explanation can make a difficult doorway easier to enter.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-278",
+      "kind": "original-reflection",
+      "text": "A new perspective need not erase the old one to add something.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-045",
+      "kind": "original-riddle",
+      "text": "Can being puzzled be a way of paying attention?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-152",
+      "kind": "original-reflection",
+      "text": "Let the bell ring all the way out.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-259",
+      "kind": "original-riddle",
+      "text": "Can a mirror keep a face after it has gone?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-026",
+      "kind": "original-riddle",
+      "text": "Can you hear a sound without keeping it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-133",
+      "kind": "original-reflection",
+      "text": "A careful beginning can be as simple as opening your notebook.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-240",
+      "kind": "original-reflection",
+      "text": "There is skill in noticing when an approach needs to change.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-007",
+      "kind": "original-reflection",
+      "text": "The cup is warm. Begin with what is here.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-114",
+      "kind": "original-riddle",
+      "text": "What makes an ordinary morning ordinary?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-221",
+      "kind": "original-reflection",
+      "text": "Even a long-held question can change its shape.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-328",
+      "kind": "original-riddle",
+      "text": "What can you do with a moment before calling it wasted?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 24,
+      "text": "Asked how to pass beyond speech and silence, Fūketsu recalls spring south of the river: partridges calling, flowers fragrant.",
+      "id": "gateless-24-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 24 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 24. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#24._離卻語言",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-095",
+      "kind": "original-riddle",
+      "text": "What becomes lighter when you stop proving it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-202",
+      "kind": "original-reflection",
+      "text": "The season changes one small detail at a time.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-309",
+      "kind": "original-reflection",
+      "text": "You can return to this moment without explaining where you went.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-076",
+      "kind": "original-riddle",
+      "text": "Who taught the bud when to open?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-183",
+      "kind": "original-reflection",
+      "text": "Help without turning the moment into a measure of yourself.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-290",
+      "kind": "original-reflection",
+      "text": "Let the pattern of a leaf interrupt your hurry.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-057",
+      "kind": "original-reflection",
+      "text": "A seed does its first work out of sight.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-164",
+      "kind": "original-reflection",
+      "text": "Notice the difference between waiting to speak and listening.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-271",
+      "kind": "original-riddle",
+      "text": "Where is the middle of a moment?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-038",
+      "kind": "original-reflection",
+      "text": "A fresh look asks less of the world and notices more.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-145",
+      "kind": "original-riddle",
+      "text": "Does silence begin when the last sound ends?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-252",
+      "kind": "original-reflection",
+      "text": "Leave today’s practice with one thing you noticed.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-019",
+      "kind": "original-reflection",
+      "text": "Even the pause between two words has a shape.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-126",
+      "kind": "original-riddle",
+      "text": "When does a familiar doorway become a threshold?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 26,
+      "text": "Hōgen points to the blinds. Two monks roll them up. One gains, one loses, he says.",
+      "id": "gateless-26-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 26 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 26. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#26._二僧卷簾",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-233",
+      "kind": "original-reflection",
+      "text": "Let effort be attentive enough to learn from its own results.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-340",
+      "kind": "original-reflection",
+      "text": "Keep a little space in the day for something you did not plan to notice.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-107",
+      "kind": "original-riddle",
+      "text": "Can you set down a question without abandoning it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-214",
+      "kind": "original-reflection",
+      "text": "Let today’s evidence speak to yesterday’s conclusion.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-321",
+      "kind": "original-reflection",
+      "text": "There is room in this moment for an unfinished day.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-088",
+      "kind": "original-reflection",
+      "text": "A thought can visit without moving in.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-195",
+      "kind": "original-reflection",
+      "text": "Care can be quiet and still be felt.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-302",
+      "kind": "original-reflection",
+      "text": "Let the rhythm of rain give your attention somewhere to rest.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-069",
+      "kind": "original-reflection",
+      "text": "Do what can be done now; let the rest have its time.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-176",
+      "kind": "original-riddle",
+      "text": "What travels farther than the words “thank you”?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-283",
+      "kind": "original-reflection",
+      "text": "A mossy stone asks for no explanation of its green.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-050",
+      "kind": "original-reflection",
+      "text": "A question can be useful before it is answered.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-157",
+      "kind": "original-riddle",
+      "text": "Can you listen without deciding whether you agree?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-264",
+      "kind": "original-reflection",
+      "text": "Sometimes a smaller question reveals a larger world.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 28,
+      "text": "Ryūtan offers Tokusan a lit candle. Just as Tokusan reaches for it, Ryūtan blows it out.",
+      "id": "gateless-28-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 28 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 28. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#28._久響龍潭",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-031",
+      "kind": "original-reflection",
+      "text": "A good question makes space for an unexpected answer.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-138",
+      "kind": "original-riddle",
+      "text": "Does a meal become different when you notice the first bite?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-245",
+      "kind": "original-reflection",
+      "text": "A good question can be the most useful thing you bring today.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-012",
+      "kind": "original-reflection",
+      "text": "The room has many sounds. Listen beyond the loudest.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-119",
+      "kind": "original-reflection",
+      "text": "A small kindness fits into an ordinary minute.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-226",
+      "kind": "original-riddle",
+      "text": "What did your mistake reveal that a guess might have hidden?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-333",
+      "kind": "original-reflection",
+      "text": "Arrive again, as often as you need.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-100",
+      "kind": "original-reflection",
+      "text": "Keep the lesson; loosen your grip on the embarrassment.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-207",
+      "kind": "original-riddle",
+      "text": "Which moment turns the seed into a tree?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-314",
+      "kind": "original-reflection",
+      "text": "Begin with the breath that is already here.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-081",
+      "kind": "original-reflection",
+      "text": "A half-finished bowl still rests on the potter’s wheel.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-188",
+      "kind": "original-riddle",
+      "text": "Can you be gentle without becoming less clear?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-295",
+      "kind": "original-reflection",
+      "text": "There is a whole afternoon in the changing shade of a wall.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-062",
+      "kind": "original-reflection",
+      "text": "Some understanding arrives after the question has grown quiet.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 30,
+      "text": "What is Buddha? Daibai asks. Baso answers: this very mind is Buddha.",
+      "id": "gateless-30-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 30 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 30. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#30._即心即佛",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-169",
+      "kind": "original-reflection",
+      "text": "Look for the person beyond the moment that frustrated you.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-276",
+      "kind": "original-reflection",
+      "text": "An unfamiliar answer may reveal a familiar assumption.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-043",
+      "kind": "original-reflection",
+      "text": "Curiosity begins where the rehearsed explanation pauses.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-150",
+      "kind": "original-reflection",
+      "text": "An answer is easier to hear when you release the one you expected.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-257",
+      "kind": "original-riddle",
+      "text": "Which side of a doorway is the beginning?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-024",
+      "kind": "original-reflection",
+      "text": "The smallest detail can open a very large question.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-131",
+      "kind": "original-reflection",
+      "text": "The path begins wherever your feet are resting.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-238",
+      "kind": "original-riddle",
+      "text": "What are you learning while you think you are only starting over?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-005",
+      "kind": "original-riddle",
+      "text": "How much of the sky fits inside a window?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-112",
+      "kind": "original-reflection",
+      "text": "Give the next moment permission to be different.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-219",
+      "kind": "original-riddle",
+      "text": "Where is the boundary between ending and beginning?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-326",
+      "kind": "original-reflection",
+      "text": "The next breath does not ask you to explain the last one.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-093",
+      "kind": "original-reflection",
+      "text": "Release one unnecessary expectation of this moment.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-200",
+      "kind": "original-reflection",
+      "text": "Allow a familiar person the possibility of surprising you.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 33,
+      "text": "A monk asks Baso, What is Buddha? Baso answers: neither mind nor Buddha.",
+      "id": "gateless-33-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 33 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 33. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#33._非心非佛",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-307",
+      "kind": "original-reflection",
+      "text": "A patch of sunlight needs no audience to be bright.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-074",
+      "kind": "original-reflection",
+      "text": "Give an idea enough quiet to unfold.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-181",
+      "kind": "original-reflection",
+      "text": "Notice who has not yet had room to speak.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-288",
+      "kind": "original-riddle",
+      "text": "How many skies can one pond reflect?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-055",
+      "kind": "original-reflection",
+      "text": "Carry what you know lightly enough to learn something else.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-162",
+      "kind": "original-reflection",
+      "text": "Let your reply grow out of what was actually said.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-269",
+      "kind": "original-riddle",
+      "text": "Can you draw the space that makes a bowl useful?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-036",
+      "kind": "original-riddle",
+      "text": "Can you meet something again for the first time?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-143",
+      "kind": "original-reflection",
+      "text": "Listening can be a way of making room.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-250",
+      "kind": "original-riddle",
+      "text": "What would you try if the first attempt did not have to be impressive?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-017",
+      "kind": "original-riddle",
+      "text": "Where does listening end and the sound begin?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-124",
+      "kind": "original-reflection",
+      "text": "An ordinary task can become a place to practice care.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-231",
+      "kind": "original-reflection",
+      "text": "Begin again with what the last attempt taught you.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-338",
+      "kind": "original-reflection",
+      "text": "A student asked where to begin. The teacher moved a book aside and made room at the table.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 34,
+      "text": "Nansen says: mind is not Buddha; knowing is not the Way.",
+      "id": "gateless-34-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 34 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 34. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#34._智不是道",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-105",
+      "kind": "original-reflection",
+      "text": "Let the last task end before beginning this one.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-212",
+      "kind": "original-reflection",
+      "text": "A familiar path carries new shadows each afternoon.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-319",
+      "kind": "original-riddle",
+      "text": "What happens to “later” when it finally arrives?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-086",
+      "kind": "original-riddle",
+      "text": "How far must you carry a stone before putting it down?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-193",
+      "kind": "original-reflection",
+      "text": "Thank someone for something you have begun to take for granted.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-300",
+      "kind": "original-riddle",
+      "text": "What color is a shadow on fresh snow?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-067",
+      "kind": "original-riddle",
+      "text": "Can you see growth while it is happening?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-174",
+      "kind": "original-reflection",
+      "text": "Treat your unfinished understanding with the care you offer a friend.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-281",
+      "kind": "original-reflection",
+      "text": "The branch bends; the wind continues its conversation.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-048",
+      "kind": "original-riddle",
+      "text": "If you know the name of a bird, have you heard its song?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-155",
+      "kind": "original-reflection",
+      "text": "A moment of silence need not become a task to complete.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-262",
+      "kind": "original-reflection",
+      "text": "Look for the assumption quietly holding up your answer.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-029",
+      "kind": "original-reflection",
+      "text": "Leave a little room beside what you already know.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-136",
+      "kind": "original-reflection",
+      "text": "Even sweeping begins with noticing what is underfoot.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 36,
+      "text": "You meet someone who has realized the Way. Without speech or silence, how do you greet them?",
+      "id": "gateless-36-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 36 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 36. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#36._路逢達道",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-243",
+      "kind": "original-reflection",
+      "text": "Understanding sometimes begins with noticing exactly where you are confused.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-010",
+      "kind": "original-reflection",
+      "text": "One careful look can loosen an old assumption.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-117",
+      "kind": "original-riddle",
+      "text": "Is the walk to the lesson outside the lesson?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-224",
+      "kind": "original-reflection",
+      "text": "The next version of your understanding begins with this one.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-331",
+      "kind": "original-riddle",
+      "text": "Is a beginning something you find or something you notice?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-098",
+      "kind": "original-riddle",
+      "text": "Who is holding the other end of your worry?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-205",
+      "kind": "original-reflection",
+      "text": "What felt impossible yesterday may deserve another look today.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-312",
+      "kind": "original-reflection",
+      "text": "Let your attention arrive with the rest of you.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-079",
+      "kind": "original-riddle",
+      "text": "Can a pause move your understanding forward?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-186",
+      "kind": "original-reflection",
+      "text": "Make your next correction with care for the person receiving it.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-293",
+      "kind": "original-reflection",
+      "text": "A breeze can remind you that the world is moving around you.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-060",
+      "kind": "original-reflection",
+      "text": "An unfinished thought may need time, not force.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-167",
+      "kind": "original-reflection",
+      "text": "A thoughtful pause can be part of an honest answer.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-274",
+      "kind": "original-reflection",
+      "text": "Step back far enough to notice what your close view left out.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 38,
+      "text": "An ox passes through a window. Head, horns, and all four legs pass. Why cannot its tail?",
+      "id": "gateless-38-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 38 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 38. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#38._牛過窗櫺",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-041",
+      "kind": "original-reflection",
+      "text": "There is no shame in a map with unexplored places.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-148",
+      "kind": "original-riddle",
+      "text": "Can two people share a silence in different ways?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-255",
+      "kind": "original-riddle",
+      "text": "If everyone stands at the center, where is the edge?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-022",
+      "kind": "original-reflection",
+      "text": "Look once for what you expect, then once for what is there.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-129",
+      "kind": "original-riddle",
+      "text": "Can a small task contain your whole attention?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-236",
+      "kind": "original-reflection",
+      "text": "Ask for help while the question is still alive.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-003",
+      "kind": "original-reflection",
+      "text": "A quiet moment can hold more than a hurried hour.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-110",
+      "kind": "original-riddle",
+      "text": "What remains when the need to be right grows quiet?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-217",
+      "kind": "original-reflection",
+      "text": "Notice one thing that has quietly changed since last week.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-324",
+      "kind": "original-reflection",
+      "text": "Let your shoulders know that this is one task, not the whole week.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-091",
+      "kind": "original-reflection",
+      "text": "You can change direction without erasing the road behind you.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-198",
+      "kind": "original-riddle",
+      "text": "When a cloud changes shape, which shape was the cloud?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-305",
+      "kind": "original-reflection",
+      "text": "One clear drop can change what you see through it.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-072",
+      "kind": "original-reflection",
+      "text": "Roots do not need applause to keep growing.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 40,
+      "text": "Hyakujō sets down a water jar: without calling it a water jar, what will you call it?",
+      "id": "gateless-40-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 40 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 40. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#40._趯倒淨瓶",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-179",
+      "kind": "original-riddle",
+      "text": "When you offer your attention, what have you given?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-286",
+      "kind": "original-reflection",
+      "text": "A single leaf can make the movement of air visible.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-053",
+      "kind": "original-reflection",
+      "text": "You do not have to pretend to know in order to begin.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-160",
+      "kind": "original-riddle",
+      "text": "What is the shape of the space between two notes?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-267",
+      "kind": "original-riddle",
+      "text": "What does a door become when there is no wall?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-034",
+      "kind": "original-reflection",
+      "text": "You can bring experience without bringing a closed door.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-141",
+      "kind": "original-reflection",
+      "text": "Leave enough silence for another person to finish.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-248",
+      "kind": "original-reflection",
+      "text": "Let feedback become information you can use.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-015",
+      "kind": "original-reflection",
+      "text": "Take one ordinary moment seriously enough to notice it.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-122",
+      "kind": "original-reflection",
+      "text": "The everyday world has no shortage of things to wonder about.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-229",
+      "kind": "original-riddle",
+      "text": "Can the wrong turn teach you something about the path?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-336",
+      "kind": "original-reflection",
+      "text": "Let the day close without requiring every question to close with it.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-103",
+      "kind": "original-reflection",
+      "text": "Allow a good moment to pass without trying to pin it down.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-210",
+      "kind": "original-riddle",
+      "text": "Is a returning wave the wave that left?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 4,
+      "text": "Why does the bearded man from the West have no beard?",
+      "id": "gateless-04-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 4 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 4. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#4._胡子無鬚",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-317",
+      "kind": "original-reflection",
+      "text": "Pause at the threshold and let one task become the next.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-084",
+      "kind": "original-reflection",
+      "text": "Patience can begin with the very next breath.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-191",
+      "kind": "original-riddle",
+      "text": "How does a welcome change a room without moving its walls?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-298",
+      "kind": "original-reflection",
+      "text": "The shoreline is drawn again with every wave.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-065",
+      "kind": "original-reflection",
+      "text": "Let practice have its ordinary, unremarkable days.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-172",
+      "kind": "original-reflection",
+      "text": "Leave room for someone else’s way of seeing.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-279",
+      "kind": "original-riddle",
+      "text": "Can a path be yours without belonging to you?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-046",
+      "kind": "original-reflection",
+      "text": "Make room for the detail that does not fit your story.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-153",
+      "kind": "original-reflection",
+      "text": "There may be something to learn from the unfinished sentence.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-260",
+      "kind": "original-reflection",
+      "text": "Your view is real, and it is also a view from somewhere.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-027",
+      "kind": "original-reflection",
+      "text": "Let one thing receive your undivided attention.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-134",
+      "kind": "original-reflection",
+      "text": "Give your full attention to putting one thing in its place.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-241",
+      "kind": "original-riddle",
+      "text": "Can you be serious about learning without being harsh with yourself?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-008",
+      "kind": "original-riddle",
+      "text": "When you notice that you were distracted, where are you now?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 8,
+      "text": "A cart has a hundred spokes. Take away its two ends and axle. What does this reveal?",
+      "id": "gateless-08-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 8 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 8. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#8._奚仲造車",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-115",
+      "kind": "original-reflection",
+      "text": "The doorway you use every day still opens into something new.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-222",
+      "kind": "original-riddle",
+      "text": "Does the horizon move, or does your place in the world?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-329",
+      "kind": "original-reflection",
+      "text": "Notice the ground before deciding how far you must travel.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-096",
+      "kind": "original-reflection",
+      "text": "Let an old opinion sit quietly while you look again.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-203",
+      "kind": "original-reflection",
+      "text": "A new understanding can change an old memory’s weight.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-310",
+      "kind": "original-riddle",
+      "text": "How far away is the present when you remember it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-077",
+      "kind": "original-reflection",
+      "text": "Let today be one day of practice, with room for tomorrow.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-184",
+      "kind": "original-reflection",
+      "text": "An honest apology makes room for a different next step.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-291",
+      "kind": "original-riddle",
+      "text": "Which part of a tree is the forest?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-058",
+      "kind": "original-riddle",
+      "text": "Can you hurry a shadow by running ahead of it?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-165",
+      "kind": "original-reflection",
+      "text": "Offer another person the space you would want for your own words.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-272",
+      "kind": "original-reflection",
+      "text": "Let two different observations remain beside each other awhile.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-039",
+      "kind": "original-riddle",
+      "text": "Which is larger: what you know, or what you can wonder about?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-146",
+      "kind": "original-reflection",
+      "text": "Let a question remain in the room for a moment.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "case": 48,
+      "text": "A monk asks where the road to nirvana begins. Kempō draws a line with his staff: here.",
+      "id": "gateless-48-case",
+      "kind": "traditional-koan",
+      "credit": "Gateless Gate 48 · adapted",
+      "source": "The Gateless Gate (Wumenguan, 1228), case 48. Short English adaptation from the public-domain Chinese text; not a quotation from a modern translation.",
+      "url": "https://zh.wikisource.org/wiki/無門關#48._乾峰一路",
+      "treatment": "adaptation"
+    },
+    {
+      "id": "original-253",
+      "kind": "original-riddle",
+      "text": "Can a window see the view it offers?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-020",
+      "kind": "original-riddle",
+      "text": "If you stop naming the clouds, what remains overhead?",
+      "credit": "Original Zen-inspired riddle",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-127",
+      "kind": "original-reflection",
+      "text": "The water in the glass needs no special occasion to sparkle.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    },
+    {
+      "id": "original-234",
+      "kind": "original-reflection",
+      "text": "A difficult question does not need an answer this instant to be worthwhile.",
+      "credit": "Original Zen-inspired reflection",
+      "source": "Newly written for this daily collection; not a traditional Zen quotation.",
+      "url": null,
+      "treatment": "original"
+    }
+  ]
+}

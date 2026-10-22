@@ -1,3 +1,4 @@
+import { ownerEmailsFor, isSameIdentity } from '@/lib/identity-aliases'
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -16,13 +17,13 @@ type CourseRow = { id: string; name: string | null; section: string | null; teac
 const label = (c: CourseRow) => (c.section ? `${c.name ?? 'Class'} · ${c.section}` : (c.name ?? 'Class'))
 
 async function teacherCourseIds(email: string): Promise<string[]> {
-  const { data } = await supabaseAdmin.from('courses').select('id').eq('teacher_email', email)
+  const { data } = await supabaseAdmin.from('courses').select('id').in('teacher_email', ownerEmailsFor(email))
   return ((data ?? []) as { id: string }[]).map((c) => c.id)
 }
 async function teacherOwnsCourse(email: string, courseId: string, isAdmin: boolean): Promise<boolean> {
   if (isAdmin) return true
   const { data } = await supabaseAdmin.from('courses').select('teacher_email').eq('id', courseId).maybeSingle()
-  return (data as { teacher_email: string | null } | null)?.teacher_email === email
+  return isSameIdentity(email, (data as { teacher_email: string | null } | null)?.teacher_email)
 }
 
 // GET — store-builder data for the caller.
@@ -31,9 +32,9 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
   const email = ctx.scopeEmail
 
   const [{ data: myRewards }, { data: library }, { data: courseRows }] = await Promise.all([
-    supabaseAdmin.from('rewards').select('*').eq('owner_email', email).order('cost_points', { ascending: true }),
+    supabaseAdmin.from('rewards').select('*').in('owner_email', ownerEmailsFor(email)).order('cost_points', { ascending: true }),
     supabaseAdmin.from('rewards').select('*').is('owner_email', null).eq('active', true).order('cost_points', { ascending: true }),
-    supabaseAdmin.from('courses').select('id, name, section, teacher_email').eq('teacher_email', email).order('name', { ascending: true }),
+    supabaseAdmin.from('courses').select('id, name, section, teacher_email').in('teacher_email', ownerEmailsFor(email)).order('name', { ascending: true }),
   ])
   const myCourses = ((courseRows ?? []) as CourseRow[]).map((c) => ({ id: c.id, label: label(c) }))
   const myCourseIds = myCourses.map((c) => c.id)
@@ -77,7 +78,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const { data: existing } = await supabaseAdmin.from('rewards').select('owner_email').eq('id', body.id).maybeSingle()
     if (!existing) return NextResponse.json({ error: 'Reward not found' }, { status: 404 })
     const owner = (existing as { owner_email: string | null }).owner_email
-    if (!(isAdmin || owner === ctx.scopeEmail)) return NextResponse.json({ error: 'You can only edit your own rewards' }, { status: 403 })
+    if (!(isAdmin || isSameIdentity(ctx.scopeEmail, owner))) return NextResponse.json({ error: 'You can only edit your own rewards' }, { status: 403 })
 
     const patch: Record<string, unknown> = { updated_at: new Date().toISOString() }
     if (body.name !== undefined) patch.name = body.name
@@ -136,7 +137,7 @@ export const PUT = withRole(['teacher', 'admin'], async (request, ctx) => {
   const { data: reward } = await supabaseAdmin.from('rewards').select('owner_email').eq('id', body.reward_id).maybeSingle()
   if (!reward) return NextResponse.json({ error: 'Reward not found' }, { status: 404 })
   const owner = (reward as { owner_email: string | null }).owner_email
-  if (!(isAdmin || owner === null || owner === ctx.scopeEmail)) {
+  if (!(isAdmin || owner === null || isSameIdentity(ctx.scopeEmail, owner))) {
     return NextResponse.json({ error: 'You can only place your own rewards or global rewards' }, { status: 403 })
   }
 

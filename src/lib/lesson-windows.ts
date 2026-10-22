@@ -1,3 +1,4 @@
+import { calendarAssigned } from './calendar-assignment'
 import { supabaseAdmin } from '@/lib/supabase'
 
 // Per-class lesson release windows. A published lesson is CLOSED to a class until
@@ -8,7 +9,8 @@ import { supabaseAdmin } from '@/lib/supabase'
 
 export interface LessonWindow { course_id: string; lesson_id: string; open_at: string | null; close_at: string | null; due_at?: string | null }
 
-function within(w: { open_at: string | null; close_at: string | null }, now: number): boolean {
+function within(w: { open_at: string | null; close_at: string | null; due_at?:string|null }, now: number): boolean {
+  if(!calendarAssigned(true,w.due_at))return false
   const openOk = !w.open_at || now >= new Date(w.open_at).getTime()
   const closeOk = !w.close_at || now <= new Date(w.close_at).getTime()
   return openOk && closeOk
@@ -35,10 +37,10 @@ export async function getStudentLessonGate(
 
   const { data } = await supabaseAdmin
     .from('lesson_class_windows')
-    .select('course_id, lesson_id, open_at, close_at')
+    .select('course_id, lesson_id, open_at, close_at, due_at')
     .in('course_id', courseIds)
-  const byKey = new Map<string, { open_at: string | null; close_at: string | null }>()
-  for (const w of (data ?? []) as LessonWindow[]) byKey.set(`${w.course_id}|${w.lesson_id}`, { open_at: w.open_at, close_at: w.close_at })
+  const byKey = new Map<string, LessonWindow>()
+  for (const w of (data ?? []) as LessonWindow[]) byKey.set(`${w.course_id}|${w.lesson_id}`, w)
 
   return (lessonId: string) => {
     for (const c of courseIds) {
@@ -78,6 +80,7 @@ export async function getStudentLessonWindowStatuses(
 
   const out: Record<string, LessonWindowStatus> = {}
   for (const w of (data ?? []) as LessonWindow[]) {
+    if(!calendarAssigned(true,w.due_at))continue
     const next = { ...statusOf(w, now), due_at: w.due_at ?? null }
     const prev = out[w.lesson_id]
     if (!prev || rank(next) > rank(prev) || tieBreak(prev, next)) out[w.lesson_id] = next

@@ -2,6 +2,15 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {workMatches, workDueTime, validateWorkDue, type ClassWorkItem} from './class-work'
 import {lessonWorkSchedule,sameLessonSchedule} from './lesson-work-schedule'
+
+test('calendar deadline moves preserve assignment access, including windows open without a start date',()=>{
+ const now='2026-10-19T12:00:00.000Z', due_at='2026-10-23T20:00:00.000Z'
+ for(const window of [{open_at:null,close_at:null},{open_at:now,close_at:null},{open_at:'2026-10-20T12:00:00.000Z',close_at:null}]) {
+  assert.deepEqual(lessonWorkSchedule({due_at},{...window,due_at:now},now),{...window,due_at})
+  assert.deepEqual(lessonWorkSchedule({due_at:null},{...window,due_at},now),{open_at:null,close_at:now,due_at:null})
+ }
+ assert.throws(()=>lessonWorkSchedule({due_at},null,now),/Open or schedule/)
+})
 const now='2026-10-07T16:00:00.000Z',due='2026-10-08T20:00:00.000Z'
 const base:ClassWorkItem={id:'a',sourceId:'a',title:'Homework',kind:'homework',context:'',audience:'Whole class',access:'open',dueAt:due,href:'/',canEditDue:true,canToggle:true}
 test('attention counts consider active assignments only, never closed or draft work',()=>{
@@ -14,10 +23,10 @@ test('date-only assignments remain due through the local end of their calendar d
  const timestamp=workDueTime({...base,dueAt:'2026-10-07',dateOnly:true})
  assert.equal(new Date(timestamp).getDate(),7);assert.equal(new Date(timestamp).getHours(),23)
 })
-test('closing and reopening preserve the original due date, including late homework',()=>{
+test('unassigning clears the calendar date; reopening requires a date',()=>{
  const old={open_at:'2026-10-01T00:00:00Z',close_at:null,due_at:due}
  const closed=lessonWorkSchedule({open_at:null,close_at:null},old,now)
- assert.equal(closed.due_at,due);assert.equal(closed.close_at,now)
+ assert.equal(closed.due_at,null);assert.equal(closed.close_at,now)
  assert.equal(lessonWorkSchedule({access:'open',open_at:now,close_at:null},{...closed,due_at:'2026-10-06T20:00:00.000Z'},now).due_at,'2026-10-06T20:00:00.000Z')
 })
 test('schedule rejects deadlines before a future opening or after automatic closing',()=>{

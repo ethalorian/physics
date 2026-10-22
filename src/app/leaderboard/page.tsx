@@ -528,7 +528,7 @@ export default function LeaderboardPage() {
 }
 
 // Per-entry avatar with the priority order students expect:
-// (1) the Mii at medium crop if they opted in and finished setup,
+// (1) the face-focused Mii portrait if they opted in and finished setup,
 // (2) their Google profile photo,
 // (3) a User icon fallback.
 function LeaderboardAvatar({ entry, size }: { entry: LeaderboardEntry; size: number }) {
@@ -544,7 +544,7 @@ function LeaderboardAvatar({ entry, size }: { entry: LeaderboardEntry; size: num
           equipped={entry.avatar_equipped}
           items={entry.avatar_items}
           size={size}
-          crop="medium"
+          crop="portrait"
           className="w-full h-full"
         />
       ) : entry.image ? (

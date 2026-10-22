@@ -1,8 +1,3 @@
 'use client'
-
-import SimLab from '@/components/simulations/lab/SimLab'
-import { areaUnderCurveDef } from './def'
-
-export default function AreaUnderCurvePage() {
-  return <SimLab def={areaUnderCurveDef} />
-}
+import SimulationActivity from '@/components/simulations/SimulationActivity'
+export default function Simulation(){return <SimulationActivity id="area-under-curve"/>}

@@ -52,7 +52,7 @@ function ClockFace({ divisions, label, hourAngle, minuteAngle, readout }: {
         <circle cx="70" cy="70" r="3" fill="currentColor" />
       </svg>
       <div className="text-sm font-semibold">{label}</div>
-      <div className="font-mono text-sm tabular-nums text-muted-foreground">{readout}</div>
+      <div data-avatar-evidence className="font-mono text-sm tabular-nums text-muted-foreground">{label}: {readout}</div>
     </div>
   )
 }

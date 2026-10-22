@@ -248,7 +248,7 @@ export default function LobbyDetailPage() {
                         style={{ borderColor: 'var(--border)', background: spotlight[g.id] === m.user_id ? 'color-mix(in oklch, var(--primary) 12%, transparent)' : undefined, borderRadius: spotlight[g.id] === m.user_id ? 6 : undefined }}>
                         <div className="flex items-start gap-2 min-w-0">
                           <div className="shrink-0 rounded-full overflow-hidden mt-0.5" style={{ width: 30, height: 30, background: 'var(--muted)' }}>
-                            <Avatar traits={m.traits} equipped={m.equipped} items={avatarItems} size={30} crop="head" />
+                            <Avatar traits={m.traits} equipped={m.equipped} items={avatarItems} size={30} crop="portrait" />
                           </div>
                           <div className="min-w-0">
                             <div className="flex items-center gap-1.5 flex-wrap">

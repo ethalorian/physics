@@ -1,3 +1,4 @@
+import { calendarAssigned, CALENDAR_ASSIGNMENT_MESSAGE } from '@/lib/calendar-assignment'
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -39,6 +40,7 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
 
 export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
   const body = (await request.json().catch(() => ({}))) as { course_id?: string; vocabulary_set_id?: string; due_on?: string | null; note?: string | null }
+  if(!calendarAssigned(true,body.due_on))return NextResponse.json({error:CALENDAR_ASSIGNMENT_MESSAGE},{status:400})
   if (!body.course_id || !body.vocabulary_set_id) return NextResponse.json({ error: 'course_id and vocabulary_set_id required' }, { status: 400 })
   if (!(await ownsCourse(ctx, body.course_id))) return NextResponse.json({ error: 'Not your class' }, { status: 403 })
   const {data:existing,error:lookupError}=await supabaseAdmin.from('vocab_assignments').select('id,active').eq('course_id',body.course_id).eq('vocabulary_set_id',body.vocabulary_set_id).maybeSingle()

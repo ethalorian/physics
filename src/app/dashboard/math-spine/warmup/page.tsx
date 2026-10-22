@@ -42,6 +42,7 @@ import { pickTier, type MiniLesson } from '@/lib/math-spine-lessons'
 import { type PickKind } from '@/lib/math-spine-picker'
 import { MATH_LANGUAGES } from '@/lib/math-languages'
 import { useTranslator } from '@/lib/math-translate-store'
+import { MATH_WARMUP_SCHEDULE_MESSAGE } from '@/lib/math-warmup-schedule'
 
 type CheckMode = 'numeric' | 'short-answer' | 'teacher-only' | 'exact-form' | 'estimate'
 
@@ -90,6 +91,7 @@ function WarmupContent() {
   const [savedRemediation, setSavedRemediation] = useState<MathRemediation | null>(null)
   const [pickKind, setPickKind] = useState<PickKind>('climb')
   const [loading, setLoading] = useState(true)
+  const [warmupScheduled, setWarmupScheduled] = useState(true)
   const [alreadySubmitted, setAlreadySubmitted] = useState(false)
   const [work, setWork] = useState<WorkValue>({ answer: '', workStrokes: [], workTexts: [], sandbox: { lines: [] } })
   const [resumedDraft, setResumedDraft] = useState(false)
@@ -114,6 +116,7 @@ function WarmupContent() {
       .then((d) => {
         if (!active || !d) return
         setItem(d.item ?? null)
+        setWarmupScheduled(d.warmupScheduled !== false)
         if (d.item?.instanceId && !d.alreadySubmitted) { try { const draft = sessionStorage.getItem('math-draft:' + d.item.instanceId); if (draft) { setWork(JSON.parse(draft)); setResumedDraft(true) } } catch {} }
         setPickKind((d.pickKind as PickKind) ?? 'climb')
         setAlreadySubmitted(Boolean(d.alreadySubmitted))
@@ -241,7 +244,7 @@ function WarmupContent() {
 
       {error && !item && <p role="alert">{error} <button onClick={() => window.location.reload()} className="underline min-h-11">Retry</button></p>}
       {loading && <p className="text-sm text-muted-foreground">{t('Loading your warm-up…')}</p>}
-      {!loading && !item && <p className="text-sm text-muted-foreground">{t('No warm-up available right now — check back soon.')}</p>}
+      {!loading && !item && !error && <p className="text-sm text-muted-foreground">{t(warmupScheduled ? 'No warm-up available right now — check back soon.' : MATH_WARMUP_SCHEDULE_MESSAGE)}</p>}
 
       {!loading && item && !done && (
         <div className="grid gap-4 min-[900px]:grid-cols-[minmax(320px,2fr)_3fr] min-[900px]:items-start">

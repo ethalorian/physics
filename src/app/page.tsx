@@ -20,7 +20,7 @@ export default function Home() {
       // Students → student hub; teachers → teacher home; admins → command center.
       // Prefer the session-baked role (honors DB teacher grants).
       const role = session.user?.role ?? getUserRole(session.user?.email);
-      router.push(role === "student" ? "/home" : role === "teacher" ? "/admin/teacher" : "/admin/home");
+      router.push(role === "observer" ? "/admin/analytics" : role === "student" ? "/home" : role === "teacher" ? "/admin/teacher" : "/admin/home");
     } else {
       // New sign-ins are students by default → land on the home hub.
       signIn("google", { callbackUrl: "/home" });

@@ -1,4 +1,5 @@
 export interface LessonYouTubePlayer {
+  pauseVideo(): void
   getCurrentTime(): number
   getPlayerState(): number
   destroy(): void

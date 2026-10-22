@@ -62,3 +62,26 @@
   .gridHeading > div { min-width:0; }
   .gridHeading a { flex:0 0 90px; text-align:right; }
 }
+
+/* Keep one generous content edge across scope, navigation, and results. */
+.workspace { padding:28px 36px 36px; }
+.navigation { gap:24px; margin-top:24px; }
+.navigation a { flex:0 0 auto; padding:12px 0; min-height:48px; }
+.navigation a[aria-current=page] { background:transparent; }
+.navigation .coursePlanLink { margin-left:auto; font-weight:500; font-size:12px; }
+.resultsNavigation { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; padding:24px 0 12px; }
+.resultsNavigation>nav { display:flex; gap:3px; padding:3px; border:1px solid var(--border); border-radius:9px; background:var(--muted); }
+.resultsNavigation>nav a { padding:8px 16px; border-radius:6px; font-size:13px; }
+.resultsNavigation>nav a[aria-current=page] { background:var(--card); color:var(--foreground); box-shadow:0 1px 3px color-mix(in oklch,var(--foreground) 9%,transparent); }
+.resultsTrail { display:flex; align-items:center; flex-wrap:wrap; gap:20px; font-size:13px; }
+.resultsTrail a { display:inline-flex; align-items:center; gap:7px; color:var(--primary); }
+.resultsTrail>span { color:var(--muted-foreground); }
+@media(max-width:900px) { .workspace { padding:24px; } }
+@media(max-width:600px) { .workspace { padding:22px 18px; }.resultsNavigation { gap:10px; }.navigation { gap:20px; }.navigation .coursePlanLink { white-space:normal; } }
+@media(max-width:380px) { .workspace { padding-inline:16px; } }
+
+/* Teaching destinations live in the sidebar; keep the same paths within reach on mobile. */
+@media(min-width:1024px) { .navigation { display:none; } .header { padding-bottom:18px; border-bottom:1px solid var(--border); } }
+.planNavigation { display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+.planNavigation a { display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:8px 16px; font-size:14px; border-radius:var(--radius-md); color:var(--muted-foreground); }
+.planNavigation a[aria-current=page] { background:var(--muted); color:var(--foreground); font-weight:600; }

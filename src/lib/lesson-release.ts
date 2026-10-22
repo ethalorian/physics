@@ -21,6 +21,10 @@ export interface ReleaseLesson {
   program: string | null
   unit_order: number
   video_sequence?: number
+  reflection_kind?: 'manga' | 'story' | 'graphic-novel'
+  chapter?: number
+  target_refs?: string[]
+  prompts?: string[]
 }
 export interface ReleaseWindow {
   due_at?: string | null

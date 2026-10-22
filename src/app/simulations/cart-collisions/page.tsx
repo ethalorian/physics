@@ -1,7 +1,3 @@
-"use client"
-import SimLab from '@/components/simulations/lab/SimLab'
-import { cartCollisionsDef } from './def'
-
-export default function CartCollisionsSimulation() {
-  return <SimLab def={cartCollisionsDef} />
-}
+'use client'
+import SimulationActivity from '@/components/simulations/SimulationActivity'
+export default function Simulation(){return <SimulationActivity id="cart-collisions"/>}

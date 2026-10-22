@@ -1,0 +1,23 @@
+.player { position: relative; min-width: 0; }
+.lobby { display: grid; justify-items: center; align-content: end; width: min(100%, 360px); padding: 16px 20px 24px; text-align: center; }
+.lobby .character { position: relative; width: 146px; height: 292px; z-index: 1; }
+.lobby .character::after { content: ''; position: absolute; left: -30%; right: -30%; bottom: 0; height: 24px; z-index: -1; border: 1px solid #a9ecd451; border-radius: 50%; background: #8fe4ce18; }
+.identity { min-width: 0; }
+.eyebrow { margin: 12px 0 6px; color: #9ae7ce; font: 700 10px/1.4 system-ui, sans-serif; text-transform: uppercase; letter-spacing: 2px; }
+.name { margin: 0; font-size: 21px; line-height: 1.3; font-weight: 700; overflow-wrap: anywhere; }
+.description { margin: 7px 0; color: #b2c8c6; font-size: 12px; line-height: 1.6; }
+.customize { display: inline-flex; align-items: center; min-height: 44px; gap: 6px; font-size: 12px; font-weight: 650; text-decoration: underline; text-underline-offset: 4px; }
+.lobby .customize { color: #d4ffed; }
+.customize:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 3px; }
+.placeholder { width: 100%; height: 100%; color: #8caaa4; padding: 22%; }
+.compact { display: flex; gap: 10px; align-items: center; }
+.compact .character { width: 52px; height: 52px; flex-shrink: 0; border-radius: 50%; overflow: hidden; background: var(--secondary); }
+.compact .character > svg { display: block; width: 100%; height: 100%; }
+.compact .name { max-width: 180px; font-size: 13px; }
+.compact .customize { font-size: 11px; }
+@media (max-width: 620px) {
+  .lobby { grid-template-columns: 100px minmax(0, 1fr); align-items: center; gap: 20px; width: 100%; padding: 4px 28px 24px; text-align: left; }
+  .lobby .character { width: 100px; height: 200px; }
+  .lobby .name { font-size: 19px; }
+  .compact .name { max-width: 140px; }
+}

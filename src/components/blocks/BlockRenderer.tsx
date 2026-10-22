@@ -1,4 +1,8 @@
 "use client"
+import InteractiveQuestion from './InteractiveQuestion'
+import type { InteractiveAnswer } from '@/lib/interactive-question'
+import {ChoiceResponse, WrittenResponse, QuestionPrompt} from '@/components/interactive-assignments/QuestionResponse'
+import questionStyles from '@/components/interactive-assignments/QuestionResponse.module.css'
 import { PEDAGOGY } from '@/lib/palette'
 import responseStyles from '@/components/lessons/WorkshopResponses.module.css'
 
@@ -18,6 +22,7 @@ import MathMarkdown, { type GlossaryEntry } from '@/components/MathMarkdown'
 import { ContentBlock, BlockType, isBlockComplete, isBlockDone, isCaptureBlock, type DiagramForce, type DiagramVector, type GraphSeries, type CircuitComponent, type EnergyChainLink, type DiagramScene, type LabNotebookBlock } from '@/data/content-blocks'
 import type { Stroke } from './DoodleCanvas'
 import PaintPad from './PaintPad'
+import MangaUploadCapture from './MangaUploadCapture'
 import PhysicsDiagram from './PhysicsDiagram'
 import type { ConceptValue } from './ConceptExercise'
 import GewaInteractive, { type GewaValue } from './GewaInteractive'
@@ -375,12 +380,18 @@ function DiagramBackground({ scene }: { scene: DiagramScene }) {
 // the sketch's "Save drawing" or a reasoning box blur persists the WHOLE response
 // ({ strokes, fields }) so thinking and work are logged together.
 const LAB_DEFAULT_FIELDS = ['What I did', 'What I observed', 'What it means']
-function LabNotebook({ b, saved, save, onDraft = NO_DRAFT }: { b: LabNotebookBlock; saved: unknown; save: SaveFn; onDraft?: (v: unknown) => void }) {
+function LabNotebook({ b, saved, save, onDraft = NO_DRAFT, interactive = false, readOnly = false }: { interactive?: boolean; readOnly?: boolean; b: LabNotebookBlock; saved: unknown; save: SaveFn; onDraft?: (v: unknown) => void }) {
   const fields = b.fields && b.fields.length ? b.fields : LAB_DEFAULT_FIELDS
   const prev = (saved as { strokes?: Stroke[]; fields?: Record<string, string> } | undefined) ?? {}
   const [strokes, setStrokes] = useState<Stroke[]>(prev.strokes ?? [])
   const [text, setText] = useState<Record<string, string>>(prev.fields ?? {})
   useDraft(onDraft, { strokes, fields: text })
+  if (interactive) return <div className={questionStyles.surface}>
+    <QuestionPrompt>{b.instruction}</QuestionPrompt>
+    <details className={questionStyles.drawing} open={strokes.length ? true : undefined}><summary>Model, graph, or calculation · drawing tools</summary><div inert={readOnly || undefined}><PaintPad workshop value={strokes} onChange={setStrokes} background={b.backgroundDiagram ? <DiagramBackground scene={b.backgroundDiagram}/> : undefined}/></div></details>
+    {fields.map(label=><WrittenResponse key={label} label={label} value={text[label]??''} disabled={readOnly} maxLength={10000} onChange={value=>setText(v=>({...v,[label]:value}))}/>)}
+    <button type="button" className={questionStyles.save} disabled={readOnly || (b.requireAllFields ? !fields.every(f=>text[f]?.trim()) : !strokes.length && !Object.values(text).some(v=>v.trim()))} onClick={()=>save(b.id,'lab_notebook',{strokes,fields:text})}>Save response</button>
+  </div>
   return <div className="rounded-xl border p-3 space-y-3 bg-card">
     <p className="text-sm font-medium">{b.instruction}</p>
     <PaintPad value={strokes} onChange={setStrokes} background={b.backgroundDiagram ? <DiagramBackground scene={b.backgroundDiagram} /> : undefined} />
@@ -483,7 +494,7 @@ function SentenceFrameView({ frame, frames, wordBank, sei }: { frame: string; fr
  * its L1 line, a visual that carries the meaning, picture options, then an
  * explain step with a frame + word bank. Saves { optionId, explain, mode }.
  */
-function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract<ContentBlock, { type: 'question' }>; saved: unknown; save: SaveFn; onDraft?: (v: unknown) => void }) {
+function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT, interactive = false }: { interactive?: boolean; b: Extract<ContentBlock, { type: 'question' }>; saved: unknown; save: SaveFn; onDraft?: (v: unknown) => void }) {
   const q = (b.question && typeof b.question === 'object' && 'prompt' in (b.question as object) ? (b.question as InlineQuestion) : null)
   const prev = (saved as { optionId?: string; explain?: string; autoCheck?: 'match' | 'mismatch' } | undefined) ?? {}
   const [optionId, setOptionId] = useState<string | undefined>(prev.optionId)
@@ -515,9 +526,9 @@ function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract
           <span aria-hidden>●</span> Live poll{pollLocked ? ' · answers locked' : ' · answer now'}
         </div>
       )}
-      <SeiPrompt prompt={q.prompt} l1Text={state.l1Text} />
+      {interactive ? <QuestionPrompt translation={state.l1Text}>{q.prompt}</QuestionPrompt> : <SeiPrompt prompt={q.prompt} l1Text={state.l1Text} />}
       {b.workshop?.hotspots ? <div className="relative mb-5"><SeiVisual visual={b.sei?.visual} />{b.workshop.hotspots.map(h=><button type="button" key={h.optionId} aria-label={q.options?.find(o=>o.id===h.optionId)?.text??h.label} aria-pressed={optionId===h.optionId} disabled={pollLocked} onClick={()=>{setOptionId(h.optionId);setSavedFlag(false)}} className="absolute grid place-items-center rounded-full border-2 font-bold" style={{left:h.x+'%',top:h.y+'%',transform:'translate(-50%,-50%)',width:48,height:48,minHeight:48,padding:0,background:optionId===h.optionId?'var(--primary)':'var(--card)',color:optionId===h.optionId?'var(--primary-foreground)':'var(--foreground)',borderColor:'var(--primary)'}}>{h.label}</button>)}</div> : <SeiVisual visual={b.sei?.visual} />}
-      {hasOptions && (
+      {hasOptions && (interactive ? <ChoiceResponse value={optionId} disabled={pollLocked} onChange={id=>{setOptionId(id);setSavedFlag(false)}} options={q.options!.map(o=>({id:o.id,revealed:Boolean(pollRevealed&&live.session?.reveal?.correctOptionId===o.id),content:<>{o.icon&&<span aria-hidden>{o.icon} </span>}{o.text}{showL1&&profile?.homeLang&&o.text_l1?.[profile.homeLang]&&<small className="block">{o.text_l1[profile.homeLang]}</small>}</>}))}/> : (
         <div data-response-options className="grid gap-2 mb-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
           {q.options!.map((o) => {
             const on = optionId === o.id
@@ -534,7 +545,7 @@ function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract
             )
           })}
         </div>
-      )}
+      ))}
       {hasOptions && verdict && (
         <div className="rounded-md border p-2 mb-3 text-sm" style={{ borderColor: verdict === 'match' ? 'color-mix(in oklch, var(--success) 45%, var(--border))' : 'color-mix(in oklch, var(--viz-down, var(--destructive)) 45%, var(--border))', background: verdict === 'match' ? 'color-mix(in oklch, var(--success) 10%, var(--card))' : 'color-mix(in oklch, var(--viz-down, var(--destructive)) 8%, var(--card))', color: C.indigo }}>
           <b>{verdict === 'match' ? 'That’s it.' : 'Not yet.'}</b> {pickedSaved?.feedback ?? (verdict === 'match' ? '' : 'Look at the visual again and try another answer.')}
@@ -555,15 +566,15 @@ function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract
         <>
           <p className="text-sm mb-1" style={{ color: C.indigo }}>{q.explain ?? 'Explain your thinking.'}</p>
           <SeiFrameBox state={state} onUseFrame={(f) => { if (!explain.trim()) setExplain(f) }} />
-          <textarea aria-label={q.explain ?? 'Explain your thinking'} value={explain} onChange={(e) => { setExplain(e.target.value); setSavedFlag(false) }} rows={3}
-            className="w-full rounded-md border p-2 text-sm" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }} />
+          {interactive ? <WrittenResponse label="Your reasoning" value={explain} onChange={value=>{setExplain(value);setSavedFlag(false)}}/> : <textarea aria-label={q.explain ?? 'Explain your thinking'} value={explain} onChange={(e) => { setExplain(e.target.value); setSavedFlag(false) }} rows={3}
+            className="w-full rounded-md border p-2 text-sm" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }} />}
         </>
       )}
       <div data-response-footer className="flex items-center gap-2 mt-1">
         <button data-response-action onClick={async () => { if (!canSave) return; const ok = await save(b.id, 'question', { optionId, explain: explain.trim(), mode: hasOptions ? 'choice' : 'text' }, { response_mode: hasOptions ? 'choice' : 'text', scaffolds_used: state.scaffolds, target_id: b.targetId, evidence_source: isPoll ? 'live_poll' : 'lesson_checkpoint', confidence, ...(isPoll ? { presentSessionId: live.session!.id, pollRunId: live.session!.pollRunId ?? undefined } : {}) }); setSavedFlag(ok !== false) }}
-          disabled={!canSave} className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
-          style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: canSave ? 'pointer' : 'not-allowed' }}>
-          {savedFlag ? 'Saved ✓' : 'Save'}
+          disabled={!canSave} className={interactive ? questionStyles.save : "text-xs rounded-md border px-3 py-1 disabled:opacity-50"}
+          style={interactive ? undefined : { borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: canSave ? 'pointer' : 'not-allowed' }}>
+          {savedFlag ? 'Saved ✓' : interactive ? 'Save answer' : 'Save'}
         </button>
       </div>
       <SeiFairnessNote />
@@ -588,7 +599,7 @@ function ObservationCapture({ b, saved, save, onDraft }: { b: Extract<ContentBlo
   </div>;
 }
 
-function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: string, glossary?: GlossaryEntry[], draft: DraftFn = () => {}, targets?: TargetInfo[], readOnly = false) {
+function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: string, glossary?: GlossaryEntry[], draft: DraftFn = () => {}, targets?: TargetInfo[], readOnly = false, interactive = false) {
   const onDraft = (v: unknown) => draft(b.id, b.type, v)
   switch (b.type) {
     case 'target':
@@ -677,14 +688,15 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     case 'lesson_vocab':
       return <LessonVocabView lessonId={lessonId} termIds={b.termIds} contextKey={b.id} />
     case 'lab_notebook':
-      return <LabNotebook b={b} saved={saved} save={save} onDraft={onDraft} />
+      return <LabNotebook b={b} saved={saved} save={save} onDraft={onDraft} interactive={interactive} readOnly={readOnly} />
     case 'sketch':
+      if (b.submission === 'upload') return <MangaUploadCapture block={b} lessonId={lessonId} value={saved} readOnly={!!readOnly} onDraft={onDraft} onSave={v => save(b.id, b.type, v, { response_mode: 'sketch', target_id: b.targetId })} />
       return <SketchPad b={b} saved={saved} save={save} onDraft={onDraft} />
     case 'marzano':
       return <div><p className="text-sm mb-2">{targets?.find((t) => t.slug === b.targetId || t.id === b.targetId)?.statement ?? b.targetId}</p><MarzanoInput value={saved as number | undefined} onSave={(n) => save(b.id, 'marzano', n, { target_id: b.targetId })} /></div>
     case 'exit_ticket':
       if (b.workshop?.peerCheck) return <WorkshopPeerCheck value={saved} onDraft={onDraft} onSave={v=>save(b.id,b.type,v,{target_id:b.targetId,evidence_source:'exit_ticket',response_mode:'text'})} />
-      return <SeiTextCapture sei={b.sei} prompt={b.prompt} fallbackFrame={b.frame} talkFirst={b.talkFirst} value={saved} onDraft={onDraft} onSave={(r, scaffolds, mode) => save(b.id, 'exit_ticket', r, { response_mode: mode, scaffolds_used: scaffolds, target_id: b.targetId, evidence_source: 'exit_ticket' })} />
+      return <SeiTextCapture interactive={interactive} readOnly={readOnly} sei={b.sei} prompt={b.prompt} fallbackFrame={b.frame} talkFirst={b.talkFirst} value={saved} onDraft={onDraft} onSave={(r, scaffolds, mode) => save(b.id, 'exit_ticket', r, { response_mode: mode, scaffolds_used: scaffolds, target_id: b.targetId, evidence_source: 'exit_ticket' })} />
     case 'gewa':
       if (b.responseFormat === 'problem-workspace') return <ProblemWorkspace block={b} readOnly={readOnly} value={saved as GewaValue | undefined} onDraft={onDraft} onSave={(v, scaffolds)=>save(b.id,'gewa',v,{response_mode:Object.values(v.responses??{}).some(r=>typeof r==='object'&&r.strokes.length)?'sketch':'text',scaffolds_used:scaffolds})}/>
       return <GewaInteractive sei={b.sei} prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} equationOptions={b.equationOptions} equationIds={b.equationIds} solveFor={b.solveFor} equationCategories={b.equationCategories} value={saved as GewaValue | undefined} onDraft={onDraft} onSave={(v, scaffolds) => save(b.id, 'gewa', v, { response_mode: 'text', scaffolds_used: scaffolds })} />
@@ -696,8 +708,10 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       return <ObservationCapture b={b} saved={saved} save={save} onDraft={onDraft} />
     case 'transfer_prompt':
       return b.task?.prompt ? <div><MathMarkdown content={b.task.prompt} />{b.task.rubric && <details className="my-3"><summary className="cursor-pointer font-medium">How this transfer task is reviewed</summary>{Object.entries(b.task.rubric).map(([dimension, criterion]) => <div key={dimension} className="mt-2"><h4 className="font-medium capitalize">{dimension}</h4><MathMarkdown content={typeof criterion === 'string' ? criterion : criterion && typeof criterion === 'object' && 'description' in criterion ? String(criterion.description) : ''} /></div>)}</details>}<SeiTextCapture sei={b.sei} prompt="Explain your transfer solution and supporting physics evidence." value={saved} onDraft={onDraft} onSave={(r, scaffolds, mode) => save(b.id, 'transfer_prompt', { ...r, masteryTaskId: b.task!.id }, { response_mode: mode, scaffolds_used: scaffolds, target_id: b.targetId })} /></div> : <p role="alert">This transfer task could not be loaded. Ask your teacher to check its task reference; your other work is kept.</p>
+    case 'interactive_question':
+      return <InteractiveQuestion task={b.task} value={saved as InteractiveAnswer|undefined} readOnly={readOnly} onDraft={onDraft} onSave={value=>save(b.id,b.type,value,{target_id:b.targetId,response_mode:b.task.parts.every(p=>p.kind==='choice')?'choice':'text'})}/>
     case 'question':
-      return <InlineQuestionView b={b} saved={saved} save={save} onDraft={onDraft} />
+      return <InlineQuestionView b={b} saved={saved} save={save} onDraft={onDraft} interactive={interactive} />
     case 'figure': {
       if (!b.src) return null
       const full = b.align === 'full'
@@ -760,7 +774,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
   }
 }
 
-function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, selfRatingHold, isDraft, readOnly = false, visualReference, responseGuided = false }: { responseGuided?: boolean; visualReference?: ContentBlock; readOnly?: boolean; b: ContentBlock; saved: unknown; save: SaveFn; draft?: DraftFn; targets?: TargetInfo[]; lessonId: string; glossary?: GlossaryEntry[]; selfRatingHold?: string | null; isDraft?: boolean }) {
+function RenderedBlock({ interactive = false, b, saved, save, draft, targets, lessonId, glossary, selfRatingHold, isDraft, readOnly = false, visualReference, responseGuided = false }: { interactive?: boolean; responseGuided?: boolean; visualReference?: ContentBlock; readOnly?: boolean; b: ContentBlock; saved: unknown; save: SaveFn; draft?: DraftFn; targets?: TargetInfo[]; lessonId: string; glossary?: GlossaryEntry[]; selfRatingHold?: string | null; isDraft?: boolean }) {
   const assignedTrade = useAssignedTrade()
   const meta = BLOCK_META[b.type]
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
@@ -786,10 +800,10 @@ function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, sel
     )
     return meta && !BARE.has(b.type) ? <BlockShell meta={meta} done={false} capture hideHeading={responseGuided}>{held}</BlockShell> : held
   }
-  const rendered = renderBody(b, saved, trackedSave, lessonId, glossary, draft, targets, readOnly)
+  const rendered = renderBody(b, saved, trackedSave, lessonId, glossary, draft, targets, readOnly, interactive)
   const body = b.mcasId ? <><McasQuestion id={b.mcasId}/>{rendered}</> : rendered
   if (body === null) return null
-  if ((b.workshop || (b.type === 'gewa' && b.responseFormat === 'problem-workspace')) && isCaptureBlock(b)) return <div className={responseStyles.response}>
+  if ((interactive || b.workshop || (b.type === 'gewa' && b.responseFormat === 'problem-workspace')) && isCaptureBlock(b)) return <div className={responseStyles.response}>
     <fieldset disabled={readOnly || saveStatus === 'saving'} className="min-w-0 border-0 p-0 m-0">{body}</fieldset>
     {saveStatus !== 'idle' && <p role={saveStatus === 'error' ? 'alert' : 'status'} className="mt-3">{saveStatus === 'saving' ? 'Saving…' : saveStatus === 'error' ? 'Not saved. Try the Save button again; your work is still here.' : isDraft ? 'Changes need saving.' : 'Saved for your teacher.'}</p>}
   </div>
@@ -825,8 +839,9 @@ class BlockBoundary extends Component<{ label?: string; children: ReactNode }, {
 }
 
 export default function BlockRenderer({
-  blocks, referenceBlocks, lessonId, responses: extResponses, hydrated, save: extSave, draft: extDraft, targets, glossary, readOnly = false, readOnlyExceptBlockId, trackBadges = false, selfRatingHold = null, showResponseGuide = false, hideBlockHeadings = false, collapseReferences = true,
+  interactiveQuestions = false, blocks, referenceBlocks, lessonId, responses: extResponses, hydrated, save: extSave, draft: extDraft, targets, glossary, readOnly = false, readOnlyExceptBlockId, trackBadges = false, selfRatingHold = null, showResponseGuide = false, hideBlockHeadings = false, collapseReferences = true,
 }: {
+  interactiveQuestions?: boolean
   /** Student lesson response headings and direct navigation anchors. */
   showResponseGuide?: boolean
   /** Projector supplies its own matching response cue above the content. */
@@ -885,20 +900,20 @@ export default function BlockRenderer({
                 {gate === 'honors' ? 'Honors only' : 'CPA only'}
               </span>
             )}
-            {b.evidenceRole && <p className="mb-2 text-sm font-medium">{b.requiredForCompletion===false ? 'Optional practice · save if useful' : b.evidenceRole==='diagnostic'?'Diagnostic checkpoint':b.evidenceRole==='main'?'Main work artifact':b.evidenceRole==='practice'?'Practice check':'Individual exit'}</p>}
+            {!interactiveQuestions && b.evidenceRole && <p className="mb-2 text-sm font-medium">{b.requiredForCompletion===false ? 'Optional practice · save if useful' : b.evidenceRole==='diagnostic'?'Diagnostic checkpoint':b.evidenceRole==='main'?'Main work artifact':b.evidenceRole==='practice'?'Practice check':'Individual exit'}</p>}
             {guide && <div className={answerStyles.responseHeading}>
               <div><span className={`${answerStyles.responseEyebrow} lesson-response-badge`}>{readOnly && b.id !== readOnlyExceptBlockId ? 'YOUR SAVED WORK' : 'YOUR RESPONSE'} {String(responseNumber).padStart(2, '0')}</span><strong>{guide.title}</strong>{typeof b.xp === 'number' && b.xp > 0 && <span className={answerStyles.blockXp}>{b.xp} XP · earn once</span>}<span className={answerStyles.responseState}>{answerStatus(b, responses)}</span></div>
               <p>{readOnly && b.id !== readOnlyExceptBlockId ? 'Review your response below.' : 'Answer in the area below. Check each part before moving on.'}</p>
               <ul aria-label="Response parts">{guide.parts.map((part, i) => <li key={i}>{part}</li>)}</ul>
             </div>}
-            {!guide && isCaptureBlock(b) && typeof b.xp === 'number' && b.xp > 0 && <p className="mb-3 text-sm font-semibold text-primary">{b.xp} XP · Earn once for a complete saved answer.</p>}
+            {!interactiveQuestions && !guide && isCaptureBlock(b) && typeof b.xp === 'number' && b.xp > 0 && <p className="mb-3 text-sm font-semibold text-primary">{b.xp} XP · Earn once for a complete saved answer.</p>}
             <BlockBoundary label={b.type}>
               {b.referenceBlockIds?.map(id => {
                 const reference = (referenceBlocks ?? blocks).find(v => v.id === id && v.id !== b.id && !isCaptureBlock(v) && v.type !== 'deck')
                 return reference ? <details key={id} className="mb-3 rounded-lg border p-3"><summary className="min-h-11 cursor-pointer font-semibold">Open shared reference · {'title' in reference && reference.title ? String(reference.title) : 'Case data'}</summary><RenderedBlock responseGuided readOnly saved={undefined} b={reference} save={async () => false} lessonId={lessonId} /></details> : null
               })}
               {b.type === 'data_table' && b.sourceRows?.length ? <div className="mb-4 overflow-x-auto rounded-lg border p-3"><p className="mb-2 font-semibold">Supplied readings · use these as your source</p><table className="w-full text-left"><thead><tr>{b.columns.map(c => <th key={c} className="p-2">{c}</th>)}</tr></thead><tbody>{b.sourceRows.map((row,i) => <tr key={i}>{row.map((v,j) => <td key={j} className="border-t p-2">{v}</td>)}</tr>)}</tbody></table></div> : null}
-              <ReferenceContainer>{collapsedReference && <summary className="min-h-11 cursor-pointer rounded-lg border p-3 font-semibold">{b.teachingMoment?.title ?? 'Open background and reference'}</summary>}<RenderedBlock responseGuided={guided || hideBlockHeadings} visualReference={(referenceBlocks ?? blocks).find((v) => v.id === b.sei?.visualBlockId && v.id !== b.id && ['figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'sketch'].includes(v.type))} readOnly={readOnly && b.id !== readOnlyExceptBlockId} b={b} saved={responses[b.id]?.response ?? (b.workshop?.seedFrom ? responses[b.workshop.seedFrom]?.response : undefined)} isDraft={responses[b.id]?.draft} save={save} draft={draft} targets={targets} lessonId={lessonId} glossary={glossary} selfRatingHold={selfRatingHold} /></ReferenceContainer>
+              <ReferenceContainer>{collapsedReference && <summary className="min-h-11 cursor-pointer rounded-lg border p-3 font-semibold">{b.teachingMoment?.title ?? 'Open background and reference'}</summary>}<RenderedBlock interactive={interactiveQuestions} responseGuided={guided || hideBlockHeadings} visualReference={(referenceBlocks ?? blocks).find((v) => v.id === b.sei?.visualBlockId && v.id !== b.id && ['figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'sketch'].includes(v.type))} readOnly={readOnly && b.id !== readOnlyExceptBlockId} b={b} saved={responses[b.id]?.response ?? (b.workshop?.seedFrom ? responses[b.workshop.seedFrom]?.response : undefined)} isDraft={responses[b.id]?.draft} save={save} draft={draft} targets={targets} lessonId={lessonId} glossary={glossary} selfRatingHold={selfRatingHold} /></ReferenceContainer>
             </BlockBoundary>
           </div>
         )

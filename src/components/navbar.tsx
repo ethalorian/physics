@@ -1,9 +1,10 @@
 "use client"
+import { librarySectionForPath } from '@/lib/library-navigation'
 
 // React/Next.js imports
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 
 // External package imports
 import { useSession, signIn } from "next-auth/react"
@@ -20,16 +21,24 @@ import { useViewMode } from "@/contexts/ViewModeContext"
 import { useViewAwarePermissions } from "@/hooks/useViewAwarePermissions"
 import AccountMenu from "@/components/AccountMenu"
 import NotificationBell from "@/components/NotificationBell"
+import { useClassScope } from '@/lib/use-class-scope'
 import { useLessonContext } from '@/components/admin/useLessonContext'
-import { lessonContextHref } from '@/lib/lesson-release'
+import { scopedTeachingHref, teachingNavActive } from '@/lib/teaching-navigation'
+import StudentNavigation from "@/components/StudentNavigation"
 import BrandLogo from "@/components/BrandLogo"
 
 export default function Navbar() {
+  return <Suspense fallback={null}><NavbarContent /></Suspense>
+}
+
+function NavbarContent() {
   const { data: session, status } = useSession()
   const { viewMode } = useViewMode()
   const pathname = usePathname()
   const context = useLessonContext()
-  const navigationHref=(path:string)=>['/admin/dashboard','/admin/control-room'].includes(path)?lessonContextHref(path,{class:context.classId,lesson:context.lessonId}):path
+  const { classId: sharedClassId } = useClassScope()
+  const search = useSearchParams().toString()
+  const navigationHref = (href: string) => scopedTeachingHref(href, search, sharedClassId ?? context.classId)
 
   // Use view-aware permissions for navigation decisions
   const {
@@ -74,12 +83,12 @@ export default function Navbar() {
     // Observer (principal / coach): insights and read-only curriculum access.
     if (role === 'observer') {
       return [
-        { href: "/admin/analytics", label: "Mastery", icon: LayoutGrid },
+        { href: "/admin/analytics", label: "Analytics", icon: LayoutGrid },
         { href: "/admin/oversight", label: "Oversight", icon: Settings },
         { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
         { href: "/admin/teacher/plans", label: "Lesson plans", icon: BookOpen },
         { href: "/lessons", label: "Lessons & map", icon: BookOpen },
-        { href: "/admin/resources", label: "Resources", icon: BookText },
+        { href: "/admin/library?section=materials", label: "Library", icon: BookOpen },
       ]
     }
 
@@ -87,22 +96,15 @@ export default function Navbar() {
     // students get their own journey. "View as student" sends staff to the
     // student nav below so they can preview it.
     if (isStaff && !studentViewActive) {
-      // Teachers land in the Class Cockpit; the admin home stays the OWNER's
-      // console (access requests, drafts, app-wide stats) — admin only.
       const isTeacherOnly = role === 'teacher'
       const staff = [
-        { href: isTeacherOnly ? "/admin/classes" : "/admin/home", label: "Home", icon: Home },
-        { href: "/admin/classes", label: "Classes", icon: BookOpen },
-        { href: "/admin/control-room", label: "Student work", icon: LayoutGrid },
-        { href: "/admin/dashboard", label: "Lessons", icon: BookOpen },
-        { href: "/admin/resources", label: "Resources", icon: BookText },
+        { href: "/admin/control-room?view=plan", label: "Teaching", icon: LayoutGrid },
+        { href: "/admin/students?view=roster", label: "Students", icon: Users },
+        { href: "/admin/library", label: "Library", icon: BookOpen },
+        { href: "/comics", label: "Graphic novels", icon: BookOpen },
         { href: "/arcade", label: "Arcade", icon: Joystick },
       ]
-      // The global Admin tab is admin-only; it's also hidden while an admin is
-      // previewing the teacher experience. Teachers whose Home IS the cockpit
-      // don't need the duplicate Classes entry.
-      const deduped = isTeacherOnly ? staff.filter((i) => i.label !== "Home") : staff
-      return isTeacherOnly ? deduped : [...deduped, { href: "/experience", label: "Experience as…", icon: Eye }]
+      return isTeacherOnly ? staff : [...staff, { href: "/experience", label: "Experience as…", icon: Eye }]
     }
 
     // Student nav: orient → work → play → compete → spend. Simulations are
@@ -113,6 +115,7 @@ export default function Navbar() {
       { href: "/lessons", label: "Lessons", icon: BookOpen },
       { href: "/quizzes", label: "Quizzes", icon: LayoutGrid },
       { href: "/reference", label: "Reference", icon: Sigma },
+      { href: "/comics", label: "Graphic novels", icon: BookOpen },
       { href: "/textbook", label: "Textbook", icon: BookText },   // Conceptual Physics, session-gated PDF reader
       { href: "/lobby", label: "Lobby", icon: Users },
       { href: "/arcade", label: "Arcade", icon: Joystick },      // ONE arcade: earn upstairs (vocab), spend downstairs (ranked)
@@ -122,14 +125,15 @@ export default function Navbar() {
   }
 
   const navigationItems = getNavigationItems()
+  const groupedNavigation = isAuthenticated && role !== 'observer' && (!isStaff || studentViewActive)
 
   // Prefix-match active state (Surface 15): a lesson page lights the Lessons
   // tab, a lobby room lights Lobby. Boundary-safe so /store never matches
   // /storefront-style siblings.
-  const isActivePath = (href: string) => pathname === href || pathname?.startsWith(href + '/')
+  const isActivePath = (href: string) => href.startsWith('/admin/library') ? librarySectionForPath(pathname, search) !== null : href === '/arcade' ? pathname === '/arcade' || pathname.startsWith('/arcade/') || pathname.startsWith('/admin/arcade') || pathname.startsWith('/admin/avatar') : href.startsWith('/admin/control-room') ? ['plan', 'calendar', 'live', 'results'].some(view => teachingNavActive(pathname, search, '/admin/control-room?view=' + view)) : href.startsWith('/admin/students') ? pathname === '/admin/students' || pathname === '/admin/teacher' : teachingNavActive(pathname, search, href)
 
   // Signed-in users' logo goes home — their home, not the marketing splash.
-  const logoHref = isAuthenticated ? (role === 'observer' ? '/admin/oversight' : role === 'teacher' && !studentViewActive ? '/admin/classes' : isStaff && !studentViewActive ? '/admin/home' : '/home') : '/'
+  const logoHref = isAuthenticated ? (role === 'observer' ? '/admin/analytics' : isStaff && !studentViewActive ? navigationHref('/admin/control-room?view=plan') : '/home') : '/'
 
   // Chrome-free embed pages (e.g. simulations rendered inside a lesson iframe).
   if (pathname?.startsWith('/embed') || pathname === '/admin/observe' || pathname === '/admin/command-center' || pathname === '/admin/projector') return null
@@ -158,16 +162,16 @@ export default function Navbar() {
               <span className="text-base sm:text-lg tracking-tight">
                 <span className="block lg:hidden">Physics</span>
                 <span className="hidden lg:block">Antocci Physics</span>
+                {groupedNavigation && <span className="hidden lg:block text-xs font-normal text-muted-foreground mt-0.5">HS Conceptual Physics</span>}
               </span>
             </Link>
             {/* Physics Level Badge - Hidden on Mobile */}
-            <div className="hidden 2xl:block">
-              <PhysicsLevelBadge variant="compact" />
-            </div>
+            {!groupedNavigation && <div className="hidden 2xl:block"><PhysicsLevelBadge variant="compact" /></div>}
           </div>
 
+          {groupedNavigation && <StudentNavigation />}
           {/* Desktop navigation links */}
-          {isAuthenticated && navigationItems.length > 0 && (
+          {!groupedNavigation && isAuthenticated && navigationItems.length > 0 && (
             <div className="nav-rail hidden xl:flex items-center gap-0.5 rounded-xl px-1 py-0.5" aria-label="Main">
               {navigationItems.map((item) => {
                 const Icon = item.icon
@@ -195,7 +199,7 @@ export default function Navbar() {
           )}
 
           {/* Mobile Hamburger Menu - Only show when authenticated and has nav items */}
-          {isAuthenticated && navigationItems.length > 0 && (
+          {!groupedNavigation && isAuthenticated && navigationItems.length > 0 && (
             <div className="xl:hidden">
               <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                 <SheetTrigger asChild>
@@ -252,11 +256,8 @@ export default function Navbar() {
               </div>
             ) : isAuthenticated && session ? (
               <>
-                {/* Theme toggle — always in the bar on desktop (the mobile
-                    sheet and the avatar menu carry it too). */}
-                <div className="hidden md:block">
-                  <ThemeToggle />
-                </div>
+                {/* Keep appearance within reach in the student bar at every size. */}
+                <div className={groupedNavigation ? 'shrink-0' : 'hidden md:block'}><ThemeToggle /></div>
 
                 {/* Notifications — new ratings, grades, math, duels, due work */}
                 <NotificationBell />

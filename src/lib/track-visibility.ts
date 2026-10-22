@@ -1,3 +1,4 @@
+import { studentInteractiveTask } from './interactive-question'
 /**
  * Curriculum-track visibility — the single place that decides what a given
  * VIEWER is allowed to see.
@@ -95,6 +96,7 @@ export function filterDocumentForViewer(
 }
 
 function stripAnswerKey(b: ContentBlock): ContentBlock {
+  if (b.type === 'interactive_question') return {...b,task:studentInteractiveTask(b.task)};
   if (b.type !== 'question' || !b.question || typeof b.question !== 'object' || !('correctOptionId' in (b.question as object))) return b;
   const { correctOptionId: _omit, ...rest } = b.question as { correctOptionId?: string } & Record<string, unknown>;
   void _omit;

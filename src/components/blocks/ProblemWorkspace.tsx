@@ -73,6 +73,23 @@ export default function ProblemWorkspace({block,value,onDraft,onSave,readOnly=fa
 }
 
 export function WorkedProblemExample({block}:{block:WorkedExampleBlock}){
+ const [active,setActive]=useState<Stage>('Problem')
+ const [review,setReview]=useState(false)
+ const [revealed,setRevealed]=useState<Stage[]>(['Problem'])
  const values={Model:block.given,Plan:block.equation,Work:block.work,Answer:block.answer}
- return <section className={`${theme.theme} ${styles.board}`} aria-label="Worked problem"><div className={styles.steps}>{stages.map(stage=><span key={stage} className="text-sm italic">{stage}</span>)}</div><div className={styles.layout}><div><header className={styles.band}><h3>Problem</h3><MathMarkdown content={block.prompt}/></header>{Object.entries(values).filter(([,v])=>v).map(([stage,value])=><section key={stage} className={styles.field}><h4>{stage}</h4><div className={stage==='Answer'?styles.answer:styles.staticText}><MathMarkdown content={value!}/></div></section>)}</div>{block.sei?.visual&&<aside className={styles.reference}><figure className={styles.figure}><SeiVisual visual={block.sei.visual}/><figcaption>Use the model to connect each step to the situation.</figcaption></figure></aside>}</div></section>
+ const interactive=Boolean(block.interactive)
+ const available=stages.filter(stage=>stage==='Problem'||values[stage as keyof typeof values])
+ const next=available[available.indexOf(active)+1]
+ const go=(stage:Stage)=>{setActive(stage);setReview(false)}
+ return <section className={`${theme.theme} ${styles.board}`} aria-label={interactive?'Interactive worked problem':'Worked problem'}>
+   {interactive?<nav className={styles.steps} aria-label="Worked example stages">{available.map(stage=><button key={stage} type="button" aria-current={!review&&active===stage?'step':undefined} onClick={()=>go(stage)}>{stage}</button>)}<button type="button" className={styles.review} aria-pressed={review} onClick={()=>setReview(value=>!value)}>Review example</button></nav>:<div className={styles.steps}>{available.map(stage=><span key={stage} className="text-sm italic">{stage}</span>)}</div>}
+   <div className={styles.layout} data-example={interactive}>
+     <div><header className={styles.band}><h3>Problem</h3><MathMarkdown content={block.prompt}/></header>
+       {interactive&&!review&&active==='Problem'&&<p className={styles.intro}>Read the problem and identify what you need to find. Predict the next step, then reveal the example’s reasoning. Afterward, try the same kind of problem with new numbers.</p>}
+       {Object.entries(values).filter(([stage,value])=>value&&(!interactive||review||stage===active)).map(([stage,value])=><section key={stage} className={styles.field}><h4>{stage}</h4>{interactive&&!review&&!revealed.includes(stage as Stage)?<div className={styles.predict}><p>{guidance[stage as Stage]} Pause and think through your approach before revealing the example.</p><button type="button" onClick={()=>setRevealed(previous=>[...previous,stage as Stage])}>Reveal {stage.toLowerCase()}</button></div>:<div className={`${stage==='Answer'?styles.answer:styles.staticText} ${interactive?styles.handwritten:''}`}><MathMarkdown content={value!}/></div>}</section>)}
+       {interactive&&!review&&<div className={styles.advance}><button type="button" onClick={()=>next?go(next):setReview(true)}>{next?`Continue to ${next}`:'Review example'}</button><span>This example is a learning support. Save your own reasoning in the next problem.</span></div>}
+     </div>
+     {block.sei?.visual&&<aside className={styles.reference}><figure className={styles.figure}><SeiVisual visual={block.sei.visual}/><figcaption>Use the model to connect each step to the situation.</figcaption></figure></aside>}
+   </div>
+ </section>
 }

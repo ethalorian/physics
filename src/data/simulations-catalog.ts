@@ -29,20 +29,21 @@ export interface SimulationCatalogEntry {
 
 export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
-    "title": "Measurement, Precision & Accuracy",
+    "title": "Measurement Lab",
     "slug": "measurement-precision",
-    "description": "Learn to measure with proper precision and understand the difference between accuracy and precision. Practice reading measurements from various instruments.",
-    "category": "lab-skills",
+    "description": "Can a precise measurement still be wrong? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Lab skills",
+    "topic": "Measurement",
     "difficulty": "beginner",
     "sort_order": 10,
     "component_path": "/simulations/measurement-precision",
     "estimated_time": 20,
     "objectives": [
-      "Measure to the precision of a measuring device",
-      "Understand accuracy vs precision",
-      "Identify systematic and random errors"
+      "Make a prediction",
+      "Read, repeat, and calibrate",
+      "Separate variation from offset",
+      "Try a new situation"
     ],
     "key_concepts": [
       "precision",
@@ -50,7 +51,9 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "measurement",
       "error analysis"
     ],
-    "tags": [],
+    "tags": [
+      "interactive-assignment"
+    ],
     "can_embed": true,
     "has_ai_guide": false,
     "published": true
@@ -102,38 +105,46 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
     "published": true
   },
   {
-    "title": "Distance vs. Displacement",
+    "title": "Out & Back",
     "slug": "distance-displacement",
-    "description": "Walk a path and compare total distance traveled with net displacement. See why direction matters.",
+    "description": "What changes when you turn around? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "1D motion",
+    "topic": "Motion",
     "difficulty": "beginner",
-    "sort_order": 21,
+    "sort_order": 10,
     "component_path": "/simulations/distance-displacement",
     "estimated_time": 15,
-    "objectives": [],
+    "objectives": [
+      "Make a prediction",
+      "Follow the two legs",
+      "Return, then overshoot",
+      "Try a new situation"
+    ],
     "key_concepts": [],
-    "tags": [],
+    "tags": [
+      "interactive-assignment"
+    ],
     "can_embed": true,
     "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Constant Velocity Motion Lab",
+    "title": "Motion Studio",
     "slug": "constant-velocity",
-    "description": "Control a walker's motion and collect position data. Observe constant velocity in 1D motion and analyze position-time graphs to find velocity from slope.",
+    "description": "Does changing the origin change the motion? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "1D motion",
+    "topic": "Motion",
     "difficulty": "beginner",
-    "sort_order": 22,
+    "sort_order": 15,
     "component_path": "/simulations/constant-velocity",
-    "estimated_time": 15,
+    "estimated_time": 20,
     "objectives": [
-      "Understand constant velocity motion",
-      "Collect and analyze position-time data",
-      "Calculate velocity from graph slope"
+      "Make a prediction",
+      "Connect motion and slope",
+      "Change the coordinate reading",
+      "Try a new situation"
     ],
     "key_concepts": [
       "velocity",
@@ -141,33 +152,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "graphs",
       "data collection"
     ],
-    "tags": [],
+    "tags": [
+      "interactive-assignment"
+    ],
     "can_embed": true,
     "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Car Race: Relative Motion & Kinematics",
+    "title": "Catch-Up Challenge",
     "slug": "car-race",
-    "description": "Analyze relative motion between two cars traveling at constant velocities with different start times. Use kinematics equations to predict when and where one car overtakes the other. Learn to interpret position-time graphs, understand relative velocity, apply reference frames, and solve multi-object motion problems. See how mathematical tools (systems of equations) help solve physics problems!",
+    "description": "When does a faster car actually catch up? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "1D motion",
+    "topic": "Motion",
     "difficulty": "intermediate",
-    "sort_order": 23,
+    "sort_order": 25,
     "component_path": "/simulations/car-race",
     "estimated_time": 25,
     "objectives": [
-      "Set up position equations for objects with constant velocity",
-      "Create a system of two linear equations from a word problem",
-      "Solve systems of equations algebraically to find intersection",
-      "Interpret intersection point as the time and place where cars meet",
-      "Graph position vs. time for multiple objects on same axes",
-      "Identify intersection point visually on a graph",
-      "Understand that intersection = solution to system of equations",
-      "Apply systems of equations to relative motion problems",
-      "Verify algebraic solutions using graphical methods",
-      "Predict race outcomes using mathematical models"
+      "Make a prediction",
+      "Find the meeting",
+      "Separate speed from start time",
+      "Try a new situation"
     ],
     "key_concepts": [
       "systems of equations",
@@ -191,63 +198,79 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "linear-equations",
       "relative-motion",
       "intersections",
-      "word-problems"
+      "word-problems",
+      "interactive-assignment"
     ],
     "can_embed": true,
-    "has_ai_guide": true,
+    "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Slope Calculator",
+    "title": "Slope Detective",
     "slug": "slope-calculator",
-    "description": "Find velocity from the slope of a position-time graph. Drag points and read rise over run.",
+    "description": "Is a high point on the graph a high speed? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Motion graphs",
+    "topic": "Motion",
     "difficulty": "beginner",
-    "sort_order": 30,
+    "sort_order": 15,
     "component_path": "/simulations/slope-calculator",
     "estimated_time": 15,
-    "objectives": [],
+    "objectives": [
+      "Make a prediction",
+      "Read rise and run",
+      "Move the line, then change its slope",
+      "Try a new situation"
+    ],
     "key_concepts": [],
-    "tags": [],
+    "tags": [
+      "interactive-assignment"
+    ],
     "can_embed": true,
     "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Area Under the Curve",
+    "title": "Signed Area Lab",
     "slug": "area-under-curve",
-    "description": "Discover how the area under a velocity-time graph gives displacement. Build the curve and read the accumulated area.",
+    "description": "Can you travel far and end where you began? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Motion graphs",
+    "topic": "Motion",
     "difficulty": "intermediate",
-    "sort_order": 31,
+    "sort_order": 20,
     "component_path": "/simulations/area-under-curve",
     "estimated_time": 20,
-    "objectives": [],
+    "objectives": [
+      "Make a prediction",
+      "Read three intervals",
+      "Design a return trip",
+      "Try a new situation"
+    ],
     "key_concepts": [],
-    "tags": [],
+    "tags": [
+      "interactive-assignment"
+    ],
     "can_embed": true,
     "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Uniformly Accelerated Motion",
+    "title": "Acceleration Studio",
     "slug": "uniformly-accelerated-motion",
-    "description": "Watch a car drop oil spots every second to visualize constant acceleration. Explore all four kinematic equations and see how spacing patterns reveal acceleration.",
+    "description": "Can positive velocity go with negative acceleration? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Acceleration & free fall",
+    "topic": "Motion",
     "difficulty": "intermediate",
-    "sort_order": 40,
+    "sort_order": 35,
     "component_path": "/simulations/uniformly-accelerated-motion",
     "estimated_time": 25,
     "objectives": [
-      "Visualize constant acceleration",
-      "Understand all four kinematic equations",
-      "Connect math to physical motion patterns"
+      "Make a prediction",
+      "Find the turn",
+      "Separate velocity from acceleration",
+      "Try a new situation"
     ],
     "key_concepts": [
       "acceleration",
@@ -255,26 +278,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "velocity",
       "displacement"
     ],
-    "tags": [],
+    "tags": [
+      "interactive-assignment"
+    ],
     "can_embed": true,
     "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Freefall Cliff Lab",
+    "title": "Cliff Drop",
     "slug": "freefall-cliff",
-    "description": "Help a traveler measure cliff height by dropping a stone! Watch position traces every 0.25 seconds and use the freefall equation h = ½gt² to calculate the height.",
+    "description": "What can fall time tell you about height? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Acceleration & free fall",
+    "topic": "Motion",
     "difficulty": "intermediate",
-    "sort_order": 41,
+    "sort_order": 40,
     "component_path": "/simulations/freefall-cliff",
     "estimated_time": 20,
     "objectives": [
-      "Apply freefall equations to real problems",
-      "Use experimental data to calculate height",
-      "Understand acceleration due to gravity"
+      "Make a prediction",
+      "Use time as a measuring tool",
+      "Change the model condition",
+      "Try a new situation"
     ],
     "key_concepts": [
       "freefall",
@@ -282,31 +308,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "gravity",
       "experimental methods"
     ],
-    "tags": [],
+    "tags": [
+      "interactive-assignment"
+    ],
     "can_embed": true,
     "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Vacuum Chamber: Feather vs. Bowling Ball",
+    "title": "Vacuum Chamber",
     "slug": "vacuum-chamber",
-    "description": "Drop a feather and bowling ball side-by-side in a vacuum chamber with adjustable air pressure. Discover that without air resistance, all objects fall at the same rate regardless of mass! Observe how air resistance affects light objects much more than heavy objects, and explore the concept of terminal velocity. This is the famous experiment demonstrated by Apollo 15 astronauts on the Moon!",
-    "category": "forces",
+    "description": "Why does mass matter in air but not in a vacuum? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Acceleration & free fall",
+    "topic": "Motion",
     "difficulty": "beginner",
-    "sort_order": 42,
+    "sort_order": 40,
     "component_path": "/simulations/vacuum-chamber",
-    "estimated_time": 15,
+    "estimated_time": 20,
     "objectives": [
-      "Understand that all objects fall at the same rate in a vacuum",
-      "Recognize that gravity pulls on all objects equally (a = g = 9.8 m/s²)",
-      "Observe how air resistance affects objects differently",
-      "Understand that air resistance depends on speed, area, and shape",
-      "Explain why feathers fall slowly on Earth but quickly on the Moon",
-      "Recognize the concept of terminal velocity",
-      "Compare kinematics with and without air resistance",
-      "Understand that mass does not affect falling rate in vacuum"
+      "Make a prediction",
+      "Remove the air",
+      "Add drag without changing gravity",
+      "Try a new situation"
     ],
     "key_concepts": [
       "gravity",
@@ -331,31 +355,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "free-fall",
       "galileo",
       "moon",
-      "vacuum"
+      "vacuum",
+      "interactive-assignment"
     ],
     "can_embed": true,
-    "has_ai_guide": true,
+    "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Maze Navigator: Vector Addition",
+    "title": "Vector Routes",
     "slug": "maze-vectors",
-    "description": "Guide a mouse through a maze to find cheese while learning how position vectors are composed of x and y components. Visualize vector addition in real-time as component vectors combine to form resultant vectors using the Pythagorean theorem.",
+    "description": "Do different routes lead to the same displacement? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Vectors & 2D motion",
+    "topic": "Vectors",
     "difficulty": "beginner",
-    "sort_order": 50,
+    "sort_order": 30,
     "component_path": "/simulations/maze-vectors",
-    "estimated_time": 15,
+    "estimated_time": 20,
     "objectives": [
-      "Understand that position vectors have x and y components",
-      "Recognize that vectors can be broken down into perpendicular components",
-      "Learn how to add vectors by adding their components",
-      "Apply the Pythagorean theorem to find vector magnitude",
-      "Visualize vector addition geometrically",
-      "Calculate resultant vectors from component vectors",
-      "Understand the relationship between components and magnitude"
+      "Make a prediction",
+      "Build the resultant",
+      "Change order, then close the route",
+      "Try a new situation"
     ],
     "key_concepts": [
       "vectors",
@@ -377,33 +399,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "kinematics",
       "position",
       "pythagorean-theorem",
-      "coordinate-geometry"
+      "coordinate-geometry",
+      "interactive-assignment"
     ],
     "can_embed": true,
-    "has_ai_guide": true,
+    "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Riverboat Crossing: Vector Addition",
+    "title": "River Crossing",
     "slug": "riverboat-crossing",
-    "description": "Navigate a boat across a river with flowing current and discover how velocities add as vectors! See three velocity vectors simultaneously: boat velocity (relative to water), current velocity (water flow), and resultant velocity (actual path over ground). Learn to calculate drift distance, find the angle needed to go straight across, and understand relative motion. Perfect for teaching vector addition, components, and real-world applications of 2D motion!",
+    "description": "Can pointing upstream make the crossing take longer? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Vectors & 2D motion",
+    "topic": "Optional extensions",
     "difficulty": "intermediate",
-    "sort_order": 51,
+    "sort_order": 196,
     "component_path": "/simulations/riverboat-crossing",
-    "estimated_time": 20,
+    "estimated_time": 25,
     "objectives": [
-      "Understand that velocities add as vectors",
-      "Recognize boat velocity is relative to the water, not ground",
-      "Calculate resultant velocity from vector addition",
-      "Predict drift distance caused by current",
-      "Determine the angle needed to travel straight across",
-      "Apply Pythagorean theorem to find resultant velocity magnitude",
-      "Understand relative motion between boat, water, and ground",
-      "Solve real-world navigation problems using vector addition",
-      "Interpret velocity vectors visually and mathematically"
+      "Make a prediction",
+      "Add velocities by components",
+      "Trade drift for crossing time",
+      "Try a new situation"
     ],
     "key_concepts": [
       "vector addition",
@@ -426,51 +444,54 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "relative-velocity",
       "navigation",
       "river-crossing",
-      "2d-motion"
+      "2d-motion",
+      "interactive-assignment"
     ],
-    "can_embed": true,
-    "has_ai_guide": true,
-    "published": true
-  },
-  {
-    "title": "Projectile Motion Lab",
-    "slug": "projectile-motion",
-    "description": "Launch projectiles and analyze 2D motion under gravity. Drag the targets, then dial in angle and speed to hit them. Explore range, height, and trajectory.",
-    "category": "kinematics",
-    "unit": "unit-1",
-    "topic": "Vectors & 2D motion",
-    "difficulty": "intermediate",
-    "sort_order": 53,
-    "component_path": "/simulations/projectile-motion",
-    "estimated_time": 20,
-    "objectives": [],
-    "key_concepts": [],
-    "tags": [],
     "can_embed": true,
     "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Monkey Hunter: Projectile Motion",
-    "slug": "monkey-hunter",
-    "description": "The classic physics demonstration! A monkey hangs from a tree branch. You aim a dart gun directly at it and fire. At that exact moment, the monkey drops (lets go of the branch). Will the dart hit the monkey? Discover why aiming directly at the target works even when it falls! Learn about projectile motion, independence of x and y components, and how gravity affects all objects equally. Perfect for understanding 2D kinematics and the counterintuitive results of simultaneous motion.",
+    "title": "Launch Lab",
+    "slug": "projectile-motion",
+    "description": "Which part of the motion does gravity change? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Vectors & 2D motion",
+    "topic": "Optional extensions",
     "difficulty": "intermediate",
-    "sort_order": 54,
-    "component_path": "/simulations/monkey-hunter",
-    "estimated_time": 20,
+    "sort_order": 198,
+    "component_path": "/simulations/projectile-motion",
+    "estimated_time": 25,
     "objectives": [
-      "Understand that horizontal and vertical motion are independent",
-      "Recognize that gravity affects all objects equally (dart and monkey)",
-      "Apply projectile motion equations to predict trajectory",
-      "Understand why aiming directly at a dropping target still hits it",
-      "Analyze motion in two dimensions (x and y components)",
-      "Calculate time of flight from horizontal motion",
-      "Predict where projectile and falling object meet",
-      "Understand that both objects fall ½gt² regardless of horizontal motion",
-      "Recognize the principle behind \"aim at the target\" strategy"
+      "Make a prediction",
+      "Follow two independent components",
+      "Same speed, different launch",
+      "Try a new situation"
+    ],
+    "key_concepts": [],
+    "tags": [
+      "interactive-assignment"
+    ],
+    "can_embed": true,
+    "has_ai_guide": false,
+    "published": true
+  },
+  {
+    "title": "Dropping Target",
+    "slug": "monkey-hunter",
+    "description": "Why aim at where a falling target started? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "category": "kinematics",
+    "unit": "unit-1",
+    "topic": "Optional extensions",
+    "difficulty": "intermediate",
+    "sort_order": 198,
+    "component_path": "/simulations/monkey-hunter",
+    "estimated_time": 25,
+    "objectives": [
+      "Make a prediction",
+      "Compare the gravitational offsets",
+      "Test the limit",
+      "Try a new situation"
     ],
     "key_concepts": [
       "projectile motion",
@@ -492,29 +513,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "gravity",
       "free-fall",
       "trajectory",
-      "monkey-hunter"
+      "monkey-hunter",
+      "interactive-assignment"
     ],
     "can_embed": true,
-    "has_ai_guide": true,
+    "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Free Body Diagram Lab",
+    "title": "Force Inspector",
     "slug": "free-body-diagram",
-    "description": "Interactive free body diagram simulation where students can experiment with force vectors and see how they affect acceleration. Drag and drop force vectors to explore Newton's Second Law (F = ma) with real-time calculations showing the relationship between force, mass, and acceleration.",
+    "description": "Which forces belong on this object’s diagram? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "forces",
     "unit": "unit-1",
-    "topic": "Forces & Newton's laws",
+    "topic": "Forces",
     "difficulty": "intermediate",
-    "sort_order": 60,
+    "sort_order": 75,
     "component_path": "/simulations/free-body-diagram",
     "estimated_time": 25,
     "objectives": [
-      "Understand Newton's Second Law (F = ma)",
-      "Practice vector addition and decomposition",
-      "Visualize how multiple forces affect an object",
-      "Explore equilibrium conditions",
-      "See the relationship between force, mass, and acceleration"
+      "Make a prediction",
+      "Choose the object and the agents",
+      "Reduce support, then lose contact",
+      "Try a new situation"
     ],
     "key_concepts": [
       "force",
@@ -531,29 +552,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "drag-and-drop",
       "vectors",
       "forces",
-      "Newton"
+      "Newton",
+      "interactive-assignment"
     ],
     "can_embed": true,
-    "has_ai_guide": true,
+    "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Sumo Wrestling Forces",
+    "title": "Force Tug-of-War",
     "slug": "sumo-forces",
-    "description": "Experience Newton's Second Law through an exciting sumo wrestling simulation! Control the force and mass of two wrestlers to see how unbalanced forces lead to motion. Watch real-time kinematics tracking as wrestlers battle for victory. When forces are balanced, neither wrestler moves; when unbalanced, the battle begins!",
+    "description": "Do balanced forces mean the object must be stopped? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "forces",
     "unit": "unit-1",
-    "topic": "Forces & Newton's laws",
+    "topic": "Forces",
     "difficulty": "beginner",
-    "sort_order": 61,
+    "sort_order": 80,
     "component_path": "/simulations/sumo-forces",
-    "estimated_time": 15,
+    "estimated_time": 20,
     "objectives": [
-      "Understand how unbalanced forces cause acceleration",
-      "See the relationship between force, mass, and acceleration (F=ma)",
-      "Track kinematics: position, velocity, and acceleration over time",
-      "Explore how mass affects the outcome when forces are applied",
-      "Visualize equilibrium when forces are balanced"
+      "Make a prediction",
+      "Find the sum before using F=ma",
+      "Balance while moving",
+      "Try a new situation"
     ],
     "key_concepts": [
       "force",
@@ -573,32 +594,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "kinematics",
       "forces",
       "Newton",
-      "competition"
+      "competition",
+      "interactive-assignment"
     ],
     "can_embed": true,
-    "has_ai_guide": true,
+    "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Carts & Springs: Newton's Third Law",
+    "title": "Spring Carts",
     "slug": "carts-third-law",
-    "description": "Watch two carts push apart when a compressed spring is released between them. Observe Newton's Third Law (action-reaction pairs), see how equal forces cause different accelerations for different masses, and verify conservation of momentum. The classic physics demonstration that proves forces come in pairs!",
+    "description": "Equal forces—so why do the carts move differently? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "forces",
     "unit": "unit-1",
-    "topic": "Forces & Newton's laws",
+    "topic": "Forces",
     "difficulty": "intermediate",
-    "sort_order": 62,
+    "sort_order": 70,
     "component_path": "/simulations/carts-third-law",
-    "estimated_time": 20,
+    "estimated_time": 25,
     "objectives": [
-      "Understand Newton's Third Law (action-reaction pairs)",
-      "Recognize that forces always come in pairs",
-      "Observe that action and reaction forces are equal in magnitude and opposite in direction",
-      "Understand that same force on different masses produces different accelerations",
-      "Apply F = ma to predict motion of each cart",
-      "Verify conservation of momentum (total momentum = 0)",
-      "Calculate velocities using momentum conservation",
-      "Analyze kinematics data for both objects simultaneously"
+      "Make a prediction",
+      "Compare the two objects at one instant",
+      "Swap masses and release",
+      "Try a new situation"
     ],
     "key_concepts": [
       "Newton's Third Law",
@@ -620,32 +638,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "momentum",
       "conservation-laws",
       "carts",
-      "collisions"
+      "collisions",
+      "interactive-assignment"
     ],
     "can_embed": true,
-    "has_ai_guide": true,
+    "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Astronaut Thrust: Newton's Laws in Space",
+    "title": "Thrust & Coast",
     "slug": "astronaut-thrust",
-    "description": "Apply thrust vectors to an astronaut floating in space and observe Newton's First and Second Laws in action. Explore mechanical equilibrium, vector forces, and how acceleration relates to force. Collect kinematics data including position, velocity, and acceleration over time in a frictionless environment.",
+    "description": "What happens after the engine switches off? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "forces",
     "unit": "unit-1",
-    "topic": "Forces & Newton's laws",
+    "topic": "Forces",
     "difficulty": "intermediate",
-    "sort_order": 63,
+    "sort_order": 45,
     "component_path": "/simulations/astronaut-thrust",
     "estimated_time": 20,
     "objectives": [
-      "Understand Newton's First Law (inertia and equilibrium)",
-      "Apply Newton's Second Law (F = ma) with vector forces",
-      "Recognize mechanical equilibrium (F_net = 0)",
-      "Observe that constant force produces constant acceleration",
-      "Analyze velocity changes under applied forces",
-      "Understand vector nature of forces and accelerations",
-      "Collect and analyze kinematics data (position, velocity, acceleration)",
-      "Recognize that in space, no friction means forces cause permanent changes"
+      "Make a prediction",
+      "Separate burn from coast",
+      "Brake without changing the model",
+      "Try a new situation"
     ],
     "key_concepts": [
       "Newton's First Law",
@@ -670,33 +685,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "kinematics",
       "equilibrium",
       "space-physics",
-      "F=ma"
+      "F=ma",
+      "interactive-assignment"
     ],
     "can_embed": true,
-    "has_ai_guide": true,
+    "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Atwood Machine: Forces & Equilibrium",
+    "title": "Pulley Balance",
     "slug": "atwood-machine",
-    "description": "Study the classic Atwood machine - two masses connected by a rope over a frictionless pulley. Explore static equilibrium (equal masses at rest), dynamic equilibrium (equal masses moving), and accelerated motion (unequal masses). Calculate system acceleration using Newton's Second Law, predict time to fall a fixed distance, and understand tension forces. Beautiful, smooth animation with realistic rope physics and force vectors. Perfect for teaching balanced/unbalanced forces, tension, and applying F=ma to connected objects!",
+    "description": "When does tension equal weight? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "forces",
     "unit": "unit-1",
-    "topic": "Forces & Newton's laws",
+    "topic": "Forces",
     "difficulty": "intermediate",
-    "sort_order": 64,
+    "sort_order": 90,
     "component_path": "/simulations/atwood-machine",
-    "estimated_time": 20,
+    "estimated_time": 25,
     "objectives": [
-      "Understand static equilibrium (F_net = 0, v = 0)",
-      "Understand dynamic equilibrium (F_net = 0, v = constant)",
-      "Calculate acceleration for connected masses using a = g(m1-m2)/(m1+m2)",
-      "Apply Newton's Second Law to systems of objects",
-      "Calculate rope tension in pulley systems",
-      "Predict time to fall a given distance using kinematics",
-      "Recognize that tension is same throughout massless rope",
-      "Understand that heavier side accelerates down, lighter up",
-      "Verify predictions using experimental data"
+      "Make a prediction",
+      "Write one equation per object",
+      "Balance does not require rest",
+      "Try a new situation"
     ],
     "key_concepts": [
       "Atwood machine",
@@ -721,10 +732,11 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "newtons-laws",
       "F=ma",
       "connected-objects",
-      "atwood-machine"
+      "atwood-machine",
+      "interactive-assignment"
     ],
     "can_embed": true,
-    "has_ai_guide": true,
+    "has_ai_guide": false,
     "published": true
   },
   {
@@ -878,20 +890,21 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
     "published": true
   },
   {
-    "title": "Reading 2026-XJ’s Trajectory",
+    "title": "Trajectory Reader",
     "slug": "asteroid-trajectory",
-    "description": "Each week NASA reports a new distance to the asteroid. The distance-time data falls on a line - read the slope for the closing speed and extrapolate to zero to predict the impact day. More measurement scatter, shakier prediction. (Returns as the Unit 1 transfer task.)",
+    "description": "Is an asteroid’s distance from Earth the same as its x position? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Motion graphs",
+    "topic": "Mission",
     "difficulty": "intermediate",
-    "sort_order": 32,
+    "sort_order": 20,
     "component_path": "/simulations/asteroid-trajectory",
     "estimated_time": 20,
     "objectives": [
-      "Read velocity as the slope of a distance-time graph",
-      "Extrapolate a linear trend to predict a future position and arrival time",
-      "Explain why measurement scatter creates uncertainty in a prediction"
+      "Make a prediction",
+      "Read a coordinate, not a road",
+      "Hold the x motion fixed",
+      "Try a new situation"
     ],
     "key_concepts": [
       "Position-time graphs",
@@ -910,27 +923,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "measurement-uncertainty",
       "asteroid",
       "planetary-defense",
-      "nasa"
+      "nasa",
+      "interactive-assignment"
     ],
     "can_embed": true,
     "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Closing Speed — How Fast Is It Really Coming?",
+    "title": "Closing Speed",
     "slug": "closing-speed",
-    "description": "The asteroid has its own speed through space, but Earth is racing along its orbit too. Subtract the velocity vectors to find the asteroid velocity relative to Earth - the closing/impact speed, usually bigger than either speed alone.",
+    "description": "Does all of an asteroid’s speed bring it closer? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Vectors & 2D motion",
+    "topic": "Mission",
     "difficulty": "intermediate",
-    "sort_order": 52,
+    "sort_order": 30,
     "component_path": "/simulations/closing-speed",
-    "estimated_time": 15,
+    "estimated_time": 20,
     "objectives": [
-      "Find a relative velocity by subtracting velocity vectors",
-      "Read the impact speed as the length of the relative-velocity vector",
-      "Reason about motion in different reference frames"
+      "Make a prediction",
+      "Separate toward and across",
+      "Same speed, different direction",
+      "Try a new situation"
     ],
     "key_concepts": [
       "Relative velocity",
@@ -947,28 +962,29 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "impact-speed",
       "vectors",
       "asteroid",
-      "planetary-defense"
+      "planetary-defense",
+      "interactive-assignment"
     ],
     "can_embed": true,
     "has_ai_guide": false,
     "published": true
   },
   {
-    "title": "Transfer Task: Predicting 2026-XJ’s Position",
+    "title": "Prediction Envelope",
     "slug": "predicting-2026-xj",
-    "description": "Unit 1's transfer task - the same trajectory tool from Motion graphs, now the assessed challenge. You have the distance-time graph, slope as velocity, and extrapolation: produce a predicted impact day, state your confidence, and justify it from the data. Push the measurement scatter and decide how many observations you'd demand before staking a real decision on the number.",
+    "description": "How confident should we be in a distant prediction? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
     "category": "kinematics",
     "unit": "unit-1",
-    "topic": "Transfer Task: Predicting 2026-XJ",
+    "topic": "Mission",
     "difficulty": "advanced",
-    "sort_order": 70,
+    "sort_order": 100,
     "component_path": "/simulations/predicting-2026-xj",
-    "estimated_time": 25,
+    "estimated_time": 30,
     "objectives": [
-      "Produce a defensible impact-day prediction from real trajectory data",
-      "Quantify and communicate the uncertainty in that prediction",
-      "Justify a claim using slope and extrapolation evidence from the graph",
-      "Decide how much data is enough before acting on a prediction"
+      "Make a prediction",
+      "Predict a region, not just a dot",
+      "Change time and measurement quality separately",
+      "Try a new situation"
     ],
     "key_concepts": [
       "Transfer task",
@@ -986,7 +1002,90 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
       "measurement-uncertainty",
       "asteroid",
       "planetary-defense",
-      "nasa"
+      "nasa",
+      "interactive-assignment"
+    ],
+    "can_embed": true,
+    "has_ai_guide": false,
+    "published": true
+  },
+  {
+    "slug": "incline-lab",
+    "title": "Tilted Axes",
+    "description": "Why does the normal force change on a ramp? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "category": "forces",
+    "unit": "unit-1",
+    "topic": "Forces",
+    "difficulty": "intermediate",
+    "sort_order": 80,
+    "component_path": "/simulations/incline-lab",
+    "estimated_time": 25,
+    "objectives": [
+      "Make a prediction",
+      "Choose axes that fit the constraint",
+      "Tilt, then release",
+      "Try a new situation"
+    ],
+    "key_concepts": [
+      "forces"
+    ],
+    "tags": [
+      "interactive-assignment"
+    ],
+    "can_embed": true,
+    "has_ai_guide": false,
+    "published": true
+  },
+  {
+    "slug": "force-mass",
+    "title": "Force & Mass Lab",
+    "description": "What does a fair test of F = ma look like? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "category": "forces",
+    "unit": "unit-1",
+    "topic": "Forces",
+    "difficulty": "intermediate",
+    "sort_order": 55,
+    "component_path": "/simulations/force-mass",
+    "estimated_time": 30,
+    "objectives": [
+      "Make a prediction",
+      "Hold force fixed",
+      "Hold mass fixed",
+      "Combine the two fair tests",
+      "Try a new situation"
+    ],
+    "key_concepts": [
+      "forces"
+    ],
+    "tags": [
+      "interactive-assignment"
+    ],
+    "can_embed": true,
+    "has_ai_guide": false,
+    "published": true
+  },
+  {
+    "slug": "friction-lab",
+    "title": "Grip & Slip",
+    "description": "Why is it harder to start sliding than to keep sliding? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "category": "forces",
+    "unit": "unit-1",
+    "topic": "Forces",
+    "difficulty": "intermediate",
+    "sort_order": 85,
+    "component_path": "/simulations/friction-lab",
+    "estimated_time": 25,
+    "objectives": [
+      "Make a prediction",
+      "Find the threshold",
+      "Keep it moving, then let it stop",
+      "Try a new situation"
+    ],
+    "key_concepts": [
+      "forces"
+    ],
+    "tags": [
+      "interactive-assignment"
     ],
     "can_embed": true,
     "has_ai_guide": false,

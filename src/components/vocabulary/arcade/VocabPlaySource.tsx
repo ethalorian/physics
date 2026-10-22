@@ -1,174 +1,55 @@
-"use client"
+'use client'
 
-import { useCallback, useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { VocabularyTerm } from '@/types/assignment'
 
-// Shared "what do you want to play?" selector for the arcade: pick a unit OR a
-// single lesson, plus a tier filter. Resolves to terms + a score-attribution set
-// id via /api/vocab/play and reports them up through onResolved.
-//
-// One-tap play: when nothing steers the picker (no deep link), it resolves a
-// smart default on its own — the last-used selection (localStorage), else the
-// first lesson with vocab — so every game opens with words already loaded.
-// Once sources are known it ALWAYS eventually calls onResolved (possibly with
-// zero terms), so pages can treat "no callback yet" as a loading state.
+export interface ResolvedPlay { terms: VocabularyTerm[]; scoreSetId: string | null; label: string; unitId?: string | null }
+const LAST_UNIT = 'vocab:lastUnit'
 
-interface SourceUnit { id: string; name: string }
-interface SourceLesson { id: string; title: string; unit: string }
-interface Assigned { setId: string; lessonId: string | null; unitId: string | null; dueOn: string | null; label: string }
-export interface ResolvedPlay { terms: VocabularyTerm[]; scoreSetId: string | null; label: string }
-
-const LAST_PLAY_KEY = 'vocab:lastPlay'
-const TIERS = ['all', '1', '2', '3']
-
+/** Every game uses the complete published word pool for the selected class unit. */
 export default function VocabPlaySource({ onResolved, initialLessonId }: { onResolved: (r: ResolvedPlay) => void; initialLessonId?: string }) {
-  const requestVersion=useRef(0)
-  const [exact, setExact] = useState(false)
-  const [exactLabel,setExactLabel] = useState('Loading assigned words…')
+  const [units, setUnits] = useState<{id:string;name:string}[]>([]), [unitId, setUnitId] = useState('')
+  const [count, setCount] = useState(0), [loading, setLoading] = useState(true), [error, setError] = useState(''), [retry, setRetry] = useState(0), [resolvedUnit, setResolvedUnit] = useState('')
+  const onResolvedRef = useRef(onResolved)
+  useEffect(() => { onResolvedRef.current = onResolved }, [onResolved])
   useEffect(() => {
-    const sp=new URLSearchParams(window.location.search); const tid=sp.get('task_id'), sid=sp.get('set_id'); if(!tid&&!sid)return; setExact(true)
-    fetch(tid ? `/api/vocab/play?task_id=${tid}` : `/api/vocab/play?set_id=${sid}`).then(async r=>{if(!r.ok)throw new Error('Assigned words could not load.');return r.json()}).then(d=>{onResolved(d);setExactLabel(d.label)}).catch(e=>setExactLabel(e.message))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
-  const [units, setUnits] = useState<SourceUnit[]>([])
-  const [lessons, setLessons] = useState<SourceLesson[]>([])
-  const [assigned, setAssigned] = useState<Assigned[]>([])
-  const [scope, setScope] = useState<'lesson' | 'unit'>('lesson')
-  const [lessonId, setLessonId] = useState(initialLessonId ?? '')
-  const [unitId, setUnitId] = useState('')
-  const [tier, setTier] = useState('all')
-  const [count, setCount] = useState<number | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    fetch('/api/vocab/sources').then((r) => r.json())
-      .then((d: { units?: SourceUnit[]; lessons?: SourceLesson[]; assigned?: Assigned[] }) => { setUnits(d.units ?? []); setLessons(d.lessons ?? []); setAssigned(d.assigned ?? []) })
-      .catch(() => {})
-      .finally(() => setLoading(false))
-  }, [])
-
-  // Deep-linked from a lesson (e.g. the vocab block's "Play Word Shoot" button):
-  // preselect that lesson's vocab and resolve its terms immediately.
-  useEffect(() => {
-    if (!initialLessonId || new URLSearchParams(location.search).has('task_id') || new URLSearchParams(location.search).has('set_id')) return
-    setScope('lesson')
-    setLessonId(initialLessonId)
-    fetch(`/api/vocab/play?lesson_id=${initialLessonId}&tier=all`).then((r) => r.json())
-      .then((d: ResolvedPlay) => { setCount(d.terms?.length ?? 0); onResolved(d) })
-      .catch(() => { setCount(0); onResolved({ terms: [], scoreSetId: null, label: '' }) })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialLessonId])
-
-  // Deep-linked from a lesson or assignment (?lesson_id= or
-  // ?unit_id= on ANY game page): preselect and resolve, no prop plumbing
-  // needed. window.location (not useSearchParams) keeps prerender happy.
-  useEffect(() => {
-    if (initialLessonId || new URLSearchParams(location.search).has('task_id') || new URLSearchParams(location.search).has('set_id')) return
-    const sp = new URLSearchParams(window.location.search)
-    const lid = sp.get('lesson_id'), uid = sp.get('unit_id')
-    if (!lid && !uid) return
-    const scope2 = lid ? 'lesson' as const : 'unit' as const
-    const id = (lid ?? uid)!
-    setScope(scope2)
-    if (lid) setLessonId(lid); else setUnitId(id)
-    fetch(`/api/vocab/play?${lid ? 'lesson_id' : 'unit_id'}=${id}&tier=all`).then((r) => r.json())
-      .then((d: ResolvedPlay) => { setCount(d.terms?.length ?? 0); onResolved(d) })
-      .catch(() => { setCount(0); onResolved({ terms: [], scoreSetId: null, label: '' }) })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const resolve = useCallback((nextScope: 'lesson' | 'unit', id: string, t: string) => {
-    if (!id) { setCount(null); onResolved({ terms: [], scoreSetId: null, label: '' }); return }
-    // Remember the pick so the next game (or visit) opens straight into it.
-    try { localStorage.setItem(LAST_PLAY_KEY, JSON.stringify({ scope: nextScope, id, tier: t })) } catch { /* ignore */ }
-    const version=++requestVersion.current
-    const qs = nextScope === 'lesson' ? `lesson_id=${id}` : `unit_id=${id}`
-    fetch(`/api/vocab/play?${qs}&tier=${t}`).then((r) => r.json())
-      .then((d: ResolvedPlay) => { if(version!==requestVersion.current)return; setCount(d.terms?.length ?? 0); onResolved(d) })
-      .catch(() => { setCount(0); onResolved({ terms: [], scoreSetId: null, label: '' }) })
-  }, [onResolved])
-
-  // Smart default (one-tap play): no deep link and nothing picked yet →
-  // restore the last-used selection if it still exists, else fall back to the
-  // first lesson (then first unit) with vocab. If there is nothing at all to
-  // play, settle with an empty resolve so callers can leave loading state.
-  useEffect(() => {
-    if (loading || initialLessonId || new URLSearchParams(location.search).has('task_id') || new URLSearchParams(location.search).has('set_id')) return
-    const sp = new URLSearchParams(window.location.search)
-    if (sp.get('lesson_id') || sp.get('unit_id')) return
-    if (lessonId || unitId) return
-    // The teacher's assignment beats memory: the newest assigned set with a lesson opens first.
-    const a = assigned.find((x) => x.lessonId && lessons.some((l) => l.id === x.lessonId))
-    if (a?.lessonId) { setScope('lesson'); setLessonId(a.lessonId); resolve('lesson', a.lessonId, 'all'); return }
-    let stored: { scope?: string; id?: string; tier?: string } | null = null
-    try { stored = JSON.parse(localStorage.getItem(LAST_PLAY_KEY) ?? 'null') } catch { /* ignore */ }
-    const t = stored?.tier && TIERS.includes(stored.tier) ? stored.tier : 'all'
-    if (stored?.scope === 'lesson' && stored.id && lessons.some((l) => l.id === stored?.id)) {
-      setScope('lesson'); setLessonId(stored.id); setTier(t); resolve('lesson', stored.id, t); return
+    const controller = new AbortController()
+    async function load() {
+      setLoading(true); setError('')
+      try {
+        const response = await fetch('/api/vocab/sources', { signal: controller.signal })
+        if (!response.ok) throw Error('Unit vocabulary could not load. Try again.')
+        const sources = await response.json() as { units: {id:string;name:string}[] }
+        if (controller.signal.aborted) return
+        setUnits(sources.units)
+        const params = new URLSearchParams(location.search)
+        let remembered = ''
+        try { remembered = localStorage.getItem(LAST_UNIT) ?? '' } catch { /* Storage is optional. */ }
+        const chosen = unitId || params.get('unit_id') || remembered
+        const query = new URLSearchParams({ practice: 'unit' })
+        if (unitId) query.set('unit_id', unitId)
+        else if (params.get('task_id')) query.set('task_id', params.get('task_id')!)
+        else if (params.get('set_id')) query.set('set_id', params.get('set_id')!)
+        else if (initialLessonId || params.get('lesson_id')) query.set('lesson_id', initialLessonId || params.get('lesson_id')!)
+        else if (sources.units.length) query.set('unit_id', sources.units.some(u => u.id === chosen) ? chosen : sources.units[0].id)
+        else { setCount(0); onResolvedRef.current({ terms: [], scoreSetId: null, label: '' }); return }
+        const result = await fetch('/api/vocab/play?' + query, { signal: controller.signal })
+        const data = await result.json() as ResolvedPlay & { error?: string }
+        if (!result.ok) throw Error(data.error ?? 'Practice words could not load.')
+        if (controller.signal.aborted) return
+        setCount(data.terms.length)
+        setResolvedUnit(data.unitId ?? '')
+        onResolvedRef.current(data)
+        if (data.unitId) { try { localStorage.setItem(LAST_UNIT, data.unitId) } catch { /* Optional. */ } }
+      } catch (e) { if (!controller.signal.aborted) { setCount(0); setError((e as Error).message); onResolvedRef.current({ terms: [], scoreSetId: null, label: '' }) } }
+      finally { if (!controller.signal.aborted) setLoading(false) }
     }
-    if (stored?.scope === 'unit' && stored.id && units.some((u) => u.id === stored?.id)) {
-      setScope('unit'); setUnitId(stored.id); setTier(t); resolve('unit', stored.id, t); return
-    }
-    if (lessons.length > 0) { setScope('lesson'); setLessonId(lessons[0].id); resolve('lesson', lessons[0].id, 'all'); return }
-    if (units.length > 0) { setScope('unit'); setUnitId(units[0].id); resolve('unit', units[0].id, 'all'); return }
-    onResolved({ terms: [], scoreSetId: null, label: '' })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading])
-
-  const sel = { borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }
-
-  if (exact) return <div className="text-sm">{exactLabel} · <a className="underline" href={new URLSearchParams(location.search).get('task_id') ? `/vocabulary/work?task_id=${new URLSearchParams(location.search).get('task_id')}` : '/vocabulary/work'}>Back to words</a></div>
-  if (loading) return <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading vocab…</div>
-  if (units.length === 0 && lessons.length === 0) {
-    return <div className="rounded-lg border p-3 text-sm" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>No vocabulary is open for your class yet. Your teacher can open a lesson or assign words.</div>
-  }
-
-  return (
-    <div className="space-y-3">
-      {assigned.length > 0 && (
-        <div className="rounded-lg border px-3 py-2 text-sm" style={{ borderColor: 'color-mix(in oklch, var(--reward) 45%, var(--border))', background: 'color-mix(in oklch, var(--reward) 12%, var(--card))' }}>
-          <span className="font-semibold">Assigned · Asignado:</span>{' '}
-          {assigned.map((a, i) => (
-            <button key={a.setId} type="button" className="underline mr-2" onClick={() => { window.location.href = `${window.location.pathname}?set_id=${a.setId}` }}>
-              {a.label}{a.dueOn ? ` (due ${a.dueOn})` : ''}{i < assigned.length - 1 ? '' : ''}
-            </button>
-          ))}
-        </div>
-      )}
-      <div className="flex gap-1.5">
-        {(['lesson', 'unit'] as const).map((s) => (
-          <button key={s} onClick={() => { setScope(s); setLessonId(''); setUnitId(''); setCount(null); onResolved({ terms: [], scoreSetId: null, label: '' }) }}
-            className="text-sm rounded-lg border px-3 py-1.5 capitalize" style={{ borderColor: 'var(--border)', background: scope === s ? 'var(--primary)' : 'var(--card)', color: scope === s ? 'var(--primary-foreground)' : 'var(--foreground)' }}>
-            {s === 'lesson' ? 'By lesson' : 'By unit'}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
-        {scope === 'lesson' ? (
-          <select value={lessonId} onChange={(e) => { setLessonId(e.target.value); resolve('lesson', e.target.value, tier) }} className="rounded-lg border px-2.5 py-1.5 text-sm" style={sel}>
-            <option value="">— choose a lesson —</option>
-            {lessons.map((l) => <option key={l.id} value={l.id}>{l.unit ? `${l.unit} · ` : ''}{l.title}</option>)}
-          </select>
-        ) : (
-          <select value={unitId} onChange={(e) => { setUnitId(e.target.value); resolve('unit', e.target.value, tier) }} className="rounded-lg border px-2.5 py-1.5 text-sm" style={sel}>
-            <option value="">— choose a unit —</option>
-            {units.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
-          </select>
-        )}
-        <select value={tier} onChange={(e) => { setTier(e.target.value); resolve(scope, scope === 'lesson' ? lessonId : unitId, e.target.value) }} className="rounded-lg border px-2.5 py-1.5 text-sm" style={sel}>
-          <option value="all">All tiers</option>
-          <option value="1">Tier 1 · everyday</option>
-          <option value="2">Tier 2 · academic</option>
-          <option value="3">Tier 3 · physics</option>
-        </select>
-      </div>
-
-      {count !== null && (
-        <div className="text-xs" style={{ color: count > 0 ? 'var(--muted-foreground)' : 'var(--destructive)' }}>
-          {count > 0 ? `${count} terms ready` : 'No terms for this selection'}
-        </div>
-      )}
-    </div>
-  )
+    void load()
+    return () => controller.abort()
+  }, [unitId, initialLessonId, retry])
+  return <div className="space-y-2">
+    <label className="grid gap-2 text-sm font-medium">Practice unit<select aria-label="Practice unit" className="min-h-11 rounded-lg border border-border bg-card px-3 text-foreground" value={unitId || resolvedUnit} onChange={e => { setUnitId(e.target.value); onResolvedRef.current({terms:[],scoreSetId:null,label:''}) }} disabled={loading || !units.length}>{!units.length && <option value="">No unit vocabulary yet</option>}{units.map(unit => <option key={unit.id} value={unit.id}>{unit.name}</option>)}</select></label>
+    <p className="text-xs text-muted-foreground" role="status">{loading ? 'Loading unit words…' : `${count} words · all published words and tiers in this unit`}</p>
+    {error && <p role="alert" className="text-sm text-destructive">{error} <button type="button" className="min-h-11 underline" onClick={() => setRetry(n => n + 1)}>Retry</button></p>}
+  </div>
 }

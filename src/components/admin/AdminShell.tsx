@@ -1,16 +1,19 @@
 "use client"
 
 import { useEffect, useState, type ReactNode } from 'react'
+import LibraryWorkspaceNav from './LibraryWorkspaceNav'
+import { librarySectionForPath } from '@/lib/library-navigation'
 import ResumeTeaching from './ResumeTeaching'
+import { useClassScope } from '@/lib/use-class-scope'
 import { useLessonContext } from './useLessonContext'
-import { lessonContextHref } from '@/lib/lesson-release'
+import { scopedTeachingHref, teachingNavActive } from '@/lib/teaching-navigation'
 import LobbyLauncher from '@/components/admin/LobbyLauncher'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { useSession, signIn } from 'next-auth/react'
 import type { UserRole } from '@/lib/permissions'
 import type { ContentArea } from '@/lib/content-access'
-import { GROUPS, gateGroups } from './adminNav'
+import { GROUPS, gateGroups, flatTools } from './adminNav'
 import { BookOpen } from 'lucide-react'
 import AdminCommand from './AdminCommand'
 import { Menu, X } from 'lucide-react'
@@ -26,7 +29,9 @@ import BrandLogo from '@/components/BrandLogo'
  */
 export default function AdminShell({ children, effectiveRole, editableAreas = [] }: { children: ReactNode; effectiveRole: UserRole; editableAreas?: ContentArea[] }) {
   const context = useLessonContext()
-  const scopedHref = (href:string) => ['/admin/dashboard','/admin/command-center','/admin/control-room','/admin/student-preview'].includes(href) ? lessonContextHref(href,{class:context.classId,lesson:href==='/admin/command-center'?'':context.lessonId}) : href
+  const { classId: sharedClassId } = useClassScope()
+  const search = useSearchParams().toString()
+  const scopedHref = (href: string) => scopedTeachingHref(href, search, sharedClassId ?? context.classId)
   const role = effectiveRole
   const { data: session, status } = useSession()
   const isAdmin = role === 'admin'
@@ -41,16 +46,16 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
       tools: [
         { href: '/admin/teacher/plans', label: 'Course plans', desc: 'Asteroid course plans and Trades plans', icon: BookOpen, accent: 'var(--primary)' },
         { href: '/lessons', label: 'Lessons & concept map', desc: 'Published video lessons and connected ideas, read-only', icon: BookOpen, accent: 'var(--primary)' },
-        { href: '/admin/resources', label: 'Resources', desc: 'Textbook, simulations, and teaching plans', icon: BookOpen, accent: 'var(--primary)' },
+        { href: '/admin/library?section=materials', label: 'Library', desc: 'Textbook, simulations, and teaching plans', icon: BookOpen, accent: 'var(--primary)' },
       ],
     },
   ]
   const groups = role === 'observer' ? observerGroups : gateGroups(GROUPS, isAdmin, editableAreas)
-  const tools = groups.flatMap((group) => group.tools)
+  const tools = (role === 'observer' ? groups.flatMap(group => group.tools) : flatTools(isAdmin, editableAreas)).map(tool => ({ ...tool, href: scopedHref(tool.href) }))
   const [mobileOpen, setMobileOpen] = useState(false)
 
   // Close the mobile drawer whenever the route changes.
-  useEffect(() => { setMobileOpen(false) }, [pathname])
+  useEffect(() => { setMobileOpen(false) }, [pathname, search])
 
   // Signed-out visitors to any staff page get bounced to Google sign-in instead
   // of a shell full of failed fetches ("Could not load..." with no way forward).
@@ -66,10 +71,10 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
     )
   }
 
-  const isActive = (href: string) =>
-    href === '/home' ? pathname === '/home' : pathname === href || pathname.startsWith(href + '/')
+  const librarySection = librarySectionForPath(pathname, search)
+  const isActive = (href: string) => teachingNavActive(pathname, search, href)
 
-  const homeHref = isAdmin ? '/admin/home' : role === 'observer' ? '/admin/oversight' : '/admin/classes'
+  const homeHref = role === 'observer' ? '/admin/analytics' : scopedHref('/admin/control-room?view=plan')
   const roleLabel = isAdmin ? 'Admin' : role === 'observer' ? 'Observer' : 'Teacher'
 
   if (pathname === '/admin/command-center' || pathname === '/admin/projector') return <div className="teaching-workspace">{children}</div>
@@ -91,7 +96,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
           <div key={g.title} className="mb-4">
             <div className="text-overline px-2 mb-1.5" style={{ color: 'var(--muted-foreground)' }}>{g.title}</div>
             <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-              {g.tools.slice(0, 1).map((t) => {
+              {(g.expanded ? g.tools : g.tools.slice(0, 1)).map((t) => {
                 const Ico = t.icon
                 const act = isActive(t.href)
                 return (
@@ -115,7 +120,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
                 )
               })}
             </ul>
-            {g.tools.length > 1 && <details open={g.tools.slice(1).some(t => isActive(t.href)) || undefined} className="mt-1"><summary className="min-h-11 cursor-pointer px-2 py-3 text-xs text-muted-foreground">More {g.title.toLowerCase()} tools</summary><ul className="space-y-1 pl-2">{g.tools.slice(1).map(t => <li key={t.href}><Link href={scopedHref(t.href)} aria-current={isActive(t.href) ? 'page' : undefined} className={`flex min-h-11 items-center rounded-lg px-2 py-2 text-sm ${isActive(t.href) ? 'bg-primary/10 font-semibold' : ''}`}>{t.label}</Link></li>)}</ul></details>}
+            {!g.expanded && g.tools.length > 1 && <details open={g.tools.slice(1).some(t => isActive(t.href)) || undefined} className="mt-1"><summary className="min-h-11 cursor-pointer px-2 py-3 text-xs text-muted-foreground">More {g.title.toLowerCase()} tools</summary><ul className="space-y-1 pl-2">{g.tools.slice(1).map(t => <li key={t.href}><Link href={scopedHref(t.href)} aria-current={isActive(t.href) ? 'page' : undefined} className={`flex min-h-11 items-center rounded-lg px-2 py-2 text-sm ${isActive(t.href) ? 'bg-primary/10 font-semibold' : ''}`}>{t.label}</Link></li>)}</ul></details>}
           </div>
         ))}
       </nav>
@@ -125,7 +130,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
   return (
     <div className="lg:grid lg:items-start" style={{ gridTemplateColumns: '248px minmax(0, 1fr)' }}>
       {/* L-1 · the lobby launcher rides on every staff surface (press L) */}
-      <LobbyLauncher />
+      {role !== 'observer' && <LobbyLauncher />}
       {/* desktop sidebar */}
       <aside className="hidden lg:block sticky top-0" style={{ height: '100vh', borderRight: '1px solid var(--border)' }}>
         {NavBody}
@@ -169,7 +174,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
             {session?.user?.name ?? ''}
           </div>
         </header>
-        <main>{children}</main>
+        <div>{librarySection && pathname !== '/admin/library' && <div className="mx-auto max-w-7xl px-4 pt-5 sm:px-6"><p className="mb-3 text-overline text-muted-foreground">Library</p><LibraryWorkspaceNav active={librarySection} isAdmin={isAdmin} /></div>}{children}</div>
       </div>
     </div>
   )

@@ -1,3 +1,4 @@
+import {BLOOMS} from '@/lib/assessment-demand'
 import {QUIZ_UUID, type Quiz, type QuizTarget} from './types'
 import type {QuizLanguageLevel} from './language'
 import {validateQuiz} from './validation'
@@ -45,7 +46,7 @@ export function generatedQuiz(raw:unknown,request:QuizGenerationRequest):Quiz {
 }
 
 export const quizOutputSchema={type:'object',additionalProperties:false,required:['title','instructions','questions'],properties:{
-  title:{type:'string'},instructions:{type:'string'},questions:{type:'array',items:{type:'object',additionalProperties:false,required:['kind','prompt','points','target_id','guide','options','correct_index'],properties:{
-    kind:{type:'string',enum:['choice','written','problem']},prompt:{type:'string'},points:{type:'integer'},target_id:{type:'string'},guide:{type:'string'},options:{type:'array',items:{type:'string'}},correct_index:{type:['integer','null']}
+  title:{type:'string'},instructions:{type:'string'},questions:{type:'array',items:{type:'object',additionalProperties:false,required:['kind','prompt','points','target_id','guide','options','correct_index','demand'],properties:{
+    demand:{type:'object',additionalProperties:false,required:['blooms','dok','evidence'],properties:{blooms:{type:'string',enum:[...BLOOMS]},dok:{type:'integer',enum:[1,2,3]},evidence:{type:'string'}}},kind:{type:'string',enum:['choice','written','problem']},prompt:{type:'string'},points:{type:'integer'},target_id:{type:'string'},guide:{type:'string'},options:{type:'array',items:{type:'string'}},correct_index:{type:['integer','null']}
   }}}
 }}

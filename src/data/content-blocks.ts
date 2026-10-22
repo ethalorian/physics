@@ -78,6 +78,7 @@ export interface WorkshopBlock {
 }
 
 interface BaseBlock {
+  demand?: import('@/lib/assessment-demand').AssessmentDemand;
   /** Original released MCAS content, resolved from the curated bank without answer keys. */
   mcasId?: string;
   /** Collapsible background reading; essential instructions must stay open. */
@@ -155,6 +156,8 @@ export interface VocabBlock extends BaseBlock {
 }
 
 export interface WorkedExampleBlock extends BaseBlock {
+  /** Reveal the worked reasoning one stage at a time before matched practice. */
+  interactive?: boolean;
   format?: 'problem-workspace';
   type: 'worked_example';
   prompt: string;
@@ -304,6 +307,10 @@ export interface MarzanoBlock extends BaseBlock {
  * packet's "real coordinate grid" convention). Saved as { strokes }.
  */
 export interface SketchBlock extends BaseBlock {
+  /** A private uploaded creative product, captured through the same response flow. */
+  submission?: 'upload';
+  /** Existing uploads require a caption unless the authored task opts out. */
+  captionRequired?: boolean;
   type: 'sketch';
   capture: true;
   instruction: string;        // what to draw + how (at-home guidance lives here)
@@ -327,6 +334,12 @@ export interface InlineQuestion {
   autoCheckable?: boolean;            // safe key-presence metadata; never the answer
   correctOptionId?: string;           // never shown to students; used by the teacher drawer
 }
+export interface InteractiveQuestionBlock extends BaseBlock {
+  type: 'interactive_question';
+  capture: true;
+  task: import('@/lib/interactive-question').InteractiveTask;
+}
+
 export interface QuestionBlock extends BaseBlock {
   type: 'question';
   capture: true;
@@ -550,13 +563,14 @@ export interface PositionExplorerBlock extends BaseBlock {
 export type ContentBlock =
   | InstructionVideoBlock | PositionExplorerBlock | MathMissionBlock | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
   | CalloutBlock | SentenceFrameBlock | LabNotebookBlock | SimEmbedBlock | DeckBlock | Animation3DBlock | EquationVisualizerBlock | LessonVocabBlock | ProcedureBlock
-  | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock | SketchBlock
+  | InteractiveQuestionBlock | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock | SketchBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock
   | FigureBlock | DiagramBlock | GraphBlock | ConceptExerciseBlock | ReadingBlock;
 
 export type BlockType = ContentBlock['type'];
 
 export interface BlockDocument {
+  reflection?: { version: 1; kind: 'manga' | 'story' | 'graphic-novel'; book?: string; chapter?: number };
   /** Original notebook design; its checks remain canonical question blocks. */
   interactiveNotebook?: import('@/lib/interactive-notebook').InteractiveNotebook;
   /** Explicit many-to-many links to the existing teacher plan collection. */

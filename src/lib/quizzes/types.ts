@@ -1,3 +1,4 @@
+import type {AssessmentDemand} from '@/lib/assessment-demand'
 import type {QuizLanguageLevel} from './language'
 import type {ProblemAnswer} from '@/lib/problem-response'
 export type {ProblemAnswer} from '@/lib/problem-response'
@@ -7,7 +8,7 @@ export type QuizKind = 'vocabulary' | 'understanding' | 'mixed'
 export const LETTER_GRADES = ['A+','A','A−','B+','B','B−','C+','C','C−','D+','D','D−','F'] as const
 export interface QuizQuestion {
   id:string; kind:'choice'|'written'|'problem'; prompt:string; points:number; target_id:string;
-  mcas_id?:string;
+  mcas_id?:string; demand?:AssessmentDemand;
   options?:string[]; correct_index?:number; guide?:string; vocabulary?:string[];
 }
 export interface Quiz {
@@ -23,10 +24,10 @@ export interface QuizSubmission {id:string;quiz_id:string;user_id:string;answers
 export interface QuizReview {id:string;submission_id:string;decision:'returned'|'graded';scores:Record<string,number>;ratings:Record<string,1|2|3|null>;note:string;question_notes:Record<string,string>;earned:number|null;possible:number|null;grade_mode:GradeMode;grade_value:string|null;reviewed_at:string}
 export interface QuizCourse {id:string;name:string;section:string;program:string;track?:string|null}
 export interface QuizTarget {id:string;statement:string;domain:string;program:string;unit_id:string;slug?:string}
-export interface LockedQuizCard { id:string; course_id:string; title:string; due_at:string|null; created_at?:string; reading_id:string; reading_title:string }
+export interface LockedQuizCard { kind:QuizKind; id:string; course_id:string; title:string; due_at:string|null; created_at?:string; reading_id:string; reading_title:string }
 export interface QuizList {locked?:LockedQuizCard[];staff:boolean;readOnly:boolean;courses:QuizCourse[];quizzes:QuizCard[];work:QuizWork[];reviews:QuizReview[];pending:Record<string,number>;inventory?:{units:{id:string;name:string}[];targets:QuizTarget[]}}
 export interface QuizReviewDraft {submission_id:string;version:number;payload:{scores:Record<string,number>;ratings:Record<string,1|2|3|null>;note:string;question_notes:Record<string,string>;grade_value:string|null}}
-export interface QuizDetail {drafts?:QuizReviewDraft[];staff:boolean;readOnly:boolean;quiz:Quiz;students:{id:string;name:string}[];work:QuizWork[];submissions:QuizSubmission[];reviews:QuizReview[];targets:QuizTarget[]}
+export interface QuizDetail {ai?:import('./grading').QuizAiReview[];claudeConfigured?:boolean;claudeModel?:string;drafts?:QuizReviewDraft[];staff:boolean;readOnly:boolean;quiz:Quiz;students:{id:string;name:string}[];work:QuizWork[];submissions:QuizSubmission[];reviews:QuizReview[];targets:QuizTarget[]}
 export interface QuizCatalog {courses:QuizCourse[];targets:QuizTarget[];units:{id:string;name:string;program:string}[];sets:{id:string;name:string;unit_id:string}[];words:{id:string;term:string;definition:string;vocabulary_set_id:string}[];enrollments:{course_id:string;student_id:string;name:string}[];readOnly:boolean}
 export function quizCard(q:Quiz):QuizCard { const {questions,...card}=q;return {...card,target_ids:[...new Set(questions.map(q=>q.target_id))],question_count:questions.length,possible:questions.reduce((n,q)=>n+q.points,0)} }
 /** Always strip assessment keys, including for already-submitted students. */

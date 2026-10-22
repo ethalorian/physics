@@ -42,6 +42,7 @@ export default function DailyMathTask({ onStatus, compact = false }: { onStatus?
   const [item, setItem] = useState<DailyItem | null>(null)
   const [snapshot, setSnapshot] = useState<DailySnapshot | null>(null)
   const [alreadySubmitted, setAlreadySubmitted] = useState(false)
+  const [warmupScheduled, setWarmupScheduled] = useState(true)
   const [remediation, setRemediation] = useState<MathRemediation | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -65,6 +66,7 @@ export default function DailyMathTask({ onStatus, compact = false }: { onStatus?
       .then(d => {
         if (!active) return
         setItem(d.item ?? null)
+        setWarmupScheduled(d.warmupScheduled !== false)
         setSnapshot(d.snapshot ?? null)
         setAlreadySubmitted(Boolean(d.alreadySubmitted))
         setRemediation(d.remediation ?? null)
@@ -77,6 +79,8 @@ export default function DailyMathTask({ onStatus, compact = false }: { onStatus?
       .finally(() => { clearTimeout(timeout); if (active) setLoading(false) })
     return () => { active = false; clearTimeout(timeout); controller.abort() }
   }, [retry])
+
+  if (!loading && !error && !warmupScheduled) return null
 
   if (compact) return <Card density="compact">
     <div className="flex flex-wrap items-center justify-between gap-2"><h4 className="text-sm font-semibold">Math warm-up</h4>{!loading && !error && <PracticeCompletionBadge state={alreadySubmitted ? 'done' : item ? 'todo' : 'empty'} label={alreadySubmitted ? 'Done' : item ? 'To do' : 'Unassigned'} />}</div>

@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { FlaskConical, Search, ArrowUpRight, Clock } from 'lucide-react'
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { SIMULATION_CATALOG } from '@/data/simulations-catalog'
+import type { SIMULATION_CATALOG } from '@/data/simulations-catalog'
+import { subscribePageReturn } from '@/lib/page-return'
 
 const RECENT_KEY = 'physics:sim-launcher-recent'
 const initialSimulations: typeof SIMULATION_CATALOG = []
@@ -16,15 +17,50 @@ const toSearchable = (simulations: typeof SIMULATION_CATALOG) => simulations.map
 
 /** Available throughout the signed-in app; launches in a new tab to preserve lesson work. */
 export default function SimulationLauncher() {
-  const { status } = useSession()
+  const { data: session, status } = useSession()
+  const userId = session?.user?.id
+  const role = session?.user?.role
   const pathname = usePathname() ?? ''
-  const [allowed,setAllowed]=useState(false)
-  useEffect(()=>{const ac=new AbortController();setAllowed(false);if(status==='authenticated')fetch('/api/simulations/access',{signal:ac.signal}).then(r=>r.ok?r.json():{allowed:false}).then(d=>setAllowed(d.allowed===true)).catch(()=>{});return()=>ac.abort()},[status,pathname])
-  const enabled = allowed && status === 'authenticated' && !pathname.startsWith('/embed/') && pathname !== '/admin/command-center' && pathname !== '/admin/projector'
-  const [simulations,setSimulations]=useState(initialSimulations)
-  useEffect(()=>{if(!enabled)return;const ac=new AbortController();fetch('/api/simulations?published=true',{signal:ac.signal}).then(r=>r.ok?r.json():{simulations:[]}).then(d=>setSimulations((d.simulations??[]).map((s:typeof SIMULATION_CATALOG[number])=>({...s,unit:s.unit??'physics',key_concepts:s.key_concepts??[],tags:s.tags??[],sort_order:s.sort_order??999})))).catch(()=>{});return()=>ac.abort()},[enabled])
-  const searchable=useMemo(()=>toSearchable(simulations),[simulations])
+  const eligible = status === 'authenticated' && !pathname.startsWith('/embed/') && pathname !== '/admin/command-center' && pathname !== '/admin/projector'
+  const [allowed, setAllowed] = useState(false)
   const [open, setOpen] = useState(false)
+  const [simulations, setSimulations] = useState(initialSimulations)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+  const [attempt, setAttempt] = useState(0)
+  useEffect(() => {
+    setAllowed(false); setOpen(false); setSimulations([])
+    if (!eligible) return
+    let controller: AbortController | undefined
+    let active = true, pending = false
+    const check = async () => {
+      if (pending) return
+      pending = true; controller = new AbortController()
+      try {
+        const response = await fetch('/api/simulations/access', { signal: controller.signal })
+        const data = response.ok ? await response.json() : { allowed: false }
+        if (active) { setAllowed(data.allowed === true); if (!data.allowed) setOpen(false) }
+      } catch { if (active) { setAllowed(false); setOpen(false) } }
+      finally { pending = false }
+    }
+    void check()
+    const unsubscribe = subscribePageReturn(() => void check())
+    return () => { active = false; controller?.abort(); unsubscribe() }
+  }, [eligible, userId, role])
+  const enabled = eligible && allowed
+  // The launcher is on every page. Download the catalog only when it is used.
+  useEffect(() => {
+    if (!enabled || !open) return
+    const controller = new AbortController()
+    setLoading(true); setError(false)
+    fetch('/api/simulations?published=true', { signal: controller.signal })
+      .then(async response => { if (!response.ok) throw Error('unavailable'); return response.json() })
+      .then(data => { if (!controller.signal.aborted) setSimulations((data.simulations ?? []).map((sim: typeof SIMULATION_CATALOG[number]) => ({ ...sim, unit: sim.unit ?? 'physics', key_concepts: sim.key_concepts ?? [], tags: sim.tags ?? [], sort_order: sim.sort_order ?? 999 }))) })
+      .catch(() => { if (!controller.signal.aborted) setError(true) })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false) })
+    return () => controller.abort()
+  }, [enabled, open, userId, attempt])
+  const searchable = useMemo(() => toSearchable(simulations), [simulations])
   const [query, setQuery] = useState('')
   const [recent, setRecent] = useState<string[]>([])
   const [shortcut, setShortcut] = useState('Ctrl+Shift+K')
@@ -103,13 +139,13 @@ export default function SimulationLauncher() {
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={(event) => {
               if (event.nativeEvent.isComposing) return
-              if (event.key === 'ArrowDown' && results.length) { event.preventDefault(); linksRef.current[0]?.focus() }
-              if (event.key === 'Enter' && results.length) { event.preventDefault(); linksRef.current[0]?.click() }
+              if (event.key === 'ArrowDown' && !loading && !error && results.length) { event.preventDefault(); linksRef.current[0]?.focus() }
+              if (event.key === 'Enter' && !loading && !error && results.length) { event.preventDefault(); linksRef.current[0]?.click() }
             }} />
         </div>
-        <p role="status" className="text-xs text-muted-foreground">{results.length} simulations{!query.trim() && recent.length > 0 ? ' · Recently opened first' : ''}</p>
+        <p role="status" className="text-xs text-muted-foreground">{loading ? 'Loading simulations…' : error ? 'Simulations could not load.' : results.length + ' simulations'}{!query.trim() && recent.length > 0 ? ' · Recently opened first' : ''}</p>
         <ul id={resultsId} aria-label="Simulation results" className="max-h-[min(52vh,420px)] space-y-1 overflow-y-auto overscroll-contain">
-          {results.map((sim, index) => (
+          {!loading && !error && results.map((sim, index) => (
             <li key={sim.slug}>
               <a ref={(node) => { linksRef.current[index] = node }} href={`/simulations/${sim.slug}`} target="_blank" rel="noopener noreferrer"
                 onClick={() => remember(sim.slug)}
@@ -129,7 +165,8 @@ export default function SimulationLauncher() {
               </a>
             </li>
           ))}
-          {results.length === 0 && <li className="px-3 py-8 text-center text-sm text-muted-foreground">No simulations match “{query}”. Try a broader concept such as motion or forces.</li>}
+          {!loading && !error && results.length === 0 && <li className="px-3 py-8 text-center text-sm text-muted-foreground">No simulations match “{query}”. Try a broader concept such as motion or forces.</li>}
+          {error && <li className="p-3"><button type="button" className="min-h-11 font-semibold text-primary underline" onClick={() => setAttempt(value => value + 1)}>Retry loading simulations</button></li>}
         </ul>
         <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-3 text-xs text-muted-foreground">
           <span>↑ ↓ to choose · Enter to open · Esc to close</span>

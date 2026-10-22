@@ -4,6 +4,9 @@ import { ProjectionSeiContext } from '@/components/present/ProjectionSeiContext'
 import { useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useDraft } from './useDraft'
 import PaintPad from './PaintPad'
+import ProblemStageInput from './ProblemStageInput'
+import {stageResponse} from '@/lib/problem-response'
+import {QuestionPrompt} from '@/components/interactive-assignments/QuestionResponse'
 import MathMarkdown from '@/components/MathMarkdown'
 import PhysicsDiagram from './PhysicsDiagram'
 import type { Stroke } from './DoodleCanvas'
@@ -166,7 +169,9 @@ export function SeiSketchAnswer({ value, onChange, labelBank }: { value: Stroke[
 }
 
 /** Text answer with the whole SEI layer around it. Saves { text | strokes, mode }. */
-export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst, placeholder, value, onSave, onDraft }: {
+export function SeiTextCapture({ interactive = false, readOnly = false, sei, prompt, fallbackFrame, wordBank, talkFirst, placeholder, value, onSave, onDraft }: {
+  interactive?: boolean
+  readOnly?: boolean
   sei?: SeiScaffold
   prompt: string
   fallbackFrame?: string
@@ -179,7 +184,7 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
   onDraft?: (response: { text?: string; strokes?: Stroke[]; mode: ResponseMode }) => void
 }) {
   const prior = (typeof value === 'string' ? { text: value } : (value as { text?: string; strokes?: Stroke[]; mode?: ResponseMode } | undefined)) ?? {}
-  const state = useSei(sei, { fallbackFrame, wordBank, talkFirst, defaultMode: prior.mode === 'sketch' ? 'sketch' : 'text', supportedModes: ['text', 'sketch'], extraModes: prior.mode === 'sketch' ? ['sketch'] : [] })
+  const state = useSei(sei, { fallbackFrame, wordBank, talkFirst, defaultMode: prior.mode === 'sketch' ? 'sketch' : 'text', supportedModes: ['text', 'sketch'], extraModes: interactive || prior.mode === 'sketch' ? ['sketch'] : [] })
   const [text, setText] = useState(prior.text ?? '')
   const [strokes, setStrokes] = useState<Stroke[]>(prior.strokes ?? [])
   const [saved, setSaved] = useState(false)
@@ -189,15 +194,17 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
   useEffect(() => { if (!touched) { setText(prior.text ?? ''); setStrokes(prior.strokes ?? []) } }, [prior.text, prior.strokes, touched])
   useDraft(onDraft ?? (() => {}), touched ? ({ text, strokes, mode: state.mode }) : undefined)
   const gated = state.talkFirst && !state.talkDone
-  const canSave = !gated && (state.mode === 'sketch' ? strokes.length > 0 : text.trim().length > 0 && !/_{2,}/.test(text) && text.trim() !== state.frame?.text.trim())
+  const ownText = text.trim().length > 0 && !/_{2,}/.test(text) && text.trim() !== state.frame?.text.trim()
+  const responseMode = interactive ? (state.mode === 'sketch' && strokes.length || !ownText && strokes.length ? 'sketch' : 'text') : state.mode
+  const canSave = !readOnly && !gated && (interactive ? ownText || strokes.length > 0 : state.mode === 'sketch' ? strokes.length > 0 : ownText)
   return (
     <div>
-      <SeiPrompt prompt={prompt} l1Text={state.l1Text} />
+      {interactive ? <QuestionPrompt translation={state.l1Text}>{prompt}</QuestionPrompt> : <SeiPrompt prompt={prompt} l1Text={state.l1Text} />}
       <SeiVisual visual={sei?.visual} />
       <SeiTalkFirst state={state} />
-      <SeiModeSwitch state={{ ...state, setMode: (mode) => { state.setMode(mode); setTouched(true); setSaved(false) } }} />
+      {!interactive && <SeiModeSwitch state={{ ...state, setMode: (mode) => { state.setMode(mode); setTouched(true); setSaved(false) } }} />}
       <SeiFrameBox state={state} onUseFrame={(f) => { if (!text.trim()) { setText(f); setTouched(true) } }} />
-      {state.mode === 'sketch' ? (
+      {interactive ? <ProblemStageInput label="Your reasoning" help="Use evidence from the question. Explain the physics in words, a labeled model, calculations, or a combination." disabled={readOnly || gated || saving} value={{text,strokes,mode:state.mode==='sketch'?'drawing':'text'}} onChange={value=>{const next=stageResponse(value);setText(next.text);setStrokes(next.strokes);state.setMode(next.mode==='drawing'?'sketch':'text');setTouched(true);setSaved(false)}}/> : state.mode === 'sketch' ? (
         <SeiSketchAnswer value={strokes} onChange={(s) => { setStrokes(s); setSaved(false); setTouched(true) }} labelBank={sei?.labelBank} />
       ) : (
         <textarea aria-label={prompt} value={text} onChange={(e) => { setText(e.target.value); setSaved(false); setTouched(true) }} placeholder={placeholder} rows={4} disabled={gated}
@@ -208,7 +215,7 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
           if (!canSave || saving) return
           setSaving(true); setSaveError(false)
           try {
-            const ok = await onSave({ text: text.trim(), strokes, mode: state.mode }, state.scaffolds, state.mode)
+            const ok = await onSave({ text: text.trim(), strokes, mode: responseMode }, state.scaffolds, responseMode)
             setSaved(ok !== false); setSaveError(ok === false)
             if (ok !== false) setTouched(false)
           } catch { setSaveError(true) } finally { setSaving(false) }

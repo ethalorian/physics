@@ -9,12 +9,10 @@ import './globals.css'
 // Internal components and providers
 import AuthProvider from '@/components/auth-provider'
 import AccessGate from '@/components/AccessGate'
-import Navbar from '@/components/navbar'
+import AppPageFrame from '@/components/AppPageFrame'
 import RoleExperienceBar from '@/components/RoleExperienceBar'
 import ExperienceRequestBoundary from '@/components/ExperienceRequestBoundary'
-import SimulationLauncher from '@/components/simulations/SimulationLauncher'
 import { QuickTestAccountSwitcher } from '@/components/QuickTestAccountSwitcher'
-import { StudentActivityProvider } from '@/contexts/StudentActivityContext'
 import { ViewModeProvider } from '@/contexts/ViewModeContext'
 import { SimulationProvider } from '@/contexts/SimulationContext'
 import { ToastProvider } from '@/providers/toast-provider'
@@ -65,17 +63,11 @@ export default function RootLayout({
           <ToastProvider>
             <ViewModeProvider>
               <SimulationProvider>
-                <StudentActivityProvider>
                   <AccessGate>
                     <StudentLiveInvitations />
-                    <Navbar />
-                    <SimulationLauncher />
-                    <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
-                      {children}
-                    </main>
+                    <AppPageFrame>{children}</AppPageFrame>
                   </AccessGate>
                   <QuickTestAccountSwitcher />
-                </StudentActivityProvider>
               </SimulationProvider>
             </ViewModeProvider>
           </ToastProvider>

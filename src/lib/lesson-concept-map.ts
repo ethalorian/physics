@@ -15,6 +15,7 @@ export interface ConceptLesson {
   completion?: LessonCompletion
   progress: number
   href?: string
+  watchHref?: string
 }
 export interface ConceptConnection { from: string; to: string; label: string }
 export interface LessonConceptMapData { nodes: ConceptLesson[]; connections: ConceptConnection[] }

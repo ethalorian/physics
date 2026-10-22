@@ -15,3 +15,12 @@ test('the latest assigned copy replaces the earlier score and drafts never enter
  const result=assessmentResults({quizzes:[quiz,newer,draft],courses:[{id:'c1',name:'Physics',section:'A',program:'physics'}],enrollments:[{course_id:'c1',student_id:'u1',name:'Alex'}],work:[],submissions:[],reviews:[]})[0]
  assert.equal(result.students.length,1);assert.equal(result.students[0].quiz_id,'new');assert.equal(result.classes[0].graded,0);assert.equal(result.classes[0].assigned,1)
 })
+test('choice EX and available quizzes leave assigned counts; attempted quizzes always stay in the gradebook',()=>{
+ const result=assessmentResults({quizzes:[quiz],courses:[{id:'c1',name:'Physics',section:'A',program:'physics'}],enrollments:['ex','available','working','required'].map(id=>({course_id:'c1',student_id:id,name:id})),work:[{quiz_id:'a',user_id:'working',state:'in_progress',answers:{q1:'0'},version:1,submission_id:null}],submissions:[],reviews:[],choiceExemptions:{a:['ex','working']},choiceAvailable:{a:['available']}})[0]
+ assert.equal(result.classes[0].assigned,2)
+ assert.equal(result.students.find(s=>s.student_id==='ex')?.choiceExempt,true)
+ assert.equal(result.students.find(s=>s.student_id==='available')?.choiceAvailable,true)
+ assert.equal(result.students.find(s=>s.student_id==='working')?.choiceExempt,false)
+ assert.equal(result.students.find(s=>s.student_id==='required')?.choiceExempt,false)
+ assert(result.students.every(s=>s.percent===null))
+})

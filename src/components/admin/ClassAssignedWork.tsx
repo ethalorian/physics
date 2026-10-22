@@ -16,8 +16,8 @@ function dateLabel(date:string|null,dateOnly=false) {
   return new Date(dateOnly?date+'T12:00:00':date).toLocaleString(undefined,{month:'short',day:'numeric',...(dateOnly?{}:{hour:'numeric',minute:'2-digit'})})
 }
 
-export default function ClassAssignedWork({classId}:{classId:string|null}) {
-  const params=useSearchParams(),{data,error,loading,load}=useClassWork(classId)
+export default function ClassAssignedWork({classId,resource}:{classId:string|null;resource?:ReturnType<typeof useClassWork>}) {
+  const params=useSearchParams(),local=useClassWork(resource?null:classId),{data,error,loading,load}=resource??local
   const [edit,setEdit]=useState<Edit|null>(null),[notice,setNotice]=useState(''),[now,setNow]=useState(Date.now())
   const filter=filters.find(f=>f.id===params.get('workStatus'))?.id??'assigned'
   const kind=params.get('workKind')??'all',query=params.get('workSearch')??''
@@ -27,6 +27,7 @@ export default function ClassAssignedWork({classId}:{classId:string|null}) {
   if(!classId)return <section className={s.empty}><CalendarDays size={28}/><h2>Choose a classroom to manage its work</h2><p>Select a class above to see assignments, due dates, and access together.</p></section>
   return <section className={s.workspace} aria-label="Class assigned work">
     <div className={s.heading}><div><h2>Everything assigned to this class</h2><p>Set deadlines and manage student access across all units.</p></div><div className={s.actions}>
+      <Link className={s.secondary} href={`/home?class=${classId}`}><CalendarDays size={16}/>Calendar</Link>
       <button className={s.secondary} disabled={loading} onClick={()=>void load().then(()=>setNow(Date.now()))} aria-label="Refresh assigned work"><RefreshCw size={16}/></button>
       <details className={s.add}><summary><Plus size={17}/>Assign work</summary><div>
         <button onClick={e=>{change('workStatus','unassigned');change('workKind','homework');e.currentTarget.closest('details')?.removeAttribute('open')}}>Video homework</button>

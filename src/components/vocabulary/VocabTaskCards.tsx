@@ -40,7 +40,7 @@ export default function VocabTaskCards({ onStatus, compact = false }: { onStatus
         if (!r.ok) throw new Error('Vocabulary assignments could not load.')
         const data = await r.json()
         if (!Array.isArray(data.tasks)) throw new Error('Vocabulary assignments could not load.')
-        return data.tasks as CardTask[]
+        return (data.tasks as CardTask[]).filter(task => task.task_kind !== 'quiz')
       })
       .then(tasks => {
         if (!active || controller !== current) return

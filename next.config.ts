@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // A custom webpack config otherwise disables this worker. Release compilation
+    // memory before the full-app TypeScript and ESLint checks start.
+    webpackBuildWorker: true,
+  },
   outputFileTracingIncludes: {
+    '/api/quizzes/*': ['./public/mcas/assets/**/*'],
+    '/api/quizzes/**/*': ['./public/mcas/assets/**/*'],
+    '/api/review-modules/**/*': ['./resources/review-modules/**/*'],
+    '/api/review-modules/*': ['./resources/review-modules/**/*'],
     '/api/teacher/worksheets/*/*/key': ['./resources/worksheet-keys/**/*.pdf'],
     '/api/teacher/worksheets/*/*/presentation': ['./resources/worksheet-decks/generated/*.html'],
   },
@@ -87,6 +96,12 @@ const nextConfig: NextConfig = {
   
   async headers() {
     return [
+      {
+        // Versioned artwork is reused across every student's saved appearance.
+        // Publish future artwork changes under a new collection directory.
+        source: '/avatar/:collection(manga-v1|manga-wardrobe-v1|manga-wardrobe-v2|manga-profile-v1|manga-profile-wardrobe-v1)/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
       {
         // Apply these headers to all routes EXCEPT the presenter decks.
         // The decks (/decks/*) are self-contained foreign artifacts

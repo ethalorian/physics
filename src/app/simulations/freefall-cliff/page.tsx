@@ -1,8 +1,3 @@
-"use client"
-
-import SimLab from '@/components/simulations/lab/SimLab'
-import { freefallDef } from './def'
-
-export default function FreefallCliffLab() {
-  return <SimLab def={freefallDef} />
-}
+'use client'
+import SimulationActivity from '@/components/simulations/SimulationActivity'
+export default function Simulation(){return <SimulationActivity id="freefall-cliff"/>}

@@ -44,9 +44,9 @@ export default function LessonsPage() {
             <BookOpen className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{observer ? 'Lessons & concept map' : 'Your lessons'}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{observer ? 'Lessons & concept map' : 'Video library & lessons'}</h1>
             <p className="text-sm text-muted-foreground">
-              {observer ? 'Browse published video lessons and explore how the concepts connect. Observer access is read-only.' : 'Watch, investigate, and show your thinking. Follow your class learning path.'}
+              {observer ? 'Browse published video lessons and explore how the concepts connect. Observer access is read-only.' : 'Watch videos anytime. Find assigned questions and activities on your class calendar.'}
             </p>
           </div>
         </div>

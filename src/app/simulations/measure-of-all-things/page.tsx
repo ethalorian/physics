@@ -12,6 +12,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import SimulationAvatar from '@/components/avatar/SimulationAvatar'
 import { useSession } from 'next-auth/react'
 import { ArrowLeft, CheckCircle2, RotateCcw } from 'lucide-react'
 import { useSimulations } from '@/contexts/SimulationContext'
@@ -31,7 +32,7 @@ import Ch3Water from './ch3-water'
 import Ch4Time from './ch4-time'
 import Ch5Mission from './ch5-mission'
 
-export default function MeasureOfAllThingsSim() {
+function MeasureOfAllThingsContent() {
   const { data: session } = useSession()
   const embedded = useSimEmbedded()
   const { getSimulationBySlug, startActivity, recordInteraction, completeActivity } = useSimulations()
@@ -242,3 +243,5 @@ export default function MeasureOfAllThingsSim() {
     </div>
   )
 }
+
+export default function MeasureOfAllThingsSim(){return <SimulationAvatar id="measure-of-all-things" title="The Measure of All Things" question="How can your expedition create measurements that other people can reproduce?"><MeasureOfAllThingsContent/></SimulationAvatar>}

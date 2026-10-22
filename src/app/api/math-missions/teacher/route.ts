@@ -1,3 +1,4 @@
+import { calendarAssigned, CALENDAR_ASSIGNMENT_MESSAGE } from '@/lib/calendar-assignment'
 import {NextResponse} from 'next/server'
 import {withRole} from '@/lib/api-auth'
 import {supabaseAdmin} from '@/lib/supabase'
@@ -20,7 +21,7 @@ export const POST=withRole(['teacher','admin'],async(request,ctx)=>{
   const m=missionBySlug(body.mission);if(!m||!(m.codes as readonly string[]).includes(body.code)||typeof body.userId!=='string')return NextResponse.json({error:'Choose a student and skill.'},{status:400});
   if(ctx.role==='teacher'&&!await teacherCanAccessStudent(ctx.scopeEmail,body.userId))return NextResponse.json({error:'Student not on your roster'},{status:403});
   const {data:student,error:studentError}=await supabaseAdmin.from('students').select('id').eq('id',body.userId).maybeSingle();if(studentError||!student)return NextResponse.json({error:'Student not found'},{status:404});
-  if(body.dueAt&&!Number.isFinite(Date.parse(body.dueAt)))return NextResponse.json({error:'Choose a valid due date.'},{status:400});
+  if(!calendarAssigned(true,body.dueAt))return NextResponse.json({error:CALENDAR_ASSIGNMENT_MESSAGE},{status:400});
   const {data,error}=await supabaseAdmin.from('math_mission_assignments').insert({teacher_email:ctx.scopeEmail,user_id:body.userId,mission:m.slug,code:body.code,title:`${m.name} · ${body.code}`,due_at:body.dueAt||null}).select().single();
   return error?NextResponse.json({error:'Could not assign mission.'},{status:503}):NextResponse.json({assignment:data});
  }

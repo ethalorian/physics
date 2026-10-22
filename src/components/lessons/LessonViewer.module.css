@@ -7,7 +7,7 @@
 @media (max-width: 600px) {
   .identity { gap: 10px; }
   .avatar { width: 58px; height: 76px; border-radius: 16px; }
-  .avatar svg { width: 48px; height: auto; }
+  .avatar > svg { width: 48px; height: auto; }
 }
 .title { font-size: 18px; font-weight: 600; letter-spacing: -.02em; line-height: 1.4; overflow-wrap: anywhere; }
 .xpBar { position: static; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; padding: 14px 18px; border-radius: 16px; border: 1px solid #e7c36b; background: #fff3ce; color: #60420b; box-shadow: 0 6px 18px -12px var(--foreground); }

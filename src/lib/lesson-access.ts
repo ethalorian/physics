@@ -11,6 +11,8 @@ import type { GlossaryEntry } from '@/components/MathMarkdown'
 import type { BlockDocument } from '@/data/content-blocks'
 import { submissionStatus } from '@/lib/lesson-review'
 import { physicsProblemFormat } from '@/lib/physics-problem-format'
+import { videoWatchDocument } from '@/lib/video-watch'
+import { isCurrentLesson } from '@/lib/current-lesson-catalog'
 
 export interface AccessibleLesson {
   id: string; slug: string; title: string; published: boolean; unit_id: string | null
@@ -22,8 +24,9 @@ type Actor = Pick<AuthContext, 'userId' | 'email' | 'realRole'>
 type Access = { ok: true; lesson: AccessibleLesson; viewer: Viewer; document: BlockDocument | null } | { ok: false; response: Response }
 
 /** A-4: the same publication, enrollment, program, track and window gates on every surface. */
-export async function authorizeLesson(actor: Actor, lessonId: string, write = false, liveEvidence = false): Promise<Access> {
+export async function authorizeLesson(actor: Actor, lessonId: string, write = false, liveEvidence = false, purpose: 'assignment' | 'watch' = 'assignment'): Promise<Access> {
   const deny = (error: string, status: number): Access => ({ ok: false, response: NextResponse.json({ error }, { status }) })
+  if (purpose === 'watch' && write) return deny('Open assigned questions from your calendar to save work.', 403)
   const observer = actor.realRole === 'observer'
   const staff = observer || actor.realRole === 'admin' || actor.realRole === 'teacher' || await canEditArea(actor.email, 'lessons', false)
   if (write && (actor.realRole !== 'student' || staff)) return deny('Lesson previews are read-only. Use a student account to submit work.', 403)
@@ -41,7 +44,13 @@ export async function authorizeLesson(actor: Actor, lessonId: string, write = fa
     if (!enrollment.enrolled) return deny('You are not in a class yet. Ask your teacher to add you.', 403)
     viewer = { role: 'student', track }
     if (!lesson.published || !isLessonVisible(lesson.visibility_track, viewer) || (lesson.unit_id ? unitPrograms.get(lesson.unit_id) ?? 'physics' : 'physics') !== program) return deny('Lesson not found', 404)
-    if (!gate(lessonId)) return deny('This lesson is not open for your class.', 403)
+    if (purpose === 'assignment' && !gate(lessonId)) return deny('This assignment is not open on your class calendar.', 403)
+  }
+  if (purpose === 'watch') {
+    if (!lesson.published || !isCurrentLesson(lesson)) return deny('Video not found', 404)
+    const document = videoWatchDocument(lesson.content_blocks ? filterDocumentForViewer(lesson.content_blocks, viewer) : null)
+    if (!document) return deny('Video not found', 404)
+    return { ok: true, lesson, viewer, document }
   }
   if (write && !liveEvidence) {
     const state = await submissionStatus(actor.userId, lessonId)

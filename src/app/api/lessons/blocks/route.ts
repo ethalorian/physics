@@ -1,3 +1,4 @@
+import { ownsLessonArtifact } from '@/lib/lesson-artifacts-server'
 import { isAssignedTrade } from '@/lib/vocational'
 import { recordEvidence } from '@/lib/math-spine-server'
 import { checkedLessonResponse } from '@/lib/lesson-response-validation'
@@ -42,6 +43,7 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
     // never reaches the student (stripped server-side by the lesson page).
     const checked = checkedLessonResponse(block, body.response)
     if (!checked.ok) return NextResponse.json({ error: checked.error }, { status: 422 })
+    if (!await ownsLessonArtifact(block, checked.response, body.lesson_id, ctx.userId)) return NextResponse.json({ error: 'Use your own upload for this activity.' }, { status: 422 })
     let response = checked.response
     if (blocks.some(b=>b.vocational)) {
       const {data:profile,error:profileError}=await supabaseAdmin.from('vocational_profiles').select('trade').eq('user_id',ctx.userId).maybeSingle()
@@ -136,7 +138,7 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
         }
         // For physics lessons, reserving the final step for submission prevents a
         // save (or XP award) from claiming that the lesson has been turned in.
-        const needsSubmission = lessonRow.content_blocks?.presentation === 'physics-path'
+        const needsSubmission = lessonRow.content_blocks?.presentation === 'physics-path' || !!lessonRow.content_blocks?.reflection
         const pct = Math.round((done.size / (captureIds.length + (needsSubmission ? 1 : 0))) * 100)
         const completed = !needsSubmission && pct >= 100
         await supabaseAdmin.from('lesson_progress').upsert(

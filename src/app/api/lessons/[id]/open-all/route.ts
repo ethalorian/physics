@@ -8,6 +8,7 @@ export const POST = withRole<{ id: string }>(['teacher', 'admin'], async (reques
   const { id: lessonId } = await ctx.params
   const body = await request.json().catch(() => null)
   if (!body || !['open', 'close'].includes(body.action)) return NextResponse.json({ error: 'Choose open or close.' }, { status: 400 })
+  if(body.action==='open')return NextResponse.json({error:'Assign lesson questions to a date on the class calendar.',href:'/admin/control-room?view=calendar'},{status:409})
   const classes = await releaseClasses(ctx.scopeEmail, ctx.role === 'admin')
   const lesson = (await releaseLessons()).find(l => l.id === lessonId)
   if (body.action === 'open' && !lesson) return NextResponse.json({ error: 'Only published lessons can be released.' }, { status: 422 })

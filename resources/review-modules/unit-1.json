@@ -1,0 +1,157 @@
+{
+  "slug": "unit-1",
+  "title": "Unit 1 Review · CPA Physics",
+  "total": 16,
+  "fields": [
+    {
+      "screen": 1,
+      "id": "job",
+      "label": "In your own words, what two jobs does the asteroid task ask you to do?",
+      "kind": "long"
+    },
+    {
+      "screen": 2,
+      "id": "position",
+      "label": "The current position, 1.2 × 10⁸ km, tells us _____.",
+      "kind": "short"
+    },
+    {
+      "screen": 2,
+      "id": "velocity",
+      "label": "The velocity, 8,500 m/s at 15°, tells us _____.",
+      "kind": "short"
+    },
+    {
+      "screen": 2,
+      "id": "gravity",
+      "label": "Why is a constant-velocity model reasonable here?",
+      "kind": "long"
+    },
+    {
+      "screen": 3,
+      "id": "deliverables",
+      "label": "Name the five things you need to produce for the transfer task.",
+      "kind": "long"
+    },
+    {
+      "screen": 4,
+      "id": "km",
+      "label": "1 km = _____ m.",
+      "kind": "short"
+    },
+    {
+      "screen": 4,
+      "id": "convert",
+      "label": "Convert 1.2 × 10⁸ km to meters. Show your conversion and units.",
+      "kind": "long"
+    },
+    {
+      "screen": 5,
+      "id": "seconds",
+      "label": "Because velocity is in m/s, time must be in _____.",
+      "kind": "short"
+    },
+    {
+      "screen": 5,
+      "id": "day",
+      "label": "1 day = 24 × 60 × 60 = _____ seconds.",
+      "kind": "short"
+    },
+    {
+      "screen": 5,
+      "id": "time",
+      "label": "Using 182.5 days for six months, calculate the time in seconds. Show your work.",
+      "kind": "long"
+    },
+    {
+      "screen": 6,
+      "id": "toward",
+      "label": "Toward-Earth component: v × _____ θ.",
+      "kind": "short"
+    },
+    {
+      "screen": 6,
+      "id": "side",
+      "label": "Sideways component: v × _____ θ.",
+      "kind": "short"
+    },
+    {
+      "screen": 6,
+      "id": "components",
+      "label": "Calculate both components of 8,500 m/s at 15°. Include units and explain which component changes the toward-Earth position.",
+      "kind": "long"
+    },
+    {
+      "screen": 7,
+      "id": "equation",
+      "label": "Write the position equation, define its symbols, and explain the sign of the toward-Earth velocity.",
+      "kind": "long"
+    },
+    {
+      "screen": 7,
+      "id": "prediction",
+      "label": "Use your converted starting position, toward-Earth velocity, and six-month time to predict x_f. Show the calculation with units.",
+      "kind": "long"
+    },
+    {
+      "screen": 8,
+      "id": "uncertainty",
+      "label": "Uncertainty describes _____, rather than a mistake.",
+      "kind": "short"
+    },
+    {
+      "screen": 8,
+      "id": "range",
+      "label": "For 900 ± 30 m, the lowest value is _____ m and the highest is _____ m.",
+      "kind": "short"
+    },
+    {
+      "screen": 8,
+      "id": "explain_uncertainty",
+      "label": "Explain what ± means to someone who has never studied physics.",
+      "kind": "long"
+    },
+    {
+      "screen": 9,
+      "id": "wiggle",
+      "label": "Total wiggle = position uncertainty + (velocity uncertainty × _____).",
+      "kind": "short"
+    },
+    {
+      "screen": 9,
+      "id": "window",
+      "label": "Using ±50,000 km and ±200 m/s, calculate the uncertainty after six months. Show matching units and the lower and upper x_f bounds.",
+      "kind": "long"
+    },
+    {
+      "screen": 10,
+      "id": "graph",
+      "label": "Describe your graph: label both axes with units, describe the predicted-position line, and explain why the uncertainty band widens.",
+      "kind": "long"
+    },
+    {
+      "screen": 11,
+      "id": "traps",
+      "label": "Choose two of the four traps. Explain how you will avoid each in your own work.",
+      "kind": "long"
+    },
+    {
+      "screen": 12,
+      "id": "scores",
+      "label": "Name the four rubric categories and describe what strong evidence looks like in one of them.",
+      "kind": "long"
+    },
+    {
+      "screen": 13,
+      "id": "lowest",
+      "label": "How does the lowest-score rule work? Which part of your work will you improve first, and how?",
+      "kind": "long"
+    },
+    {
+      "screen": 14,
+      "id": "public",
+      "label": "Write your public paragraph: what we know, what we do not know, why there is uncertainty, and what should happen next. Use numbers, units, and plain language.",
+      "kind": "long"
+    }
+  ]
+}

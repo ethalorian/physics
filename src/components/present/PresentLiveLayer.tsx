@@ -94,7 +94,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
     try {
       const r = await fetch('/api/present/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lesson_id: lessonId, course_id: courseId }) })
       const d = await r.json() as { session?: Session; deck?: DeckBlock | null; lesson?: { content_blocks: BlockDocument }; answerKeys?: Record<string, string>; error?: string }
-      if (!r.ok || !d.session || !d.lesson) throw new Error(d.error ?? 'Could not start the presentation. Please retry.')
+      if (!r.ok || !d.session || !d.lesson) throw new Error(d.error ?? 'Could not start guided practice. Please retry.')
       setSession(d.session); setClassDoc(d.lesson.content_blocks); setClassDeck(d.deck ?? null); setAnswerKeys(d.answerKeys ?? {})
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not connect. Please retry.')
@@ -216,7 +216,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
             {/* Start / end */}
             {!live ? (
               <div className="flex items-center gap-2">
-                <select aria-label="Presentation class" disabled={starting} value={courseId} onChange={(e) => setCourseId(e.target.value)} className="flex-1 text-sm rounded-lg px-2" style={{ border: '1px solid var(--border)', background: 'var(--background)', minHeight: 44 }}>
+                <select aria-label="Activity class" disabled={starting} value={courseId} onChange={(e) => setCourseId(e.target.value)} className="flex-1 text-sm rounded-lg px-2" style={{ border: '1px solid var(--border)', background: 'var(--background)', minHeight: 44 }}>
                   <option value="">Choose a class</option>
                   {courses.map((c) => <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>)}
                 </select>
@@ -224,7 +224,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
               </div>
             ) : (
               <div className="flex items-center gap-2 flex-wrap">
-                <button type="button" onClick={openDeck} style={btn(deckOpen)}><MonitorPlay size={14} /> {deckOpen ? 'Deck open' : deck ? 'Open deck' : 'Open slides'}</button>
+                <button type="button" onClick={openDeck} style={btn(deckOpen)}><MonitorPlay size={14} /> {deckOpen ? 'Activity screen open' : deck ? 'Open activity screen' : 'Open activity screen'}</button>
                 <button type="button" onClick={toggleBlackout} style={btn(session?.blackout)} title="B"><Moon size={14} /> Blackout</button>
                 <button type="button" onClick={end} style={{ ...btn(), marginLeft: 'auto', color: 'var(--destructive)' }}><Square size={14} /> End</button>
               </div>
@@ -234,11 +234,11 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
             )}
             {live && deckOpen && (
               <div className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
-                If the deck opened on this screen: drag it to the projector, then <strong>{fullscreenKeyHint()}</strong>. Display mode must be Extend.
+                If the activity opened on this screen: drag it to the projector, then <strong>{fullscreenKeyHint()}</strong>. Display mode must be Extend.
               </div>
             )}
 
-            {live && <p className="text-xs">On your iPad, sign in to the same account and open the <a className="underline" href="/admin/command-center" target="_blank" rel="noreferrer">Command Center</a>. Choose “Control this presentation.” Keep this laptop page and deck open.</p>}
+            {live && <p className="text-xs">On your iPad, sign in to the same account and open the <a className="underline" href="/admin/command-center" target="_blank" rel="noreferrer">Guided problem solving</a>. Choose “Resume guided session.” Keep this laptop page and activity screen open.</p>}
             {remote.state && <TeachingToolControls document={classDoc??{schemaVersion:1,blocks:pages.flatMap(p=>p.blocks)}} session={remote.state.session} busy={remote.busy} patch={patch}/>}
             {remote.error && <p role="alert" className="text-destructive text-xs">{remote.error}</p>}
             {/* Slide + section */}

@@ -144,7 +144,7 @@ export default function ProjectorConnection({ sessionId, existingWindow, compact
       if (doc && stateRef.current?.session.status === 'ended') {
         // Leaving the finished session must not uncover the last slide.
         const blank = doc.createElement('div')
-        blank.setAttribute('aria-label', 'Presentation ended')
+        blank.setAttribute('aria-label', 'Guided session ended')
         blank.style.cssText = 'position:fixed;inset:0;background:#000;z-index:2147483647'
         doc.body.appendChild(blank)
       }
@@ -199,15 +199,15 @@ export default function ProjectorConnection({ sessionId, existingWindow, compact
   const ended = state?.session.status === 'ended'
 
   return <div className={existingWindow !== undefined ? 'hidden' : compact ? 'space-y-3' : 'mx-auto max-w-3xl space-y-5 p-6'}>
-    {!compact && <header><p className="text-overline text-primary">Classroom screen</p><h1 className="mt-2 text-title-1">{documentData?.lesson.title ?? 'Loading presentation…'}</h1><p className="mt-3 text-muted-foreground">Open the deck on the classroom display, then use your iPad to teach.</p></header>}
+    {!compact && <header><p className="text-overline text-primary">Classroom screen</p><h1 className="mt-2 text-title-1">{documentData?.lesson.title ?? 'Loading guided activity…'}</h1><p className="mt-3 text-muted-foreground">Open the activity on the classroom display, then use your iPad to guide the problem solving.</p></header>}
     {(error || loadError) && <p role="alert" className="text-destructive">{error || loadError}</p>}
     <Button className="min-h-14" disabled={!documentData || ended} onClick={connect}>{connected ? 'Reopen projector window' : 'Open projector window'}</Button>
-    <p role="status">{ended ? 'Presentation ended.' : connected ? 'Projector window open. Keep this page open to receive iPad controls.' : 'The deck opens in a separate window for your classroom screen.'}</p>
-    {connected && <p className="text-sm text-muted-foreground">Move the deck window to your projector and use {fullscreenKeyHint()} for fullscreen. Use Extend display.</p>}
-    {!compact && <div className="rounded-xl border p-4"><p className="font-semibold">Continue on your iPad</p><p className="mt-2 text-sm">Open Command Center with the same account, then choose “Control this presentation.” Keep this page and the projector window open on the computer.</p><a className="mt-3 inline-flex min-h-12 items-center text-primary underline" href="/admin/command-center" target="_blank" rel="noreferrer">Open Command Center</a></div>}
+    <p role="status">{ended ? 'Guided session ended.' : connected ? 'Projector window open. Keep this page open to receive iPad controls.' : 'The activity opens in a separate window for your classroom screen.'}</p>
+    {connected && <p className="text-sm text-muted-foreground">Move the activity window to your projector and use {fullscreenKeyHint()} for fullscreen. Use Extend display.</p>}
+    {!compact && <div className="rounded-xl border p-4"><p className="font-semibold">Continue on your iPad</p><p className="mt-2 text-sm">Open Guided problem solving with the same account, then choose “Resume guided session.” Keep this page and the projector window open on the computer.</p><a className="mt-3 inline-flex min-h-12 items-center text-primary underline" href="/admin/command-center" target="_blank" rel="noreferrer">Open guided problem solving</a></div>}
     {portal && state && createPortal(<>
       {teaching.state && <span style={{ display: 'none' }} data-projection-signature={projectorSignature(state, teaching.state)} />}
-      {(state.session.blackout || ended) ? <div style={{ position: 'fixed', inset: 0, zIndex: 2147483647, background: '#000' }} aria-label={ended ? 'Presentation ended' : 'Screen blanked'} /> : <>
+      {(state.session.blackout || ended) ? <div style={{ position: 'fixed', inset: 0, zIndex: 2147483647, background: '#000' }} aria-label={ended ? 'Guided session ended' : 'Screen blanked'} /> : <>
         {state.session.lesson_id && !state.session.projected_block_id && boundBlock && <div data-bound-slide-ready={state.session.current_slide} style={{position:'fixed',inset:0,zIndex:2147483644}}><TeachingStage lesson={documentData?.lesson.title ?? 'Today’s lesson'} mode={blockMode(boundBlock)} footer={teachingCue(boundBlock)}><TeachingBlockContent block={boundBlock} lessonId={state.session.lesson_id} referenceBlocks={documentData?.lesson.content_blocks.blocks ?? []} seiEnabled={teaching.state?.tools?.sei_enabled ?? false}/></TeachingStage></div>}
         {state.session.lesson_id && state.session.projected_block_id && <iframe key={state.session.projected_block_id} title="Projected lesson block" src={`${origin}/embed/present-block/${encodeURIComponent(sessionId)}?lesson=${encodeURIComponent(state.session.lesson_id)}&block=${encodeURIComponent(state.session.projected_block_id)}&part=${state.session.projected_block_page ?? 0}`} style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', border: 0, zIndex: 2147483644, background: 'white' }} allow="fullscreen" />}
         {(showLobby || pulse || poll?.type === 'question') && <div style={{ position: 'fixed', inset: 0, zIndex: 2147483645 }}><TeachingActivity seiEnabled={teaching.state?.tools?.sei_enabled ?? false} referenceBlocks={documentData?.lesson.content_blocks.blocks ?? []} lesson={documentData?.lesson.title ?? 'Today’s lesson'} live={state} pulse={pulse} question={commandQuestion(poll)} discussion={Boolean(teaching.state?.tools?.discussion_block_id && teaching.state.tools.discussion_block_id === state.session.poll_block_id)} origin={origin} /></div>}

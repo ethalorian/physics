@@ -1,0 +1,347 @@
+{
+  "cart-collisions": {
+    "params": [
+      {
+        "key": "mass1",
+        "label": "Cart A mass",
+        "min": 0.5,
+        "max": 5,
+        "step": 0.5,
+        "unit": "kg",
+        "initial": 2
+      },
+      {
+        "key": "v1",
+        "label": "Cart A velocity",
+        "min": -4,
+        "max": 4,
+        "step": 0.5,
+        "unit": "m/s",
+        "initial": 2
+      },
+      {
+        "key": "mass2",
+        "label": "Cart B mass",
+        "min": 0.5,
+        "max": 5,
+        "step": 0.5,
+        "unit": "kg",
+        "initial": 1
+      },
+      {
+        "key": "v2",
+        "label": "Cart B velocity",
+        "min": -4,
+        "max": 4,
+        "step": 0.5,
+        "unit": "m/s",
+        "initial": -1.5
+      },
+      {
+        "key": "elasticity",
+        "label": "Bounciness (e)",
+        "min": 0,
+        "max": 1,
+        "step": 0.05,
+        "unit": "",
+        "initial": 1
+      }
+    ],
+    "readings": [
+      {
+        "key": "pBefore",
+        "label": "Momentum before",
+        "unit": "kg·m/s"
+      },
+      {
+        "key": "pAfter",
+        "label": "Momentum after",
+        "unit": "kg·m/s"
+      },
+      {
+        "key": "keBefore",
+        "label": "KE before",
+        "unit": "J"
+      },
+      {
+        "key": "keAfter",
+        "label": "KE after",
+        "unit": "J"
+      },
+      {
+        "key": "keLost",
+        "label": "KE converted to other forms",
+        "unit": "%"
+      }
+    ]
+  },
+  "impulse-momentum": {
+    "params": [
+      {
+        "key": "cartMass",
+        "label": "Cart mass",
+        "min": 0.5,
+        "max": 5,
+        "step": 0.5,
+        "unit": "kg",
+        "initial": 1
+      },
+      {
+        "key": "impactSpeed",
+        "label": "Impact speed",
+        "min": 0.5,
+        "max": 5,
+        "step": 0.5,
+        "unit": "m/s",
+        "initial": 3
+      },
+      {
+        "key": "contactTime",
+        "label": "Contact time (bumper softness)",
+        "min": 20,
+        "max": 400,
+        "step": 10,
+        "unit": "ms",
+        "initial": 100
+      },
+      {
+        "key": "bounce",
+        "label": "Rebound (e)",
+        "min": 0,
+        "max": 1,
+        "step": 0.05,
+        "unit": "",
+        "initial": 0.5
+      }
+    ],
+    "readings": [
+      {
+        "key": "impulse",
+        "label": "Impulse (area)",
+        "unit": "N·s"
+      },
+      {
+        "key": "deltaP",
+        "label": "Change in momentum Δp",
+        "unit": "kg·m/s"
+      },
+      {
+        "key": "peakForce",
+        "label": "Peak force",
+        "unit": "N"
+      },
+      {
+        "key": "vIn",
+        "label": "Speed in",
+        "unit": "m/s"
+      },
+      {
+        "key": "vOut",
+        "label": "Speed out",
+        "unit": "m/s"
+      },
+      {
+        "key": "contactMs",
+        "label": "Contact time",
+        "unit": "ms"
+      }
+    ]
+  },
+  "dart-deflection": {
+    "params": [
+      {
+        "key": "asteroidSize",
+        "label": "Asteroid diameter",
+        "min": 50,
+        "max": 500,
+        "step": 10,
+        "unit": "m",
+        "initial": 300
+      },
+      {
+        "key": "impactorMass",
+        "label": "Impactor mass",
+        "min": 500,
+        "max": 50000,
+        "step": 500,
+        "unit": "kg",
+        "initial": 20000
+      },
+      {
+        "key": "impactorSpeed",
+        "label": "Impactor speed",
+        "min": 1,
+        "max": 20,
+        "step": 0.5,
+        "unit": "km/s",
+        "initial": 10
+      },
+      {
+        "key": "beta",
+        "label": "Momentum boost β",
+        "min": 1,
+        "max": 5,
+        "step": 0.1,
+        "unit": "×",
+        "initial": 3.6
+      },
+      {
+        "key": "leadTime",
+        "label": "Lead time before arrival",
+        "min": 1,
+        "max": 50,
+        "step": 1,
+        "unit": "yr",
+        "initial": 20
+      }
+    ],
+    "readings": [
+      {
+        "key": "miss",
+        "label": "Miss distance",
+        "unit": "km"
+      },
+      {
+        "key": "missR",
+        "label": "vs Earth radius",
+        "unit": "×"
+      },
+      {
+        "key": "deltaV",
+        "label": "Asteroid Δv",
+        "unit": "mm/s"
+      },
+      {
+        "key": "deltaP",
+        "label": "Momentum given",
+        "unit": "×10⁶ kg·m/s"
+      },
+      {
+        "key": "massBn",
+        "label": "Asteroid mass",
+        "unit": "×10⁹ kg"
+      }
+    ]
+  },
+  "riverboat-crossing-3d": {
+    "params": [
+      {
+        "key": "boatSpeed",
+        "label": "Boat speed (through the water)",
+        "min": 2,
+        "max": 10,
+        "step": 0.5,
+        "unit": "m/s",
+        "initial": 5
+      },
+      {
+        "key": "boatAngle",
+        "label": "Heading — 90° = straight across, less = aim upstream",
+        "min": 60,
+        "max": 120,
+        "step": 5,
+        "unit": "°",
+        "initial": 90
+      },
+      {
+        "key": "currentSpeed",
+        "label": "River current",
+        "min": 0,
+        "max": 5,
+        "step": 0.5,
+        "unit": "m/s",
+        "initial": 2
+      }
+    ],
+    "readings": [
+      {
+        "key": "time",
+        "label": "Time",
+        "unit": "s"
+      },
+      {
+        "key": "across",
+        "label": "Distance across",
+        "unit": "m"
+      },
+      {
+        "key": "drift",
+        "label": "Drift from target dock",
+        "unit": "m"
+      },
+      {
+        "key": "resultantSpeed",
+        "label": "Speed over ground",
+        "unit": "m/s"
+      },
+      {
+        "key": "resultantAngle",
+        "label": "Actual travel angle",
+        "unit": "°"
+      }
+    ]
+  },
+  "picket-fence-g": {
+    "params": [
+      {
+        "key": "bandSpacing",
+        "label": "Band spacing",
+        "min": 2,
+        "max": 8,
+        "step": 0.5,
+        "unit": "cm",
+        "initial": 5
+      },
+      {
+        "key": "releaseHeight",
+        "label": "Release height above gate",
+        "min": 0,
+        "max": 40,
+        "step": 5,
+        "unit": "cm",
+        "initial": 10
+      },
+      {
+        "key": "mass",
+        "label": "Strip mass",
+        "min": 10,
+        "max": 200,
+        "step": 10,
+        "unit": "g",
+        "initial": 50
+      }
+    ],
+    "readings": [
+      {
+        "key": "measuredG",
+        "label": "Measured g (slope)",
+        "unit": "m/s²"
+      },
+      {
+        "key": "bandsTimed",
+        "label": "Bands timed",
+        "unit": ""
+      },
+      {
+        "key": "vGate",
+        "label": "Velocity at gate",
+        "unit": "m/s"
+      },
+      {
+        "key": "spacing",
+        "label": "Band spacing",
+        "unit": "cm"
+      },
+      {
+        "key": "mass",
+        "label": "Strip mass",
+        "unit": "g"
+      },
+      {
+        "key": "fallTime",
+        "label": "Fall time",
+        "unit": "s"
+      }
+    ]
+  }
+}

@@ -1,14 +1,16 @@
+import {validateDemand,type AssessmentDemand} from '@/lib/assessment-demand'
+import type { ReadingXpStatus } from './xp-policy'
 import { validateHonorsReading, type HonorsReading } from './openstax-physics'
 import { textbookChapter } from '@/data/textbook'
 import { TEXTBOOK_SECTIONS } from '@/data/textbook-sections'
 
 export const READING_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-export type ReadingQuestion = { id: string; reference: string; prompt: string; target_id: string }
+export type ReadingQuestion = { demand?:AssessmentDemand; id: string; reference: string; prompt: string; target_id: string }
 export type ReadingTarget = { id: string; slug?: string; statement: string; unit_id: string; domain: string; program: string }
 export type ReadingAssignment = {
   origin_key?: string | null; passage?: string | null; honors_reading?: HonorsReading | null;
   id: string; course_id: string; title: string; chapter: number; reading: string; section_ids: string[];
-  instructions: string; questions: ReadingQuestion[]; due_at: string | null;
+  instructions: string; questions: ReadingQuestion[]; opens_at?: string | null; due_at: string | null;
   status: 'draft' | 'published' | 'archived'; version: number; created_at: string;
 }
 export type ReadingWork = {
@@ -19,7 +21,7 @@ export type ReadingSubmission = { id: string; assignment_id: string; user_id: st
 export type ReadingReview = { id: string; submission_id: string; decision: 'rated' | 'returned'; ratings: Record<string, number>; note: string; reviewed_at: string }
 export type ReadingCourse = { id: string; name: string; section: string | null; program: string; track?: string | null }
 export type ReadingList = { review_counts?: Record<string,number>; assignments: ReadingAssignment[]; work: ReadingWork[]; courses: ReadingCourse[]; staff: boolean }
-export type ReadingDetail = { readingQuiz?: {id: string | null; locked: boolean; state?: string; needsCompletion?: boolean} | null; lesson_slug?: string | null; assignment: ReadingAssignment; work: ReadingWork[]; submissions: ReadingSubmission[]; reviews: ReadingReview[]; targets: ReadingTarget[]; students: { id: string; name: string }[]; staff: boolean }
+export type ReadingDetail = { excused_student_ids?: string[]; xp?: ReadingXpStatus | null; readingQuiz?: {id: string | null; locked: boolean; state?: string; needsCompletion?: boolean} | null; lesson_slug?: string | null; assignment: ReadingAssignment; work: ReadingWork[]; submissions: ReadingSubmission[]; reviews: ReadingReview[]; targets: ReadingTarget[]; students: { id: string; name: string }[]; staff: boolean }
 
 export function readingState(work?: ReadingWork | null) {
   return work ? ({ in_progress: 'In progress', submitted: 'Ready to review', returned: 'Needs revision', rated: 'Rated' })[work.state] : 'Not started'
@@ -63,7 +65,7 @@ export function validateReading(value: unknown) {
     seen.add(String(q.id))
     const reference = bounded(q.reference, 160, 'the question reference'), prompt = bounded(q.prompt, 3000, 'the question prompt')
     if (!reference && !prompt) throw new Error('Enter a question reference or prompt.')
-    return { id: String(q.id), reference, prompt, target_id: String(q.target_id) }
+    return { id: String(q.id), reference, prompt, target_id: String(q.target_id), demand:validateDemand(q.demand) }
   })
   const due = b.due_at === null ? null : bounded(b.due_at, 40, 'the due date', true)
   if (due && !Number.isFinite(Date.parse(due))) throw new Error('Enter a valid due date.')

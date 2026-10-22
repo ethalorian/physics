@@ -7,6 +7,7 @@ import { ArrowLeft, Coins, Trophy, Crown, Maximize2 } from 'lucide-react'
 import { createTetherBridge } from '@/lib/tether-bridge'
 import { DEFAULT_PULSE_CHART, pulseChart } from '@/lib/pulse-charts'
 import styles from '../arcade.module.css'
+import ArcadePlayer from '@/components/arcade/ArcadePlayer'
 
 /**
  * One arcade cabinet: the game in an iframe, bridged to the XP economy.
@@ -166,6 +167,7 @@ export default function ArcadeCabinetPage() {
           {game?.unit && <span className="text-[11px] uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{game.unit}</span>}
         </div>
         <div className="flex items-center gap-3 text-sm">
+          <ArcadePlayer compact />
           {game && (
             <span className="flex items-center gap-1 rounded-full border px-3 py-1" style={{ borderColor: 'var(--border)' }}>
               <Coins size={14} style={{ color: accent }} />

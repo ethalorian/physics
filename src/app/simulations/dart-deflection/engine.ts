@@ -248,7 +248,8 @@ export function createDartDeflectionEngine(
         xCol: 0, yCol: 1,
       }
     },
-    isComplete() { return done && physics().isMiss },
+    // A hit is also a completed trial: students need that evidence to revise a plan.
+    isComplete() { return done },
     destroy() {},
   }
   return engine

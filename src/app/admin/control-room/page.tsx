@@ -3,6 +3,7 @@ import ClassAssignedWork from "@/components/admin/ClassAssignedWork"
 import {ProblemStageDisplay} from '@/components/blocks/ProblemStageInput'
 import {PROBLEM_STAGES,lessonProblemAnswer} from '@/lib/problem-response'
 
+import { decayingAverage } from '@/data/curriculum-types'
 import MasteryReviewDesk from '@/components/admin/MasteryReviewDesk'
 import { filterReviewQueue, reviewItemKey, type MasteryReviewItem } from '@/lib/mastery-review-queue'
 
@@ -21,9 +22,20 @@ import TeacherDailyMathTask from '@/components/math-spine/TeacherDailyMathTask'
 import { StrokeShapes, type Stroke } from '@/lib/draw/strokes'
 import { useClassScope } from '@/lib/use-class-scope'
 
+const LessonReleasePanel = dynamic(() => import('@/components/admin/LessonReleasePanel'))
+const VocabLearningBoard = dynamic(() => import('@/components/vocabulary/VocabLearningBoard'))
+const PacingManager = dynamic(() => import('@/components/admin/planning/PacingManager'))
 const VideoProgressDashboard = dynamic(() => import('@/components/admin/video-progress/VideoProgressDashboard'))
 const QuizTeacher = dynamic(() => import('@/components/quizzes/QuizTeacher'))
 const TeacherReadings = dynamic(() => import('@/components/readings/TeacherReadings'))
+const LiveClassroom = dynamic(() => import('@/components/admin/LiveClassroom'))
+const CourseGuide = dynamic(() => import('@/components/admin/planning/CourseGuide'))
+const ChoicePlanningWorkspace = dynamic(() => import('@/components/admin/planning/ChoicePlanningWorkspace'))
+const UnitPlanningWorkspace = dynamic(() => import('@/components/admin/planning/UnitPlanningWorkspace'))
+const ResultsMastery = dynamic(() => import('@/components/admin/results/ResultsMastery'))
+const ResultsGradebook = dynamic(() => import('@/components/admin/results/ResultsGradebook'))
+const AssignmentTeacher = dynamic(() => import('@/components/interactive-assignments/AssignmentTeacher'))
+const ReviewTeacher = dynamic(() => import('@/components/review-modules/ReviewTeacher'))
 const VocabControlRoom = dynamic(() => import('@/components/admin/VocabControlRoom'))
 
 // ---------------------------------------------------------------------------
@@ -65,6 +77,7 @@ function cellStyle(b: 0 | 1 | 2 | 3): CSSProperties {
 }
 const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Got it')
 // Show the actual average; color still follows the mastery band.
+function recordAverage(records: RecordItem[] | undefined, target: string) { const levels = (records ?? []).filter(r => r.target_id === target).sort((a, b) => a.observed_at.localeCompare(b.observed_at)).map(r => r.level); return levels.length ? decayingAverage(levels) : null }
 const averageLabel = (value: number | null | undefined) => value == null ? '–' : value.toFixed(2)
 
 
@@ -247,11 +260,14 @@ function ResponseView({ response, prompt }: { response: unknown; prompt?: string
   return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{String(response)}</p>
 }
 
-export default function StudentWorkCenter() { return <Suspense fallback={<p className="p-6">Loading Student work…</p>}><ControlRoom /></Suspense> }
+export default function StudentWorkCenter() { return <Suspense fallback={<p className="p-6">Loading Teaching…</p>}><ControlRoom /></Suspense> }
 
 function ControlRoom() {
   const params = useSearchParams(), router = useRouter()
   const view = assessmentView(params.get('view'))
+  const planning = ['plan', 'choices', 'calendar', 'guide', 'live', 'access', 'tasks', 'pacing'].includes(view)
+  const [planningScope, setPlanningScope] = useState<{ classId: string; units: GridData['units'] } | null>(null)
+  const [planningScopeError, setPlanningScopeError] = useState('')
   const [reviewVersion, setReviewVersion] = useState(0)
   const gridRequestVersion = useRef(0)
   const [gridData, setGrid] = useState<GridData | null>(null)
@@ -262,7 +278,7 @@ function ControlRoom() {
   const [error, setError] = useState<string | null>(null)
   const [gridError, setGridError] = useState<string | null>(null)
 
-  const [sel, setSel] = useState<{ studentId: string; targetId: string; lessonId?: string; submissionId?: string | null } | null>(null)
+  const [sel, setSel] = useState<{ studentId: string; targetId: string; unitId?: string; lessonId?: string; submissionId?: string | null } | null>(null)
   const workRequestVersion = useRef(0)
   const [work, setWork] = useState<WorkData | null>(null)
   const [workLoading, setWorkLoading] = useState(false)
@@ -304,10 +320,10 @@ function ControlRoom() {
     if (sp.has('class')) setClassScope(sp.get('class') || null, sp.get('label'))
   }, [setClassScope, params])
   useEffect(() => {
-    fetch('/api/courses')
+    fetch('/api/teaching-plans?view=classes')
       .then(async r => { if (!r.ok) throw new Error('Classes could not be loaded. Refresh to try again.'); return r.json() })
       .then((d: { courses?: { id: string; name: string; section: string | null; teacher_email?: string | null; program?: string | null }[] }) => {
-        setClasses((d.courses ?? []).map((c) => ({ id: c.id, label: c.section ? `${c.name} · ${c.section}` : c.name, teacher: c.teacher_email ?? null, program: c.program ?? 'physics' })))
+        setClasses((d.courses ?? []).map((c) => ({ id: c.id, label: c.section ? `${c.name} · ${c.section}` : c.name, teacher: c.teacher_email ?? null, program: c.program ?? 'physics' })).sort((a, b) => a.label.localeCompare(b.label)))
       })
       .catch(e => setClassError(e.message))
   }, [])
@@ -364,16 +380,33 @@ function ControlRoom() {
   // Embedded quiz/reading reviews write mastery too; revisiting this tab must
   // pick up those ratings rather than retaining the grid from before grading.
   const invalidateGrid = useCallback(() => { gridRequestVersion.current++ }, [])
-  useEffect(() => { if (ready && view !== 'assignments') loadGrid(unitId); return invalidateGrid }, [unitId, loadGrid, view, ready, invalidateGrid])
+  useEffect(() => { if (ready && view !== 'assignments' && !planning) loadGrid(unitId); return invalidateGrid }, [unitId, loadGrid, view, ready, invalidateGrid, planning])
+  useEffect(() => {
+    if (!ready || !planning || !classId) return
+    const controller = new AbortController()
+    setPlanningScopeError('')
+    fetch(`/api/teaching-plans?view=scope&class=${encodeURIComponent(classId)}`, { signal: controller.signal }).then(async response => {
+      const data = await response.json()
+      if (!response.ok) throw Error(data.error || 'Course units could not load.')
+      if (controller.signal.aborted) return
+      setPlanningScope(data)
+      if (!data.units.some((u: { id: string }) => u.id === unitId) && data.unitId) {
+        setUnitId(data.unitId)
+        const next = new URLSearchParams(window.location.search); next.set('unit', data.unitId)
+        router.replace('?' + next.toString(), { scroll: false })
+      }
+    }).catch(error => { if (!controller.signal.aborted) setPlanningScopeError(error.message) })
+    return () => controller.abort()
+  }, [classId, ready, planning, unitId, router])
   // Picking a class moves the unit to the one THAT class is working in — a Trades
   // or Project Physics class never sits on physics unit-1 (its program's units only).
   const classProgram = classId ? (classes.find((c) => c.id === classId)?.program ?? null) : null
   useEffect(() => {
-    if (!classId) return
+    if (!classId || planning) return
     const unitProgram = grid?.units.find((u) => u.id === unitId)?.program
     if (classProgram && unitProgram && unitProgram !== classProgram) setUnitId('auto')
     else if (classProgram && grid && !unitProgram && unitId !== 'auto') setUnitId('auto')
-  }, [classId, classProgram]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [classId, classProgram, planning]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadQueue = useCallback((unit: string) => {
     fetch(`/api/mastery/queue?unit_id=${encodeURIComponent(unit)}${classQuery}`)
@@ -403,13 +436,13 @@ function ControlRoom() {
     return <span className="text-overline" style={{ marginLeft: 6, color: lastSeenColor(iso) }} title={iso ? `Last signed in ${new Date(iso).toLocaleString()}` : 'No recorded sign-in yet'}>{lastSeenLabel(iso)}</span>
   }
 
-  const openCell = useCallback((studentId: string, targetId: string, context?: { lessonId?: string; submissionId?: string | null }) => {
+  const openCell = useCallback((studentId: string, targetId: string, context?: { unitId?: string; lessonId?: string; submissionId?: string | null }) => {
     if (grid?.students.find(s => s.id === studentId)?.ratable === false) return
     const version = ++workRequestVersion.current
     const pending = grid?.reviewQueue?.find(item => item.studentId === studentId && item.targetId === targetId && (!lessonFilter || item.lessonId === lessonFilter))
-    const selectedContext = context ?? pending ?? (lessonFilter ? { lessonId: lessonFilter } : {})
+    const selectedContext: { unitId?: string; lessonId?: string; submissionId?: string | null } = context ?? pending ?? (lessonFilter ? { lessonId: lessonFilter } : {})
     setSel({ studentId, targetId, ...selectedContext }); setWork(null); setError(null); setWorkLoading(true)
-    const params = new URLSearchParams({ user_id: studentId, unit_id: unitId, target_id: targetId })
+    const params = new URLSearchParams({ user_id: studentId, unit_id: selectedContext.unitId ?? unitId, target_id: targetId })
     if (selectedContext.lessonId) params.set('lesson_id', selectedContext.lessonId)
     if (selectedContext.submissionId) params.set('submission_id', selectedContext.submissionId)
     fetch(`/api/mastery/student-work?${params}`)
@@ -481,10 +514,11 @@ function ControlRoom() {
       <StudentWorkHeader view={view} search={params.toString()} classId={classId}
         classLabel={classes.find(c => c.id === classId)?.label ?? classLabel}
         classes={classes} teachers={teachers} teacher={teacherFilter} onTeacherChange={pickTeacher}
-        unitId={unitId} units={grid?.units ?? [{ id: unitId, name: unitLabel }]} program={classProgram}
+        unitId={unitId} units={(planning && planningScope?.classId === classId ? planningScope.units : grid?.units) ?? [{ id: unitId, name: unitLabel }]} program={classProgram}
         onClassChange={pickClass} onUnitChange={pickUnit} onNavigate={closeDrawer} />
       {classError && <p role="alert" className="my-3 text-sm text-destructive">{classError}</p>}
-      <section className={styles.content} aria-label="Current student work view">
+      {planning && planningScopeError && <p role="alert" className="my-3 text-sm text-destructive">{planningScopeError} Refresh to retry loading course units.</p>}
+      <section className={styles.content} aria-label="Current Teaching view">
       {(usesUnit || view === 'videos') && <div className={styles.filters}>
         <label>Find a student<input value={nameFilter} onChange={e => setNameFilter(e.target.value)} placeholder="Name…" type="search" /></label>
         {view === 'mastery' && <label>Lesson<select value={lessonFilter} onChange={e => changeLesson(e.target.value)}>
@@ -492,18 +526,18 @@ function ControlRoom() {
         </select></label>}
         {(nameFilter || lessonFilter || targetFilter) && <button className={styles.clear} onClick={clearEvidenceFilters}>Clear filters</button>}
         {(view === 'mastery' || view === 'lessons') && <button className={styles.review} onClick={startGradingPending} disabled={loading || !!gridError || totalPendingInView === 0}
-          title={`${pendingStudents.length} student${pendingStudents.length === 1 ? '' : 's'} with target evidence awaiting review`}>
-          {loading ? 'Loading reviews…' : totalPendingInView ? `Review ${totalPendingInView} pending` : 'No pending target reviews'}
+          title={`${pendingStudents.length} student${pendingStudents.length === 1 ? '' : 's'} with lesson target evidence awaiting review`}>
+          {loading ? 'Loading reviews…' : totalPendingInView ? `Review ${totalPendingInView} lesson targets` : 'No pending lesson target reviews'}
         </button>}
       </div>}
       {(view === 'mastery' || view === 'lessons') && targetFilter && <p className={styles.filterNotice}>Filtered to one learning target. <button onClick={() => { setTargetFilter(''); const p = new URLSearchParams(window.location.search); p.delete('target'); router.replace('?' + p, { scroll: false }) }}>Show all targets</button></p>}
       {view === 'mastery' && <>
         <div className={styles.summary} aria-label="Gradebook summary">
           <div><strong>{loading || gridError ? '—' : visibleStudents.length}</strong><span>students in view</span></div>
-          <div><strong>{loading || gridError ? '—' : totalPendingInView}</strong><span>target reviews waiting</span></div>
+          <div><strong>{loading || gridError ? '—' : totalPendingInView}</strong><span>lesson target reviews waiting</span></div>
           <div><strong>{loading || gridError || !totalCells ? '—' : `${Math.round(ratedCells / totalCells * 100)}%`}</strong><span>student targets rated</span></div>
         </div>
-        <div className={styles.gridHeading}><div><h2>Class gradebook</h2><p>{unitLabel} · Select a cell to see the evidence and record mastery.</p></div>
+        <div className={styles.gridHeading}><div><h2>Learning-target mastery</h2><p>{unitLabel} · Select a cell to see the evidence and record mastery.</p></div>
           <Link href={assessmentCenterHref('lessons', null, classId, params.toString())}>Open lesson inbox →</Link>
         </div>
       </>}
@@ -515,6 +549,16 @@ function ControlRoom() {
           onRateTarget={openCell} unitId={unitId} classQuery={classQuery}
           onReviewed={() => { loadGrid(unitId, true); loadQueue(unitId) }} renderResponse={response => <ResponseView response={response} />} />
       </>}
+      {(view === 'plan' || view === 'calendar') && <UnitPlanningWorkspace classId={classId} unitId={unitId} mode={view} />}
+      {view === 'choices' && <ChoicePlanningWorkspace unitId={unitId} classId={classId} classLabel={classes.find(c => c.id === classId)?.label ?? classLabel} program={classes.find(c => c.id === classId)?.program ?? null} />}
+      {view === 'access' && (classId ? <LessonReleasePanel key={classId} courseId={classId} /> : <p className="py-10 text-muted-foreground">Choose a class to manage student lesson access.</p>)}
+      {view === 'tasks' && (classId ? <VocabLearningBoard key={classId} classId={classId} onClassChange={pickClass} /> : <p className="py-10 text-muted-foreground">Choose a class to assign and track vocabulary tasks.</p>)}
+      {view === 'pacing' && (classId ? <PacingManager key={classId} classId={classId} /> : <p className="py-10 text-muted-foreground">Choose a class to set its meeting pattern and pacing.</p>)}
+      {view === 'live' && <LiveClassroom classId={classId} unitId={unitId} />}
+      {view === 'guide' && (classId && !['auto', 'all', 'unmapped'].includes(unitId) ? <CourseGuide embedded /> : <p className="py-10 text-muted-foreground">Choose a class and course unit above to read its teaching guide.</p>)}
+      {view === 'results' && (unitId === 'auto' && gridError ? <p role="alert">The class’s current unit could not load. <button className={styles.clear} onClick={() => pickUnit('all')}>Show results from all units</button></p> : <ResultsGradebook key={reviewVersion} classId={classId} unitId={unitId} targets={grid?.targets ?? []} onReviewLesson={openCell} onSaved={() => loadGrid(unitId, true)} />)}
+      {view === 'interactive' && (classId ? <AssignmentTeacher key={classId + ':' + params.get('id')} courseId={classId} initialSlug={params.get('id') ?? undefined} initialStudent={params.get('student') ?? ''} resultsContext /> : <p>Choose a class to review interactive assignments.</p>)}
+      {view === 'reviews' && (classId ? <ReviewTeacher key={classId + ':' + params.get('id') + ':' + params.get('student')} embedded classId={classId} initialSlug={params.get('id') ?? ''} initialStudent={params.get('student') ?? ''} /> : <p>Choose a class to review responses.</p>)}
       {view === 'assignments' && <ClassAssignedWork key={classId ?? 'none'} classId={classId} />}
       {view === 'videos' && <VideoProgressDashboard key={classId ?? 'none'} classId={classId} nameFilter={nameFilter} />}
       {view === 'quizzes' && <QuizTeacher embedded classId={classId} onClassChange={pickClass} />}
@@ -577,7 +621,8 @@ function ControlRoom() {
         <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>No students on your roster yet.</p>
       )}
 
-      {view === 'mastery' && !loading && grid && grid.students.length > 0 && (
+      {view === 'mastery' && !loading && grid && classId && <ResultsMastery key={classId + unitId} classId={classId} unitId={unitId} students={visibleStudents} targets={visibleTargets} cells={grid.cells} pending={reviewQueue} onReviewLesson={openCell} onSaved={() => { loadGrid(unitId, true); loadQueue(unitId) }} />}
+      {view === 'mastery' && !classId && !loading && grid && grid.students.length > 0 && (
         <div className={styles.gradebook} ref={restoreGradebookPosition} onScroll={e => { gradebookPositions.current[gradebookPositionKey] = { top: e.currentTarget.scrollTop, left: e.currentTarget.scrollLeft } }} tabIndex={0} role="region" aria-label="Class mastery gradebook, scroll horizontally for more targets" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
           <table><caption className="sr-only">Average mastery on a 1–3 scale by student and learning target. A dot marks evidence awaiting review.</caption>
             <thead>
@@ -619,7 +664,7 @@ function ControlRoom() {
         </div>
       )}
 
-      {view === 'mastery' && !loading && grid && (
+      {view === 'mastery' && !classId && !loading && grid && (
         <div className="flex gap-4 flex-wrap mt-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
           <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(3) }}>{'3'}</span> Got it (3)</span>
           <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center text-overline" style={{ width: 16, height: 16, borderRadius: 'var(--radius-xs)', ...cellStyle(2) }}>{'2'}</span> Almost (2)</span>
@@ -633,7 +678,7 @@ function ControlRoom() {
       {view === 'mastery' && !loading && !gridError && grid && grid.students.length > 0 && visibleStudents.length === 0 && <p className={styles.filterNotice}>No students match “{nameFilter}”. <button onClick={() => setNameFilter('')}>Show all students</button></p>}
       </section>
 
-      {sel && grid && <MasteryReviewDesk studentId={sel.studentId} targetId={sel.targetId} initialLessonId={sel.lessonId} submissionId={sel.submissionId} unitId={unitId} students={rosterForView} targets={grid.targets} work={work} loading={workLoading} loadError={error} currentMastery={grid.cells[sel.studentId]?.[sel.targetId]?.value} reviewQueue={reviewQueue} onSelect={openCell} onClose={closeDrawer} onSaved={item => { setReviewVersion(v => v + 1); setGradedKeys(previous => new Set(previous).add(reviewItemKey(item))); loadGrid(unitId); loadQueue(unitId) }} onReturned={() => { setReviewVersion(v => v + 1); loadGrid(unitId); loadQueue(unitId) }} onSkip={item => setSkippedKeys(previous => new Set(previous).add(reviewItemKey(item)))} renderResponse={w => <ResponseView response={w.response} prompt={w.prompt}/>} />}
+      {sel && grid && <MasteryReviewDesk studentId={sel.studentId} targetId={sel.targetId} initialLessonId={sel.lessonId} submissionId={sel.submissionId} unitId={sel.unitId ?? unitId} students={rosterForView} targets={work?.targets ?? grid.targets} work={work} loading={workLoading} loadError={error} currentMastery={sel.unitId && sel.unitId !== unitId ? recordAverage(work?.records, sel.targetId) : grid.cells[sel.studentId]?.[sel.targetId]?.value} reviewQueue={reviewQueue} onSelect={(student, target, context) => openCell(student, target, { ...context, unitId: sel.unitId })} onClose={closeDrawer} onSaved={item => { setReviewVersion(v => v + 1); setGradedKeys(previous => new Set(previous).add(reviewItemKey(item))); loadGrid(unitId); loadQueue(unitId) }} onReturned={() => { setReviewVersion(v => v + 1); loadGrid(unitId); loadQueue(unitId) }} onSkip={item => setSkippedKeys(previous => new Set(previous).add(reviewItemKey(item)))} renderResponse={w => <ResponseView response={w.response} prompt={w.prompt}/>} />}
     </div>
   )
 }

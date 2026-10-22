@@ -1,0 +1,41 @@
+const fs=require('node:fs'),path=require('node:path'),{execFileSync}=require('node:child_process');
+const root=process.env.READING_ROOT||path.resolve(__dirname,'..');
+const id=n=>`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`;
+const migration=fs.readdirSync(root+'/supabase/migrations').find(f=>f.endsWith('_reading_assignment_exemptions.sql'));
+const base=fs.readFileSync(root+'/scripts/test-textbook-readings-db.cjs','utf8');
+// Reuse the existing schema and full submission/review history regression suite.
+let script=base.replace("do $$ declare r jsonb; begin",()=>`${fs.readFileSync(root+'/supabase/migrations/'+migration,'utf8')}\ndo $$ declare r jsonb; begin`);
+const sql=`
+create table public.reading_syllabus_bundles(reading_id uuid,reading_quiz_id uuid);
+create table public.quiz_work(quiz_id uuid,user_id uuid,answers jsonb);
+create trigger test_quiz_guard before insert or update of answers on public.quiz_work for each row execute function public.guard_reading_quiz_completion();
+insert into reading_syllabus_bundles values('${id(10)}','${id(60)}');
+update course_students set enrollment_state='ACTIVE';
+insert into course_students(course_id,student_id,enrollment_state) values('${id(1)}','${id(4)}','ACTIVE');
+do $$ declare before_work jsonb; v integer; begin
+  select jsonb_agg(to_jsonb(w)) into before_work from textbook_work w;
+  begin perform set_textbook_reading_exemption('${id(10)}','${id(2)}',true,1,'other@test','other@test'); raise exception 'FAILED ownership'; exception when raise_exception then if sqlerrm not like '%unavailable%' then raise; end if; end;
+  begin perform set_textbook_reading_exemption('${id(10)}','${id(99)}',true,1,'teacher@test','teacher@test'); raise exception 'FAILED roster'; exception when raise_exception then if sqlerrm not like '%active student%' then raise; end if; end;
+  perform set_textbook_reading_exemption('${id(10)}','${id(2)}',true,1,'teacher@test','teacher@test');
+  if (select count(*) from textbook_submissions)<>2 or (select count(*) from textbook_reviews)<>2 or (select count(*) from mastery_records)<>1 or before_work is distinct from (select jsonb_agg(to_jsonb(w)) from textbook_work w) then raise exception 'Work or grades lost'; end if;
+  begin perform textbook_student_action('${id(10)}','${id(2)}','save','{}',5,'${id(90)}'); raise exception 'FAILED stale save'; exception when raise_exception then if sqlerrm not like '%unassigned%' then raise; end if; end;
+  begin perform textbook_student_action('${id(10)}','${id(2)}','submit','{}',5,'${id(90)}'); raise exception 'FAILED stale submit'; exception when raise_exception then if sqlerrm not like '%unassigned%' then raise; end if; end;
+  begin perform set_textbook_reading_exemption('${id(10)}','${id(2)}',false,1,'teacher@test','teacher@test'); raise exception 'FAILED stale version'; exception when raise_exception then if sqlerrm not like '%changed%' then raise; end if; end;
+  perform set_textbook_reading_exemption('${id(10)}','${id(2)}',false,2,'teacher@test','teacher@test');
+  if exists(select 1 from textbook_reading_exemptions) then raise exception 'Reassignment failed'; end if;
+  begin insert into quiz_work values('${id(60)}','${id(4)}','{}'); raise exception 'FAILED quiz prerequisite'; exception when raise_exception then if sqlerrm not like '%Complete and submit%' then raise; end if; end;
+  perform set_textbook_reading_exemption('${id(10)}','${id(4)}',true,3,'teacher@test','teacher@test');
+  insert into quiz_work values('${id(60)}','${id(4)}','{}');
+  perform set_textbook_reading_exemption('${id(10)}','${id(4)}',false,4,'teacher@test','teacher@test');
+  update textbook_assignments set status='archived';
+  update quiz_work set answers='{"answer":"Allowed after class unassignment"}';
+  update textbook_assignments set status='published';
+  begin update quiz_work set answers='{}'; raise exception 'FAILED restored prerequisite'; exception when raise_exception then if sqlerrm not like '%Complete and submit%' then raise; end if; end;
+  perform textbook_student_action('${id(10)}','${id(4)}','save','{}',0,'${id(91)}');
+  if has_table_privilege('anon','textbook_reading_exemptions','SELECT') or has_table_privilege('authenticated','textbook_reading_exemptions','INSERT') or has_function_privilege('authenticated','set_textbook_reading_exemption(uuid,uuid,boolean,integer,text,text)','EXECUTE') then raise exception 'Student access exposed'; end if;
+  if not (select relrowsecurity from pg_class where oid='textbook_reading_exemptions'::regclass) then raise exception 'RLS missing'; end if;
+end $$;
+`;
+script=script.replace('rollback;`',()=>sql+'rollback;`');
+const Module=require('node:module');const mod=new Module(__filename,module);mod.filename=__filename;mod.paths=module.paths;mod._compile(script,__filename);
+console.log('PASS: unassign/reassign, ownership, roster membership, stale versions, preserved work/mastery, blocked stale submissions, quiz prerequisites, and service-only permissions.');

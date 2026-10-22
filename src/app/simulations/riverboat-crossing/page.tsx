@@ -1,8 +1,3 @@
-"use client"
-
-import SimLab from '@/components/simulations/lab/SimLab'
-import { riverboatCrossingDef } from './def'
-
-export default function RiverboatCrossingSimulation() {
-  return <SimLab def={riverboatCrossingDef} />
-}
+'use client'
+import SimulationActivity from '@/components/simulations/SimulationActivity'
+export default function Simulation(){return <SimulationActivity id="riverboat-crossing"/>}

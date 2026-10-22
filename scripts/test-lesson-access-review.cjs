@@ -179,6 +179,26 @@ let passed=0;async function check(name,fn){reset();await fn();passed++;console.l
  await check('student reader filters track, teacher deck, answer keys and legacy answers',async()=>{const a=await access.authorizeLesson(student,'A');assert.equal(a.ok,true);assert.deepEqual(a.document.blocks.map(b=>b.id),['q']);assert.equal(a.document.blocks[0].question.correctOptionId,undefined);assert.equal(a.document.blocks[0].question.autoCheckable,true);assert.equal(access.lessonForReader(a.lesson,a.document).embedded_questions,undefined);});
  for(const [name,change,status] of [['unenrolled',()=>state.enrolled=false,403],['closed window',()=>state.open=false,403],['unpublished',()=>state.tables.lessons[0].published=false,404],['wrong program',()=>state.program='trades',404],['wrong whole-lesson track',()=>state.tables.lessons[0].visibility_track='honors',404]]) await check(name+' denied for reads and writes',async()=>{change();for(const write of [false,true]){const a=await access.authorizeLesson(student,'A',write);assert.equal(a.ok,false);assert.equal(a.response.status,status);}});
  await check('observer and staff/editor previews cannot create student evidence',async()=>{assert.equal((await access.authorizeLesson({...student,realRole:'observer'},'A')).ok,true);assert.equal((await access.authorizeLesson({...student,realRole:'observer'},'A',true)).ok,false);assert.equal((await access.authorizeLesson(teacher,'A')).ok,true);assert.equal((await access.authorizeLesson(teacher,'A',true)).ok,false);state.editor=true;assert.equal((await access.authorizeLesson(student,'A',true)).ok,false);});
+
+ const addVideo=()=>state.tables.lessons[0].content_blocks.blocks.unshift({id:'video',type:'instruction_video',youtubeId:'Z1qFlfqlS_E',title:'Units',summary:'Measure consistently.',transcript:'A unit describes a measurement.',xp:10,gate:true});
+ await check('unassigned videos can be watched without exposing questions or allowing writes',async()=>{
+   addVideo();state.open=false;state.windows={};
+   const watched=await access.authorizeLesson(student,'A',false,false,'watch');assert(watched.ok);
+   assert.equal(watched.document.blocks.length,1);assert.equal(watched.document.blocks[0].type,'instruction_video');
+   const text=JSON.stringify(watched.document);for(const key of ['Which?','correctOptionId','Honors','targetId','xp','gate','learningPath'])assert(!text.includes(key),key);
+   assert.equal((await access.authorizeLesson(student,'A')).ok,false);
+   assert.equal((await access.authorizeLesson(student,'A',true)).ok,false);
+   assert.equal((await access.authorizeLesson(student,'A',true,false,'watch')).ok,false);
+   assert.equal((await blockRoute.POST(req('/api/lessons/blocks',{lesson_id:'A',block_id:'q',block_type:'question',response:{optionId:'a'}}),student)).status,403);
+   assert.equal((await submit.POST(req('/api/lessons/submit',{lesson_id:'A'}),student)).status,403);
+   assert.equal(state.writes.length,0);
+ });
+ for(const [name,change] of [['unenrolled',()=>state.enrolled=false],['draft',()=>state.tables.lessons[0].published=false],['wrong track',()=>state.tables.lessons[0].visibility_track='honors'],['wrong program',()=>state.program='trades'],['hidden video',()=>state.tables.lessons[0].content_blocks.blocks[0].visibilityTrack='honors']]) await check('watch access still denies '+name,async()=>{addVideo();change();assert.equal((await access.authorizeLesson(student,'A',false,false,'watch')).ok,false);assert.equal(state.writes.length,0)});
+ await check('opening calendar work preserves the full question and submission flow',async()=>{
+   addVideo();const a=await access.authorizeLesson(student,'A');assert(a.ok);assert(a.document.blocks.some(b=>b.id==='q'));
+   const r=await blockRoute.POST(req('/api/lessons/blocks',{lesson_id:'A',block_id:'q',block_type:'question',response:{optionId:'a'}}),student);assert.equal(r.status,201);assert(state.writes.some(w=>w.table==='block_responses'));
+ });
+ await check('watch route rejects classroom investigations even if they contain a video',async()=>{addVideo();state.tables.lessons[0].content_blocks.learningPath.kind='investigation';assert.equal((await access.authorizeLesson(student,'A',false,false,'watch')).ok,false)});
  await check('observer can browse published lessons and map across programs and tracks without enrollment or release windows',async()=>{
    const observer={...student,userId:'observer',role:'observer',realRole:'observer'};
    state.enrolled=false;state.open=false;state.windows={};state.editor=true;
@@ -256,8 +276,9 @@ let passed=0;async function check(name,fn){reset();await fn();passed++;console.l
    state.tables.lessons=[{...original,content_blocks:doc},{...original,id:'B',slug:'b',title:'Second lesson',content_blocks:{...doc,blocks:[{id:'video',type:'instruction_video',youtubeId:'vf7X7mmJfsE'},...original.content_blocks.blocks]}},
      {...original,id:'draft',published:false,content_blocks:doc},{...original,id:'honors',visibility_track:'honors',content_blocks:doc},{...original,id:'other-program',unit_id:'trade-1',content_blocks:doc},{...original,id:'legacy',content_blocks:{schemaVersion:1,blocks:original.content_blocks.blocks}}];
    const data=await(await publishedRoute.GET(req('/api/lessons/published'),student)).json();
-   assert.deepEqual(data.lessons.map(l=>l.id),['A']);
+   assert.deepEqual(data.lessons.map(l=>l.id),['A','B']);
    assert.deepEqual(data.conceptMap.nodes.map(l=>l.id),['A','B']);
+   assert.deepEqual(data.conceptMap.nodes.map(l=>l.watchHref),['/lessons/a/watch','/lessons/b/watch']);
    assert.equal(data.conceptMap.nodes[0].href,'/lessons/a');
    assert.equal(data.conceptMap.nodes[1].access,'locked');assert.equal(data.conceptMap.nodes[1].href,undefined);
    assert.deepEqual(data.conceptMap.connections,[{from:'A',to:'B',label:'Give motion its units'}]);
@@ -269,7 +290,7 @@ let passed=0;async function check(name,fn){reset();await fn();passed++;console.l
    state.windows={A:{state:'closed',closed_at:'2026-09-27'},B:{state:'scheduled',opens_at:'2026-10-01T12:00:00Z'}};
    state.tables.lesson_progress=[{user_id:'s',lesson_id:'A',progress_percentage:30,status:'completed'}];
    let data=await(await publishedRoute.GET(req('/api/lessons/published'),student)).json();
-   assert.equal(data.conceptMap.nodes[0].progress,0,'Stale completed cache cannot replace a submission');assert.equal(data.conceptMap.nodes[1].opensAt,'2026-10-01T12:00:00Z');assert(data.conceptMap.nodes.every(n=>!n.href));assert.deepEqual(data.lessons.map(l=>l.id),['A']);
+   assert.equal(data.conceptMap.nodes[0].progress,0,'Stale completed cache cannot replace a submission');assert.equal(data.conceptMap.nodes[1].opensAt,'2026-10-01T12:00:00Z');assert(data.conceptMap.nodes.every(n=>!n.href && n.watchHref));assert.deepEqual(data.lessons.map(l=>l.id),['A','B']);
    state.windows.A={state:'open'};data=await(await publishedRoute.GET(req('/api/lessons/published'),student)).json();
    assert.equal(data.conceptMap.nodes[0].href,'/lessons/a');assert.equal(data.conceptMap.nodes[1].href,undefined);assert.equal(state.writes.length,0);
  });

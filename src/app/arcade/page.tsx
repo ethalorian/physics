@@ -7,6 +7,7 @@ import MissionHub from '@/components/math-missions/MissionHub'
 import { MISSIONS } from '@/lib/math-missions/catalog'
 import DailySpinWheel from '@/components/arcade/DailySpinWheel'
 import GamePreview from '@/components/arcade/GamePreview'
+import ArcadePlayer from '@/components/arcade/ArcadePlayer'
 import { UNIT_XP_TARGETS } from '@/lib/xp-policy'
 import styles from './arcade.module.css'
 
@@ -139,7 +140,7 @@ export default function ArcadePage() {
     <header className={styles.masthead}><Link href="/arcade" className={styles.brand}><Joystick size={22} /><span>The Arcade<span className={styles.brandDot}>.</span></span></Link><span className={styles.mastheadNote}>A playground for curious minds</span></header>
     <section className={styles.hero} aria-labelledby="arcade-title">
       <div className={styles.heroCopy}><span className={styles.heroKicker}><span /> Learn. Play. Level up.</span><h1 id="arcade-title">A little practice.<br /><em>A new high score.</em></h1><p>Build your skills, bank some XP, and find your next favorite game. There’s a cabinet with your name on it.</p><a href="#game-library" className={styles.heroButton}>Find your game <ArrowDown size={16} /></a></div>
-      <div className={styles.heroArt} aria-hidden="true"><div className={styles.orbitOne} /><div className={styles.orbitTwo} /><span className={styles.artStar}>✦</span><div className={styles.miniCabinet}><div className={styles.cabinetMarquee}>ANTOCCI / ARCADE</div><div className={styles.cabinetScreen}><Atom size={66} strokeWidth={1} /><span>READY, PLAYER?</span><i>PRESS PLAY</i></div><div className={styles.cabinetControls}><span /><i /><i /></div><div className={styles.cabinetBase}><span>01</span><i /></div></div><span className={styles.artCaption}>GOOD THINKING. GREAT PLAY.</span></div>
+      <div className={styles.heroArt}><ArcadePlayer /></div>
     </section>
 
     <div className={styles.playerBar} aria-label="Your arcade progress">

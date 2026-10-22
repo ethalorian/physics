@@ -1,0 +1,30 @@
+'use client'
+import {useId} from 'react'
+import {displayLabValue as fmt,type LabFrame,type ForceSet} from '@/lib/interactive-assignments/investigation-model'
+import {SceneDefs,ink} from './SceneArt'
+import s from './scenes.module.css'
+const colors={primary:ink.cyan,secondary:ink.rose,muted:ink.amber}
+
+export function LabGraph({graph,progress=0}:{graph:NonNullable<LabFrame['graph']>;progress?:number}){
+ const id='graph'+useId().replaceAll(':',''),all=graph.paths.flatMap(p=>p.points),xmin=Math.min(0,...all.map(p=>p.x)),xmax=Math.max(1e-9,...all.map(p=>p.x)),ymin=Math.min(0,...all.map(p=>p.y)),ymax=Math.max(0,...all.map(p=>p.y)),dy=Math.max(1,ymax-ymin),lo=ymin-dy*.18,hi=ymax+dy*.18,px=(x:number)=>78+(x-xmin)/(xmax-xmin)*600,py=(y:number)=>310-(y-lo)/(hi-lo)*230,time=xmin+(xmax-xmin)*progress
+ return <div className={s.scene}><svg viewBox="0 0 760 390" className={s.graphCanvas} role="img" aria-label={`${graph.yLabel} versus ${graph.xLabel}. Cursor at ${fmt(time)}. ${graph.paths.map(p=>p.label).join(', ')}.`}>
+  <defs><clipPath id={id}><rect x="77" y="65" width={Math.max(1,px(time)-77)} height="246"/></clipPath></defs>
+  <text x="28" y="34" className={s.graphTitle}>{graph.yLabel}</text><text x="728" y="34" textAnchor="end">Inspect the journey to move the cursor</text>
+  {[0,1,2,3,4].map(i=>{const y=lo+(hi-lo)*i/4,x=xmin+(xmax-xmin)*i/4;return <g key={i}><line x1="78" x2="678" y1={py(y)} y2={py(y)} stroke="#305064" strokeDasharray="2 5"/><line x1={px(x)} x2={px(x)} y1="80" y2="310" stroke="#305064" strokeDasharray="2 5"/><text x="65" y={py(y)+4} textAnchor="end">{fmt(y)}</text><text x={px(x)} y="335" textAnchor="middle">{fmt(x)}</text></g>})}
+  {(graph.areas??[]).map((a,i)=><g key={i}><rect x={px(a.start)} y={Math.min(py(0),py(a.height))} width={px(a.end)-px(a.start)} height={Math.abs(py(a.height)-py(0))} fill={a.height>=0?ink.cyan:ink.rose} opacity=".16"/>{Math.abs(a.height)>.1&&<text x={(px(a.start)+px(a.end))/2} y={(py(0)+py(a.height))/2+4} textAnchor="middle" style={{fill:a.height>=0?ink.cyan:ink.rose}}>{a.height>=0?'+':''}{fmt((a.end-a.start)*a.height)} m</text>}</g>)}
+  <line x1="78" x2="678" y1={py(0)} y2={py(0)} stroke="#8ba9bb" opacity=".6"/><line x1="78" x2="78" y1="80" y2="310" stroke="#8ba9bb" opacity=".6"/>
+  {graph.paths.map((p,i)=>{const points=p.points.map(q=>`${px(q.x)},${py(q.y)}`).join(' '),right=p.points.findIndex(q=>q.x>time),a=right<0?p.points.at(-1)!:p.points[Math.max(0,right-1)],b=right<0?a:p.points[right],current=b.x===a.x?a.y:a.y+(b.y-a.y)*(time-a.x)/(b.x-a.x),color=colors[p.tone??'primary'];return <g key={i}><polyline points={points} fill="none" stroke={color} strokeWidth="2" strokeDasharray="5 6" opacity=".3"/><polyline points={points} fill="none" stroke={color} strokeWidth="3" clipPath={`url(#${id})`}/><circle cx={px(time)} cy={py(current)} r="6" fill={color} stroke="#10293b" strokeWidth="2"/><text x={Math.min(710,Math.max(103,px(time)))} y={py(current)-13-i*17} textAnchor="middle" style={{fill:color}}>{fmt(current)}</text></g>})}
+  <line x1={px(time)} x2={px(time)} y1="69" y2="311" stroke="#f5dfad" strokeDasharray="3 4" opacity=".7"/><text x="380" y="370" textAnchor="middle">{graph.xLabel} · current {fmt(time)}</text>
+ </svg><div className={s.key}>{graph.paths.map(p=><span key={p.label}><i style={{background:colors[p.tone??'primary']}}/>{p.label}</span>)}<span>Solid = elapsed · dashed = remaining</span></div><div className={s.caption}><strong>Connect the views</strong><p>The cursor follows the same instant as the model. Pause or scrub the journey to connect position, motion, and the shape of the graph.</p></div></div>
+}
+
+const forceColors=[ink.rose,ink.cyan,ink.amber,ink.blue,'#d4b8ff']
+export function LabForces({groups,scaleMaximum}:{groups:ForceSet[];scaleMaximum:number}){
+ const id='forces'+useId().replaceAll(':',''),largest=Math.max(1,scaleMaximum)
+ return <div><div className={s.forceBoard}>{groups.map((g,j)=>{const net=g.forces.reduce((a,f)=>({x:a.x+f.x,y:a.y+f.y}),{x:0,y:0}),nonzero=g.forces.filter(f=>Math.hypot(f.x,f.y)>1e-8);return <div key={g.body} className={s.forceCard}><h3>{g.body}</h3><svg viewBox="0 0 360 290" role="img" aria-label={nonzero.map(f=>`${f.label}: Fx ${fmt(f.x)} N, Fy ${fmt(f.y)} N`).join('; ')||'No nonzero forces shown'}><SceneDefs id={`${id}-${j}`}/><defs>{g.forces.map((f,i)=><marker key={i} id={`${id}-${j}-${i}`} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill={forceColors[i%forceColors.length]}/></marker>)}</defs>
+ <circle cx="180" cy="143" r="98" fill="none" stroke="#294a60"/><circle cx="180" cy="143" r="58" fill="none" stroke="#294a60" strokeDasharray="2 6"/><path d="M54 143H306M180 27V257" stroke="#66889e" strokeDasharray="3 6" opacity=".35"/>
+ <rect x="166" y="129" width="28" height="28" rx="6" fill={`url(#${id}-${j}-metal)`} stroke="#a9c9d6"/>
+ {g.forces.map((f,i)=>{if(Math.hypot(f.x,f.y)<1e-8)return null;const offset=f.x===0?(i%3-1)*8:0,x=180+offset+f.x/largest*95,y=143-f.y/largest*95,color=forceColors[i%forceColors.length];return <g key={i}><line x1={180+offset} y1="143" x2={x} y2={y} stroke={color} strokeWidth="3" markerEnd={`url(#${id}-${j}-${i})`}/><circle cx={x+(f.x<0?-14:f.x>0?14:19)} cy={y+(f.y<0?9:-9)} r="9" fill="#17374d" stroke={color}/><text x={x+(f.x<0?-14:f.x>0?14:19)} y={y+(f.y<0?13:-5)} textAnchor="middle" style={{fill:color}}>{i+1}</text></g>})}
+ {nonzero.length===0&&<text x="180" y="200" textAnchor="middle">No applied force</text>}<text x="180" y="278" textAnchor="middle">Right +x · up +y · one shared force scale</text>
+ </svg><ol className={s.forceList}>{g.forces.map((f,i)=><li key={i}><i style={{background:forceColors[i%forceColors.length]}}/><span>{i+1}. {f.label}</span><b>{fmt(Math.hypot(f.x,f.y))} N</b></li>)}</ol><p className={s.netForce}>Net components: {fmt(net.x)} N right · {fmt(net.y)} N up</p></div>})}</div><p className={s.forceNote}>Each arrow is an interaction on the named object. Arrow length shows magnitude. Net force is the vector sum, not another interaction.</p></div>
+}

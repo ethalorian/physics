@@ -73,6 +73,8 @@ export function deriveSectionTitle(page: LessonPage, index: number, pageCount: n
 
 function blockTitle(b: ContentBlock): string | null {
   switch (b.type) {
+    case 'interactive_question':
+      return b.task.title
     case 'target':
       return b.statement || null
     case 'prose':

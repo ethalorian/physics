@@ -1,3 +1,4 @@
+import { ownerEmailsFor } from '@/lib/identity-aliases'
 import { supabaseAdmin } from '@/lib/supabase'
 
 // Supabase caps responses at 1,000 rows; monthly activity and rosters can exceed it.
@@ -13,7 +14,7 @@ export async function bountyRows<T>(page: (from: number, to: number) => PromiseL
 
 export async function bountyRoster(email: string) {
   const courses = await bountyRows((from, to) => supabaseAdmin.from('courses')
-    .select('id, name, section').eq('teacher_email', email).order('id').range(from, to))
+    .select('id, name, section').in('teacher_email', ownerEmailsFor(email)).order('id').range(from, to))
   const ids = courses.map(c => c.id)
   const enrollments = ids.length ? await bountyRows((from, to) => supabaseAdmin.from('course_students')
     .select('course_id, student_id').in('course_id', ids).eq('enrollment_state', 'ACTIVE')

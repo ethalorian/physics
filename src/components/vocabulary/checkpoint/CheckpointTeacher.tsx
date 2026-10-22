@@ -1,11 +1,12 @@
 'use client'
+import { useAssessmentReviewGuard } from '@/components/admin/useAssessmentReviewGuard'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { ArrowRight, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { checkpointScore, checkpointStatus, type CheckpointQuestion, type StoredCheckpointAttempt } from '@/lib/vocab-checkpoint'
 import type { VocabMasteryTask } from '@/lib/vocab-mastery'
-import CheckpointBuilder, { CheckpointQuestionEditor } from './CheckpointBuilder'
 import { checkpointRequest } from './CheckpointWork'
 import { CheckpointResult } from './CheckpointStudent'
 import CheckpointScene from './CheckpointScene'
@@ -14,11 +15,10 @@ import s from './checkpoint.module.css'
 interface Data { students:{studentId:string;name:string}[];attempts:StoredCheckpointAttempt[];questions:CheckpointQuestion[];words:string[] }
 const labels=['No evidence','Limited','Developing','Mostly clear','Precise']
 const statuses=['Not started','In progress','Needs scoring','Ready to release','Graded']
-export default function CheckpointTeacher({tasks,classId,unitId,nameFilter,onSaved,onMastery,initialTaskId}: {tasks:VocabMasteryTask[];classId:string|null;unitId:string;nameFilter:string;onSaved:()=>Promise<void>;onMastery:(task:string,student:string)=>void;initialTaskId?:string}) {
- const [taskId,setTaskId]=useState(initialTaskId??''),[data,setData]=useState<Data|null>(null),[screen,setScreen]=useState<'dashboard'|'setup'|'review'|'retake'>('dashboard')
- const [studentId,setStudentId]=useState(''),[query,setQuery]=useState(''),[filter,setFilter]=useState('all'),[index,setIndex]=useState(0),[autoNext,setAutoNext]=useState(true)
+export default function CheckpointTeacher({tasks,nameFilter,onSaved,onMastery,initialTaskId,initialStudentId}: {tasks:VocabMasteryTask[];classId:string|null;unitId:string;nameFilter:string;onSaved:()=>Promise<void>;onMastery:(task:string,student:string)=>void;initialTaskId?:string;initialStudentId?:string}) {
+ const [taskId,setTaskId]=useState(initialTaskId??''),[data,setData]=useState<Data|null>(null),[screen,setScreen]=useState<'dashboard'|'review'>(initialStudentId?'review':'dashboard')
+ const [studentId,setStudentId]=useState(initialStudentId??''),[query,setQuery]=useState(''),[filter,setFilter]=useState('all'),[index,setIndex]=useState(0),[autoNext,setAutoNext]=useState(!initialStudentId)
  const [error,setError]=useState(''),[notice,setNotice]=useState(''),[loading,setLoading]=useState(false),[busy,setBusy]=useState(false),[note,setNote]=useState('')
- const [retake,setRetake]=useState<CheckpointQuestion[]>([]),[retakeApproved,setRetakeApproved]=useState(false)
  const saving=useRef(false),generation=useRef(0),heading=useRef<HTMLHeadingElement>(null)
  const task=tasks.find(t=>t.id===taskId)??tasks[0]
  const selectedTaskId=task?.id
@@ -33,7 +33,7 @@ export default function CheckpointTeacher({tasks,classId,unitId,nameFilter,onSav
   // eslint-disable-next-line react-hooks/exhaustive-deps
   generation.current++
  }},[load])
- const students=data?.students.slice().sort((a,b)=>a.name.localeCompare(b.name)).filter(a=>a.name.toLowerCase().includes(`${nameFilter}`.toLowerCase())&&a.name.toLowerCase().includes(query.toLowerCase())).map(st=>{
+ const students=data?.students.slice().sort((a,b)=>a.name.localeCompare(b.name)).filter(a=>(!initialStudentId||a.studentId===initialStudentId)&&a.name.toLowerCase().includes(`${nameFilter}`.toLowerCase())&&a.name.toLowerCase().includes(query.toLowerCase())).map(st=>{
   const attempts=data.attempts.filter(a=>a.user_id===st.studentId).map(a=>({...a,name:st.name,knowledge:task?.progress.find(p=>p.studentId===st.studentId)?.review?.level as 1|2|3|null??null}))
   const latest=attempts[0]
   const best=attempts.filter(a=>a.released).sort((a,b)=>checkpointScore(b.questions,b).points!-checkpointScore(a.questions,a).points!)[0]
@@ -43,6 +43,7 @@ export default function CheckpointTeacher({tasks,classId,unitId,nameFilter,onSav
  const questions=attempt?.questions??[],writing=questions.filter(q=>q.part==='explain'),current=writing[index]
  const score=attempt?checkpointScore(questions,attempt):null
  const savedNote=current&&attempt?attempt.notes[current.id]??'':''
+ useAssessmentReviewGuard(busy || note !== savedNote)
  useEffect(()=>{setNote(savedNote);heading.current?.focus({preventScroll:true});heading.current?.scrollIntoView({block:'start'})},[attempt?.id,current?.id,savedNote])
  function open(id:string){const a=data?.attempts.find(a=>a.user_id===id);setStudentId(id);setIndex(Math.max(0,a?.questions.filter(q=>q.part==='explain').findIndex(q=>a.scores[q.id]===undefined)??0));setScreen('review');setError('');setNotice('')}
  async function mutate(action:string,payload:Record<string,unknown>={}) {
@@ -53,15 +54,13 @@ export default function CheckpointTeacher({tasks,classId,unitId,nameFilter,onSav
    setData(d=>d&&({...d,attempts:[updated,...d.attempts.filter(a=>a.id!==updated.id)]}))
    if(action==='score'){setNotice(`Saved ${payload.points}/4 for ${student?.name}.`);if(autoNext&&index===0)setIndex(1)}
    if(action==='release'){setNotice(`Grade released to ${student?.name}.`);await onSaved()}
-   if(action==='retake'){setNotice(`Reassessment assigned to ${student?.name}. Earlier grades are retained.`);setScreen('dashboard');await onSaved()}
   }catch(e){setError((e as Error).message)}finally{saving.current=false;setBusy(false)}
  }
- if(screen==='setup')return <CheckpointBuilder classId={classId} unitId={unitId} onCancel={()=>setScreen('dashboard')} onAssigned={id=>{setTaskId(id);setScreen('dashboard');setNotice('Checkpoint assigned. Students can open it from Home.');void onSaved()}}/>
  return <section className={s.app} aria-label="Vocabulary checkpoints">
- <div className={s.pageHeading}><div><p className={s.eyebrow}>CONTROL ROOM / VOCABULARY</p><h2 className="text-title-1">Vocabulary checkpoints</h2><p>A quiz grade from recognition, interpretation, and clear explanations.</p></div><Button size="lg" disabled={busy} onClick={()=>{setScreen('setup');setError('')}}>New checkpoint</Button></div>
- <div className={s.tableTools}><label className={s.field}>Checkpoint<select value={task?.id??''} disabled={busy} onChange={e=>{setTaskId(e.target.value);setData(null);setScreen('dashboard');setNotice('')}}><option value="" disabled>Choose checkpoint…</option>{tasks.map(t=><option key={t.id} value={t.id}>{t.title} · {t.courseLabel}{t.active?'':' · Archived'}</option>)}</select></label><Button size="lg" variant="outline" disabled={busy||loading} onClick={()=>{void load();void onSaved()}}>Refresh</Button>{screen!=='dashboard'&&<Button size="lg" variant="outline" disabled={busy} onClick={()=>setScreen('dashboard')}>Back to dashboard</Button>}</div>
+ <div className={s.pageHeading}><div><p className={s.eyebrow}>CONTROL ROOM / VOCABULARY</p><h2 className="text-title-1">Earlier checkpoint records</h2><p>Review existing responses and grades. Create new vocabulary assessments in Quizzes.</p></div>{!initialStudentId&&<Button size="lg" asChild><Link href="/admin/control-room?view=quizzes">Create vocabulary quiz</Link></Button>}</div>
+ <div className={s.tableTools}><label className={s.field}>Checkpoint<select value={task?.id??''} disabled={busy} onChange={e=>{setTaskId(e.target.value);setData(null);setScreen('dashboard');setNotice('')}}><option value="" disabled>Choose checkpoint…</option>{tasks.map(t=><option key={t.id} value={t.id}>{t.title} · {t.courseLabel}{t.active?'':' · Archived'}</option>)}</select></label><Button size="lg" variant="outline" disabled={busy||loading} onClick={()=>{void load();void onSaved()}}>Refresh</Button>{!initialStudentId&&screen!=='dashboard'&&<Button size="lg" variant="outline" disabled={busy} onClick={()=>setScreen('dashboard')}>Back to dashboard</Button>}</div>
  {error&&<p role="alert" className={s.guidance}>{error}</p>}<p role="status">{notice||(loading?'Loading checkpoint progress…':'')}</p>
- {!task&&<Card className={s.paddedCard}><h3 className="text-title-2">Ready for your first checkpoint</h3><p>Select your words and Knowledge target, review the ten questions, then assign to your class.</p></Card>}
+ {!task&&<Card className={s.paddedCard}><h3 className="text-title-2">No earlier checkpoint records</h3><p>Use Quizzes to create a vocabulary quiz for your class.</p></Card>}
  {task&&data&&screen==='dashboard'&&<>
  <div className={s.stats}>{[{n:students.length,label:'Assigned',value:'all'},...['Needs scoring','Ready to release','Graded'].map(value=>({n:students.filter(st=>st.status===value).length,label:value,value}))].map(c=><Button key={c.value} variant="outline" className={s.stat} aria-pressed={filter===c.value} onClick={()=>setFilter(c.value)}><strong>{c.n}</strong><span>{c.label}</span></Button>)}</div>
  <Card className={s.dashboardCard}><div className={s.tableHeading}><div><h3 className="text-title-2">{task.title}</h3><p>{task.term_ids.length} words · 10 questions · 20 points{task.due_on?` · Due ${task.due_on}`:''}</p></div><Button size="lg" disabled={!students.some(st=>st.status==='Needs scoring')} onClick={()=>open(students.find(st=>st.status==='Needs scoring')!.studentId)}>Grade next <ArrowRight/></Button></div>
@@ -70,7 +69,7 @@ export default function CheckpointTeacher({tasks,classId,unitId,nameFilter,onSav
  {!students.filter(st=>filter==='all'||st.status===filter).length&&<p className={s.empty}>No students match this view.</p>}<p className={s.tableFoot}>Final grades appear after release. Reassessments retain the higher released score. Unscored work stays pending.</p></Card></>}
  {task&&student&&attempt&&screen==='review'&&<div className={s.reviewLayout}><aside className={s.roster}><h3>Students</h3>{students.map(st=><Button size="lg" key={st.studentId} className={s.rosterButton} variant="outline" aria-pressed={st.studentId===studentId} disabled={busy||!st.latest?.submitted} onClick={()=>open(st.studentId)}><strong>{st.name}</strong><span>{st.status}</span></Button>)}</aside><div className={s.stack}>
  <div className={s.between}><div><p className={s.eyebrow}>GRADING VOCABULARY</p><h3 ref={heading} tabIndex={-1} className="text-title-1">{student.name}</h3></div><label className={s.toggle}><input type="checkbox" checked={autoNext} onChange={e=>setAutoNext(e.target.checked)}/> Next explanation after scoring</label></div>
- {attempt.released?<><div className={s.actions}><Button size="lg" onClick={()=>onMastery(task.id,student.studentId)}>Rate Knowledge mastery <ArrowRight/></Button><Button size="lg" variant="outline" disabled={!task.active} onClick={()=>{setRetake(attempt.questions.map(q=>({...q})));setRetakeApproved(false);setScreen('retake')}}>Assign reassessment</Button></div><CheckpointResult state={{title:task.title}} gradeLabel={attempt.number>1?'This attempt':'Quiz grade'} attempt={attempt} questions={questions}/></>:current&&<>
+ {attempt.released?<><div className={s.actions}><Button size="lg" onClick={()=>onMastery(task.id,student.studentId)}>Rate Knowledge mastery <ArrowRight/></Button><Button size="lg" variant="outline" asChild><Link href="/admin/control-room?view=quizzes">Create reassessment in Quizzes</Link></Button></div><CheckpointResult state={{title:task.title}} gradeLabel={attempt.number>1?'This attempt':'Quiz grade'} attempt={attempt} questions={questions}/></>:current&&<>
  <div className={s.actions}>{writing.map((q,i)=><Button key={q.id} size="lg" variant="outline" aria-pressed={i===index} disabled={busy} onClick={()=>setIndex(i)}>Explanation {i+1} · {attempt.scores[q.id]===undefined?'Not scored':`${attempt.scores[q.id]}/4`}</Button>)}</div>
  <Card className={s.paddedCard}><h4 className="text-title-2">{current.prompt}</h4>{current.scene&&<details className={s.support}><summary>Show question diagram</summary><CheckpointScene kind={current.scene}/></details>}<div className={s.response}><span>Student response</span><p>{attempt.answers[current.id]}</p></div><details className={s.support}><summary>Answer guide & scoring rubric</summary><p>{current.explanation}</p><p><strong>Meaning (0–2):</strong> 0 incorrect or absent; 1 partly accurate; 2 accurate.</p><p><strong>Application (0–2):</strong> 0 no valid connection; 1 partial connection; 2 specific, correct connection.</p><p>Add both parts for the score below. Score understanding; do not deduct for minor grammar or spelling.</p></details>
  <details className={s.support}><summary>Add feedback (optional)</summary><label className={s.field}>Feedback (saved with your score)<textarea value={note} maxLength={2000} rows={2} disabled={busy} onChange={e=>setNote(e.target.value)}/></label></details>
@@ -80,6 +79,5 @@ export default function CheckpointTeacher({tasks,classId,unitId,nameFilter,onSav
  {student.attempts.length>1&&<details className={s.support}><summary>Attempt history</summary>{student.attempts.map(a=><p key={a.id}>Attempt {a.number}: {a.released?`${checkpointScore(a.questions,a).percent}% released ${new Date(a.released_at!).toLocaleDateString()}`:checkpointStatus(a.questions,a)}</p>)}</details>}
  <Button size="lg" variant="outline" disabled={busy||!students.some(st=>st.studentId!==studentId&&st.status==='Needs scoring')} onClick={()=>open(students.find(st=>st.studentId!==studentId&&st.status==='Needs scoring')!.studentId)}>Next student to grade <ArrowRight/></Button>
  </div></div>}
- {task&&student&&screen==='retake'&&<Card className={s.paddedCard}><h3 className="text-title-1">Fresh situations for {student.name}</h3><p>Keep the same words, difficulty and 20-point blueprint. Change all four interpretation contexts and both explanation situations. The previous attempt remains in the history; the higher released grade is retained.</p><CheckpointQuestionEditor questions={retake} words={task.words.map(w=>w.term)} disabled={busy} onChange={q=>{setRetake(q);setRetakeApproved(false)}}/><label className={s.toggle}><input type="checkbox" checked={retakeApproved} onChange={e=>setRetakeApproved(e.target.checked)}/> I checked that these new situations assess the same understanding at equivalent difficulty.</label><Button size="lg" disabled={busy||!retakeApproved} onClick={()=>void mutate('retake',{questions:retake})}>Assign this reassessment</Button></Card>}
  </section>
 }

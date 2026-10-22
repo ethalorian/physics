@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { teachingHref } from '@/lib/teaching-navigation'
 import { ArrowRight, Check, ClipboardCheck, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -77,6 +78,7 @@ export default function ObservationPage() {
   const requestedTarget = useRef('')
   useEffect(() => {
     const query = new URLSearchParams(window.location.search)
+    if (query.get('unit') && !['all', 'unmapped'].includes(query.get('unit')!)) setUnit(query.get('unit')!)
     requestedStudent.current = query.get('student') ?? ''
     requestedTarget.current = query.get('target') ?? ''
     if (query.get('class')) setClassScope(query.get('class'))
@@ -222,7 +224,7 @@ export default function ObservationPage() {
     <div className={styles.page}>
       <header className={styles.header}>
         <h1 className="text-title-1 flex items-center gap-2"><ClipboardCheck aria-hidden />Classroom observations</h1>
-        <Button asChild variant="outline" className="min-h-12"><Link href="/admin/command-center">Command Center</Link></Button>
+        <Button asChild variant="outline" className="min-h-12"><Link href={teachingHref('live', classId ?? '', grid?.unitId ?? unit)}>Live classroom</Link></Button>
       </header>
       <fieldset disabled={busy} className={styles.scope}>
         <legend className="sr-only">Class and unit</legend>

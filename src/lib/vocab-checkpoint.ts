@@ -1,5 +1,7 @@
+import {validateDemand,type AssessmentDemand} from '@/lib/assessment-demand'
 /** Checkpoint scoring model. Practice and Knowledge ratings never enter the quiz calculation. */
 export interface CheckpointQuestion {
+  demand?:AssessmentDemand
   id: string
   part: 'recognize' | 'interpret' | 'explain'
   prompt: string
@@ -100,7 +102,7 @@ export function validateCheckpointQuestions(value: unknown, terms: string[]): Ch
       (q.scene !== undefined && !['roundtrip', 'track'].includes(q.scene))) throw new Error(`Complete question ${i + 1}, its assessed words, and its answer guide.`)
     keys.add(q.id)
     if (part !== 'explain' && (!Array.isArray(q.options) || q.options.length !== 4 || q.options.some(o => typeof o !== 'string' || !o.trim() || o.length > 500) || new Set(q.options.map(o => o.trim().toLowerCase())).size !== 4 || !Number.isInteger(q.answer) || q.answer! < 0 || q.answer! > 3)) throw new Error(`Question ${i + 1} needs four different choices and one correct answer.`)
-    return { id: q.id, part, points, prompt: q.prompt.trim(), words: q.words, explanation: q.explanation.trim(), ...(part !== 'explain' ? { options: q.options, answer: q.answer } : { frame: q.frame }), ...(q.scene ? { scene: q.scene } : {}) }
+    return { demand:validateDemand(q.demand), id: q.id, part, points, prompt: q.prompt.trim(), words: q.words, explanation: q.explanation.trim(), ...(part !== 'explain' ? { options: q.options, answer: q.answer } : { frame: q.frame }), ...(q.scene ? { scene: q.scene } : {}) }
   })
   if (terms.some(t => !questions.some(q => q.words.some(w => w.toLocaleLowerCase() === t.toLocaleLowerCase())))) throw new Error('Every selected word must appear in at least one assessed question.')
   return questions

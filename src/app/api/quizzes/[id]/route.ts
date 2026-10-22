@@ -1,3 +1,8 @@
+import { calendarAssigned, CALENDAR_ASSIGNMENT_MESSAGE } from '@/lib/calendar-assignment'
+import {after} from 'next/server'
+import {processQuizSubmission,quizGradingModel} from '@/lib/quizzes/grading-server'
+import {quizAiClaimable,type QuizAiReview} from '@/lib/quizzes/grading'
+export const maxDuration=180
 import {withAuth} from '@/lib/api-auth'
 import {supabaseAdmin} from '@/lib/supabase'
 import {accessQuiz,quizJson,quizRows,quizRoster,quizStaff,quizRpcError,quizListWork} from '@/lib/quizzes/server'
@@ -16,8 +21,12 @@ export const GET=withAuth<{id:string}>(async(_req,ctx)=>{
  const reviews=submissions.length?await quizRows<QuizReview>((a,b)=>supabaseAdmin.from('quiz_reviews').select('id,submission_id,decision,scores,ratings,note,question_notes,earned,possible,grade_mode,grade_value,reviewed_at').in('submission_id',submissions.map(s=>s.id)).order('reviewed_at',{ascending:false}).order('id').range(a,b)):[]
  // Reviewed keys are released only with a final grade for that immutable attempt.
  const drafts=staff&&submissions.length?await quizRows((a,b)=>supabaseAdmin.from('quiz_review_drafts').select('submission_id,version,payload').in('submission_id',submissions.map(s=>s.id)).order('submission_id').range(a,b)):[]
+ const ai=staff&&submissions.length?await quizRows<QuizAiReview>((a,b)=>supabaseAdmin.from('quiz_ai_reviews').select('submission_id,status,result,error,model,locked_until,updated_at').in('submission_id',submissions.map(s=>s.id)).order('submission_id').range(a,b)):[]
+ const current=new Set(allWork.filter(w=>w.state==='submitted').map(w=>w.submission_id))
+ const resume=ai.filter(a=>current.has(a.submission_id)&&quizAiClaimable(a)).slice(0,2)
+ if(staff&&!ctx.viewingAsTeacher&&process.env.ANTHROPIC_API_KEY&&resume.length)after(async()=>{await Promise.allSettled(resume.map(a=>processQuizSubmission(a.submission_id)))})
  const graded=new Set(reviews.filter(r=>r.decision==='graded').map(r=>r.submission_id))
- return quizJson({drafts,staff,readOnly:ctx.viewingAsTeacher,quiz:staff?quiz:studentQuiz(quiz),students,work:allWork.filter(w=>users.includes(w.user_id)),submissions:staff?submissions:submissions.map(s=>({...s,snapshot:graded.has(s.id)?{...studentQuiz(s.snapshot),questions:s.snapshot.questions}:studentQuiz(s.snapshot)})),reviews,targets})
+ return quizJson({... (staff?{ai,claudeConfigured:!!process.env.ANTHROPIC_API_KEY,claudeModel:quizGradingModel()}:{}),drafts,staff,readOnly:ctx.viewingAsTeacher,quiz:staff?quiz:studentQuiz(quiz),students,work:allWork.filter(w=>users.includes(w.user_id)),submissions:staff?submissions:submissions.map(s=>({...s,snapshot:graded.has(s.id)?{...studentQuiz(s.snapshot),questions:s.snapshot.questions}:studentQuiz(s.snapshot)})),reviews,targets})
 })
 export const POST=withAuth<{id:string}>(async(req,ctx)=>{
  const {id}=await ctx.params;if(!QUIZ_UUID.test(id))return quizJson({error:'Quiz unavailable.'},404)
@@ -28,6 +37,7 @@ export const POST=withAuth<{id:string}>(async(req,ctx)=>{
   if(ctx.viewingAsTeacher)return quizJson({error:'Return to your own account before grading.'},403)
   if(b.action==='archive'||b.action==='reopen'){
    if(Object.keys(b).some(k=>!['action','version'].includes(k))||!Number.isInteger(b.version)||b.version<1||b.version>=2147483647)return quizJson({error:'Reload this quiz before continuing.'},400)
+   if(b.action==='reopen'&&!calendarAssigned(true,access.quiz.due_at))return quizJson({error:CALENDAR_ASSIGNMENT_MESSAGE},409)
    const from=b.action==='archive'?'published':'archived',to=b.action==='archive'?'archived':'published'
    if(access.quiz.status===to&&access.quiz.version===b.version+1)return quizJson({ok:true})
    if(access.quiz.status!==from)return quizJson({error:'Quiz status changed. Refresh before continuing.'},409)
@@ -46,5 +56,7 @@ export const POST=withAuth<{id:string}>(async(req,ctx)=>{
  if(!Number.isInteger(b.version)||b.version<0||!QUIZ_UUID.test(b.request_id??''))return quizJson({error:'Reload this quiz before continuing.'},400)
  let answers;try{answers=validateAnswers(b.answers,access.quiz.questions,b.action==='submit')}catch(e){return quizJson({error:(e as Error).message},400)}
  const {data,error}=await supabaseAdmin.rpc('quiz_student_action',{p_quiz:id,p_user:ctx.userId,p_action:b.action,p_answers:answers,p_version:b.version,p_request:b.request_id})
- return error?quizRpcError(error):quizJson({work:data})
+ if(error)return quizRpcError(error)
+ if(b.action==='submit')after(async()=>{try{await processQuizSubmission(b.request_id)}catch{console.warn('[quiz-grading] Saved submission remains pending analysis.')}})
+ return quizJson({work:data})
 })

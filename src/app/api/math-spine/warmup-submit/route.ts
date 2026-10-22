@@ -1,3 +1,5 @@
+import { schoolDayKey } from '@/lib/school-day'
+import { hasCalendarWarmup } from '@/lib/calendar-warmups-server'
 import { getMathXpStatus } from '@/lib/math-xp-status'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
@@ -6,12 +8,14 @@ import { checkAnswerWithMode } from '@/lib/math-answer-check'
 import { hasMathWork, summarizeMathResponse, validateMathResponse } from '@/lib/math-response'
 import { matchSlip, type Slip } from '@/lib/math-misconceptions'
 import type { ItemTemplate } from '@/lib/math-item-template'
+import { MATH_WARMUP_SCHEDULE_MESSAGE } from '@/lib/math-warmup-schedule'
 
 export const POST = withAuth(async (request, ctx) => {
   if (ctx.role !== 'student') return NextResponse.json({ error: 'Student submissions only' }, { status: 403 })
+  if (!await hasCalendarWarmup(ctx.userId)) return NextResponse.json({ error: MATH_WARMUP_SCHEDULE_MESSAGE }, { status: 409 })
   const body = await request.json()
   if (typeof body.instance_id !== 'string' || !validateMathResponse(body.response_json)) return NextResponse.json({ error: 'Reload the task and enter valid work before submitting.' }, { status: 400 })
-  const { data: instance, error } = await supabaseAdmin.from('math_warmup_instances').select('id,item,checking').eq('id', body.instance_id).eq('user_id', ctx.userId).maybeSingle()
+  const { data: instance, error } = await supabaseAdmin.from('math_warmup_instances').select('id,item,checking').eq('id', body.instance_id).eq('user_id', ctx.userId).eq('school_day',schoolDayKey()).maybeSingle()
   if (error) return NextResponse.json({ error: 'Could not load the task. Please retry.' }, { status: 503 })
   if (!instance) return NextResponse.json({ error: 'Task not found' }, { status: 404 })
   const r = { ...body.response_json, needsGraph: instance.item.needsGraph === true }

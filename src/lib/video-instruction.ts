@@ -34,6 +34,12 @@ export function lessonsForVideo(video: PhysicsVideo, lessons: VideoLessonLink[],
     isVideoInstructionEntry(lesson.learning) && lesson.learning?.videoIds.includes(video.youtubeId))
     .sort((a, b) => Number(b.published !== false) - Number(a.published !== false))
 }
+/** Watching uses the published, server-scoped catalog independently of assignments. */
+export function watchLessonsForVideo(video: PhysicsVideo, lessons: VideoLessonLink[], staff = false): VideoLessonLink[] {
+  return lessons.filter(lesson => (staff || lesson.published !== false) &&
+    isVideoInstructionEntry(lesson.learning) && lesson.learning?.videoIds.includes(video.youtubeId))
+    .sort((a, b) => Number(b.published !== false) - Number(a.published !== false))
+}
 export function videoBlock(video: PhysicsVideo) {
   return { id: `video-${video.youtubeId}`, type: 'instruction_video' as const, youtubeId: video.youtubeId, title: video.title, summary: video.summary, ...(video.durationSeconds ? {durationSeconds:video.durationSeconds} : {}) }
 }

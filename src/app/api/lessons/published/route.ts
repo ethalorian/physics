@@ -12,6 +12,8 @@ import { withAuth } from '@/lib/api-auth'
 import { getStudentProgram, getProgramUnitIds, asProgram, PROGRAM_LABEL, type Program } from '@/lib/program'
 import { filterDocumentForViewer, effectiveTrack, isLessonVisible } from '@/lib/track-visibility'
 import type { BlockDocument } from '@/data/content-blocks'
+import { isVideoLesson } from '@/lib/video-lesson-workspace'
+import { videoWatchHref } from '@/lib/video-watch'
 
 interface LessonListRow extends AccessibleLesson {
   description?: string | null
@@ -138,7 +140,9 @@ export const GET = withAuth(async (request, ctx) => {
     if (isStudent && userId && visibleLessons.length > 0) {
       const statuses = await getStudentLessonWindowStatuses(userId)
       Object.assign(windowStatuses, statuses)
-      visibleLessons = visibleLessons.filter((l) => statuses[l.id] !== undefined && statuses[l.id].state !== 'scheduled' && isLessonVisible(l.visibility_track, { role: 'student', track: studentTrack }))
+      visibleLessons = visibleLessons.filter((l) => isLessonVisible(l.visibility_track, { role: 'student', track: studentTrack }) &&
+        (isVideoLesson(filterDocumentForViewer(l.content_blocks ?? {schemaVersion:1,blocks:[]}, {role:'student',track:studentTrack})) ||
+          (statuses[l.id] !== undefined && statuses[l.id].state !== 'scheduled')))
     }
 
     const progressLessons = [...new Map([...visibleLessons,...mapLessons].map(l=>[l.id,l])).values()]
@@ -182,6 +186,7 @@ export const GET = withAuth(async (request, ctx) => {
         id: lesson.id, title: lesson.title, slug: lesson.slug, description: lesson.description,
         unit: lesson.unit, unit_id: lesson.unit_id, lesson_number: lesson.lesson_number,
         lesson_type: lesson.lesson_type || 'markdown',
+        ...(isVideoLesson(lesson.content_blocks) ? {watchHref:videoWatchHref(lesson.slug)} : {}),
         estimated_time: lesson.estimated_time, objectives: lesson.objectives ?? [],
         learning: physicsLearningEntry({ ...lesson, content_blocks: lesson.content_blocks ? filterDocumentForViewer(lesson.content_blocks, isObserver ? {role:'admin'} : {role:'student',track:studentTrack}) : undefined }, learningTargets),
         completion: completion[lesson.id], progress: progress[lesson.id] || 0, window: windowStatuses[lesson.id] ?? null,

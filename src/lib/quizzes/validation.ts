@@ -1,4 +1,6 @@
+import {validateDemand} from '@/lib/assessment-demand'
 import {MCAS_ID} from '@/lib/mcas/types'
+import {quizScheduleError} from '@/lib/quiz-schedule'
 import {LETTER_GRADES,QUIZ_UUID,type Quiz,type QuizAnswers,type QuizQuestion,type ProblemAnswer} from './types'
 import {PROBLEM_STAGES,validateProblemStage,stageHasEvidence} from '@/lib/problem-response'
 const object=(v:unknown):v is Record<string,unknown>=>!!v&&typeof v==='object'&&!Array.isArray(v)
@@ -6,6 +8,8 @@ const text=(v:unknown,max:number,required=true):v is string=>typeof v==='string'
 export function validateQuiz(v:unknown):Quiz {
  if(!object(v)||!QUIZ_UUID.test(String(v.id))||!QUIZ_UUID.test(String(v.course_id))||!text(v.title,160)||!text(v.instructions,3000,false)||!['vocabulary','understanding','mixed'].includes(String(v.kind))||!['numeric','letter','credit'].includes(String(v.grade_mode))||!['draft','published'].includes(String(v.status))||!Number.isInteger(v.version)||Number(v.version)<0)throw Error('Choose a class, title, quiz type, and grading format.')
  if(v.due_at!==null&&(!text(v.due_at,40)||!Number.isFinite(Date.parse(v.due_at))))throw Error('Choose a valid due date or leave it empty.')
+ const scheduleError=quizScheduleError(v.due_at as string|null,v.kind==='vocabulary'?'vocabulary':'regular')
+ if(scheduleError)throw Error(scheduleError)
  if(v.source_quiz_id!==null&&!QUIZ_UUID.test(String(v.source_quiz_id)))throw Error('Invalid reassessment link.')
  if(v.student_ids!==null&&(!Array.isArray(v.student_ids)||!v.student_ids.length||v.student_ids.length>1000||v.student_ids.some(id=>typeof id!=='string'||!QUIZ_UUID.test(id))))throw Error('Choose students or assign the whole class.')
  if(v.language_level!=null&&!['cpa','honors'].includes(String(v.language_level))||v.sei_supports!=null&&typeof v.sei_supports!=='boolean')throw Error('Choose CPA or Honors and a valid SEI support setting.')
@@ -14,7 +18,7 @@ export function validateQuiz(v:unknown):Quiz {
  const seen=new Set<string>()
  const questions=v.questions.map((raw,i)=>{
   if(!object(raw)||!QUIZ_UUID.test(String(raw.id))||seen.has(String(raw.id))||!['choice','written','problem'].includes(String(raw.kind))||!text(raw.prompt,3000,published)||!text(raw.guide,3000,published)||!(raw.target_id===''&&!published||QUIZ_UUID.test(String(raw.target_id)))||!Number.isInteger(raw.points)||Number(raw.points)<1||Number(raw.points)>20)throw Error(`Question ${i+1} needs a prompt, answer guide, learning target, and 1–20 points.`)
-  seen.add(String(raw.id));const q:QuizQuestion={id:String(raw.id),kind:raw.kind as QuizQuestion['kind'],prompt:raw.prompt.trim(),guide:raw.guide.trim(),target_id:String(raw.target_id),points:Number(raw.points)}
+  seen.add(String(raw.id));const q:QuizQuestion={demand:validateDemand(raw.demand),id:String(raw.id),kind:raw.kind as QuizQuestion['kind'],prompt:raw.prompt.trim(),guide:raw.guide.trim(),target_id:String(raw.target_id),points:Number(raw.points)}
   if(raw.mcas_id!==undefined){if(typeof raw.mcas_id!=='string'||!MCAS_ID.test(raw.mcas_id))throw Error('Invalid MCAS question reference.');q.mcas_id=raw.mcas_id}
   if(q.kind==='choice'){
    if(!Array.isArray(raw.options)||raw.options.length<2||raw.options.length>6||raw.options.some(o=>!text(o,800,published))||(published&&new Set(raw.options.map(o=>String(o).trim().toLowerCase())).size!==raw.options.length)||!Number.isInteger(raw.correct_index)||Number(raw.correct_index)<(published?0:-1)||Number(raw.correct_index)>=raw.options.length)throw Error(`Question ${i+1} needs distinct choices and one correct answer.`)

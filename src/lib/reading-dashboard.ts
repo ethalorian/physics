@@ -17,8 +17,8 @@ export interface ReadingDashboardGroup {
   source: string
   resources: ReadingDashboardResource[]
 }
-export function readingDashboardHref({ view = 'overview', courseId, stepId, resource, id, create }: {
-  view?: ReadingDashboardView; courseId?: string | null; stepId?: string; resource?: ReadingResourceKind; id?: string; create?: boolean
+export function readingDashboardHref({ view = 'overview', courseId, stepId, resource, id, create, book, chapter }: {
+  view?: ReadingDashboardView; courseId?: string | null; stepId?: string; resource?: ReadingResourceKind; id?: string; create?: boolean; book?: 'hewitt' | 'openstax'; chapter?: string
 } = {}) {
   const params = new URLSearchParams({ view })
   if (courseId && courseId !== 'all') params.set('course_id', courseId)
@@ -26,6 +26,8 @@ export function readingDashboardHref({ view = 'overview', courseId, stepId, reso
   if (resource) params.set('resource', resource)
   if (id) params.set(resource === 'practice' ? 'task_id' : 'id', id)
   if (create) params.set('create', '1')
+  if (book) params.set('book', book)
+  if (chapter) params.set('ch', chapter)
   return `/admin/readings?${params}`
 }
 
@@ -35,7 +37,7 @@ export function readingDashboardGroups(syllabus: SyllabusCatalog | null, reading
   const quizMap = new Map(quizzes?.quizzes.map(q => [q.id, q]))
   const linked = new Set(syllabus?.bundles.map(b => b.reading_id))
   const groups: ReadingDashboardGroup[] = (syllabus?.bundles ?? []).map(bundle => {
-    const step = syllabus?.steps.find(s => s.id === bundle.step_id)
+    const step = [...(syllabus?.steps ?? []), ...(syllabus?.textbookSteps ?? [])].find(s => s.id === bundle.step_id)
     const assignment = readingMap.get(bundle.reading_id)
     const resource = (kind: ReadingResourceKind, label: string, value: SyllabusResource): ReadingDashboardResource => ({
       ...value, status: value.id ? value.status : 'unavailable', kind, label,
@@ -60,7 +62,18 @@ export function readingDashboardGroups(syllabus: SyllabusCatalog | null, reading
 
 export function readingResourceStatus(resource: Pick<ReadingDashboardResource, 'status' | 'kind'>) {
   if (resource.status === 'draft') return 'Draft'
-  if (resource.status === 'published') return resource.kind === 'readingQuiz' ? 'Unlocks after reading' : 'Assigned'
-  if (resource.status === 'archived') return 'Archived'
+  if (resource.status === 'published') return 'Assigned'
+  if (resource.status === 'archived') return 'Unassigned'
   return 'Unavailable'
+}
+
+export type ReadingAssignmentFilter = 'published' | 'draft' | 'archived' | 'all'
+/** Filter individual assignments: a linked draft must not appear as assigned. */
+export function filterReadingAssignments(groups: ReadingDashboardGroup[], status: ReadingAssignmentFilter, search = '', kind = 'all') {
+  const query = search.trim().toLowerCase()
+  return groups.flatMap(group => {
+    const matches = `${group.title} ${group.source} ${group.step?.words.map(word => word.term).join(' ') ?? ''}`.toLowerCase().includes(query)
+    const resources = group.resources.filter(resource => resource.id && (status === 'all' || resource.status === status) && (kind === 'all' || resource.kind === kind) && (matches || `${resource.title} ${resource.label}`.toLowerCase().includes(query)))
+    return resources.length ? [{ ...group, resources }] : []
+  })
 }

@@ -1,3 +1,4 @@
+import { studentWarmupDates } from '@/lib/calendar-warmups-server'
 import { getMathXpStatus } from '@/lib/math-xp-status'
 import { mathRemediation, type MathRemediation } from '@/lib/math-remediation'
 import { pendingFreshCheck } from '@/lib/math-student-view'
@@ -9,7 +10,8 @@ import { decayingAverage } from '@/data/curriculum-types'
 import { FLUENT_THRESHOLD } from '@/lib/math-spine'
 import { pickTargetRung, rungState, type PickKind, type RungInput } from '@/lib/math-spine-picker'
 import { instantiateTemplate, type ItemTemplate } from '@/lib/math-item-template'
-import { schoolDayKey, schoolDayKeyFromNumber, schoolDayNumber, schoolDayStart, schoolDayWeekday } from '@/lib/school-day'
+import { schoolDayKey, schoolDayNumber, schoolDayStart } from '@/lib/school-day'
+import { mathWarmupStreak, MATH_WARMUP_SCHEDULE_MESSAGE } from '@/lib/math-warmup-schedule'
 
 // GET /api/math-spine/daily[?user_id=...]
 // The daily-dashboard "to-do": one warm-up problem, chosen by the shared picker
@@ -29,6 +31,11 @@ export const GET = withAuth(async (request, ctx) => {
     return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
   }
   const targetUserId = resolved.userId
+  const now = new Date()
+  const scheduledDays = await studentWarmupDates(targetUserId)
+  if (!scheduledDays.includes(schoolDayKey(now))) {
+    return NextResponse.json({ item: null, alreadySubmitted: false, warmupScheduled: false, scheduledDays, scheduleMessage: MATH_WARMUP_SCHEDULE_MESSAGE })
+  }
 
   // Active competencies.
   const { data: compRows, error: competencyError } = await supabaseAdmin
@@ -119,7 +126,7 @@ export const GET = withAuth(async (request, ctx) => {
   if (pool.length > 0) {
     // Eastern calendar day, not UTC: a UTC day number rolled over at 8pm
     // local and handed the 8:30pm homework crowd tomorrow's problem.
-    const dayNum = schoolDayNumber()
+    const dayNum = schoolDayNumber(now)
     const chosen = pool[dayNum % pool.length]
 
     // Shared prompt, varied numbers: a templated item keeps one problem
@@ -167,18 +174,18 @@ export const GET = withAuth(async (request, ctx) => {
     // One immutable task per student and school day. The server-only checking
     // snapshot keeps the answer key out of all client payloads.
     if (ctx.session?.experience) {
-      const stored = await supabaseAdmin.from('math_warmup_instances').select('id,item').eq('user_id', targetUserId).eq('school_day', schoolDayKey()).maybeSingle()
+      const stored = await supabaseAdmin.from('math_warmup_instances').select('id,item').eq('user_id', targetUserId).eq('school_day', schoolDayKey(now)).maybeSingle()
       if (stored.error) throw stored.error
       if (stored.data) item = { ...stored.data.item, instanceId: stored.data.id }
       // An unissued task is rendered from the same deterministic picker without
       // creating a task on the student's behalf. Submissions remain disabled.
     } else if (ctx.role === 'student') {
       const inserted = await supabaseAdmin.from('math_warmup_instances').upsert({
-        user_id: targetUserId, school_day: schoolDayKey(), item,
+        user_id: targetUserId, school_day: schoolDayKey(now), item,
         checking: { key: answerKey, mode: chosen.check_mode, template: chosen.template, values: templateValues, slips: chosen.misconceptions, fallback: target.misconception_fallback },
       }, { onConflict: 'user_id,school_day', ignoreDuplicates: true })
       if (inserted.error) return NextResponse.json({ error: 'Could not prepare your task. Please retry.' }, { status: 503 })
-      const stored = await supabaseAdmin.from('math_warmup_instances').select('id,item').eq('user_id', targetUserId).eq('school_day', schoolDayKey()).single()
+      const stored = await supabaseAdmin.from('math_warmup_instances').select('id,item').eq('user_id', targetUserId).eq('school_day', schoolDayKey(now)).single()
       if (stored.error) return NextResponse.json({ error: 'Could not load your task. Please retry.' }, { status: 503 })
       item = { ...stored.data.item, instanceId: stored.data.id }
     }
@@ -205,7 +212,7 @@ export const GET = withAuth(async (request, ctx) => {
   let submissionXp: number | null = null
   let remediation: MathRemediation | null = null
   {
-    const dayStart = schoolDayStart()
+    const dayStart = schoolDayStart(now)
     const { data: pend, error: submissionError } = await supabaseAdmin
       .from('math_warmup_submissions')
       .select('id,competency_id,self_check,status,resulting_level')
@@ -226,9 +233,7 @@ export const GET = withAuth(async (request, ctx) => {
     }
   }
 
-  // Day count + streak for the warm-up ribbon. A streak counts consecutive
-  // SCHOOL days (Mon–Fri) with a submission, ending today or the last school
-  // day — a weekend never breaks it, a missed Tuesday does.
+  // Preserve all completed days; streaks only expect Tuesday/Thursday work.
   let dayCount = 0
   let streak = 0
   {
@@ -243,18 +248,7 @@ export const GET = withAuth(async (request, ctx) => {
     // neither doubles nor skips a day.
     const days = new Set((subs ?? []).map((r) => schoolDayKey(new Date(r.submitted_at))))
     dayCount = days.size
-    let dn = schoolDayNumber()
-    const isWeekend = (n: number) => schoolDayWeekday(n) === 0 || schoolDayWeekday(n) === 6
-    // Start from today if submitted today, else from the most recent school day.
-    if (!days.has(schoolDayKeyFromNumber(dn))) {
-      dn -= 1
-      while (isWeekend(dn)) dn -= 1
-    }
-    while (days.has(schoolDayKeyFromNumber(dn))) {
-      streak += 1
-      dn -= 1
-      while (isWeekend(dn)) dn -= 1
-    }
+    streak = mathWarmupStreak((subs ?? []).map(r => r.submitted_at), now)
   }
 
   // Snapshot for the card framing + the ladder strip on the warm-up page.
@@ -281,6 +275,8 @@ export const GET = withAuth(async (request, ctx) => {
 
   return NextResponse.json({
     item,
+    warmupScheduled: true,
+    scheduledDays,
     pickKind,
     ladder,
     alreadySubmitted,

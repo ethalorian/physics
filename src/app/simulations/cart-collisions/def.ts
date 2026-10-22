@@ -21,7 +21,7 @@ export const cartCollisionsDef: SimDefinition = {
     { key: 'pAfter', label: 'Momentum after', unit: 'kg·m/s', precision: 2, color: 'var(--success)' },
     { key: 'keBefore', label: 'KE before', unit: 'J', precision: 2 },
     { key: 'keAfter', label: 'KE after', unit: 'J', precision: 2 },
-    { key: 'keLost', label: 'KE lost to heat', unit: '%', precision: 0 },
+    { key: 'keLost', label: 'KE converted to other forms', unit: '%', precision: 0 },
   ],
   createEngine: createCartCollisionsEngine,
   sensors: [

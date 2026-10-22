@@ -1,7 +1,6 @@
 "use client"
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
-import { useActivityTracking } from '@/contexts/StudentActivityContext'
 
 interface LessonActivityTrackerProps {
   lessonId: string
@@ -10,7 +9,19 @@ interface LessonActivityTrackerProps {
 
 export default function LessonActivityTracker({ lessonId, children }: LessonActivityTrackerProps) {
   const { data: session } = useSession()
-  const { recordLessonView } = useActivityTracking()
+  const userId = session?.user?.id
+  const readOnly = Boolean(session?.experience)
+  const recordLessonView = useCallback(async (id: string, duration?: number) => {
+    if (!userId || readOnly) return
+    try {
+      await fetch('/api/student-activity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ activity_type: 'lesson_view', lesson_id: id, session_duration: duration }),
+        keepalive: true,
+      })
+    } catch { /* Activity telemetry must not interrupt student work. */ }
+  }, [userId, readOnly])
   const startTimeRef = useRef<number>(Date.now())
   const hasRecordedView = useRef<boolean>(false)
 

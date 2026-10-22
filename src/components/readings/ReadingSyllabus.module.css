@@ -10,3 +10,5 @@
 .page [data-slot="button"]{white-space:normal;min-height:44px;height:auto;max-width:100%}
 
 .embedded{display:flex;flex-direction:column;gap:22px;min-width:0}.embedded [data-slot="button"]{white-space:normal;min-height:44px;height:auto;max-width:100%}
+
+.interactivePreview{display:grid;gap:12px;padding:18px;margin-bottom:18px;border:1px solid var(--primary);border-radius:var(--radius-md);background:var(--secondary);color:var(--secondary-foreground)}.interactivePreview [data-slot="button"]{justify-self:start}.branch{color:var(--card-foreground)}

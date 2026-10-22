@@ -5,6 +5,8 @@ import { physicsLearningEntry, type PhysicsTarget } from '@/lib/physics-learning
 import { filterDocumentForViewer, isLessonVisible, type Viewer } from '@/lib/track-visibility'
 import type { LessonWindowStatus } from '@/lib/lesson-windows'
 import { CONCEPT_LABELS, VIDEO_CONNECTIONS, type ConceptLesson, type LessonConceptMapData } from '@/lib/lesson-concept-map'
+import { isVideoLesson } from '@/lib/video-lesson-workspace'
+import { videoWatchHref } from '@/lib/video-watch'
 
 export interface MapCatalogLesson {
   id: string; title: string; slug: string; unit?: string | null; unit_id?: string | null
@@ -33,6 +35,7 @@ export function buildLessonConceptMap(lessons: MapCatalogLesson[], targets: Phys
       completion: completion[lesson.id],
       progress: Number.isFinite(value) ? Math.min(100,Math.max(0,value)) : 0,
       ...(status?.state === 'open' ? {href:`/lessons/${encodeURIComponent(lesson.slug)}`} : {}),
+      ...(isVideoLesson(doc) ? {watchHref:videoWatchHref(lesson.slug)} : {}),
     }
   }).sort((a,b)=>(a.sequence??1000)-(b.sequence??1000)||a.title.localeCompare(b.title))
   const primary = new Map<number,ConceptLesson>()

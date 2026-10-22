@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Search, BookOpen, GraduationCap, type LucideIcon } from 'lucide-react'
 import { useLessonContext } from './useLessonContext'
 import { lessonContextHref } from '@/lib/lesson-release'
+import { confirmAssessmentReviewLeave } from './useAssessmentReviewGuard'
 import type { Tool } from './adminNav'
 
 interface CommandItem {
@@ -109,7 +110,13 @@ export default function AdminCommand({ tools }: { tools: Tool[] }) {
 
   useEffect(() => { setActive(0) }, [query])
 
-  const go = (it: CommandItem) => { setOpen(false); router.push(lessonContextHref(it.href,{class:context.classId})) }
+  const go = (it: CommandItem) => {
+    if (!confirmAssessmentReviewLeave()) return
+    const destination = new URLSearchParams(it.href.split('?')[1])
+    const classId = new URLSearchParams(window.location.search).get('class') ?? context.classId
+    setOpen(false)
+    router.push(destination.has('class') ? it.href : lessonContextHref(it.href, { class: classId }))
+  }
 
   return (
     <>

@@ -1,0 +1,13 @@
+import {test} from 'node:test'
+import {strict as assert} from 'node:assert'
+import {composeChoiceResults} from './choice-composition'
+import type {ResultActivity} from './types'
+const base={dueAt:null,archived:false,unitIds:[]} satisfies Partial<ResultActivity>
+const native=(kind:'interactive'|'reading'|'reflection'|'quiz',id:string):ResultActivity=>({...base,kind,key:kind+':'+id,sourceId:id,title:id,unitIds:['unit-1'],targetIds:['target'],cells:{alice:{state:'submitted',label:'Needs review',needsReview:true,submissionId:'submission'},bob:{state:'not_started',label:'Not started',needsReview:false}}})
+test('choice owns one grade column, native reviews remain connected, and attached quiz stays independent',()=>{
+ const reading=native('reading','read'),quiz=native('quiz','check');const choice:ResultActivity={...base,key:'choice:menu:1',kind:'choice',sourceId:'1',choiceSectionId:'menu',title:'Read',sourceKeys:['reading:read'],followUpKeys:['quiz:check'],cells:{alice:{state:'submitted',label:'8/10',needsReview:false},bob:{state:'excused',label:'EX',needsReview:false}}}
+ const result=composeChoiceResults([reading,quiz,choice]);assert.equal(result.length,2);assert.deepEqual(choice.unitIds,['unit-1']);assert.deepEqual(choice.targetIds,['target']);assert(choice.cells.alice.needsReview);assert.deepEqual(choice.cells.alice.pendingTargets,['target']);assert.equal(choice.evidenceActivities?.[0].key,'reading:read');assert.equal(quiz.cells.bob.label,'EX');assert.equal(quiz.cells.alice.label,'Needs review');assert.equal(choice.cells.bob.needsReview,false)
+})
+test('reflection receipt stays available and a missing lab does not create a second zero',()=>{
+ const reflection=native('reflection','manga'),choice:ResultActivity={...base,key:'choice:menu:1',kind:'choice',sourceId:'1',choiceSectionId:'menu',title:'Manga',sourceKeys:['lesson:manga'],cells:{alice:{state:'submitted',label:'10/10',needsReview:false}}},lab:ResultActivity={...base,key:'choice:menu:lab',kind:'choice',sourceId:'lab',choiceSectionId:'menu',title:'Lab',unitIds:['unit-1'],cells:{alice:{state:'not_started',label:'Missing',needsReview:false}}},missing:ResultActivity={...base,key:'choice:menu:missing',kind:'choice',sourceId:'',choiceSectionId:'menu',title:'Missing required choice',cells:{alice:{state:'not_started',label:'0/10',needsReview:false}}};const result=composeChoiceResults([reflection,choice,lab,missing]);assert.equal(result.filter(a=>a.cells.alice?.label==='0/10').length,1);assert.equal(lab.cells.alice.label,'Missing');assert.equal(choice.evidenceActivities?.[0].cells.alice.submissionId,'submission');assert.deepEqual(missing.unitIds,['unit-1'])
+})

@@ -24,7 +24,7 @@ function CubeBuilder({ onBuilt }: { onBuilt: () => void }) {
             aria-label={`Cube with side ${side} centimeters`}
           />
         </div>
-        <div className="space-y-1 text-[15px]">
+        <div data-avatar-evidence className="space-y-1 text-[15px]">
           <div>side = <span className="font-mono font-semibold">{side} cm</span></div>
           <div>volume = {side} × {side} × {side} = <span className="font-mono font-semibold">{volume.toLocaleString()} cm³</span></div>
           {hit && <div className="text-success font-semibold">1,000 cm³ — exactly the target.</div>}
@@ -59,7 +59,7 @@ function FillAndWeigh({ onWeighed }: { onWeighed: () => void }) {
           </span>
         </div>
         {/* balance readout */}
-        <div className="rounded-lg border border-border px-4 py-3 text-center min-w-[130px]">
+        <div data-avatar-evidence className="rounded-lg border border-border px-4 py-3 text-center min-w-[130px]">
           <div className="text-xs uppercase tracking-wide text-muted-foreground">balance</div>
           <div className="text-2xl font-mono font-bold tabular-nums">
             {weighed ? '1.000 kg' : poured ? '?' : '0.000 kg'}

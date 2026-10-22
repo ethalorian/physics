@@ -1,4 +1,5 @@
 import { supabaseAdmin } from '@/lib/supabase'
+import { ownerEmailsFor, isSameIdentity } from '@/lib/identity-aliases'
 
 // The set of students a TEACHER is allowed to see.
 //
@@ -15,7 +16,7 @@ export async function getTeacherStudentGids(teacherEmail: string): Promise<strin
   const { data: courseRows } = await supabaseAdmin
     .from('courses')
     .select('id')
-    .eq('teacher_email', teacherEmail)
+    .in('teacher_email', ownerEmailsFor(teacherEmail))
   const courseIds = ((courseRows ?? []) as { id: string }[]).map((c) => c.id)
   if (courseIds.length === 0) return []
 
@@ -139,7 +140,7 @@ export async function resolveRosterScope(opts: {
   if (classId) {
     if (role === 'teacher') {
       const owner = await getCourseOwnerEmail(classId)
-      if (owner !== scopeEmail) return { gids: [] }
+      if (!isSameIdentity(scopeEmail, owner)) return { gids: [] }
     }
     return { gids: await getCourseStudentGids(classId) }
   }

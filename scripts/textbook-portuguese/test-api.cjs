@@ -1,7 +1,10 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'../..'),out='/private/tmp/textbook-portuguese-api.cjs';
 let downloads=[],legacyReads=0,missing=false;
-global.__textbookStorage={storage:{from:bucket=>({download:async key=>{downloads.push([bucket,key]);return missing?{data:null,error:new Error('not found')}:{data:new Blob(['%PDF-fixture']),error:null};}})},from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>{legacyReads++;return {data:null};}})})})};
+process.env.NEXT_PUBLIC_SUPABASE_URL='https://storage.test';
+process.env.SUPABASE_SERVICE_ROLE_KEY='fixture-service-key';
+global.fetch=async(url,options)=>{const key=new URL(url).pathname.replace('/storage/v1/object/textbook/','');downloads.push(['textbook',key]);return missing?Response.json({error:'not found'},{status:404}):new Response('%PDF-fixture',{headers:{ETag:'"fixture-'+key+'"'}});};
+global.__textbookStorage={from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>{legacyReads++;return {data:null};}})})})};
 (async()=>{
  const mocks={
   '@/lib/api-auth':`export const withAuth=fn=>(req,ctx)=>req.headers.get('x-test-user')?fn(req,ctx):Response.json({error:'Unauthorized'},{status:401});`,

@@ -7,15 +7,24 @@ import type { InstructionVideoBlock } from '@/data/content-blocks'
 import { loadLessonYouTubeApi, type LessonYouTubePlayer } from '@/lib/youtube-player'
 import { useVideoWatchXp } from './useVideoWatchXp'
 
-export default function InstructionVideo({ block }: { block: InstructionVideoBlock }) {
+export default function InstructionVideo({ block, visible = true }: { block: InstructionVideoBlock; visible?: boolean }) {
   const [playing, setPlaying] = useState(false)
   const [playerError, setPlayerError] = useState(false)
   const playerContainer = useRef<HTMLDivElement>(null)
+  const playerRef = useRef<LessonYouTubePlayer | null>(null)
+  const visibleRef = useRef(visible)
   const xp = useVideoWatchXp(block.id)
-  const { report, enabled } = xp
+  const { report } = xp
   const start = Math.max(0, Math.floor(block.startSeconds ?? 0))
   useEffect(() => {
-    if (!playing || !enabled || !playerContainer.current) return
+    visibleRef.current = visible
+    if (!visible && playerRef.current) {
+      playerRef.current.pauseVideo()
+      void report(playerRef.current.getCurrentTime(), false)
+    }
+  }, [visible, report])
+  useEffect(() => {
+    if (!playing || !playerContainer.current) return
     let active = true, player: LessonYouTubePlayer | undefined
     let timer: ReturnType<typeof setInterval> | undefined
     const container = playerContainer.current
@@ -27,10 +36,11 @@ export default function InstructionVideo({ block }: { block: InstructionVideoBlo
     frame.allowFullscreen = true
     frame.referrerPolicy = 'strict-origin-when-cross-origin'
     container.replaceChildren(frame)
-    const sample = () => { if (active && player) void report(player.getCurrentTime(), player.getPlayerState() === 1 && document.visibilityState === 'visible') }
+    const sample = () => { if (active && player) void report(player.getCurrentTime(), visibleRef.current && player.getPlayerState() === 1 && document.visibilityState === 'visible') }
     loadLessonYouTubeApi().then(api => {
       if (!active) return
-      player = new api.Player(frame, { events: { onReady: sample, onStateChange: sample } })
+      player = new api.Player(frame, { events: { onReady: () => { if (!visibleRef.current) player?.pauseVideo(); sample() }, onStateChange: sample } })
+      playerRef.current = player
       timer = setInterval(sample, 5000)
       document.addEventListener('visibilitychange', sample)
     }).catch(() => { if (active) setPlayerError(true) })
@@ -38,14 +48,15 @@ export default function InstructionVideo({ block }: { block: InstructionVideoBlo
       if (player) void report(player.getCurrentTime(), false)
       active = false; clearInterval(timer)
       document.removeEventListener('visibilitychange', sample)
+      playerRef.current = null
       player?.destroy()
       container.replaceChildren()
     }
-  }, [playing, enabled, report, block.title, block.youtubeId, start])
+  }, [playing, report, block.title, block.youtubeId, start])
   if (!/^[A-Za-z0-9_-]{11}$/.test(block.youtubeId)) return <p role="alert">This video link needs a teacher correction. Use the key ideas below: {block.summary}</p>
   return <div className="space-y-4">
     <div className="aspect-video overflow-hidden rounded-xl border bg-secondary">
-      {playing ? enabled ? <div ref={playerContainer} className="h-full w-full"/> : <iframe className="h-full w-full" title={block.title} src={`https://www.youtube-nocookie.com/embed/${block.youtubeId}?rel=0&cc_load_policy=1&playsinline=1&start=${start}`} allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowFullScreen referrerPolicy="strict-origin-when-cross-origin"/> : <button type="button" className="flex h-full w-full min-h-44 flex-col items-center justify-center gap-4 p-6 text-center" onClick={()=>setPlaying(true)}><PlayCircle className="h-14 w-14 text-primary"/><span className="text-xl font-semibold">{block.title}</span><span className="text-sm text-muted-foreground">Play lesson · antocciphysics</span></button>}
+      {playing ? <div ref={playerContainer} className="h-full w-full"/> : <button type="button" className="flex h-full w-full min-h-44 flex-col items-center justify-center gap-4 p-6 text-center" onClick={()=>setPlaying(true)}><PlayCircle className="h-14 w-14 text-primary"/><span className="text-xl font-semibold">{block.title}</span><span className="text-sm text-muted-foreground">Play lesson · antocciphysics</span></button>}
     </div>
     <div className="flex flex-wrap items-center justify-between gap-3 text-sm"><span className="text-muted-foreground">Pause and replay whenever you need.</span><a className="min-h-11 inline-flex items-center text-primary underline" href={`https://www.youtube.com/watch?v=${block.youtubeId}&t=${start}s`} target="_blank" rel="noopener noreferrer">Open on YouTube</a></div>
     {typeof block.xp === 'number' && block.xp > 0 && <div className="space-y-2 text-sm">

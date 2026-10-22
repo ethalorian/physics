@@ -1,4 +1,5 @@
 'use client'
+import { isVideoLesson } from '@/lib/video-lesson-workspace'
 import { useEffect, useMemo, useState } from 'react'
 import { TradeContext } from '@/components/lessons/TradeContext'
 import { TRADE_LABELS, type AssignedTrade } from '@/lib/vocational'
@@ -33,12 +34,13 @@ export default function AdminLessonPreview({
   canEdit?: boolean
 }) {
   return (
-    <div className="mx-auto max-w-6xl p-4 sm:p-5">
+    <div className="mx-auto max-w-[1440px] p-3 sm:p-5">
       <LessonWorkspaceNav
         lessonId={lesson.id}
         title={lesson.title}
         published={lesson.published}
         active="preview"
+        video={isVideoLesson(lesson.content_blocks)}
       />
       <LessonStudentPreview lesson={lesson} />
     </div>
@@ -183,6 +185,7 @@ export function LessonStudentPreview({ lesson }: { lesson: PreviewLesson }) {
             previewReturnHref={`/admin/lessons/${lesson.id}${classId?'?class='+encodeURIComponent(classId):''}`}
             staffView={mode === 'teacher'}
             previewAnswerKeys={keys}
+            previewInteractiveTasks={Object.fromEntries((lesson.content_blocks?.blocks??[]).flatMap(b=>b.type==='interactive_question'?[[b.id,b.task]]:[]))}
             previewTargets={referencedLessonTargets(doc, lesson.targets ?? []).map((t) => ({
               slug: t.slug,
               statement: t.statement,

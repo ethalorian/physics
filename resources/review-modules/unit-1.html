@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unit 1 Review · CPA Physics</title><script>window.__resources={"https://unpkg.com/react@18.3.1/umd/react.production.min.js":"/review-runtime/react.production.min.js","https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js":"/review-runtime/react-dom.production.min.js"};</script><script src="/review-runtime/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700;800&family=Atkinson+Hyperlegible+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#F7F4EE;color:#1D1B18;font-family:'Atkinson Hyperlegible Next',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#2F62B5}a:hover{color:#1D1B18}
+button{font-family:inherit}
+sup,sub{font-size:.65em;line-height:0}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <header style="position:sticky;top:0;z-index:5;background:#F7F4EE;border-bottom:1.5px solid #DDD6CA">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;padding:14px 24px">
+      <div style="display:flex;flex-direction:column;gap:2px;flex:1 1 260px">
+        <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">CPA Physics · Unit 1 Transfer Task Review</span>
+        <span style="font-size:20px;font-weight:700">Predicting 2026-XJ's Position</span>
+      </div>
+      <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:15px;color:#4A463F">Screen {{ screenNum }} of {{ screenTotal }}</span>
+    </div>
+    <div style="height:6px;background:#E6DFD3"><div style="height:6px;background:#C8592A;width:{{ progressPct }};transition:width .3s"></div></div>
+  </header>
+
+  <div style="display:flex;flex-wrap:wrap;flex:1;align-items:flex-start">
+    <nav style="flex:1 1 240px;max-width:100%;padding:24px 20px;display:flex;flex-direction:column;gap:22px">
+      <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#4A463F;padding:0 12px 6px">{{ g.title }}</span>
+          <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="4">
+            <button onClick="{{ it.go }}" style="display:flex;align-items:center;gap:10px;text-align:left;min-height:44px;padding:8px 12px;border-radius:10px;border:none;background:{{ it.bg }};color:#1D1B18;font-size:16px;font-weight:{{ it.weight }};cursor:pointer">
+              <span style="flex:none;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-family:'Atkinson Hyperlegible Mono',monospace;background:{{ it.dotBg }};color:{{ it.dotFg }}">{{ it.mark }}</span>
+              <span>{{ it.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-for>
+    </nav>
+
+    <main style="flex:999 1 560px;min-width:0;padding:36px 28px 60px">
+      <div ref="{{ contentRef }}" style="max-width:860px;display:flex;flex-direction:column;gap:28px">
+
+        <sc-if value="{{ s0 }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:28px">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Start here</span>
+              <h1 style="font-size:48px;line-height:1.08;margin:0;font-weight:800;letter-spacing:-0.02em;text-wrap:balance">Predicting 2026-XJ's Position</h1>
+              <p style="font-size:22px;line-height:1.55;margin:0;max-width:60ch;text-wrap:pretty">This review walks you through your Unit 1 transfer task. Go at your own speed. Come back as many times as you need. Your spot, self-checks, and written responses save to your account. Complete the responses on each screen, then submit using the assignment bar.</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">PART 1</span>
+                <strong style="font-size:21px">Unpack the task</strong>
+                <span style="font-size:18px;line-height:1.5;color:#4A463F">What it says. What it asks. What you hand in.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">PART 2</span>
+                <strong style="font-size:21px">The physics tools</strong>
+                <span style="font-size:18px;line-height:1.5;color:#4A463F">Six tools, each with a worked example.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px 22px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">PART 3</span>
+                <strong style="font-size:21px">How you're scored</strong>
+                <span style="font-size:18px;line-height:1.5;color:#4A463F">The four-part rubric, in plain words.</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:14px;background:#EAE4D8">
+              <span style="flex:none;width:10px;height:10px;margin-top:9px;border-radius:50%;background:#C8592A"></span>
+              <p style="font-size:19px;line-height:1.5;margin:0">Every screen ends with a <strong>Check yourself</strong> question. Wrong answers are fine. They show you what to look at again.</p>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s1 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 1 · Unpack the task</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">Your job</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">NASA has new tracking data on an asteroid called <strong>2026-XJ</strong>. You are an <strong>apprentice analyst</strong>. You have two jobs:</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:22px;display:flex;gap:16px">
+                <span style="flex:none;font-size:34px;font-weight:800;color:#C8592A;line-height:1">1</span>
+                <span style="font-size:21px;line-height:1.45"><strong>Predict</strong> where the asteroid will be <strong>6 months</strong> from now.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:22px;display:flex;gap:16px">
+                <span style="flex:none;font-size:34px;font-weight:800;color:#C8592A;line-height:1">2</span>
+                <span style="font-size:21px;line-height:1.45"><strong>Tell the public</strong> honestly how sure you can be.</span>
+              </div>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">Job 2 matters as much as job 1. People deserve the truth, including what we <em>don't</em> know yet.</p>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#4A463F">Words to know</span>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+                <div style="border-left:none;background:#EFEAE0;border-radius:10px;padding:12px 16px;font-size:18px;line-height:1.45"><strong>trajectory</strong> — the path something travels</div>
+                <div style="background:#EFEAE0;border-radius:10px;padding:12px 16px;font-size:18px;line-height:1.45"><strong>analyst</strong> — a person who studies data to help make a decision</div>
+                <div style="background:#EFEAE0;border-radius:10px;padding:12px 16px;font-size:18px;line-height:1.45"><strong>prediction</strong> — your best answer about the future, backed by evidence</div>
+              </div>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">What are the TWO things this task asks you to do?</p>
+              <div style="display:grid;gap:10px">
+                <sc-for list="{{ q1.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="display:flex;gap:14px;align-items:center;text-align:left;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#F7F4EE;font-size:19px;line-height:1.35;cursor:pointer"><span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-weight:600;color:#E8875A">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ q1.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q1.fbColor }}"><strong>{{ q1.verdict }}</strong> {{ q1.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s2 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 1 · Unpack the task</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">Decode the data</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">NASA gives you five pieces of data. Here is what each one means.</p>
+            <div style="display:flex;flex-direction:column;border:1.5px solid #DDD6CA;border-radius:14px;overflow:hidden;background:#FFFFFF">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 20px;padding:16px 20px;border-bottom:1.5px solid #DDD6CA">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;color:#4A463F">Current position</span><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px;font-weight:600">1.2 × 10<sup>8</sup> km</span></div>
+                <span style="font-size:19px;line-height:1.45">How far away it is right now. That's 120,000,000 km.</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 20px;padding:16px 20px;border-bottom:1.5px solid #DDD6CA">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;color:#4A463F">Current velocity</span><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px;font-weight:600">8,500 m/s at 15°</span></div>
+                <span style="font-size:19px;line-height:1.45">How fast <strong>and</strong> which way. It is not aimed straight at us. It is tilted 15°.</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 20px;padding:16px 20px;border-bottom:1.5px solid #DDD6CA">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;color:#4A463F">Earth's gravity on it</span><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px;font-weight:600">&lt; 0.001 m/s²</span></div>
+                <span style="font-size:19px;line-height:1.45">So small we can ignore it. Its speed stays about the same.</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 20px;padding:16px 20px;border-bottom:1.5px solid #DDD6CA">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;color:#4A463F">Position uncertainty</span><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px;font-weight:600">± 50,000 km</span></div>
+                <span style="font-size:19px;line-height:1.45">NASA's position could be off by this much, in either direction.</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 20px;padding:16px 20px">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:16px;color:#4A463F">Velocity uncertainty</span><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px;font-weight:600">± 200 m/s</span></div>
+                <span style="font-size:19px;line-height:1.45">The speed could be off by this much, either way.</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:14px;background:#EAE4D8">
+              <span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-size:24px;font-weight:600;color:#B24E22;line-height:1.2">±</span>
+              <p style="font-size:19px;line-height:1.5;margin:0">Say it <strong>"plus or minus."</strong> ± 200 m/s means the real speed could be 200 more <em>or</em> 200 less.</p>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">Why can we treat the asteroid's speed as constant (not changing)?</p>
+              <div style="display:grid;gap:10px">
+                <sc-for list="{{ q2.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="display:flex;gap:14px;align-items:center;text-align:left;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#F7F4EE;font-size:19px;line-height:1.35;cursor:pointer"><span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-weight:600;color:#E8875A">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ q2.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q2.fbColor }}"><strong>{{ q2.verdict }}</strong> {{ q2.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s3 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 1 · Unpack the task</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">The prompt, as 5 jobs</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">The <strong>verb</strong> in each job tells you what to do. Look for the action word in each job.</p>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:18px 20px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px">
+                <span style="grid-row:span 2;font-size:28px;font-weight:800;color:#C8592A">1</span>
+                <span style="font-size:21px;line-height:1.4"><strong style="color:#B24E22">CALCULATE</strong> where it will be in 6 months.</span>
+                <span style="font-size:17px;color:#4A463F">You hand in: calculations with units</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:18px 20px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px">
+                <span style="grid-row:span 2;font-size:28px;font-weight:800;color:#C8592A">2</span>
+                <span style="font-size:21px;line-height:1.4"><strong style="color:#B24E22">SPLIT</strong> the velocity into two parts: toward Earth and sideways.</span>
+                <span style="font-size:17px;color:#4A463F">You hand in: vector components</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:18px 20px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px">
+                <span style="grid-row:span 2;font-size:28px;font-weight:800;color:#C8592A">3</span>
+                <span style="font-size:21px;line-height:1.4"><strong style="color:#B24E22">FIND</strong> the range of places it could be.</span>
+                <span style="font-size:17px;color:#4A463F">You hand in: the uncertainty "window"</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:18px 20px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px">
+                <span style="grid-row:span 2;font-size:28px;font-weight:800;color:#C8592A">4</span>
+                <span style="font-size:21px;line-height:1.4"><strong style="color:#B24E22">SKETCH</strong> a position-vs-time graph.</span>
+                <span style="font-size:17px;color:#4A463F">You hand in: a labeled graph with uncertainty bounds</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:18px 20px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 14px">
+                <span style="grid-row:span 2;font-size:28px;font-weight:800;color:#C8592A">5</span>
+                <span style="font-size:21px;line-height:1.4"><strong style="color:#B24E22">WRITE</strong> one paragraph for the public.</span>
+                <span style="font-size:17px;color:#4A463F">You hand in: what we know, what we don't, and why</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:14px;background:#EAE4D8">
+              <span style="flex:none;width:10px;height:10px;margin-top:9px;border-radius:50%;background:#C8592A"></span>
+              <p style="font-size:19px;line-height:1.5;margin:0"><strong>Day 1:</strong> read, plan, start jobs 1–3. <strong>Day 2:</strong> finish, defend your work to a peer, revise, submit.</p>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">In job 5, who are you writing for?</p>
+              <div style="display:grid;gap:10px">
+                <sc-for list="{{ q3.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="display:flex;gap:14px;align-items:center;text-align:left;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#F7F4EE;font-size:19px;line-height:1.35;cursor:pointer"><span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-weight:600;color:#E8875A">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ q3.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q3.fbColor }}"><strong>{{ q3.verdict }}</strong> {{ q3.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s4 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 2 · Tool 1 of 6</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">Units: kilometers to meters</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">The speed is in <strong>meters</strong> per second. The distance is in <strong>kilometers</strong>. Before you multiply or subtract, make the units match.</p>
+            <div style="display:flex;align-items:center;justify-content:center;gap:18px;padding:24px;background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;font-family:'Atkinson Hyperlegible Mono',monospace;font-size:28px;font-weight:600">1 km = 1,000 m</div>
+            <div style="background:#FFFFFF;border:1.5px solid #2F62B5;border-radius:14px;overflow:hidden">
+              <div style="background:#2F62B5;color:#FFFFFF;padding:10px 20px;font-size:16px;font-weight:700;letter-spacing:.02em">Worked example · practice object, not 2026-XJ</div>
+              <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+                <p style="font-size:20px;line-height:1.5;margin:0">Convert <strong>5.0 × 10<sup>7</sup> km</strong> to meters.</p>
+                <div style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:19px;line-height:1.9;display:flex;flex-direction:column">
+                  <span>5.0 × 10<sup>7</sup> km × 1,000 m/km</span>
+                  <span>= 5.0 × 10<sup>7</sup> × 10<sup>3</sup> m</span>
+                  <span style="color:#2F62B5;font-weight:600">= 5.0 × 10<sup>10</sup> m</span>
+                </div>
+                <p style="font-size:18px;line-height:1.5;margin:0;color:#4A463F">Shortcut: multiplying by 1,000 adds 3 to the exponent. 7 + 3 = 10.</p>
+              </div>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">Convert 40,000 km to meters.</p>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+                <input value="{{ q4.value }}" onChange="{{ q4.onInput }}" onKeyDown="{{ q4.onKey }}" placeholder="e.g. 4e7 or 40000000" style="flex:1 1 220px;min-height:52px;padding:0 16px;border-radius:12px;border:2px solid #4A463F;background:#34312C;color:#F7F4EE;font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px"></input>
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px">m</span>
+                <button onClick="{{ q4.check }}" style="min-height:52px;padding:0 24px;border-radius:12px;border:none;background:#E8875A;color:#1D1B18;font-size:19px;font-weight:700;cursor:pointer">Check</button>
+              </div>
+              <sc-if value="{{ q4.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q4.fbColor }}"><strong>{{ q4.verdict }}</strong> {{ q4.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s5 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 2 · Tool 2 of 6</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">Time: change it to seconds</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">Speed is meters per <strong>second</strong>. So time must be in seconds too. Build it one step at a time.</p>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 14px;padding:22px;background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;font-family:'Atkinson Hyperlegible Mono',monospace;font-size:21px;font-weight:600">
+              <span>1 day</span><span style="color:#4A463F">=</span><span>24 h</span><span style="color:#4A463F">×</span><span>60 min</span><span style="color:#4A463F">×</span><span>60 s</span><span style="color:#4A463F">=</span><span style="color:#B24E22">86,400 s</span>
+            </div>
+            <div style="background:#FFFFFF;border:1.5px solid #2F62B5;border-radius:14px;overflow:hidden">
+              <div style="background:#2F62B5;color:#FFFFFF;padding:10px 20px;font-size:16px;font-weight:700;letter-spacing:.02em">Worked example · practice object, not 2026-XJ</div>
+              <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+                <p style="font-size:20px;line-height:1.5;margin:0">How many seconds are in <strong>30 days</strong>?</p>
+                <div style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:19px;line-height:1.9;display:flex;flex-direction:column">
+                  <span>30 days × 86,400 s/day</span>
+                  <span style="color:#2F62B5;font-weight:600">= 2,592,000 s ≈ 2.59 × 10<sup>6</sup> s</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:14px;background:#EAE4D8">
+              <span style="flex:none;width:10px;height:10px;margin-top:9px;border-radius:50%;background:#C8592A"></span>
+              <p style="font-size:19px;line-height:1.5;margin:0">For your task: <strong>6 months ≈ 182.5 days.</strong> Show this conversion in your work. It counts for Science and Communication.</p>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">How many seconds are in 10 days?</p>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+                <input value="{{ q5.value }}" onChange="{{ q5.onInput }}" onKeyDown="{{ q5.onKey }}" placeholder="type a number" style="flex:1 1 220px;min-height:52px;padding:0 16px;border-radius:12px;border:2px solid #4A463F;background:#34312C;color:#F7F4EE;font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px"></input>
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px">s</span>
+                <button onClick="{{ q5.check }}" style="min-height:52px;padding:0 24px;border-radius:12px;border:none;background:#E8875A;color:#1D1B18;font-size:19px;font-weight:700;cursor:pointer">Check</button>
+              </div>
+              <sc-if value="{{ q5.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q5.fbColor }}"><strong>{{ q5.verdict }}</strong> {{ q5.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s6 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 2 · Tool 3 of 6</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">Split the velocity into two parts</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">Velocity is a <strong>vector</strong>: it has a size <em>and</em> a direction. The asteroid isn't aimed straight at Earth. It's tilted. So we split its velocity into a <strong>toward-Earth part</strong> and a <strong>sideways part</strong>. These parts are called <strong>components</strong>.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px">
+              <svg viewBox="0 0 320 170" style="flex:1 1 260px;max-width:360px;height:auto">
+                <line x1="20" y1="140" x2="290" y2="140" stroke="#2F62B5" stroke-width="5"></line>
+                <line x1="290" y1="140" x2="290" y2="40" stroke="#2F62B5" stroke-width="5" stroke-dasharray="10 7"></line>
+                <line x1="20" y1="140" x2="290" y2="40" stroke="#C8592A" stroke-width="6"></line>
+                <circle cx="20" cy="140" r="9" fill="#1D1B18"></circle>
+                <text x="70" y="128" font-family="Atkinson Hyperlegible Mono" font-size="16" fill="#1D1B18">θ</text>
+                <text x="120" y="80" font-family="Atkinson Hyperlegible Next" font-size="17" font-weight="700" fill="#B24E22">v</text>
+                <text x="110" y="163" font-family="Atkinson Hyperlegible Next" font-size="15" fill="#2F62B5">toward Earth</text>
+                <text x="232" y="95" font-family="Atkinson Hyperlegible Next" font-size="15" fill="#2F62B5" text-anchor="end">sideways</text>
+              </svg>
+              <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:12px;font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px">
+                <span>v<sub>toward</sub> = v × cos θ</span>
+                <span>v<sub>side</sub> = v × sin θ</span>
+                <span style="font-family:'Atkinson Hyperlegible Next',sans-serif;font-size:17px;line-height:1.45;color:#4A463F">Memory trick: <strong>cos</strong> goes with the side that <strong>touches</strong> the angle.</span>
+              </div>
+            </div>
+            <div style="background:#FFFFFF;border:1.5px solid #2F62B5;border-radius:14px;overflow:hidden">
+              <div style="background:#2F62B5;color:#FFFFFF;padding:10px 20px;font-size:16px;font-weight:700;letter-spacing:.02em">Worked example · practice object, not 2026-XJ</div>
+              <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+                <p style="font-size:20px;line-height:1.5;margin:0">An object moves at <strong>6,000 m/s</strong>, tilted <strong>20°</strong> from the line toward Earth.</p>
+                <div style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:19px;line-height:1.9;display:flex;flex-direction:column">
+                  <span>v<sub>toward</sub> = 6,000 × cos 20° = 6,000 × 0.940</span>
+                  <span style="color:#2F62B5;font-weight:600">= 5,640 m/s</span>
+                  <span>v<sub>side</sub> = 6,000 × sin 20° = 6,000 × 0.342</span>
+                  <span style="color:#2F62B5;font-weight:600">= 2,050 m/s</span>
+                </div>
+                <p style="font-size:18px;line-height:1.5;margin:0;color:#4A463F">Sense check: each part is smaller than 6,000. A part can never be bigger than the whole. Set your calculator to <strong>degree mode</strong>.</p>
+              </div>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself · spot the error</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">A student writes: v<sub>toward</sub> = 6,000 × sin 20° = 2,050 m/s. What went wrong?</p>
+              <div style="display:grid;gap:10px">
+                <sc-for list="{{ q6.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="display:flex;gap:14px;align-items:center;text-align:left;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#F7F4EE;font-size:19px;line-height:1.35;cursor:pointer"><span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-weight:600;color:#E8875A">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ q6.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q6.fbColor }}"><strong>{{ q6.verdict }}</strong> {{ q6.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s7 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 2 · Tool 4 of 6</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">Where will it be? x<sub>f</sub> = x<sub>i</sub> + vt</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">When speed stays the same, <strong>final position = initial position + (velocity × time)</strong>.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px">
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:22px;font-weight:600;color:#B24E22">x<sub>f</sub></span><span style="font-size:17px;line-height:1.4">final position (where it ends up)</span></div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:22px;font-weight:600;color:#B24E22">x<sub>i</sub></span><span style="font-size:17px;line-height:1.4">initial position ("x initial")</span></div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:22px;font-weight:600;color:#B24E22">v</span><span style="font-size:17px;line-height:1.4">velocity (m/s)</span></div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px"><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:22px;font-weight:600;color:#B24E22">t</span><span style="font-size:17px;line-height:1.4">time (s)</span></div>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">Moving <strong>toward</strong> Earth makes the distance <strong>shrink</strong>, so that velocity counts as <strong>negative</strong>. x<sub>f</sub> = x<sub>i</sub> + vt becomes: <span style="font-family:'Atkinson Hyperlegible Mono',monospace;white-space:nowrap">x<sub>f</sub> = x<sub>i</sub> − v<sub>toward</sub> × t</span></p>
+            <div style="background:#FFFFFF;border:1.5px solid #2F62B5;border-radius:14px;overflow:hidden">
+              <div style="background:#2F62B5;color:#FFFFFF;padding:10px 20px;font-size:16px;font-weight:700;letter-spacing:.02em">Worked example · same practice object, 30 days</div>
+              <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+                <p style="font-size:20px;line-height:1.5;margin:0">Start: <strong>5.0 × 10<sup>10</sup> m</strong> away. v<sub>toward</sub> = <strong>5,640 m/s</strong>. t = <strong>2.59 × 10<sup>6</sup> s</strong>.</p>
+                <div style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:19px;line-height:1.9;display:flex;flex-direction:column">
+                  <span>distance covered = 5,640 × 2.59 × 10<sup>6</sup> = 1.46 × 10<sup>10</sup> m</span>
+                  <span>x<sub>f</sub> = 5.0 × 10<sup>10</sup> − 1.46 × 10<sup>10</sup></span>
+                  <span style="color:#2F62B5;font-weight:600">= 3.54 × 10<sup>10</sup> m  (3.54 × 10<sup>7</sup> km)</span>
+                  <span>sideways = 2,050 × 2.59 × 10<sup>6</sup> = 5.3 × 10<sup>9</sup> m off to the side</span>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:14px;background:#EAE4D8">
+              <span style="flex:none;width:10px;height:10px;margin-top:9px;border-radius:50%;background:#C8592A"></span>
+              <p style="font-size:19px;line-height:1.5;margin:0"><strong>Think like an analyst.</strong> What if the distance covered is <em>bigger</em> than the start distance? Your answer goes negative. That means it has passed Earth's distance. Don't erase it. Explain what it means.</p>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">A rock is 900,000 m away. It moves toward you at 300 m/s. How far away is it after 1,000 s?</p>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+                <input value="{{ q7.value }}" onChange="{{ q7.onInput }}" onKeyDown="{{ q7.onKey }}" placeholder="type a number" style="flex:1 1 220px;min-height:52px;padding:0 16px;border-radius:12px;border:2px solid #4A463F;background:#34312C;color:#F7F4EE;font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px"></input>
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px">m</span>
+                <button onClick="{{ q7.check }}" style="min-height:52px;padding:0 24px;border-radius:12px;border:none;background:#E8875A;color:#1D1B18;font-size:19px;font-weight:700;cursor:pointer">Check</button>
+              </div>
+              <sc-if value="{{ q7.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q7.fbColor }}"><strong>{{ q7.verdict }}</strong> {{ q7.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s8 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 2 · Explainer before Tool 5</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">What is uncertainty?</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">Every measurement is a little bit off. Not because someone messed up, but because <strong>no tool is perfect</strong>. <strong>Uncertainty</strong> tells you <strong>how far off</strong> a measurement could be.</p>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#4A463F">You already use uncertainty</span>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px">
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">YOUR PHONE MAP</span>
+                <strong style="font-size:20px;line-height:1.3">The circle around your dot</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">The map isn’t sure exactly where you are. You’re somewhere inside that circle.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">THE BUS APP</span>
+                <strong style="font-size:20px;line-height:1.3">"Arriving in 6–10 min"</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">The app can’t give one exact time, so it gives a range.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">A RULER</span>
+                <strong style="font-size:20px;line-height:1.3">Only as good as its marks</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">A ruler marked in millimeters can’t measure anything smaller than a millimeter.</span>
+              </div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:22px">
+              <strong style="font-size:21px">How to read ±</strong>
+              <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 14px;font-family:'Atkinson Hyperlegible Mono',monospace;font-size:24px;font-weight:600"><span>value</span><span style="color:#B24E22">±</span><span>uncertainty</span></div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;font-size:19px;line-height:1.45">
+                <span style="padding:12px 16px;background:#EFEAE0;border-radius:10px"><strong>Lowest</strong> it could be = value <strong>−</strong> uncertainty</span>
+                <span style="padding:12px 16px;background:#EFEAE0;border-radius:10px"><strong>Highest</strong> it could be = value <strong>+</strong> uncertainty</span>
+              </div>
+            </div>
+            <div style="background:#FFFFFF;border:1.5px solid #2F62B5;border-radius:14px;overflow:hidden">
+              <div style="background:#2F62B5;color:#FFFFFF;padding:10px 20px;font-size:16px;font-weight:700;letter-spacing:.02em">Worked examples · from easy to space</div>
+              <div style="padding:20px;display:flex;flex-direction:column;gap:16px">
+                <div style="display:flex;flex-direction:column;gap:4px"><p style="font-size:20px;line-height:1.5;margin:0">The bus is <strong>8 min ± 2 min</strong> away.</p><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:19px;line-height:1.8">8 − 2 = 6 min · 8 + 2 = 10 min</span><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:19px;color:#2F62B5;font-weight:600">The bus will come in 6 to 10 minutes.</span></div>
+                <div style="display:flex;flex-direction:column;gap:4px"><p style="font-size:20px;line-height:1.5;margin:0">The practice object is <strong>5.0 × 10<sup>7</sup> km ± 40,000 km</strong> away.</p><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:19px;line-height:1.8">50,000,000 − 40,000 = 49,960,000 km<br>50,000,000 + 40,000 = 50,040,000 km</span><span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:19px;color:#2F62B5;font-weight:600">It is somewhere between 49,960,000 and 50,040,000 km away.</span></div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">MISTAKE</span>
+                <strong style="font-size:20px;line-height:1.3">A mistake is wrong</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">Like using the wrong formula. You fix it.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">UNCERTAINTY</span>
+                <strong style="font-size:20px;line-height:1.3">Uncertainty is honest</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">It shows how good your data is. You report it.</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:14px;background:#EAE4D8">
+              <span style="flex:none;width:10px;height:10px;margin-top:9px;border-radius:50%;background:#C8592A"></span>
+              <p style="font-size:19px;line-height:1.5;margin:0"><strong>Why it matters for 2026-XJ:</strong> if NASA’s data were perfect, we could name one exact spot. It isn’t, so we give a <strong>range</strong>. Telling people that range is part of being honest with them.</p>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">What does uncertainty tell you?</p>
+              <div style="display:grid;gap:10px">
+                <sc-for list="{{ q18.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="display:flex;gap:14px;align-items:center;text-align:left;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#F7F4EE;font-size:19px;line-height:1.35;cursor:pointer"><span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-weight:600;color:#E8875A">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ q18.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q18.fbColor }}"><strong>{{ q18.verdict }}</strong> {{ q18.feedback }}</p></sc-if>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">A rock is 900 m ± 30 m away. What is the <strong>closest</strong> it could be?</p>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+                <input value="{{ q17.value }}" onChange="{{ q17.onInput }}" onKeyDown="{{ q17.onKey }}" placeholder="type a number" style="flex:1 1 220px;min-height:52px;padding:0 16px;border-radius:12px;border:2px solid #4A463F;background:#34312C;color:#F7F4EE;font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px"></input>
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:20px">m</span>
+                <button onClick="{{ q17.check }}" style="min-height:52px;padding:0 24px;border-radius:12px;border:none;background:#E8875A;color:#1D1B18;font-size:19px;font-weight:700;cursor:pointer">Check</button>
+              </div>
+              <sc-if value="{{ q17.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q17.fbColor }}"><strong>{{ q17.verdict }}</strong> {{ q17.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s9 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 2 · Tool 5 of 6</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">The uncertainty window</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">NASA's numbers aren't perfect. So we find the <strong>closest</strong> and <strong>farthest</strong> it could be. The space between them is the <strong>window</strong>.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:6px">
+                <strong style="font-size:19px">Wiggle 1 · the start</strong>
+                <span style="font-size:18px;line-height:1.45">Position uncertainty. It stays the same size.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:6px">
+                <strong style="font-size:19px">Wiggle 2 · the speed</strong>
+                <span style="font-size:18px;line-height:1.45">Velocity uncertainty × time. It <strong>grows</strong> every second.</span>
+              </div>
+            </div>
+            <div style="background:#FFFFFF;border:1.5px solid #2F62B5;border-radius:14px;overflow:hidden">
+              <div style="background:#2F62B5;color:#FFFFFF;padding:10px 20px;font-size:16px;font-weight:700;letter-spacing:.02em">Worked example · same practice object, 30 days</div>
+              <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+                <p style="font-size:20px;line-height:1.5;margin:0">Position ± <strong>40,000 km</strong>. Velocity ± <strong>150 m/s</strong>. Predicted distance: <strong>3.54 × 10<sup>7</sup> km</strong>.</p>
+                <div style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:19px;line-height:1.9;display:flex;flex-direction:column">
+                  <span>speed wiggle = 150 × 2.59 × 10<sup>6</sup> = 3.89 × 10<sup>8</sup> m = 389,000 km</span>
+                  <span>total wiggle = 40,000 + 389,000 = ± 429,000 km</span>
+                  <span style="color:#2F62B5;font-weight:600">window: 3.497 × 10<sup>7</sup> km to 3.583 × 10<sup>7</sup> km</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;padding-top:8px">
+                  <div style="position:relative;height:16px;border-radius:999px;background:#DCE5F5">
+                    <div style="position:absolute;left:18%;right:18%;top:0;bottom:0;border-radius:999px;background:#2F62B5"></div>
+                    <div style="position:absolute;left:50%;top:-6px;width:4px;height:28px;margin-left:-2px;background:#C8592A"></div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;font-size:15px;color:#4A463F;padding:0 14%"><span>closest</span><span style="color:#B24E22;font-weight:700">predicted</span><span>farthest</span></div>
+                </div>
+              </div>
+            </div>
+            <!-- uncertainty-window-visual:start -->
+            <figure aria-labelledby="uncertainty-window-visual-title" style="margin:0;padding:22px;border:1.5px solid #DDD6CA;border-radius:16px;background:#FFFFFF;display:flex;flex-direction:column;gap:18px;min-width:0">
+              <figcaption style="display:flex;flex-direction:column;gap:8px">
+                <h3 id="uncertainty-window-visual-title" style="margin:0;font-size:23px;line-height:1.3">Picture it: the window grows over time</h3>
+                <p style="margin:0;font-size:17px;line-height:1.5;color:#4A463F">Follow the predicted path. The shaded window shows possible positions around it. This is a sketch, not to scale.</p>
+              </figcaption>
+              <svg viewBox="0 0 760 300" role="img" aria-labelledby="uncertainty-cone-title uncertainty-cone-description" style="display:block;width:100%;height:auto">
+                <title id="uncertainty-cone-title">A small uncertainty window now becomes a wider window six months from now</title>
+                <desc id="uncertainty-cone-description">A dot marks the estimated starting position. A dashed predicted path runs through the middle of a shaded band. The band starts narrow and widens through two, four, and six months. Several faded dots and a question mark at six months represent possible positions, not several asteroids.</desc>
+                <path d="M95 140 L665 40 L665 260 L95 160 Z" fill="#DCE5F5"></path>
+                <path d="M95 140 L665 40 M95 160 L665 260" fill="none" stroke="#2F62B5" stroke-width="3"></path>
+                <path d="M95 140 V160 M285 107 V193 M475 73 V227 M665 40 V260" fill="none" stroke="#2F62B5" stroke-width="2" stroke-dasharray="5 6" opacity="0.65"></path>
+                <path d="M95 150 H695" fill="none" stroke="#C8592A" stroke-width="4" stroke-dasharray="10 8"></path>
+                <path d="M685 142 L698 150 L685 158" fill="none" stroke="#C8592A" stroke-width="3"></path>
+                <circle cx="95" cy="150" r="10" fill="#1D1B18"></circle>
+                <circle cx="665" cy="72" r="9" fill="#2F62B5" opacity="0.35"></circle>
+                <circle cx="665" cy="110" r="9" fill="#2F62B5" opacity="0.35"></circle>
+                <circle cx="665" cy="190" r="9" fill="#2F62B5" opacity="0.35"></circle>
+                <circle cx="665" cy="228" r="9" fill="#2F62B5" opacity="0.35"></circle>
+                <text x="665" y="161" text-anchor="middle" fill="#1D1B18" font-family="Atkinson Hyperlegible Next, sans-serif" font-size="36" font-weight="800">?</text>
+              </svg>
+              <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;text-align:center;font-size:15px;line-height:1.4">
+                <div><strong>Now</strong><br><span style="color:#4A463F">small</span></div>
+                <div><strong>2 months</strong><br><span style="color:#4A463F">bigger</span></div>
+                <div><strong>4 months</strong><br><span style="color:#4A463F">bigger still</span></div>
+                <div><strong>6 months</strong><br><span style="color:#4A463F">widest</span></div>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:12px 22px;font-size:16px;line-height:1.4">
+                <span style="display:flex;align-items:center;gap:9px"><span aria-hidden="true" style="flex:none;width:10px;height:10px;border-radius:50%;background:#1D1B18"></span>estimated position now</span>
+                <span style="display:flex;align-items:center;gap:9px"><span aria-hidden="true" style="flex:none;width:26px;border-top:3px dashed #C8592A"></span>predicted path</span>
+                <span style="display:flex;align-items:center;gap:9px"><span aria-hidden="true" style="flex:none;width:18px;height:14px;border:1px solid #2F62B5;background:#DCE5F5"></span>window of possible positions</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px;font-size:18px;line-height:1.5">
+                <p style="margin:0;padding:16px;border-radius:12px;background:#EFEAE0"><strong>Now:</strong> a small window. That is wiggle 1: uncertainty in the starting position.</p>
+                <p style="margin:0;padding:16px;border-radius:12px;background:#EFEAE0"><strong>Every second:</strong> wiggle 2 adds more. A slightly different velocity carries the object to a slightly different position.</p>
+                <p style="margin:0;padding:16px;border-radius:12px;background:#EFEAE0"><strong>Six months:</strong> a wider window. The faded dots are possible positions for one object. We cannot name one exact spot.</p>
+              </div>
+              <p style="margin:0;padding-top:14px;border-top:1px solid #DDD6CA;font-size:18px;line-height:1.5"><strong>Seen a hurricane forecast cone?</strong> It gets wider farther into the future. Same idea: more time means a wider range of possible positions. The shading shows uncertainty, not the size of the object.</p>
+              <p style="margin:0;font-size:15px;line-height:1.5;color:#4A463F">This shows how the window grows when we use the same measurements and a constant-velocity model. New measurements can narrow it.</p>
+            </figure>
+            <!-- uncertainty-window-visual:end -->
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:14px;background:#EAE4D8">
+              <span style="flex:none;width:10px;height:10px;margin-top:9px;border-radius:50%;background:#C8592A"></span>
+              <p style="font-size:19px;line-height:1.5;margin:0"><strong>Big idea:</strong> the further ahead we predict, the wider the window.</p>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">You predict 12 months ahead instead of 6. What happens to the window?</p>
+              <div style="display:grid;gap:10px">
+                <sc-for list="{{ q8.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="display:flex;gap:14px;align-items:center;text-align:left;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#F7F4EE;font-size:19px;line-height:1.35;cursor:pointer"><span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-weight:600;color:#E8875A">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ q8.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q8.fbColor }}"><strong>{{ q8.verdict }}</strong> {{ q8.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s10 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 2 · Tool 6 of 6</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">The position-vs-time graph</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">Your graph shows three lines: the <strong>predicted</strong> path, plus a <strong>closest</strong> and <strong>farthest</strong> line. Together they show the window.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px">
+              <svg viewBox="0 0 340 230" style="flex:1 1 280px;max-width:420px;height:auto">
+                <line x1="50" y1="20" x2="50" y2="190" stroke="#1D1B18" stroke-width="2.5"></line>
+                <line x1="50" y1="190" x2="320" y2="190" stroke="#1D1B18" stroke-width="2.5"></line>
+                <line x1="50" y1="38" x2="310" y2="98" stroke="#2F62B5" stroke-width="2.5" stroke-dasharray="7 6"></line>
+                <line x1="50" y1="46" x2="310" y2="166" stroke="#2F62B5" stroke-width="2.5" stroke-dasharray="7 6"></line>
+                <line x1="50" y1="42" x2="310" y2="132" stroke="#C8592A" stroke-width="4"></line>
+                <text x="185" y="214" font-family="Atkinson Hyperlegible Next" font-size="14" fill="#1D1B18" text-anchor="middle">time (days)</text>
+                <text x="20" y="105" font-family="Atkinson Hyperlegible Next" font-size="14" fill="#1D1B18" text-anchor="middle" transform="rotate(-90 20 105)">distance from Earth (km)</text>
+              </svg>
+              <div style="flex:1 1 220px;display:flex;flex-direction:column;gap:10px;font-size:18px;line-height:1.4">
+                <span style="display:flex;gap:10px;align-items:center"><span style="flex:none;width:28px;height:4px;background:#C8592A"></span>predicted</span>
+                <span style="display:flex;gap:10px;align-items:center"><span style="flex:none;width:28px;height:0;border-top:3px dashed #2F62B5"></span>closest / farthest bounds</span>
+                <span style="color:#4A463F">The lines start close together and spread apart over time.</span>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#4A463F">A strong graph has</span>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px 18px;font-size:19px;line-height:1.45">
+                <span style="display:flex;gap:10px"><span style="flex:none;width:18px;height:18px;margin-top:4px;border:2px solid #1D1B18;border-radius:4px"></span>a title</span>
+                <span style="display:flex;gap:10px"><span style="flex:none;width:18px;height:18px;margin-top:4px;border:2px solid #1D1B18;border-radius:4px"></span>x-axis: time, with units</span>
+                <span style="display:flex;gap:10px"><span style="flex:none;width:18px;height:18px;margin-top:4px;border:2px solid #1D1B18;border-radius:4px"></span>y-axis: distance, with units</span>
+                <span style="display:flex;gap:10px"><span style="flex:none;width:18px;height:18px;margin-top:4px;border:2px solid #1D1B18;border-radius:4px"></span>predicted line</span>
+                <span style="display:flex;gap:10px"><span style="flex:none;width:18px;height:18px;margin-top:4px;border:2px solid #1D1B18;border-radius:4px"></span>closest and farthest lines</span>
+                <span style="display:flex;gap:10px"><span style="flex:none;width:18px;height:18px;margin-top:4px;border:2px solid #1D1B18;border-radius:4px"></span>a key that names each line</span>
+              </div>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">Why do the bound lines spread apart over time?</p>
+              <div style="display:grid;gap:10px">
+                <sc-for list="{{ q9.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="display:flex;gap:14px;align-items:center;text-align:left;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#F7F4EE;font-size:19px;line-height:1.35;cursor:pointer"><span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-weight:600;color:#E8875A">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ q9.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q9.fbColor }}"><strong>{{ q9.verdict }}</strong> {{ q9.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s11 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 2 · Wrap-up</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">Four traps to avoid</h2>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">TRAP 1</span>
+                <strong style="font-size:20px">Mixing km and m</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">Convert first. Then calculate.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">TRAP 2</span>
+                <strong style="font-size:20px">Ignoring direction</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">8,500 m/s is not the whole story. It's tilted 15°.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">TRAP 3</span>
+                <strong style="font-size:20px">Whole vs. parts</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">Use v<sub>toward</sub> for distance to Earth, not the full speed.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">TRAP 4</span>
+                <strong style="font-size:20px">Skipping uncertainty</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">One number isn't enough. Give the window.</span>
+              </div>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself · spot the error</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">A student multiplies 8,500 m/s × time, then subtracts the answer from 1.2 × 10<sup>8</sup> km. Which traps did they fall into?</p>
+              <div style="display:grid;gap:10px">
+                <sc-for list="{{ q10.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="display:flex;gap:14px;align-items:center;text-align:left;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#F7F4EE;font-size:19px;line-height:1.35;cursor:pointer"><span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-weight:600;color:#E8875A">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ q10.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q10.fbColor }}"><strong>{{ q10.verdict }}</strong> {{ q10.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s12 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 3 · How you're scored</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">Four scores, each 0 to 4</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">Your work gets four separate scores. Each one asks a different question.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">1 · SCIENCE</span>
+                <strong style="font-size:21px;line-height:1.3">Is the physics right?</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">A 4 looks like: correct components, x<sub>f</sub> = x<sub>i</sub> + vt used right, uncertainty carried through, exact vocabulary.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">2 · REASONING</span>
+                <strong style="font-size:21px;line-height:1.3">Did you explain why?</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">A 4 looks like: you say why each step, what "constant speed" assumes, and what could make you wrong.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">3 · COMMUNICATION</span>
+                <strong style="font-size:21px;line-height:1.3">Can someone follow it?</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">A 4 looks like: organized, units on every number, clear graph, a paragraph a non-expert understands.</span>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#B24E22">4 · TRANSFER TO ASTEROID</span>
+                <strong style="font-size:21px;line-height:1.3">Did you connect it to the real question?</strong>
+                <span style="font-size:18px;line-height:1.45;color:#4A463F">A 4 looks like: you say what we know, what we don't, and why, not just "I did the math."</span>
+              </div>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">All your math is correct, but you never explain why you did each step. Which score takes the hit?</p>
+              <div style="display:grid;gap:10px">
+                <sc-for list="{{ q11.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="display:flex;gap:14px;align-items:center;text-align:left;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#F7F4EE;font-size:19px;line-height:1.35;cursor:pointer"><span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-weight:600;color:#E8875A">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ q11.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q11.fbColor }}"><strong>{{ q11.verdict }}</strong> {{ q11.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s13 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 3 · How you're scored</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">Your lowest score sets the grade</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">Scores are <strong>not averaged</strong>. Your lowest score shows exactly what to work on next.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:stretch">
+              <div style="flex:1 1 120px;background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-size:44px;font-weight:800">4</span><span style="font-size:16px;color:#4A463F">Science</span></div>
+              <div style="flex:1 1 120px;background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-size:44px;font-weight:800">4</span><span style="font-size:16px;color:#4A463F">Reasoning</span></div>
+              <div style="flex:1 1 120px;background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-size:44px;font-weight:800">4</span><span style="font-size:16px;color:#4A463F">Communication</span></div>
+              <div style="flex:1 1 120px;background:#C8592A;color:#FFFFFF;border:1.5px solid #C8592A;border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:4px"><span style="font-size:44px;font-weight:800">2</span><span style="font-size:16px">Transfer</span></div>
+              <div style="flex:1 1 120px;background:#1D1B18;color:#F7F4EE;border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px"><span style="font-size:44px;font-weight:800">B</span><span style="font-size:16px">grade</span></div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:14px;background:#EAE4D8">
+              <span style="flex:none;width:10px;height:10px;margin-top:9px;border-radius:50%;background:#C8592A"></span>
+              <p style="font-size:19px;line-height:1.5;margin:0"><strong>You can revise.</strong> Within 2 weeks of feedback, you can move up one level per score. Show <strong>new evidence</strong>. Nicer wording alone doesn't count.</p>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">Your scores: Science 4, Reasoning 3, Communication 4, Transfer 2. What should you revise first?</p>
+              <div style="display:grid;gap:10px">
+                <sc-for list="{{ q12.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="display:flex;gap:14px;align-items:center;text-align:left;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#F7F4EE;font-size:19px;line-height:1.35;cursor:pointer"><span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-weight:600;color:#E8875A">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ q12.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q12.fbColor }}"><strong>{{ q12.verdict }}</strong> {{ q12.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s14 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Part 3 · How you're scored</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">The public paragraph</h2>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">Picture someone on your block: a neighbor, a grandparent, a younger cousin. They saw "asteroid" in a headline on their phone. What do they need from you?</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+              <div style="background:#1D1B18;color:#F7F4EE;border-radius:14px;padding:18px 20px;font-size:20px;font-weight:700">What we know</div>
+              <div style="background:#1D1B18;color:#F7F4EE;border-radius:14px;padding:18px 20px;font-size:20px;font-weight:700">What we don't know</div>
+              <div style="background:#1D1B18;color:#F7F4EE;border-radius:14px;padding:18px 20px;font-size:20px;font-weight:700">Why we can't be exact yet</div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:14px;background:#EAE4D8">
+              <span style="flex:none;width:10px;height:10px;margin-top:9px;border-radius:50%;background:#C8592A"></span>
+              <p style="font-size:19px;line-height:1.5;margin:0"><strong>Read official messages critically.</strong> Some leave out what they don't know. Honest analysts say it out loud. "We're not sure yet, and here's why" builds trust.</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px">
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#4A463F">SAMPLE A</span>
+                <p style="font-size:19px;line-height:1.55;margin:0">"The object is moving at a certain speed and will be at a certain position. We did the math. Physics is important for understanding space."</p>
+              </div>
+              <div style="background:#FFFFFF;border:1.5px solid #DDD6CA;border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px">
+                <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;color:#4A463F">SAMPLE B</span>
+                <p style="font-size:19px;line-height:1.55;margin:0">"In 30 days, the object will be about 35 million km from Earth, roughly 90 times farther than the Moon. We can't name one exact spot. NASA's measurements are slightly off, and small errors grow over time. So the real spot is somewhere in a window about 860,000 km wide. As more data comes in, that window will shrink."</p>
+              </div>
+            </div>
+            <div style="background:#24221E;color:#F7F4EE;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#E8875A">Check yourself · score it</span>
+              <p style="font-size:21px;line-height:1.45;margin:0;font-weight:600">Which sample would score higher on Communication and Transfer to Asteroid?</p>
+              <div style="display:grid;gap:10px">
+                <sc-for list="{{ q13.opts }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="display:flex;gap:14px;align-items:center;text-align:left;min-height:52px;padding:10px 16px;border-radius:12px;border:2px solid {{ o.bd }};background:{{ o.bg }};color:#F7F4EE;font-size:19px;line-height:1.35;cursor:pointer"><span style="flex:none;font-family:'Atkinson Hyperlegible Mono',monospace;font-weight:600;color:#E8875A">{{ o.letter }}</span><span>{{ o.label }}</span></button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ q13.answered }}"><p style="font-size:19px;line-height:1.5;margin:0;color:{{ q13.fbColor }}"><strong>{{ q13.verdict }}</strong> {{ q13.feedback }}</p></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s15 }}">
+          <div style="display:flex;flex-direction:column;gap:26px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#B24E22">Finish</span>
+              <h2 style="font-size:36px;line-height:1.12;margin:0;font-weight:800;letter-spacing:-0.01em">You're ready to start</h2>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;background:#1D1B18;color:#F7F4EE;border-radius:16px;padding:22px 24px">
+              <span style="font-size:48px;font-weight:800;color:#E8875A">{{ correctCount }}/{{ qTotal }}</span>
+              <span style="font-size:19px;line-height:1.45;flex:1 1 240px">checks answered right on the first or a later try. Missed one? Go back and try it again.</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <span style="font-family:'Atkinson Hyperlegible Mono',monospace;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#4A463F">What you hand in</span>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:20px;line-height:1.45">
+                <span style="display:flex;gap:12px"><span style="flex:none;width:20px;height:20px;margin-top:4px;border:2px solid #1D1B18;border-radius:4px"></span>Calculations for the position after 6 months</span>
+                <span style="display:flex;gap:12px"><span style="flex:none;width:20px;height:20px;margin-top:4px;border:2px solid #1D1B18;border-radius:4px"></span>Velocity split into components</span>
+                <span style="display:flex;gap:12px"><span style="flex:none;width:20px;height:20px;margin-top:4px;border:2px solid #1D1B18;border-radius:4px"></span>The uncertainty window</span>
+                <span style="display:flex;gap:12px"><span style="flex:none;width:20px;height:20px;margin-top:4px;border:2px solid #1D1B18;border-radius:4px"></span>A labeled position-vs-time graph with bounds</span>
+                <span style="display:flex;gap:12px"><span style="flex:none;width:20px;height:20px;margin-top:4px;border:2px solid #1D1B18;border-radius:4px"></span>One honest paragraph for the public</span>
+              </div>
+            </div>
+            <p style="font-size:21px;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">Use your <strong>Unit 1 Student Packet</strong> to build each piece step by step.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px">
+              <button onClick="{{ goPart1 }}" style="min-height:48px;padding:0 20px;border-radius:999px;border:2px solid #1D1B18;background:transparent;color:#1D1B18;font-size:17px;font-weight:700;cursor:pointer">Review Part 1</button>
+              <button onClick="{{ goPart2 }}" style="min-height:48px;padding:0 20px;border-radius:999px;border:2px solid #1D1B18;background:transparent;color:#1D1B18;font-size:17px;font-weight:700;cursor:pointer">Review Part 2</button>
+              <button onClick="{{ goPart3 }}" style="min-height:48px;padding:0 20px;border-radius:999px;border:2px solid #1D1B18;background:transparent;color:#1D1B18;font-size:17px;font-weight:700;cursor:pointer">Review Part 3</button>
+              <button onClick="{{ resetAll }}" style="min-height:48px;padding:0 20px;border-radius:999px;border:2px solid #B23A2E;background:transparent;color:#B23A2E;font-size:17px;font-weight:700;cursor:pointer">Reset practice checks</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ responses.length }}"><section aria-label="Your assignment responses" style="background:#fff;border:2px solid #C8592A;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:20px">
+<h2 style="margin:0;font-size:25px">Your responses</h2><p style="margin:0;color:#4A463F">Write in your own words. Your answers save to this assignment. Self-checks above are practice and keep their feedback.</p>
+<sc-for list="{{ responses }}" as="f"><label style="display:flex;flex-direction:column;gap:9px;font-size:19px;line-height:1.5"><span>{{ f.label }}</span><sc-if value="{{ f.short }}"><input aria-label="{{ f.label }}" value="{{ f.value }}" onChange="{{ f.onInput }}" disabled="{{ f.readOnly }}" maxLength="12000" style="box-sizing:border-box;width:100%;min-height:48px;padding:10px 12px;border:1.5px solid #B9AF9F;border-radius:8px;font:inherit;background:#FFFEFC;color:#1D1B18"></input></sc-if><sc-if value="{{ f.long }}"><textarea aria-label="{{ f.label }}" value="{{ f.value }}" onChange="{{ f.onInput }}" disabled="{{ f.readOnly }}" maxLength="12000" rows="5" style="box-sizing:border-box;width:100%;min-height:130px;resize:vertical;padding:12px;border:1.5px solid #B9AF9F;border-radius:8px;font:inherit;background:#FFFEFC;color:#1D1B18"></textarea></sc-if></label></sc-for></section></sc-if>
+<div style="display:flex;justify-content:space-between;gap:12px;padding-top:12px;border-top:1.5px solid #DDD6CA">
+          <button onClick="{{ prev }}" disabled="{{ atStart }}" style="min-height:56px;padding:0 26px;border-radius:999px;border:2px solid #1D1B18;background:transparent;color:#1D1B18;font-size:19px;font-weight:700;cursor:pointer;opacity:{{ prevOpacity }}">← Back</button>
+          <button onClick="{{ next }}" disabled="{{ atEnd }}" style="min-height:56px;padding:0 30px;border-radius:999px;border:none;background:#C8592A;color:#FFFFFF;font-size:19px;font-weight:700;cursor:pointer;opacity:{{ nextOpacity }}">{{ nextLabel }} →</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+
+const NAV = [
+  { title: 'Part 1 · Unpack', items: [[1,'Your job'],[2,'Decode the data'],[3,'The 5 jobs']] },
+  { title: 'Part 2 · Physics tools', items: [[4,'Units: km to m'],[5,'Time in seconds'],[6,'Vector components'],[7,'Position equation'],[8,'What is uncertainty?'],[9,'Uncertainty window'],[10,'The graph'],[11,'Four traps']] },
+  { title: 'Part 3 · Scoring', items: [[12,'Four scores'],[13,'Lowest score rule'],[14,'Public paragraph'],[15,'Finish']] },
+];
+const SCREEN_Q = {1:'q1',2:'q2',3:'q3',4:'q4',5:'q5',6:'q6',7:'q7',8:'q17',9:'q8',10:'q9',11:'q10',12:'q11',13:'q12',14:'q13'};
+const Q = {
+  q1: { opts: ["Find the asteroid's mass and size", 'Predict its position, and explain honestly how sure we are', 'Decide whether to destroy the asteroid', 'Draw a picture of the asteroid'], c: 1,
+    right: 'You need a prediction AND an honest report on how certain it is.', wrong: 'Look back at the two numbered jobs above.' },
+  q2: { opts: ['The asteroid has no mass', "Earth's gravity on it is tiny: less than 0.001 m/s²", 'NASA told us to', 'It is moving straight at Earth'], c: 1,
+    right: 'Almost no force means almost no change in speed.', wrong: 'Find the row about gravity in the data table.' },
+  q3: { opts: ['Your teacher only', 'NASA scientists', 'The public: people with no physics background', 'Other physics students'], c: 2,
+    right: 'Write so a neighbor or family member can follow it.', wrong: 'Re-read job 5. It names the audience.' },
+  q4: { num: 4e7, right: '40,000 × 1,000 = 40,000,000 m, or 4 × 10⁷ m.', wrong: 'Multiply by 1,000. Add 3 to the exponent.' },
+  q5: { num: 864000, right: '10 × 86,400 = 864,000 s.', wrong: 'One day is 86,400 s. Multiply by 10.' },
+  q6: { opts: ['Used sin where it should be cos', 'Forgot the units', 'Should have added, not multiplied', 'Nothing is wrong'], c: 0,
+    right: 'The toward-Earth side touches the angle, so it uses cos. The answer should be 5,640 m/s.', wrong: 'Check the memory trick: which side touches the angle?' },
+  q7: { num: 6e5, right: 'Covered 300 × 1,000 = 300,000 m. Then 900,000 − 300,000 = 600,000 m.', wrong: 'First find distance covered (v × t). Then subtract it from the start.' },
+  q8: { opts: ['It gets wider', 'It gets narrower', 'It stays the same', 'It disappears'], c: 0,
+    right: 'Speed uncertainty × a longer time = a bigger wiggle.', wrong: 'Wiggle 2 is velocity uncertainty × time. What happens when time doubles?' },
+  q9: { opts: ['The speed uncertainty adds up every second', 'The asteroid speeds up', "Earth's gravity gets stronger", 'The graph is drawn wrong'], c: 0,
+    right: 'A small error in speed becomes a bigger error in position over time.', wrong: 'Go back to the "Big idea" on the uncertainty screen.' },
+  q10: { opts: ['Used the full speed instead of v-toward, and mixed m with km', 'Nothing. This is correct', 'Should have used sin', 'Should have added instead of subtracted'], c: 0,
+    right: 'Traps 1 and 3. Convert units, and use only the toward-Earth part.', wrong: 'Compare their steps to Trap 1 and Trap 3.' },
+  q11: { opts: ['Science', 'Reasoning', 'Communication', 'Transfer to Asteroid'], c: 1,
+    right: 'Correct math without the "why" is plug-and-chug. That caps Reasoning.', wrong: 'Which score asks "Did you explain why?"' },
+  q12: { opts: ['Science', 'Reasoning', 'Communication', 'Transfer to Asteroid'], c: 3,
+    right: 'The 2 is lowest, and it sets the grade. Start there.', wrong: 'Find the lowest number. That one sets your grade.' },
+  q13: { opts: ['Sample A', 'Sample B', 'They would score the same'], c: 1,
+    right: 'B gives real numbers in plain words, admits what we don\u2019t know, and explains why.', wrong: 'Check each sample for: what we know, what we don\u2019t, and why.' },
+};
+Q.q17 = { num: 870, right: '900 − 30 = 870 m. The farthest would be 930 m.', wrong: 'Closest = value − uncertainty.' };
+Q.q18 = { opts: ['Who made a mistake', 'How far off a measurement could be', 'The exact answer', 'A guess with no data behind it'], c: 1, right: 'Uncertainty is the honest size of the “maybe.”', wrong: 'Uncertainty is not a mistake. Re-read the top of this screen.' };
+const LETTERS = ['A','B','C','D'];
+const TOTAL = 16;
+
+function parseNum(s) {
+  if (s == null) return NaN;
+  let t = String(s).replace(/,/g, '').replace(/\s/g, '').replace(/[a-z]+$/i, (m) => /^e/i.test(m) ? m : '');
+  t = t.replace(/(?:×|x|\*)10\^?/i, 'e').replace(/^10\^/, '1e');
+  return parseFloat(t);
+}
+
+class Component extends DCLogic {
+  contentRef = React.createRef();
+  state = { i:0, ans:{}, num:{}, done:{}, responses:{}, speaking:false };
+  componentDidMount() {
+    this.receive = e => { if(e.source!==window.parent || e.origin!==window.parent.location.origin || e.data?.type!=='review:init')return; this.setState({...e.data.state,responses:e.data.state.responses||{},speaking:false}); this.readOnly=!!e.data.readOnly; };
+    window.addEventListener('message',this.receive);
+    window.parent.postMessage({type:'review:ready'},window.parent.location.origin);
+  }
+  save(patch) {
+    this.setState(patch,()=>{const {i,ans,num,done,responses}=this.state;window.parent.postMessage({type:'review:change',state:{i,ans,num,done,responses}},window.parent.location.origin);});
+  }
+  componentWillUnmount() { window.removeEventListener("message",this.receive); try { speechSynthesis.cancel(); } catch (e) {} }
+  go(i) {
+    try { speechSynthesis.cancel(); } catch (e) {}
+    this.save({ i: Math.max(0, Math.min(TOTAL - 1, i)), speaking: false });
+    window.scrollTo(0, 0);
+  }
+  toggleSpeak() {
+    if (!window.speechSynthesis) return;
+    if (this.state.speaking) { speechSynthesis.cancel(); this.setState({ speaking: false }); return; }
+    const el = this.contentRef.current; if (!el) return;
+    let text = el.innerText.replace(/← Back|Next →|Start →|Check\n/g, '').replace(/±/g, ' plus or minus ').replace(/× 10/g, ' times 10 to the ').replace(/θ/g, 'theta');
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.92;
+    u.onend = () => this.setState({ speaking: false });
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+    this.setState({ speaking: true });
+  }
+  mcVals(id) {
+    const q = Q[id], a = this.state.ans[id];
+    const answered = a != null, ok = a === q.c;
+    return {
+      answered,
+      verdict: ok ? 'Yes!' : 'Not quite.',
+      feedback: ok ? q.right : q.wrong + ' Try again.',
+      fbColor: ok ? '#8FD9AA' : '#F4A898',
+      opts: q.opts.map((label, k) => {
+        const picked = a === k;
+        const showRight = picked && ok;
+        return {
+          label, letter: LETTERS[k],
+          bg: showRight ? '#1F4D33' : picked ? '#5A2620' : '#34312C',
+          bd: showRight ? '#8FD9AA' : picked ? '#F4A898' : '#4A463F',
+          onClick: () => this.save({ ans: { ...this.state.ans, [id]: k }, done: { ...this.state.done, [id]: k === q.c || !!this.state.done[id] } }),
+        };
+      }),
+    };
+  }
+  numVals(id) {
+    const q = Q[id], v = this.state.num[id] ?? '', res = this.state.ans[id];
+    const check = () => {
+      const n = parseNum(this.state.num[id]);
+      const ok = isFinite(n) && Math.abs(n - q.num) / q.num < 0.03;
+      this.save({ ans: { ...this.state.ans, [id]: ok }, done: { ...this.state.done, [id]: ok || this.state.done[id] } });
+    };
+    return {
+      value: v,
+      onInput: (e) => this.save({ num: { ...this.state.num, [id]: e.target.value }, ans: { ...this.state.ans, [id]: undefined } }),
+      onKey: (e) => { if (e.key === 'Enter') check(); },
+      check,
+      answered: res === true || res === false,
+      verdict: res ? 'Yes!' : 'Not quite.',
+      feedback: res ? q.right : q.wrong + ' Try again.',
+      fbColor: res ? '#8FD9AA' : '#F4A898',
+    };
+  }
+  renderVals() {
+    const { i, done } = this.state;
+    const out = {};
+    for (let k = 0; k < TOTAL; k++) out['s' + k] = i === k;
+    Object.keys(Q).forEach((id) => { out[id] = Q[id].num != null ? this.numVals(id) : this.mcVals(id); });
+    const navGroups = NAV.map((g) => ({
+      title: g.title,
+      items: g.items.map(([n, label]) => {
+        const qid = SCREEN_Q[n], isDone = qid && done[qid], active = i === n;
+        return {
+          label, go: () => this.go(n),
+          bg: active ? '#E6DFD3' : 'transparent',
+          weight: active ? 700 : 400,
+          mark: isDone ? '✓' : String(n),
+          dotBg: isDone ? '#2E7D4F' : active ? '#C8592A' : '#E6DFD3',
+          dotFg: isDone || active ? '#FFFFFF' : '#4A463F',
+        };
+      }),
+    }));
+    return {
+      ...out,
+      responses: [{"screen":1,"id":"job","label":"In your own words, what two jobs does the asteroid task ask you to do?","kind":"long"},{"screen":2,"id":"position","label":"The current position, 1.2 × 10⁸ km, tells us _____.","kind":"short"},{"screen":2,"id":"velocity","label":"The velocity, 8,500 m/s at 15°, tells us _____.","kind":"short"},{"screen":2,"id":"gravity","label":"Why is a constant-velocity model reasonable here?","kind":"long"},{"screen":3,"id":"deliverables","label":"Name the five things you need to produce for the transfer task.","kind":"long"},{"screen":4,"id":"km","label":"1 km = _____ m.","kind":"short"},{"screen":4,"id":"convert","label":"Convert 1.2 × 10⁸ km to meters. Show your conversion and units.","kind":"long"},{"screen":5,"id":"seconds","label":"Because velocity is in m/s, time must be in _____.","kind":"short"},{"screen":5,"id":"day","label":"1 day = 24 × 60 × 60 = _____ seconds.","kind":"short"},{"screen":5,"id":"time","label":"Using 182.5 days for six months, calculate the time in seconds. Show your work.","kind":"long"},{"screen":6,"id":"toward","label":"Toward-Earth component: v × _____ θ.","kind":"short"},{"screen":6,"id":"side","label":"Sideways component: v × _____ θ.","kind":"short"},{"screen":6,"id":"components","label":"Calculate both components of 8,500 m/s at 15°. Include units and explain which component changes the toward-Earth position.","kind":"long"},{"screen":7,"id":"equation","label":"Write the position equation, define its symbols, and explain the sign of the toward-Earth velocity.","kind":"long"},{"screen":7,"id":"prediction","label":"Use your converted starting position, toward-Earth velocity, and six-month time to predict x_f. Show the calculation with units.","kind":"long"},{"screen":8,"id":"uncertainty","label":"Uncertainty describes _____, rather than a mistake.","kind":"short"},{"screen":8,"id":"range","label":"For 900 ± 30 m, the lowest value is _____ m and the highest is _____ m.","kind":"short"},{"screen":8,"id":"explain_uncertainty","label":"Explain what ± means to someone who has never studied physics.","kind":"long"},{"screen":9,"id":"wiggle","label":"Total wiggle = position uncertainty + (velocity uncertainty × _____).","kind":"short"},{"screen":9,"id":"window","label":"Using ±50,000 km and ±200 m/s, calculate the uncertainty after six months. Show matching units and the lower and upper x_f bounds.","kind":"long"},{"screen":10,"id":"graph","label":"Describe your graph: label both axes with units, describe the predicted-position line, and explain why the uncertainty band widens.","kind":"long"},{"screen":11,"id":"traps","label":"Choose two of the four traps. Explain how you will avoid each in your own work.","kind":"long"},{"screen":12,"id":"scores","label":"Name the four rubric categories and describe what strong evidence looks like in one of them.","kind":"long"},{"screen":13,"id":"lowest","label":"How does the lowest-score rule work? Which part of your work will you improve first, and how?","kind":"long"},{"screen":14,"id":"public","label":"Write your public paragraph: what we know, what we do not know, why there is uncertainty, and what should happen next. Use numbers, units, and plain language.","kind":"long"}].filter(f=>f.screen===i).map(f=>({...f,long:f.kind==='long',short:f.kind==='short',value:this.state.responses[f.id]||'',readOnly:!!this.readOnly,onInput:e=>{if(!this.readOnly)this.save({responses:{...this.state.responses,[f.id]:e.target.value}});}})),
+      navGroups,
+      contentRef: this.contentRef,
+      screenNum: i + 1, screenTotal: TOTAL,
+      progressPct: Math.round((i / (TOTAL - 1)) * 100) + '%',
+      speakLabel: this.state.speaking ? 'Stop reading' : 'Read aloud',
+      toggleSpeak: () => this.toggleSpeak(),
+      prev: () => this.go(i - 1), next: () => this.go(i + 1),
+      atStart: i === 0, atEnd: i === TOTAL - 1,
+      prevOpacity: i === 0 ? 0.35 : 1, nextOpacity: i === TOTAL - 1 ? 0.35 : 1,
+      nextLabel: i === 0 ? 'Start' : 'Next',
+      correctCount: Object.keys(Q).filter((id) => done[id]).length,
+      qTotal: Object.keys(Q).length,
+      goPart1: () => this.go(1), goPart2: () => this.go(4), goPart3: () => this.go(12),
+      resetAll: () => this.save({ ans: {}, num: {}, done: {}, i: 0 }),
+    };
+  }
+}
+</script>
+</body>
+</html>

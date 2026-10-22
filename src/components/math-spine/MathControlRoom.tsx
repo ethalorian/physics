@@ -13,6 +13,7 @@
  * Self-contained so the main control-room file only gains a view toggle. Scoped
  * to the control room's active class via `classId`.
  */
+import { useAssessmentReviewGuard } from '@/components/admin/useAssessmentReviewGuard'
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import MathWorkReview from './MathWorkReview'
 import styles from './MathControlRoom.module.css'
@@ -74,7 +75,7 @@ const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Go
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 const CHECKED_REVISION_REPLY = 'I have checked your response. Your next step is a fresh independent check on this skill.'
 
-export default function MathControlRoom({ classId, teacher }: { classId?: string | null; teacher?: string | null }) {
+export default function MathControlRoom({ classId, teacher, initialStudentId, competencyId, embedded = false, onClose, onSaved }: { classId?: string | null; teacher?: string | null; initialStudentId?: string; competencyId?: string; embedded?: boolean; onClose?: () => void; onSaved?: () => void }) {
   // class + (admin-only) teacher scope, as one query string.
   const scopeParams = new URLSearchParams()
   if (classId) scopeParams.set('class', classId)
@@ -99,6 +100,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   // Between students we pause on a gate so your eyes land before the next swap.
   const [nextGate, setNextGate] = useState<{ id: string; name: string } | null>(null)
 
+  useAssessmentReviewGuard(!!savingKey || !!fbText.trim() || selectedLevel !== null || requestRevision || !!revisionOutcome)
   const refreshVersion=useRef(0)
   const [queueError,setQueueError]=useState(''),[agedOnly,setAgedOnly]=useState(false)
   const refresh = useCallback(() => {
@@ -123,7 +125,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   const loadStudent = useCallback((studentId: string) => {
     const generation = ++studentLoad.current
     setDrawerLoading(true)
-    return fetch(`/api/math-spine/student-warmups?user_id=${encodeURIComponent(studentId)}`)
+    return fetch(`/api/math-spine/student-warmups?user_id=${encodeURIComponent(studentId)}${competencyId ? '&competency_id=' + encodeURIComponent(competencyId) : ''}`)
       .then(async (r) => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Could not load work'); return d })
       .then((d) => {
         if (generation !== studentLoad.current) return [] as Submission[]
@@ -136,7 +138,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
         return enriched as Submission[]
       })
       .catch((e) => { if (generation === studentLoad.current) { setDrawerLoading(false); setFlash(e.message) } return [] as Submission[] })
-  }, [])
+  }, [competencyId])
 
   const openStudent = useCallback((studentId: string, name: string) => {
     if (savingKey) return
@@ -149,7 +151,10 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
     loadStudent(studentId)
   }, [loadStudent, grid, savingKey])
 
-  const closeDrawer = useCallback(() => { if (savingKey) return; studentLoad.current++; setSel(null); setSubs([]); setNextGate(null) }, [savingKey])
+  const closeDrawer = useCallback(() => { if (savingKey) return; if (embedded) { onClose?.(); return }; studentLoad.current++; setSel(null); setSubs([]); setNextGate(null); onClose?.() }, [savingKey, onClose, embedded])
+
+  const initialOpened = useRef(false)
+  useEffect(() => { if (!initialOpened.current && initialStudentId && grid) { const student = grid.students.find(s => s.id === initialStudentId); if (student) { initialOpened.current = true; openStudent(student.id, student.name) } } }, [grid, initialStudentId, openStudent])
 
   const pendingSubs = subs.filter(s => s.status === 'pending' || s.revision?.status === 'pending')
   const activeSub = pendingSubs.find(s => s.id === submissionId) ?? pendingSubs[0] ?? null
@@ -188,7 +193,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   useEffect(() => {
     if (!sel) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Tab') {
+      if (!embedded && e.key === 'Tab') {
         const dialog = document.querySelector<HTMLElement>('[aria-label="Review math work"]')
         const fields = Array.from(dialog?.querySelectorAll<HTMLElement>('button:not(:disabled), textarea:not(:disabled), input:not(:disabled), select:not(:disabled), a[href], summary') ?? []).filter(el => el.getClientRects().length > 0)
         const first = fields[0], last = fields[fields.length - 1]
@@ -198,7 +203,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       if (nextGate) return // gate owns the keyboard while it's up
       const el = document.activeElement
       const typing = !!el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')
-      if (e.key === 'Escape') {
+      if (!embedded && e.key === 'Escape') {
         // Mid-draft Escape must not close the drawer and eat the feedback text.
         if (typing && el.tagName === 'TEXTAREA') { (el as HTMLElement).blur(); return }
         closeDrawer(); return
@@ -210,7 +215,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         e.preventDefault()
         const direction = e.key === 'ArrowRight' ? 1 : -1
-        if (e.shiftKey) { const roster = grid?.students.filter(s => s.ratable !== false) ?? []; const next = roster[roster.findIndex(s => s.id === sel.studentId) + direction]; if (next) openStudent(next.id, next.name) }
+        if (e.shiftKey && !embedded) { const roster = grid?.students.filter(s => s.ratable !== false) ?? []; const next = roster[roster.findIndex(s => s.id === sel.studentId) + direction]; if (next) openStudent(next.id, next.name) }
         else { const next = pendingSubs[pendingSubs.findIndex(s => s.id === activeSub?.id) + direction]; if (next) setSubmissionId(next.id) }
         return
       }
@@ -274,9 +279,9 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
         setFlash(`🎉 +${pts} XP for ${sel.name}`)
         setTimeout(() => setFlash(null), 3000)
       }
-      refresh()
+      refresh(); onSaved?.()
       const fresh = await loadStudent(sel.studentId)
-      if (!fresh.some((s) => s.status === 'pending' || s.revision?.status === 'pending')) {
+      if (!embedded && !fresh.some((s) => s.status === 'pending' || s.revision?.status === 'pending')) {
         // Student done — advance to the next student with warm-ups to review,
         // skipping those with nothing pending. Close if everyone's caught up.
         const q = await fetch(`/api/math-spine/warmup-queue${classQuery}`).then((r) => r.json())
@@ -301,6 +306,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   if (!grid) return <p role="alert" className="text-sm" style={{ color: 'var(--destructive)' }}>{queueError||'Could not load the math grid.'} <button className="min-h-11 underline" onClick={refresh}>Retry</button></p>
   if (grid.students.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No students in scope.</p>
 
+  if (embedded && initialStudentId && !grid.students.some(s => s.id === initialStudentId && s.ratable !== false)) return <p role="alert">This student’s work is outside your grading roster. Close this panel and choose a student from your class.</p>
   const reviewRoster = grid.students.filter(s => s.ratable !== false)
   const studentIndex = reviewRoster.findIndex(s => s.id === sel?.studentId)
   const previousStudent = reviewRoster[studentIndex - 1]
@@ -315,6 +321,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
         </div>
       )}
 
+      {!embedded && <>
       {/* Review-first: the warm-ups waiting to be rated. */}
       <div className="rounded-xl border p-4 mb-5" style={{ borderColor: 'color-mix(in oklch, var(--reward) 35%, var(--border))', background: 'color-mix(in oklch, var(--reward) 8%, transparent)' }}>
         <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
@@ -500,12 +507,13 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
         )
       })()}
 
+      </>}
       {/* Review drawer */}
       {sel && (
         <>
-          <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
-          <div className={styles.drawer} role="dialog" aria-modal="true" aria-label="Review math work" style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1440px, 100vw)', zIndex: 100, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
-            <ReviewQueueRail students={grid.students} counts={Object.fromEntries(queue.map(q => [q.studentId, q.count]))} activeId={sel.studentId} savedCount={reviewsSaved} disabled={savingKey !== null || !!nextGate} onSelect={id => { const student = grid.students.find(s => s.id === id); if (student) openStudent(id, student.name) }} />
+          {!embedded && <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />}
+          <div className={styles.drawer} role={embedded ? undefined : "dialog"} aria-modal={embedded ? undefined : true} aria-label="Review math work" style={{ position: embedded ? 'relative' : 'fixed', top: 0, right: 0, bottom: 0, height: embedded ? '75vh' : undefined, width: embedded ? '100%' : 'min(1440px, 100vw)', zIndex: 100, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
+            {!embedded && <ReviewQueueRail students={grid.students} counts={Object.fromEntries(queue.map(q => [q.studentId, q.count]))} activeId={sel.studentId} savedCount={reviewsSaved} disabled={savingKey !== null || !!nextGate} onSelect={id => { const student = grid.students.find(s => s.id === id); if (student) openStudent(id, student.name) }} />}
             {/* content column */}
             <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}>
 
@@ -594,7 +602,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
               </div>
               </div>
             )}
-            <ReviewStudentBar name={sel.name} context={`Warm-up · ${queue.length} students remaining`} previous={previousStudent} next={nextStudent} disabled={savingKey !== null || !!nextGate} onSelect={id => { const student = reviewRoster.find(s => s.id === id); if (student) openStudent(id, student.name) }} onClose={closeDrawer} />
+            {!embedded && <ReviewStudentBar name={sel.name} context={`Warm-up · ${queue.length} students remaining`} previous={previousStudent} next={nextStudent} disabled={savingKey !== null || !!nextGate} onSelect={id => { const student = reviewRoster.find(s => s.id === id); if (student) openStudent(id, student.name) }} onClose={closeDrawer} />}
             {nextGate && (
               <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'color-mix(in oklch, var(--background) 94%, transparent)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
                 <div className={styles.savedSeal} aria-hidden="true">✓</div><div className="text-caption" style={{ color: 'var(--success)' }}>Review saved. One more next step delivered.</div><div className={styles.sessionCount}>{reviewsSaved} reviews saved this session</div>

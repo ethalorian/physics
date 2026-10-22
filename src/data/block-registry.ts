@@ -1,3 +1,5 @@
+import { interactiveComplete, interactiveTaskIssues } from '@/lib/interactive-question'
+import { isArtifactResponseComplete } from '@/lib/lesson-artifacts'
 import {completeProblemAnswer} from '@/lib/problem-response'
 import { notebookAuthoringIssues } from '@/lib/interactive-notebook'
 import { numericCell } from '@/components/blocks/data-plot'
@@ -8,6 +10,7 @@ export interface FieldDef { key: string; label: string; kind: FieldKind; options
 export interface BlockDef { type: BlockType; label: string; group: 'Teach' | 'Practice'; capture?: boolean; fields: FieldDef[] }
 
 export const BLOCK_DEFS: BlockDef[] = [
+  {type:'interactive_question', label:'Interactive question',group:'Practice',capture:true,fields:[]},
   { type: 'instruction_video', label: 'Instruction video', group: 'Teach', fields: [{ key: 'title', label: 'Video title', kind: 'text' }, { key: 'youtubeId', label: 'YouTube video ID', kind: 'text' }, { key: 'summary', label: 'Key ideas / text alternative', kind: 'textarea' }, { key: 'durationSeconds', label: 'Verified video length in seconds (for watch XP)', kind: 'number' }, { key: 'transcript', label: 'Verified transcript (optional)', kind: 'textarea' }] },
   { type: 'position_explorer', label: 'Position and displacement explorer', group: 'Teach', fields: [{ key: 'title', label: 'Title', kind: 'text' }] },
   { type: 'question', label: 'Checkpoint question', group: 'Practice', capture: true, fields: [{ key: 'question', label: 'Question and feedback', kind: 'question' }] },
@@ -157,7 +160,7 @@ export const RESPONSE_RULES: Partial<Record<BlockType, (response: unknown, block
   exit_ticket: (v, b) => b?.type === 'exit_ticket' && b.workshop?.peerCheck ? ['ready', 'fix'].includes(String(obj(v).decision)) && text(obj(v).reading) && text(obj(v).source) && (obj(v).decision !== 'fix' || text(obj(v).fix)) : substantiveAnswer(v, b),
   transfer_prompt: (v, b) => substantiveAnswer(v, b),
   sentence_frame: (v, b) => substantiveAnswer(v, b),
-  sketch: (v) => drawing(obj(v).strokes) || text(obj(v).text),
+  sketch: (v, b) => b?.type === 'sketch' && b.submission === 'upload' ? isArtifactResponseComplete(v, b.captionRequired !== false) : drawing(obj(v).strokes) || text(obj(v).text),
   lab_notebook: (v, b) => !(b?.type === 'lab_notebook' && b.requireAllFields) ? drawing(obj(v).strokes) || Object.values(obj(obj(v).fields)).some(text) : (b?.type === 'lab_notebook' && b.fields?.length ? b.fields : ['What I did', 'What I observed', 'What it means']).every((field) => text(obj(obj(v).fields)[field])),
   observation: (v, b) => substantiveAnswer({ text: obj(v).pattern }, b) && substantiveAnswer({ text: obj(v).interpret }, b),
   marzano: rating,
@@ -177,6 +180,7 @@ export const RESPONSE_RULES: Partial<Record<BlockType, (response: unknown, block
     return Array.isArray(rows) && rows.filter((row) => Array.isArray(row) && row.length >= cols && row.every(text) && (!numeric || [row[xi], row[yi]].every((v) => numericCell(v) !== null))).length >= required && (b?.type === 'data_table' && b.analysisMode === 'record' || text(obj(v).pattern) && text(obj(v).interpret));
   },
   concept_exercise: (v) => obj(v).submitted === true && Number(obj(obj(v).summary).itemCount) > 0 && obj(obj(v).summary).answeredCount === obj(obj(v).summary).itemCount,
+  interactive_question: (v,b) => interactiveComplete(b?.type==='interactive_question'?b.task:undefined,v),
   question: (v, b) => {
     const r = obj(v), q = b?.type === 'question' ? obj(b.question) : {}
     const options = Array.isArray(q.options) ? q.options : []
@@ -212,6 +216,17 @@ export interface BlockIssue { blockId?: string; message: string }
 export function validateBlockDocument(value: unknown, publishing = false): BlockIssue[] {
   const doc = obj(value), issues: BlockIssue[] = []
   if (doc.schemaVersion !== 1 || !Array.isArray(doc.blocks)) return [{ message: 'Use a version 1 lesson with a blocks array.' }]
+  if (doc.reflection !== undefined) {
+    const reflection = obj(doc.reflection)
+    if (publishing && doc.blocks.some(b => obj(b).capture === true && !text(obj(b).targetId))) issues.push({message:'Link the assignment to a physics target before publishing so its evidence reaches mastery review.'})
+    if (reflection.version !== 1 || !['manga', 'story', 'graphic-novel'].includes(String(reflection.kind))) issues.push({ message: 'Choose a manga, short-story, or graphic novel assignment.' })
+  }
+  if (obj(doc.reflection).kind === 'graphic-novel') {
+    const questions = doc.blocks.filter(b => obj(b).capture === true)
+    if (questions.length < 1 || questions.length > 3 || questions.some(b => obj(b).type !== 'exit_ticket' || !obj(b).demand)) issues.push({message:'A graphic novel assignment needs 1–3 reasoning questions with Bloom’s and DOK planning.'})
+    const ref = obj(doc.reflection)
+    if (ref.book !== 'book-one' || !Number.isInteger(ref.chapter) || Number(ref.chapter) < 1 || Number(ref.chapter) > 17) issues.push({message:'Choose an available graphic novel chapter.'})
+  }
   issues.push(...notebookAuthoringIssues(doc as unknown as import('./content-blocks').BlockDocument, publishing).map(message => ({message})))
   if (doc.teachingPlans !== undefined && (!Array.isArray(doc.teachingPlans) || doc.teachingPlans.length > 64 || doc.teachingPlans.some(raw => { const ref=obj(raw); return typeof ref.unitId!=='string' || !/^[a-z0-9][a-z0-9-]*$/.test(ref.unitId) || !Number.isInteger(ref.day) || Number(ref.day)<0 }))) issues.push({message:'Choose valid teacher plan links with a unit and a whole-number day.'})
   if (doc.learningPath !== undefined) {
@@ -228,6 +243,8 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
     if (id) ids.add(id)
     const def = typeof b.type === 'string' ? DEF_BY_TYPE.get(b.type) : undefined
     if (!def) { add('Choose a supported block type.'); continue }
+    if (b.type === 'sketch' && b.captionRequired !== undefined && typeof b.captionRequired !== 'boolean') add('Caption requirement must be true or false.')
+    if (b.type === 'sketch' && b.submission !== undefined && b.submission !== 'upload') add('Choose an uploaded product or a drawing block.')
     if (b.gate === true && !RESPONSE_RULES[def.type]) add('Only answer blocks can be checkpoints.')
     for (const field of def.fields) {
       const v = b[field.key]
@@ -249,6 +266,7 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
         if (!['electrical','carpentry','plumbing'].includes(trade) || !Array.isArray(connection.directions) || !connection.directions.every(text) || !connection.directions.length) add('Every trade connection needs a valid trade and explicit directions.')
       }
     }
+    if (b.type === 'interactive_question') for (const issue of interactiveTaskIssues(b.task)) add(issue)
     if (!publishing) continue
     const required: Partial<Record<BlockType, string[]>> = {
       instruction_video: ['title','youtubeId','summary'], position_explorer: ['title'], target: ['statement'], prose: ['markdown'], asteroid_thread: ['connection'], worked_example: ['prompt'], callout: ['markdown'], sentence_frame: ['frame'],

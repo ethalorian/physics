@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useLessonContext } from './useLessonContext'
-import styles from './ClassOverview.module.css'
-import { Play, ArrowRight, BookOpen, Eye, Settings2 } from 'lucide-react'
+import styles from './VideoLessonWorkspace.module.css'
+import { Play, ArrowRight, BookOpen, Eye, Settings2, ClipboardCheck, Video } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -208,7 +208,7 @@ export default function LessonReleasePanel({
   const locked = busy || batchBusy
   return (
     <section
-      aria-label="Class lesson workflow"
+      aria-label={compact ? 'Video Lesson Workspace' : 'Class lesson workflow'}
       className={compact ? styles.lesson : "space-y-4 rounded-2xl border bg-card p-4 sm:p-5"}
     >
       {!compact && <div>
@@ -234,11 +234,11 @@ export default function LessonReleasePanel({
       )}
       {compact ? <>
         <div className={styles.lessonTop}>
-          <span className={styles.eyebrow}><BookOpen size={16} /> Lesson workspace</span>
+          <div><p className={styles.eyebrow}><Video size={16}/> Watch · Work · Explain</p><h2>Video Lesson Workspace</h2></div>
           <Link href={href('/admin/lesson-access')} className={styles.textLink}>All lesson access <ArrowRight size={14} /></Link>
         </div>
         <label className={styles.lessonPicker}>
-          <span>Choose lesson</span>
+          <span>Choose a video lesson</span>
           <select className={field} disabled={locked} value={selected?.id ?? lessonId} onChange={(e) => choose(e.target.value)}>
             <option value="" disabled>Choose a lesson</option>
             {summary?.lessons.map((l) => <option key={l.id} value={l.id}>{l.unit} · {lessonLabel(l).replace(/^(Day \d+) · Day \d+\s*[—–-]\s*/, '$1 · ')}</option>)}
@@ -247,13 +247,18 @@ export default function LessonReleasePanel({
         {course && selected ? <>
           <div className={styles.lessonBody}>
             <div className={styles.lessonCopy}>
-              <p className={styles.eyebrow}>Selected lesson</p>
-              <h2>{selected.title.replace(/^Day \d+\s*[—–:.-]\s*/, '')}</h2>
+              <p className={styles.eyebrow}>Ready for your class</p>
+              <h3>{selected.title.replace(/^Day \d+\s*[—–:.-]\s*/, '')}</h3>
               <p className={styles.unit}>{selected.unit}</p>
               <div className={styles.lessonActions}>
                 <Link className={styles.primary} href={href('/admin/command-center')}><Play size={17} /> Teach lesson</Link>
                 <Link className={styles.secondary} href={href(`/admin/lessons/${selected.id}`)}><BookOpen size={16} /> Prepare lesson</Link>
-                <Link className={styles.textLink} href={href(`/admin/lessons/${selected.id}/preview`)}><Eye size={16} /> Student preview</Link>
+                
+              </div>
+              <div className={styles.workflow}>
+                <Link href={href(`/admin/lessons/${selected.id}/preview`)}><Eye/><div><strong>Preview</strong><small>Try the video and student questions.</small></div></Link>
+                <Link href={href('/admin/lesson-access')}><Settings2/><div><strong>Assign</strong><small>Choose when this class can open it.</small></div></Link>
+                <Link href={href('/admin/control-room')}><ClipboardCheck/><div><strong>Review</strong><small>Read explanations and give feedback.</small></div></Link>
               </div>
             </div>
             <div className={styles.access}>

@@ -1,0 +1,64 @@
+'use client'
+import SimulationAvatar from '@/components/avatar/SimulationAvatar'
+import {useInvestigationParticipation} from '@/components/avatar/InvestigationParticipation'
+import AvatarCharacter from '@/components/avatar/AvatarCharacter'
+import {useEffect,useMemo,useRef,useState,type ChangeEvent} from 'react'
+import Link from 'next/link'
+import {useSession} from 'next-auth/react'
+import {Play,Pause,RotateCcw,Flag,Check,Download,FlaskConical,NotebookPen} from 'lucide-react'
+import {investigationById,initialLabParameters,validLabParameters,type LabDefinition,type LabControl} from '@/lib/interactive-assignments/investigation-definitions'
+import {investigationFrame,displayLabValue as fmt,type LabTrial} from '@/lib/interactive-assignments/investigation-model'
+import {useSimEmbedded} from '@/components/simulations/embed-context'
+import {LabGraph,LabForces} from './LabPlots'
+import {SceneVisual} from './SceneVisual'
+import s from './investigations.module.css'
+type Props={id:string;savedTrials?:LabTrial[];onTrialsChange?:(trials:LabTrial[])=>void;readOnly?:boolean;visible?:boolean}
+export default function InvestigationLab(props:Props){const lab=investigationById(props.id);return lab?<SimulationAvatar id={lab.id} title={lab.title} question={lab.question} actorInModel><Lab key={lab.id} {...props} lab={lab}/></SimulationAvatar>:<p role="alert">This investigation is unavailable.</p>}
+function NumericControl({control:c,value,onChange}:{control:LabControl;value:number;onChange:(value:number)=>void}){
+ const [draft,setDraft]=useState(String(value));useEffect(()=>setDraft(String(value)),[value])
+ function commit(event:ChangeEvent<HTMLInputElement>){setDraft(event.target.value);const n=Number(event.target.value);if(event.target.value!==''&&Number.isFinite(n)&&n>=c.min&&n<=c.max&&Math.abs((n-c.min)/c.step-Math.round((n-c.min)/c.step))<1e-7)onChange(n)}
+ return <div className={s.numberControl}><label><span>{c.label}{c.unit&&<small>{c.unit}</small>}</span><input aria-label={c.label} type="number" min={c.min} max={c.max} step={c.step} value={draft} onChange={commit} onBlur={()=>setDraft(String(value))}/></label><input type="range" aria-label={`${c.label} slider`} min={c.min} max={c.max} step={c.step} value={value} onChange={e=>onChange(Number(e.target.value))}/></div>
+}
+function Lab({lab,savedTrials,onTrialsChange,readOnly=false,visible=true}:Props&{lab:LabDefinition}){
+ const participation=useInvestigationParticipation()
+ const embedded=useSimEmbedded(),{data:session}=useSession(),staff=session?.user?.role==='admin'||session?.user?.role==='teacher'
+ const [parameters,setParameters]=useState(()=>initialLabParameters(lab)),[progress,setProgress]=useState(0),[running,setRunning]=useState(false),[scratch,setScratch]=useState<LabTrial[]>([]),[panel,setPanel]=useState<'experiment'|'notebook'>('experiment'),[view,setView]=useState<'model'|'graph'|'forces'>(lab.id==='free-body-diagram'?'forces':'model'),[notice,setNotice]=useState(''),[playback,setPlayback]=useState(1)
+ const forceScale=useMemo(()=>Math.max(1,...Array.from({length:81},(_,i)=>investigationFrame(lab.id,parameters,i/80)).flatMap(f=>(f.forces??[]).flatMap(g=>g.forces.map(a=>Math.hypot(a.x,a.y))))),[lab.id,parameters])
+ const trials=savedTrials??scratch,frame=useMemo(()=>investigationFrame(lab.id,parameters,progress),[lab.id,parameters,progress]),sequence=useRef(0),framePosition=useRef(0)
+ useEffect(()=>{sequence.current=Math.max(sequence.current,...trials.map(t=>t.id),0)},[trials])
+ useEffect(()=>{if(!visible||panel==='notebook'||participation?.active===false)setRunning(false)},[visible,panel,participation?.active])
+ useEffect(()=>{
+  if(!running||!visible||panel!=='experiment')return
+  let handle=0,last:number|undefined
+  const tick=(now:number)=>{if(last!==undefined){framePosition.current=Math.min(1,framePosition.current+Math.min(100,now-last)/8000*playback);setProgress(framePosition.current)}last=now;if(framePosition.current<1)handle=requestAnimationFrame(tick);else setRunning(false)}
+  handle=requestAnimationFrame(tick);return()=>cancelAnimationFrame(handle)
+ },[running,visible,panel,playback])
+ function inspect(value:number){setRunning(false);framePosition.current=value;setProgress(value);setNotice('')}
+ function change(key:string,value:number){const next={...parameters,[key]:value};if(!validLabParameters(lab,next))return;setParameters(next);inspect(0)}
+ function start(){if(progress>=1){framePosition.current=0;setProgress(0)}setNotice('');setRunning(v=>!v)}
+ function save(){if(readOnly||trials.length>=12||(!lab.static&&progress<1))return;const trial={id:++sequence.current,parameters:{...parameters}},next=[...trials,trial];if(onTrialsChange)onTrialsChange(next);else setScratch(next);setNotice(`Trial ${trial.id} saved in Notebook. Compare it with a run that changes just one condition.`)}
+ function remove(){if(readOnly)return;const next=trials.slice(0,-1);if(onTrialsChange)onTrialsChange(next);else setScratch(next);setNotice('Last trial removed.')}
+ function exportTable(){const completed=trials.map(t=>investigationFrame(lab.id,t.parameters,1)),headers=['Trial',...lab.controls.map(c=>`${c.label}${c.unit?' ('+c.unit+')':''}`),...completed[0]?.metrics.map(m=>m.label+(m.unit?' ('+m.unit+')':''))??[]],rows=trials.map((t,i)=>[t.id,...lab.controls.map(c=>t.parameters[c.key]),...completed[i].metrics.map(m=>m.value)]),csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=lab.id+'-trials.csv';a.click();URL.revokeObjectURL(url)}
+ return <div className={s.lab}>
+  {!embedded&&<header className={s.intro}><Link href="/simulations">← Simulation library</Link><p className={s.eyebrow}>Unit 1 · {lab.group}{lab.group==='Extension'?' · Optional bridge':''} · {lab.minutes} minutes</p><h1>{lab.question}</h1><p>{lab.assumption}</p><Link href={staff?`/interactive-assignments/simulation-${lab.id}`:'/home'}>{staff?'Open the complete interactive assignment →':'Open my assignments to save and submit work →'}</Link>{staff&&<Link href={`/admin/interactive-assignments?activity=simulation-${lab.id}&plan=1`}>Assign through the calendar →</Link>}</header>}
+  <header className={s.toolbar}><h2>{lab.title}</h2><div role="group" aria-label="Simulation panel" className={s.tabs}><button aria-pressed={panel==='experiment'} onClick={()=>setPanel('experiment')}><FlaskConical size={15} aria-hidden="true"/>Experiment</button><button aria-pressed={panel==='notebook'} onClick={()=>setPanel('notebook')}><NotebookPen size={15} aria-hidden="true"/>Notebook <span>{trials.length}</span></button></div></header>
+  <div hidden={panel!=='experiment'}>
+   <div className={s.surface}><div role="group" aria-label="Representations" className={s.representations}><button aria-pressed={view==='model'} onClick={()=>setView('model')}>Model</button>{frame.graph&&<button aria-pressed={view==='graph'} onClick={()=>setView('graph')}>Graph</button>}{frame.forces&&<button aria-pressed={view==='forces'} onClick={()=>setView('forces')}>Forces</button>}{!lab.static&&<button className={s.primary} onClick={start}>{running?<Pause size={16}/>:<Play size={16}/>} {running?'Pause':progress>=1?'Replay':'Run trial'}</button>}<span>{lab.static?'Inspect & compare':`${fmt(frame.time)} s · physical time`}</span></div>
+    {view==='graph'&&frame.graph?<LabGraph graph={frame.graph} progress={progress}/>:view==='forces'&&frame.forces?<LabForces groups={frame.forces} scaleMaximum={forceScale}/>:<SceneVisual id={lab.id} frame={frame} parameters={parameters} progress={progress} running={running}/>}
+    {participation?.active&&view!=='model'&&<div className={s.observer}><div aria-hidden="true"><AvatarCharacter portrait={participation.portrait} sampleStudent={participation.sample} pose="side"/></div><p>{view==='graph'?'Trace the graph with your avatar. Compare its slope or area with the physical quantities below.':'Inspect the forces with your avatar. Name the object receiving each force and the agent applying it.'}</p></div>}
+    <dl data-avatar-evidence className={s.metrics} aria-label="Current measurements">{frame.metrics.map(m=><div key={m.label}><dt>{m.label}</dt><dd>{fmt(m.value)} <small>{m.unit}</small></dd></div>)}</dl>
+   </div>
+   {!lab.static&&<label className={s.timeline}><span>Inspect the journey <b>{Math.round(progress*100)}%</b></span><input aria-label="Inspect the journey" aria-valuetext={`${fmt(frame.time)} s`} type="range" min="0" max="1000" step="1" value={Math.round(progress*1000)} onChange={e=>inspect(Number(e.target.value)/1000)}/></label>}
+   <div className={s.actions}><button className={lab.static?s.primary:undefined} disabled={readOnly||trials.length>=12||(!lab.static&&progress<1)} onClick={save}><Check size={16}/>Record trial</button>{!lab.static&&<button onClick={()=>inspect(1)} aria-label="Jump to exact finish" title="Jump to exact finish"><Flag size={16}/><span>Finish</span></button>}<button onClick={()=>{setParameters(initialLabParameters(lab));inspect(0)}} aria-label="Restore starting conditions" title="Restore starting conditions"><RotateCcw size={16}/><span>Reset</span></button></div>
+   <details className={s.conditionDrawer}><summary>Change trial conditions <span>{lab.controls.length} controls</span></summary><div className={s.controls} aria-label="Trial conditions">{lab.controls.map(c=>c.options?<label key={c.key} className={s.selectControl}><span>{c.label}</span><select value={parameters[c.key]} onChange={e=>change(c.key,Number(e.target.value))}>{c.options.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select></label>:<NumericControl key={c.key} control={c} value={parameters[c.key]} onChange={value=>change(c.key,value)}/>)}</div></details>
+   <p className={s.status} role="status">{notice|| (readOnly?'Your submitted notebook is preserved. You can still explore the model.':trials.length>=12?'Notebook full. Export it or remove the last trial.':lab.static?'Predict first. Change one condition, then record a comparison.':progress>=1?'Trial complete. Record the result before changing a condition.':'Predict first. Run the trial or use Finish to inspect the exact endpoint.')}</p>
+   {!lab.static&&<div className={s.playback}><p>Animation is time-scaled; use the displayed physical time. Use the slider or Finish to inspect without animation.</p><label>Playback<select value={playback} onChange={e=>setPlayback(Number(e.target.value))}><option value="0.5">½×</option><option value="1">1×</option><option value="2">2×</option></select></label></div>}
+   {frame.note&&<p className={s.note}>{frame.note}</p>}<details className={s.assumptions}><summary>Model assumptions & limits</summary><p>{lab.assumption}</p></details>
+  </div>
+  <section hidden={panel!=='notebook'} className={s.notebook} aria-label="Trial notebook">{participation?.active&&<div className={s.observer}><div aria-hidden="true"><AvatarCharacter portrait={participation.portrait} sampleStudent={participation.sample} pose="seated"/></div><p>Compare your recorded trials. Identify the condition you changed and use the measurements to explain its effect.</p></div>}<p className={s.eyebrow}>Your evidence</p><h3>One change. A useful comparison.</h3><p>{savedTrials?'Recorded conditions and results are saved with your assignment.':'These are temporary exploration trials in this tab. Export a copy to keep them.'}</p>{trials.length?<><LabTrialTable id={lab.id} trials={trials}/><div className={s.actions}><button onClick={exportTable}><Download size={16}/>Export table</button><button disabled={readOnly} onClick={remove}>Remove last trial</button></div></>:<div className={s.empty}><NotebookPen size={30}/><h3>Start with a prediction.</h3><p>Follow the assignment’s first experiment, record it, then change one condition and compare.</p><button onClick={()=>setPanel('experiment')}>Open experiment</button></div>}</section>
+ </div>
+}
+export function LabTrialTable({id,trials}:{id:string;trials:LabTrial[]}){
+ const lab=investigationById(id);if(!lab)return null;const results=trials.map(t=>investigationFrame(id,t.parameters,1))
+ return <div className={s.tableScroll} tabIndex={0} role="region" aria-label="Recorded trial comparison"><table><caption>{lab.title} · completed trials</caption><thead><tr><th scope="col">Trial / conditions</th>{results[0]?.metrics.map(m=><th scope="col" key={m.label}>{m.label}{m.unit&&<small>{m.unit}</small>}</th>)}</tr></thead><tbody>{trials.map((t,i)=><tr key={t.id}><th scope="row">Trial {t.id}<small>{lab.controls.map(c=>`${c.label}: ${c.options?.find(o=>o.value===t.parameters[c.key])?.label??fmt(t.parameters[c.key])}${c.unit?' '+c.unit:''}`).join(' · ')}</small></th>{results[i].metrics.map(m=><td key={m.label}>{fmt(m.value)}</td>)}</tr>)}</tbody></table></div>
+}

@@ -168,29 +168,6 @@ export default function SimulationAssignmentsPage() {
     }
   }
 
-  const duplicateAssignment = async (assignment: SimulationAssignment) => {
-    try {
-      const response = await fetch('/api/simulations/assignments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...assignment,
-          id: undefined,
-          title: `${assignment.title} (Copy)`,
-          published: false,
-          created_at: undefined,
-          created_by: session?.user?.email
-        })
-      })
-
-      if (response.ok) {
-        loadAssignments()
-      }
-    } catch (error) {
-      console.error('Error duplicating assignment:', error)
-    }
-  }
-
   // Get unique simulations from assignments
   const uniqueSimulations = Array.from(new Set(assignments.map(a => a.simulation_slug)))
 
@@ -206,7 +183,7 @@ export default function SimulationAssignmentsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <div className="mb-6 rounded-xl border bg-primary/5 p-5"><h2 className="font-semibold">Use guided investigations for new assignments</h2><p className="my-2 text-sm">This earlier editor creates separate question sets. Guided investigations use class lesson access, saved evidence, XP, and mastery feedback.</p><a href="/admin/simulations/activities" className="inline-flex min-h-11 items-center text-primary underline">Prepare a guided investigation →</a></div>
+      <div className="mb-6 rounded-xl border bg-primary/5 p-5"><h2 className="font-semibold">Use guided investigations for new assignments</h2><p className="my-2 text-sm">This earlier editor creates separate question sets. Use the current interactive assignment workspace for new activities, saved evidence, Bloom’s/DOK reasoning, and mastery feedback.</p><a href="/admin/interactive-assignments/investigations" className="inline-flex min-h-11 items-center text-primary underline">Open interactive investigations →</a></div>
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between">
@@ -217,11 +194,7 @@ export default function SimulationAssignmentsPage() {
             </p>
           </div>
           <Button
-            onClick={() => {
-              setEditingAssignment(null)
-              setSelectedSimulation('')
-              setShowEditor(true)
-            }}
+            onClick={() => router.push('/admin/interactive-assignments/investigations')}
             className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -338,11 +311,7 @@ export default function SimulationAssignmentsPage() {
             </p>
             {!searchQuery && filterSimulation === 'all' && (
               <Button
-                onClick={() => {
-                  setEditingAssignment(null)
-                  setSelectedSimulation('')
-                  setShowEditor(true)
-                }}
+                onClick={() => router.push('/admin/interactive-assignments/investigations')}
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Create First Assignment
@@ -431,9 +400,9 @@ export default function SimulationAssignmentsPage() {
                           <Edit className="h-4 w-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => duplicateAssignment(assignment)}>
+                        <DropdownMenuItem onClick={() => router.push('/admin/interactive-assignments/investigations')}>
                           <Copy className="h-4 w-4 mr-2" />
-                          Duplicate
+                          New interactive investigation
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => togglePublished(assignment)}>
                           {assignment.published ? (

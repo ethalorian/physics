@@ -19,18 +19,37 @@ interface Notif {
 
 const LEVEL_WORD = (l: number) => (l >= 2.5 ? 'Got it' : l >= 1.5 ? 'Almost' : 'Not yet')
 
+async function optionalRead<T>(query: PromiseLike<{ data: T }>): Promise<{ data: T | null }> {
+  try { return await query } catch { return { data: null } }
+}
+
 export const GET = withAuth(async (_req, ctx) => {
   const me = ctx.userId
   const items: Notif[] = []
 
+  // Sources are independently scoped to this user. Start them together;
+  // challenger names still wait for their challenge rows. Merge in the original
+  // order so equal timestamps retain the existing notification order.
+  const [readResult, mastery, revisions, feedback, grades, points, challenges, parts, access] = await Promise.all([
+    supabaseAdmin.from('notification_reads').select('seen_at').eq('user_id', me).maybeSingle(),
+    optionalRead(supabaseAdmin.from('mastery_records').select('id, level, observed_at').eq('user_id', me).order('observed_at', { ascending: false }).limit(8)),
+    supabaseAdmin.from('math_warmup_revisions').select('id,teacher_reply,acknowledged_at').eq('user_id',me).eq('status','acknowledged').order('acknowledged_at',{ascending:false}).limit(8),
+    optionalRead(supabaseAdmin.from('teacher_feedback').select('id, message, target_id, competency_id, created_at').eq('user_id', me).order('created_at', { ascending: false }).limit(8)),
+    optionalRead(supabaseAdmin.from('submissions').select('id, score, max_score, graded_at').eq('user_id', me).eq('status', 'graded').order('graded_at', { ascending: false }).limit(8)),
+    optionalRead(supabaseAdmin.from('math_spine_point_grants').select('id, points, note, awarded_at').eq('user_id', me).gt('points', 0).order('awarded_at', { ascending: false }).limit(8)),
+    optionalRead(supabaseAdmin.from('challenges').select('id, challenger_user_id, created_at').eq('opponent_user_id', me).eq('status', 'pending').order('created_at', { ascending: false }).limit(8)),
+    optionalRead(supabaseAdmin .from('reward_redemptions') .select('id, reward_name, status, created_at, reward:rewards(grant_lesson_id, category)') .eq('user_id', me) .neq('status', 'denied') .order('created_at', { ascending: false }) .limit(8)),
+    ctx.realRole === 'admin' ? optionalRead(supabaseAdmin .from('teacher_access_requests') .select('email, name, created_at') .eq('status', 'pending') .order('created_at', { ascending: false }) .limit(10)) : Promise.resolve({ data: [] }),
+  ])
+
   // last-seen baseline (default: 3 days ago so a new student sees recent activity)
-  const { data: readRow } = await supabaseAdmin.from('notification_reads').select('seen_at').eq('user_id', me).maybeSingle()
+  const { data: readRow } = readResult
   const seenAt = readRow?.seen_at ? new Date(readRow.seen_at) : new Date(Date.now() - 3 * 86400000)
   const isUnread = (iso: string | null) => !!iso && new Date(iso) > seenAt
 
   // 1. Mastery ratings
   try {
-    const { data } = await supabaseAdmin.from('mastery_records').select('id, level, observed_at').eq('user_id', me).order('observed_at', { ascending: false }).limit(8)
+    const { data } = mastery
     for (const r of (data ?? []) as { id: string; level: number; observed_at: string }[]) {
       items.push({ id: `mastery:${r.id}`, type: 'mastery', title: 'New mastery rating', detail: LEVEL_WORD(r.level), at: r.observed_at, href: '/dashboard/growth', unread: isUnread(r.observed_at) })
     }
@@ -38,12 +57,12 @@ export const GET = withAuth(async (_req, ctx) => {
 
   // Acknowledgment closes the response loop and deserves its own notification.
   {
-    const { data } = await supabaseAdmin.from('math_warmup_revisions').select('id,teacher_reply,acknowledged_at').eq('user_id',me).eq('status','acknowledged').order('acknowledged_at',{ascending:false}).limit(8)
+    const { data } = revisions
     for (const r of data ?? []) if (r.acknowledged_at) items.push({ id: 'math-response:' + r.id, type:'feedback', title:'Your teacher responded to your correction', detail:r.teacher_reply ?? 'Open your work to see the response.', at:r.acknowledged_at, href:'/dashboard/math-spine#math-feedback', unread:isUnread(r.acknowledged_at) })
   }
   // 1b. Written teacher feedback (one-way notes from the grading drawers).
   try {
-    const { data } = await supabaseAdmin.from('teacher_feedback').select('id, message, target_id, competency_id, created_at').eq('user_id', me).order('created_at', { ascending: false }).limit(8)
+    const { data } = feedback
     for (const r of (data ?? []) as { id: string; message: string; target_id: string | null; competency_id: string | null; created_at: string }[]) {
       // All notes render in full on the Growth page ("Notes from your teacher").
       items.push({ id: `feedback:${r.id}`, type: 'feedback', title: 'Note from your teacher', detail: r.message.length > 140 ? r.message.slice(0, 140) + '…' : r.message, at: r.created_at, href: r.competency_id ? '/dashboard/math-spine#math-feedback' : '/dashboard/growth', unread: isUnread(r.created_at) })
@@ -52,7 +71,7 @@ export const GET = withAuth(async (_req, ctx) => {
 
   // 2. Grades (graded submissions)
   try {
-    const { data } = await supabaseAdmin.from('submissions').select('id, score, max_score, graded_at').eq('user_id', me).eq('status', 'graded').order('graded_at', { ascending: false }).limit(8)
+    const { data } = grades
     for (const r of (data ?? []) as { id: string; score: number | null; max_score: number | null; graded_at: string | null }[]) {
       if (!r.graded_at) continue
       items.push({ id: `grade:${r.id}`, type: 'grade', title: 'Assignment graded', detail: r.max_score ? `${r.score ?? 0} / ${r.max_score}` : `${r.score ?? 0} pts`, at: r.graded_at, href: '/home', unread: isUnread(r.graded_at) })
@@ -61,7 +80,7 @@ export const GET = withAuth(async (_req, ctx) => {
 
   // 3. Math points
   try {
-    const { data } = await supabaseAdmin.from('math_spine_point_grants').select('id, points, note, awarded_at').eq('user_id', me).gt('points', 0).order('awarded_at', { ascending: false }).limit(8)
+    const { data } = points
     for (const r of (data ?? []) as { id: string; points: number; note: string | null; awarded_at: string }[]) {
       items.push({ id: `math:${r.id}`, type: 'math', title: 'Math XP earned', detail: r.note ? `+${r.points} · ${r.note}` : `+${r.points}`, at: r.awarded_at, href: '/dashboard/math-spine', unread: isUnread(r.awarded_at) })
     }
@@ -69,7 +88,7 @@ export const GET = withAuth(async (_req, ctx) => {
 
   // 4. Duel challenges (incoming, pending)
   try {
-    const { data } = await supabaseAdmin.from('challenges').select('id, challenger_user_id, created_at').eq('opponent_user_id', me).eq('status', 'pending').order('created_at', { ascending: false }).limit(8)
+    const { data } = challenges
     const rows = (data ?? []) as { id: string; challenger_user_id: string; created_at: string }[]
     if (rows.length) {
       const ids = rows.map((r) => r.challenger_user_id)
@@ -85,13 +104,7 @@ export const GET = withAuth(async (_req, ctx) => {
   // 5. Car parts earned (Unit-8 grant-type rewards). Created PENDING when the build
   //    lesson is passed; the teacher releases the physical part from the admin queue.
   try {
-    const { data } = await supabaseAdmin
-      .from('reward_redemptions')
-      .select('id, reward_name, status, created_at, reward:rewards(grant_lesson_id, category)')
-      .eq('user_id', me)
-      .neq('status', 'denied')
-      .order('created_at', { ascending: false })
-      .limit(8)
+    const { data } = parts
     type RInfo = { grant_lesson_id: string | null; category: string | null }
     for (const r of (data ?? []) as { id: string; reward_name: string; status: string; created_at: string; reward: RInfo | RInfo[] | null }[]) {
       const rw = Array.isArray(r.reward) ? r.reward[0] : r.reward
@@ -113,12 +126,7 @@ export const GET = withAuth(async (_req, ctx) => {
   //    waiting for approval. Links to the oversight page where you approve them.
   if (ctx.realRole === 'admin') {
     try {
-      const { data } = await supabaseAdmin
-        .from('teacher_access_requests')
-        .select('email, name, created_at')
-        .eq('status', 'pending')
-        .order('created_at', { ascending: false })
-        .limit(10)
+      const { data } = access
       for (const r of (data ?? []) as { email: string; name: string | null; created_at: string }[]) {
         items.push({
           id: `access:${r.email}`, type: 'access', title: 'Teacher access request',

@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import type { ReleaseClass, ReleaseLesson } from '@/lib/lesson-release'
 import { isCurrentLesson } from '@/lib/current-lesson-catalog'
 import { PHYSICS_VIDEOS } from '@/data/physics-videos'
+import { lessonTargetReferences } from '@/lib/lesson-target-references'
 import type { BlockDocument } from '@/data/content-blocks'
 
 export async function releaseClasses(
@@ -57,6 +58,10 @@ export async function releaseLessons(): Promise<ReleaseLesson[]> {
         unit_order: u?.order_index ?? Number.MAX_SAFE_INTEGER,
         current: isCurrentLesson({ unit_id: l.unit_id, program: u?.program ?? 'physics', content_blocks: doc }),
         video_sequence: video?.sequence,
+        reflection_kind: doc?.reflection?.kind,
+        chapter: doc?.reflection?.chapter,
+        target_refs: lessonTargetReferences(doc),
+        prompts: doc?.blocks?.filter(b => b.type === 'exit_ticket').slice(0, 3).map(b => b.prompt) ?? [],
       }
     })
     .filter(l => l.current)

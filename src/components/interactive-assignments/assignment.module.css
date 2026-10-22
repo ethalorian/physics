@@ -1,0 +1,190 @@
+.page,.desk{max-width:1100px;margin:0 auto;padding:24px;color:var(--foreground);line-height:1.65}.page button,.desk button{font:inherit;cursor:pointer;border:1px solid var(--border);border-radius:10px;padding:10px 16px;background:var(--card);color:var(--foreground)}.page button:disabled,.desk button:disabled{opacity:.6;cursor:default}.page a,.desk a{color:var(--primary);text-decoration:underline;text-underline-offset:3px}.page input,.page textarea,.desk textarea,.desk select{font:inherit;width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:var(--background);color:var(--foreground)}.page input[type=range]{padding:8px 0;accent-color:var(--primary)}.page :is(button,input,textarea,a):focus-visible,.desk :is(button,select,textarea,a):focus-visible{outline:3px solid var(--primary);outline-offset:3px}.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--border);padding:12px 0 20px;font-size:14px}.intro{padding:40px 0 16px}.intro h1{font-family:Georgia,serif;font-size:clamp(30px,5vw,52px);line-height:1.15;margin:14px 0 20px}.intro>p:not(.eyebrow){max-width:850px;font-size:18px}.eyebrow{text-transform:uppercase;letter-spacing:.13em;font:700 12px/1.5 ui-monospace,monospace;color:var(--primary)}.save{font:500 14px/1.5 system-ui!important;color:var(--muted-foreground)}.parts{display:grid;gap:28px}.part,.exit,.panel{border:1px solid var(--border);border-radius:18px;padding:28px;background:var(--card)}.part h2,.exit h2,.submit h2{font:700 clamp(25px,3vw,36px)/1.25 Georgia,serif;margin:10px 0 22px}.exit{border:2px solid var(--primary)}.concepts{display:grid;grid-template-columns:1fr 1fr;gap:16px}.concepts>div{border-radius:12px;padding:20px;background:color-mix(in oklch,var(--primary) 9%,var(--card))}.concepts>div+div{background:color-mix(in oklch,var(--reward) 18%,var(--card))}.concepts strong{font-size:13px;text-transform:uppercase;letter-spacing:.05em}.concepts p{font-family:Georgia,serif;font-size:21px;line-height:1.5;margin:8px 0 0}.tryIt{background:var(--muted);padding:22px;border-radius:12px;margin:24px 0}.tryIt h3{font-size:16px;margin:0 0 12px}.tryIt label{display:block}.question{padding:24px 0;border-top:1px solid var(--border);margin-top:22px}.question>label{display:block;font-family:Georgia,serif;font-size:21px;line-height:1.5;margin-bottom:14px}.question b{color:var(--primary);font-family:system-ui;font-size:15px;margin-right:10px}.answerRow{display:flex;gap:12px;align-items:center;max-width:450px}.answerRow input{min-width:0;max-width:290px}.answerRow span{white-space:nowrap}.check{margin-top:12px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.choices button{text-align:left}.graphChoices{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.graphChoices button{padding:10px 6px!important;font-size:13px!important}.chosen,.actions [aria-pressed=true]{border:2px solid var(--primary)!important;background:color-mix(in oklch,var(--primary) 10%,var(--card))!important}.hint,.correct,.error,.feedback{padding:16px 20px;border-radius:10px;margin:16px 0}.hint{background:color-mix(in oklch,var(--reward) 15%,var(--card))}.correct,.feedback{background:color-mix(in oklch,var(--success) 10%,var(--card))}.error{border:1px solid var(--destructive);color:var(--destructive);background:var(--card)}.feedback p,.response{white-space:pre-wrap;overflow-wrap:anywhere}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.primary{background:var(--primary)!important;color:var(--primary-foreground)!important}.submit{background:var(--muted);border-radius:18px;padding:28px;margin-top:30px}.graph{display:block;width:100%;max-width:500px;margin:14px auto;overflow:visible}.graph text,.numberLine text{fill:var(--foreground);font:11px system-ui}.grid{stroke:var(--border);stroke-width:1}.axis{stroke:var(--foreground);fill:none;stroke-width:1.5}.motionLine{stroke:var(--primary);stroke-width:3;fill:none}.targetLine{stroke:var(--foreground);stroke-width:3;stroke-dasharray:7 7;fill:none}.walker{fill:var(--primary)}.numberLine{width:100%;display:block;margin:12px auto;max-width:650px}.conversion{font:17px/1.7 ui-monospace,monospace;overflow-wrap:anywhere}.conversion s{color:var(--muted-foreground)}.desk{max-width:1280px}.desk h1{font-size:32px;line-height:1.2}.desk h2{font-size:22px}.desk select{max-width:520px;margin:12px 0}.deskGrid{display:grid;grid-template-columns:300px minmax(0,1fr);gap:22px;margin-top:24px}.roster{display:flex;flex-direction:column;gap:8px;align-self:start}.roster button{text-align:left;display:grid;gap:3px}.roster small,.meta{font-size:13px;color:var(--muted-foreground)}.evidence{border-top:1px solid var(--border);padding:18px 0}.evidence h3{font-size:16px;margin:0 0 10px}.evidence summary{cursor:pointer}.response{padding:12px;background:var(--muted);border-radius:8px}.panel+.panel{margin-top:18px}.tableWrap{overflow-x:auto}.desk table{width:100%;border-collapse:collapse}.desk td,.desk th{text-align:left;padding:8px;border-bottom:1px solid var(--border)}
+@media(max-width:700px){.page,.desk{padding:16px}.part,.exit,.panel,.submit{padding:20px}.concepts,.choices,.deskGrid{grid-template-columns:1fr}.graphChoices{grid-template-columns:1fr 1fr}.intro{padding-top:24px}.roster{max-height:320px;overflow:auto}.bar{font-size:12px}.question>label{font-size:19px}}
+.desk input{font:inherit;border:1px solid var(--border);border-radius:10px;padding:10px 12px;background:var(--background);color:var(--foreground);display:block;max-width:260px}.desk input:focus-visible{outline:3px solid var(--primary);outline-offset:3px}.schedule{display:flex;gap:14px;align-items:end;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0}.stats>div{padding:20px;border-radius:12px;background:var(--muted);display:grid;gap:5px}.stats strong{font-size:32px;line-height:1.2}.stats small{font-size:16px;font-weight:400}.stats span{font-size:13px;color:var(--muted-foreground)}.conceptGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:24px 0}.conceptGrid>div{border:1px solid var(--border);border-radius:12px;padding:16px}.conceptGrid b{font-size:14px}.conceptGrid p,.conceptGrid small{font-size:12px;margin:8px 0}.conceptGrid progress{width:100%;height:8px;accent-color:var(--destructive)}.heatmap{font-size:12px;white-space:nowrap}.desk .heatmap td,.desk .heatmap th{padding:4px}.desk .heatmap button{padding:6px 8px;min-width:34px;font-size:12px;border-radius:7px}.heatmap th:first-child{position:sticky;left:0;background:var(--card);z-index:1;max-width:180px;white-space:normal}.evidenceGood{background:color-mix(in oklch,var(--success) 16%,var(--card))!important}.evidenceGap{background:color-mix(in oklch,var(--destructive) 12%,var(--card))!important}.evidencePending{background:var(--muted)!important;color:var(--muted-foreground)!important}.questionDetail{border:1px solid var(--border);padding:20px;border-radius:12px;margin:20px 0}.questionDetail article{border-top:1px solid var(--border);padding:14px 0}.questionDetail span{margin-left:10px}.weakpoint{border-top:1px solid var(--border);padding:14px 0}.weakpoint summary{cursor:pointer;font-weight:600}.weakpoint article{padding:16px;background:var(--muted);border-radius:10px;margin-top:12px}.suggestion{border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:12px;background:color-mix(in oklch,var(--primary) 5%,var(--card));padding:20px;margin:20px 0}.suggestedLevel{font-size:32px;font-weight:700}.suggestedLevel span{font-size:14px;font-weight:400}.tableWrap:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
+@media(max-width:850px){.stats,.conceptGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:450px){.conceptGrid{grid-template-columns:1fr}.stats>div{padding:14px}}
+.explorerControl{display:block;margin:1rem 0}.explorerControl input{display:block;width:100%;margin-top:.6rem}.forceRow{display:flex;flex-wrap:wrap;gap:.75rem;margin:.8rem 0;border:1px solid var(--border);border-radius:8px;padding:.8rem}.forceRow label{flex:1;min-width:110px}.forceRow input{width:100%;box-sizing:border-box}.modelTable{width:100%;border-collapse:collapse}.modelTable th,.modelTable td{text-align:left;padding:.55rem;border-bottom:1px solid var(--border)}
+
+.assignmentPage{max-width:1400px;overflow-anchor:none}
+.assignmentWorkspace{display:grid;grid-template-columns:minmax(350px,.95fr) minmax(0,1.05fr);align-items:start;gap:28px;padding-top:8px}
+.assignmentContent{min-width:0}
+.assignmentContent .intro{padding-top:0}
+.assignmentContent :is(.part,.exit,.submit){scroll-margin-top:170px}
+.assignmentContent :is(.part,.exit,.submit):focus-visible{outline:3px solid var(--primary);outline-offset:4px}
+.checklist{position:sticky;top:96px;max-height:calc(100dvh - 120px);overflow:auto;border:1px solid var(--border);border-radius:16px;padding:20px 12px;background:var(--card)}
+.checklistHeading{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 8px}
+.checklistHeading h2{font:700 15px/1.4 system-ui;margin:0}
+.checklistCount{font-size:12px;color:var(--muted-foreground);margin:8px 8px 6px}
+.checklistProgress{display:block;width:calc(100% - 16px);height:6px;margin:0 8px 18px;accent-color:var(--primary);border:0;border-radius:6px;overflow:hidden;background:var(--muted)}
+.checklistProgress::-webkit-progress-bar{background:var(--muted)}
+.checklistProgress::-webkit-progress-value{background:var(--primary);border-radius:6px}
+.checklistProgress::-moz-progress-bar{background:var(--primary);border-radius:6px}
+.checklistList{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.checklistList a{display:flex;align-items:flex-start;gap:11px;padding:12px 8px;border:1px solid transparent;border-radius:10px;color:var(--foreground);text-decoration:none;line-height:1.4}
+.checklistList a:hover{background:var(--muted)}
+.checklistList a[aria-current]{border-color:color-mix(in oklch,var(--primary) 45%,var(--border));background:color-mix(in oklch,var(--primary) 12%,var(--card))}
+.checklistList strong{display:block;font-size:14px;font-weight:600;overflow-wrap:anywhere}
+.checklistList small{display:block;font-size:11px;color:var(--muted-foreground);margin-top:5px}
+.checklistMark{display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;border:1px solid var(--border);border-radius:50%;font-size:12px;font-weight:700;color:var(--muted-foreground)}
+.checklistList [data-complete=true] .checklistMark{background:color-mix(in oklch,var(--success) 15%,var(--card));border-color:var(--success);color:var(--success)}
+.checklistSubmit{border-top:1px solid var(--border);padding-top:8px;margin-top:6px}
+.checklistNote{font-size:11px;line-height:1.6;color:var(--muted-foreground);margin:16px 8px 0}
+.page .checklistToggle{display:none}
+@media(max-width:900px){
+ .assignmentWorkspace{grid-template-columns:minmax(0,1fr);gap:24px;padding-top:20px}
+ .checklist{top:80px;z-index:10;max-height:calc(100dvh - 100px);padding:12px}
+ .page .checklistToggle{display:inline-flex;align-items:center;gap:10px;flex-shrink:0;padding:7px 10px;font-size:12px}
+ .checklistProgress{margin-bottom:0}
+ .checklistParts{display:none;margin-top:16px}
+ .checklistParts[data-expanded=true]{display:block}
+ .checklistHeading h2{font-size:14px}
+ .checklistList{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .checklistSubmit{grid-column:1/-1}
+ .assignmentContent :is(.part,.exit,.submit){scroll-margin-top:210px}
+}
+@media(max-width:500px){.checklistList{grid-template-columns:minmax(0,1fr)}}
+
+.assignmentPage>.intro{padding:28px 0 20px}
+.assignmentPage>.intro h1{font-size:clamp(30px,3.5vw,46px);margin-top:8px}
+.assignmentPage>.intro>p:not(.eyebrow){font-size:16px;max-width:960px}
+.lessonGuide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;list-style:none;padding:0;margin:0 0 16px;border:1px solid color-mix(in oklch,var(--primary) 20%,var(--border));border-radius:14px;background:color-mix(in oklch,var(--primary) 5%,var(--card));overflow:hidden}
+.lessonGuide li{display:flex;align-items:center;gap:14px;padding:18px 20px;min-width:0}
+.lessonGuide li+li{border-left:1px solid color-mix(in oklch,var(--primary) 15%,var(--border))}
+.guideIcon{display:grid;place-items:center;flex-shrink:0;width:38px;height:38px;border-radius:11px;background:color-mix(in oklch,var(--primary) 12%,var(--card));color:var(--primary)}
+.guideIcon svg{width:19px;height:19px;stroke-width:1.8}
+.lessonGuide strong{display:block;font-size:15px;line-height:1.4}
+.lessonGuide p{font-size:13px;line-height:1.5;color:var(--muted-foreground);margin:4px 0 0;text-wrap:pretty}
+.lessonMeta{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin-bottom:14px}
+.statusBadge,.dueBadge{display:inline-flex;align-items:center;gap:8px;max-width:100%;margin:0;padding:7px 12px;border:1px solid var(--border);border-radius:9px;background:var(--card);font-size:12px;line-height:1.5;color:var(--muted-foreground)}
+.statusBadge svg,.dueBadge svg,.teacherNote>svg{width:16px;height:16px;flex-shrink:0}
+.statusBadge[data-tone=preview]{background:var(--muted)}
+.statusBadge[data-tone=saved]{color:var(--success);border-color:color-mix(in oklch,var(--success) 30%,var(--border));background:color-mix(in oklch,var(--success) 7%,var(--card))}
+.statusBadge[data-tone=attention]{color:var(--destructive);border-color:var(--destructive)}
+.dueBadge{flex-wrap:wrap;column-gap:6px;color:var(--foreground)}
+.dueBadge svg{color:var(--primary);margin-right:2px}
+.dueBadge time{font-weight:600}
+.teacherNote{display:flex;align-items:flex-start;gap:12px;border-left:3px solid color-mix(in oklch,var(--primary) 55%,var(--border));border-radius:0 10px 10px 0;padding:12px 16px;background:var(--muted)}
+.teacherNote>svg{color:var(--primary);margin-top:2px}
+.teacherNote h2{margin:0 0 4px;font:600 12px/1.5 system-ui;color:var(--primary)}
+.teacherNote p{margin:0;font-size:13px;line-height:1.6;color:var(--muted-foreground);max-width:1100px;text-wrap:pretty}
+@media(max-width:700px){
+ .lessonGuide{grid-template-columns:minmax(0,1fr);margin-bottom:12px}
+ .lessonGuide li{padding:12px 14px;gap:12px}
+ .lessonGuide li+li{border-left:0;border-top:1px solid color-mix(in oklch,var(--primary) 15%,var(--border))}
+ .lessonGuide p{margin-top:2px}
+ .guideIcon{width:34px;height:34px}
+ .teacherNote{padding:12px;gap:10px}
+}
+.teachingTool{position:sticky;top:96px;max-height:calc(100dvh - 120px);overflow:auto;border:1px solid var(--border);border-radius:18px;background:var(--card);scroll-margin-top:100px}
+.teachingTool:focus-visible{outline:3px solid var(--primary);outline-offset:4px}
+.teachingHeading{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;background:var(--card)}
+.teachingHeading .eyebrow{margin:0 0 4px;font-size:10px}
+.teachingHeading h2{margin:0;font:700 19px/1.3 Georgia,serif}
+.page .teachingHeading button{font-size:12px;min-height:44px;padding:8px 12px;flex-shrink:0}
+.teachingStage{position:relative;aspect-ratio:16/10;background:var(--muted);border-block:1px solid var(--border)}
+.teachingStage iframe{position:absolute;inset:0;display:block;width:100%;height:100%;border:0}
+.teachingLoading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;background:var(--muted);text-align:center;font-size:14px}
+.teachingControls{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:end;gap:10px 12px;padding:12px 16px}
+.teachingTransport{display:flex;gap:10px;flex-wrap:nowrap}
+.page .teachingTransport button{min-height:44px;padding:8px 16px;font-size:14px}
+.teachingSections{display:grid;gap:5px;font-size:12px;font-weight:600}
+.teachingSections select{min-width:0;width:100%;font:400 14px/1.4 system-ui;min-height:44px;padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:var(--background);color:var(--foreground)}
+.teachingSections select:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
+.teachingHint{grid-column:1/-1;font-size:12px;line-height:1.6;color:var(--muted-foreground);margin:0}
+.page .teachingExternal{font-size:11px;color:var(--muted-foreground);display:inline-flex;align-items:center;min-height:32px}
+.teachingTool:fullscreen{position:fixed;inset:0;width:100%;height:100%;max-height:none;border:0;border-radius:0;display:flex;flex-direction:column;overflow:hidden;background:var(--background)}
+.teachingTool:fullscreen .teachingStage{flex:1;min-height:0;aspect-ratio:auto}
+.teachingTool:fullscreen .teachingControls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:12px 20px}
+.teachingTool:fullscreen .teachingTransport{margin:0}
+.teachingTool:fullscreen .teachingSections{min-width:220px;flex:1;max-width:400px}
+.teachingTool:fullscreen :is(.teachingHint,.teachingExternal){display:none}
+.page .returnToTool{display:none}
+.assignmentWorkspace .assignmentContent :is(.part,.exit,.submit){scroll-margin-top:230px}
+.checklistCompact{z-index:10;padding:12px;margin-bottom:24px}
+.checklistCompact .checklistProgress{margin-bottom:0}
+.checklistCompact .checklistParts{display:none;margin-top:14px}
+.checklistCompact .checklistParts[data-expanded=true]{display:block}
+.checklistCompact .checklistList{grid-template-columns:repeat(2,minmax(0,1fr))}
+.page .checklistCompact .checklistToggle{display:inline-flex;align-items:center;gap:10px;flex-shrink:0;padding:7px 10px;font-size:12px;min-height:44px}
+@media(max-width:900px){
+ .assignmentWorkspace{grid-template-columns:minmax(0,1fr);gap:24px;padding-top:0}
+ .teachingTool{position:relative;top:auto;max-height:none}
+ .teachingStage{max-height:500px;aspect-ratio:16/10}
+ .page .returnToTool{display:block;position:fixed;z-index:30;bottom:80px;right:16px;border-color:var(--primary);background:var(--primary);color:var(--primary-foreground);box-shadow:0 4px 18px color-mix(in oklch,var(--foreground) 15%,transparent);min-height:44px;font-size:13px}
+}
+@media(max-width:500px){
+ .teachingHeading{padding:14px}.teachingHeading h2{font-size:18px}.teachingControls{padding:14px;grid-template-columns:minmax(0,1fr)}
+ .checklistCompact .checklistList{grid-template-columns:minmax(0,1fr)}
+ .teachingTool:fullscreen .teachingControls{gap:8px;padding:8px 12px}
+}
+
+/* One mounted film and assignment, with a focused Chromebook layout. */
+.lessonWorkspace{--workspace-top:80px;--workspace-height:68px;overflow-anchor:none}
+.workspaceControls{position:sticky;top:var(--workspace-top);z-index:20;display:flex;align-items:center;gap:24px;min-height:var(--workspace-height);padding:10px 0;background:var(--background);border-bottom:1px solid var(--border);margin-bottom:16px;scroll-margin-top:var(--workspace-top)}
+.viewChoices{display:flex;gap:4px;padding:3px;border:1px solid var(--border);border-radius:12px;background:var(--card);flex-shrink:0}
+.page .viewChoices button{border:0;background:transparent;min-height:44px;padding:8px 18px;font-size:14px;white-space:nowrap}
+.page .viewChoices button[aria-pressed=true]{background:var(--primary);color:var(--primary-foreground)}
+.workspaceControls .checklistCompact{position:static;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 16px;flex:1;max-height:none;overflow:visible;border:0;border-radius:0;padding:0;margin:0;background:transparent}
+.workspaceControls .checklistHeading{display:contents}
+.workspaceControls .checklistHeading h2{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.workspaceControls .checklistToggle{grid-column:2;grid-row:1/3}
+.workspaceControls .checklistCount{grid-column:1;grid-row:1;margin:0;font-size:12px}
+.workspaceControls .checklistProgress{grid-column:1;grid-row:2;width:100%;margin:0}
+.workspaceControls .checklistParts{position:absolute;top:100%;right:0;width:min(660px,100%);max-height:calc(100dvh - 190px);overflow:auto;margin:0;padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--card);box-shadow:0 10px 24px color-mix(in oklch,var(--foreground) 12%,transparent)}
+.lessonWorkspace .assignmentWorkspace{padding-top:0}
+.lessonWorkspace [hidden]{display:none!important}
+.watchPane{min-width:0;position:sticky;top:calc(var(--workspace-top) + var(--workspace-height) + 16px)}
+.lessonWorkspace .teachingTool{position:static;max-height:calc(100dvh - 184px)}
+.lessonWorkspace .assignmentContent :is(.part,.exit,.submit){scroll-margin-top:calc(var(--workspace-top) + var(--workspace-height) + 16px)}
+.lessonWorkspace[data-view=watch] .assignmentWorkspace,.lessonWorkspace[data-view=work] .assignmentWorkspace{display:block}
+.lessonWorkspace[data-view=work] .assignmentContent{max-width:960px;margin:0 auto}
+.lessonWorkspace[data-view=watch] .watchPane{position:static}
+.lessonWorkspace[data-view=watch] .teachingTool:not(:fullscreen){display:grid;grid-template-columns:minmax(0,1fr) auto;max-height:none;overflow:visible}
+.lessonWorkspace[data-view=watch] .teachingTool:not(:fullscreen) .teachingHeading{grid-column:2;grid-row:1;padding:8px 12px;position:static;border-radius:0 18px 0 0}
+.lessonWorkspace[data-view=watch] .teachingTool:not(:fullscreen) .teachingHeading>div{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.lessonWorkspace[data-view=watch] .teachingTool:not(:fullscreen) .teachingControls{grid-column:1;grid-row:1;display:flex;align-items:center;flex-wrap:wrap;padding:8px 12px;gap:12px}
+.lessonWorkspace[data-view=watch] .teachingTool:not(:fullscreen) .teachingHint:not([role=status]){display:none}
+.lessonWorkspace[data-view=watch] .teachingTool:not(:fullscreen) .teachingSections{flex:1;max-width:400px}
+.lessonWorkspace[data-view=watch] .teachingTool:not(:fullscreen) .teachingSections>span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.lessonWorkspace[data-view=watch] .teachingStage{grid-column:1/-1;grid-row:2;height:clamp(380px,calc(100dvh - 215px),760px);max-height:none;aspect-ratio:auto;border-bottom:0;border-radius:0 0 18px 18px;overflow:hidden}
+.lessonWorkspace .teachingTool:fullscreen{position:fixed;max-height:none}
+.lessonWorkspace .teachingTool:fullscreen .teachingStage{height:auto;max-height:none;border-radius:0}
+@media(max-width:900px){
+ .lessonWorkspace{--workspace-top:76px;--workspace-height:68px}
+ .workspaceControls{gap:12px}
+ .page .viewChoices button{padding:8px 12px;font-size:13px}
+ .lessonWorkspace[data-view=side] .assignmentWorkspace{grid-template-columns:minmax(280px,.95fr) minmax(0,1.05fr);gap:16px}
+ .lessonWorkspace[data-view=side] .teachingControls{grid-template-columns:minmax(0,1fr)}
+ .lessonWorkspace[data-view=side] .teachingHeading{gap:8px;padding:10px}
+ .lessonWorkspace[data-view=side] .teachingHeading h2{font-size:15px}
+}
+@media(max-width:650px){
+ .lessonWorkspace{--workspace-height:110px}
+ .workspaceControls{flex-wrap:wrap;gap:8px}
+ .viewChoices{width:100%}.viewChoices button{flex:1}
+ .workspaceControls .checklistCompact{flex-basis:100%}
+ .workspaceControls .checklistCount{font-size:11px}
+ .workspaceControls .checklistToggle{min-height:32px!important;padding:3px 10px!important}
+ .lessonWorkspace[data-view=watch] .teachingTool:not(:fullscreen) .teachingControls{gap:8px;display:grid;grid-template-columns:minmax(0,1fr)}
+ .lessonWorkspace[data-view=watch] .teachingStage{height:auto;aspect-ratio:16/11}
+ .lessonWorkspace[data-view=side] .assignmentWorkspace{grid-template-columns:minmax(0,1fr)}
+ .lessonWorkspace[data-view=side] .watchPane{position:static}
+ .lessonWorkspace[data-view=side] .teachingTool{max-height:none}
+}
+.simulationTool{max-height:calc(100dvh - 184px);overflow:auto;overscroll-behavior:contain;border:1px solid var(--border);border-radius:18px;padding:16px;background:var(--card);scroll-margin-top:170px}
+.simulationTool>header{padding:0 0 12px}.simulationTool h2{font:700 24px/1.3 Georgia,serif;margin:4px 0}.simulationTool>header>p:last-child{font-size:13px;color:var(--muted-foreground)}
+.lessonWorkspace[data-simulation=true][data-view=side] .assignmentWorkspace{grid-template-columns:minmax(0,1.2fr) minmax(340px,.8fr);gap:20px}
+.lessonWorkspace[data-simulation=true] .assignmentContent :is(.part,.exit){padding:22px}
+.lessonWorkspace[data-simulation=true] .assignmentContent h2{font-size:27px}
+.lessonWorkspace[data-simulation=true] .assignmentContent .question>label{font-size:19px}
+.lessonWorkspace[data-simulation=true] .assignmentContent .choices{grid-template-columns:1fr}
+.lessonWorkspace[data-simulation=true][data-view=watch] .simulationTool{max-height:none}
+@media(max-width:900px){.lessonWorkspace[data-simulation=true][data-view=side] .assignmentWorkspace{grid-template-columns:1fr}.lessonWorkspace[data-simulation=true] .watchPane{position:static}.simulationTool{max-height:none}}
+.simulationTool>header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:10px}.simulationTool>header>p{margin:0}.simulationTool>header>h2{font-size:20px}
+@media(min-width:651px) and (max-width:900px){.lessonWorkspace[data-simulation=true][data-view=side] .assignmentWorkspace{grid-template-columns:minmax(280px,1fr) minmax(300px,1fr);gap:16px}.lessonWorkspace[data-simulation=true][data-view=side] .watchPane{position:sticky}.lessonWorkspace[data-simulation=true][data-view=side] .simulationTool{max-height:calc(100dvh - 168px)}}
+.simulationTool{container-type:inline-size}
+.lessonWorkspace[data-view=story] .assignmentWorkspace{display:block}
+@media(max-width:420px){.page .viewChoices button{padding:8px 7px;font-size:12px}}
+
+.desk.deskEmbedded{max-width:none;padding:0;margin:0}.deskEmbedded>details>summary{padding:8px 0;cursor:pointer;font-size:14px}.deskEmbedded>h2{font-weight:650}
+
+.storyLoading{min-height:100dvh;padding:28px;color:var(--muted-foreground)}

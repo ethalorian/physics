@@ -29,7 +29,7 @@ export default function TeachingRecap({ sessionId }: { sessionId: string }) {
       ])
       const slides = await commandSlides(doc.lesson, doc.deck, controller.signal).catch(() => [])
       const course = classes.courses.find(c => c.id === courseId)
-      if (!controller.signal.aborted) setContext({ title: doc.lesson.title, course: course ? `${course.name}${course.section ? ` · ${course.section}` : ''}` : 'Presentation class', slides })
+      if (!controller.signal.aborted) setContext({ title: doc.lesson.title, course: course ? `${course.name}${course.section ? ` · ${course.section}` : ''}` : 'Class', slides })
     }
     void load().catch(e => { if (!controller.signal.aborted) setContextError(e.message) })
     return () => controller.abort()
@@ -44,7 +44,7 @@ export default function TeachingRecap({ sessionId }: { sessionId: string }) {
     const a = document.createElement('a'); a.href = url; a.download = 'teaching-notes.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
   return <div className="mx-auto max-w-4xl space-y-6 p-4 sm:p-6">
-    <Button asChild variant="ghost" className="min-h-12"><Link href={back}><ArrowLeft size={18} aria-hidden />{live ? 'Back to live presentation' : 'Back to Command Center'}</Link></Button>
+    <Button asChild variant="ghost" className="min-h-12"><Link href={back}><ArrowLeft size={18} aria-hidden />{live ? 'Back to guided session' : 'Back to guided problem solving'}</Link></Button>
     <header><p className="text-overline text-primary">After teaching</p><h1 className="mt-2 text-title-1">Saved teaching notes</h1><p className="mt-2 text-muted-foreground">The moments you bookmarked while teaching, linked to the slide you were on.</p></header>
     <Card className="gap-4 p-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><h2 className="text-title-2">{context?.title ?? 'Presentation notes'}</h2><p className="mt-1 text-caption text-muted-foreground">{context?.course ?? 'Loading lesson details…'}{session.state?.session.created_at ? ` · ${new Date(session.state.session.created_at).toLocaleString()}` : ''}</p></div><span className="flex items-center gap-2 rounded-full bg-muted px-3 py-2 text-caption"><LockKeyhole size={14} aria-hidden />Only for teachers</span></div><div className="flex flex-wrap items-center justify-between gap-3 border-t pt-4"><p className="text-caption">{notes.length} saved note{notes.length === 1 ? '' : 's'} · {live ? 'Presentation still live' : 'Presentation history'}</p><Button variant="outline" className="min-h-12" disabled={!notes.length} onClick={download}><Download size={16} aria-hidden />Download notes</Button></div></Card>
     {(error || session.error || contextError) && <p role="alert" className="rounded-xl border border-destructive p-4 text-destructive">{error || session.error || contextError}</p>}

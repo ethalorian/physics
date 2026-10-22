@@ -10,6 +10,7 @@ import styles from './LessonConceptMap.module.css'
 
 const icons = {1:BookOpen,2:Orbit,3:MoveHorizontal,4:Box,5:Navigation,6:ArrowLeftRight,7:Timer,8:Gauge}
 function accessLabel(lesson: ConceptLesson) {
+  if(lesson.watchHref) return 'Video available'
   if(lesson.access==='scheduled') return 'Opens soon'
   if(lesson.access==='closed') return 'Access closed'
   if(lesson.access!=='open') return 'Not open yet'
@@ -18,7 +19,7 @@ function accessLabel(lesson: ConceptLesson) {
   return lesson.progress>0?'In progress':'Open to you'
 }
 function nodeTone(lesson: ConceptLesson) {
-  return lesson.access!=='open'?'locked':lesson.progress>=100?'complete':lesson.progress>0?'progress':'open'
+  return lesson.watchHref?'open':lesson.access!=='open'?'locked':lesson.progress>=100?'complete':lesson.progress>0?'progress':'open'
 }
 
 export default function LessonConceptMap({data,onRefresh,observer=false}:{data:LessonConceptMapData;onRefresh:()=>void;observer?:boolean}) {
@@ -34,6 +35,7 @@ export default function LessonConceptMap({data,onRefresh,observer=false}:{data:L
   const selected=nodes.find(n=>n.id===selectedId)??next??nodes[0]
   const related=new Set(connections.filter(c=>c.from===selected?.id||c.to===selected?.id).flatMap(c=>[c.from,c.to]))
   const openCount=nodes.filter(n=>n.access==='open').length
+  const videoCount=nodes.filter(n=>n.watchHref).length
   const completed=nodes.filter(n=>n.progress>=100).length
   const incoming=connections.filter(c=>c.to===selected?.id),outgoing=connections.filter(c=>c.from===selected?.id)
 
@@ -57,8 +59,8 @@ export default function LessonConceptMap({data,onRefresh,observer=false}:{data:L
   if(!selected)return null
   return <section className={styles.map} aria-label="Lesson concept map">
     <header className={styles.intro}>
-      <div><p className={styles.eyebrow}>{observer ? 'PHYSICS CONCEPT MAP' : 'YOUR VIDEO SPINE & PRACTICE'}</p><h2>See how the ideas connect.</h2><p>{observer ? 'Explore the connections and open any published lesson in a read-only preview.' : 'The videos build concepts for the Asteroid story and in-class investigations. Follow the connections and open the lessons your teacher has released.'}</p></div>
-      <div className={styles.counts}><span><strong>{openCount}</strong> open to you</span>{!observer&&<span><strong>{completed}</strong> submitted</span>}</div>
+      <div><p className={styles.eyebrow}>{observer ? 'PHYSICS CONCEPT MAP' : 'YOUR VIDEO SPINE & PRACTICE'}</p><h2>See how the ideas connect.</h2><p>{observer ? 'Explore the connections and open any published lesson in a read-only preview.' : 'Watch videos anytime to explore the ideas. Open assigned questions and activities from your class calendar.'}</p></div>
+      <div className={styles.counts}><span><strong>{videoCount}</strong> videos to watch</span><span><strong>{openCount}</strong> assignments open</span>{!observer&&<span><strong>{completed}</strong> submitted</span>}</div>
     </header>
     <div className={styles.workspace}>
       <div className={styles.mapColumn}>
@@ -84,7 +86,7 @@ export default function LessonConceptMap({data,onRefresh,observer=false}:{data:L
               </svg>
               {layout.nodes.map(({lesson,x,y})=>{
                 const Icon=lesson.sequence?icons[lesson.sequence as keyof typeof icons]??BookOpen:lesson.kind==='investigation'?FlaskConical:BookOpen
-                const locked=lesson.access!=='open'
+                const locked=!lesson.watchHref && lesson.access!=='open'
                 return <button type="button" key={lesson.id} data-lesson-id={lesson.id} className={styles.node} style={{left:x,top:y}} data-tone={nodeTone(lesson)} data-selected={lesson.id===selected.id} data-related={related.has(lesson.id)} aria-pressed={lesson.id===selected.id} aria-label={`${lesson.label}. ${accessLabel(lesson)}. Show lesson details.`} onClick={()=>select(lesson.id)}>
                   <span className={styles.nodeTop}><span className={styles.nodeIcon}><Icon size={23} strokeWidth={1.7}/></span><span className={styles.nodeSequence}>{lesson.sequence?`VIDEO ${String(lesson.sequence).padStart(2,'0')}`:lesson.kind==='investigation'?'INVESTIGATE':'PRACTICE'}</span><span className={styles.accessIcon}>{locked?<LockKeyhole size={14}/>:lesson.progress>=100?<Check size={17}/>:<CircleDot size={15}/>}</span></span>
                   <strong>{lesson.label}</strong><span className={styles.nodeStatus}>{accessLabel(lesson)}</span>
@@ -94,17 +96,17 @@ export default function LessonConceptMap({data,onRefresh,observer=false}:{data:L
             </div>
           </div>
         </div>
-        <div className={styles.mapFooter}><span>{observer ? 'Drag or scroll to explore published lessons and their connections.' : 'Drag or scroll to explore. Grey lessons open when your teacher releases them.'}</span>{!observer&&next&&<button type="button" onClick={focusNext}>Find my next lesson <ArrowRight size={15}/></button>}<button type="button" className={styles.mobileDetails} onClick={()=>detail.current?.scrollIntoView({behavior:'smooth',block:'start'})}>Selected lesson <ArrowDown size={15}/></button></div>
+        <div className={styles.mapFooter}><span>{observer ? 'Drag or scroll to explore published lessons and their connections.' : 'Drag or scroll to explore. Videos are available to watch; your calendar lists assigned work.'}</span>{!observer&&next&&<button type="button" onClick={focusNext}>Find my next lesson <ArrowRight size={15}/></button>}<button type="button" className={styles.mobileDetails} onClick={()=>detail.current?.scrollIntoView({behavior:'smooth',block:'start'})}>Selected lesson <ArrowDown size={15}/></button></div>
       </div>
       <aside className={styles.detail} aria-label="Selected lesson details" ref={detail}>
-        <div className={styles.detailTop}><span className={styles.eyebrow}>{selected.sequence?`VIDEO ${String(selected.sequence).padStart(2,'0')}`:'EXPLORE THE IDEA'}</span><span className={styles.status} data-tone={nodeTone(selected)}>{selected.access==='open'?<CircleDot size={13}/>:<LockKeyhole size={13}/>} {accessLabel(selected)}</span></div>
+        <div className={styles.detailTop}><span className={styles.eyebrow}>{selected.sequence?`VIDEO ${String(selected.sequence).padStart(2,'0')}`:'EXPLORE THE IDEA'}</span><span className={styles.status} data-tone={nodeTone(selected)}>{selected.watchHref || selected.access==='open'?<CircleDot size={13}/>:<LockKeyhole size={13}/>} {accessLabel(selected)}</span></div>
         <h3>{selected.title}</h3><p className={styles.focus}>{selected.focus}</p>
-        {selected.access==='open'&&selected.href?<Link className={styles.openLesson} href={selected.href}>{selected.completion?.state==='ready'?'Finish & submit':selected.progress>=100?'Revisit lesson':selected.progress>0?'Continue lesson':'Open lesson'}<ArrowRight size={18}/></Link>:<div className={styles.lockedNotice}><LockKeyhole size={18}/><p>{selected.access==='scheduled'&&selected.opensAt?`Scheduled to open ${new Date(selected.opensAt).toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}.`:selected.access==='closed'?'Your teacher has closed access to this lesson.':'Your teacher has not opened this lesson for your class yet.'}<span>You can still explore how this idea connects.</span></p></div>}
-        {selected.progress>0&&<p className={styles.progressNote}>{selected.completion ? `${selected.completion.answered} of ${selected.completion.required} required responses saved. ${LESSON_COMPLETION_LABELS[selected.completion.state]}.` : `${Math.round(selected.progress)}% of lesson completed.`} Saving answers and earning XP do not submit a lesson. Mastery comes from your evidence and teacher feedback.</p>}
+        {selected.watchHref && !observer ? <><Link className={styles.openLesson} href={selected.watchHref}>Watch video<ArrowRight size={18}/></Link><Link className="inline-flex min-h-11 items-center text-sm text-primary underline" href="/home">Questions & assignments on calendar →</Link></> : selected.access==='open'&&selected.href?<Link className={styles.openLesson} href={selected.href}>{selected.completion?.state==='ready'?'Finish & submit':selected.progress>=100?'Revisit lesson':selected.progress>0?'Continue lesson':'Open lesson'}<ArrowRight size={18}/></Link>:<div className={styles.lockedNotice}><LockKeyhole size={18}/><p>{selected.access==='scheduled'&&selected.opensAt?`Scheduled to open ${new Date(selected.opensAt).toLocaleString(undefined,{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}.`:selected.access==='closed'?'Your teacher has closed access to this lesson.':'Your teacher has not opened this lesson for your class yet.'}<span>You can still explore how this idea connects.</span></p></div>}
+        {!selected.watchHref&&selected.progress>0&&<p className={styles.progressNote}>{selected.completion ? `${selected.completion.answered} of ${selected.completion.required} required responses saved. ${LESSON_COMPLETION_LABELS[selected.completion.state]}.` : `${Math.round(selected.progress)}% of lesson completed.`} Saving answers and earning XP do not submit a lesson. Mastery comes from your evidence and teacher feedback.</p>}
         {!!incoming.length&&<section className={styles.connections}><h4>Builds on</h4>{incoming.map(c=>{const n=placed.get(c.from)!.lesson;return <button type="button" key={c.from} onClick={()=>select(n.id)}><span><strong>{n.label}</strong><small>{c.label}</small></span><ArrowRight size={15}/></button>})}</section>}
         {!!outgoing.length&&<section className={styles.connections}><h4>Leads to</h4>{outgoing.map(c=>{const n=placed.get(c.to)!.lesson;return <button type="button" key={c.to} onClick={()=>select(n.id)}><span><strong>{n.label}</strong><small>{c.label}</small></span><ArrowRight size={15}/></button>})}</section>}
         {!!selected.targets.length&&<section className={styles.targets}><h4>Learning targets</h4><ul>{selected.targets.map(t=><li key={t.slug}>{t.statement}</li>)}</ul></section>}
-        <p className={styles.detailNote}>{observer ? 'Observer preview · published lessons are read-only.' : 'Connections are a guide to the ideas. Your teacher controls lesson access.'}</p>
+        <p className={styles.detailNote}>{observer ? 'Observer preview · published lessons are read-only.' : 'Videos are available for review. Your teacher assigns questions through the calendar.'}</p>
       </aside>
     </div>
   </section>

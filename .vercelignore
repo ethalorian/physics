@@ -1,4 +1,12 @@
-
 .env*
 .private
 .next
+node_modules
+
+/work
+*.tsbuildinfo
+
+/learning-rollout-preview
+source-baseline.json
+scripts/learning-rollout
+scripts/manga-collection

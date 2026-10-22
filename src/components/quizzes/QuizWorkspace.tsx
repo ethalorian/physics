@@ -35,9 +35,9 @@ export default function QuizWorkspace({data,courseId,href,reload,onManage,view,o
     for(const a of results?.assignments??[])for(const st of a.students){const key=`${st.course_id}:${st.student_id}`;if(!cells.has(key))cells.set(key,new Map());cells.get(key)!.set(a.id,st)}
     return (results?.enrollments??[]).map(st=>({...st,cells:cells.get(`${st.course_id}:${st.student_id}`)??new Map<string,AssessmentComparison['students'][number]>()}))
   },[results])
-  const students=rows.filter(st=>(!courseId||st.course_id===courseId)&&st.name.toLowerCase().includes(studentQuery.toLowerCase())&&(studentFilter==='all'||[...st.cells.entries()].some(([id,cell])=>assignedIds.has(id)&&(studentFilter==='review'?cell.state==='submitted':['not_started','in_progress','returned'].includes(cell.state)))))
+  const students=rows.filter(st=>(!courseId||st.course_id===courseId)&&st.name.toLowerCase().includes(studentQuery.toLowerCase())&&(studentFilter==='all'||[...st.cells.entries()].some(([id,cell])=>assignedIds.has(id)&&!cell.choiceExempt&&!cell.choiceAvailable&&(studentFilter==='review'?cell.state==='submitted':['not_started','in_progress','returned'].includes(cell.state)))))
     .sort((a,b)=>a.name.localeCompare(b.name)||a.course_id.localeCompare(b.course_id))
-  const visibleStudents=columns.flatMap(a=>a.students),pending=quizzes.reduce((n,q)=>n+(data.pending[q.id]??0),0),scored=visibleStudents.flatMap(st=>st.percent===null?[]:[st.percent])
+  const visibleStudents=columns.flatMap(a=>a.students).filter(st=>!st.choiceExempt&&!st.choiceAvailable),pending=quizzes.reduce((n,q)=>n+(data.pending[q.id]??0),0),scored=visibleStudents.flatMap(st=>st.percent===null?[]:[st.percent])
   async function refresh(){await Promise.all([reload(),load()])}
   const courseName=(id:string)=>{const c=data.courses.find(c=>c.id===id);return c?`${c.name} · ${c.section}`:'Class'}
   function download(){

@@ -1,3 +1,4 @@
+import {rebuildVocabulary} from './vocab-rebuild'
 import 'server-only'
 import type { LearningWord } from './vocab-learning'
 import type { CheckpointQuestion } from './vocab-checkpoint'
@@ -18,6 +19,8 @@ export const CHECKPOINT_QUESTIONS: CheckpointQuestion[] = [
 ]
 
 export function draftCheckpoint(words: LearningWord[]): CheckpointQuestion[] {
+  const rebuilt=rebuildVocabulary(words)
+  if(rebuilt.length===10&&rebuilt.every(q=>q.prompt&&!q.prompt.startsWith('A student uses')))return rebuilt
   const selected = new Map(words.map(word => [word.term.trim().toLowerCase(), word.term]))
   const authored = AUTHORED_CHECKPOINTS.find(pack => pack.terms.length === words.length && pack.terms.every(term => selected.has(term.toLowerCase())))
   if (authored) return structuredClone(authored.questions).map(question => ({ ...question, words: question.words.map(term => selected.get(term.toLowerCase())!) }))

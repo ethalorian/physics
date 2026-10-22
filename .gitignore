@@ -27,6 +27,19 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env*
+!.env.example
+/.private/
+/source-baseline.json
+/work/
+/learning-rollout-preview/
+/scripts/learning-rollout/
+/scripts/manga-collection/
+__pycache__/
+*.pyc
+/.mcas-tests/
+/.simshots-tmp/
+/.tmp-*
 
 # vercel
 .vercel

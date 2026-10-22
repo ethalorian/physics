@@ -4,10 +4,10 @@
 // Nothing opens a dashboard directly from the avatar; "My progress" is the explicit
 // labeled trigger for the progress slide-over (see UserContextSheet).
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import Avatar from '@/components/avatar/Avatar'
-import type { MeBundle } from '@/app/api/avatar/me/route'
+import { useAvatarPortrait } from '@/hooks/useAvatarPortrait'
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
@@ -23,11 +23,6 @@ import UserContextSheet from '@/components/UserContextSheet'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { useRouter } from 'next/navigation'
 
-// Module-level cache so a hard navigation between pages doesn't refetch the
-// avatar bundle every time the menu mounts. Wardrobe edits invalidate by
-// dispatching the 'avatar-updated' event below.
-let _meCache: { userId: string; bundle: MeBundle } | null = null
-
 export default function AccountMenu() {
   const { data: session } = useSession()
   const [progressOpen, setProgressOpen] = useState(false)
@@ -41,35 +36,10 @@ export default function AccountMenu() {
   // sync — no half-switched chrome.
   const studentViewActive = canToggleView && viewMode === 'student'
   const displayRole = studentViewActive ? 'student' : role
-  const [me, setMe] = useState<MeBundle | null>(null)
-
-  useEffect(() => {
-    const userId = session?.user?.id
-    if (!userId) { setMe(null); _meCache = null; return }
-    const cached = _meCache?.userId === userId ? _meCache.bundle : null
-    setMe(cached)
-    let controller: AbortController | null = null
-    const load = async () => {
-      controller?.abort()
-      controller = new AbortController()
-      const signal = controller.signal
-      try {
-        const r = await fetch('/api/avatar/me', { signal })
-        if (!r.ok) return
-        const d = await r.json() as MeBundle
-        if (signal.aborted || !Array.isArray(d.equipped_items)) return
-        _meCache = { userId, bundle: d }; setMe(d)
-      } catch { /* Keep the last confirmed portrait during a transient failure. */ }
-    }
-    if (!cached) void load()
-    const onUpdate = () => { void load() }
-    window.addEventListener('avatar-updated', onUpdate)
-    return () => { controller?.abort(); window.removeEventListener('avatar-updated', onUpdate) }
-  }, [session?.user?.id])
+  const { portrait: me } = useAvatarPortrait()
 
   const handleSignOut = async () => {
     try {
-      _meCache = null
       if (session?.experience || document.cookie.split('; ').some(cookie => cookie.startsWith(EXPERIENCE_MARKER + '='))) {
         await fetch('/api/admin/experience', { method: 'DELETE' })
         try { localStorage.setItem('experience-changed', String(Date.now())) } catch { /* Sign out still works without browser storage. */ }
@@ -88,22 +58,19 @@ export default function AccountMenu() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
+            aria-label="Account and appearance"
             variant="ghost"
             className={`relative h-9 w-9 sm:h-10 sm:w-10 rounded-full p-0 overflow-hidden transition-all duration-200 hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 hover:ring-offset-background${needsSetup ? ' avatar-nudge-glow' : ''}`}
           >
             {me?.setup_completed && me?.traits ? (
-              // Custom Mii — head-only crop so the face fills the bubble.
-              // The square viewBox + size=40 matches the sm:h-10 sm:w-10
-              // trigger; the rounded-full button clips the corners into a
-              // circle. Background tint sits behind for the head's neck/ear
-              // space inside the square crop.
+              // Use the same circular face framing as Home and the leaderboard.
               <div className="w-full h-full rounded-full overflow-hidden" style={{ background: 'var(--secondary)' }}>
                 <Avatar
                   traits={me.traits}
                   equipped={me.equipped}
                   items={me.equipped_items}
                   size={40}
-                  crop="head"
+                  crop="portrait"
                   className="size-full"
                 />
               </div>

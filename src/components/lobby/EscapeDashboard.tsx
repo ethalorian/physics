@@ -104,7 +104,7 @@ export default function EscapeDashboard({
             {ungrouped.map((m) => (
               <span key={m.user_id} className="inline-flex items-center gap-1.5 rounded-full pl-1 pr-1.5 py-0.5" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
                 <span className="rounded-full overflow-hidden" style={{ width: 20, height: 20, background: 'var(--muted)' }}>
-                  <Avatar traits={m.traits} equipped={m.equipped} items={avatarItems} size={20} crop="head" />
+                  <Avatar traits={m.traits} equipped={m.equipped} items={avatarItems} size={20} crop="portrait" />
                 </span>
                 <span className="text-xs font-medium">{m.name}</span>
                 {groups.length > 0 && onMove && (
@@ -207,7 +207,7 @@ export default function EscapeDashboard({
                     return (
                       <div key={mc.user_id} className="flex items-start gap-2 rounded-lg px-2 py-1.5" style={{ background: mc.solved ? 'color-mix(in oklch, var(--success) 9%, transparent)' : 'var(--muted)' }}>
                         <div className="rounded-full overflow-hidden shrink-0 mt-0.5" style={{ width: 24, height: 24, background: 'var(--card)' }}>
-                          {m ? <Avatar traits={m.traits} equipped={m.equipped} items={avatarItems} size={24} crop="head" /> : null}
+                          {m ? <Avatar traits={m.traits} equipped={m.equipped} items={avatarItems} size={24} crop="portrait" /> : null}
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5">

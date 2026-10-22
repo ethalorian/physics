@@ -25,31 +25,44 @@ export const GET=withEnrolledStudent(async(_req,ctx)=>{
   supabaseAdmin.from('lobby_sessions').select('id,present_session_id,code,task_prompt,created_at').in('present_session_id',ids).in('status',['lobby','grouped','open']),
  ])
  if(pulses.error||lobbies.error)throw pulses.error||lobbies.error
+ // A poll runs on every student's open tab. Fetch completion in batches instead
+ // of doing another round trip for every pulse and lobby in every session.
+ const ticketIds = (pulses.data ?? []).filter(isTicket).map(row => row.id)
+ const pollRows = (pulses.data ?? []).filter(row => !isTicket(row))
+ const respondentKeys = new Map(pollRows.map(row => [row.id, createHash('md5').update(row.salt + ctx.userId).digest('hex')]))
+ const lobbyIds = (lobbies.data ?? []).map(row => row.id)
+ const questionRuns = sessions.data.filter(session => session.lesson_id && session.poll_block_id && session.poll_run_id && !session.poll_locked && !session.poll_revealed)
+ const [tickets, responses, memberships, answers] = await Promise.all([
+  ticketIds.length ? supabaseAdmin.from('present_ticket_responses').select('pulse_id').in('pulse_id',ticketIds).eq('user_id',ctx.userId) : {data:[],error:null},
+  pollRows.length ? supabaseAdmin.from('present_pulse_responses').select('pulse_id,respondent_key').in('pulse_id',pollRows.map(row=>row.id)).in('respondent_key',[...respondentKeys.values()]) : {data:[],error:null},
+  lobbyIds.length ? supabaseAdmin.from('lobby_members').select('session_id').in('session_id',lobbyIds).eq('user_id',ctx.userId) : {data:[],error:null},
+  questionRuns.length ? supabaseAdmin.from('block_responses').select('present_session_id,poll_run_id').in('present_session_id',questionRuns.map(session=>session.id)).in('poll_run_id',questionRuns.map(session=>session.poll_run_id!)).eq('user_id',ctx.userId) : {data:[],error:null},
+ ])
+ for (const result of [tickets,responses,memberships,answers]) if (result.error) throw result.error
+ const answeredTickets = new Set((tickets.data ?? []).map(row=>row.pulse_id))
+ const answeredPolls = new Set((responses.data ?? []).filter(row=>respondentKeys.get(row.pulse_id)===row.respondent_key).map(row=>row.pulse_id))
+ const joinedLobbies = new Set((memberships.data ?? []).map(row=>row.session_id))
+ const answeredQuestions = new Set((answers.data ?? []).map(row=>row.present_session_id+':'+row.poll_run_id))
  const items:PresentInvitation[]=[]
  for(const session of sessions.data){
   const course=courses.data.find(c=>c.id===session.course_id)!
   const base={sessionId:session.id,courseName:[course.name,course.section].filter(Boolean).join(' · ')}
   for(const row of pulses.data??[]){
    if(row.session_id!==session.id)continue
-   const response=isTicket(row)?await supabaseAdmin.from('present_ticket_responses').select('id').eq('pulse_id',row.id).eq('user_id',ctx.userId).maybeSingle():await supabaseAdmin.from('present_pulse_responses').select('choice').eq('pulse_id',row.id).eq('respondent_key',createHash('md5').update(row.salt+ctx.userId).digest('hex')).maybeSingle()
-   if(response.error)throw response.error
-   if(response.data)continue
+   if(isTicket(row) ? answeredTickets.has(row.id) : answeredPolls.has(row.id))continue
    const pulse:Pulse={id:row.id,kind:row.kind,anonymous:row.anonymous,status:row.status,created_at:row.created_at,prompt:row.prompt,options:row.options,required:row.required,locked:row.locked,revealed:row.revealed,target_id:row.target_id}
    items.push({...base,id:'pulse:'+row.id,kind:'pulse',createdAt:row.created_at,required:row.required,pulse})
   }
   for(const row of lobbies.data??[]){
    if(row.present_session_id!==session.id)continue
-   const member=await supabaseAdmin.from('lobby_members').select('user_id').eq('session_id',row.id).eq('user_id',ctx.userId).maybeSingle()
-   if(member.error)throw member.error
-   if(!member.data)items.push({...base,id:'lobby:'+row.id,kind:'lobby',code:row.code,prompt:row.task_prompt??'Join your class activity.',createdAt:row.created_at,required:false})
+   if(!joinedLobbies.has(row.id))items.push({...base,id:'lobby:'+row.id,kind:'lobby',code:row.code,prompt:row.task_prompt??'Join your class activity.',createdAt:row.created_at,required:false})
   }
   if(session.lesson_id&&session.poll_block_id&&session.poll_run_id&&!session.poll_locked&&!session.poll_revealed){
+   if(answeredQuestions.has(session.id+':'+session.poll_run_id))continue
    const lesson=await classLesson(session.lesson_id,session.course_id)
    const block=lesson?.content_blocks.blocks.find(b=>b.id===session.poll_block_id&&b.type==='question')
    if(!block)continue
-   const answered=await supabaseAdmin.from('block_responses').select('id').eq('present_session_id',session.id).eq('poll_run_id',session.poll_run_id).eq('user_id',ctx.userId).limit(1)
-   if(answered.error)throw answered.error
-   if(!answered.data?.length)items.push({...base,id:'question:'+session.poll_run_id,kind:'lesson_poll',prompt:'Your teacher opened a live question. Join the class poll.',href:'/lessons/'+encodeURIComponent(lesson!.slug)+'#'+encodeURIComponent(session.poll_block_id),createdAt:session.created_at,required:false})
+   items.push({...base,id:'question:'+session.poll_run_id,kind:'lesson_poll',prompt:'Your teacher opened a live question. Join the class poll.',href:'/lessons/'+encodeURIComponent(lesson!.slug)+'#'+encodeURIComponent(session.poll_block_id),createdAt:session.created_at,required:false})
   }
  }
  return json(items.sort((a,b)=>Number(b.required)-Number(a.required)||b.createdAt.localeCompare(a.createdAt)))

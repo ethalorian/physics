@@ -3,6 +3,7 @@ import {supabaseAdmin} from '@/lib/supabase'
 import {quizCourses,quizRows,quizJson,quizListWork} from '@/lib/quizzes/server'
 import type {Quiz,QuizSubmission,QuizReview} from '@/lib/quizzes/types'
 import {assessmentResults} from '@/lib/quizzes/comparison'
+import {choiceQuizDispositions} from '@/lib/choice-calendar-server'
 
 export const GET=withRole(['teacher','admin'],async(_req,ctx)=>{
  const courses=(await quizCourses(ctx)).map(c=>({id:c.id,name:c.name,section:c.section??'',program:c.program})),ids=courses.map(c=>c.id)
@@ -19,6 +20,7 @@ export const GET=withRole(['teacher','admin'],async(_req,ctx)=>{
   Promise.all(chunks.map(ids=>quizRows<QuizReview>((a,b)=>supabaseAdmin.from('quiz_reviews').select('*').in('submission_id',ids).order('id').range(a,b)))).then(rows=>rows.flat()),
  ]):[[],[]]
  const enrollments=roster.flatMap(e=>{const student=Array.isArray(e.students)?e.students[0]:e.students;return student&&student.is_active!==false?[{course_id:e.course_id,student_id:e.student_id,name:student.name}]:[]})
- const input={quizzes,courses,enrollments,work,submissions,reviews}
+ const choices=await choiceQuizDispositions(ids,[...new Set(enrollments.map(e=>e.student_id))])
+ const input={quizzes,courses,enrollments,work,submissions,reviews,choiceExemptions:choices.exemptions,choiceAvailable:choices.available}
  return quizJson({assessments:assessmentResults(input),assignments:assessmentResults({...input,groupCopies:false}),targets,courses,enrollments})
 })

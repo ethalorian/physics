@@ -5,7 +5,7 @@ import {defaultQuizFilters,filterQuizzes,matchedGrowth,questionSignals,quizCsv,r
 import type {Quiz,QuizCard,QuizReview} from './types'
 const quiz:Quiz={id:'a',course_id:'c',title:'Motion',kind:'mixed',instructions:'Explain',grade_mode:'numeric',questions:[{id:'q',kind:'written',prompt:'Explain motion',points:4,target_id:'t'},{id:'r',kind:'written',prompt:'Compare',points:6,target_id:'t'}],due_at:null,status:'published',version:1,student_ids:null,source_quiz_id:null,created_at:'2026-10-01'}
 const course={id:'c',name:'Physics',section:'A',program:'physics'}
-const row=(id:string,level:1|2|3|null,at='2026-10-01',course_id='c')=>({course_id,student_id:id,name:id,quiz_id:'a',state:'graded',earned:5,possible:10,percent:50,questionScores:[2,3],ratings:{t:level},gradeMode:'numeric' as const,gradeValue:null,submittedAt:at})
+const row=(id:string,level:1|2|3|null,at='2026-10-01',course_id='c')=>({course_id,student_id:id,name:id,quiz_id:'a',state:'graded',choiceExempt:false,choiceAvailable:false,earned:5,possible:10,percent:50,questionScores:[2,3],ratings:{t:level},gradeMode:'numeric' as const,gradeValue:null,submittedAt:at})
 const assessment=(students:AssessmentComparison['students']):AssessmentComparison=>({id:'a',title:'Motion',created_at:'2026-10-01',due_at:null,question_count:2,possible:10,copies:[{id:'a',course_id:'c',status:'published'}],classes:[],students,questions:quiz.questions})
 test('gradebook preserves earlier assignments while comparison view uses the latest copy',()=>{
  const copy={...quiz,id:'b',created_at:'2026-10-02'},review:QuizReview={id:'rev',submission_id:'s',decision:'graded',scores:{q:2,r:3},ratings:{t:2},note:'',question_notes:{},earned:5,possible:10,grade_mode:'numeric',grade_value:null,reviewed_at:'2026-10-01'}

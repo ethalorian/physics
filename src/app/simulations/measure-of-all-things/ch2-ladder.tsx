@@ -68,7 +68,7 @@ function RungExplorer({ onAllVisited }: { onAllVisited: () => void }) {
 
       {/* current rung detail */}
       <div className="rounded-lg border border-border p-4 space-y-3 min-h-[170px]">
-        <div className="flex items-baseline gap-3 flex-wrap">
+        <div data-avatar-evidence className="flex items-baseline gap-3 flex-wrap">
           <span className="text-2xl font-bold">1 {r.symbol}</span>
           <span className="text-muted-foreground">{r.name}</span>
           <span className="font-mono text-sm px-2 py-0.5 rounded bg-muted">
@@ -130,7 +130,7 @@ function LadderConverter({ startValue, fromIdx, toIdx, onDone }: {
         Convert {fmt(startValue)} {RUNGS[fromIdx].symbol} into {RUNGS[toIdx].symbol} by walking the ladder.
         Each step multiplies or divides by 10 — watch the decimal point slide.
       </p>
-      <div className="flex items-center gap-3 flex-wrap">
+      <div data-avatar-evidence className="flex items-center gap-3 flex-wrap">
         <span className="text-2xl font-mono font-bold tabular-nums">{fmt(value)}</span>
         <span className="text-xl font-mono px-2 py-0.5 rounded bg-primary/10">{RUNGS[pos].symbol}</span>
         <span className="text-sm text-muted-foreground">target: {RUNGS[toIdx].symbol}</span>

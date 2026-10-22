@@ -1,3 +1,4 @@
+import { isSameIdentity } from '@/lib/identity-aliases'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -22,7 +23,7 @@ export const GET = withAuth(async (request, ctx) => {
 
   // The class must be the caller's own.
   const { data: course } = await supabaseAdmin.from('courses').select('id, teacher_email').eq('id', classId).maybeSingle()
-  if (!course || course.teacher_email !== ctx.scopeEmail) {
+  if (!course || !isSameIdentity(ctx.scopeEmail, course.teacher_email)) {
     return NextResponse.json({ error: 'Not your class' }, { status: 403 })
   }
 

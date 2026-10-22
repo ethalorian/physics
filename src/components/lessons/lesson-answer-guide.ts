@@ -4,6 +4,7 @@ import type { BlockResponseMap } from '@/components/blocks/useBlockResponses'
 /** UI guidance only; completion is always determined by the shared response rules. */
 export function answerGuide(block: ContentBlock): { title: string; parts: string[] } {
   switch (block.type) {
+    case 'interactive_question': return {title:block.task.title,parts:block.task.parts.map(p=>p.label)}
     case 'question': {
       const question = block.question as { options?: unknown[]; explain?: string } | undefined
       return { title: 'Question', parts: question?.options?.length ? ['Choose an answer', ...(question.explain ? ['Explain your choice'] : [])] : ['Write your explanation'] }

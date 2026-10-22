@@ -1,5 +1,6 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { quizScheduleError } from '@/lib/quiz-schedule'
 import type { ClassWorkData, ClassWorkItem } from '@/lib/class-work'
 
 export async function classWorkRequest(url: string, body?: unknown, method = 'POST', signal?: AbortSignal) {
@@ -24,6 +25,7 @@ export function useClassWork(classId: string | null) {
   return {data:data?.courseId===classId?data:null,error,loading,load}
 }
 export async function saveClassWork(item:ClassWorkItem,classId:string,action:'due'|'close'|'open'|'schedule',fields:{due_at?:string|null;open_at?:string|null;close_at?:string|null;access?:string}) {
+  if (action === 'due' && item.quizSchedule) { const error = quizScheduleError(fields.due_at ?? null, item.quizSchedule); if (error) throw Error(error) }
   if(item.kind==='homework'||item.kind==='lesson')return classWorkRequest(`/api/classes/${encodeURIComponent(classId)}/windows`,{lesson_id:item.sourceId,expected:item.window??null,...fields})
   if(item.kind==='quiz')return action==='due'?classWorkRequest(`/api/quizzes/${item.sourceId}/due-date`,{due_at:fields.due_at,version:item.version}):classWorkRequest(`/api/quizzes/${item.sourceId}`,{action:action==='open'?'reopen':'archive',version:item.version})
   if(item.kind==='reading')return classWorkRequest(`/api/readings/${item.sourceId}`,{action:action==='due'?'due-date':action==='open'?'reopen':'archive',version:item.version,...(action==='due'?{due_at:fields.due_at}:{})})

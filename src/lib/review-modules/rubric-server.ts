@@ -1,0 +1,38 @@
+import 'server-only'
+import type { Criterion,Topic } from './analytics'
+import type { ReviewState } from './state'
+export const RUBRIC_VERSION='review-v2'
+export const TOPICS:Topic[]=[{id:'task',label:'Understand the task'},{id:'units',label:'Units & time'},{id:'vectors',label:'Vectors & position'},{id:'uncertainty',label:'Uncertainty'},{id:'honors',label:'Honors reasoning'},{id:'graph',label:'Graphs & checks'},{id:'communication',label:'Explain & communicate'}]
+const rows:[string,string,string][]=[
+ ['job','task','Predict the asteroid position and communicate uncertainty honestly to the public. Both prediction and uncertainty are needed.'],
+ ['position','task','Current distance from Earth or initial/starting position. Full credit for explaining what the quantity means, such as how far away it is right now. The value is already supplied in the prompt; do not require repeating 120 million km.'],
+ ['velocity','task','Both speed (how fast it moves) and direction (which way/angle it travels). Full credit for “how fast it is moving and in which direction” or “speed in a direction.” The numbers 8500 and 15° are already supplied; do not require repeating them. Speed alone is 2/4 (one of two essential ideas), not 1/4.'],
+ ['gravity','task','The task gives very small Earth gravity, so ignoring acceleration is a simplifying first model. Full credit for stating that gravity/acceleration is very small so speed and direction are approximately constant; the numerical bound need not be repeated. Accept a well-reasoned challenge that this bound can accumulate over six months; do not insist it is always negligible.'],
+ ['deliverables','task','Five deliverables: six-month position calculations with units; toward and sideways vector components; uncertainty window; labeled position-versus-time graph with uncertainty bounds; public paragraph explaining what is known, unknown, and why.'],
+ ['km','units','1000 (one thousand) meters. A short blank needs only the number, not working.'],
+ ['convert','units','1.2×10^8 km ×1000 m/km =1.2×10^11 m. Accept equivalent standard notation, with conversion and units.'],
+ ['seconds','units','Seconds (s). A short blank needs no extra explanation.'],
+ ['day','units','86400 seconds. A short blank needs only the number.'],
+ ['time','units','182.5 days ×86400 s/day =15,768,000 s ≈1.58×10^7 s. Accept reasonable rounding and correct units.'],
+ ['toward','vectors','cos or cosine. Short blank.'],
+ ['side','vectors','sin or sine. Short blank.'],
+ ['components','vectors','v_toward=8500 cos15°≈8210 m/s; v_side=8500 sin15°≈2200 m/s. Toward component changes the Earth-line position; sideways is perpendicular. Accept 8.21×10³ and2.20×10³ with units.'],
+ ['equation','vectors','x_f=x_i+v_x t; x_i initial position, x_f final position, v_x velocity component along the chosen x axis, t elapsed seconds. For x positive away from Earth, v_x is negative; equivalent x_f=x_i−v_toward t with a positive toward speed is correct.'],
+ ['prediction','vectors','Use x_i=1.2×10^11m, v_x≈−8210.37m/s, t=1.5768×10^7s: x_f≈−9.46×10^9m (−9.46×10^6km). Rounding t to1.58×10^7 gives about−9.73×10^9m: accept consistent intermediate rounding. Negative is a signed Earth-line position, not negative physical distance and not an impact claim. Accept an explicitly different axis convention if internally consistent.'],
+ ['uncertainty','uncertainty','How far a measured value could plausibly be off / range or limited precision from measurement. Not a mistake.'],
+ ['range','uncertainty','Lowest870m and highest930m; both needed.'],
+ ['explain_uncertainty','uncertainty','Plus/minus gives a range around a reported value: subtract for lower bound, add for upper. Explain measurement limits in plain language.'],
+ ['wiggle','uncertainty','time (in compatible units, seconds with m/s). Short blank.'],
+ ['window','uncertainty','Δx=50,000km+(200m/s)(15,768,000s)/1000=3,203,600km≈3.20×10^6km. Apply ±Δx to signed x_f from the student’s consistent prediction, giving approximately−12.666million to−6.259million km. Accept consistent rounded predictions, units and bounds. This is a 1D position interval, not proof of collision. Do not penalize a carried-forward arithmetic error twice if this method is correct.'],
+ ['honors_combine','honors','a=50,000km and b≈3,153,600km. Worst-case a+b≈3,203,600km; RSS sqrt(a²+b²)≈3,154,000km. State independence for RSS; explain a defensible public reporting choice and assumptions. RSS is not a guaranteed bound. Accept consistent rounding.'],
+ ['honors_test','honors','Upper bound½at² with a=.001m/s²,t=15,768,000s gives1.243×10^11m≈1.243×10^8km, ~39 times the±3.20millionkm measurement window. Shows this acceleration bound alone cannot justify ignoring gravity over six months. It is a conservative bound, not a prediction that actual gravity has this constant maximum.'],
+ ['honors_closest','honors','d_min=(1.2×10^8km)sin15°≈3.106×10^7km. t=(1.2×10^11m cos15°)/8500m/s≈1.364×10^7s≈158days, before182.5days. A perpendicular segment is the shortest gap to the straight path. Match units.'],
+ ['graph','graph','Time on horizontal axis with units; signed Earth-line position on vertical axis with distance units. Central position line decreases linearly in the chosen convention; uncertainty band widens asΔx0+Δv t. Accept a physical distance graph only if distinguished from signed x, with correct closest-approach behavior.'],
+ ['traps','graph','Explain any two of the four module traps: mixing km and m; ignoring direction; using full speed instead of toward component (whole versus parts); skipping uncertainty. State how to prevent each.'],
+ ['scores','communication','Science, Reasoning, Communication, Transfer to Asteroid. Describe strong evidence in at least one: accurate methods/units, justified choices, understandable writing, or applying numbers to this asteroid and uncertainty.'],
+ ['lowest','communication','The lowest rubric category sets the transfer-task level; improve the weakest area. Name a concrete part and a useful revision. This refers to the transfer task rubric, not the separate review-response percentage.'],
+ ['public','communication','Clear public-facing paragraph with numbers and units, a prediction and range, what is unknown, why uncertainty grows, and a sensible next step such as collecting more data/refining the gravity model. Accept consistent numbers from student work and careful caveats; do not require exact wording or alarmist collision claims. Distinguish signed position from actual distance.']
+]
+export function reviewCriteria(slug:string):Criterion[]{return rows.filter(r=>slug==='unit-1-honors'||r[1]!=='honors').map(([id,topic,expected])=>({id,topic,expected}))}
+const checks:Record<string,[string,string,number|null]>={q1:['task','Two jobs',1],q2:['task','Gravity assumption',1],q3:['task','Audience',2],q4:['units','Kilometers to meters',null],q5:['units','Time conversion',null],q6:['vectors','Sine or cosine',0],q7:['vectors','Position prediction',null],q8:['uncertainty','Window growth',0],q9:['graph','Widening band',0],q10:['graph','Calculation traps',0],q11:['communication','Reasoning rubric',1],q12:['communication','Lowest score',3],q13:['communication','Public paragraph',1],q14:['honors','Root-sum-square',null],q15:['honors','Gravity bound',null],q16:['honors','Closest approach',0],q17:['uncertainty','Lower bound',null],q18:['uncertainty','Meaning of uncertainty',1]}
+export function practiceSignals(state:ReviewState){return Object.entries(state.ans).flatMap(([id,v])=>{const c=checks[id];return c?[{id,topic:c[0],label:c[1],correct:c[2]===null?v===true:v===c[2]}]:[]})}

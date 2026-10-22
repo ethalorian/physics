@@ -1,3 +1,5 @@
+import {choiceQuizDispositions} from '@/lib/choice-calendar-server'
+import { calendarAssigned, CALENDAR_ASSIGNMENT_MESSAGE } from '@/lib/calendar-assignment'
 import {mcasItem} from '@/lib/mcas/bank'
 import {withAuth,withRole} from '@/lib/api-auth'
 import {supabaseAdmin} from '@/lib/supabase'
@@ -7,13 +9,16 @@ import {validateQuiz} from '@/lib/quizzes/validation'
 import {lockedReadingQuizPrerequisites} from '@/lib/reading-quiz-access'
 export const GET=withAuth(async(req,ctx)=>{
  const staff=quizStaff(ctx),courses=await quizCourses(ctx),inventory=staff&&new URL(req.url).searchParams.get('inventory')==='1'
- let quizzes=courses.length?await quizRows<Quiz>((a,b)=>{let q=supabaseAdmin.from('quiz_assignments').select('*').in('course_id',courses.map(c=>c.id));if(!inventory)q=q.is('deleted_at',null);if(!staff)q=q.neq('status','draft');return q.order('created_at',{ascending:false}).order('id').range(a,b)}):[]
- if(!staff)quizzes=quizzes.filter(q=>!q.student_ids||q.student_ids.includes(ctx.userId))
+ let quizzes=courses.length?await quizRows<Quiz>((a,b)=>{let q=supabaseAdmin.from('quiz_assignments').select('*').in('course_id',courses.map(c=>c.id));if(!inventory)q=q.is('deleted_at',null);if(!staff)q=q.eq('status','published');return q.order('created_at',{ascending:false}).order('id').range(a,b)}):[]
+ if(!staff){
+  const disposition=await choiceQuizDispositions(courses.filter(c=>c.program==='physics').map(c=>c.id),[ctx.userId])
+  quizzes=quizzes.filter(q=>calendarAssigned(q.status,q.due_at)&&(!q.student_ids||q.student_ids.includes(ctx.userId))&&!disposition.exemptions[q.id]?.includes(ctx.userId)&&!disposition.available[q.id]?.includes(ctx.userId))
+ }
  const locked:LockedQuizCard[]=[]
  if(!staff){
   const prerequisites=await lockedReadingQuizPrerequisites(quizzes.map(q=>q.id),ctx.userId)
   const readings=prerequisites.size?await quizRows<{id:string;course_id:string;title:string}>((a,b)=>supabaseAdmin.from('textbook_assignments').select('id,course_id,title').in('id',[...prerequisites.values()]).eq('status','published').order('id').range(a,b)):[]
-  for(const q of quizzes){const reading=readings.find(r=>r.id===prerequisites.get(q.id)&&r.course_id===q.course_id);if(q.status==='published'&&reading)locked.push({id:q.id,course_id:q.course_id,title:q.title,due_at:q.due_at,created_at:q.created_at,reading_id:reading.id,reading_title:reading.title})}
+  for(const q of quizzes){const reading=readings.find(r=>r.id===prerequisites.get(q.id)&&r.course_id===q.course_id);if(q.status==='published'&&reading)locked.push({kind:q.kind,id:q.id,course_id:q.course_id,title:q.title,due_at:q.due_at,created_at:q.created_at,reading_id:reading.id,reading_title:reading.title})}
   quizzes=quizzes.filter(q=>!prerequisites.has(q.id))
  }
 
@@ -34,6 +39,7 @@ export const GET=withAuth(async(req,ctx)=>{
 export const POST=withRole(['teacher','admin'],async(req,ctx)=>{
  if(ctx.viewingAsTeacher)return quizJson({error:'Return to your own account to create quizzes.'},403)
  let quiz;try{quiz=validateQuiz(await req.json())}catch(e){return quizJson({error:(e as Error).message},400)}
+ if(quiz.status==='published'&&!calendarAssigned(quiz.status,quiz.due_at))return quizJson({error:CALENDAR_ASSIGNMENT_MESSAGE},400)
  if(quiz.questions.some(q=>q.mcas_id&&!mcasItem(q.mcas_id)))return quizJson({error:'An MCAS source question is unavailable. Reopen the bank and select it again.'},400)
  const course=(await quizCourses(ctx)).find(c=>c.id===quiz.course_id);if(!course)return quizJson({error:'Choose your own class.'},403)
  if(course.program!=='physics'&&quiz.questions.some(q=>q.mcas_id))return quizJson({error:'MCAS Physics questions belong to a Physics class.'},400)

@@ -1,0 +1,1 @@
+.gridActor{transform-box:view-box;transform-origin:0 0;transition:transform .52s cubic-bezier(.25,0,.35,1)}.gridActor[data-active=false]{visibility:hidden}@media(prefers-reduced-motion:reduce){.gridActor{transition:none}}

@@ -4,19 +4,19 @@ import { getLessonCompletions } from '@/lib/lesson-completion-server'
 import { getStudentTrack } from '@/lib/student-enrollment'
 import type { BlockDocument } from '@/data/content-blocks'
 import { isCatalogUnit } from '@/lib/retired-curriculum'
-import { CURRENT_LESSON_FIELDS, isCurrentLesson } from '@/lib/current-lesson-catalog'
+import { CURRENT_LESSON_FIELDS, CURRENT_PHYSICS_LESSON_FILTER, isCurrentLesson } from '@/lib/current-lesson-catalog'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
-import { getStudentLessonGate, getStudentLessonWindowStatuses } from '@/lib/lesson-windows'
+import { getStudentLessonWindowStatuses } from '@/lib/lesson-windows'
 import { getStudentProgram } from '@/lib/program'
 import { targetValue, MasteryRecord, Domain } from '@/data/curriculum-types'
 
 // GET /api/home
 // One call that feeds the student home hub: Continue (next/in-progress lesson +
 // the current unit's journey), Retry (targets below mastery from teacher records),
-// the mastery climb (date-stamped ratings), points/XP + streak, and a side-quest sim.
+// the mastery climb (date-stamped ratings), points/XP + streak.
 //
 // Key join note: lessons.unit is a DISPLAY STRING that equals units.name; the
 // stable key (units.id) is what learning_targets.unit_id uses. So we bridge
@@ -27,14 +27,25 @@ type LessonRow = { id: string; slug: string; title: string; unit: string; lesson
 type ProgressRow = { lesson_id: string; status: string | null; progress_percentage: number | null }
 type TargetRow = { id: string; statement: string; domain: string; order_index: number }
 type RecordRow = { target_id: string; level: number; observed_at: string }
-type SimRow = { slug: string; title: string; unit: string | null }
 
 export const GET = withAuth(async (request, ctx) => {
     const userId = ctx.userId
     const name = ctx.session.user.name ?? 'there'
 
     // --- Program (physics | trades) — decides which units/lessons exist for this student
-    const program = await getStudentProgram(userId)
+    // Start independent reads together. Window statuses also supply the access
+    // gate, so the same enrollments/windows are not fetched a second time.
+    const [program, track, windows, bal, activity, progress] = await Promise.all([
+      getStudentProgram(userId),
+      getStudentTrack(userId),
+      getStudentLessonWindowStatuses(userId),
+      getBalance(userId),
+      supabaseAdmin.from('student_activity').select('created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(500),
+      supabaseAdmin.from('lesson_progress').select('lesson_id, status, progress_percentage').eq('user_id', userId),
+    ])
+    if (activity.error) throw activity.error
+    if (progress.error) throw progress.error
+    const openIds = Object.keys(windows).filter(id => windows[id].state === 'open')
 
     // --- Units (ordered) -----------------------------------------------------
     const { data: unitRowsRaw } = await supabaseAdmin
@@ -47,15 +58,17 @@ export const GET = withAuth(async (request, ctx) => {
     const orderByName = new Map<string, number>(units.map((u): [string, number] => [u.name, u.order_index]))
 
     // --- Published lessons, ordered by unit then lesson_number ---------------
-    const { data: lessonRowsRaw } = await supabaseAdmin
-      .from('lessons')
-      .select(`id,slug,title,unit,lesson_number,content_blocks,visibility_track,${CURRENT_LESSON_FIELDS}`)
-      .eq('published', true)
-      .in('unit_id', units.map((u) => u.id))
-    // Per-class release gate: hide lessons the student's class hasn't opened yet
-    // (or has closed). Published-and-no-window = open by default.
-    const [lessonGate,track] = await Promise.all([getStudentLessonGate(userId),getStudentTrack(userId)])
-    const lessons = (lessonRowsRaw ?? []).filter(l => isCurrentLesson({ ...l, program }) && lessonGate(l.id) && isLessonVisible(l.visibility_track,{role:'student',track})) as LessonRow[]
+    let lessonRowsRaw: LessonRow[] = []
+    if (openIds.length && units.length) {
+      let query = supabaseAdmin.from('lessons')
+        .select(`id,slug,title,unit,lesson_number,content_blocks,visibility_track,${CURRENT_LESSON_FIELDS}`)
+        .eq('published', true).in('unit_id', units.map(u => u.id)).in('id', openIds)
+      if (program === 'physics') query = query.or(CURRENT_PHYSICS_LESSON_FILTER)
+      const result = await query
+      if (result.error) throw result.error
+      lessonRowsRaw = result.data ?? []
+    }
+    const lessons = lessonRowsRaw.filter(l => isCurrentLesson({ ...l, program }) && isLessonVisible(l.visibility_track, { role: 'student', track }))
     lessons.sort(
       (a, b) =>
         (orderByName.get(a.unit) ?? 99) - (orderByName.get(b.unit) ?? 99) ||
@@ -63,10 +76,7 @@ export const GET = withAuth(async (request, ctx) => {
     )
 
     // --- This student's lesson progress --------------------------------------
-    const { data: progRowsRaw } = await supabaseAdmin
-      .from('lesson_progress')
-      .select('lesson_id, status, progress_percentage')
-      .eq('user_id', userId)
+    const progRowsRaw = progress.data
     const progByLesson = new Map<string, ProgressRow>(
       ((progRowsRaw ?? []) as ProgressRow[]).map((p): [string, ProgressRow] => [p.lesson_id, p]),
     )
@@ -168,24 +178,17 @@ export const GET = withAuth(async (request, ctx) => {
       }
     }
 
-    const windows = await getStudentLessonWindowStatuses(userId)
     const homework = lessons.flatMap(lesson => {
       const video = PHYSICS_VIDEOS.find(v => lesson.content_blocks?.blocks?.some(b => b.type === 'instruction_video' && b.youtubeId === v.youtubeId))
       return video ? [{ id:lesson.id, slug:lesson.slug, title:lesson.title, sequence:video.sequence, due_at:windows[lesson.id]?.due_at??null, complete:isDone(lesson) }] : []
     }).sort((a,b) => Number(a.complete)-Number(b.complete) || (a.due_at?Date.parse(a.due_at):Infinity)-(b.due_at?Date.parse(b.due_at):Infinity) || a.sequence-b.sequence)
 
     // --- Points / XP ---------------------------------------------------------
-    const bal = await getBalance(userId)
 
     // --- Streak: consecutive days of activity ending today or yesterday ------
     let streak = 0
     try {
-      const { data: act } = await supabaseAdmin
-        .from('student_activity')
-        .select('created_at')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(500)
+      const act = activity.data
       const iso = (dt: Date) => dt.toISOString().slice(0, 10)
       const days = new Set<string>(((act ?? []) as { created_at: string }[]).map((a) => iso(new Date(a.created_at))))
       const cursor = new Date()
@@ -198,16 +201,6 @@ export const GET = withAuth(async (request, ctx) => {
       streak = 0
     }
 
-    // --- Side quest sim (match current unit, else any published) -------------
-    const { data: simRowsRaw } = await supabaseAdmin
-      .from('simulations')
-      .select('slug, title, unit')
-      .eq('published', true)
-    const sims = (simRowsRaw ?? []) as SimRow[]
-    const sim =
-      sims.find((s) => s.unit && currentUnitName && s.unit === currentUnitName) || sims[0] || null
-    const sideQuest = { sim: sim ? { slug: sim.slug, title: sim.title } : null }
-
     return NextResponse.json({
       student: { name },
       program,
@@ -216,7 +209,6 @@ export const GET = withAuth(async (request, ctx) => {
       continue: continueData,
       retry,
       climb,
-      sideQuest,
       homework,
     })
 })

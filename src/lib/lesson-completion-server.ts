@@ -28,9 +28,21 @@ export async function getLessonCompletions(userId: string, lessons: { id: string
   for (const s of submissions) latest.set(s.lesson_id,s)
   const reviews = await readIdBatches<{ submission_id: string }>([...latest.values()].map(s=>s.id), batch => supabaseAdmin.from('lesson_reviews').select('submission_id').in('submission_id',batch))
   const reviewed = new Set(reviews.map(r=>r.submission_id))
+  const answersByLesson = new Map<string, typeof answers>()
+  for (const answer of answers) {
+    const rows = answersByLesson.get(answer.lesson_id) ?? []
+    rows.push(answer)
+    answersByLesson.set(answer.lesson_id, rows)
+  }
+  const draftsByLesson = new Map<string, typeof drafts>()
+  for (const draft of drafts) {
+    const rows = draftsByLesson.get(draft.lesson_id) ?? []
+    rows.push(draft)
+    draftsByLesson.set(draft.lesson_id, rows)
+  }
   return Object.fromEntries(current.map(l => {
     const document = filterDocumentForViewer(physicsProblemFormat(l.id,l.content_blocks!),{role:'student',track})
     const submission = latest.get(l.id)
-    return [l.id,lessonCompletion(document.blocks,answers.filter(a=>a.lesson_id===l.id),submission ? {...submission,reviewed:reviewed.has(submission.id)} : undefined,drafts.filter(d=>d.lesson_id===l.id))]
+    return [l.id,lessonCompletion(document.blocks,answersByLesson.get(l.id) ?? [],submission ? {...submission,reviewed:reviewed.has(submission.id)} : undefined,draftsByLesson.get(l.id) ?? [])]
   }))
 }

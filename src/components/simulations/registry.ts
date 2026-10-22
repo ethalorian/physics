@@ -10,6 +10,9 @@ const load = (importer: () => Promise<{ default: ComponentType }>): ComponentTyp
   dynamic(importer, { ssr: false, loading: () => null })
 
 export const SIM_COMPONENTS: Record<string, ComponentType> = {
+  'incline-lab': load(() => import('@/app/simulations/incline-lab/page')),
+  'friction-lab': load(() => import('@/app/simulations/friction-lab/page')),
+  'force-mass': load(() => import('@/app/simulations/force-mass/page')),
   'area-under-curve': load(() => import('@/app/simulations/area-under-curve/page')),
   'asteroid-trajectory': load(() => import('@/app/simulations/asteroid-trajectory/page')),
   'astronaut-thrust': load(() => import('@/app/simulations/astronaut-thrust/page')),

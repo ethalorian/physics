@@ -69,26 +69,26 @@ for (const v of PHYSICS_VIDEOS) test(`video ${v.sequence} draft uses canonical e
   const doc = createVideoLesson(v.youtubeId)!
   assert.deepEqual(validateBlockDocument(doc, true), [])
   assert.deepEqual(doc.learningPath!.targetSlugs, v.targets.filter(t => t.relationship === 'teaches').map(t => t.slug))
-  assert.equal(paginateBlocks(doc.blocks).length, v.sequence >= 9 ? 5 : 3)
+  assert.equal(paginateBlocks(doc.blocks).filter(page=>page.hasCapture).length, 5)
   assert.deepEqual(linkedTeachingPlans({ unit_id: 'unit-1', lesson_number: 99 + v.sequence }, doc), [])
   const captures = doc.blocks.filter(b => 'capture' in b && b.capture)
-  assert.equal(captures.length, v.sequence >= 9 ? 3 : 2)
+  assert.equal(captures.length, 5)
   for (const block of captures) {
     assert.ok(evidenceContext(block).targets.includes(block.targetId!))
-    const visual = block.sei!.visual!
-    assert.ok('src' in visual && fs.existsSync('public' + visual.src))
-    assert.ok(block.sei!.frames!.length)
     assert.ok(!block.gate, 'incorrect practice must not block the lesson')
   }
-  const q = captures.find(b => b.type === 'question') as QuestionBlock
-  const question = q.question as InlineQuestion
-  assert.ok(question.options!.every(option => option.feedback))
-  const wrong = question.options!.find(option => option.id !== question.correctOptionId)!
-  const response = checkedLessonResponse(q, { optionId: wrong.id, autoCheck: 'match' })
+  const q = captures.find(b => b.type === 'interactive_question')!
+  assert.ok(q.type === 'interactive_question')
+  if(q.type !== 'interactive_question') throw Error('interactive')
+  const part = q.task.parts[0]
+  assert.ok(part.kind === 'choice')
+  if(part.kind !== 'choice') throw Error('choice')
+  const wrong = part.options.find(o=>o.id!==part.answer)!
+  const response = checkedLessonResponse(q, {version:1,answers:{[part.id]:wrong.id},checks:{[part.id]:'match'}})
   assert.ok(response.ok)
-  if (response.ok) {
-    assert.equal((response.response as { autoCheck: string }).autoCheck, 'mismatch')
-    assert.equal(isBlockComplete(q, response.response), true)
+  if(response.ok) {
+    assert.equal((response.response as {checks:Record<string,string>}).checks[part.id],'mismatch')
+    assert.equal(isBlockComplete(q,response.response),true)
   }
   const filtered = filterDocumentForViewer(doc, { role: 'student', track: 'cpa' })
   assert.ok(!JSON.stringify(filtered).includes('correctOptionId'))

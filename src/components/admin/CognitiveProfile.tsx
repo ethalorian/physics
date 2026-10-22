@@ -1,0 +1,6 @@
+import {BLOOMS,type AssessmentDemand} from '@/lib/assessment-demand'
+export default function CognitiveProfile({demands}:{demands:(AssessmentDemand|undefined)[]}){
+ const known=demands.filter((d):d is AssessmentDemand=>!!d)
+ if(!known.length)return null
+ return <details className="rounded-xl border bg-card p-4"><summary className="min-h-11 cursor-pointer font-semibold">Question mix · Bloom’s & DOK</summary><p className="mb-3 text-sm text-muted-foreground">Thinking process and depth are planned separately. Review the work students produce, not just the question label.</p><div className="flex flex-wrap gap-2">{BLOOMS.map(level=>{const count=known.filter(d=>d.blooms===level).length;return count?<span key={level} className="rounded-lg bg-secondary px-3 py-2 text-sm">{level} · {count}</span>:null})}</div><p className="my-3 text-sm">{[1,2,3,4].filter(level=>known.some(d=>d.dok===level)).map(level=>`DOK ${level}: ${known.filter(d=>d.dok===level).length}`).join(' · ')}</p><ul className="space-y-2 text-sm">{known.map((d,i)=><li key={i}><strong>{d.blooms} · DOK {d.dok}:</strong> {d.evidence}</li>)}</ul>{known.some(d=>d.dok===4)&&<p className="mt-3 text-sm text-muted-foreground">DOK 4 requires the completed investigation: evidence, revision, and synthesis across conditions. A plan alone does not establish this depth.</p>}</details>
+}

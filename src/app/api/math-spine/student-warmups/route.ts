@@ -11,7 +11,7 @@ export const GET = withAuth(async (request, ctx) => {
   const query = () => {
     let q = supabaseAdmin.from('math_warmup_submissions').select(columns).eq('user_id', target.userId)
     if (params.get('submission_id')) q = q.eq('id', params.get('submission_id')!)
-    if (params.get('competency_id') && !params.get('submission_id')) q = q.eq('competency_id', params.get('competency_id')!)
+    if (params.get('competency_id') && !params.get('submission_id')) q = q.contains('tested_competency_ids', [params.get('competency_id')!])
     return q
   }
   const [pending, recent, feedback, revisions, requested] = await Promise.all([

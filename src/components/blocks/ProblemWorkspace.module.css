@@ -6,3 +6,37 @@
 .board{scroll-margin-top:80px}.coach{display:grid;grid-template-columns:64px minmax(0,1fr);gap:.35rem .7rem;text-align:left;padding:.8rem}.portrait{grid-row:1 / span 3;min-height:88px}.coach h4{font-size:.85rem}.coach p{font-size:.75rem;line-height:1.45;margin:0}.coach button{font-size:.8rem;padding:.4rem .5rem;justify-self:start}.coach .hint{grid-column:1/-1;margin-top:.35rem;font-size:.82rem}@media(max-width:540px){.coach{grid-template-columns:1fr}.portrait{display:none}.reference{position:static}.board{scroll-margin-top:12px}}
 
 .board{border-top:4px solid var(--learn-practice)}.steps button[aria-current=step]{color:var(--learn-practice);border-color:var(--learn-practice)}.figure{background:color-mix(in oklch,var(--learn-concept) 5%,var(--card));border-color:color-mix(in oklch,var(--learn-concept) 25%,var(--border))}.coach{border-style:solid;border-color:color-mix(in oklch,var(--learn-practice) 30%,var(--border));background:color-mix(in oklch,var(--learn-practice) 7%,var(--card))}.coach h4,.coach button{color:var(--learn-practice)}.coach button{border-color:var(--learn-practice);background:var(--card)}.hint{animation:reveal .2s ease-out}.field:focus-within textarea{border-color:var(--learn-practice);outline:2px solid color-mix(in oklch,var(--learn-practice) 20%,transparent);outline-offset:2px}@keyframes reveal{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}@media(prefers-reduced-motion:reduce){.hint{animation:none}}
+
+.layout[data-example=true]:not(:has(aside)){grid-template-columns:minmax(0,1fr)}.predict{padding:18px;border:1px dashed var(--border);border-radius:var(--radius-md);background:var(--background)}.predict button{min-height:44px;padding:8px 14px;border:1px solid var(--primary);color:var(--primary);border-radius:var(--radius-md);font-weight:600}.board :is(button,textarea):focus-visible{outline:3px solid var(--ring);outline-offset:3px}@container(max-width:850px){.layout{grid-template-columns:minmax(0,1fr)}.reference{position:static;grid-row:auto}}
+
+@font-face {
+  font-family: 'Lesson Handwriting';
+  src: url('/fonts/kalam/Kalam-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+.handwritten {
+  font-family: 'Lesson Handwriting', cursive;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(2.1875rem - 1px), color-mix(in srgb, var(--border) 55%, transparent) calc(2.1875rem - 1px), color-mix(in srgb, var(--border) 55%, transparent) 2.1875rem);
+  background-origin: content-box;
+  padding: 1rem 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.handwritten :is(p, li) {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+.handwritten p { margin: 0 0 2.1875rem; }
+.handwritten p:last-child { margin-bottom: 0; }

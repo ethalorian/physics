@@ -1,0 +1,3 @@
+export type ForceArrow={label:string;angle:number;magnitude:number}
+export function parseForces(value:string):ForceArrow[]{try{const a:unknown=JSON.parse(value);if(!Array.isArray(a)||a.length>8)return [];return a.filter((f):f is ForceArrow=>!!f&&typeof f==='object'&&typeof f.label==='string'&&f.label.length<=100&&Number.isFinite(f.angle)&&f.angle>=0&&f.angle<=360&&Number.isFinite(f.magnitude)&&f.magnitude>0&&f.magnitude<=10000)}catch{return []}}
+export function forceDescription(value:string){const arrows=parseForces(value);return arrows.length?arrows.map(f=>`${f.label||'Unlabeled force'}: ${f.magnitude} N at ${f.angle}° counterclockwise from right`).join('; '):value}

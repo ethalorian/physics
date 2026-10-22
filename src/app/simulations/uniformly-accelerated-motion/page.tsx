@@ -1,8 +1,3 @@
-"use client"
-
-import SimLab from '@/components/simulations/lab/SimLab'
-import { uamDef } from './def'
-
-export default function UniformlyAcceleratedMotion() {
-  return <SimLab def={uamDef} />
-}
+'use client'
+import SimulationActivity from '@/components/simulations/SimulationActivity'
+export default function Simulation(){return <SimulationActivity id="uniformly-accelerated-motion"/>}

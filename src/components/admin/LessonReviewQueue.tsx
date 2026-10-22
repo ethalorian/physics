@@ -248,7 +248,7 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
             <label className="text-sm">Section <select aria-label="Submitted lesson section" className="min-h-11 rounded-lg border bg-card px-2" value={sectionIndex} onChange={e => setSectionIndex(Number(e.target.value))}>{reviewPages.map((_, i) => <option key={i} value={i}>{i + 1} of {reviewPages.length}</option>)}</select></label>
             <button className="min-h-11 rounded-lg border px-3 disabled:opacity-40" disabled={sectionIndex === reviewPages.length - 1} onClick={() => setSectionIndex(i => i + 1)}>Next section</button>
           </nav>
-          <BlockRenderer key={`${selected.id}:${sectionIndex}`} blocks={reviewPage.blocks} referenceBlocks={snapshot?.contentSnapshot?.blocks} lessonId={selected.lesson_id} responses={responses} targets={work?.targets} hydrated readOnly />
+          <BlockRenderer interactiveQuestions key={`${selected.id}:${sectionIndex}`} blocks={reviewPage.blocks} referenceBlocks={snapshot?.contentSnapshot?.blocks} lessonId={selected.lesson_id} responses={responses} targets={work?.targets} hydrated readOnly />
         </div>}
         {work && <details open={!snapshot?.contentSnapshot?.blocks} className="my-3 rounded border p-3"><summary className="cursor-pointer font-semibold">Captured responses · all saved fields</summary>{work.work.map((w) => <div key={w.blockId} className="my-3 rounded border p-3"><p className="text-xs text-muted-foreground">{w.blockType} · {w.blockId}</p>{renderResponse(w.response)}</div>)}</details>}
 

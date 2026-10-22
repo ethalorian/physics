@@ -1,7 +1,3 @@
-"use client"
-import SimLab from '@/components/simulations/lab/SimLab'
-import { picketFenceGDef } from './def'
-
-export default function PicketFenceGSimulation() {
-  return <SimLab def={picketFenceGDef} />
-}
+'use client'
+import SimulationActivity from '@/components/simulations/SimulationActivity'
+export default function Simulation(){return <SimulationActivity id="picket-fence-g"/>}

@@ -51,6 +51,7 @@ interface Lesson {
   order_index?: number
   // Release-window status (students only; null/absent for staff, who are ungated)
   window?: LessonWindowInfo | null
+  watchHref?: string
 }
 
 // Mirrors LessonWindowStatus from @/lib/lesson-windows (server-only module —
@@ -100,6 +101,7 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
   const [showAllCourses, setShowAllCourses] = useState(false)
   const [conceptMap,setConceptMap]=useState<LessonConceptMapData|null>(null)
   const [mapView,setMapView]=useState(true)
+  const [staff,setStaff]=useState(false)
 
   const fetchLessons = useCallback(async (quiet = false) => {
     try {
@@ -112,6 +114,7 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
       setLessons(data.lessons || [])
       setProgress(data.progress || {})
       setConceptMap(data.conceptMap ?? null)
+      setStaff(data.isAdmin === true)
     } catch (error) {
       console.error('Error fetching lessons:', error)
       setLoadError(true)
@@ -164,7 +167,7 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
     <nav className={mapStyles.viewTabs} aria-label="Lesson view"><button type="button" aria-pressed={mapView} onClick={()=>setMapView(true)}><Network size={17}/>Concept map</button><button type="button" aria-pressed={!mapView} onClick={()=>setMapView(false)}><List size={17}/>Lesson list</button></nav>
     {mapView?<LessonConceptMap data={conceptMap} onRefresh={()=>void fetchLessons(true)} observer={observer}/>:<PhysicsLearningLibrary lessons={lessons} onOtherCourses={()=>setShowAllCourses(true)} staff={false} observer={observer}/>}
   </>
-  if (!loading && !loadError && !showAllCourses && hasPhysicsLearning(lessons)) return <PhysicsLearningLibrary lessons={lessons} onOtherCourses={()=>setShowAllCourses(true)} staff={!observer && lessons.some(l=>!l.window)} observer={observer}/>
+  if (!loading && !loadError && !showAllCourses && hasPhysicsLearning(lessons)) return <PhysicsLearningLibrary lessons={lessons} onOtherCourses={()=>setShowAllCourses(true)} staff={staff} observer={observer}/>
 
   if (loading) {
     return (
@@ -336,7 +339,8 @@ function LessonCard({
 
   // Release-window state. No window info (staff, or pre-deploy cache) = open.
   const win = lesson.window ?? null
-  const isLocked = win?.state === 'scheduled' || win?.state === 'closed'
+  const isLocked = !lesson.watchHref && (win?.state === 'scheduled' || win?.state === 'closed')
+  const href = lesson.watchHref ?? `/lessons/${lesson.slug}`
   const urgent = win?.state === 'open' && !!win.closes_at && closesSoon(win.closes_at)
 
   return (
@@ -346,10 +350,10 @@ function LessonCard({
           ? 'opacity-70 cursor-default'
           : `hover:shadow-lg cursor-pointer ${isCompleted ? 'border-success/30 bg-success/5' : ''}`
       }`}
-      onClick={() => { if (!isLocked) router.push(`/lessons/${lesson.slug}`) }}
+      onClick={() => { if (!isLocked) router.push(href) }}
     >
       {/* Progress Bar */}
-      {progress > 0 && (
+      {!lesson.watchHref && progress > 0 && (
         <div className="absolute top-0 left-0 right-0 h-1 bg-muted">
           <div
             className={`h-full transition-all ${isCompleted ? 'bg-success' : 'bg-primary'}`}
@@ -374,7 +378,7 @@ function LessonCard({
             <TypeIcon className={`h-5 w-5 ${typeInfo.color}`} />
           </div>
           <div className="flex gap-1">
-            {isCompleted && (
+            {!lesson.watchHref && isCompleted && (
               <Badge variant="default" className="text-xs bg-success text-background">
                 <CheckCircle className="h-3 w-3 mr-1" />
                 Done
@@ -412,9 +416,9 @@ function LessonCard({
           )}
         </div>
 
-        {win?.due_at && <p className="text-sm font-semibold">Due {fmtWhen(win.due_at)}</p>}
+        {!lesson.watchHref && win?.due_at && <p className="text-sm font-semibold">Due {fmtWhen(win.due_at)}</p>}
         {/* Release window — opened / closes / opens / closed, at a glance */}
-        {win && (
+        {!lesson.watchHref && win && (
           <div
             className={`flex items-center gap-1.5 text-xs font-medium ${
               urgent
@@ -453,10 +457,10 @@ function LessonCard({
           disabled={isLocked}
           onClick={(e) => {
             e.stopPropagation()
-            if (!isLocked) router.push(`/lessons/${lesson.slug}`)
+            if (!isLocked) router.push(href)
           }}
         >
-          {isLocked ? (
+          {lesson.watchHref ? <><Play className="h-4 w-4 mr-2"/>Watch video</> : isLocked ? (
             <>
               <Lock className="h-4 w-4 mr-2" />
               {win?.state === 'scheduled' ? `Opens ${fmtWhen(win.opens_at, false)}` : 'Closed'}

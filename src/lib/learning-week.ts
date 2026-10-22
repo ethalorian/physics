@@ -3,7 +3,7 @@ import type { StudentAssignment } from './student-dashboard'
 
 export type LearningActivity = Omit<StudentAssignment, 'kind'> & { kind: StudentAssignment['kind'] | 'math'; day?: string; available?: boolean }
 export type LearningPlans = Record<string, string | null>
-export const LEARNING_LABELS = { video: 'Video', reading: 'Reading', quiz: 'Quiz', vocabulary: 'Vocabulary', math: 'Math spine' } as const
+export const LEARNING_LABELS = { review: 'Review', video: 'Video', reading: 'Reading', quiz: 'Quiz', vocabulary: 'Vocabulary', math: 'Math spine' } as const
 export const ENGAGEMENT_TARGET = 80
 export const LEARNING_XP_SOURCES = ['lesson-block', 'lesson-video', 'legacy-lesson-progress', 'math-spine', 'vocabulary', 'vocab-assignment', 'review-complete']
 export type LearningPace = {
@@ -18,7 +18,7 @@ export function validPlanDate(value: unknown): value is string {
 export function weekDates(today: string, offset = 0) {
   const n = Math.floor(Date.parse(`${today}T12:00:00Z`) / 86400000)
   const monday = n - ((schoolDayWeekday(n) + 6) % 7) + offset * 7
-  return Array.from({ length: 5 }, (_, i) => schoolDayKeyFromNumber(monday + i))
+  return Array.from({ length: 7 }, (_, i) => schoolDayKeyFromNumber(monday + i))
 }
 export function deadlineDay(due: string | null) {
   if (!due) return null
@@ -51,4 +51,11 @@ export function summarizeLearningPace(dates: string[], activity: string[], xp: {
   const days = new Set(dates), active = new Set(activity.filter(at => Number.isFinite(Date.parse(at))).map(at => schoolDayKey(new Date(at))).filter(day => days.has(day)))
   const earned = xp.reduce((total, event) => total + (LEARNING_XP_SOURCES.includes(event.source) && Number.isFinite(event.points) && event.points > 0 && Number.isFinite(Date.parse(event.earned_at)) && days.has(schoolDayKey(new Date(event.earned_at))) ? event.points : 0), 0)
   return { activeDays: active.size, engagement: dates.length ? Math.round(active.size / dates.length * 100) : null, learningXp: Math.round(earned), xpRate: dates.length ? Math.round(earned / dates.length * 10) / 10 : null, ready: dates.length === 5 }
+}
+
+/** Include a weekend date when an assignment or personal plan actually lands there. */
+export function scheduledWeekDates(today:string,offset:number,items:Pick<LearningActivity,'id'|'due'>[],plans:LearningPlans){
+ const dates=weekDates(today,offset),monday=Math.floor(Date.parse(dates[0]+'T12:00:00Z')/86400000)
+ const scheduled=new Set(items.flatMap(item=>[deadlineDay(item.due),plans[item.id]??null]))
+ return [...dates,...[5,6].map(i=>schoolDayKeyFromNumber(monday+i)).filter(date=>scheduled.has(date))]
 }

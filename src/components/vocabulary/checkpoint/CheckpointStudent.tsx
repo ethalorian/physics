@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card'
 import { checkpointScore, type CheckpointAttempt, type CheckpointQuestion } from '@/lib/vocab-checkpoint'
 import CheckpointScene from './CheckpointScene'
 import s from './checkpoint.module.css'
+import {ChoiceResponse,WrittenResponse} from '@/components/interactive-assignments/QuestionResponse'
 
 interface StudentProps {
   state: { title: string; instructions: string }
@@ -41,7 +42,7 @@ export function CheckpointStudent({ state, attempt, onAnswer, onSubmit, onTeache
 
   if (stage === 'intro') return <div className={s.studentWidth}>
     <p className={s.eyebrow}>VOCABULARY CHECKPOINT</p><h1 className="text-display">Put your words to work.</h1><p className={s.lead}>{state.title}</p>
-    <Card className={s.introCard}><div className={s.inlineMeta}><span>10 questions</span><span>20 points</span><span>About 10–15 minutes · untimed</span></div>
+    <Card className={s.introCard}><div className={s.inlineMeta}><span>10 questions</span><span>20 points</span><span>Untimed · save and return</span></div>
       <h2 className="text-title-2">Show what you understand.</h2><p>{state.instructions}</p>
       <div className={s.threeParts}>{[['01','Recognize','4 quick questions'],['02','Interpret','4 real situations'],['03','Explain','2 short responses']].map(([n,t,d])=><div key={n}><span className={s.eyebrow}>{n}</span><strong>{t}</strong><span>{d}</span></div>)}</div>
       <div className={s.chips}>{words.map(w=><span key={w}>{w}</span>)}</div>
@@ -70,11 +71,11 @@ export function CheckpointStudent({ state, attempt, onAnswer, onSubmit, onTeache
       <div className={s.between}><p className={s.eyebrow}>{question.part==='recognize'?'01 · RECOGNIZE':question.part==='interpret'?'02 · INTERPRET':'03 · EXPLAIN'}</p><span className={s.badge}>{question.points} {question.points===1?'point':'points'}</span></div>
       <h1 ref={prompt} tabIndex={-1} className="text-title-1">{question.prompt}</h1>
       {question.scene&&<CheckpointScene kind={question.scene}/>}
-      {question.options?<fieldset className={s.options}><legend className="sr-only">Choose one answer</legend>{question.options.map((o,i)=><label className={s.option} data-selected={attempt.answers[question.id]===String(i)} key={o}><input type="radio" name={question.id} checked={attempt.answers[question.id]===String(i)} disabled={busy} onChange={()=>onAnswer(question.id,String(i))}/><span>{o}</span></label>)}</fieldset>:<>
+      {question.options?<ChoiceResponse value={attempt.answers[question.id]} disabled={busy} onChange={v=>onAnswer(question.id,v)} options={question.options.map((o,i)=>({id:String(i),content:o}))}/>:<>
         <div className={s.chips}>{question.words.map(w=><span key={w}>{w}</span>)}</div>
-        <label className={s.field}>Your explanation<textarea disabled={busy} maxLength={2000} rows={5} value={attempt.answers[question.id]??''} onChange={e=>onAnswer(question.id,e.target.value)} placeholder="A few clear sentences are enough."/></label>
+        <WrittenResponse label="Your explanation" maxLength={2000} disabled={busy} value={attempt.answers[question.id]??''} onChange={v=>onAnswer(question.id,v)} help="Explain your choices with evidence from the situation."/>
         <details className={s.support}><summary>Need a sentence starter?</summary><p>{question.frame}</p></details>
-        <div className={s.rubricMini}><strong>How this earns 4 points</strong><span>Meaning: 0–2 · Application to this situation: 0–2</span></div>
+        <div className={s.rubricMini}><strong>How this earns 4 points</strong><span>Use accurate meanings, apply them to the situation, and justify your reasoning.</span></div>
       </>}
     </Card>
     <div className={s.quizFooter}><Button size="lg" variant="outline" disabled={index===0} onClick={()=>setIndex(i=>i-1)}><ArrowLeft/> Back</Button><span className={s.muted}>{saveStatus}</span><Button size="lg" onClick={()=>index===9?setStage('confirm'):setIndex(i=>i+1)}>{index===9?'Review & submit':'Next'} <ArrowRight/></Button></div>

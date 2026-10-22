@@ -1,3 +1,4 @@
+import { calendarAssigned } from '@/lib/calendar-assignment'
 import 'server-only'
 import {supabaseAdmin} from '@/lib/supabase'
 import type {AuthContext} from '@/lib/api-auth'
@@ -9,7 +10,7 @@ export async function accessQuiz(id:string,ctx:AuthContext){
  const {data,error}=await supabaseAdmin.from('quiz_assignments').select('*').eq('id',id).maybeSingle();if(error)throw error
  if(!data||data.deleted_at)return null
  const staff=ctx.role==='teacher'||ctx.role==='admin'
- if(!staff&&(ctx.realRole!=='student'||data.status==='draft'||data.student_ids&&!data.student_ids.includes(ctx.userId)))return null
+ if(!staff&&(ctx.realRole!=='student'||!calendarAssigned(data.status,data.due_at)||data.student_ids&&!data.student_ids.includes(ctx.userId)))return null
  const course=(await readingCourses(ctx)).find(c=>c.id===data.course_id)
  if(course&&!staff&&(await lockedReadingQuizIds([id],ctx.userId)).has(id))return null
  return course?{quiz:data as Quiz,course}:null

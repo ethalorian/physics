@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { teachingHref } from '@/lib/teaching-navigation'
 import { Users, Plus, ArrowRight, KeyRound, Trash2, Search, ArrowDownUp } from 'lucide-react'
 import { ESCAPE_ROOMS, getRoom, decodeEscapeConfig, type EscapePrizeTier } from '@/lib/lobby/escape'
 
@@ -34,6 +35,9 @@ const PRIZE_TIERS: { v: EscapePrizeTier; label: string }[] = [
 
 export default function LobbyAdminPage() {
   const router = useRouter()
+  const params = useSearchParams()
+  const requestedClass = params.get('class') ?? ''
+  const unitId = params.get('unit') ?? 'auto'
   const [courses, setCourses] = useState<Course[]>([])
   const [targets, setTargets] = useState<Target[]>([])
   const [sessions, setSessions] = useState<Session[]>([])
@@ -72,12 +76,12 @@ export default function LobbyAdminPage() {
     fetch('/api/courses').then((r) => r.json()).then((d: { courses?: Course[] }) => {
       const cs = d.courses ?? []
       setCourses(cs)
-      if (cs[0]) setCourseId(cs[0].id)
+      setCourseId(cs.some(c => c.id === requestedClass) ? requestedClass : requestedClass ? '' : cs[0]?.id ?? '')
     }).catch(() => {})
     fetch('/api/lobby/targets').then((r) => r.json())
       .then((d: { targets?: Target[] }) => setTargets(d.targets ?? [])).catch(() => {})
     loadSessions()
-  }, [])
+  }, [requestedClass])
 
   const create = async () => {
     if (!courseId) return
@@ -140,9 +144,10 @@ export default function LobbyAdminPage() {
 
   return (
     <div className="max-w-3xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+      <Link className="mb-3 inline-flex min-h-11 items-center text-sm text-primary" href={teachingHref('live', courseId, courseId === requestedClass ? unitId : 'auto')}>← Teaching · Live classroom</Link>
       <div className="flex items-center gap-2 mb-4">
         <Users size={22} style={{ color: 'var(--primary)' }} />
-        <h1 className="text-2xl font-semibold tracking-tight">Lobby Sessions</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Group activities</h1>
       </div>
 
       <div className="rounded-2xl border p-5 mb-6" style={card}>

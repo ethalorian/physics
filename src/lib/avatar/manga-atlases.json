@@ -1,0 +1,520 @@
+[
+  {
+    "name": "faces",
+    "cols": 2,
+    "rows": 2,
+    "entries": [
+      "round",
+      "egg",
+      "square",
+      "heart"
+    ],
+    "collection": "manga-expression-v1"
+  },
+  {
+    "name": "hair-a",
+    "cols": 3,
+    "rows": 2,
+    "entries": [
+      "short",
+      "buzz",
+      "fade",
+      "spiky",
+      "side_part",
+      "mohawk"
+    ]
+  },
+  {
+    "name": "free-outfits",
+    "cols": 3,
+    "rows": 2,
+    "entries": [
+      "tee",
+      "polo",
+      "hoodie",
+      "striped",
+      "varsity"
+    ]
+  },
+  {
+    "name": "hair-b",
+    "cols": 3,
+    "rows": 2,
+    "entries": [
+      "curls",
+      "twists",
+      "afro",
+      "locs",
+      "braids",
+      "bun"
+    ]
+  },
+  {
+    "name": "hair-c",
+    "cols": 3,
+    "rows": 2,
+    "entries": [
+      "high_pony",
+      "ponytail",
+      "bob",
+      "bangs",
+      "long",
+      "wavy"
+    ]
+  },
+  {
+    "name": "hair-d",
+    "cols": 2,
+    "rows": 1,
+    "entries": [
+      "twin_braids",
+      "hijab"
+    ]
+  },
+  {
+    "name": "arms",
+    "cols": 2,
+    "rows": 1,
+    "entries": [
+      "left-arm",
+      "right-arm"
+    ],
+    "collection": "manga-anatomy-v1"
+  },
+  {
+    "name": "outfits-2",
+    "cols": 4,
+    "rows": 2,
+    "entries": [
+      "night-bat-hoodie",
+      "flash-suit",
+      "batman-suit",
+      "thor-suit",
+      "spooky-witch-robe",
+      "spooky-ghost-sheet",
+      "spooky-skeleton-suit",
+      "spooky-pumpkin-outfit"
+    ]
+  },
+  {
+    "name": "eyewear",
+    "collection": "manga-wardrobe-v1",
+    "cols": 3,
+    "rows": 2,
+    "entries": [
+      "lab-goggles",
+      "round-glasses",
+      "sunglasses",
+      "hex-glasses",
+      "half-rim-glasses",
+      "spooky-pirate-eye-patch"
+    ]
+  },
+  {
+    "name": "accessories-1",
+    "collection": "manga-wardrobe-v1",
+    "cols": 3,
+    "rows": 3,
+    "entries": [
+      "atom-pin",
+      "beaker-pin",
+      "bolt-pin",
+      "cuban-gold-chain",
+      "comet-pin",
+      "ruby-bat-pendant",
+      "piccolo",
+      "batman-utility-belt",
+      "batarang"
+    ]
+  },
+  {
+    "name": "accessories-2",
+    "collection": "manga-wardrobe-v1",
+    "cols": 3,
+    "rows": 3,
+    "entries": [
+      "mjolnir",
+      "spooky-broom",
+      "spooky-candy-bucket",
+      "spooky-cauldron",
+      "spooky-spider-brooch",
+      "spooky-bat-bow-tie",
+      "spooky-lantern"
+    ]
+  },
+  {
+    "name": "outfits-3",
+    "collection": "manga-wardrobe-v1",
+    "cols": 4,
+    "rows": 2,
+    "entries": [
+      "spooky-mummy-wraps",
+      "spooky-werewolf-shirt",
+      "spooky-monster-jacket",
+      "spooky-scarecrow-overalls",
+      "spooky-cat-suit",
+      "spooky-pirate-coat",
+      "fhs-football-uniform",
+      "fhs-basketball-uniform"
+    ]
+  },
+  {
+    "name": "outfits-4",
+    "collection": "manga-wardrobe-v1",
+    "cols": 4,
+    "rows": 2,
+    "entries": [
+      "fhs-baseball-uniform",
+      "fhs-softball-uniform",
+      "fhs-soccer-uniform",
+      "fhs-volleyball-uniform",
+      "fhs-hockey-uniform",
+      "fhs-track-uniform",
+      "fhs-cross-country-uniform",
+      "fhs-lacrosse-uniform"
+    ]
+  },
+  {
+    "name": "outfits-5",
+    "collection": "manga-wardrobe-v1",
+    "cols": 3,
+    "rows": 2,
+    "entries": [
+      "fhs-tennis-uniform",
+      "fhs-golf-uniform",
+      "fhs-cheer-uniform",
+      "fhs-varsity-jacket",
+      "fhs-warmup-jacket"
+    ]
+  },
+  {
+    "name": "headwear-3",
+    "collection": "manga-wardrobe-v1",
+    "cols": 3,
+    "rows": 2,
+    "entries": [
+      "spooky-pumpkin-mask",
+      "spooky-mummy-mask",
+      "spooky-werewolf-mask",
+      "spooky-monster-mask",
+      "spooky-scarecrow-mask",
+      "spooky-cat-hood"
+    ]
+  },
+  {
+    "name": "headwear-4",
+    "collection": "manga-wardrobe-v1",
+    "cols": 2,
+    "rows": 2,
+    "entries": [
+      "spooky-pirate-hat",
+      "fhs-baseball-cap",
+      "fhs-football-helmet",
+      "fhs-hockey-helmet"
+    ]
+  },
+  {
+    "name": "face-accessories",
+    "collection": "manga-wardrobe-v1",
+    "cols": 2,
+    "rows": 2,
+    "entries": [
+      "mustache",
+      "full-beard",
+      "vampire-ears",
+      "vampire-fangs"
+    ]
+  },
+  {
+    "name": "outfits-lab-coat",
+    "collection": "manga-wardrobe-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "lab-coat"
+    ]
+  },
+  {
+    "name": "outfits-denim-jacket",
+    "collection": "manga-wardrobe-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "denim-jacket"
+    ]
+  },
+  {
+    "name": "outfits-cosmic-hoodie",
+    "collection": "manga-wardrobe-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "cosmic-hoodie"
+    ]
+  },
+  {
+    "name": "outfits-field-vest",
+    "collection": "manga-wardrobe-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "field-vest"
+    ]
+  },
+  {
+    "name": "outfits-flight-suit",
+    "collection": "manga-wardrobe-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "flight-suit"
+    ]
+  },
+  {
+    "name": "outfits-midnight-vampire-dress",
+    "collection": "manga-wardrobe-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "midnight-vampire-dress"
+    ]
+  },
+  {
+    "name": "outfits-dracula-cape",
+    "collection": "manga-wardrobe-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "dracula-cape"
+    ]
+  },
+  {
+    "name": "headwear-beanie",
+    "collection": "manga-wardrobe-v2",
+    "cols": 2,
+    "rows": 1,
+    "entries": [
+      "beanie"
+    ]
+  },
+  {
+    "name": "headwear-grad-cap",
+    "collection": "manga-wardrobe-v2",
+    "cols": 2,
+    "rows": 1,
+    "entries": [
+      "grad-cap"
+    ]
+  },
+  {
+    "name": "headwear-scholars-laurel",
+    "collection": "manga-wardrobe-v2",
+    "cols": 2,
+    "rows": 1,
+    "entries": [
+      "scholars-laurel"
+    ]
+  },
+  {
+    "name": "headwear-space-helmet",
+    "collection": "manga-wardrobe-v2",
+    "cols": 2,
+    "rows": 1,
+    "entries": [
+      "space-helmet"
+    ]
+  },
+  {
+    "name": "headwear-viking-helmet",
+    "collection": "manga-wardrobe-v2",
+    "cols": 2,
+    "rows": 1,
+    "entries": [
+      "viking-helmet"
+    ]
+  },
+  {
+    "name": "headwear-football-helmet",
+    "collection": "manga-wardrobe-v2",
+    "cols": 2,
+    "rows": 1,
+    "entries": [
+      "football-helmet"
+    ]
+  },
+  {
+    "name": "headwear-spooky-witch-hat",
+    "collection": "manga-wardrobe-v2",
+    "cols": 2,
+    "rows": 1,
+    "entries": [
+      "spooky-witch-hat"
+    ]
+  },
+  {
+    "name": "headwear-spooky-ghost-hood",
+    "collection": "manga-wardrobe-v2",
+    "cols": 2,
+    "rows": 1,
+    "entries": [
+      "spooky-ghost-hood"
+    ]
+  },
+  {
+    "name": "headwear-spooky-skull-mask",
+    "collection": "manga-wardrobe-v2",
+    "cols": 2,
+    "rows": 1,
+    "entries": [
+      "spooky-skull-mask"
+    ]
+  },
+  {
+    "name": "legs",
+    "collection": "manga-anatomy-v1",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "legs"
+    ]
+  },
+  {
+    "name": "scenes",
+    "collection": "manga-studio-v1",
+    "cols": 2,
+    "rows": 4,
+    "entries": [
+      "observatory-scene",
+      "night-sky",
+      "sage-halo",
+      "aurora",
+      "sunrise",
+      "spooky-graveyard",
+      "spooky-haunted-castle",
+      "spooky-pumpkin-patch"
+    ]
+  },
+  {
+    "name": "essential-bodies",
+    "collection": "manga-studio-v1",
+    "cols": 3,
+    "rows": 2,
+    "entries": [
+      "essential-tee",
+      "essential-polo",
+      "essential-hoodie",
+      "essential-striped",
+      "essential-varsity"
+    ]
+  },
+  {
+    "name": "eyes-noses",
+    "collection": "manga-expression-v1",
+    "cols": 2,
+    "rows": 4,
+    "entries": [
+      "expression-eyes-small",
+      "expression-eyes-big",
+      "expression-eyes-narrow",
+      "expression-eyes-wide",
+      "expression-nose-button",
+      "expression-nose-broad",
+      "expression-nose-narrow",
+      "expression-nose-hook"
+    ]
+  },
+  {
+    "name": "mouths-ink",
+    "collection": "manga-expression-v1",
+    "cols": 2,
+    "rows": 4,
+    "entries": [
+      "expression-mouth-neutral",
+      "expression-mouth-smile",
+      "expression-mouth-grin",
+      "expression-mouth-smirk",
+      "expression-mouth-joy",
+      "expression-mouth-open",
+      "expression-mouth-fangs",
+      "expression-mouth-fangs-profile"
+    ]
+  },
+  {
+    "name": "profile-heads-neck-fit",
+    "collection": "manga-expression-v1",
+    "cols": 2,
+    "rows": 2,
+    "entries": [
+      "profile-face-button",
+      "profile-face-narrow",
+      "profile-face-broad",
+      "profile-face-hook"
+    ]
+  },
+  {
+    "name": "essentials",
+    "collection": "manga-profile-body-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "profile-essential-parts"
+    ]
+  },
+  {
+    "name": "wardrobe-1",
+    "collection": "manga-profile-body-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "profile-wardrobe-1-parts"
+    ]
+  },
+  {
+    "name": "wardrobe-3",
+    "collection": "manga-profile-body-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "profile-wardrobe-3-parts"
+    ]
+  },
+  {
+    "name": "wardrobe-4",
+    "collection": "manga-profile-body-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "profile-wardrobe-4-parts"
+    ]
+  },
+  {
+    "name": "wardrobe-5",
+    "collection": "manga-profile-body-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "profile-wardrobe-5-parts"
+    ]
+  },
+  {
+    "name": "wardrobe-6",
+    "collection": "manga-profile-body-v2",
+    "cols": 1,
+    "rows": 1,
+    "entries": [
+      "profile-wardrobe-6-parts"
+    ]
+  },
+  {
+    "name": "profile-heads-pointed-neck-fit",
+    "collection": "manga-expression-v1",
+    "cols": 2,
+    "rows": 2,
+    "entries": [
+      "profile-pointed-button",
+      "profile-pointed-narrow",
+      "profile-pointed-broad",
+      "profile-pointed-hook"
+    ]
+  }
+]

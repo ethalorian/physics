@@ -2,11 +2,12 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { conceptTitle } from '@/lib/video-instruction'
+import styles from './VideoLessonWorkspace.module.css'
 import { useRouter } from 'next/navigation'
 import { useLessonContext } from './useLessonContext'
 import { appliesToClass, classLabel, lessonContextHref, releaseStatus, type ReleaseData } from '@/lib/lesson-release'
 
-export default function LessonWorkspaceNav({ lessonId, title, published, active = 'prepare' }: { lessonId: string; title: string; published?: boolean; active?: 'prepare' | 'preview' | 'teach' | 'work' }) {
+export default function LessonWorkspaceNav({ lessonId, title, published, active = 'prepare', video = false }: { lessonId: string; title: string; published?: boolean; video?: boolean; active?: 'prepare' | 'preview' | 'teach' | 'work' }) {
   const router = useRouter()
   const context = useLessonContext()
   const [data, setData] = useState<ReleaseData | null>(null)
@@ -34,13 +35,13 @@ export default function LessonWorkspaceNav({ lessonId, title, published, active 
     router.refresh()
   }
   const href = (path: string) => lessonContextHref(path, { class: classId, lesson: lessonId })
-  return <header className="mb-5 space-y-4 border-b pb-5">
-    <Link className="inline-flex min-h-11 items-center text-sm underline" href={href('/admin/dashboard')}>← Lessons</Link>
-    <div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm text-muted-foreground">Selected lesson</p><h1 className="text-2xl font-semibold">{conceptTitle(title)}</h1></div><label className="text-sm">Class<select aria-label="Workspace class" className="ml-2 min-h-11 rounded-lg border bg-background px-3" value={classId} onChange={e => select(e.target.value)}><option value="">Choose a class</option>{classes.map(c => <option key={c.id} value={c.id}>{classLabel(c)}</option>)}</select></label></div>
-    <p className="text-sm text-muted-foreground">{published ? 'Published' : 'Draft'} · Student access: {classId && data ? releaseStatus(data.windows[`${classId}|${lessonId}`]) : 'choose a class'} · {running ? 'Presentation running' : 'No presentation running'}</p>
+  return <header className={video ? `${styles.nav} space-y-4` : "mb-5 space-y-4 border-b pb-5"}>
+    <Link className="inline-flex min-h-11 items-center text-sm underline" href={lessonContextHref('/admin/dashboard', { class: classId, view: video ? 'videos' : 'classroom' })}>← {video ? 'All video lessons' : 'All lessons'}</Link>
+    <div className="flex flex-wrap items-end justify-between gap-4"><div><p className={video ? styles.eyebrow : "text-sm text-muted-foreground"}>{video ? 'Video Lesson Workspace' : 'Selected lesson'}</p><h1 className="text-2xl font-semibold">{conceptTitle(title)}</h1></div><label className="text-sm">Class<select aria-label="Workspace class" className="ml-2 min-h-11 rounded-lg border bg-background px-3" value={classId} onChange={e => select(e.target.value)}><option value="">Choose a class</option>{classes.map(c => <option key={c.id} value={c.id}>{classLabel(c)}</option>)}</select></label></div>
+    <p className="text-sm text-muted-foreground">{published ? 'Published' : 'Draft'} · {video ? 'Question access' : 'Student access'}: {classId && data ? releaseStatus(data.windows[`${classId}|${lessonId}`]) : 'choose a class'} · {running ? 'Presentation running' : 'No presentation running'}</p>
     {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
     <nav aria-label="Lesson workspace" className="flex flex-wrap gap-2">{([
-      ['prepare', 'Prepare', `/admin/lessons/${lessonId}`], ['preview', 'Student preview', `/admin/lessons/${lessonId}/preview`], ['teach', running ? 'Resume teaching' : 'Teach', '/admin/command-center'], ['work', 'Student work', '/admin/control-room'],
+      ['prepare', 'Prepare', `/admin/lessons/${lessonId}`], ['preview', 'Student preview', `/admin/lessons/${lessonId}/preview`], ['teach', running ? 'Resume guided practice' : 'Guide practice', '/admin/command-center'], ['work', 'Student work', '/admin/control-room'],
     ] as const).map(([part,label,path]) => <Link key={part} aria-current={active === part ? 'page' : undefined} className={`inline-flex min-h-11 items-center rounded-lg border px-4 text-sm ${active === part ? 'bg-primary text-primary-foreground' : ''}`} href={href(path)} onClick={() => context.remember({classId,lessonId})}>{label}</Link>)}</nav>
   </header>
 }

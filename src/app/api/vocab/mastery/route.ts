@@ -9,16 +9,20 @@ import { vocabularyProgress, type VocabEvidenceCheck, type VocabMasteryReview } 
 export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
   const sp = new URL(request.url).searchParams
   const courses = (await vocabCourses(ctx)).filter(c => (!sp.get('class') || c.id === sp.get('class')) && (!sp.get('teacher') || c.teacher_email === sp.get('teacher')))
-  const { data: targets, error } = await supabaseAdmin.from('learning_targets').select('id,statement,program').eq('unit_id', sp.get('unit_id') ?? 'unit-1').eq('domain', 'knowledge').order('order_index')
+  const unit = sp.get('unit_id') ?? 'unit-1'
+  let targetQuery = supabaseAdmin.from('learning_targets').select('id,statement,program').eq('domain', 'knowledge').order('order_index')
+  if (!['all', 'unmapped'].includes(unit)) targetQuery = targetQuery.eq('unit_id', unit)
+  const { data: targets, error } = await targetQuery
   if (error) throw error
   if (!courses.length) return NextResponse.json({ tasks: [], students: [], targets: targets ?? [] })
   const courseIds = courses.map(c => c.id)
   const tasks = await vocabRows<VocabTask>((a, b) => {
     let q = supabaseAdmin.from('vocab_tasks').select('*').in('course_id', courseIds).order('created_at', { ascending: false }).order('id')
+    if (sp.get('task_id')) q = q.eq('id', sp.get('task_id')!)
     if (sp.get('archived') !== 'true') q = q.eq('active', true)
     return q.range(a, b)
   })
-  const visible = tasks.filter(t => !t.target_id || targets?.some(k => k.id === t.target_id))
+  const visible = tasks.filter(t => !t.syllabus_draft && (!t.target_id || targets?.some(k => k.id === t.target_id)))
   const taskIds = visible.map(t => t.id)
   const [enrollments, checks, reviews] = await Promise.all([
     vocabRows((a, b) => supabaseAdmin.from('course_students').select('course_id,student_id,students(id,name)').in('course_id', courseIds).eq('enrollment_state', 'ACTIVE').order('id').range(a, b)),

@@ -1,6 +1,8 @@
 "use client"
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { subscribePageReturn } from '@/lib/page-return'
 import Link from 'next/link'
 import { Bell, Star, FileText, Swords, Clock, Sigma, Car, UserPlus, MessageSquare, type LucideIcon } from 'lucide-react'
 
@@ -32,23 +34,44 @@ function ago(iso: string): string {
 }
 
 export default function NotificationBell() {
+  const { data: session, status } = useSession()
+  const userId = session?.user?.id
   const [items, setItems] = useState<Notif[]>([])
   const [unread, setUnread] = useState(0)
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
-
-  const load = useCallback(() => {
-    fetch('/api/notifications')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (d) { setItems(d.items ?? []); setUnread(d.unread ?? 0) } })
-      .catch(() => {})
-  }, [])
+  const readVersion = useRef(0)
 
   useEffect(() => {
-    load()
-    const t = setInterval(load, 60000)
-    return () => clearInterval(t)
-  }, [load])
+    setItems([]); setUnread(0); setOpen(false)
+    if (status !== 'authenticated' || !userId) return
+    let active = true, reading = false, lastStarted = -Infinity
+    let controller: AbortController | null = null
+    const load = async () => {
+      // Hidden tabs do not need a badge refresh. Returning to the tab refreshes
+      // immediately, with focus/visibility events sharing one in-flight read.
+      if (!active || document.hidden || reading || Date.now() - lastStarted < 1000) return
+      reading = true; lastStarted = Date.now()
+      const version = readVersion.current
+      const request = new AbortController(); controller = request
+      const deadline = setTimeout(() => request.abort(), 10000)
+      try {
+        const response = await fetch('/api/notifications', { signal: request.signal })
+        const data = response.ok ? await response.json() : null
+        if (active && data && version === readVersion.current) {
+          setItems(data.items ?? []); setUnread(data.unread ?? 0)
+        }
+      } catch { /* Keep the last feed until the next refresh. */ }
+      finally { clearTimeout(deadline); reading = false }
+    }
+    void load()
+    const timer = setInterval(load, 60000)
+    const unsubscribe = subscribePageReturn(() => { void load() })
+    return () => {
+      active = false; controller?.abort(); clearInterval(timer)
+      unsubscribe()
+    }
+  }, [status, userId])
 
   useEffect(() => {
     if (!open) return
@@ -61,6 +84,8 @@ export default function NotificationBell() {
     const next = !open
     setOpen(next)
     if (next && unread > 0) {
+      // A feed read started before this acknowledgment must not restore its badge.
+      readVersion.current++
       setUnread(0)
       setItems((xs) => xs.map((i) => ({ ...i, unread: false })))
       await fetch('/api/notifications', { method: 'POST' }).catch(() => {})
