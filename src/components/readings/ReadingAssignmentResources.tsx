@@ -1,4 +1,5 @@
 'use client'
+import { interactiveChapterForAssignment } from './interactive/registry'
 import OpenStaxReading from './OpenStaxReading'
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
@@ -19,13 +20,13 @@ export function ReadingQuestionText({ chapter, question }: { chapter: number; qu
   const page = readingQuestionPage(chapter, question)
   if (question.prompt) return <p className="whitespace-pre-wrap">{question.prompt}</p>
   return <div className={styles.stack}>
-    <p className={styles.muted}>Read {question.reference} {page ? `on printed page ${page.printedPage}` : `in Chapter ${chapter}`}. Use the textbook panel to see the full question and any diagrams.</p>
+    <p className={styles.muted}>Read {question.reference} {page ? `on printed page ${page.printedPage}` : `in Chapter ${chapter}`}. Use the textbook link to see the full question and any diagrams.</p>
     <a className="text-primary underline" href={readingBookUrl(chapter, page, language)} target="_blank" rel="noopener noreferrer">Open question in textbook{page ? ` · p. ${page.printedPage}` : ''}<ExternalLink className="inline ml-2" size={15} /></a>
   </div>
 }
 
 /** The same assigned pages and question sources appear before and after publishing. */
-export default function ReadingAssignmentResources({ assignment, showQuestions = false }: { assignment: ReadingAssignment; showQuestions?: boolean }) {
+export default function ReadingAssignmentResources({ assignment, showQuestions = false, showInteractiveLink = true }: { assignment: ReadingAssignment; showQuestions?: boolean; showInteractiveLink?: boolean }) {
   const [language] = useTextbookLanguage()
   const start = readingStartPage(assignment)
   const [page, setPage] = useState(start?.pdfPage ?? 1)
@@ -35,11 +36,12 @@ export default function ReadingAssignmentResources({ assignment, showQuestions =
     const source = readingQuestionPage(assignment.chapter, q)
     return source ? [{ question: q, source }] : []
   })
-  if (assignment.honors_reading) return <div className={styles.stack}><OpenStaxReading key={`${assignment.honors_reading.from}:${assignment.honors_reading.to}`} reading={assignment.honors_reading} /><details className={styles.question}><summary className="cursor-pointer font-semibold py-3">Shared foundation · {assignment.passage ? "Course reading" : "Hewitt support"}</summary><ReadingAssignmentResources assignment={{...assignment,honors_reading:null}} /></details>{showQuestions && assignment.questions.map((q,i)=><div key={q.id} className={styles.question}><h3 className="font-semibold">{i+1}. {q.reference}</h3><ReadingQuestionText chapter={assignment.chapter} question={q}/></div>)}</div>
+  if (assignment.honors_reading) return <div className={styles.stack}><OpenStaxReading key={`${assignment.honors_reading.from}:${assignment.honors_reading.to}`} reading={assignment.honors_reading} /><details className={styles.question}><summary className="cursor-pointer font-semibold py-3">Shared foundation · {assignment.passage ? "Course reading" : "Hewitt support"}</summary><ReadingAssignmentResources assignment={{...assignment,honors_reading:null}} showInteractiveLink={false} /></details>{showQuestions && assignment.questions.map((q,i)=><div key={q.id} className={styles.question}><h3 className="font-semibold">{i+1}. {q.reference}</h3><ReadingQuestionText chapter={assignment.chapter} question={q}/></div>)}</div>
   if (assignment.passage) return <section className={styles.question} aria-label="Assigned course reading"><h2 className="text-title-3">{assignment.title}</h2><p className={styles.muted}>Course reading</p><div className="whitespace-pre-wrap leading-relaxed">{assignment.passage}</div>{showQuestions && assignment.questions.map((q, i) => <div key={q.id} className={styles.question}><h3 className="font-semibold">{i + 1}. {q.reference}</h3><ReadingQuestionText chapter={assignment.chapter} question={q} /></div>)}</section>
   return <section className={styles.question} aria-label="Assigned textbook pages and questions">
     <div className={`${styles.row} ${styles.spread}`}><h2 className="text-title-3"><BookOpen className="inline mr-2" size={20} />Assigned pages & questions</h2><a className="text-primary underline text-sm" href={readingBookUrl(assignment.chapter, { pdfPage: page, printedPage: page + offset }, language)} target="_blank" rel="noopener noreferrer">Open current page in new tab<ExternalLink className="inline ml-2" size={15} /></a></div>
     <p>{assignment.reading}</p>
+    {showInteractiveLink && assignment.status !== 'draft' && assignment.id && interactiveChapterForAssignment(assignment, language) ? <a className="text-primary underline" href={`/readings/${assignment.id}?reader=interactive`} target="_blank" rel="noopener noreferrer">Open saved assignment in the interactive chapter<ExternalLink className="inline ml-2" size={15} /></a> : null}
     <nav className={styles.actions} aria-label="Assigned reading pages">
       {sections.length ? sections.map(section => {
         const source = readingSectionPage(assignment.chapter, section.id)!

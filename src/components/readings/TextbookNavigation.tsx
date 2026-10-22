@@ -35,6 +35,7 @@ export default function TextbookNavigation({ activeBook, language = 'en' }: Text
         </Button>
       </div>
       <div className={styles.actions}>
+        <Button asChild variant="outline"><Link href="/textbook/interactive">Interactive library</Link></Button>
         <Button asChild>
           <Link href={staff ? '/admin/readings/syllabus' : '/readings'}>
             <BookMarked size={18} aria-hidden="true" />{staff ? copy.readingSyllabus : copy.studentReadings}

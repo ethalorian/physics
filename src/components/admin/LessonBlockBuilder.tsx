@@ -3,6 +3,7 @@
 import GuidedActivityPicker from './GuidedActivityPicker'
 import LearningPathSettings from './LearningPathSettings'
 import NotebookLessonSettings from './NotebookLessonSettings'
+import ReflectionLessonSettings from './ReflectionLessonSettings'
 import TeachingPlanSettings from './TeachingPlanSettings'
 import TeachingMomentEditor from './TeachingMomentEditor'
 import { useState, useEffect, useMemo, useRef } from 'react'
@@ -241,7 +242,8 @@ function BuilderSession({
 
       {!preview && doc.interactiveNotebook && <div className="mb-5"><NotebookLessonSettings document={doc} targets={targets} onChange={next=>{setSource(next);setBlocks(fromDocument(next))}}/></div>}
       {!preview && <TeachingPlanSettings document={doc} onChange={setSource} unitId={unitId} day={day}/>}
-      {!preview && (source?.learningPath || /^unit-[1-8]$/.test(unitId??'')) && <div className="mb-5"><LearningPathSettings document={doc} onChange={setSource} targets={targets} title={lessonTitle} lessonId={lessonId} unitId={unitId}/></div>}
+      {!preview && doc.reflection && <ReflectionLessonSettings document={doc} targets={targets} onChange={next=>{setSource(next);setBlocks(fromDocument(next))}}/>}
+      {!preview && !doc.reflection && (source?.learningPath || /^unit-[1-8]$/.test(unitId??'')) && <div className="mb-5"><LearningPathSettings document={doc} onChange={setSource} targets={targets} title={lessonTitle} lessonId={lessonId} unitId={unitId}/></div>}
       {!preview && <GuidedActivityPicker unitId={unitId} onAdd={added=>setBlocks(previous=>[...previous,...fromDocument({schemaVersion:1,blocks:added})])}/>}
       {!preview && /^unit-[1-8]$/.test(unitId??'') && <McasLessonPicker blocks={doc.blocks} targets={targets} unitId={unitId} onChange={next=>setBlocks(fromDocument({...doc,blocks:next}))}/>}
       {conflict != null && <LessonSaveConflict local={doc} current={conflict} />}

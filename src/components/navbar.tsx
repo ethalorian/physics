@@ -22,6 +22,7 @@ import AccountMenu from "@/components/AccountMenu"
 import NotificationBell from "@/components/NotificationBell"
 import { useLessonContext } from '@/components/admin/useLessonContext'
 import { lessonContextHref } from '@/lib/lesson-release'
+import StudentNavigation from "@/components/StudentNavigation"
 import BrandLogo from "@/components/BrandLogo"
 
 export default function Navbar() {
@@ -122,6 +123,7 @@ export default function Navbar() {
   }
 
   const navigationItems = getNavigationItems()
+  const groupedNavigation = isAuthenticated && role !== 'observer' && (!isStaff || studentViewActive)
 
   // Prefix-match active state (Surface 15): a lesson page lights the Lessons
   // tab, a lobby room lights Lobby. Boundary-safe so /store never matches
@@ -158,16 +160,16 @@ export default function Navbar() {
               <span className="text-base sm:text-lg tracking-tight">
                 <span className="block lg:hidden">Physics</span>
                 <span className="hidden lg:block">Antocci Physics</span>
+                {groupedNavigation && <span className="hidden lg:block text-xs font-normal text-muted-foreground mt-0.5">HS Conceptual Physics</span>}
               </span>
             </Link>
             {/* Physics Level Badge - Hidden on Mobile */}
-            <div className="hidden 2xl:block">
-              <PhysicsLevelBadge variant="compact" />
-            </div>
+            {!groupedNavigation && <div className="hidden 2xl:block"><PhysicsLevelBadge variant="compact" /></div>}
           </div>
 
+          {groupedNavigation && <StudentNavigation />}
           {/* Desktop navigation links */}
-          {isAuthenticated && navigationItems.length > 0 && (
+          {!groupedNavigation && isAuthenticated && navigationItems.length > 0 && (
             <div className="nav-rail hidden xl:flex items-center gap-0.5 rounded-xl px-1 py-0.5" aria-label="Main">
               {navigationItems.map((item) => {
                 const Icon = item.icon
@@ -195,7 +197,7 @@ export default function Navbar() {
           )}
 
           {/* Mobile Hamburger Menu - Only show when authenticated and has nav items */}
-          {isAuthenticated && navigationItems.length > 0 && (
+          {!groupedNavigation && isAuthenticated && navigationItems.length > 0 && (
             <div className="xl:hidden">
               <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                 <SheetTrigger asChild>
@@ -252,11 +254,8 @@ export default function Navbar() {
               </div>
             ) : isAuthenticated && session ? (
               <>
-                {/* Theme toggle — always in the bar on desktop (the mobile
-                    sheet and the avatar menu carry it too). */}
-                <div className="hidden md:block">
-                  <ThemeToggle />
-                </div>
+                {/* Keep appearance within reach in the student bar at every size. */}
+                <div className={groupedNavigation ? 'shrink-0' : 'hidden md:block'}><ThemeToggle /></div>
 
                 {/* Notifications — new ratings, grades, math, duels, due work */}
                 <NotificationBell />

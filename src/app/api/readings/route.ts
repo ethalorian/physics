@@ -1,3 +1,5 @@
+import { choiceSourceDispositions } from '@/lib/choice-calendar-server'
+import { readingExemptions } from '@/lib/reading-exemptions-server'
 import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { READING_UUID, validateReading } from '@/lib/textbook-assignments'
@@ -8,12 +10,16 @@ export const GET = withAuth(async (req, ctx) => {
   if (lessonId && !READING_UUID.test(lessonId)) return readingJson({ error: 'Invalid lesson.' }, 400)
   const courses = await readingCourses(ctx), staff = readingStaff(ctx)
   if (!courses.length) return readingJson({ courses: [], assignments: [], work: [], staff })
-  const assignments = await readingRows((a, b) => {
+  const available = await readingRows((a, b) => {
     let q = supabaseAdmin.from('textbook_assignments').select('*').in('course_id', courses.map(c => c.id))
-    if (!staff) q = q.neq('status', 'draft')
+    if (!staff) q = lessonId ? q.eq('status', 'published') : q.neq('status', 'draft')
     if (lessonId) q = q.like('origin_key', `lesson:${lessonId}:%`)
     return q.order('created_at', { ascending: false }).order('id').range(a, b)
   })
+  const exemptions = await readingExemptions(available.map(a => a.id), staff ? undefined : ctx.userId)
+  const excused = new Set(exemptions.map(e => e.assignment_id + ':' + e.user_id))
+  const choices = staff ? null : await choiceSourceDispositions(courses.filter(c => (c.program ?? 'physics') === 'physics').map(c => c.id), [ctx.userId], 'reading')
+  const assignments = staff ? available : available.filter(a => !choices?.exemptions[a.id]?.includes(ctx.userId) && !choices?.available[a.id]?.includes(ctx.userId) && !excused.has(a.id + ':' + ctx.userId) && (!a.opens_at || Date.parse(a.opens_at) <= Date.now()))
   // Only the student's own work goes to the student. Roster answers are fetched
   // on an individual teacher review page, never in list/home responses.
   const work = !staff && assignments.length ? await readingRows((a, b) => supabaseAdmin.from('textbook_work').select('*').eq('user_id', ctx.userId).in('assignment_id', assignments.map(x => x.id)).order('assignment_id').range(a, b)) : []
@@ -24,7 +30,7 @@ export const GET = withAuth(async (req, ctx) => {
       readingRows((a,b)=>supabaseAdmin.from('textbook_work').select('assignment_id,user_id').in('assignment_id',assignments.filter(a=>a.status==='published').map(a=>a.id)).eq('state','submitted').order('assignment_id').order('user_id').range(a,b))
     ])
     const enrolled=new Set(roster.map(r=>`${r.course_id}:${r.student_id}`)),byId=new Map(assignments.map(a=>[a.id,a]))
-    for(const w of pending)if(enrolled.has(`${byId.get(w.assignment_id)?.course_id}:${w.user_id}`))review_counts[w.assignment_id]=(review_counts[w.assignment_id]??0)+1
+    for(const w of pending)if(!excused.has(w.assignment_id+':'+w.user_id)&&enrolled.has(`${byId.get(w.assignment_id)?.course_id}:${w.user_id}`))review_counts[w.assignment_id]=(review_counts[w.assignment_id]??0)+1
   }
   return readingJson({ ...(staff?{review_counts}:{}), courses: courses.map(({ id, name, section, program }) => ({ id, name, section, program })), assignments, work, staff })
 })

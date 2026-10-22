@@ -13,6 +13,7 @@ import LessonXp from './LessonXp'
 import { LessonVideoXpContext } from './LessonVideoXpContext'
 import TradesWorkshopView from './TradesWorkshopView'
 import PhysicsPathView from './PhysicsPathView'
+import ReflectionWorkspace from './ReflectionWorkspace'
 import LessonMasteryTargets from './LessonMasteryTargets'
 import { physicsProblemFormat } from '@/lib/physics-problem-format'
 import TeachingToolRenderer, { TeachingToolContext } from '@/components/teaching-tools/TeachingToolRenderer'
@@ -80,7 +81,7 @@ export default function BlockLessonViewer(props: BlockLessonViewerProps) {
   // The language profile + scaffold dial are shared by every block on the page.
   // P-4/P-5 · students poll the live presentation (follow mode + open polls); staff drive it.
   return (
-    <div onClickCapture={event=>{if(!preview)return;const link=(event.target as HTMLElement).closest('a');if(!link)return;const href=link.getAttribute('href')??'';if(href.startsWith('#')||href===(props.previewReturnHref??'/admin/lessons/'+props.lesson.id))return;event.preventDefault();event.stopPropagation();setNavigationNotice('This link opens another area of the app. Exit preview to use it.')}}>
+    <div onClickCapture={event=>{if(!preview)return;const link=(event.target as HTMLElement).closest('a');if(!link)return;const href=link.getAttribute('href')??'';if(href.startsWith('#')||href===(props.previewReturnHref??'/admin/lessons/'+props.lesson.id)||(props.snapshot&&href.startsWith('/api/lessons/artifacts?id=')))return;event.preventDefault();event.stopPropagation();setNavigationNotice('This link opens another area of the app. Exit preview to use it.')}}>
     {navigationNotice&&<p role="status" className="sticky top-0 z-20 rounded-lg border bg-card p-3 text-sm">{navigationNotice}<button className="ml-3 min-h-11 underline" onClick={()=>setNavigationNotice('')}>Dismiss</button></p>}
     <LessonReadingPreview.Provider value={preview}><LanguageProfileProvider preview={preview} previewProfile={props.previewProfile}>
       <PresentLiveProvider lessonId={props.lesson.id} enabled={!props.staffView && !preview} simulation={preview?props.previewLive:undefined}>
@@ -292,6 +293,18 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
   if (!responsesLoaded) return <p role="status" className="p-6">Loading your saved work…</p>
 
   const videoXp = { lessonId: lesson.id, enabled: !preview && !staffView && !snapshot, onXpTotal: store.recordXpTotal }
+
+  if (lesson.content_blocks?.reflection) {
+    const readOnly = inspection || !!snapshot || staffView || submissionLocked || !submissionStatusLoaded
+    const ready = interactive.every(b => isBlockComplete(b, responses[b.id]?.response))
+    const reflectionWork = blocks.filter(isCaptureBlock), reflectionBrief = blocks.filter(b => !isCaptureBlock(b))
+    return <ReflectionWorkspace title={lesson.title}
+      toolbar={<><Link className="inline-flex min-h-11 items-center underline" href={preview || staffView ? exitHref : '/home'}>{preview || staffView ? 'Back to lesson workspace' : 'Back to my calendar'}</Link><LanguageDial/></>}
+      brief={<><BlockRenderer blocks={reflectionBrief} referenceBlocks={blocks} lessonId={lesson.id} readOnly glossary={glossary}/><p className="mt-4 text-sm text-muted-foreground">{doneTasks} of {totalTasks} responses saved. Submit the creative product and reflections together.</p>{(preview || staffView) && <p className="mt-4 text-sm">{snapshot ? 'Read-only submitted work' : 'Teacher preview · no student work is changed'}</p>}{reviewFeedback && <section aria-label="Teacher feedback" className="mt-4 rounded-lg border p-3"><h2 className="font-semibold">Teacher feedback</h2><p className="whitespace-pre-wrap text-sm">{reviewFeedback}</p></section>}</>}
+      work={<BlockRenderer key={submissionLocked ? 'locked' : 'open'} blocks={reflectionWork} referenceBlocks={blocks} lessonId={lesson.id} responses={responses} hydrated save={save} draft={draft} glossary={glossary} targets={viewerTargets} readOnly={readOnly}/>}
+      footer={<section className="space-y-3 rounded-xl border bg-card p-5" aria-label="Submit reflection"><h2 className="font-semibold">Submit your learning reflection</h2><p className="text-sm text-muted-foreground">Your creative product, physics connection, change in thinking, strategy, and next step are reviewed together.</p>{snapshot || staffView ? <p className="text-sm">Read-only view · submission is disabled.</p> : preview ? <p className="text-sm">Teacher preview · uploads and submission are disabled.</p> : <SubmitLessonButton lessonId={lesson.id} blocked={!ready || readOnly} complete={allTasksDone} prepare={() => store.savePending(blocks)} onChange={state => { setSubmissionStatusLoaded(true); setReviewFeedback(state.feedback ?? ''); setSubmitted(Boolean(state.submittedAt) && state.locked); setSubmissionLocked(state.locked) }}/>}</section>}
+    />
+  }
 
   if (stepped && notebookChecks && lesson.content_blocks?.interactiveNotebook) {
     const mappedIds = new Set(notebookChecks.map(block => block.id))

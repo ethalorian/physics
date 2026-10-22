@@ -15,6 +15,12 @@ let issued = null;
 let xpFailure = false;
 let submission = null;
 let requests = [];
+const RealDate = Date;
+let now = '2026-10-13T16:00:00Z';
+class SchoolClock extends RealDate {
+  constructor(...args) { super(...(args.length ? args : [now])); }
+  static now() { return new RealDate(now).getTime(); }
+}
 const mocks = {
   '@/lib/auth': 'export const auth = async () => global.__warmupExperience.session();',
   '@/lib/effective-context': "export const getEffectiveContext = async () => ({role:'student',realRole:'student',scopeEmail:'student@example.invalid',viewingAsTeacher:false});",
@@ -23,6 +29,7 @@ const mocks = {
 async function main() {
   await esbuild.build({
     stdin: { contents: `export { GET } from './src/app/api/math-spine/daily/route';
+      export { POST } from './src/app/api/math-spine/warmup-submit/route';
       export { experienceDatabaseFetch, registerExperienceDatabaseGuard } from './src/lib/experience-db-fetch';`, resolveDir: repo },
     outfile: output, bundle: true, platform: 'node', format: 'cjs', logLevel: 'silent',
     plugins: [{ name: 'synthetic-identity', setup(build) {
@@ -39,6 +46,7 @@ async function main() {
   }) };
   const routes = require(output);
   const originalFetch = global.fetch;
+  global.Date = SchoolClock;
   const originalError = console.error;
   const errors = [];
   console.error = (...args) => errors.push(args);
@@ -53,6 +61,7 @@ async function main() {
       assert.deepEqual(JSON.parse(init.body), { p_user: studentId });
       return xpFailure ? Response.json({ code: 'DATABASE_UNAVAILABLE', message: 'offline' }, { status: 400 }) : Response.json(xp);
     }
+    if (table === 'submit_math_warmup') return Response.json({ self_check: 'match', xpEarned: 1, xpAwarded: 1 });
     if (table === 'math_competencies') return Response.json([{ id: 'skill', code: 'NS1', statement: 'Compare numbers', strand: 'number', sequence_order: 1, order_index: 1 }]);
     if (table === 'math_warmup_submissions') return Response.json(submission ? [submission] : []);
     if (table === 'math_spiral_items') return Response.json([{ id: 'problem', prompt: 'Travel 12 m in 4 s. What is the speed?', answer_key: '3 m/s', check_mode: 'numeric' }]);
@@ -62,7 +71,7 @@ async function main() {
         issued = { ...JSON.parse(init.body), id: 'issued-task' };
         return new Response(null, { status: 201 });
       }
-      return Response.json(issued ? { id: issued.id, item: issued.item } : null);
+      return Response.json(issued ? { id: issued.id, item: issued.item, checking: { key: '3 m/s', mode: 'numeric' } } : null);
     }
     return Response.json([]);
   };
@@ -125,6 +134,35 @@ async function main() {
     assert(requests.some(r => r.path.endsWith('/math_warmup_instances') && r.method === 'POST'));
     console.log('PASS regular student sessions still issue and load a daily task');
 
+    const submit = () => routes.POST(new Request('https://app.example.invalid/api/math-spine/warmup-submit', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ instance_id: 'issued-task', response_json: { answer: '3 m/s', work: '12 divided by 4 is 3.', workStrokes: [], workTexts: [], sandbox: { lines: [] } } }),
+    }), { params: Promise.resolve({}) });
+    for (let day = 11; day <= 17; day++) {
+      now = `2026-10-${day}T16:00:00Z`;
+      result = await daily();
+      const scheduled = day === 13 || day === 15;
+      assert.equal(result.status, 200);
+      assert.equal(result.body.warmupScheduled, scheduled);
+      if (scheduled) assert(result.body.item?.instanceId);
+      else {
+        assert.equal(result.body.item, null);
+        assert.equal(result.body.alreadySubmitted, false);
+        assert.equal(requests.length, 0, 'An off day must not query or issue tasks');
+      }
+      requests = [];
+      const response = await submit();
+      assert.equal(response.status, scheduled ? 200 : 409, now + ': ' + await response.text());
+      if (!scheduled) assert.equal(requests.length, 0, 'An off-day submission must not write evidence or XP');
+    }
+    now = '2026-10-14T16:00:00Z';
+    preview = true;
+    result = await daily();
+    assert.equal(result.body.item, null);
+    assert.equal(requests.length, 0);
+    console.log('PASS all seven days: only Tuesday/Thursday issue tasks or accept submissions; walkthrough respects off days');
+    now = '2026-10-13T16:00:00Z';
+
     preview = true;
     xpFailure = true;
     result = await daily();
@@ -134,6 +172,7 @@ async function main() {
     console.log('PASS genuine XP lookup failures stay visible instead of returning invented totals');
   } finally {
     global.fetch = originalFetch;
+    global.Date = RealDate;
     console.error = originalError;
     routes.registerExperienceDatabaseGuard(async () => false);
     delete global.__warmupExperience;

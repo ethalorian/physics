@@ -1,0 +1,16 @@
+.path { margin: 24px 0; border: 1px solid var(--line, var(--border)); border-radius: 12px; overflow: hidden; background: var(--reader-panel, var(--card)); color: var(--ink, var(--foreground)); font: 14px/1.5 system-ui, sans-serif; }
+.path header { padding: 22px 24px 16px; }
+.path header > p { margin: 0 0 6px; color: var(--reader-muted, var(--muted-foreground)); font-size: 10px; font-weight: 750; letter-spacing: .15em; }
+.path h2 { margin: 0; font: 600 27px/1.2 Georgia, serif; }
+.path ol { display: grid; grid-template-columns: 1fr 1fr; list-style: none; padding: 0 24px; margin: 0; gap: 0 24px; }
+.path li { display: flex; align-items: flex-start; gap: 10px; padding: 17px 0; border-top: 1px solid var(--line, var(--border)); min-width: 0; }
+.path h3 { font: 700 15px/1.4 system-ui, sans-serif; margin: 0 0 4px; }
+.path li p { margin: 8px 0; font-size: 13px; color: var(--reader-muted, var(--muted-foreground)); }
+.number { display: grid; flex: 0 0 24px; height: 24px; place-items: center; border-radius: 50%; background: var(--pale, var(--secondary)); font-size: 12px; font-weight: 700; }
+.status { font-size: 12px; font-weight: 650; color: var(--green, var(--primary)); }
+.path button, .retry button { background: none; border: 0; padding: 6px 0; font: 650 13px/1.4 system-ui, sans-serif; color: var(--green, var(--primary)); cursor: pointer; text-align: left; text-decoration: underline; text-underline-offset: 3px; }
+.path button:disabled { opacity: .55; cursor: wait; }
+.path button:focus-visible, .retry button:focus-visible { outline: 2px solid var(--green, var(--primary)); outline-offset: 3px; border-radius: 2px; }
+.evidence { padding: 16px 24px; margin: 0; background: var(--pale, var(--secondary)); font-size: 12px; color: var(--reader-muted, var(--muted-foreground)); }
+.retry { padding: 12px; font: 14px/1.5 system-ui, sans-serif; }
+@media (max-width: 600px) { .path ol { grid-template-columns: 1fr; } .path header, .evidence { padding-left: 18px; padding-right: 18px; } .path ol { padding: 0 18px; } .path h2 { font-size: 24px; } }

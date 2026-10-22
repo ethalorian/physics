@@ -1,0 +1,13 @@
+.workspace { max-width: 78rem; margin: 0 auto; padding: 1rem 1rem 5rem; display: grid; gap: 1.25rem; color: var(--foreground); }
+.header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+.header h1 { font-size: 1.6rem; font-weight: 650; }
+.eyebrow { font-size: .8rem; color: var(--muted-foreground); }
+.tabs { display: flex; flex-wrap: wrap; gap: .5rem; }
+.tabs button { min-height: 44px; padding: .5rem 1rem; border: 1px solid var(--border); border-radius: .6rem; background: var(--card); }
+.tabs button[aria-pressed=true] { color: var(--primary-foreground); background: var(--primary); }
+.tabs button:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.columns { display: grid; grid-template-columns: minmax(16rem,1fr) minmax(0,2fr); gap: 1.25rem; align-items: start; }
+.columns[data-view=work], .columns[data-view=brief] { grid-template-columns: minmax(0,1fr); }
+.brief, .work { min-width: 0; border: 1px solid var(--border); border-radius: 1rem; padding: 1.25rem; background: var(--card); }
+.brief { position: sticky; top: 1rem; }
+@media(max-width:800px) { .columns { grid-template-columns: minmax(0,1fr); } .brief { position: static; } .workspace { padding: .75rem .75rem 4rem; } .brief,.work { padding: 1rem; } }

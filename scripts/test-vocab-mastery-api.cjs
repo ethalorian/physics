@@ -12,5 +12,13 @@ assert.equal((await call('vocab','PATCH',{task_id:id(6),target_id:id(5)})).statu
 const body={user_id:id(3),target_id:id(4),level:2,vocabulary:{task_id:id(6),request_id:id(9),evidence_key:id(8)+':0',previous_review_id:null,note:'Uses direction'}};
 assert.equal((await call('records','POST',body,'',{...ctx,role:'student'})).status,403);global.vocabMasteryFixture.allowed=false;assert.equal((await call('records','POST',body,'',{...ctx,role:'admin'})).status,403);global.vocabMasteryFixture.allowed=true;
 assert.equal((await call('records','POST',{...body,vocabulary:{...body.vocabulary,request_id:'invalid'}})).status,400);assert.equal((await call('records','POST',body)).status,201);const rpc=global.vocabMasteryFixture.calls.at(-1);assert.equal(rpc.name,'submit_vocab_mastery_review');assert.equal(rpc.args.p_reviewer,'teacher@test');assert.equal(rpc.args.p_level,2);assert.equal(rpc.args.p_note,'Uses direction');assert.equal(tables.mastery_records.length,0,'vocab branch uses atomic RPC, never a second insert');
+tables.courses[0].teacher_email='antoccic@fitchburg.k12.ma.us';
+const alias={role:'admin',scopeEmail:'craigantocci@gmail.com'};
+let aliased=await(await call('vocab','GET',null,'',alias)).json();assert.equal(aliased.tasks.length,1,'linked teacher identity sees school-owned vocabulary');
+assert.equal((await call('records','POST',body,'',alias)).status,201);assert.equal(global.vocabMasteryFixture.calls.at(-1).args.p_reviewer,'antoccic@fitchburg.k12.ma.us','database receives the verified teacher of record');
+assert.equal((await call('records','POST',{...body,user_id:id(13)},'',alias)).status,403,'unassigned student denied');
+assert.equal((await call('records','POST',body,'',{role:'admin',scopeEmail:'other@test'})).status,403,'another teacher remains excluded');
+tables.courses[0].archived_at='2026-10-12';assert.equal((await call('records','POST',body,'',alias)).status,403,'archived course denied');
+console.log('PASS: linked teacher identities, canonical ownership for vocabulary review, foreign teacher and unassigned student exclusion.');
 console.log('PASS: class scope, active membership, unlinked assignments, Knowledge-only links, role/roster gates, validation, and canonical atomic save dispatch');
 })().catch(e=>{console.error(e);process.exitCode=1});

@@ -1,5 +1,6 @@
 import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { TEXTBOOK_SYLLABUS, mapTextbookTargets } from '@/data/textbook-syllabus'
 import { READING_SYLLABUS } from '@/data/reading-syllabus'
 import { HONORS_READING_MAP } from '@/lib/openstax-physics'
 import { buildSyllabusDrafts, resolveSyllabusWords } from '@/lib/reading-syllabus'
@@ -18,7 +19,7 @@ export const GET = withAuth(async(req,ctx)=>{
     syllabusBundles(selected,staff?undefined:ctx.userId),
     staff?readingRows<ReadingTarget>((a,b)=>supabaseAdmin.from('learning_targets').select('id,slug,statement,unit_id,domain,program').eq('program','physics').eq('exclude_from_growth',false).order('id').range(a,b)):[],
   ])
-  return readingJson({staff,readOnly:ctx.viewingAsTeacher,courses:courses.map(({id,name,section,program,track})=>({id,name,section,program,track})),bundles,targets,
+  return readingJson({staff,readOnly:ctx.viewingAsTeacher,courses:courses.map(({id,name,section,program,track})=>({id,name,section,program,track})),bundles,targets,textbookSteps:staff?TEXTBOOK_SYLLABUS:[],
     steps:staff?READING_SYLLABUS.map(s=>({...s,honorsReading:HONORS_READING_MAP[s.id]})):READING_SYLLABUS.map(({id,unit,title,focus,prerequisites})=>({id,unit,title,focus,prerequisites}))})
 })
 
@@ -27,16 +28,18 @@ export const POST = withRole(['teacher','admin'],async(req,ctx)=>{
   let body:Record<string,unknown>
   try{const v=await req.json();if(!v||typeof v!=='object'||Array.isArray(v))throw Error();body=v}catch{return readingJson({error:'Choose a syllabus step.'},400)}
   if(!READING_UUID.test(String(body.course_id))||typeof body.step_id!=='string'||!['prepare','release'].includes(String(body.action)))return readingJson({error:'Choose a class, step, and action.'},400)
-  const step=READING_SYLLABUS.find(s=>s.id===body.step_id)
+  let step=[...READING_SYLLABUS,...TEXTBOOK_SYLLABUS].find(s=>s.id===body.step_id)
   if(!step)return readingJson({error:'This syllabus step is unavailable.'},404)
   const course=(await readingCourses(ctx)).find(c=>c.id===body.course_id&&c.program==='physics')
   if(!course)return readingJson({error:'Choose your own Physics class.'},403)
+  if(step.sourceBook==='openstax'&&course.track!=='honors')return readingJson({error:'Choose an Honors class for OpenStax.'},409)
   if(body.action==='release'){
     if(!Number.isInteger(body.version)||Number(body.version)<1||body.due_at!==null&&(typeof body.due_at!=='string'||!Number.isFinite(Date.parse(body.due_at))))return readingJson({error:'Refresh the reading and choose a valid due date.'},400)
     const {data,error}=await supabaseAdmin.rpc('release_reading_syllabus_step',{p_course:course.id,p_step:step.id,p_owner:course.teacher_email,p_actor:ctx.email,p_version:body.version,p_due:body.due_at})
     return error?readingRpcError(error):readingJson({bundle:data})
   }
   const catalog=await vocabularyFor(ctx,{courseId:course.id,authoring:true})
+  try{step=mapTextbookTargets(step,catalog.targets,{unit:body.unit,reading_target:body.reading_target,vocabulary_target:body.vocabulary_target})}catch(e){return readingJson({error:(e as Error).message},409)}
   const resolved=resolveSyllabusWords(step.words,catalog.words,new Set(catalog.sets.filter(s=>s.unit_id===step.unit&&s.access[course.id]).map(s=>s.id)))
   let drafts
   try{

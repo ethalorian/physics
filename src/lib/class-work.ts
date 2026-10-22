@@ -7,6 +7,7 @@ export interface ClassWorkItem {
   dueAt: string | null; dateOnly?: boolean; access: WorkAccess; opensAt?: string | null; closesAt?: string | null;
   href: string; version?: number; window?: ReleaseWindow | null; canEditDue: boolean; canToggle: boolean;
   restriction?: string;
+  quizSchedule?: import('./quiz-schedule').QuizSchedule;
 }
 export interface ClassWorkData { courseId: string; items: ClassWorkItem[]; warnings: string[]; readOnly: boolean }
 export type WorkFilter = 'assigned' | 'open' | 'due' | 'past' | 'scheduled' | 'closed' | 'unassigned'

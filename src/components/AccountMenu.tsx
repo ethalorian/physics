@@ -88,6 +88,7 @@ export default function AccountMenu() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
+            aria-label="Account and appearance"
             variant="ghost"
             className={`relative h-9 w-9 sm:h-10 sm:w-10 rounded-full p-0 overflow-hidden transition-all duration-200 hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 hover:ring-offset-background${needsSetup ? ' avatar-nudge-glow' : ''}`}
           >

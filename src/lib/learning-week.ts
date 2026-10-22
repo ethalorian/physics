@@ -18,7 +18,7 @@ export function validPlanDate(value: unknown): value is string {
 export function weekDates(today: string, offset = 0) {
   const n = Math.floor(Date.parse(`${today}T12:00:00Z`) / 86400000)
   const monday = n - ((schoolDayWeekday(n) + 6) % 7) + offset * 7
-  return Array.from({ length: 5 }, (_, i) => schoolDayKeyFromNumber(monday + i))
+  return Array.from({ length: 7 }, (_, i) => schoolDayKeyFromNumber(monday + i))
 }
 export function deadlineDay(due: string | null) {
   if (!due) return null

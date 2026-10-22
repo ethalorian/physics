@@ -5,7 +5,7 @@ import type { QuizList } from '@/lib/quizzes/types'
 import type { VocabPracticeStatus } from '@/components/vocabulary/VocabTaskCards'
 import type { MathCompetencyFocus, MathCompetencyRecord } from '@/data/curriculum-types'
 import type { SpineCompetency } from '@/components/math-spine/MathSpineGrowth'
-import type { LearningPace, LearningPlans } from '@/lib/learning-week'
+import type { LearningPace } from '@/lib/learning-week'
 import type { VideoHomework } from './AssignedWork'
 import type { StudentAssignment } from '@/lib/student-dashboard'
 
@@ -14,7 +14,7 @@ export interface HomeData {
  continue: { unitId?: string; unitName: string | null; lesson: { slug: string; title: string; progress: number; lessonNumber?: number | null }; completed: number; total: number } | null
  retry: { targetId: string; statement: string; level: 1 | 2 }[]
 }
-export interface DailyData { item: { competencyId: string; competencyCode: string; competencyStatement: string } | null; alreadySubmitted?: boolean; snapshot?: { fluentCount: number; total: number }; dayCount?: number }
+export interface DailyData { item: { competencyId: string; competencyCode: string; competencyStatement: string } | null; warmupScheduled?: boolean; alreadySubmitted?: boolean; snapshot?: { fluentCount: number; total: number }; dayCount?: number }
 export interface GrowthData { competencies: SpineCompetency[]; records: MathCompetencyRecord[]; focus: MathCompetencyFocus[] }
 interface VocabData { tasks: { id: string; title: string; created_at?: string; due_on?: string; task_kind?: string; progress: { complete?: boolean; quiz?: { submitted?: boolean } }[] }[] }
 
@@ -39,12 +39,11 @@ export function useLearningWeek() {
  const vocab = useLearningResource<VocabData>('/api/vocab/tasks')
  const math = useLearningResource<DailyData>('/api/math-spine/daily')
  const pace = useLearningResource<LearningPace>('/api/home/pace')
- const plan = useLearningResource<{ plans: LearningPlans }>('/api/home/plan')
  const growth = useLearningResource<GrowthData>('/api/math-spine/dashboard')
  const loading = home.loading, error = home.error, homework = home.data?.homework ?? []
- const vocabulary: VocabPracticeStatus = { state: vocab.error ? 'error' : vocab.loading ? 'loading' : 'ready', total: vocab.data?.tasks?.length ?? 0, completed: 0, assignments: (vocab.data?.tasks ?? []).map(t => {
+ const vocabulary: VocabPracticeStatus = { state: vocab.error ? 'error' : vocab.loading ? 'loading' : 'ready', total: vocab.data?.tasks?.length ?? 0, completed: 0, assignments: (vocab.data?.tasks ?? []).filter(t => t.task_kind !== 'quiz').map(t => {
   const p = t.progress[0], complete = !!(t.task_kind === 'quiz' ? p?.quiz?.submitted : p?.complete)
-  return { id: 'vocabulary:' + t.id, kind: 'vocabulary' as const, title: t.title, assignedAt: t.created_at, href: '/vocabulary/work?task_id=' + t.id, due: t.due_on ?? null, complete, status: complete ? t.task_kind === 'quiz' ? 'Submitted' : 'Done' : t.task_kind === 'quiz' ? 'Quiz · needs completion' : 'To do', action: t.task_kind === 'quiz' ? complete ? 'View quiz results' : 'Open quiz' : complete ? 'Review words' : 'Practice words' }
+  return { id: 'vocabulary:' + t.id, kind: 'vocabulary' as const, quizSchedule: t.task_kind === 'quiz' ? 'vocabulary' as const : undefined, title: t.title, assignedAt: t.created_at, href: '/vocabulary/work?task_id=' + t.id, due: t.due_on ?? null, complete, status: complete ? t.task_kind === 'quiz' ? 'Submitted' : 'Done' : t.task_kind === 'quiz' ? 'Quiz · needs completion' : 'To do', action: t.task_kind === 'quiz' ? complete ? 'View quiz results' : 'Open quiz' : complete ? 'Review words' : 'Practice words' }
  }) }
   const readingWork = new Map(readings.data?.work.map(w => [w.assignment_id, w]))
   const quizWork = new Map(quizzes.data?.work.map(w => [w.quiz_id, w]))
@@ -56,13 +55,13 @@ export function useLearningWeek() {
     }),
     ...(!quizzes.loading && !quizzes.error && !quizzes.data?.staff ? quizzes.data?.quizzes ?? [] : []).filter(q => q.status === 'published' || ['submitted', 'graded'].includes(quizWork.get(q.id)?.state ?? '')).map(q => {
       const w = quizWork.get(q.id), complete = ['submitted', 'graded'].includes(w?.state ?? ''), course = quizzes.data?.courses.find(c => c.id === q.course_id)
-      return { id: `quiz:${q.id}`, kind: 'quiz' as const, title: q.title, assignedAt: q.created_at, due: q.due_at, complete, href: `/quizzes/${q.id}`, returned: w?.state === 'returned', status: w?.state === 'returned' ? 'Revise & resubmit' : complete ? w?.state === 'graded' ? 'Grade ready' : 'Submitted' : 'Needs completion', action: complete ? 'View quiz' : w?.state === 'returned' ? 'Revise quiz' : w ? 'Continue quiz' : 'Start quiz', context: course ? [course.name, course.section].filter(Boolean).join(' · ') : undefined }
+      return { id: `quiz:${q.id}`, kind: 'quiz' as const, quizSchedule: q.kind === 'vocabulary' ? 'vocabulary' as const : 'regular' as const, title: q.title, assignedAt: q.created_at, due: q.due_at, complete, href: `/quizzes/${q.id}`, returned: w?.state === 'returned', status: w?.state === 'returned' ? 'Revise & resubmit' : complete ? w?.state === 'graded' ? 'Grade ready' : 'Submitted' : 'Needs completion', action: complete ? 'View quiz' : w?.state === 'returned' ? 'Revise quiz' : w ? 'Continue quiz' : 'Start quiz', context: course ? [course.name, course.section].filter(Boolean).join(' · ') : undefined }
     }),
-    ...(!quizzes.loading && !quizzes.error && !quizzes.data?.staff ? quizzes.data?.locked ?? [] : []).map(q => ({ id: 'quiz:' + q.id, kind: 'quiz' as const, title: q.title, assignedAt: q.created_at, due: q.due_at, complete: false, status: 'Complete reading first', action: 'Open required reading', href: '/readings/' + q.reading_id, context: 'Unlocks after: ' + q.reading_title })),
+    ...(!quizzes.loading && !quizzes.error && !quizzes.data?.staff ? quizzes.data?.locked ?? [] : []).map(q => ({ id: 'quiz:' + q.id, kind: 'quiz' as const, quizSchedule: q.kind === 'vocabulary' ? 'vocabulary' as const : 'regular' as const, title: q.title, assignedAt: q.created_at, due: q.due_at, complete: false, status: 'Complete reading first', action: 'Open required reading', href: '/readings/' + q.reading_id, context: 'Unlocks after: ' + q.reading_title })),
     ...(vocabulary?.state === 'ready' ? vocabulary.assignments ?? [] : []),
   ]
 
  const sources = [{ name: 'lessons', ...home }, { name: 'readings', ...readings }, { name: 'quizzes', ...quizzes }, { name: 'vocabulary', ...vocab }]
- const refresh = () => { home.refresh(); readings.refresh(); quizzes.refresh(); vocab.refresh(); math.refresh(); pace.refresh(); plan.refresh(); growth.refresh() }
- return { home, readings, quizzes, vocab, math, pace, plan, growth, items, sources, refresh }
+ const refresh = () => { home.refresh(); readings.refresh(); quizzes.refresh(); vocab.refresh(); math.refresh(); pace.refresh(); growth.refresh() }
+ return { home, readings, quizzes, vocab, math, pace, growth, items, sources, refresh }
 }

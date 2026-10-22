@@ -304,6 +304,8 @@ export interface MarzanoBlock extends BaseBlock {
  * packet's "real coordinate grid" convention). Saved as { strokes }.
  */
 export interface SketchBlock extends BaseBlock {
+  /** A private uploaded creative product, captured through the same response flow. */
+  submission?: 'upload';
   type: 'sketch';
   capture: true;
   instruction: string;        // what to draw + how (at-home guidance lives here)
@@ -557,6 +559,7 @@ export type ContentBlock =
 export type BlockType = ContentBlock['type'];
 
 export interface BlockDocument {
+  reflection?: { version: 1; kind: 'manga' | 'story' };
   /** Original notebook design; its checks remain canonical question blocks. */
   interactiveNotebook?: import('@/lib/interactive-notebook').InteractiveNotebook;
   /** Explicit many-to-many links to the existing teacher plan collection. */

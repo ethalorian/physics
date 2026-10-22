@@ -51,6 +51,7 @@ function presenceDiff(prev: string[], next: string[]): string | null {
 export default function LobbyActivityPage() {
   const { code } = useParams<{ code: string }>()
   const [groupError, setGroupError] = useState<string | null>(null)
+  const [connectionError, setConnectionError] = useState<string | null>(null)
   const [st, setSt] = useState<State | null>(null)
   const [collected, setCollected] = useState<string[]>([])
   const [wordInput, setWordInput] = useState('')
@@ -63,6 +64,8 @@ export default function LobbyActivityPage() {
   // MC-5 · one-tap role reflection on the Submitted screen (+5 XP once per session).
   const [reflect, setReflect] = useState<{ done: boolean; xp: number; note: string; busy: boolean }>({ done: false, xp: 0, note: '', busy: false })
   const sessionId = useRef<string | null>(null)
+  const polling = useRef(false)
+  const savedArtifact = useRef<{ sessionId: string; response: unknown; updated_at: string } | null>(null)
   // Liveness: `tick` bumps once per successful poll (drives the one-shot pulse),
   // `conn` flips to reconnecting when a poll fails so the wait never goes silent.
   const [tick, setTick] = useState(0)
@@ -72,10 +75,36 @@ export default function LobbyActivityPage() {
   const prevRoom = useRef<string[] | null>(null)
   const presenceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const poll = useCallback(() => {
-    fetch(`/api/lobby/join?code=${code}`).then((r) => r.json()).then((d: State) => {
+  const poll = useCallback(async () => {
+    if (polling.current) return
+    polling.current = true
+    try {
+      const readState = async () => {
+        const r = await fetch(`/api/lobby/join?code=${encodeURIComponent(code)}`, { cache: 'no-store' })
+        const d = await r.json().catch(() => ({}))
+        if (!r.ok) throw new Error(d.error || 'Could not load this lobby. Try again.')
+        if (!d.session_id) throw new Error('Could not load this lobby. Try again.')
+        return d as State
+      }
+      let d = await readState()
+      // Invitations and QR links open this page directly, bypassing the code form.
+      // Register through the authenticated join endpoint before showing the roster.
+      if (!d.joined && d.status !== 'closed') {
+        const r = await fetch('/api/lobby/join', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code }),
+        })
+        const result = await r.json().catch(() => ({}))
+        if (!r.ok) throw new Error(result.error || 'Could not join this lobby. Try again.')
+        d = await readState()
+        if (!d.joined) throw new Error('Your place in the lobby was not saved. Try again.')
+      }
       if (d.session_id) {
-        setSt(d)
+        setConnectionError(null)
+        // A poll started before Submit can arrive after the save receipt.
+        // Keep the confirmed receipt instead of reopening the response form.
+        const saved = savedArtifact.current
+        setSt(saved?.sessionId === d.session_id ? { ...d, submitted: true, sharedArtifact: saved } : d)
         sessionId.current = d.session_id
         setCollected((prev) => Array.from(new Set([...prev, ...(d.enteredWords ?? [])])))
         setConn('live')
@@ -90,10 +119,13 @@ export default function LobbyActivityPage() {
           }
         }
         prevRoom.current = names
-      } else {
-        setConn('reconnecting')
       }
-    }).catch(() => setConn('reconnecting'))
+    } catch (error) {
+      setConn('reconnecting')
+      setConnectionError(error instanceof Error ? error.message : 'Connection lost. Your current work is still here. Try again.')
+    } finally {
+      polling.current = false
+    }
   }, [code])
 
   useEffect(() => {
@@ -121,21 +153,38 @@ export default function LobbyActivityPage() {
 
   const isDrawing = st?.task_type === 'drawing'
 
+  const saveArtifact = async (artifact: unknown): Promise<boolean> => {
+    if (!sessionId.current) return false
+    const submittingSession = sessionId.current
+    setGroupError(null)
+    try {
+      const result = await fetch('/api/lobby/submit', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: submittingSession, response: artifact }),
+      })
+      const data = await result.json().catch(() => null)
+      if (!result.ok || data?.ok !== true || !(data.members > 0)) {
+        throw new Error(data?.error || 'Your group response was not confirmed. Your work is still here; try Submit again.')
+      }
+      const saved = { sessionId: submittingSession, response: artifact, updated_at: data.updated_at ?? new Date().toISOString() }
+      savedArtifact.current = saved
+      setSt(current => current?.session_id === submittingSession ? { ...current, submitted: true, sharedArtifact: saved } : current)
+      return true
+    } catch (error) {
+      setGroupError(error instanceof Error ? error.message : 'Your group response was not saved. Your work is still here; try Submit again.')
+      return false
+    }
+  }
+
   const submit = async () => {
-    if (!sessionId.current) return
+    if (!sessionId.current || busy) return
     setBusy(true)
     const mate = st?.group?.find((g) => String(g.idx) === buildWho)
     const built_on = mate ? { who_idx: mate.idx, who_alias: mate.alias, note: buildNote.trim() } : undefined
     const payload = isDrawing ? { strokes, built_on } : { text: response, built_on }
-    setGroupError(null)
     try {
-    const result = await fetch('/api/lobby/submit', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session_id: sessionId.current, response: payload }),
-    })
-    if(!result.ok){const data=await result.json().catch(()=>({}));throw new Error(data.error??'Your group response was not saved. Try again.')}
-    poll()
-    } catch(error) { setGroupError(error instanceof Error?error.message:'Your group response was not saved. Try again.') }
+      await saveArtifact(payload)
+    }
     finally {setBusy(false)}
   }
 
@@ -192,7 +241,7 @@ export default function LobbyActivityPage() {
     </div>
   ) : null
 
-  if (!st) return wrap(<p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading…</p>)
+  if (!st) return wrap(connectionError ? <div><p role="alert">{connectionError}</p><button type="button" onClick={poll} className="mt-3 rounded-lg border px-4 py-2">Retry joining lobby</button></div> : <p role="status" className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Joining lobby…</p>)
   if (st.status === 'closed' && !st.submitted) return wrap(<p className="text-sm">This lobby is closed.</p>)
 
   const sendReflection = async () => {
@@ -210,7 +259,7 @@ export default function LobbyActivityPage() {
   if (st.submitted) return wrap(
     <div className="text-center">
       <CheckCircle2 size={40} style={{ color: 'var(--success)' }} className="mx-auto mb-2" />
-      <h1 className="text-lg font-semibold">Submitted!</h1>
+      <h1 role="status" className="text-lg font-semibold">Submitted!</h1>
       <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Your group artifact is saved for every member.</p>
       {st.block && st.sharedArtifact && <BlockRenderer referenceBlocks={st.referenceBlocks} blocks={[st.block]} lessonId={st.lesson_id ?? ''} responses={{ [st.block.id]: { response: st.sharedArtifact.response, created_at: st.sharedArtifact.updated_at } }} hydrated readOnly />}
       {st.myRole ? (
@@ -296,6 +345,7 @@ export default function LobbyActivityPage() {
   return wrap(
     <div>
       {liveStatus}
+      {connectionError && <p role="alert" className="mb-3 text-destructive">{connectionError} Your current work is still here.</p>}
       {taskCallout}
 
       {st.myRole && (
@@ -374,16 +424,14 @@ export default function LobbyActivityPage() {
             <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>{missing} still missing — keep talking to your group.</p>
           )}
         </>
+      ) : st.status !== 'open' ? (
+        <p role="status" className="rounded-lg border p-4">Passphrase complete. Waiting for your teacher to open the task.</p>
       ) : (
         <>
           <div className="flex items-center gap-2 mb-3 text-sm font-medium" style={{ color: 'var(--success)' }}>
             <Unlock size={15} /> Passphrase complete — submit your work.
           </div>
-          {st.block ? <LanguageProfileProvider><BlockRenderer referenceBlocks={st.referenceBlocks} blocks={[st.block]} lessonId={st.lesson_id ?? ''} responses={st.sharedArtifact ? { [st.block.id]: { response: st.sharedArtifact.response, created_at: st.sharedArtifact.updated_at } } : {}} hydrated save={async (_id, _type, artifact) => {
-            const r = await fetch('/api/lobby/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: st.session_id, response: artifact }) })
-            if (!r.ok) { const d = await r.json(); setGroupError(d.error ?? 'Lobby work could not save'); return false }
-            setGroupError(null); poll(); return true
-          }} /></LanguageProfileProvider> : isDrawing ? (
+          {st.block ? <LanguageProfileProvider><BlockRenderer referenceBlocks={st.referenceBlocks} blocks={[st.block]} lessonId={st.lesson_id ?? ''} responses={st.sharedArtifact ? { [st.block.id]: { response: st.sharedArtifact.response, created_at: st.sharedArtifact.updated_at } } : {}} hydrated save={(_id, _type, artifact) => saveArtifact(artifact)} /></LanguageProfileProvider> : isDrawing ? (
             <PaintPad value={strokes} onChange={setStrokes} />
           ) : (
             <textarea value={response} onChange={(e) => setResponse(e.target.value)} rows={5}
@@ -404,7 +452,7 @@ export default function LobbyActivityPage() {
               className="w-full rounded-lg border p-2 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
           </div>
 
-          <button onClick={submit} disabled={busy || !buildWho || !buildNote.trim() || (isDrawing ? strokes.length === 0 : !response.trim())}
+          <button type="button" onClick={submit} disabled={busy || !buildWho || !buildNote.trim() || (isDrawing ? strokes.length === 0 : !response.trim())}
             className="mt-3 w-full text-sm font-semibold rounded-lg px-4 py-2.5 inline-flex items-center justify-center gap-1.5 disabled:opacity-50"
             style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
             <Send size={15} /> {busy ? 'Submitting…' : 'Submit'}

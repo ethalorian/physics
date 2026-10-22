@@ -1,4 +1,5 @@
 import {MCAS_ID} from '@/lib/mcas/types'
+import {quizScheduleError} from '@/lib/quiz-schedule'
 import {LETTER_GRADES,QUIZ_UUID,type Quiz,type QuizAnswers,type QuizQuestion,type ProblemAnswer} from './types'
 import {PROBLEM_STAGES,validateProblemStage,stageHasEvidence} from '@/lib/problem-response'
 const object=(v:unknown):v is Record<string,unknown>=>!!v&&typeof v==='object'&&!Array.isArray(v)
@@ -6,6 +7,8 @@ const text=(v:unknown,max:number,required=true):v is string=>typeof v==='string'
 export function validateQuiz(v:unknown):Quiz {
  if(!object(v)||!QUIZ_UUID.test(String(v.id))||!QUIZ_UUID.test(String(v.course_id))||!text(v.title,160)||!text(v.instructions,3000,false)||!['vocabulary','understanding','mixed'].includes(String(v.kind))||!['numeric','letter','credit'].includes(String(v.grade_mode))||!['draft','published'].includes(String(v.status))||!Number.isInteger(v.version)||Number(v.version)<0)throw Error('Choose a class, title, quiz type, and grading format.')
  if(v.due_at!==null&&(!text(v.due_at,40)||!Number.isFinite(Date.parse(v.due_at))))throw Error('Choose a valid due date or leave it empty.')
+ const scheduleError=quizScheduleError(v.due_at as string|null,v.kind==='vocabulary'?'vocabulary':'regular')
+ if(scheduleError)throw Error(scheduleError)
  if(v.source_quiz_id!==null&&!QUIZ_UUID.test(String(v.source_quiz_id)))throw Error('Invalid reassessment link.')
  if(v.student_ids!==null&&(!Array.isArray(v.student_ids)||!v.student_ids.length||v.student_ids.length>1000||v.student_ids.some(id=>typeof id!=='string'||!QUIZ_UUID.test(id))))throw Error('Choose students or assign the whole class.')
  if(v.language_level!=null&&!['cpa','honors'].includes(String(v.language_level))||v.sei_supports!=null&&typeof v.sei_supports!=='boolean')throw Error('Choose CPA or Honors and a valid SEI support setting.')

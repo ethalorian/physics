@@ -1,3 +1,4 @@
+import type { ReadingXpStatus } from './xp-policy'
 import { validateHonorsReading, type HonorsReading } from './openstax-physics'
 import { textbookChapter } from '@/data/textbook'
 import { TEXTBOOK_SECTIONS } from '@/data/textbook-sections'
@@ -8,7 +9,7 @@ export type ReadingTarget = { id: string; slug?: string; statement: string; unit
 export type ReadingAssignment = {
   origin_key?: string | null; passage?: string | null; honors_reading?: HonorsReading | null;
   id: string; course_id: string; title: string; chapter: number; reading: string; section_ids: string[];
-  instructions: string; questions: ReadingQuestion[]; due_at: string | null;
+  instructions: string; questions: ReadingQuestion[]; opens_at?: string | null; due_at: string | null;
   status: 'draft' | 'published' | 'archived'; version: number; created_at: string;
 }
 export type ReadingWork = {
@@ -19,7 +20,7 @@ export type ReadingSubmission = { id: string; assignment_id: string; user_id: st
 export type ReadingReview = { id: string; submission_id: string; decision: 'rated' | 'returned'; ratings: Record<string, number>; note: string; reviewed_at: string }
 export type ReadingCourse = { id: string; name: string; section: string | null; program: string; track?: string | null }
 export type ReadingList = { review_counts?: Record<string,number>; assignments: ReadingAssignment[]; work: ReadingWork[]; courses: ReadingCourse[]; staff: boolean }
-export type ReadingDetail = { readingQuiz?: {id: string | null; locked: boolean; state?: string; needsCompletion?: boolean} | null; lesson_slug?: string | null; assignment: ReadingAssignment; work: ReadingWork[]; submissions: ReadingSubmission[]; reviews: ReadingReview[]; targets: ReadingTarget[]; students: { id: string; name: string }[]; staff: boolean }
+export type ReadingDetail = { excused_student_ids?: string[]; xp?: ReadingXpStatus | null; readingQuiz?: {id: string | null; locked: boolean; state?: string; needsCompletion?: boolean} | null; lesson_slug?: string | null; assignment: ReadingAssignment; work: ReadingWork[]; submissions: ReadingSubmission[]; reviews: ReadingReview[]; targets: ReadingTarget[]; students: { id: string; name: string }[]; staff: boolean }
 
 export function readingState(work?: ReadingWork | null) {
   return work ? ({ in_progress: 'In progress', submitted: 'Ready to review', returned: 'Needs revision', rated: 'Rated' })[work.state] : 'Not started'

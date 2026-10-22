@@ -15,7 +15,41 @@ import { parseTextbookLanguage, textbookLanguageTag } from '@/lib/textbook-langu
 // chapter is not yet in the private bucket, proxy that copy so the reader
 // still works — the response is still gated by this route's session check.
 //
-// Responses are private and revalidated; language versions use separate paths.
+// Stable chapter/language URLs are revalidated using Storage's content ETag.
+// withAuth runs BEFORE revalidation, including responses that reuse a cached PDF.
+
+async function fetchPdf(
+  url: string,
+  request: Request,
+  responseHeaders: Record<string, string>,
+  credentials: Record<string, string> = {},
+): Promise<Response | null> {
+  const headers = new Headers(credentials)
+  // Ask Storage to check the current object instead of serving a stale CDN copy.
+  headers.set('Cache-Control', 'no-cache')
+  const validator = request.headers.get('if-none-match')
+  if (validator) headers.set('If-None-Match', validator)
+
+  // The SDK's download() buffers the entire PDF and hides its ETag/status.
+  // A conditional GET lets Storage return 304 before transferring the PDF.
+  const upstream = await fetch(url, { headers, cache: 'no-store', signal: request.signal })
+  const outgoing = new Headers(responseHeaders)
+  const etag = upstream.headers.get('etag')
+  if (etag) outgoing.set('ETag', etag)
+  if (upstream.status === 304 && validator) {
+    // Storage can omit the ETag on 304. Preserve a single browser validator;
+    // for a list/wildcard, let the browser retain its existing cache metadata.
+    if (!etag && /^(W\/)?"[^"\r\n]*"$/.test(validator.trim())) {
+      outgoing.set('ETag', validator.trim())
+    }
+    return new Response(null, { status: 304, headers: outgoing })
+  }
+  if (upstream.status === 200 && upstream.body) {
+    return new Response(upstream.body, { status: 200, headers: outgoing })
+  }
+  await upstream.body?.cancel()
+  return null
+}
 
 export const GET = withAuth<{ chapter: string }>(async (req, ctx) => {
   const { chapter } = await ctx.params
@@ -35,13 +69,19 @@ export const GET = withAuth<{ chapter: string }>(async (req, ctx) => {
     'X-Content-Type-Options': 'nosniff',
   }
 
-  // 1) Private bucket (preferred).
-  const { data: blob, error } = await supabaseAdmin.storage
-    .from(TEXTBOOK_BUCKET)
-    .download(textbookObjectPath(n, language))
-  if (blob && !error) {
-    return new Response(blob.stream(), { status: 200, headers })
-  }
+  // 1) Private bucket (preferred). Credentials remain on the server and are
+  // never sent to the browser or to the legacy public URL below.
+  const storageUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!storageUrl || !serviceKey) throw new Error('Missing server Storage configuration')
+  const objectPath = textbookObjectPath(n, language).split('/').map(encodeURIComponent).join('/')
+  const pdf = await fetchPdf(
+    `${storageUrl}/storage/v1/object/${TEXTBOOK_BUCKET}/${objectPath}`,
+    req,
+    headers,
+    { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
+  )
+  if (pdf) return pdf
 
   // Never silently substitute English for a selected translated edition.
   if (language !== 'en') return NextResponse.json(
@@ -57,10 +97,8 @@ export const GET = withAuth<{ chapter: string }>(async (req, ctx) => {
     .maybeSingle()
   const legacyUrl = ex?.text_pdf_url as string | null | undefined
   if (legacyUrl) {
-    const upstream = await fetch(legacyUrl, { cache: 'no-store' })
-    if (upstream.ok && upstream.body) {
-      return new Response(upstream.body, { status: 200, headers })
-    }
+    const legacyPdf = await fetchPdf(legacyUrl, req, headers)
+    if (legacyPdf) return legacyPdf
   }
 
   return NextResponse.json(

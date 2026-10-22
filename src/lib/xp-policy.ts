@@ -5,6 +5,8 @@ export const VOCABULARY_DAILY_XP_CAP = 5
 export interface VocabXpStatus { dailyEarned: number; dailyCap: number; lifetimeEarned: number }
 export interface MathXpStatus { dailyEarned: number; dailyCap: number; remaining: number; resetsAt: string }
 export const VOCAB_ASSIGNMENT_XP = 5
+export const READING_ASSIGNMENT_XP = 5
+export interface ReadingXpStatus { earned: number | null; available: number; awardedAt: string | null }
 export const SPIN_SEGMENTS = [1, 2, 1, 3, 1, 5, 1, 2, 1, 25, 1, 2]
 export const SPIN_PRIZES = [{ xp: 25, weight: .0033 }, { xp: 5, weight: .04 }, { xp: 3, weight: .10 }, { xp: 2, weight: .25 }, { xp: 1, weight: .6067 }]
 export interface UnitXpReport {

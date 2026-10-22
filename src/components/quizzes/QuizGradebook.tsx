@@ -42,18 +42,18 @@ export default function QuizGradebook({columns,students,courseId,courseName,href
           return <th scope="col" key={a.id}>
             <Link className={g.quizTitle} href={href(a.id,courseId)} onClick={remember} title={a.title}>{a.title}</Link>
             <small>{shortDate(a.due_at)} · {a.possible} pts{!courseId?` · ${courseName(a.copies[0].course_id)}`:''}</small>
-            <div className={g.columnSummary}><span title="Class average of scored work">Avg <strong>{resultPercent(average(scored))}</strong></span><span title="Scored students out of assigned students">{scored.length}/{a.students.length} graded</span></div>
+            <div className={g.columnSummary}><span title="Class average of scored work">Avg <strong>{resultPercent(average(scored))}</strong></span><span title="Scored students out of assigned students">{scored.length}/{a.students.filter(st=>!st.choiceExempt&&!st.choiceAvailable).length} graded</span></div>
           </th>
         })}</tr></thead>
         <tbody>{students.map((st,index)=><tr key={`${st.course_id}:${st.student_id}`}>
           <th scope="row"><div className={g.student}><span className={g.rowNumber} aria-hidden="true">{index+1}</span><span>{st.name}{!courseId&&<small>{courseName(st.course_id)}</small>}</span></div></th>
           {columns.map(a=>{const cell=st.cells.get(a.id);return <td key={a.id} data-state={cell?.state??'unassigned'}>{cell?<Link className={g.cell} href={`${href(a.id,courseId)}&student=${encodeURIComponent(st.student_id)}`} onClick={remember} aria-label={`${st.name}, ${a.title}: ${gradebookCellText(cell,display)}`} title={`${st.name} · ${a.title}\n${resultGrade(cell)}${cell.percent!==null?` · ${cell.earned}/${cell.possible} points`:''}\nOpen student review`}>
-            {cell.state==='graded'?<strong className={g.score}>{gradebookCellText(cell,display)}</strong>:<span className={g.status}>{cell.state==='submitted'?'Review':cell.state==='returned'?'Revise':cell.state==='in_progress'?'Working':'Not started'}</span>}
+            {cell.state==='graded'?<strong className={g.score}>{gradebookCellText(cell,display)}</strong>:<span className={g.status}>{cell.choiceExempt?'EX':cell.choiceAvailable?'Choice available':cell.state==='submitted'?'Review':cell.state==='returned'?'Revise':cell.state==='in_progress'?'Working':'Not started'}</span>}
           </Link>:<span className={g.unassigned} aria-label="Not assigned" title="Not assigned">—</span>}</td>})}
         </tr>)}</tbody>
       </table>
       {!students.length&&<p className={g.empty}>No students match this view.</p>}
     </div>}
-    <footer className={g.footer}><p>Click a cell to review. Missing work is never a zero.</p><div className={g.legend} aria-label="Gradebook status legend"><span data-state="submitted">Review</span><span data-state="returned">Revise</span><span data-state="in_progress">Working</span><span>— Not assigned</span></div></footer>
+    <footer className={g.footer}><p>Quiz grades use scored work. EX is excluded; missing-choice zeros appear in the calendar’s choice gradebook.</p><div className={g.legend} aria-label="Gradebook status legend"><span data-state="submitted">Review</span><span data-state="returned">Revise</span><span data-state="in_progress">Working</span><span>EX · Exempt</span><span>— Not assigned</span></div></footer>
   </section>
 }

@@ -32,6 +32,8 @@ export const resultPercent=(value:number|null|undefined)=>value==null?'—':`${M
 export const resultState=(state:string)=>({not_started:'Not started',in_progress:'In progress',submitted:'Needs review',returned:'Revise',graded:'Graded'}[state]??state)
 export type ResultStudent=AssessmentComparison['students'][number]
 export function resultGrade(row:ResultStudent) {
+  if(row.choiceExempt)return 'EX'
+  if(row.choiceAvailable)return 'Choice available'
   if(row.state!=='graded')return resultState(row.state)
   if(row.gradeMode==='letter')return row.gradeValue??'Grade pending'
   if(row.gradeMode==='credit')return row.gradeValue==='credit'?'Credit':row.gradeValue==='no_credit'?'No credit':'Grade pending'

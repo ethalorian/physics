@@ -1,6 +1,6 @@
 {
   "sourceProject": "https://claude.ai/design/p/3b51571e-3ae1-4970-8b13-66f3edd9e97e",
-  "exportedAt": "2026-10-11",
+  "exportedAt": "2026-10-12",
   "lessons": [
     {
       "day": 1,
@@ -2351,6 +2351,1030 @@
           "start": 97
         }
       ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 3,
+      "title": "Impulse",
+      "file": "Unit 3 Day 3 - Impulse - In Class.dc.html",
+      "guide": "Unit 3 Day 3 - Impulse - Teacher Guide.md",
+      "duration": 85,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 3: J = FΔt = Δp. Targets K2, S2.",
+          "start": 0
+        },
+        {
+          "name": "Check",
+          "dur": 8,
+          "desc": "Quick check: p = ?, units, vector or scalar. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Derive",
+          "dur": 18,
+          "desc": "STOP 1 answer. From F = ma: F = mΔv/Δt → FΔt = mΔv = Δp. Impulse J = FΔt = Δp; N·s = kg·m/s.",
+          "start": 15
+        },
+        {
+          "name": "Bat",
+          "dur": 14,
+          "desc": "Worked: 0.15 kg baseball +40 → −50 m/s; Δp = −13.5 kg·m/s; contact 0.002 s. STOP 2 (find F).",
+          "start": 33
+        },
+        {
+          "name": "Area",
+          "dur": 18,
+          "desc": "STOP 2 answer: −6,750 N (west). Impulse = area under F–t; a short hard push and a long gentle push with equal area give the same Δp. STOP 3 (group practice).",
+          "start": 47
+        },
+        {
+          "name": "Exit",
+          "dur": 10,
+          "desc": "Exit ticket: an impactor hits an asteroid, average 8 × 10⁵ N for 0.05 s; Δp = ? STOP 4.",
+          "start": 65
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on K2 and S2; tomorrow: why impulse matters. STOP 5.",
+          "start": 75
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 81
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 4,
+      "title": "Same Impulse Different Force",
+      "file": "Unit 3 Day 4 - Same Impulse Different Force - In Class.dc.html",
+      "guide": "Unit 3 Day 4 - Same Impulse Different Force - Teacher Guide.md",
+      "duration": 93,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 4: Same Δp, different ride. Target R1.",
+          "start": 0
+        },
+        {
+          "name": "Hook",
+          "dur": 10,
+          "desc": "Two eggs dropped: concrete (breaks) vs pillow (survives); same Δp. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Trade",
+          "dur": 16,
+          "desc": "Answer: the pillow lengthens Δt. J = FΔt = Δp fixed → longer Δt, smaller F. Concrete vs pillow force–time pulses with equal area. Examples. STOP 2 (case study).",
+          "start": 17
+        },
+        {
+          "name": "Cases",
+          "dur": 12,
+          "desc": "Six cases with the same logic: airbag, helmet, boxing glove, gym mat, crumple zone, parkour roll. STOP 3 (sprinter).",
+          "start": 33
+        },
+        {
+          "name": "Sprinter",
+          "dur": 14,
+          "desc": "STOP 3 answer: Δp = −720 kg·m/s; concrete −14,400 N vs foam pit −1,440 N; 10× time, 1/10 force.",
+          "start": 45
+        },
+        {
+          "name": "Asteroid",
+          "dur": 14,
+          "desc": "2026-XJ: short and hard (kinetic impactor, DART) vs long and gentle (gravity tractor, ion push). STOP 4.",
+          "start": 59
+        },
+        {
+          "name": "Exit",
+          "dur": 10,
+          "desc": "Exit ticket: a boxer rolls back with the punch. STOP 5.",
+          "start": 73
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on R1. STOP 6.",
+          "start": 83
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 89
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 5,
+      "title": "Conservation of Momentum",
+      "file": "Unit 3 Day 5 - Conservation of Momentum - In Class.dc.html",
+      "guide": "Unit 3 Day 5 - Conservation of Momentum - Teacher Guide.md",
+      "duration": 83,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 5: Σp before = Σp after; no external force → momentum conserved. Target K3.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 9,
+          "desc": "Recap: J = FΔt = Δp; an external force over a time gives Δp. What if there’s none?",
+          "start": 7
+        },
+        {
+          "name": "Flip",
+          "dur": 10,
+          "desc": "The flip: a system with no net external force keeps its total momentum. Two carts (1 kg, 3 kg) at rest with a squeezed spring, inside a system box; Σp = 0. STOP 1 (predict).",
+          "start": 16
+        },
+        {
+          "name": "Spring",
+          "dur": 13,
+          "desc": "Answer: the string is cut; 1 kg moves 3 m/s west, 3 kg moves 1 m/s east; Σp after = −3 + 3 = 0. Internal pushes cancel. STOP 2 (skater).",
+          "start": 26
+        },
+        {
+          "name": "Skater",
+          "dur": 12,
+          "desc": "STOP 2 answer: skater + ball system on ice; 0 = (5)(+8) + 70v → v ≈ −0.57 m/s (west).",
+          "start": 39
+        },
+        {
+          "name": "Practice",
+          "dur": 12,
+          "desc": "The rocket as before/after: system rocket + gas; gas backward → rocket forward. STOP 3 (group practice).",
+          "start": 51
+        },
+        {
+          "name": "Exit",
+          "dur": 10,
+          "desc": "Exit ticket: 0.5 kg firework at rest explodes; 0.3 kg east at 12 m/s; 0.2 kg piece unknown. STOP 4.",
+          "start": 63
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on K3; DART link. STOP 5.",
+          "start": 73
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 79
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 6,
+      "title": "Types of Collisions",
+      "file": "Unit 3 Day 6 - Types of Collisions - In Class.dc.html",
+      "guide": "Unit 3 Day 6 - Types of Collisions - Teacher Guide.md",
+      "duration": 83,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 6: Three kinds of collision. Target K4.",
+          "start": 0
+        },
+        {
+          "name": "Check",
+          "dur": 6,
+          "desc": "Quick check: the conservation rule and its condition. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Types",
+          "dur": 14,
+          "desc": "STOP 1 answer. Three cards: elastic, inelastic, perfectly inelastic; momentum bars full for all, KE bars full / partial / small. STOP 2 (predict).",
+          "start": 13
+        },
+        {
+          "name": "Demos",
+          "dur": 12,
+          "desc": "Answer: the superball keeps the most KE; all conserve p. Superball bounces high, clay squashes, Velcro carts stick. Lost KE → heat, sound, deformation. STOP 3 (run the demos).",
+          "start": 27
+        },
+        {
+          "name": "Classify",
+          "dur": 10,
+          "desc": "Eight real collisions to classify. STOP 4 (pair-share).",
+          "start": 39
+        },
+        {
+          "name": "Asteroid",
+          "dur": 16,
+          "desc": "STOP 4 answers; an asteroid strikes Earth (perfectly inelastic); flyby ≈ elastic; DART in between.",
+          "start": 49
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: a meteorite buries itself in the desert. STOP 5.",
+          "start": 65
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on K4; tomorrow Vernier lab. STOP 6.",
+          "start": 73
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 79
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 7,
+      "title": "Collision Lab",
+      "file": "Unit 3 Day 7 - Collision Lab - In Class.dc.html",
+      "guide": "Unit 3 Day 7 - Collision Lab - Teacher Guide.md",
+      "duration": 80,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 7 lab: Does momentum hold up? Targets S4, K3.",
+          "start": 0
+        },
+        {
+          "name": "Setup",
+          "dur": 9,
+          "desc": "Track, two photogates, carts A and B with magnet or Velcro bumpers; safety checklist. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Demo",
+          "dur": 11,
+          "desc": "Teacher demo, elastic: A (0.50 kg) at +0.60 m/s hits B at rest; gates read A +0.60, B +0.57; table with A after +0.02. STOP 2.",
+          "start": 16
+        },
+        {
+          "name": "Compute",
+          "dur": 13,
+          "desc": "Answer: Σp before 0.300, after 0.295 kg·m/s, ≈1.7% difference; bars nearly equal; friction is the small external impulse.",
+          "start": 27
+        },
+        {
+          "name": "Lab",
+          "dur": 10,
+          "desc": "The lab: 4-trial data table (2 elastic, 2 perfectly inelastic); Velcro carts stick and share v′. STOP 3 (lab).",
+          "start": 40
+        },
+        {
+          "name": "Class",
+          "dur": 12,
+          "desc": "Example class data: % differences mostly within 5%; sources of error. STOP 4.",
+          "start": 50
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket prompts and a sample answer. STOP 5.",
+          "start": 62
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on S4; write-up. STOP 6.",
+          "start": 70
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 76
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 8,
+      "title": "Perfectly Inelastic Collisions",
+      "file": "Unit 3 Day 8 - Perfectly Inelastic Collisions - In Class.dc.html",
+      "guide": "Unit 3 Day 8 - Perfectly Inelastic Collisions - Teacher Guide.md",
+      "duration": 73,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 8: m₁v₁ + m₂v₂ = (m₁ + m₂)v_f. Target S3.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 6,
+          "desc": "From yesterday’s lab: Velcro trials, within how many percent? STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Setup",
+          "dur": 12,
+          "desc": "STOP 1 answer. Two blocks collide and stick, moving off as (m₁ + m₂) at v_f. Σp before = Σp after → the inelastic equation → v_f = (m₁v₁ + m₂v₂)/(m₁ + m₂).",
+          "start": 13
+        },
+        {
+          "name": "Bullet",
+          "dur": 8,
+          "desc": "Worked 1: 0.05 kg bullet at 400 m/s into a 5 kg hanging block; it swings off together. Setup equation. STOP 2.",
+          "start": 25
+        },
+        {
+          "name": "Cars",
+          "dur": 8,
+          "desc": "STOP 2 answer ≈ 3.96 m/s. Worked 2: 1200 kg at +15 m/s and 1500 kg at −10 m/s collide head-on and lock. STOP 3.",
+          "start": 33
+        },
+        {
+          "name": "Practice",
+          "dur": 14,
+          "desc": "STOP 3 answer: v_f ≈ +1.11 m/s (east); between +15 and −10; the lighter car had more momentum. Three rules. STOP 4 (worksheet).",
+          "start": 41
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: 1000 kg car at 20 m/s east rear-ends a 2000 kg stalled truck. STOP 5.",
+          "start": 55
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on S3. STOP 6.",
+          "start": 63
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 69
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 9,
+      "title": "Elastic Collisions",
+      "file": "Unit 3 Day 9 - Elastic Collisions - In Class.dc.html",
+      "guide": "Unit 3 Day 9 - Elastic Collisions - Teacher Guide.md",
+      "duration": 79,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 9: Elastic collisions. Momentum and KE, two equations, two unknowns. Target S3.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 6,
+          "desc": "Quick check: elastic, what’s conserved? STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Setup",
+          "dur": 14,
+          "desc": "STOP 1 answer. Σp and ΣKE equations; two unknowns; the one-at-rest formulas for v₁f and v₂f.",
+          "start": 13
+        },
+        {
+          "name": "Worked",
+          "dur": 8,
+          "desc": "0.5 kg at +4 m/s rolls toward a 1.0 kg ball at rest; frozen before impact. STOP 2.",
+          "start": 27
+        },
+        {
+          "name": "Patterns",
+          "dur": 14,
+          "desc": "STOP 2 answer: the collision plays out; v₁f = −1.33 m/s (back), v₂f = +2.67 m/s; Σp 2.00 → 2.00 and ΣKE 4.00 → 4.00 J checked. STOP 3 (predict the three cases).",
+          "start": 35
+        },
+        {
+          "name": "Check",
+          "dur": 12,
+          "desc": "STOP 3 answers animated: equal masses swap; heavy into light, light shoots off at ≈2v; light into heavy bounces back. STOP 4 (PhET).",
+          "start": 49
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: 0.2 kg superball at 5 m/s east into a 0.2 kg ball at rest, frozen before impact. STOP 5.",
+          "start": 61
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on S3; flyby link. STOP 6.",
+          "start": 69
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 75
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 10,
+      "title": "Momentum in 2D",
+      "file": "Unit 3 Day 10 - Momentum in 2D - In Class.dc.html",
+      "guide": "Unit 3 Day 10 - Momentum in 2D - Teacher Guide.md",
+      "duration": 75,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 10: Momentum in 2D. Target R2.",
+          "start": 0
+        },
+        {
+          "name": "Hook",
+          "dur": 12,
+          "desc": "A cue ball hits a stationary ball at an angle on a pool table; both move off. STOP 1 (predict).",
+          "start": 7
+        },
+        {
+          "name": "Components",
+          "dur": 14,
+          "desc": "Answer: the blue ball goes down-right so the y-momenta cancel; tip-to-tail vector picture; p_x = mv_x, p_y = mv_y; two separate conservation equations.",
+          "start": 19
+        },
+        {
+          "name": "Worked",
+          "dur": 10,
+          "desc": "Worked: two 0.16 kg balls; cue 2 m/s east → 1 m/s at 30° N of E; components given for CPA. STOP 2.",
+          "start": 33
+        },
+        {
+          "name": "Solve",
+          "dur": 14,
+          "desc": "STOP 2 answer: v₂ₓ = 1.13 m/s, v₂ᵧ = −0.50 m/s; |v₂| ≈ 1.24 m/s at 24° S of E; component triangle; y-momenta cancel. STOP 3 (PhET 2D).",
+          "start": 43
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: why each component separately. STOP 4.",
+          "start": 57
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on R2; tomorrow DART-style deflection. STOP 5.",
+          "start": 65
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 71
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 11,
+      "title": "DART and Deflection",
+      "file": "Unit 3 Day 11 - DART and Deflection - In Class.dc.html",
+      "guide": "Unit 3 Day 11 - DART and Deflection - Teacher Guide.md",
+      "duration": 99,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 11: Could we deflect it? DART 2022. Target R3.",
+          "start": 0
+        },
+        {
+          "name": "Brief",
+          "dur": 14,
+          "desc": "DART animated: the spacecraft hits Dimorphos; its orbit around Didymos shrinks; 11 h 55 min → 11 h 23 min, 32 minutes shorter. STOP 1 (show mission video).",
+          "start": 7
+        },
+        {
+          "name": "Case",
+          "dur": 10,
+          "desc": "Case study: DART ≈ 600 kg at ≈ 6 km/s into Dimorphos ≈ 5 × 10⁹ kg; mv = (m + M)Δv. STOP 2.",
+          "start": 21
+        },
+        {
+          "name": "Answer",
+          "dur": 16,
+          "desc": "STOP 2 answer: p = 3.6 × 10⁶ kg·m/s, Δv ≈ 0.7 mm/s; measured ≈ 2.7 mm/s because of ejecta; drift animation: drift = Δv × t; ≈ 220 km in 10 years.",
+          "start": 31
+        },
+        {
+          "name": "Group",
+          "dur": 10,
+          "desc": "Group problem: 2026-XJ 1 × 10⁹ kg, shift one Earth radius in 6 months. STOP 3.",
+          "start": 47
+        },
+        {
+          "name": "Solve",
+          "dur": 12,
+          "desc": "STOP 3 answer: Δv ≈ 0.40 m/s, Δp = 4 × 10⁸ kg·m/s ≈ 110 DART-sized hits (≈ 30 with ejecta); 110 spacecraft icons fill in.",
+          "start": 57
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket prompts and sample. STOP 4.",
+          "start": 69
+        },
+        {
+          "name": "Discuss",
+          "dur": 12,
+          "desc": "One DART (3.6 mm/s) vs needed (0.40 m/s) bars; more warning time, smaller push. STOP 5.",
+          "start": 77
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on R3. STOP 6.",
+          "start": 89
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 95
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 12,
+      "title": "If It Hits",
+      "file": "Unit 3 Day 12 - If It Hits - In Class.dc.html",
+      "guide": "Unit 3 Day 12 - If It Hits - Teacher Guide.md",
+      "duration": 75,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 12: If it hits. Targets R2, R3.",
+          "start": 0
+        },
+        {
+          "name": "Frame",
+          "dur": 8,
+          "desc": "Deflection fails. It hits: an asteroid streaks toward Earth. STOP 1 (predict).",
+          "start": 7
+        },
+        {
+          "name": "Momentum",
+          "dur": 8,
+          "desc": "2026-XJ at impact: m = 3.5 × 10¹¹ kg, v = 8,500 m/s; p = ? STOP 2.",
+          "start": 15
+        },
+        {
+          "name": "Impulse",
+          "dur": 10,
+          "desc": "STOP 2 answer ≈ 3.0 × 10¹⁵ kg·m/s. The asteroid hits the ground and stops: J = FΔt = Δp, assumed Δt ≈ 0.1 s. STOP 3.",
+          "start": 23
+        },
+        {
+          "name": "Compare",
+          "dur": 12,
+          "desc": "STOP 3 answer: F ≈ 3 × 10¹⁶ N ≈ 10 million Empire State Building weights; bars for Δt = 0.01, 0.1, 1 s.",
+          "start": 33
+        },
+        {
+          "name": "Discuss",
+          "dur": 8,
+          "desc": "What the average force captures and doesn’t. STOP 4.",
+          "start": 45
+        },
+        {
+          "name": "Exit",
+          "dur": 12,
+          "desc": "STOP 4 answers: heat, shockwave, crater size, energy; Unit 4 tease KE ≈ 1.3 × 10¹⁹ J ≈ 3,000 Mt. Exit ticket: Earth’s Δv. STOP 5.",
+          "start": 53
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on R2 and R3. STOP 6.",
+          "start": 65
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 71
+        }
+      ]
+    },
+    {
+      "unit": "unit-3",
+      "day": 13,
+      "title": "Synthesis",
+      "file": "Unit 3 Day 13 - Synthesis - In Class.dc.html",
+      "guide": "Unit 3 Day 13 - Synthesis - Teacher Guide.md",
+      "duration": 81,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 3 · Day 13 synthesis: What should we do? One scenario, two branches.",
+          "start": 0
+        },
+        {
+          "name": "Frame",
+          "dur": 8,
+          "desc": "2026-XJ with two branch paths: deflect (momentum transfer, Δv, lead time) and impact (momentum, impulse, force).",
+          "start": 7
+        },
+        {
+          "name": "Deflect",
+          "dur": 8,
+          "desc": "Station 1 givens: 3.5 × 10¹¹ kg; DART-style 600 kg at 6 km/s; shift one Earth radius; 10 years or 6 months. STOP 1.",
+          "start": 15
+        },
+        {
+          "name": "DeflectAns",
+          "dur": 12,
+          "desc": "Station 1 answers: one hit gives 1.0 × 10⁻⁵ m/s; 10 yr needs Δv ≈ 0.020 m/s ≈ 2,000 hits; 6 mo needs 0.40 m/s ≈ 39,000 hits. Lead time is the lever.",
+          "start": 23
+        },
+        {
+          "name": "Impact",
+          "dur": 8,
+          "desc": "Station 2 givens: 3.5 × 10¹¹ kg at 8,500 m/s, Δt ≈ 0.1 s; J = FΔt = Δp; also KE in megatons. STOP 2.",
+          "start": 35
+        },
+        {
+          "name": "ImpactAns",
+          "dur": 12,
+          "desc": "Station 2 answers: p ≈ 3.0 × 10¹⁵, F ≈ 3 × 10¹⁶ N, KE ≈ 3,000 Mt; log bars vs Hiroshima (15 kt) and the largest bomb tested (50 Mt).",
+          "start": 43
+        },
+        {
+          "name": "Compile",
+          "dur": 8,
+          "desc": "Class compilation table: branch, key number, assumption, what it can’t tell us. STOP 3.",
+          "start": 55
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: pick the two load-bearing Unit 3 ideas. STOP 4.",
+          "start": 63
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on all Unit 3 targets; tomorrow the transfer task. STOP 5.",
+          "start": 71
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 77
+        }
+      ]
+    },
+    {
+      "unit": "unit-4",
+      "day": 1,
+      "title": "Big Force Isnt Enough",
+      "file": "Unit 4 Day 1 - Big Force Isnt Enough - In Class.dc.html",
+      "guide": "Unit 4 Day 1 - Big Force Isnt Enough - Teacher Guide.md",
+      "duration": 81,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 4 · Day 1: “Big force” isn’t enough. The energy of motion. Targets K1, K2, R4 (preview).",
+          "start": 0
+        },
+        {
+          "name": "Return",
+          "dur": 8,
+          "desc": "From Unit 3: we know momentum and force, but impacts are reported in tons of TNT, an energy.",
+          "start": 7
+        },
+        {
+          "name": "Demo",
+          "dur": 10,
+          "desc": "Demo: tennis ball from waist, tennis ball from head, baseball from head onto a tile. STOP 1 (rank them).",
+          "start": 15
+        },
+        {
+          "name": "Predict",
+          "dur": 12,
+          "desc": "What changed: more speed, more mass, both. A cart at v and 2v. STOP 2 (save an energy prediction).",
+          "start": 25
+        },
+        {
+          "name": "Reveal",
+          "dur": 14,
+          "desc": "K = ½mv² in joules; ratio test bars: 1 kg at 2 m/s = 2 J, at 4 m/s = 8 J (×4), 2 kg at 2 m/s = 4 J (×2). Energy ≠ damage. STOP 3.",
+          "start": 37
+        },
+        {
+          "name": "Preview",
+          "dur": 12,
+          "desc": "STOP 3 answer 9 J, 36 J. Unit 4 payoffs: Day 19 TNT, Day 20 escape velocity, Day 18 heat; Tunguska ≈ 10–15 Mt.",
+          "start": 51
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: the factor, compare with the prediction, why not universal damage. STOP 4.",
+          "start": 63
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano preview on K1, K2, R4. STOP 5.",
+          "start": 71
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 77
+        }
+      ]
+    },
+    {
+      "unit": "unit-4",
+      "day": 2,
+      "title": "Work",
+      "file": "Unit 4 Day 2 - Work - In Class.dc.html",
+      "guide": "Unit 4 Day 2 - Work - Teacher Guide.md",
+      "duration": 79,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 4 · Day 2: W = Fd, work as energy moved by a force. Targets K1, S1.",
+          "start": 0
+        },
+        {
+          "name": "Return",
+          "dur": 6,
+          "desc": "From Day 1: K = ½mv². Today: the quantity for energy moved.",
+          "start": 7
+        },
+        {
+          "name": "Define",
+          "dur": 12,
+          "desc": "W = Fd; F along the motion, d distance, joules; a box pushed across the floor with F and d labelled. STOP 1.",
+          "start": 13
+        },
+        {
+          "name": "Answers",
+          "dur": 12,
+          "desc": "STOP 1 answers: box 500 J; bag lifted 2 m, 100 J. Then a person pushes a wall. STOP 2 (predict).",
+          "start": 25
+        },
+        {
+          "name": "Zero",
+          "dur": 16,
+          "desc": "Answer: wall d = 0 → W = 0; carrying a book level (force up, motion sideways) → W = 0. Tease: forces at an angle.",
+          "start": 37
+        },
+        {
+          "name": "Practice",
+          "dur": 8,
+          "desc": "Six practice situations to judge. STOP 3.",
+          "start": 53
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: lift a 20 N book 1.5 m, then walk 3 m. STOP 4.",
+          "start": 61
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on K1 and S1; gravity’s work on 2026-XJ. STOP 5.",
+          "start": 69
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 75
+        }
+      ]
+    },
+    {
+      "unit": "unit-4",
+      "day": 3,
+      "title": "Work at an Angle",
+      "file": "Unit 4 Day 3 - Work at an Angle - In Class.dc.html",
+      "guide": "Unit 4 Day 3 - Work at an Angle - Teacher Guide.md",
+      "duration": 77,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 4 · Day 3: W = Fd cos θ, angles and the sign of work. Targets K1, R1.",
+          "start": 0
+        },
+        {
+          "name": "Check",
+          "dur": 6,
+          "desc": "Quick check: W = Fd units; when a force does work. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Angle",
+          "dur": 16,
+          "desc": "STOP 1 answer. A force arrow sweeps from 30° to 160° and back: the green/coral component along d; θ = 0°, 90°, >90° cases; W = Fd cos θ.",
+          "start": 13
+        },
+        {
+          "name": "Suitcase",
+          "dur": 10,
+          "desc": "Worked: a 100 N pull at 30° drags a suitcase 10 m against 20 N friction. STOP 2.",
+          "start": 29
+        },
+        {
+          "name": "Answer",
+          "dur": 12,
+          "desc": "STOP 2 answers: +866 J, −200 J, net +666 J; signed bars; friction takes energy away, like air on 2026-XJ.",
+          "start": 39
+        },
+        {
+          "name": "Practice",
+          "dur": 8,
+          "desc": "Four mixed angle/sign problems. STOP 3.",
+          "start": 51
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: push a 30 N box 4 m at constant speed against 12 N friction. STOP 4.",
+          "start": 59
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on K1 and R1. STOP 5.",
+          "start": 67
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 73
+        }
+      ]
+    },
+    {
+      "unit": "unit-4",
+      "day": 4,
+      "title": "Kinetic Energy",
+      "file": "Unit 4 Day 4 - Kinetic Energy - In Class.dc.html",
+      "guide": "Unit 4 Day 4 - Kinetic Energy - Teacher Guide.md",
+      "duration": 81,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 4 · Day 4: K = ½mv², the squared speed and the work–energy theorem. Targets K2, K4, S2.",
+          "start": 0
+        },
+        {
+          "name": "Hook",
+          "dur": 8,
+          "desc": "Day 1’s question again: a car at v and 2v. STOP 1 (predict).",
+          "start": 7
+        },
+        {
+          "name": "Define",
+          "dur": 12,
+          "desc": "K = ½mv² in joules; speed squared; bars speed ×1, ×2, ×3 → KE ×1, ×4, ×9. STOP 2 (car).",
+          "start": 15
+        },
+        {
+          "name": "Table",
+          "dur": 10,
+          "desc": "STOP 2 answer 675,000 J → 2,700,000 J. Unit 3’s table with a KE column, unknowns marked. STOP 3.",
+          "start": 27
+        },
+        {
+          "name": "TableAns",
+          "dur": 12,
+          "desc": "STOP 3 answers on log bars; the bullet out-ranks the sprinter in KE; 2026-XJ ≈ 1.3 × 10¹⁹ J.",
+          "start": 37
+        },
+        {
+          "name": "WorkE",
+          "dur": 12,
+          "desc": "W_net = ΔK = K_f − K_i; a 1 kg cart pushed by 10 N net over 5 m from rest. STOP 4.",
+          "start": 49
+        },
+        {
+          "name": "Exit",
+          "dur": 10,
+          "desc": "STOP 4 answer: 50 J → v = 10 m/s. Exit ticket: 2 kg ball, 9 J, +27 J net work. STOP 5.",
+          "start": 61
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on K2, K4, S2. STOP 6.",
+          "start": 71
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 77
+        }
+      ]
+    },
+    {
+      "unit": "unit-4",
+      "day": 5,
+      "title": "Work-Energy Shortcut",
+      "file": "Unit 4 Day 5 - Work-Energy Shortcut - In Class.dc.html",
+      "guide": "Unit 4 Day 5 - Work-Energy Shortcut - Teacher Guide.md",
+      "duration": 67,
+      "scenes": [
+        {
+          "name": "Title",
+          "dur": 7,
+          "desc": "Unit 4 · Day 5: The energy shortcut. Target S4.",
+          "start": 0
+        },
+        {
+          "name": "Recap",
+          "dur": 6,
+          "desc": "Quick check: W_net = ? and yesterday’s cart. STOP 1.",
+          "start": 7
+        },
+        {
+          "name": "Brake",
+          "dur": 10,
+          "desc": "STOP 1 answer. Worked 1: a 1500 kg car at 30 m/s brakes with 9000 N to rest; d = ? STOP 2.",
+          "start": 13
+        },
+        {
+          "name": "Coaster",
+          "dur": 8,
+          "desc": "STOP 2 answer: d = 75 m. Worked 2: a 100 kg coaster car on a 10 m drop; W(gravity) = 9,800 J. STOP 3.",
+          "start": 23
+        },
+        {
+          "name": "CoasterAns",
+          "dur": 10,
+          "desc": "STOP 3 answer: the car runs down the track; v = 14 m/s; energy needs only the drop, not the shape.",
+          "start": 31
+        },
+        {
+          "name": "Practice",
+          "dur": 8,
+          "desc": "Five mixed problems. STOP 4.",
+          "start": 41
+        },
+        {
+          "name": "Exit",
+          "dur": 8,
+          "desc": "Exit ticket: a spring launches a 0.5 kg ball with 8 J of work. STOP 5.",
+          "start": 49
+        },
+        {
+          "name": "Marz",
+          "dur": 6,
+          "desc": "Marzano on S4; 2026-XJ link. STOP 6.",
+          "start": 57
+        },
+        {
+          "name": "Hold",
+          "dur": 4,
+          "desc": "Hold.",
+          "start": 63
+        }
+      ]
     }
   ],
   "files": {
@@ -2427,7 +3451,23 @@
     "u2-day8.jsx": "4132202518b040ab3d4e1a442dd94c33ae676c84e66a8edcb618e1455139a9d0",
     "u2-day9.jsx": "a8f79b98dc0d58d69814655a9821edc9b067166e1f6a6abc007110361019d246",
     "u3-day1.jsx": "898eeab9d2036436091321d1b4f022156eda00de50e33e48555c2e57bc23b292",
+    "u3-day10.jsx": "328534038584896e3f5724f89fd62c0dba9520723c9c7f7cc8ceef5b6bccc198",
+    "u3-day11.jsx": "e2b666127290b634d8723c8358aa92b79a88438bb6eb800eca48ec89c34eb67f",
+    "u3-day12.jsx": "7a9c6cd00ce208d2c54f9f1d678242bdd67b1fed093613b6321c4ac125f24ffc",
+    "u3-day13.jsx": "344cbb60a9e8cbd29d0001349daa91b2478d0505916ce413c7ac3f8d3321d3e4",
     "u3-day2.jsx": "f3421726a0ed3c02cb48b7f88960e7a349dc9477d5988f3f0168e4f71281cdff",
+    "u3-day3.jsx": "334edf6182890ac8eb896092e0b4b97e47423e7ff8cf5ec1473f16b30edc569c",
+    "u3-day4.jsx": "3fcc2e5b7b854e0d949eecd4abc5f121ec9cdddf6275a8c4d96e39c2af4f72fc",
+    "u3-day5.jsx": "cbd42ef96d5f2cb5daa9f966fbd861e8e29befef62cbdbd2aa8ed8912bbedfac",
+    "u3-day6.jsx": "64bc6acc3f24ffd7ba06762060d02db041b2df115227bf75458aaf39d5b14078",
+    "u3-day7.jsx": "f45effcac0c7f6f710b96d21786d4b594f384787967f410ecf1f9ca64a72ed98",
+    "u3-day8.jsx": "5b6800e383992b3528f3039d5770d366b3f9c9afe7692d825f512f98a604220c",
+    "u3-day9.jsx": "4e886c373eb56299d2a8c1af7526717f01a200e173cbd4e05ee14600869e6a5f",
+    "u4-day1.jsx": "000473d52dc5906c23a0bd8945473600f603fd2e1a4a5e110b50c556744f06a1",
+    "u4-day2.jsx": "e18da5e222f4810a47d163791ee15c3cd438fea46b8882bd16c13cae9b09550a",
+    "u4-day3.jsx": "cc157446dd5fe94ea93601b6d6fcd5537c5aadf96675fad7422648fd77381cc7",
+    "u4-day4.jsx": "1c1e83200ca791d30423226a633b9d10ee84b6f5f120bfcb10573debb5a601e2",
+    "u4-day5.jsx": "88e61a2d6abc7b66f9c4d96566e23242a44b28402cd5e8733d156b92a78956b6",
     "Unit 1 Workshop and Revision - In Class.dc.html": "46ac04c3da09f6cb4929f534428efa2795c6d111f840032654919cf36f182fde",
     "Unit 1 Workshop and Revision - Teacher Guide.md": "151e5ae2f5dd30b4068b6ae3c9a65c3b56e5489fb3b948bdaeacf2dac0866570",
     "Unit 2 Day 1 - Why Does the Path Bend - In Class.dc.html": "a1fe2ed2e41fb1bcca1a983012ca3708478e8ecd13debaf8093f5d29d1521e17",
@@ -2462,8 +3502,40 @@
     "Unit 2 Day 9 - Projectile Motion - Teacher Guide.md": "cca83227951d3d32d22284ee1d6ca127c2ae53faf9e37c9d2b78e65e473ea1ad",
     "Unit 3 Day 1 - What If Earth Is in the Way - In Class.dc.html": "9fcc6338ca7ed21d34931bdf3b215b2df10e1055bdcc3f4e7c3522f1e6e8ae88",
     "Unit 3 Day 1 - What If Earth Is in the Way - Teacher Guide.md": "d219b56ed59307ba41513e668dc6a91ab4447f5cd0650e510f477a34cbc9c647",
+    "Unit 3 Day 10 - Momentum in 2D - In Class.dc.html": "c8c5ffa14b6a6b220f7150fcdf0044d679f41e37aa94b40f229e1eae9a7163ca",
+    "Unit 3 Day 10 - Momentum in 2D - Teacher Guide.md": "badf35cb25193051613684d0ad307a511d5c442568a4446a0f1a23d9b68b07e9",
+    "Unit 3 Day 11 - DART and Deflection - In Class.dc.html": "19b170fd86e3ee3f73ff04b4982b9c6330b0a19d12e9f4f3bf32c49622203dcf",
+    "Unit 3 Day 11 - DART and Deflection - Teacher Guide.md": "4403efdc746ae7b3ea904666789ba622567fa5c39f1e40dd33da33cd8e4782f1",
+    "Unit 3 Day 12 - If It Hits - In Class.dc.html": "1c2f13bbfed672ad4a9775dc4e293d5c701617c810cc96bf4bad7577a9a276a7",
+    "Unit 3 Day 12 - If It Hits - Teacher Guide.md": "4d02899d49b2e233a6255ebf87c80abd85646c716d708923035c7646bfba504e",
+    "Unit 3 Day 13 - Synthesis - In Class.dc.html": "edeaaa0395a766b070be97cf2f901c6dfd7c6217039d7b08b35867606f079118",
+    "Unit 3 Day 13 - Synthesis - Teacher Guide.md": "665c8ea2edb72aba847911897d87b9cf76c6b6530ca030c55a5cd911be4485d8",
     "Unit 3 Day 2 - Momentum - In Class.dc.html": "1ae7267441ba63ba1f21caab0eff563d42982e0214443e136e2344b34bc6ec64",
     "Unit 3 Day 2 - Momentum - Teacher Guide.md": "81e1ef11897167dd69feac444154cb6545022b40261d602274e560f749a32542",
+    "Unit 3 Day 3 - Impulse - In Class.dc.html": "53a1709fde6c892a503fa93da100c5683bffedfc4e94774484661a64a387dbf0",
+    "Unit 3 Day 3 - Impulse - Teacher Guide.md": "80849637e0f3517f116d16cae9fbcecbcce6b32ee69600d5084f3f31c7bf6f23",
+    "Unit 3 Day 4 - Same Impulse Different Force - In Class.dc.html": "f57824d19d4a36de93de7a824e33b5a8cf19990bc70d65d7959fa2694442b636",
+    "Unit 3 Day 4 - Same Impulse Different Force - Teacher Guide.md": "c56e7b956366770babc1e040cd499b0e020ddbb2375c3be1fd362228888f7e74",
+    "Unit 3 Day 5 - Conservation of Momentum - In Class.dc.html": "6fcdf993c0c211ca3ea543dc48b7d563ec9a80ff25b62c80308cc327e62cf3ea",
+    "Unit 3 Day 5 - Conservation of Momentum - Teacher Guide.md": "ed90fce79a72c46f6e18e5c82d10d8b04f9649f0e43ab2441e294c2d5f1b4a24",
+    "Unit 3 Day 6 - Types of Collisions - In Class.dc.html": "76ab16a0be7ceb203f7a9dd93f0a4b79ab8eb1046ae2b6a9bc086340b25e12c8",
+    "Unit 3 Day 6 - Types of Collisions - Teacher Guide.md": "5007a3fb846652462bbfd92e55d2234151e54742d08c8a9af0a71bb5b3521a72",
+    "Unit 3 Day 7 - Collision Lab - In Class.dc.html": "baa652498f4a68b0174355d202af53a0f09e7d8778b2ea2f2722342cc0af7935",
+    "Unit 3 Day 7 - Collision Lab - Teacher Guide.md": "198fe913ef351b064c2a47095e49c6da8f7e490264dadff77f5352985213d7f7",
+    "Unit 3 Day 8 - Perfectly Inelastic Collisions - In Class.dc.html": "19a7700dac2bffdb9c4d77f56814d04e199625a7e4be9a7541ac20c7cda87246",
+    "Unit 3 Day 8 - Perfectly Inelastic Collisions - Teacher Guide.md": "14644fa807b6200c428118bd8fdb6895f62273ec5fa63446d2a4705d1fc0e7a0",
+    "Unit 3 Day 9 - Elastic Collisions - In Class.dc.html": "b00a37c49f798d98cf1059b07c6d93944b3a3da412b3b76b9e5307d6aca88149",
+    "Unit 3 Day 9 - Elastic Collisions - Teacher Guide.md": "79a624bb3f8596cc3775d25038186a67a8f1ea0085a08c12b484d92116186c5d",
+    "Unit 4 Day 1 - Big Force Isnt Enough - In Class.dc.html": "e3471ea5143acbbc63ac0bb391810fa0ab6d2748dea8580a81ad225879fcc898",
+    "Unit 4 Day 1 - Big Force Isnt Enough - Teacher Guide.md": "4c70860fe43e9e87f654f6d81ce2588bffb2e2590e7cd8a8a417bba27c183b15",
+    "Unit 4 Day 2 - Work - In Class.dc.html": "f84a53021107e257f27a5f52d27f138e8f9a855c9c4f68eb8b9570f8bf798e83",
+    "Unit 4 Day 2 - Work - Teacher Guide.md": "161c129f0b6eecbede5293c790b258870ef6445babc0a49fcad2256482ae843e",
+    "Unit 4 Day 3 - Work at an Angle - In Class.dc.html": "3eda680912372bf28431020058b14fdfb7d6faf342821b25953cd633c9311f3f",
+    "Unit 4 Day 3 - Work at an Angle - Teacher Guide.md": "29f07fb48db1bceda16afd0fe6ac23d8b46a44413b87efb5fdda43a1a7fb711a",
+    "Unit 4 Day 4 - Kinetic Energy - In Class.dc.html": "7f37d95afe4980b34767bf8ff21561dc3ef426eeb5ff12bf0299877b0d702f0e",
+    "Unit 4 Day 4 - Kinetic Energy - Teacher Guide.md": "9da9e76f3c1670972fda5334a662b1f35d1170eb65a295e7abb9912083f367ed",
+    "Unit 4 Day 5 - Work-Energy Shortcut - In Class.dc.html": "4f8284992dd273c36497503183ababeca265dc58c9f2ae95678f35fd6f0814a3",
+    "Unit 4 Day 5 - Work-Energy Shortcut - Teacher Guide.md": "7a33f29a51ed958c0ee08e5d6ae090d5927f4a9601a87ec0836ebf6352f82da4",
     "vectors-day6.jsx": "aca9b67a547457de5122f68d4add4e8104fc5d917d38cff0665cbb36072d75a8",
     "velocity-day3.jsx": "63767ead9dcf3a7a384cc663c7bb74e571c516f1a70d015418b569b9d7767441",
     "velocity-day4.jsx": "294915a8f282c10136852fca5c10fecff33100c16716bb686c29fe372ea622ca",

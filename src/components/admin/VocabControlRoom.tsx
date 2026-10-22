@@ -112,7 +112,7 @@ export default function VocabControlRoom({ classId, unitId, teacher, nameFilter,
     </header>}
     <div className={styles.controlsBar}><div className={styles.viewSwitch} role="group" aria-label="Vocabulary workspace">
       <button className={styles.button} disabled={busy} aria-pressed={view === 'overview'} onClick={() => setView('overview')}>Class overview</button>
-      <button className={styles.button} disabled={busy} aria-pressed={view === 'checkpoints'} onClick={() => setView('checkpoints')}>Quiz checkpoints</button>
+      <Link className={styles.button} href={`/admin/control-room?view=quizzes${classId ? '&class='+encodeURIComponent(classId) : ''}`}>Vocabulary quizzes</Link>{!!data?.tasks.some(t=>t.quiz_format==='checkpoint')&&<button className={styles.button} disabled={busy} aria-pressed={view === 'checkpoints'} onClick={() => setView('checkpoints')}>Earlier checkpoint records</button>}
       <button className={styles.button} disabled={busy || !task} aria-pressed={view === 'review'} onClick={() => setView('review')}>Review & rate</button>
     </div>
     <div className={styles.toolbar}>

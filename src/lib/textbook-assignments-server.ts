@@ -31,7 +31,12 @@ export async function readingCourses(ctx: AuthContext): Promise<(ReadingCourse &
 export async function accessReading(id: string, ctx: AuthContext) {
   const { data, error } = await supabaseAdmin.from('textbook_assignments').select('*').eq('id', id).maybeSingle()
   if (error) throw error
-  if (!data || (!readingStaff(ctx) && data.status === 'draft')) return null
+  if (!data || (!readingStaff(ctx) && (data.status === 'draft' || data.opens_at && Date.parse(data.opens_at) > Date.now()))) return null
+  if (!readingStaff(ctx)) {
+    const { data: exemption, error: exemptionError } = await supabaseAdmin.from('textbook_reading_exemptions').select('user_id').eq('assignment_id', id).eq('user_id', ctx.userId).maybeSingle()
+    if (exemptionError) throw exemptionError
+    if (exemption) return null
+  }
   const course = (await readingCourses(ctx)).find(c => c.id === data.course_id)
   return course ? { assignment: data as ReadingAssignment, course } : null
 }

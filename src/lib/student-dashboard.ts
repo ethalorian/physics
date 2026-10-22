@@ -12,6 +12,7 @@ export interface StudentAssignment {
   returned?: boolean
   assignedAt?: string
   context?: string
+  quizSchedule?: import('./quiz-schedule').QuizSchedule
 }
 export const ASSIGNMENT_LABELS: Record<AssignmentKind, string> = { video: 'Video', reading: 'Reading', quiz: 'Quiz', vocabulary: 'Vocabulary' }
 
@@ -30,7 +31,7 @@ export function assignmentInView(item: StudentAssignment, view: AssignmentView, 
   const due = assignmentDeadline(item.due)
   return view === 'todo' || (view === 'overdue' ? due < now : due >= now && due <= now + 7 * 86400000)
 }
-export function prioritizeAssignments(items: StudentAssignment[], now: number) {
+export function prioritizeAssignments<T extends StudentAssignment>(items: T[], now: number) {
   return [...items].sort((a, b) => {
     const aDue = assignmentDeadline(a.due), bDue = assignmentDeadline(b.due)
     const overdue = (due: number) => Number(Number.isFinite(due) && due < now)

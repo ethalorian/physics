@@ -10,6 +10,7 @@ export function ThemeToggle() {
 
   // Initialize theme on mount
   useEffect(() => {
+    const syncTheme = () => setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light')
     try {
       const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
@@ -29,10 +30,15 @@ export function ThemeToggle() {
     } finally {
       setMounted(true)
     }
+
+    // The navigation and account menu share the same document appearance.
+    const observer = new MutationObserver(syncTheme)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
   }, [])
 
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
+    const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark'
     setTheme(newTheme)
     
     try {

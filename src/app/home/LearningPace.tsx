@@ -10,10 +10,10 @@ function dateRange(dates: string[]) {
 }
 
 export default function LearningPace({ data, loading, error, onRetry, onToday }: { data: Pace | null; loading: boolean; error: boolean; onRetry: () => void; onToday: () => void }) {
- const low = !!data?.ready && data.engagement !== null && data.engagement < ENGAGEMENT_TARGET
+ const low = !loading && !error && !!data?.ready && data.engagement !== null && data.engagement < ENGAGEMENT_TARGET
  const history = data?.historical
  return <section className={s.pace} aria-labelledby="learning-pace-heading">
-  <header className={s.heading}><div><p className={s.eyebrow}>Build a steady rhythm</p><h2 id="learning-pace-heading">Your learning pace</h2></div><p className={s.muted}>Your recent rhythm and longer-term consistency</p></header>
+  <details className={s.paceDetails}><summary><h2 id="learning-pace-heading">Your learning pace</h2><span><strong>{loading || error || data?.xpRate == null ? '—' : data.xpRate}</strong> XP / school day</span><span><strong>{loading || error || data?.engagement == null ? '—' : `${data.engagement}%`}</strong> engagement</span><span className={s.paceExpand}>{error ? 'Retry / details' : 'Details'}</span></summary>
   {error ? <div role="alert"><p>Your learning pace couldn’t load. No low-engagement warning is calculated while data is unavailable.</p><Button variant="outline" onClick={onRetry}>Retry learning pace</Button></div> : <div className={s.paceGrid} aria-busy={loading}>
    <div className={s.paceMetric} role="group" aria-labelledby="learning-xp-heading">
     <h3 id="learning-xp-heading"><Sparkles size={17} aria-hidden="true" />Learning XP rate</h3>
@@ -52,5 +52,7 @@ export default function LearningPace({ data, loading, error, onRetry, onToday }:
    <div className={low ? s.warning : s.paceNote}>{low ? <><h3><AlertTriangle size={19} aria-hidden="true" />5% term-grade credit at risk</h3><p>Your recent engagement is {data!.engagement}%. If your engagement stays below 80%, you will not earn the 5% engagement credit on your term grade.</p></> : <><h3>{data?.ready ? 'Keep your learning moving' : 'Every learning day counts'}</h3><p>{data?.ready ? 'Your recent engagement is on track. Keep making meaningful progress on school days.' : 'We use five completed school days before showing an engagement warning.'}</p></>}<button type="button" onClick={onToday}>Open today’s learning →</button></div>
   </div>}
   <details className={s.definition}><summary>How are these rates calculated?</summary><p>Engagement is school days with meaningful learning activity ÷ school days. Submitting work, saving a lesson response, completing a vocabulary check, or answering vocabulary practice counts. Simply visiting a page, opening an activity, and spinning for rewards do not count.</p><p>Recent rates use the last five completed school days. Historical rates use all completed school days since enrollment in the current school calendar, starting at the later of enrollment or the calendar’s start date. Both exclude weekends, school-calendar holidays, and today, which is still in progress. Days without learning activity remain in the denominator. Historical rates use the full totals, not an average of weekly percentages.</p><p>Learning XP includes lesson, math, vocabulary, and review earnings on those dates; game payouts, spins, and discretionary bonuses are excluded. The XP target is being calibrated; no XP-rate warning is applied.</p><p>The engagement message uses the recent rate as an early warning about the term-grade requirement, not a final term-grade calculation. Teacher observations in My growth show your understanding separately.</p></details>
+ </details>
+  {low && <p className={s.paceAlert}><AlertTriangle size={16} aria-hidden="true" /><span>Recent engagement below 80% · <strong>5% term-grade credit at risk.</strong></span><button type="button" onClick={onToday}>Open today’s learning →</button></p>}
  </section>
 }

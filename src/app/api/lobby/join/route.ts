@@ -116,13 +116,16 @@ export const GET = withAuth(async (request, ctx) => {
   const myRole = myIndex >= 0 ? roleForIndex(myIndex) : null
 
   // Has this student already submitted an artifact?
-  const { data: existing } = await supabaseAdmin
+  const { data: existing, error: submissionError } = await supabaseAdmin
     .from('block_responses')
     .select('id')
     .neq('block_type', 'lobby_reflection')
     .eq('session_id', session.id)
     .eq('user_id', ctx.userId)
+    .limit(1)
     .maybeSingle()
+
+  if (submissionError) return NextResponse.json({ error: 'Could not check your submission. Your work has not been cleared. Try again.' }, { status: 503 })
 
   const lesson = session.lesson_id ? await classLesson(session.lesson_id, session.course_id) : null
   const block = lesson?.content_blocks.blocks.find(b => b.id === session.block_id) ?? null

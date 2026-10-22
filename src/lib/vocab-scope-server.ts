@@ -7,7 +7,7 @@ import {CURRENT_LESSON_FIELDS,isCurrentLesson} from './current-lesson-catalog'
 import {scopeVocabulary,type VocabularyCourse,type VocabularySetSource,type VocabularyTaskSource,type VocabularyWindow} from './vocab-scope'
 import type {LearningWord} from './vocab-learning'
 
-export async function vocabularyFor(ctx:AuthContext,options:{courseId?:string|null;authoring?:boolean}={}){
+export async function vocabularyFor(ctx:AuthContext,options:{courseId?:string|null;authoring?:boolean;unitPractice?:boolean}={}){
  const staff=ctx.role==='teacher'||ctx.role==='admin'
  const owned=await readingCourses(ctx), courses=(options.courseId?owned.filter(c=>c.id===options.courseId):owned) as VocabularyCourse[]
  const [sets,words,units,lessons,targets,windows,tasks,assignments]=courses.length?await Promise.all([
@@ -21,7 +21,7 @@ export async function vocabularyFor(ctx:AuthContext,options:{courseId?:string|nu
   vocabRows<{course_id:string;vocabulary_set_id:string;active:boolean}>((a,b)=>supabaseAdmin.from('vocab_assignments').select('course_id,vocabulary_set_id,active').in('course_id',courses.map(c=>c.id)).eq('active',true).order('id').range(a,b)),
  ]):[[],[],[],[],[],[],[],[]]
  const lessonMetadata=lessons.map(l=>{const refs=(l.learning_path as {targetSlugs?:string[]}|null)?.targetSlugs??[];return {...l,current:isCurrentLesson({...l,program:units.find(u=>u.id===l.unit_id)?.program}),target_ids:targets.filter(t=>t.lesson_id===l.id||refs.includes(t.slug)||refs.includes(t.id)).map(t=>t.id)}})
- const scoped=scopeVocabulary({courses,sets,words,units,lessons:lessonMetadata,windows,tasks,assignments,studentId:staff?undefined:ctx.userId,authoring:staff&&options.authoring})
+ const scoped=scopeVocabulary({courses,sets,words,units,lessons:lessonMetadata,windows,tasks,assignments,studentId:staff?undefined:ctx.userId,authoring:staff&&options.authoring,unitPractice:options.unitPractice})
  const ids=new Set(scoped.flatMap(s=>s.term_ids))
  return {courses,sets:scoped,words:words.filter(w=>ids.has(w.id)),targets:targets.filter(t=>courses.some(c=>c.program===t.program)),units:units.filter(u=>scoped.some(s=>s.unit_id===u.id)),lessons:lessonMetadata.filter(l=>scoped.some(s=>s.lesson_id===l.id))}
 }

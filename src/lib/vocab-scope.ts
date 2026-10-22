@@ -10,13 +10,13 @@ export interface VocabularyWordSource { id:string; vocabulary_set_id:string }
 export interface VocabularyTaskSource { course_id:string; title:string; active:boolean; student_ids:string[]; term_ids:string[]; task_kind?:string; target_id?:string|null }
 export interface VocabularyWindow { course_id:string; lesson_id:string; open_at:string|null; close_at:string|null }
 
-/** A published word set alone never grants student or class access. */
+/** Assignment access is narrow; unit game practice uses published class-program words. */
 export function scopeVocabulary(input:{
   courses:VocabularyCourse[]; sets:VocabularySetSource[]; words:VocabularyWordSource[];
   lessons:VocabularyLesson[]; units:{id:string;name:string;program:string}[];
   windows:VocabularyWindow[]; tasks:VocabularyTaskSource[];
   assignments:{course_id:string;vocabulary_set_id:string;active:boolean}[];
-  studentId?:string; authoring?:boolean; now?:number;
+  studentId?:string; authoring?:boolean; unitPractice?:boolean; now?:number;
 }) {
   const now=input.now??Date.now(), lessons=new Map(input.lessons.map(l=>[l.id,l])), units=new Map(input.units.map(u=>[u.id,u]))
   return input.sets.flatMap(set=>{
@@ -36,7 +36,8 @@ export function scopeVocabulary(input:{
       const open=lesson?.published&&isLessonVisible(lesson.visibility_track,{role:'student',track:course.track})&&input.windows.some(w=>w.course_id===course.id&&w.lesson_id===lesson.id&&(!w.open_at||Date.parse(w.open_at)<=now)&&(!w.close_at||Date.parse(w.close_at)>=now))
       // Teachers can explicitly assign current lesson words before opening a lesson.
       const authorable=input.authoring&&!!unit&&(!linkedId||!!lesson&&isLessonVisible(lesson.visibility_track,{role:'student',track:course.track}))&&(connection?.kind!=='deck'||!!deck&&(course.track==='honors'?'honors':'cpa')===connection.track)
-      const ids=words.filter(w=>open||assigned||authorable||selected.has(w.id)).map(w=>w.id)
+      const unitPractice=input.unitPractice&&!!unit&&(!source||source.published&&isLessonVisible(source.visibility_track,{role:'student',track:course.track}))&&(connection?.kind!=='deck'||!!deck&&(course.track==='honors'?'honors':'cpa')===connection.track)
+      const ids=words.filter(w=>open||assigned||authorable||unitPractice||selected.has(w.id)).map(w=>w.id)
       if(!ids.length)continue
       access[course.id]=ids
       tasks.filter(t=>t.term_ids.some(id=>ids.includes(id))).forEach(t=>{titles.add(t.title);if(t.target_id)assignedTargets.add(t.target_id)})

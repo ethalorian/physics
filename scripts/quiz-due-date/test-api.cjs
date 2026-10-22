@@ -1,10 +1,14 @@
 const assert=require('node:assert/strict'),{createFixture,id}=require('./fixture.cjs');
 (async()=>{
  const f=await createFixture('/private/tmp/quiz-due-work/api'),{fx,role,call,seed}=f;
- const change={due_at:'2026-09-29T17:30:00.000Z',version:1};
+ const change={due_at:'2026-09-30T17:30:00.000Z',version:1};
  role('anonymous');assert.equal((await call('dueDate','POST',change)).status,401);
  role('student');assert.equal((await call('dueDate','POST',change)).status,403);
  role('teacher');assert.equal((await call('dueDate','POST',change,id(11))).status,404);
+ assert.equal((await call('dueDate','POST',{...change,due_at:'2026-09-29T17:30:00.000Z'})).status,400,'regular quizzes reject Tuesday');
+ const originalKind=seed.kind;seed.kind='vocabulary';
+ assert.equal((await call('dueDate','POST',change)).status,400,'vocabulary quizzes reject Wednesday');
+ seed.kind=originalKind;
  fx.context.viewingAsTeacher=true;assert.equal((await call('dueDate','POST',change)).status,403);fx.context.viewingAsTeacher=false;
  fx.session.experience={role:'teacher'};assert.equal((await call('dueDate','POST',change)).status,403);delete fx.session.experience;
  for(const patch of [{due_at:'bad'},{due_at:'2026-02-30T12:00:00.000Z'},{version:-1},{questions:[]},{status:'archived'}]) assert.equal((await call('dueDate','POST',{...change,...patch})).status,400);
@@ -29,6 +33,8 @@ const assert=require('node:assert/strict'),{createFixture,id}=require('./fixture
  // Simulate another tab changing the quiz after authorization but before the update.
  const db=global.quizFakeDB,from=db.from;db.from=table=>{const q=from(table);if(table==='quiz_assignments'){const update=q.update;q.update=patch=>{seed.version++;return update(patch)}}return q};
  assert.equal((await call('dueDate','POST',{version:5,due_at:change.due_at})).status,409);assert.equal(seed.due_at,null);db.from=from;
+ seed.kind='vocabulary';assert.equal((await call('dueDate','POST',{version:seed.version,due_at:'2026-09-29T17:30:00.000Z'})).status,200,'vocabulary quizzes allow Tuesday');
+ assert.deepEqual([fx.rows.quiz_work,fx.rows.quiz_submissions,fx.rows.quiz_reviews],evidence);
  seed.status='archived';assert.equal((await call('dueDate','POST',{version:seed.version,due_at:null})).status,409);
  console.log('PASS: teacher scope, preview protection, strict scheduling-only input, atomic conflict detection, retry recovery, set/clear due date, unchanged answers/history, and an already-open student session saving and submitting across date edits.');
 })().catch(e=>{console.error(e);process.exitCode=1});

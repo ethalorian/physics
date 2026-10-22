@@ -208,7 +208,7 @@ export default function LessonReleasePanel({
   const locked = busy || batchBusy
   return (
     <section
-      aria-label="Class lesson workflow"
+      aria-label={compact ? 'Video Lesson Workspace' : 'Class lesson workflow'}
       className={compact ? styles.lesson : "space-y-4 rounded-2xl border bg-card p-4 sm:p-5"}
     >
       {!compact && <div>
@@ -234,7 +234,7 @@ export default function LessonReleasePanel({
       )}
       {compact ? <>
         <div className={styles.lessonTop}>
-          <span className={styles.eyebrow}><BookOpen size={16} /> Lesson workspace</span>
+          <span className={styles.eyebrow}><BookOpen size={16} /> Video Lesson Workspace</span>
           <Link href={href('/admin/lesson-access')} className={styles.textLink}>All lesson access <ArrowRight size={14} /></Link>
         </div>
         <label className={styles.lessonPicker}>

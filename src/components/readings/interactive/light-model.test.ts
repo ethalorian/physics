@@ -1,0 +1,16 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import * as m from './light-model'
+const near=(actual:number,expected:number,tolerance=1e-9)=>assert.ok(Math.abs(actual-expected)<=tolerance*Math.max(1,Math.abs(expected)),`${actual} != ${expected}`)
+test('return timing counts both legs and scales with distance',()=>{near(m.lightTravel(15).roundTrip,2*m.lightTravel(15).oneWay);near(m.lightTravel(30).oneWay,m.lightTravel(15).roundTrip);near(m.lightTravel(0).roundTrip,0)})
+test('vacuum frequency and photon energy scale inversely with wavelength',()=>{const a=m.lightBand(400),b=m.lightBand(800);near(a.frequency,2*b.frequency);near(a.energyEv,2*b.energyEv);near(a.frequency*400e-9,m.LIGHT_SPEED)})
+test('optical ledger conserves energy across all control extremes',()=>{for(const r of [0,.1,.5,1])for(const a of [0,.1,.5,1]){const s=m.opticalBalance(r,a);near(s.reflected+s.transmitted+s.absorbed,1);assert.ok(s.transmitted>=-1e-15);assert.ok(s.absorbed>=0)}near(m.opticalBalance(.7,1).absorbed,.3)})
+test('point source has a sharp shadow, wider source broadens partial shadow',()=>{const point=m.shadowWidths(0,20,2,1),wide=m.shadowWidths(30,20,2,1);near(point.umbra,point.outer);assert.ok(wide.outer>point.outer);assert.ok(wide.umbra<point.umbra)})
+test('screen at obstacle has a sharp shadow and full shadow can disappear',()=>{const close=m.shadowWidths(45,20,2,0);near(close.umbra,20);near(close.outer,20);near(m.shadowWidths(45,20,2,3).umbra,0)})
+test('Malus projection distinguishes polarized and unpolarized input',()=>{near(m.polarizer(0),1);near(m.polarizer(90),0);near(m.polarizer(60),.25);near(m.polarizer(60,true),.125)})
+test('middle filter between crossed ends transmits without adding energy',()=>{near(m.middlePolarizer(0),0);near(m.middlePolarizer(90),0);near(m.middlePolarizer(45),.125);for(let a=0;a<=90;a++)assert.ok(m.middlePolarizer(a)<=.125+1e-12)})
+test('filter intersections commute and cyan plus yellow transmits green',()=>{assert.deepEqual(m.filteredChannels([1,1,1],m.RGB_SELECTORS[4],m.RGB_SELECTORS[6]),[0,1,0]);assert.deepEqual(m.filteredChannels([1,0,0],m.RGB_SELECTORS[3]),[0,0,0]);assert.deepEqual(m.filteredChannels([1,1,1],m.RGB_SELECTORS[6],m.RGB_SELECTORS[4]),[0,1,0])})
+test('Rayleigh strength uses the fourth power and attenuation composes',()=>{near(m.rayleighRatio(325),16);near(m.rayleighRatio(650),1);near(m.beamTransmission(.6),m.beamTransmission(.3)**2);near(m.beamTransmission(0),1)})
+test('blackbody wavelength peak halves when temperature doubles',()=>{near(m.thermalPeak(6000)*2,m.thermalPeak(3000));const peak=m.thermalPeak(5800),v=m.planckShape(peak,5800);assert.ok(v>m.planckShape(peak*.9,5800));assert.ok(v>m.planckShape(peak*1.1,5800))})
+test('transition uses the energy difference and excludes non-emission',()=>{near(m.transitionPhoton(3,1)!.energyEv,2);near(m.transitionPhoton(3,1)!.wavelengthNm,619.920992,1e-7);assert.equal(m.transitionPhoton(1,3),null);assert.equal(m.transitionPhoton(1,1),null)})
+test('beam intensity and peak fields obey radiometric conservation',()=>{const a=m.emBeam(12,.02),b=m.emBeam(12,.04),c=m.emBeam(48,.02);near(a.intensity,600);near(b.intensity,300);near(a.electricPeak/b.electricPeak,Math.sqrt(2));near(c.electricPeak,2*a.electricPeak);near(a.electricPeak/a.magneticPeak,m.LIGHT_SPEED);near(.5*m.EPSILON_0*m.LIGHT_SPEED*a.electricPeak**2,a.intensity)})

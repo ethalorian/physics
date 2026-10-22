@@ -4,24 +4,24 @@ import type { LearningWord } from './vocab-learning'
 import type { Quiz, QuizQuestion } from './quizzes/types'
 
 export interface SyllabusWord { term: string; definition: string }
-export interface SyllabusCheck { prompt: string; guide: string; target: string }
+export interface SyllabusCheck { prompt: string; guide: string; target: string; reference?: string }
 export interface SyllabusStep {
   id: string; unit: string; title: string; focus: string; chapter: number; sections: string[];
   prerequisites: string[]; words: SyllabusWord[]; vocabularyTarget: string;
   readingCheck: SyllabusCheck; quizCheck: SyllabusCheck; honors: SyllabusCheck;
-  passage?: string; honorsReading?: HonorsReading;
+  passage?: string; honorsReading?: HonorsReading; sourceBook?: 'hewitt' | 'openstax'; selectionRequired?: boolean;
 }
 export interface SyllabusBundle {
   course_id: string; step_id: string; reading_id: string; practice_id: string;
   reading_quiz_id: string; vocabulary_quiz_id: string; created_at: string;
 }
-export interface SyllabusResource { id: string; title: string; status: string; state?: string; version?: number; due_at?: string | null; due_on?: string | null }
+export interface SyllabusResource { id: string; title: string; status: string; state?: string; version?: number; opens_at?: string | null; due_at?: string | null; due_on?: string | null }
 export interface SyllabusBundleView extends SyllabusBundle {
   reading: SyllabusResource; practice: SyllabusResource; readingQuiz: SyllabusResource; vocabularyQuiz: SyllabusResource;
 }
 export interface SyllabusCatalog {
   courses: ReadingCourse[]; steps: SyllabusStep[]; bundles: SyllabusBundleView[];
-  targets: ReadingTarget[]; readOnly: boolean;
+  targets: ReadingTarget[]; readOnly: boolean; textbookSteps?: SyllabusStep[];
 }
 export interface SyllabusDrafts {
   reading: ReadingAssignment; readingQuiz: Quiz; vocabularyQuiz: Quiz;
@@ -41,7 +41,23 @@ export function syllabusWordKey(term: string) { return term.normalize('NFKC').tr
 export function resolveSyllabusWords(words: SyllabusWord[], available: LearningWord[], unitSetIds: Set<string>) {
   return words.map(word => ({ ...word, existing: available.find(w => unitSetIds.has(w.vocabulary_set_id) && syllabusWordKey(w.term) === syllabusWordKey(word.term)) ?? null }))
 }
+/** Shared by draft creation and the read-only preview, so section scope and
+ * required responses stay identical before and after preparing an assignment. */
+export function buildSyllabusReading(step: SyllabusStep, steps: SyllabusStep[], course: ReadingCourse, target: (slug: string) => string, newId: () => string): ReadingAssignment {
+  if (step.sourceBook === 'openstax' && course.track !== 'honors') throw Error('OpenStax readings require an Honors class.')
+  if (course.program !== 'physics') throw Error('Choose a Physics class for this syllabus.')
+  const honorsReading = step.sourceBook === 'hewitt' ? null : step.honorsReading ?? HONORS_READING_MAP[step.id] ?? null
+  const prior = step.prerequisites.map(id => steps.find(s => s.id === id)).filter((s): s is SyllabusStep => !!s)
+  const practiceChecks = [step.readingCheck]
+  return { id: newId(), course_id: course.id, title: step.title, chapter: step.chapter, section_ids: step.sections,
+      reading: course.track === 'honors' && honorsReading ? `OpenStax AP Physics 2e · §${honorsReading.sections.join(', ')} · pp. ${honorsReading.from}–${honorsReading.to}` : step.passage ? 'Course reading · ' + step.title : `Hewitt · Sections ${step.sections.join(', ')}`,
+      honors_reading: course.track === 'honors' ? honorsReading : null, passage: step.passage ?? null, instructions: `${step.focus}\n\nBefore reading: preview ${step.words.map(w => w.term).join(', ')}.\nAfter reading: explain the idea in your own words, then practice the vocabulary.${prior.length ? '\nBring back: ' + prior.map(s => s.title).join('; ') + '.' : ''}`,
+      questions: practiceChecks.map(q => ({ id: newId(), reference: q.reference ?? 'Read & explain', prompt: q.prompt, target_id: target(q.target) })),
+      due_at: null, status: 'draft', version: 0, created_at: new Date().toISOString() }
+}
+
 export function buildSyllabusDrafts(step: SyllabusStep, steps: SyllabusStep[], course: ReadingCourse, targets: ReadingTarget[], newId: () => string): SyllabusDrafts {
+  if (step.sourceBook === 'openstax' && course.track !== 'honors') throw Error('OpenStax readings require an Honors class.')
   if (course.program !== 'physics') throw Error('Choose a Physics class for this syllabus.')
   const target = (slug: string) => {
     const match = targets.find(t => t.slug === slug && t.program === 'physics')
@@ -49,7 +65,6 @@ export function buildSyllabusDrafts(step: SyllabusStep, steps: SyllabusStep[], c
     return match.id
   }
   const prior = step.prerequisites.map(id => steps.find(s => s.id === id)).filter((s): s is SyllabusStep => !!s)
-  const practiceChecks = [step.readingCheck]
   const checks = [step.quizCheck, ...(prior.length ? [prior[0].quizCheck] : [])]
   if (course.track === 'honors') checks.push(step.honors)
   const question = (q: SyllabusCheck): QuizQuestion => ({ id: newId(), kind: 'written', prompt: q.prompt, guide: q.guide, points: 3, target_id: target(q.target) })
@@ -58,11 +73,7 @@ export function buildSyllabusDrafts(step: SyllabusStep, steps: SyllabusStep[], c
   if (targets.find(t => t.id === vocabularyTarget)?.domain !== 'knowledge') throw Error('Vocabulary needs a Knowledge target.')
   return {
     step_id: step.id, unit: step.unit, words: step.words, vocabularyTarget,
-    reading: { id: newId(), course_id: course.id, title: step.title, chapter: step.chapter, section_ids: step.sections,
-      reading: course.track === 'honors' && HONORS_READING_MAP[step.id] ? `OpenStax AP Physics 2e · §${HONORS_READING_MAP[step.id].sections.join(', ')} · pp. ${HONORS_READING_MAP[step.id].from}–${HONORS_READING_MAP[step.id].to}` : step.passage ? 'Course reading · ' + step.title : `Hewitt · Sections ${step.sections.join(', ')}`,
-      honors_reading: course.track === 'honors' ? HONORS_READING_MAP[step.id] ?? null : null, passage: step.passage ?? null, instructions: `${step.focus}\n\nBefore reading: preview ${step.words.map(w => w.term).join(', ')}.\nAfter reading: explain the idea in your own words, then practice the vocabulary.${prior.length ? '\nBring back: ' + prior.map(s => s.title).join('; ') + '.' : ''}`,
-      questions: practiceChecks.map(q => ({ id: newId(), reference: 'Read & explain', prompt: q.prompt, target_id: target(q.target) })),
-      due_at: null, status: 'draft', version: 0, created_at: new Date().toISOString() },
+    reading: buildSyllabusReading(step, steps, course, target, newId),
     readingQuiz: { ...base, id: newId(), title: `${step.title} · Reading check`, kind: 'understanding', questions: checks.map(question) },
     vocabularyQuiz: { ...base, id: newId(), title: `${step.title} · Vocabulary check`, kind: 'vocabulary',
       questions: step.words.map(word => ({ id: newId(), kind: 'written', points: 2, target_id: vocabularyTarget,

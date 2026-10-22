@@ -18,6 +18,7 @@ import MathMarkdown, { type GlossaryEntry } from '@/components/MathMarkdown'
 import { ContentBlock, BlockType, isBlockComplete, isBlockDone, isCaptureBlock, type DiagramForce, type DiagramVector, type GraphSeries, type CircuitComponent, type EnergyChainLink, type DiagramScene, type LabNotebookBlock } from '@/data/content-blocks'
 import type { Stroke } from './DoodleCanvas'
 import PaintPad from './PaintPad'
+import MangaUploadCapture from './MangaUploadCapture'
 import PhysicsDiagram from './PhysicsDiagram'
 import type { ConceptValue } from './ConceptExercise'
 import GewaInteractive, { type GewaValue } from './GewaInteractive'
@@ -679,6 +680,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     case 'lab_notebook':
       return <LabNotebook b={b} saved={saved} save={save} onDraft={onDraft} />
     case 'sketch':
+      if (b.submission === 'upload') return <MangaUploadCapture block={b} lessonId={lessonId} value={saved} readOnly={!!readOnly} onDraft={onDraft} onSave={v => save(b.id, b.type, v, { response_mode: 'sketch', target_id: b.targetId })} />
       return <SketchPad b={b} saved={saved} save={save} onDraft={onDraft} />
     case 'marzano':
       return <div><p className="text-sm mb-2">{targets?.find((t) => t.slug === b.targetId || t.id === b.targetId)?.statement ?? b.targetId}</p><MarzanoInput value={saved as number | undefined} onSave={(n) => save(b.id, 'marzano', n, { target_id: b.targetId })} /></div>

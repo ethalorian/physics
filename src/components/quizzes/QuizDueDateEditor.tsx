@@ -1,5 +1,6 @@
 'use client'
 
+import {quizScheduleError, QUIZ_SCHEDULE_LABELS} from '@/lib/quiz-schedule'
 import {useState} from 'react'
 import type {Quiz} from '@/lib/quizzes/types'
 import AssignmentDueInput from '@/components/ui/assignment-due-input'
@@ -9,7 +10,7 @@ import {dueLabel, quizFetch} from './shared'
 import s from './Quiz.module.css'
 
 export default function QuizDueDateEditor({quiz, onSaved, onCancel}: {
-  quiz: Pick<Quiz,'id'|'due_at'|'version'>; onSaved: (change: QuizDueDateChange) => void; onCancel: () => void;
+  quiz: Pick<Quiz,'id'|'due_at'|'version'|'kind'>; onSaved: (change: QuizDueDateChange) => void; onCancel: () => void;
 }) {
   const [value, setValue] = useState(() => dueDateDraft(quiz.due_at))
   const [version, setVersion] = useState(quiz.version)
@@ -19,6 +20,8 @@ export default function QuizDueDateEditor({quiz, onSaved, onCancel}: {
     setError(''); setNotice('')
     try {
       const change = quizDueDateChange({due_at: dueDateValue(value), version})
+      const scheduleError = quizScheduleError(change.due_at, quiz.kind === 'vocabulary' ? 'vocabulary' : 'regular')
+      if (scheduleError) throw Error(scheduleError)
       setBusy(true)
       const result = await quizFetch<QuizDueDateChange>(`/api/quizzes/${quiz.id}/due-date`, change)
       onSaved(result)
@@ -39,6 +42,7 @@ export default function QuizDueDateEditor({quiz, onSaved, onCancel}: {
     <h2>Edit due date</h2>
     <p>Students can keep working. This changes only the due date for this section; questions, saved answers, submissions, and grades stay intact.</p>
     <form onSubmit={e => {e.preventDefault(); void save()}} className={s.stack}>
+      <p className={s.muted}>{QUIZ_SCHEDULE_LABELS[quiz.kind === 'vocabulary' ? 'vocabulary' : 'regular']} Dates follow Eastern time.</p>
       <AssignmentDueInput value={value} onChange={setValue} disabled={busy}/>
       <p className={s.muted}>Time zone: {Intl.DateTimeFormat().resolvedOptions().timeZone}. Leave blank for no due date. Passing the due date marks work late; it does not close the quiz.</p>
       {error && <div role="alert" className={s.error}><p>{error}</p><button type="button" className={s.secondary} disabled={busy} onClick={() => void reloadDate()}>Reload current date</button></div>}

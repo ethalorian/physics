@@ -4,16 +4,20 @@ import {supabaseAdmin} from '@/lib/supabase'
 import {quizCourses,quizRows,quizJson,quizRpcError,quizStaff,quizListWork} from '@/lib/quizzes/server'
 import {quizCard,studentQuiz,type LockedQuizCard,type Quiz,type QuizReview,type QuizTarget} from '@/lib/quizzes/types'
 import {validateQuiz} from '@/lib/quizzes/validation'
+import {choiceQuizDispositions} from '@/lib/choice-calendar-server'
 import {lockedReadingQuizPrerequisites} from '@/lib/reading-quiz-access'
 export const GET=withAuth(async(req,ctx)=>{
  const staff=quizStaff(ctx),courses=await quizCourses(ctx),inventory=staff&&new URL(req.url).searchParams.get('inventory')==='1'
  let quizzes=courses.length?await quizRows<Quiz>((a,b)=>{let q=supabaseAdmin.from('quiz_assignments').select('*').in('course_id',courses.map(c=>c.id));if(!inventory)q=q.is('deleted_at',null);if(!staff)q=q.neq('status','draft');return q.order('created_at',{ascending:false}).order('id').range(a,b)}):[]
- if(!staff)quizzes=quizzes.filter(q=>!q.student_ids||q.student_ids.includes(ctx.userId))
+ if(!staff){
+  const disposition=await choiceQuizDispositions(courses.filter(c=>c.program==='physics').map(c=>c.id),[ctx.userId])
+  quizzes=quizzes.filter(q=>(!q.student_ids||q.student_ids.includes(ctx.userId))&&!disposition.exemptions[q.id]?.includes(ctx.userId)&&!disposition.available[q.id]?.includes(ctx.userId))
+ }
  const locked:LockedQuizCard[]=[]
  if(!staff){
   const prerequisites=await lockedReadingQuizPrerequisites(quizzes.map(q=>q.id),ctx.userId)
   const readings=prerequisites.size?await quizRows<{id:string;course_id:string;title:string}>((a,b)=>supabaseAdmin.from('textbook_assignments').select('id,course_id,title').in('id',[...prerequisites.values()]).eq('status','published').order('id').range(a,b)):[]
-  for(const q of quizzes){const reading=readings.find(r=>r.id===prerequisites.get(q.id)&&r.course_id===q.course_id);if(q.status==='published'&&reading)locked.push({id:q.id,course_id:q.course_id,title:q.title,due_at:q.due_at,created_at:q.created_at,reading_id:reading.id,reading_title:reading.title})}
+  for(const q of quizzes){const reading=readings.find(r=>r.id===prerequisites.get(q.id)&&r.course_id===q.course_id);if(q.status==='published'&&reading)locked.push({kind:q.kind,id:q.id,course_id:q.course_id,title:q.title,due_at:q.due_at,created_at:q.created_at,reading_id:reading.id,reading_title:reading.title})}
   quizzes=quizzes.filter(q=>!prerequisites.has(q.id))
  }
 

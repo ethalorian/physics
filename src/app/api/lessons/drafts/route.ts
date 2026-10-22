@@ -1,3 +1,4 @@
+import { ownsLessonArtifact } from '@/lib/lesson-artifacts-server'
 import {checkedLessonResponse} from '@/lib/lesson-response-validation'
 import { authorizeLesson } from '@/lib/lesson-access'
 import { isCaptureBlock } from '@/data/content-blocks'
@@ -29,7 +30,7 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
   const blocks = new Map((access.document?.blocks ?? []).filter(isCaptureBlock).map((b) => [b.id, b]))
   if (body.drafts.some((d) => !d.block_id || !blocks.has(d.block_id))) return NextResponse.json({ error: 'A draft block is not assigned in this lesson.' }, { status: 422 })
   const checkedDrafts=[]
-  for(const d of body.drafts.slice(0,MAX_DRAFTS)){if(d.response===undefined||d.response===null)continue;const checked=checkedLessonResponse(blocks.get(d.block_id!)!,d.response);if(!checked.ok)return NextResponse.json({error:checked.error},{status:422});checkedDrafts.push({...d,response:checked.response})}
+  for(const d of body.drafts.slice(0,MAX_DRAFTS)){if(d.response===undefined||d.response===null)continue;const checked=checkedLessonResponse(blocks.get(d.block_id!)!,d.response);if(!checked.ok)return NextResponse.json({error:checked.error},{status:422});if(!await ownsLessonArtifact(blocks.get(d.block_id!)!,checked.response,lessonId,ctx.userId))return NextResponse.json({error:'Use your own upload for this activity.'},{status:422});checkedDrafts.push({...d,response:checked.response})}
   const now = new Date().toISOString()
   const rows = checkedDrafts
     .filter((d) => typeof d.block_id === 'string' && d.block_id && d.response !== undefined && d.response !== null)

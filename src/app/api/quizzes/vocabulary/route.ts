@@ -5,6 +5,6 @@ export const GET=withRole(['teacher','admin'],async(req,ctx)=>{
  const courseId=req.nextUrl.searchParams.get('class')
  if(!courseId)return quizJson({sets:[],words:[],targets:[]})
  if(!(await quizCourses(ctx)).some(c=>c.id===courseId))return quizJson({error:'Not your class'},403)
- const {sets,words,targets}=await vocabularyFor(ctx,{courseId})
+ const {sets,words,targets}=await vocabularyFor(ctx,{courseId,authoring:true})
  return quizJson({sets,words,targets})
 })

@@ -1,0 +1,17 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import * as m from './wave-model'
+const near=(a:number,b:number,tol=1e-9)=>assert.ok(Math.abs(a-b)<tol,`${a} ≠ ${b}`)
+test('pendulum scaling separates length and gravity',()=>{near(m.pendulumPeriod(4,9.8),2*m.pendulumPeriod(1,9.8));near(m.pendulumPeriod(1,2.45),2*m.pendulumPeriod(1,9.8))})
+test('oscillator restores toward equilibrium and conserves energy over a cycle',()=>{for(let phase=0;phase<=1;phase+=.01){const s=m.oscillator(2,8,.3,phase);near(s.potential+s.kinetic,s.total);near(s.a,s.force/2);assert.ok(s.force*s.x<=1e-12)}near(m.oscillator(2,8,.3,0).v,0);near(m.oscillator(2,8,.3,.25).x,0)})
+test('oscillator amplitude changes energy quadratically and mass changes period',()=>{near(m.oscillator(1,4,.4,0).total,4*m.oscillator(1,4,.2,0).total);near(m.oscillator(4,4,.2,0).period,2*m.oscillator(1,4,.2,0).period)})
+test('a traveling wave shifts right and each material point returns after a cycle',()=>{near(m.waveDisplacement(1,4,0),1);near(m.waveDisplacement(2,4,.25),1);near(m.waveDisplacement(3,4,1),m.waveDisplacement(3,4,0))})
+test('sound propagation depends on both stiffness and density',()=>{near(m.bulkSoundSpeed(4e9,1000),2*m.bulkSoundSpeed(1e9,1000));near(m.bulkSoundSpeed(1e9,4000),m.bulkSoundSpeed(1e9,1000)/2);near(m.soundSpeed(20),343)})
+test('Doppler formula returns rest frequency and shifts approach and recession oppositely',()=>{near(m.sourceDoppler(400,340,0),400);near(m.sourceDoppler(400,340,34),400/.9);assert.ok(m.sourceDoppler(400,340,-34)<400)})
+test('Mach angle has correct limit and narrows with speed',()=>{near(m.machAngle(1)!,Math.PI/2);near(m.machAngle(2)!,Math.PI/6);assert.ok(m.machAngle(3)!<m.machAngle(2)!);assert.equal(m.machAngle(.8),null)})
+test('decibel and inverse-square comparisons preserve total power',()=>{near(m.soundLevel(1e-12),0);near(m.intensityRatio(20),100);near(m.sphericalIntensity(4*Math.PI,2),.25);near(10*Math.log10(4),6.020599913279624)})
+test('beat count is the absolute mismatch, including unison',()=>{assert.equal(m.beatFrequency(440,443),3);assert.equal(m.beatFrequency(443,440),3);assert.equal(m.beatFrequency(440,440),0)})
+test('damping solutions satisfy initial rest and settle for positive damping',()=>{for(const z of [0,.2,.9,1,1.1,2]){near(m.dampedDisplacement(0,z),1);near((m.dampedDisplacement(1e-5,z)-m.dampedDisplacement(0,z))/1e-5,0,1e-5);if(z>0)assert.ok(Math.abs(m.dampedDisplacement(100,z))<1e-7)}near(m.dampedDisplacement(Math.PI,0),-1);for(const z of [1,2])for(let t=0;t<20;t+=.1)assert.ok(m.dampedDisplacement(t,z)>=0)})
+test('driven response reaches the static limit and damping bounds resonance',()=>{near(m.resonanceAmplitude(0,.2),1);near(m.resonanceAmplitude(1,.2),2.5);assert.ok(m.resonanceAmplitude(1,.1)>m.resonanceAmplitude(1,.5));assert.ok(m.resonanceAmplitude(100,.2)<.001)})
+test('tube modes satisfy open and closed displacement boundary conditions',()=>{for(let mode=1;mode<=4;mode++){const closed=m.airColumn(1,340,mode,true),open=m.airColumn(1,340,mode,false);near(closed.frequency,(2*mode-1)*85);near(open.frequency,mode*170);near(Math.abs(Math.sin(closed.harmonic*Math.PI/2)),1);near(Math.abs(Math.cos(open.harmonic*Math.PI)),1)}})
+test('pulse echoes include round-trip travel and reflection respects matching',()=>{near(m.echoDepth(100e-6),.077);near(m.reflectionFraction(1.5e6,1.5e6),0);near(m.reflectionFraction(1,3),.25);near(m.reflectionFraction(3,1),.25)})

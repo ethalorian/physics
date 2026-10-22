@@ -3,6 +3,7 @@ import {supabaseAdmin} from '@/lib/supabase'
 import {accessQuiz, quizJson} from '@/lib/quizzes/server'
 import {QUIZ_UUID} from '@/lib/quizzes/types'
 import {quizDueDateChange, sameQuizDueDate} from '@/lib/quizzes/due-date'
+import {quizScheduleError} from '@/lib/quiz-schedule'
 
 /** Teacher scheduling only. Student save/submit routes and work versions are untouched. */
 export const POST = withRole<{id: string}>(['teacher', 'admin'], async (req, ctx) => {
@@ -15,6 +16,8 @@ export const POST = withRole<{id: string}>(['teacher', 'admin'], async (req, ctx
   try { change = quizDueDateChange(await req.json()) }
   catch (error) { return quizJson({error: (error as Error).message}, 400) }
   const quiz = access.quiz
+  const scheduleError = quizScheduleError(change.due_at, quiz.kind === 'vocabulary' ? 'vocabulary' : 'regular')
+  if (scheduleError) return quizJson({error: scheduleError}, 400)
   if (quiz.status !== 'published') return quizJson({error: 'This quiz is no longer published. Reload to see its current status.'}, 409)
   // A lost response can safely be retried without changing the date twice.
   if ([change.version, change.version + 1].includes(quiz.version) && sameQuizDueDate(quiz.due_at, change.due_at)) {

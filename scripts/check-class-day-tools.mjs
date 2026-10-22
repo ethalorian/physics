@@ -7,7 +7,8 @@ const manifest = JSON.parse(fs.readFileSync('src/data/class-day-tools.json', 'ut
 assert.deepEqual(manifest.lessons.map(tool => `${tool.unit}:${tool.day}`), [
   ...Array.from({ length: 20 }, (_, i) => `unit-1:${i + 1}`),
   ...Array.from({ length: 15 }, (_, i) => `unit-2:${i + 1}`),
-  ...Array.from({ length: 2 }, (_, i) => `unit-3:${i + 1}`),
+  ...Array.from({ length: 13 }, (_, i) => `unit-3:${i + 1}`),
+  ...Array.from({ length: 5 }, (_, i) => `unit-4:${i + 1}`),
 ])
 for (const [name, expected] of Object.entries(manifest.files)) {
   for (const directory of ['src/data/explainers/claude-source/class-days', 'public/explainers/claude/class-days']) {
@@ -56,7 +57,7 @@ assert.equal(helpers.classDayTool('unit-1', 19).file, 'Unit 1 Workshop and Revis
 for (const day of ['0', '-1', '07', '1.5', '21', '../7', '1e1', 'Infinity']) {
   await assert.rejects(module.default({ params: Promise.resolve({ day }), searchParams: Promise.resolve({}) }), /NOT_FOUND/)
 }
-for (const [unit, day] of [['unit-2', '16'], ['unit-3', '3'], ['unit-4', '1'], ['unit-02', '1'], ['../unit-1', '1'], ['', '1']]) {
+for (const [unit, day] of [['unit-2', '16'], ['unit-3', '14'], ['unit-4', '6'], ['unit-5', '1'], ['unit-02', '1'], ['../unit-1', '1'], ['', '1']]) {
   await assert.rejects(module.default({ params: Promise.resolve({ day }), searchParams: Promise.resolve({ unit }) }), /NOT_FOUND/)
 }
 console.log(`Verified ${manifest.lessons.length} lessons and ${Object.keys(manifest.files).length} original files: unchanged export bytes, complete dependencies, timeline metadata, launch routes and invalid-day rejection.`)

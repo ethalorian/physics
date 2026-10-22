@@ -1,3 +1,4 @@
+import { isArtifactResponseComplete } from '@/lib/lesson-artifacts'
 import {completeProblemAnswer} from '@/lib/problem-response'
 import { notebookAuthoringIssues } from '@/lib/interactive-notebook'
 import { numericCell } from '@/components/blocks/data-plot'
@@ -157,7 +158,7 @@ export const RESPONSE_RULES: Partial<Record<BlockType, (response: unknown, block
   exit_ticket: (v, b) => b?.type === 'exit_ticket' && b.workshop?.peerCheck ? ['ready', 'fix'].includes(String(obj(v).decision)) && text(obj(v).reading) && text(obj(v).source) && (obj(v).decision !== 'fix' || text(obj(v).fix)) : substantiveAnswer(v, b),
   transfer_prompt: (v, b) => substantiveAnswer(v, b),
   sentence_frame: (v, b) => substantiveAnswer(v, b),
-  sketch: (v) => drawing(obj(v).strokes) || text(obj(v).text),
+  sketch: (v, b) => b?.type === 'sketch' && b.submission === 'upload' ? isArtifactResponseComplete(v) : drawing(obj(v).strokes) || text(obj(v).text),
   lab_notebook: (v, b) => !(b?.type === 'lab_notebook' && b.requireAllFields) ? drawing(obj(v).strokes) || Object.values(obj(obj(v).fields)).some(text) : (b?.type === 'lab_notebook' && b.fields?.length ? b.fields : ['What I did', 'What I observed', 'What it means']).every((field) => text(obj(obj(v).fields)[field])),
   observation: (v, b) => substantiveAnswer({ text: obj(v).pattern }, b) && substantiveAnswer({ text: obj(v).interpret }, b),
   marzano: rating,
@@ -212,6 +213,10 @@ export interface BlockIssue { blockId?: string; message: string }
 export function validateBlockDocument(value: unknown, publishing = false): BlockIssue[] {
   const doc = obj(value), issues: BlockIssue[] = []
   if (doc.schemaVersion !== 1 || !Array.isArray(doc.blocks)) return [{ message: 'Use a version 1 lesson with a blocks array.' }]
+  if (doc.reflection !== undefined) {
+    const reflection = obj(doc.reflection)
+    if (reflection.version !== 1 || !['manga', 'story'].includes(String(reflection.kind))) issues.push({ message: 'Choose a manga or short-story reflection.' })
+  }
   issues.push(...notebookAuthoringIssues(doc as unknown as import('./content-blocks').BlockDocument, publishing).map(message => ({message})))
   if (doc.teachingPlans !== undefined && (!Array.isArray(doc.teachingPlans) || doc.teachingPlans.length > 64 || doc.teachingPlans.some(raw => { const ref=obj(raw); return typeof ref.unitId!=='string' || !/^[a-z0-9][a-z0-9-]*$/.test(ref.unitId) || !Number.isInteger(ref.day) || Number(ref.day)<0 }))) issues.push({message:'Choose valid teacher plan links with a unit and a whole-number day.'})
   if (doc.learningPath !== undefined) {
@@ -228,6 +233,7 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
     if (id) ids.add(id)
     const def = typeof b.type === 'string' ? DEF_BY_TYPE.get(b.type) : undefined
     if (!def) { add('Choose a supported block type.'); continue }
+    if (b.type === 'sketch' && b.submission !== undefined && b.submission !== 'upload') add('Choose an uploaded product or a drawing block.')
     if (b.gate === true && !RESPONSE_RULES[def.type]) add('Only answer blocks can be checkpoints.')
     for (const field of def.fields) {
       const v = b[field.key]
