@@ -1,7 +1,7 @@
 import { isCatalogLesson } from '@/lib/retired-curriculum'
 import { supabaseAdmin } from '@/lib/supabase'
 import type { ReleaseClass, ReleaseLesson } from '@/lib/lesson-release'
-import { isCurrentLesson } from '@/lib/current-lesson-catalog'
+import { CURRENT_LESSON_FIELDS, isCurrentLesson } from '@/lib/current-lesson-catalog'
 import { PHYSICS_VIDEOS } from '@/data/physics-videos'
 import { lessonTargetReferences } from '@/lib/lesson-target-references'
 import type { BlockDocument } from '@/data/content-blocks'
@@ -29,21 +29,29 @@ export async function releaseClasses(
   return all.data ?? []
 }
 export async function releaseLessons(): Promise<ReleaseLesson[]> {
-  const [lessons, units] = await Promise.all([
+  const [catalog, units] = await Promise.all([
     supabaseAdmin
       .from('lessons')
-      .select(
-        'id, title, slug, unit, unit_id, lesson_number, published, visibility_track, content_blocks',
-      )
+      .select(`id,${CURRENT_LESSON_FIELDS}`)
       .eq('published', true),
     supabaseAdmin
       .from('units')
       .select('id, name, program, order_index')
       .order('order_index'),
   ])
-  if (lessons.error) throw lessons.error
+  if (catalog.error) throw catalog.error
   if (units.error) throw units.error
   const byId = new Map((units.data ?? []).map((u) => [u.id, u]))
+  // Identify current lessons from metadata before fetching their bodies. Retired
+  // documents remain in the database for historical work, outside this catalog.
+  const ids = (catalog.data ?? []).filter(row => isCurrentLesson({
+    ...row, program: byId.get(row.unit_id)?.program ?? 'physics',
+  })).map(row => row.id)
+  if (!ids.length) return []
+  const lessons = await supabaseAdmin.from('lessons')
+    .select('id, title, slug, unit, unit_id, lesson_number, published, visibility_track, content_blocks')
+    .in('id', ids).eq('published', true)
+  if (lessons.error) throw lessons.error
   return (lessons.data ?? [])
     .filter(isCatalogLesson)
     .map((row) => {

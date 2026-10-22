@@ -42,7 +42,7 @@ export function useLearningWeek() {
  const interactive = useLearningResource<{staff:boolean;assignments:{id:string;slug:string;created_at:string;due_on:string|null}[];work:{assignment_id:string;status:string}[];submissions:{id:string;assignment_id:string}[];reviews:{submission_id:string}[]}>('/api/interactive-assignments')
  const readings = useLearningResource<ReadingList>('/api/readings')
  const quizzes = useLearningResource<QuizList>('/api/quizzes')
- const vocab = useLearningResource<VocabData>('/api/vocab/tasks')
+ const vocab = useLearningResource<VocabData>('/api/vocab/tasks?view=summary')
  const math = useLearningResource<DailyData>('/api/math-spine/daily')
  const pace = useLearningResource<LearningPace>('/api/home/pace')
  const growth = useLearningResource<GrowthData>('/api/math-spine/dashboard')

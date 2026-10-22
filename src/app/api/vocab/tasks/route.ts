@@ -12,7 +12,18 @@ import { summarizeVocabActivity } from '@/lib/vocab-activity'
 import { vocabRows } from '@/lib/vocab-pagination'
 import { vocabularyFor } from '@/lib/vocab-scope-server'
 import { UUID,summarizeWords,type VocabTask,type CheckRecord } from '@/lib/vocab-learning'
+function groupRows<T>(rows:T[],key:(row:T)=>string):Map<string,T[]>{
+ const groups=new Map<string,T[]>()
+ for(const row of rows){const id=key(row),group=groups.get(id);if(group)group.push(row);else groups.set(id,[row])}
+ return groups
+}
+function firstRows<T>(rows:T[],key:(row:T)=>string):Map<string,T>{
+ const first=new Map<string,T>()
+ for(const row of rows){const id=key(row);if(!first.has(id))first.set(id,row)}
+ return first
+}
 export const GET=withAuth(async(req,ctx)=>{
+ const summaryView=new URL(req.url).searchParams.get('view')==='summary'
  const staff=ctx.role==='teacher'||ctx.role==='admin'
  let q=supabaseAdmin.from('vocab_tasks').select('*').order('created_at',{ascending:false})
  if(staff) q=q.in('course_id',(await vocabCourses(ctx)).map(c=>c.id))
@@ -24,27 +35,50 @@ export const GET=withAuth(async(req,ctx)=>{
  let tasks=(data ?? []) as VocabTask[]
  if(!staff)tasks=tasks.filter(t=>calendarAssigned(t.active,t.due_on))
  const activeCourses=await vocabRows((a,b)=>supabaseAdmin.from('courses').select('id').in('id',[...new Set(tasks.map(t=>t.course_id))]).is('archived_at',null).order('id').range(a,b))
- tasks=tasks.filter(t=>activeCourses.some(c=>c.id===t.course_id))
+ const activeCourseIds=new Set(activeCourses.map(c=>c.id))
+ tasks=tasks.filter(t=>activeCourseIds.has(t.course_id))
  if(!staff&&tasks.length){const choices=await choiceSourceDispositions([...new Set(tasks.map(t=>t.course_id))],[ctx.userId],'vocabulary');tasks=tasks.filter(t=>!choices.exemptions[t.id]?.includes(ctx.userId)&&!choices.available[t.id]?.includes(ctx.userId))}
+ if(!tasks.length)return NextResponse.json({tasks:[]})
  const enrollments=await vocabRows((a,b)=>supabaseAdmin.from('course_students').select('course_id,student_id').in('course_id',[...new Set(tasks.map(t=>t.course_id))]).eq('enrollment_state','ACTIVE').order('id').range(a,b))
- tasks=tasks.map(t=>({...t,student_ids:t.student_ids.filter(id=>enrollments.some(e=>e.course_id===t.course_id&&e.student_id===id))}))
+ const enrolled=new Set(enrollments.map(e=>e.course_id+'|'+e.student_id))
+ tasks=tasks.map(t=>({...t,student_ids:t.student_ids.filter(id=>enrolled.has(t.course_id+'|'+id))}))
  let cq=supabaseAdmin.from('vocab_checks').select('id,task_id,user_id,created_at,completed_at,result,review_version').in('task_id',tasks.map(t=>t.id)).order('completed_at',{ascending:false}).order('id')
  if(!staff)cq=cq.eq('user_id',ctx.userId)
- const checks=await vocabRows((from,to)=>cq.range(from,to))
  const ids=staff?[...new Set(tasks.flatMap(t=>t.student_ids))]:[ctx.userId]
  const checkpointIds=tasks.filter(t=>t.quiz_format==='checkpoint').map(t=>t.id)
- const checkpointAttempts=checkpointIds.length?await vocabRows((a,b)=>supabaseAdmin.from('vocab_checkpoint_attempts').select('task_id,user_id,number,submitted_at,released_at').in('task_id',checkpointIds).in('user_id',ids).order('number',{ascending:false}).order('id').range(a,b)):[]
- const quizProgress=(task:VocabTask,id:string)=>{
-  const summary=quizSummary(checks.filter(c=>c.task_id===task.id&&c.user_id===id),staff)
-  if(task.quiz_format!=='checkpoint')return summary
-  const latest=checkpointAttempts.find(a=>a.task_id===task.id&&a.user_id===id)
-  return {...summary,submitted:Boolean(latest?.submitted_at),needsReview:Boolean(latest?.submitted_at&&!latest?.released_at)}
- }
- const reviews=tasks.length?await vocabRows((a,b)=>supabaseAdmin.from('vocab_mastery_reviews').select('task_id,user_id,target_id,level,created_at').in('task_id',tasks.map(t=>t.id)).in('user_id',ids).order('created_at',{ascending:false}).order('id',{ascending:false}).range(a,b)):[]
- const practice = staff && ids.length && tasks.length ? await vocabRows((from,to)=>supabaseAdmin.from('vocab_attempts').select('user_id,term_id,game,correct,created_at,occurred_at').in('user_id',ids).in('term_id',[...new Set(tasks.flatMap(t=>t.term_ids))]).gte('created_at',tasks.reduce((date,t)=>t.created_at<date?t.created_at:date,tasks[0].created_at)).order('created_at').order('id').range(from,to)) : []
- const {data:students,error:se}=staff&&ids.length?await supabaseAdmin.from('students').select('id,name').in('id',ids):{data:[],error:null};if(se)throw se
- const {data:ratings,error:re}=staff&&ids.length?await supabaseAdmin.from('mastery_records').select('user_id,target_id,level,observed_at').in('user_id',ids).in('target_id',tasks.map(t=>t.target_id).filter((id):id is string=>Boolean(id))).order('observed_at',{ascending:false}):{data:[],error:null};if(re)throw re
- return NextResponse.json({tasks:tasks.map(t=>({...t,words:!staff&&t.task_kind==='quiz'?[]:t.words,student_ids:staff?t.student_ids:[ctx.userId],progress:(staff?t.student_ids:[ctx.userId]).map(id=>({studentId:id,name:students?.find(s=>s.id===id)?.name ?? 'Student',masteryRating:(()=>{const r=reviews.find(r=>r.task_id===t.id&&r.user_id===id&&r.target_id===t.target_id);return r?{level:r.level,created_at:r.created_at}:null})(),diagnostics:staff?vocabDiagnostics(t,checks.filter(c=>c.task_id===t.id&&c.user_id===id) as CheckRecord[]):undefined,quiz:t.task_kind==='quiz'?quizProgress(t,id):undefined,activity:summarizeVocabActivity(t,checks.filter(c=>c.task_id===t.id&&c.user_id===id),practice.filter(p=>p.user_id===id)),physicsRating:ratings?.find(r=>r.user_id===id&&r.target_id===t.target_id)?.level ?? null,...summarizeWords(t,(checks ?? []).filter(c=>c.task_id===t.id&&c.user_id===id) as CheckRecord[])}))}))})
+ // These reads depend on the authorized tasks/roster, but not on each other.
+ // Keep pagination inside each read so large classes retain all their evidence.
+ const [checks,checkpointAttempts,reviews,practice,studentResult,ratingResult]=await Promise.all([
+  vocabRows((from,to)=>cq.range(from,to)),
+  checkpointIds.length?vocabRows((a,b)=>supabaseAdmin.from('vocab_checkpoint_attempts').select('task_id,user_id,number,submitted_at,released_at').in('task_id',checkpointIds).in('user_id',ids).order('number',{ascending:false}).order('id').range(a,b)):[],
+  !summaryView?vocabRows((a,b)=>supabaseAdmin.from('vocab_mastery_reviews').select('task_id,user_id,target_id,level,created_at').in('task_id',tasks.map(t=>t.id)).in('user_id',ids).order('created_at',{ascending:false}).order('id',{ascending:false}).range(a,b)):[],
+  !summaryView&&staff&&ids.length?vocabRows((from,to)=>supabaseAdmin.from('vocab_attempts').select('user_id,term_id,game,correct,created_at,occurred_at').in('user_id',ids).in('term_id',[...new Set(tasks.flatMap(t=>t.term_ids))]).gte('created_at',tasks.reduce((date,t)=>t.created_at<date?t.created_at:date,tasks[0].created_at)).order('created_at').order('id').range(from,to)):[],
+  !summaryView&&staff&&ids.length?supabaseAdmin.from('students').select('id,name').in('id',ids):{data:[],error:null},
+  !summaryView&&staff&&ids.length?supabaseAdmin.from('mastery_records').select('user_id,target_id,level,observed_at').in('user_id',ids).in('target_id',tasks.map(t=>t.target_id).filter((id):id is string=>Boolean(id))).order('observed_at',{ascending:false}):{data:[],error:null},
+ ])
+ if(studentResult.error)throw studentResult.error
+ if(ratingResult.error)throw ratingResult.error
+ // Preserve query ordering (latest first) while avoiding repeated whole-class scans.
+ const checkIndex=groupRows(checks,c=>c.task_id+'|'+c.user_id)
+ const practiceIndex=groupRows(practice,p=>p.user_id)
+ const checkpointIndex=firstRows(checkpointAttempts,a=>a.task_id+'|'+a.user_id)
+ const reviewIndex=firstRows(reviews,r=>r.task_id+'|'+r.user_id+'|'+r.target_id)
+ const ratingIndex=firstRows(ratingResult.data??[],r=>r.user_id+'|'+r.target_id)
+ const studentIndex=firstRows(studentResult.data??[],s=>s.id)
+ // Home needs completion and dates, not class diagnostics or word-level evidence.
+ if(summaryView)return NextResponse.json({tasks:tasks.map(t=>({id:t.id,title:t.title,created_at:t.created_at,due_on:t.due_on,task_kind:t.task_kind,progress:(staff?t.student_ids:[ctx.userId]).map(id=>{
+  const key=t.id+'|'+id,studentChecks=checkIndex.get(key)??[],latest=checkpointIndex.get(key)
+  const quiz=t.task_kind==='quiz'?quizSummary(studentChecks,staff):undefined
+  return {complete:summarizeWords(t,studentChecks as CheckRecord[]).complete,quiz:quiz&&t.quiz_format==='checkpoint'?{...quiz,submitted:Boolean(latest?.submitted_at),needsReview:Boolean(latest?.submitted_at&&!latest?.released_at)}:quiz}
+ })}))})
+ return NextResponse.json({tasks:tasks.map(t=>({...t,words:!staff&&t.task_kind==='quiz'?[]:t.words,student_ids:staff?t.student_ids:[ctx.userId],progress:(staff?t.student_ids:[ctx.userId]).map(id=>{
+  const key=t.id+'|'+id,studentChecks=checkIndex.get(key)??[]
+  const review=reviewIndex.get(key+'|'+t.target_id)
+  const summary=t.task_kind==='quiz'?quizSummary(studentChecks,staff):undefined
+  const latest=checkpointIndex.get(key)
+  const quiz=summary&&t.quiz_format==='checkpoint'?{...summary,submitted:Boolean(latest?.submitted_at),needsReview:Boolean(latest?.submitted_at&&!latest?.released_at)}:summary
+  return {studentId:id,name:studentIndex.get(id)?.name??'Student',masteryRating:review?{level:review.level,created_at:review.created_at}:null,diagnostics:staff?vocabDiagnostics(t,studentChecks as CheckRecord[]):undefined,quiz,activity:summarizeVocabActivity(t,studentChecks,practiceIndex.get(id)??[]),physicsRating:ratingIndex.get(id+'|'+t.target_id)?.level??null,...summarizeWords(t,studentChecks as CheckRecord[])}
+ })}))})
 })
 export const POST=withRole(['teacher','admin'],async(req,ctx)=>{
  const b=await req.json() as {course_ids:string[];student_ids?:string[];term_ids:string[];target_id?:string;title:string;note?:string;due_on?:string;threshold:number;min_checks:number;check_mode:string;task_kind?:'practice'|'quiz';quiz_format?:string;questions?:unknown}
