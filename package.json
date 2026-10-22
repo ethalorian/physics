@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "prebuild": "npm run audit:styles && npm run audit:brand && npm run build:game-avatars",
+    "prebuild": "npm run verify:textbook && npm run audit:styles && npm run audit:brand && npm run build:game-avatars",
+    "verify:textbook": "node scripts/verify-textbook.cjs",
     "build:game-avatars": "node scripts/mic-check/build.cjs",
     "build": "next build",
     "start": "next start",

@@ -36,6 +36,7 @@ A comprehensive Next.js 15 physics education platform with AI-powered question g
 
 - Node.js 18+ 
 - npm or yarn
+- [Git LFS](https://git-lfs.com/) for the honors textbook PDF
 - Supabase account
 - Google Cloud Console project with OAuth 2.0 credentials
 - OpenAI API key (for AI grading features)
@@ -44,9 +45,17 @@ A comprehensive Next.js 15 physics education platform with AI-powered question g
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/physics-classroom.git
-cd physics-classroom
+git clone https://github.com/ethalorian/physics.git
+cd physics
+git lfs install
+git lfs pull
 ```
+
+The honors reader uses the exact PDF tracked in Git LFS at
+`public/textbooks/college-physics-ap-courses-2e.pdf`. Keep Git LFS enabled in
+Vercel's project Git settings. `npm run verify:textbook` verifies the complete
+file and its checksum, and runs automatically before every production build.
+Do not replace it with another edition without checking the reader's page map.
 
 2. **Install dependencies**
 ```bash
