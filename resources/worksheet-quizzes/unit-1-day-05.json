@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 5,
+  "title": "Predict a position and a range",
+  "target": "Predict a future position and explain the limits of the prediction.",
+  "criteria": [
+    "Use matching units and include the starting position.",
+    "Report a central prediction and its bounds.",
+    "Distinguish a measurement range from model limitations."
+  ],
+  "source_sha256": "fcfacfb49877172a3f2564a00e05a489a42986bece43a1dbfe83b1b8e17c0504",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.471Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A rover starts at −5 m and moves at +4 m/s for 3 s. What is predicted final position?",
+      "options": [
+        "+12 m",
+        "−17 m",
+        "−1 m",
+        "+7 m"
+      ],
+      "correct_index": 3,
+      "guide": "x_f = −5 + 4(3) = +7 m.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A probe starts at 2 km and moves at 500 m/s for 4 s. What is final position in km?",
+      "options": [
+        "2,002 km",
+        "0.004 km",
+        "502 km",
+        "4 km"
+      ],
+      "correct_index": 3,
+      "guide": "500 m/s = 0.5 km/s; x_f = 2 + 0.5(4) = 4 km.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Initial position is exactly 3 m. Velocity is 2.0 ± 0.2 m/s and time is exactly 5 s. What are central final position and bounds?",
+      "options": [
+        "15 m; 12 to 18 m.",
+        "13 m; 12 to 14 m.",
+        "13 m; 12.8 to 13.2 m.",
+        "10 m; 9 to 11 m."
+      ],
+      "correct_index": 1,
+      "guide": "Central 3 + 2(5) = 13; endpoints use 1.8 and 2.2 m/s.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Independent bounds are x₀ = 4 ± 1 m and v = 3 ± 0.5 m/s, with t = 2 s exact. What is the final-position interval?",
+      "options": [
+        "8 to 12 m.",
+        "10 to 12 m.",
+        "9 to 11 m.",
+        "6 to 14 m."
+      ],
+      "correct_index": 0,
+      "guide": "Lower = 3 + 2.5(2) = 8; upper = 5 + 3.5(2) = 12.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculated interval comes from bounded measurements and a constant-velocity assumption. What does it omit unless explicitly modeled?",
+      "options": [
+        "The stated starting position.",
+        "All measurement variation already included in the bounds.",
+        "Changes in velocity caused by forces.",
+        "The stated elapsed time."
+      ],
+      "correct_index": 2,
+      "guide": "Input uncertainty does not automatically cover errors in the motion model.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A prediction gives a bounded position interval. Does that alone establish a 95% probability of being inside it?",
+      "options": [
+        "No; ranges never contain any useful information.",
+        "Yes; every range means 95%.",
+        "No; a probability needs an additional statistical model.",
+        "Yes; every endpoint is equally probable automatically."
+      ],
+      "correct_index": 2,
+      "guide": "Bounds constrain values under assumptions but do not specify probabilities.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A rover starts at −5 m and moves at +4 m/s for 3 s. What is predicted final position?",
+      "options": [
+        "+7 m",
+        "−1 m",
+        "−17 m",
+        "+12 m"
+      ],
+      "correct_index": 0,
+      "guide": "x_f = −5 + 4(3) = +7 m.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A probe starts at 2 km and moves at 500 m/s for 4 s. What is final position in km?",
+      "options": [
+        "502 km",
+        "0.004 km",
+        "4 km",
+        "2,002 km"
+      ],
+      "correct_index": 2,
+      "guide": "500 m/s = 0.5 km/s; x_f = 2 + 0.5(4) = 4 km.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Initial position is exactly 3 m. Velocity is 2.0 ± 0.2 m/s and time is exactly 5 s. What are central final position and bounds?",
+      "options": [
+        "10 m; 9 to 11 m.",
+        "13 m; 12.8 to 13.2 m.",
+        "15 m; 12 to 18 m.",
+        "13 m; 12 to 14 m."
+      ],
+      "correct_index": 3,
+      "guide": "Central 3 + 2(5) = 13; endpoints use 1.8 and 2.2 m/s.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Independent bounds are x₀ = 4 ± 1 m and v = 3 ± 0.5 m/s, with t = 2 s exact. What is the final-position interval?",
+      "options": [
+        "9 to 11 m.",
+        "10 to 12 m.",
+        "6 to 14 m.",
+        "8 to 12 m."
+      ],
+      "correct_index": 3,
+      "guide": "Lower = 3 + 2.5(2) = 8; upper = 5 + 3.5(2) = 12.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculated interval comes from bounded measurements and a constant-velocity assumption. What does it omit unless explicitly modeled?",
+      "options": [
+        "The stated elapsed time.",
+        "Changes in velocity caused by forces.",
+        "The stated starting position.",
+        "All measurement variation already included in the bounds."
+      ],
+      "correct_index": 1,
+      "guide": "Input uncertainty does not automatically cover errors in the motion model.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A prediction gives a bounded position interval. Does that alone establish a 95% probability of being inside it?",
+      "options": [
+        "No; a probability needs an additional statistical model.",
+        "No; ranges never contain any useful information.",
+        "Yes; every endpoint is equally probable automatically.",
+        "Yes; every range means 95%."
+      ],
+      "correct_index": 0,
+      "guide": "Bounds constrain values under assumptions but do not specify probabilities.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

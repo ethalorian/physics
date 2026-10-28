@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 13,
+  "title": "Ramp energy lab",
+  "target": "Compare gravitational energy change with measured kinetic energy.",
+  "criteria": [
+    "Measure height vertically and speed at a stated location.",
+    "Calculate an energy balance.",
+    "Discuss rotation, resistance and uncertainty."
+  ],
+  "source_sha256": "6bcc03dd1ae1afcb72f0f866d8ef7135b497ddf90ddd6b79ca940fa48bf3d231",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.524Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "To calculate a cart’s lost gravitational energy on a ramp, which length is needed?",
+      "options": [
+        "Ramp length alone.",
+        "Horizontal run alone.",
+        "Wheel circumference alone.",
+        "Vertical drop of its center of mass."
+      ],
+      "correct_index": 3,
+      "guide": "Gravitational energy change depends on vertical height change.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A trial compares energy at release with energy at a marked finish line. Where should final speed be measured?",
+      "options": [
+        "At a different height without adjustment.",
+        "At that same finish line.",
+        "At any convenient later location.",
+        "Only before release."
+      ],
+      "correct_index": 1,
+      "guide": "Energy terms must describe the same initial and final states.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A supplied 2 kg cart drops 0.60 m; g = 10 N/kg. What energy is released from gravity?",
+      "options": [
+        "20 J",
+        "3 J",
+        "12 J",
+        "1.2 J"
+      ],
+      "correct_index": 2,
+      "guide": "mgΔh = 2 × 10 × 0.60 = 12 J.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A supplied trial loses 15 J of gravitational energy and gains 11 J translational plus 2 J rotational energy. What energy remains for other transfers?",
+      "options": [
+        "4 J",
+        "2 J",
+        "13 J",
+        "28 J"
+      ],
+      "correct_index": 1,
+      "guide": "15 − 11 − 2 = 2 J.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A measured ramp energy difference is 0.3 J with estimated uncertainty ±0.6 J. Which conclusion is supported?",
+      "options": [
+        "The difference is consistent with zero within this uncertainty.",
+        "The experiment proves exactly 0.3 J was destroyed.",
+        "All friction is proven absent.",
+        "Uncertainty can be ignored because the difference is positive."
+      ],
+      "correct_index": 0,
+      "guide": "The uncertainty interval includes zero; this does not establish an exact loss or absence of friction.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A ramp cart has less translational energy than the gravitational loss predicts. Which investigation is best?",
+      "options": [
+        "Assign the entire difference to destroyed energy.",
+        "Change the data until they match.",
+        "Include wheel rotation, resistance, sensor uncertainty, and consistent measurement locations.",
+        "Conclude height measurement never matters."
+      ],
+      "correct_index": 2,
+      "guide": "Several terms and uncertainties can explain a mismatch; check them explicitly.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "To calculate a cart’s lost gravitational energy on a ramp, which length is needed?",
+      "options": [
+        "Wheel circumference alone.",
+        "Ramp length alone.",
+        "Vertical drop of its center of mass.",
+        "Horizontal run alone."
+      ],
+      "correct_index": 2,
+      "guide": "Gravitational energy change depends on vertical height change.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A trial compares energy at release with energy at a marked finish line. Where should final speed be measured?",
+      "options": [
+        "Only before release.",
+        "At that same finish line.",
+        "At a different height without adjustment.",
+        "At any convenient later location."
+      ],
+      "correct_index": 1,
+      "guide": "Energy terms must describe the same initial and final states.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A supplied 2 kg cart drops 0.60 m; g = 10 N/kg. What energy is released from gravity?",
+      "options": [
+        "12 J",
+        "20 J",
+        "3 J",
+        "1.2 J"
+      ],
+      "correct_index": 0,
+      "guide": "mgΔh = 2 × 10 × 0.60 = 12 J.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A supplied trial loses 15 J of gravitational energy and gains 11 J translational plus 2 J rotational energy. What energy remains for other transfers?",
+      "options": [
+        "13 J",
+        "4 J",
+        "2 J",
+        "28 J"
+      ],
+      "correct_index": 2,
+      "guide": "15 − 11 − 2 = 2 J.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A measured ramp energy difference is 0.3 J with estimated uncertainty ±0.6 J. Which conclusion is supported?",
+      "options": [
+        "All friction is proven absent.",
+        "The experiment proves exactly 0.3 J was destroyed.",
+        "Uncertainty can be ignored because the difference is positive.",
+        "The difference is consistent with zero within this uncertainty."
+      ],
+      "correct_index": 3,
+      "guide": "The uncertainty interval includes zero; this does not establish an exact loss or absence of friction.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A ramp cart has less translational energy than the gravitational loss predicts. Which investigation is best?",
+      "options": [
+        "Assign the entire difference to destroyed energy.",
+        "Change the data until they match.",
+        "Conclude height measurement never matters.",
+        "Include wheel rotation, resistance, sensor uncertainty, and consistent measurement locations."
+      ],
+      "correct_index": 3,
+      "guide": "Several terms and uncertainties can explain a mismatch; check them explicitly.",
+      "target_slug": "u4.s4-vernier-ramp-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 import { isLessonVisible } from '@/lib/track-visibility'
 import { PHYSICS_VIDEOS } from '@/data/physics-videos'
 import { getLessonCompletions } from '@/lib/lesson-completion-server'
+import { LESSON_COMPLETION_LABELS } from '@/lib/lesson-completion'
+import type { StudentAssignment } from '@/lib/student-dashboard'
 import { getStudentTrack } from '@/lib/student-enrollment'
 import type { BlockDocument } from '@/data/content-blocks'
 import { isCatalogUnit } from '@/lib/retired-curriculum'
@@ -183,6 +185,21 @@ export const GET = withAuth(async (request, ctx) => {
       return video ? [{ id:lesson.id, slug:lesson.slug, title:lesson.title, sequence:video.sequence, due_at:windows[lesson.id]?.due_at??null, complete:isDone(lesson) }] : []
     }).sort((a,b) => Number(a.complete)-Number(b.complete) || (a.due_at?Date.parse(a.due_at):Infinity)-(b.due_at?Date.parse(b.due_at):Infinity) || a.sequence-b.sequence)
 
+    // Every released lesson belongs on the calendar, including reflections
+    // without an instruction video. Keep homework for older clients.
+    const videosById = new Map(homework.map(video => [video.id, video]))
+    const lessonAssignments: StudentAssignment[] = lessons.map(lesson => {
+      const video = videosById.get(lesson.id), state = completion[lesson.id], complete = isDone(lesson)
+      const reflection = lesson.content_blocks?.reflection?.kind
+      const context = video ? `Video ${video.sequence}` : reflection === 'graphic-novel' ? 'Graphic novel response' : reflection === 'manga' ? 'Manga' : reflection === 'story' ? 'Written Reflection' : lesson.unit
+      return {
+        id: `${video ? 'video' : 'lesson'}:${lesson.id}`, kind: video ? 'video' : 'lesson',
+        title: lesson.title, href: `/lessons/${lesson.slug}`, due: windows[lesson.id]?.due_at ?? null,
+        complete, status: state ? LESSON_COMPLETION_LABELS[state.state] : complete ? 'Submitted' : 'To do',
+        action: complete ? 'View work' : video ? 'Open homework' : 'Open assignment', context,
+      }
+    })
+
     // --- Points / XP ---------------------------------------------------------
 
     // --- Streak: consecutive days of activity ending today or yesterday ------
@@ -210,5 +227,6 @@ export const GET = withAuth(async (request, ctx) => {
       retry,
       climb,
       homework,
+      lessonAssignments,
     })
 })

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 1,
+  "title": "What changes an asteroid’s path?",
+  "target": "Explain how gravity can change velocity without contact.",
+  "criteria": [
+    "Draw velocity tangent to a path and force toward the attracting body.",
+    "Distinguish motion from a change in motion.",
+    "State what a straight-line model leaves out."
+  ],
+  "source_sha256": "98ba12235e250bece40712cccb50783dc3749b4437d32b387efd9f29ea37c7e6",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.487Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "At the top of a circular path, an object moves clockwise. In which direction is its instantaneous velocity?",
+      "options": [
+        "Zero because it is at the top.",
+        "Up away from the center.",
+        "Down toward the center.",
+        "Right, tangent to the circle."
+      ],
+      "correct_index": 3,
+      "guide": "Clockwise motion at the top is tangent to the right.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A satellite is directly east of a spherical planet. Which direction is the planet’s gravitational force on it?",
+      "options": [
+        "Along any velocity direction automatically.",
+        "East, away from the planet.",
+        "Zero outside the surface.",
+        "West, toward the planet’s center."
+      ],
+      "correct_index": 3,
+      "guide": "Gravity is attractive and points toward the source center.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An object maintains a constant speed while turning. Is its velocity changing?",
+      "options": [
+        "No; speed and velocity are identical quantities.",
+        "Only if its mass changes.",
+        "Yes; direction is part of velocity.",
+        "Only if it comes to rest."
+      ],
+      "correct_index": 2,
+      "guide": "Velocity is a vector; a direction change is a velocity change.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A probe initially moves north. A brief eastward force changes its velocity. Which change is caused directly by this force?",
+      "options": [
+        "An eastward change in velocity.",
+        "A westward change in velocity.",
+        "An automatic change of mass.",
+        "Instant loss of all northward velocity."
+      ],
+      "correct_index": 0,
+      "guide": "Acceleration follows net force; an eastward impulse changes the east component.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "What does a constant-velocity straight-line prediction omit when gravity is significant?",
+      "options": [
+        "The existence of elapsed time.",
+        "The change in velocity caused by gravity.",
+        "Only the object’s color.",
+        "Every possible displacement."
+      ],
+      "correct_index": 1,
+      "guide": "A nonzero net gravitational force changes velocity from the straight-line estimate.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two predictions for a probe separate over time: one includes gravity, one assumes constant velocity. Which observation would favor including gravity?",
+      "options": [
+        "A measured bending path toward the attracting body.",
+        "A ruler marked in meters.",
+        "An unchanged name for the probe.",
+        "A constant speed alone, with no direction information."
+      ],
+      "correct_index": 0,
+      "guide": "Curvature toward the source is evidence of a changing velocity consistent with gravity.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "At the top of a circular path, an object moves clockwise. In which direction is its instantaneous velocity?",
+      "options": [
+        "Right, tangent to the circle.",
+        "Up away from the center.",
+        "Zero because it is at the top.",
+        "Down toward the center."
+      ],
+      "correct_index": 0,
+      "guide": "Clockwise motion at the top is tangent to the right.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A satellite is directly east of a spherical planet. Which direction is the planet’s gravitational force on it?",
+      "options": [
+        "East, away from the planet.",
+        "Zero outside the surface.",
+        "West, toward the planet’s center.",
+        "Along any velocity direction automatically."
+      ],
+      "correct_index": 2,
+      "guide": "Gravity is attractive and points toward the source center.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An object maintains a constant speed while turning. Is its velocity changing?",
+      "options": [
+        "Yes; direction is part of velocity.",
+        "Only if its mass changes.",
+        "Only if it comes to rest.",
+        "No; speed and velocity are identical quantities."
+      ],
+      "correct_index": 0,
+      "guide": "Velocity is a vector; a direction change is a velocity change.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A probe initially moves north. A brief eastward force changes its velocity. Which change is caused directly by this force?",
+      "options": [
+        "A westward change in velocity.",
+        "An eastward change in velocity.",
+        "Instant loss of all northward velocity.",
+        "An automatic change of mass."
+      ],
+      "correct_index": 1,
+      "guide": "Acceleration follows net force; an eastward impulse changes the east component.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "What does a constant-velocity straight-line prediction omit when gravity is significant?",
+      "options": [
+        "The existence of elapsed time.",
+        "Every possible displacement.",
+        "Only the object’s color.",
+        "The change in velocity caused by gravity."
+      ],
+      "correct_index": 3,
+      "guide": "A nonzero net gravitational force changes velocity from the straight-line estimate.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two predictions for a probe separate over time: one includes gravity, one assumes constant velocity. Which observation would favor including gravity?",
+      "options": [
+        "A ruler marked in meters.",
+        "A measured bending path toward the attracting body.",
+        "A constant speed alone, with no direction information.",
+        "An unchanged name for the probe."
+      ],
+      "correct_index": 1,
+      "guide": "Curvature toward the source is evidence of a changing velocity consistent with gravity.",
+      "target_slug": "u2.anchor-why-bend",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 16,
+  "title": "Transfer: gravity and motion",
+  "target": "Apply gravity, projectile and orbital reasoning to a new set of cases.",
+  "criteria": [
+    "State a model and assumptions before calculating.",
+    "Connect diagrams to forces and motion.",
+    "Check units and explain the limits of conclusions."
+  ],
+  "source_sha256": "c706f302caca83bf88e393e1ba1b34d696388a0be03e98e85d0b9194590bcf4d",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.499Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Which statement defines an ideal horizontal-launch model before calculation?",
+      "options": [
+        "Horizontal speed increases because gravity points forward.",
+        "Mass must be zero.",
+        "The landing height is irrelevant.",
+        "Initial vertical velocity is zero, air resistance is negligible, and g is uniform."
+      ],
+      "correct_index": 3,
+      "guide": "These assumptions justify independent constant-horizontal and accelerated-vertical motion.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A horizontal launch falls 5 m with g = 10 m/s² and no drag. What is fall time?",
+      "options": [
+        "2 s",
+        "1 s",
+        "5 s",
+        "0.5 s"
+      ],
+      "correct_index": 1,
+      "guide": "5 = ½(10)t² gives t = 1 s.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A car turns at constant speed. Which net-force direction matches its curved motion?",
+      "options": [
+        "Away from the center.",
+        "Along the tangent necessarily.",
+        "Toward the curve’s center.",
+        "Zero because speed is constant."
+      ],
+      "correct_index": 2,
+      "guide": "Turning velocity requires inward acceleration and net force.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A probe’s center distance from a planet doubles. Its field was 16 N/kg. What are the new field and force on a 3 kg mass?",
+      "options": [
+        "4 N/kg and 4 N.",
+        "64 N/kg and 192 N.",
+        "4 N/kg and 12 N.",
+        "8 N/kg and 24 N."
+      ],
+      "correct_index": 2,
+      "guide": "g divides by 4; F = 3 × 4 = 12 N.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A projectile range calculation yields a value in m/s. What should be checked?",
+      "options": [
+        "The equations and units, because range must be a length.",
+        "Nothing; range is a speed.",
+        "Only whether the mass is positive.",
+        "Whether force is a scalar."
+      ],
+      "correct_index": 0,
+      "guide": "Dimensional consistency is a necessary check.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "An asteroid’s ideal path crosses Earth’s orbit. What conclusion is justified from that fact alone?",
+      "options": [
+        "Gravity must be absent.",
+        "The asteroid’s period equals Earth’s.",
+        "Collision is certain.",
+        "A collision is not established without matching timing and spatial geometry."
+      ],
+      "correct_index": 3,
+      "guide": "Path intersection alone omits simultaneous positions and uncertainty.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Which statement defines an ideal horizontal-launch model before calculation?",
+      "options": [
+        "Horizontal speed increases because gravity points forward.",
+        "The landing height is irrelevant.",
+        "Mass must be zero.",
+        "Initial vertical velocity is zero, air resistance is negligible, and g is uniform."
+      ],
+      "correct_index": 3,
+      "guide": "These assumptions justify independent constant-horizontal and accelerated-vertical motion.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A horizontal launch falls 5 m with g = 10 m/s² and no drag. What is fall time?",
+      "options": [
+        "1 s",
+        "2 s",
+        "0.5 s",
+        "5 s"
+      ],
+      "correct_index": 0,
+      "guide": "5 = ½(10)t² gives t = 1 s.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A car turns at constant speed. Which net-force direction matches its curved motion?",
+      "options": [
+        "Along the tangent necessarily.",
+        "Toward the curve’s center.",
+        "Zero because speed is constant.",
+        "Away from the center."
+      ],
+      "correct_index": 1,
+      "guide": "Turning velocity requires inward acceleration and net force.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A probe’s center distance from a planet doubles. Its field was 16 N/kg. What are the new field and force on a 3 kg mass?",
+      "options": [
+        "4 N/kg and 4 N.",
+        "8 N/kg and 24 N.",
+        "64 N/kg and 192 N.",
+        "4 N/kg and 12 N."
+      ],
+      "correct_index": 3,
+      "guide": "g divides by 4; F = 3 × 4 = 12 N.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A projectile range calculation yields a value in m/s. What should be checked?",
+      "options": [
+        "Whether force is a scalar.",
+        "Only whether the mass is positive.",
+        "The equations and units, because range must be a length.",
+        "Nothing; range is a speed."
+      ],
+      "correct_index": 2,
+      "guide": "Dimensional consistency is a necessary check.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "An asteroid’s ideal path crosses Earth’s orbit. What conclusion is justified from that fact alone?",
+      "options": [
+        "A collision is not established without matching timing and spatial geometry.",
+        "The asteroid’s period equals Earth’s.",
+        "Collision is certain.",
+        "Gravity must be absent."
+      ],
+      "correct_index": 0,
+      "guide": "Path intersection alone omits simultaneous positions and uncertainty.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

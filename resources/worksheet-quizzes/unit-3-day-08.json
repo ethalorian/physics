@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 8,
+  "title": "Stick-together calculations",
+  "target": "Find a common final velocity using total momentum.",
+  "criteria": [
+    "Add the initial momenta with signs.",
+    "Use the combined mass after sticking.",
+    "Check the result against the direction of total momentum."
+  ],
+  "source_sha256": "4b0c9459f7f7823187d21917ffa5ae3b60d40884497ce30c87d513938caa5858",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.507Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 3 kg cart moves at +4 m/s and a 2 kg cart at −3 m/s. What is total initial momentum?",
+      "options": [
+        "−6 kg·m/s",
+        "+7 kg·m/s",
+        "+6 kg·m/s",
+        "+18 kg·m/s"
+      ],
+      "correct_index": 2,
+      "guide": "3(4) + 2(−3) = +6.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student adds the magnitudes of two opposing carts’ momenta. What correction is needed?",
+      "options": [
+        "Use signs from one shared axis before adding.",
+        "Ignore the slower cart.",
+        "Multiply the momentum magnitudes.",
+        "Use mass alone to set direction."
+      ],
+      "correct_index": 0,
+      "guide": "Momentum is a vector, so opposing components subtract.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Carts of 3 kg and 2 kg stick with total momentum +15 kg·m/s. What is final velocity?",
+      "options": [
+        "+75 m/s",
+        "+3 m/s",
+        "+5 m/s",
+        "+7.5 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "Divide by combined mass 5 kg: 15/5 = 3.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart at +5 m/s sticks to a 3 kg cart at rest. What is final velocity?",
+      "options": [
+        "+2 m/s",
+        "+3.33 m/s",
+        "+5 m/s",
+        "+10 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "Initial momentum 10 divided by total mass 5 gives 2 m/s.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Before sticking, two carts have total momentum −8 kg·m/s. With negligible external impulse, what must be the final direction?",
+      "options": [
+        "Direction cannot be constrained at all.",
+        "Zero regardless of mass.",
+        "Positive.",
+        "Negative."
+      ],
+      "correct_index": 3,
+      "guide": "Positive combined mass means velocity has the sign of total momentum.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculation gives a negative final velocity even though isolated carts had positive total initial momentum. What should be checked first?",
+      "options": [
+        "Whether momentum conservation requires reversal.",
+        "Whether sticking always makes velocity negative.",
+        "Whether negative mass is automatically created.",
+        "Signs, algebra, and the total mass in the momentum balance."
+      ],
+      "correct_index": 3,
+      "guide": "The final momentum must retain the initial total sign.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 3 kg cart moves at +4 m/s and a 2 kg cart at −3 m/s. What is total initial momentum?",
+      "options": [
+        "−6 kg·m/s",
+        "+6 kg·m/s",
+        "+7 kg·m/s",
+        "+18 kg·m/s"
+      ],
+      "correct_index": 1,
+      "guide": "3(4) + 2(−3) = +6.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student adds the magnitudes of two opposing carts’ momenta. What correction is needed?",
+      "options": [
+        "Use signs from one shared axis before adding.",
+        "Ignore the slower cart.",
+        "Use mass alone to set direction.",
+        "Multiply the momentum magnitudes."
+      ],
+      "correct_index": 0,
+      "guide": "Momentum is a vector, so opposing components subtract.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Carts of 3 kg and 2 kg stick with total momentum +15 kg·m/s. What is final velocity?",
+      "options": [
+        "+5 m/s",
+        "+75 m/s",
+        "+3 m/s",
+        "+7.5 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Divide by combined mass 5 kg: 15/5 = 3.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart at +5 m/s sticks to a 3 kg cart at rest. What is final velocity?",
+      "options": [
+        "+2 m/s",
+        "+10 m/s",
+        "+3.33 m/s",
+        "+5 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "Initial momentum 10 divided by total mass 5 gives 2 m/s.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Before sticking, two carts have total momentum −8 kg·m/s. With negligible external impulse, what must be the final direction?",
+      "options": [
+        "Positive.",
+        "Direction cannot be constrained at all.",
+        "Zero regardless of mass.",
+        "Negative."
+      ],
+      "correct_index": 3,
+      "guide": "Positive combined mass means velocity has the sign of total momentum.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculation gives a negative final velocity even though isolated carts had positive total initial momentum. What should be checked first?",
+      "options": [
+        "Whether sticking always makes velocity negative.",
+        "Signs, algebra, and the total mass in the momentum balance.",
+        "Whether momentum conservation requires reversal.",
+        "Whether negative mass is automatically created."
+      ],
+      "correct_index": 1,
+      "guide": "The final momentum must retain the initial total sign.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

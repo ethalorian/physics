@@ -1,0 +1,91 @@
+{
+  "collaboration": {
+    "maxGroupSize": 4,
+    "primaryRoles": [
+      "Slideshow lead",
+      "Whiteboard scribe"
+    ],
+    "secondaryDuties": [
+      "Timekeeper",
+      "Checker"
+    ],
+    "individualResponses": true
+  },
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 8 Constant Acceleration Problem Solving.dc.html",
+  "sourceSha256": "741b1689c3260aa24b0fc9d7e4e694e03e26f539b0bfdec4fc8f789e96d13e7e",
+  "runtimeSha256": {
+    "support": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe",
+    "stage": "f3d3d0a662c08eefb5a8757a6da3139572485f4be32ac33785c5047061926a8a"
+  },
+  "packagedSha256": "df8203dc74c5c703183e5f519b4dc40a7fbbacd7b880a8874392c0dba7ab2a21",
+  "cover": {
+    "file": "art/asteroid-briefing.png",
+    "sha256": "ae90f10457a275a673a1662f651ce0c04ea070027eaa74f289e37b0c8819de62"
+  },
+  "studentSlides": 30,
+  "originalStudentSlides": 26,
+  "teacherSlidesExcluded": 3,
+  "timers": 2,
+  "answerReveals": 8,
+  "transition": {
+    "type": "fade",
+    "durationMs": 260,
+    "respectsReducedMotion": true
+  },
+  "snapshots": [
+    {
+      "after": 11,
+      "page": 29,
+      "file": "page-01.webp",
+      "y": 1142,
+      "height": 354,
+      "title": "Choose from what you know",
+      "alt": "Nadia explains that the equation must connect what is known to what is needed. The notebook shows v squared equals initial velocity squared plus twice acceleration times displacement. No time is needed.",
+      "body": "A stop supplies a hidden given: final velocity is zero. Choose an equation from the quantities, not the story.",
+      "question": "Which known quantities let you find a stopping displacement without first finding time?",
+      "work": "Part 1 · Defend your equation choice",
+      "sha256": "a9cbd7a59af6010fff1f4fd19d7d0ef3518ebaf88fbd6bc396b4296d1ce84ceb"
+    },
+    {
+      "after": 16,
+      "page": 30,
+      "file": "page-02.webp",
+      "y": 0,
+      "height": 620,
+      "title": "Negative acceleration, positive displacement",
+      "alt": "The novel’s separate practice car brakes from positive thirty meters per second at constant negative six meters per second squared. The calculation gives positive seventy-five meters of braking displacement. Nadia explains that it is still moving forward while slowing; reaction distance is excluded.",
+      "body": "The novel uses +30 m/s and −6 m/s². The preceding slide uses +20 m/s and −4 m/s². Both end at rest.",
+      "question": "Why do both displacements stay positive? Check each result using time and average velocity.",
+      "work": "Part 2 · Check the result another way",
+      "sha256": "33a0c527550c0dfbce291247e81ccc1310dbedad43c13b8f353ff9909a5af1fb"
+    },
+    {
+      "after": 21,
+      "page": 32,
+      "file": "page-04.webp",
+      "y": 400,
+      "height": 292,
+      "title": "Different unknowns, different equations",
+      "alt": "The novel’s train starts from rest with acceleration 0.50 meters per second squared and reaches eighty meters per second in 160 seconds. A separate cart starts at two meters per second and accelerates at 1.5 meters per second squared for four seconds, moving twenty meters.",
+      "body": "These are separate practice examples. The train’s unknown is time; the cart’s unknown is displacement.",
+      "question": "Which quantities explain the different equation choices? What constant-acceleration assumption do they share?",
+      "work": "Part 3 · Transfer the method",
+      "sha256": "e7cbbc44f5064c344e86953fe668f797500e5b6ab02b55acac5d8c1779331fe5"
+    },
+    {
+      "after": 23,
+      "page": 31,
+      "file": "page-03.webp",
+      "y": 915,
+      "height": 283,
+      "title": "At the top, which quantity is zero?",
+      "alt": "A separate paper model ignores air resistance and chooses upward positive. With launch velocity fifteen meters per second, final vertical velocity zero and acceleration negative 9.8 meters per second squared, the calculation gives a rise of about 11.5 meters.",
+      "body": "The novel’s paper model launches at 15 m/s; the slide’s example uses 14 m/s. Gravity still acts at the top.",
+      "question": "Why is the zero assigned to velocity rather than acceleration? Explain the different rises.",
+      "work": "Part 3 · Transfer the method",
+      "sha256": "84bc809de7cfd4ea1060782ab65c6c1d541be0f9dce9ec3b9db3ca6b7a8db0e3"
+    }
+  ],
+  "notes": "Original executable logic, the 20-minute pair timer, three-minute exit timer and eight reveal controls unchanged. Exit caption corrected from two to three minutes to match the original runtime default. Teacher-only slides and notes removed. Four snapshots use viewport crops of approved Day 8 pages 29–32 with text companions; artwork bytes are unchanged. Original cover uses its relative URL. Clarified separate individual answers and group reflections. Replaced the unsupported nearly-constant asteroid-velocity claim with an explicit classroom-approximation limitation. Clarified that displacement is signed and that all three equations assume constant acceleration. Novel and slide examples have different supplied numbers; captions distinguish them. Original export archived unchanged."
+}

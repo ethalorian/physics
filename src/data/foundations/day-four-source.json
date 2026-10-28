@@ -1,0 +1,91 @@
+{
+  "collaboration": {
+    "maxGroupSize": 4,
+    "primaryRoles": [
+      "Slideshow lead",
+      "Whiteboard scribe"
+    ],
+    "secondaryDuties": [
+      "Timekeeper",
+      "Checker"
+    ],
+    "individualResponses": true
+  },
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 4 Velocity-Time Graphs and Vectors.dc.html",
+  "sourceSha256": "3085f8a48bd9c8e76fdede4c00cb77cc81cb2e86611d6614b050df3241df609c",
+  "runtimeSha256": {
+    "support": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe",
+    "stage": "f3d3d0a662c08eefb5a8757a6da3139572485f4be32ac33785c5047061926a8a"
+  },
+  "packagedSha256": "ffc01c58c3c69f8462b75dcc81948acaeb6eee35ead6550daee7a0792e970a73",
+  "cover": {
+    "file": "art/asteroid-briefing.png",
+    "sha256": "ae90f10457a275a673a1662f651ce0c04ea070027eaa74f289e37b0c8819de62"
+  },
+  "studentSlides": 30,
+  "originalStudentSlides": 26,
+  "teacherSlidesExcluded": 3,
+  "timers": 3,
+  "answerReveals": 5,
+  "transition": {
+    "type": "fade",
+    "durationMs": 260,
+    "respectsReducedMotion": true
+  },
+  "snapshots": [
+    {
+      "after": 10,
+      "page": 13,
+      "file": "page-01.webp",
+      "y": 369,
+      "height": 495,
+      "title": "Read the axis before the line",
+      "alt": "The velocity–time graph is horizontal at +1 meter per second from zero to four seconds. Mr. Antocci explains that velocity stays constant while Maz points out that the object is still moving.",
+      "body": "A flat line at +1 m/s means steady motion in the positive direction.",
+      "question": "How would the same line shape mean something different on a position–time graph?",
+      "work": "Part 1 · Compare the graph stories",
+      "sha256": "5049df2d445931c15750c2c2b3002dae621cfd04073e356a88091e79b8fad200"
+    },
+    {
+      "after": 14,
+      "page": 14,
+      "file": "page-02.webp",
+      "y": 578,
+      "height": 530,
+      "title": "A common scale makes arrows useful",
+      "alt": "At one square per meter per second, one arrow is four squares east and another is two squares north. Turning an arrow changes velocity even if its length stays the same.",
+      "body": "Use the same units and scale before comparing arrow lengths.",
+      "question": "What changes when you rotate an arrow without changing its length?",
+      "work": "Part 2 · Check the arrow and its components",
+      "sha256": "91db9a2bfebbd055865ff3159220fa13ed96e2c056e41e1ffb095ee204d95640"
+    },
+    {
+      "after": 18,
+      "page": 15,
+      "file": "page-03.webp",
+      "y": 369,
+      "height": 481,
+      "title": "One motion, two components",
+      "alt": "The fictional 8,500 meter-per-second vector is fifteen degrees from the toward-Earth axis. Its perpendicular components are about 8,210 meters per second toward Earth and 2,200 meters per second sideways.",
+      "body": "The perpendicular components describe one simultaneous velocity.",
+      "question": "Why do 8,210 and 2,200 not add to 8,500 as ordinary numbers?",
+      "work": "Part 2 · Check the arrow and its components",
+      "sha256": "990fb628cccac7aa877a7dac185d06759336e19b081bbdede7d2a3c58e34c441"
+    },
+    {
+      "after": 23,
+      "page": 16,
+      "file": "page-04.webp",
+      "y": 321,
+      "height": 678,
+      "title": "A smaller component still matters",
+      "alt": "Over 1.6 times ten to the seventh seconds, the constant-velocity model gives about 131 million kilometers toward Earth and 35 million kilometers sideways. Mr. Antocci calls this a model rather than an orbit forecast.",
+      "body": "Over six months, even the smaller sideways rate produces a large displacement.",
+      "question": "What information is still missing before you can locate the final position?",
+      "work": "Part 3 · Challenge the six-month prediction",
+      "sha256": "16831d63cbd23204b5028c023774b389020b1adb20ba169c7474ee458df5aa23"
+    }
+  ],
+  "notes": "Original executable logic, timers and reveal controls unchanged. Teacher-only slides/notes removed. Four snapshots use viewport crops of existing immutable artwork with text companions. Original cover PNG and comic assets are separately cacheable; the original cover URL avoids the export’s data-URL CSS parsing bug. Clarified individual response directions, changing-velocity graphs, fictional model and angle reference. Original export archived unchanged."
+}

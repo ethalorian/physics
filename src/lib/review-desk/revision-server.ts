@@ -1,0 +1,7 @@
+export const revisionSourceKeys=(key:string)=>/^(lesson|video|reflection):/.test(key)?['lesson:','video:','reflection:'].map(prefix=>prefix+key.slice(key.indexOf(':')+1)):[key]
+import 'server-only'
+import {supabaseAdmin} from '@/lib/supabase'
+export async function pendingRevision(sourceKey:string,userId:string){const r=await supabaseAdmin.from('review_desk_revisions').select('*').in('source_key',revisionSourceKeys(sourceKey)).eq('user_id',userId).is('released_at',null).is('resubmitted_at',null).order('requested_at',{ascending:false}).limit(1).maybeSingle();if(r.error)throw r.error;return r.data}
+export function revisionRequirements(evidence:{id:string;teacherFeedback?:string}[]){return ['overall',...evidence.filter(e=>e.teacherFeedback?.trim()).map(e=>e.id)]}
+export async function checkRevisionBeforeSubmit(sourceKey:string,userId:string){const revision=await pendingRevision(sourceKey,userId);if(revision&&(!revision.change_summary.trim()||revisionRequirements(revision.evidence).some(id=>!revision.addressed.includes(id))))return 'Review your teacher’s feedback, check each revision step, and save a brief change summary before resubmitting.';return null}
+export async function recordRevisionSubmitted(sourceKey:string,userId:string){const r=await supabaseAdmin.from('review_desk_revisions').update({resubmitted_at:new Date().toISOString()}).in('source_key',revisionSourceKeys(sourceKey)).eq('user_id',userId).is('released_at',null).is('resubmitted_at',null);if(r.error)console.error('[review-desk] Revision submission metadata needs refresh',r.error.code)}

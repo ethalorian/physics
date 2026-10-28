@@ -1,3 +1,4 @@
+import { prepareSequenceDate, sequenceDateNotice, saveConfirmedSequenceDate } from '@/lib/sequence-date-server'
 import { withRole } from '@/lib/api-auth'
 import { readingCourses, readingJson } from '@/lib/textbook-assignments-server'
 import { isCatalogUnit } from '@/lib/retired-curriculum'
@@ -53,6 +54,7 @@ export const POST = withRole(['teacher', 'admin'], async (req, ctx) => {
   }
   if (!plan || !revision(body.planVersion)) return readingJson({ error: 'Save the shared sequence first.' }, 409)
   const payload: Record<string, unknown> = {}
+  let dateSource = ''
   if (!['apply', 'meeting', 'schedule', 'unassign', 'position', 'assign'].includes(body.action)) return readingJson({ error: 'Unknown plan action.' }, 400)
   if (body.action !== 'apply') {
     const { data, error } = await supabaseAdmin.from('teaching_plan_classes').select('steps,version').eq('plan_id', plan.id).eq('course_id', scope.course.id).maybeSingle()
@@ -62,6 +64,7 @@ export const POST = withRole(['teacher', 'admin'], async (req, ctx) => {
     const step = (firstPlacement ? plan.steps : state?.steps)?.find(s => s.id === body.stepId)
     if (!step || !firstPlacement && state?.version !== body.version) return readingJson({ error: 'This class plan changed. Reload before saving.' }, 409)
     payload.stepId = step.id
+    dateSource = step.activityKey
     if (body.action === 'unassign') {
       const expected = body.expected
       if (expected !== null && (!expected || typeof expected !== 'object' || Array.isArray(expected) || typeof expected.sourceId !== 'string' || expected.version !== null && !revision(expected.version) || ['dueAt', 'opensAt', 'closesAt'].some(key => expected[key] !== null && (typeof expected[key] !== 'string' || !Number.isFinite(Date.parse(expected[key])))))) return readingJson({ error: 'Reload the assignment before unassigning it.' }, 400)
@@ -86,6 +89,13 @@ export const POST = withRole(['teacher', 'admin'], async (req, ctx) => {
       const targets = await lessonTargets(lesson)
       Object.assign(payload, { dueOn: body.dueOn, expectedId: body.expectedId, expectedDue: body.expectedDue, targetId: targets[0].id })
     }
+  }
+  const changedDue = body.action === 'schedule' ? (body.slot as TeachingSlot)?.date : body.action === 'assign' ? body.dueOn : null
+  const dateChange = await prepareSequenceDate(scope.course.id, dateSource, changedDue, body.sequenceConfirmation)
+  if (dateChange && !dateChange.confirmed) return readingJson(sequenceDateNotice(dateChange.context), 409)
+  if (dateChange?.confirmed) {
+    const { data, error } = await saveConfirmedSequenceDate(scope.course.teacher_email, scope.course.id, dateSource, changedDue, dateChange.confirmed, body.action, { plan: plan.id, planVersion: body.planVersion, version: body.version, payload }, ctx.email)
+    return error ? saveError(error) : readingJson(data)
   }
   const calendarAction = body.action === 'schedule' || body.action === 'unassign'
   const { data, error } = await supabaseAdmin.rpc(calendarAction ? body.action === 'schedule' ? 'schedule_teaching_activity' : 'unassign_teaching_activity' : 'change_teaching_class', { p_owner: scope.course.teacher_email, p_plan: plan.id, p_course: scope.course.id, p_plan_version: body.planVersion, p_version: body.version, ...(calendarAction ? {} : { p_action: body.action }), p_payload: payload, p_actor: ctx.email })

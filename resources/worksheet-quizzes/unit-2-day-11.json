@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 11,
+  "title": "Angled launches",
+  "target": "Use components to analyze an angled projectile.",
+  "criteria": [
+    "Separate the initial velocity into two components.",
+    "Use vertical motion to determine flight time.",
+    "Explain the assumptions behind range comparisons."
+  ],
+  "source_sha256": "f7e20d8b3b7f889206e659ce479efa6b9c048c6db954f5cf8ea7d6b62218ec90",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.496Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A launch speed is 10 m/s at an angle with cosθ = 0.8 and sinθ = 0.6. What are initial horizontal and upward components?",
+      "options": [
+        "6 and 8 m/s.",
+        "18 and 16 m/s.",
+        "10 and 10 m/s.",
+        "8 and 6 m/s."
+      ],
+      "correct_index": 3,
+      "guide": "vx = v cosθ = 8; vy = v sinθ = 6.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A launch has horizontal component 9 m/s and upward component 12 m/s. What is launch speed?",
+      "options": [
+        "15 m/s",
+        "108 m/s",
+        "21 m/s",
+        "3 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "Magnitude = √(9² + 12²) = 15.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Initial upward velocity is 8 m/s. Use g = 10 m/s² without drag. How long to the highest point?",
+      "options": [
+        "8 s",
+        "0.8 s",
+        "80 s",
+        "1.6 s"
+      ],
+      "correct_index": 1,
+      "guide": "At top vy = 0; t = v_y0/g = 0.8 s.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A projectile launches with vx = 5 m/s and vy = 20 m/s upward, returning to launch height. Use g = 10 m/s² and no drag. What are total flight time and range?",
+      "options": [
+        "2 s and 10 m.",
+        "20 s and 100 m.",
+        "4 s and 20 m.",
+        "4 s and 80 m."
+      ],
+      "correct_index": 2,
+      "guide": "Time = 2vy/g = 4 s; range = vx t = 20 m.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Under which conditions does 45° maximize range for fixed launch speed?",
+      "options": [
+        "Only when horizontal velocity is zero.",
+        "Equal launch/landing heights, uniform g, negligible air resistance.",
+        "All terrains and all drag forces.",
+        "Only when gravity is absent."
+      ],
+      "correct_index": 1,
+      "guide": "The familiar angle result depends on these ideal assumptions.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A projectile lands far below its launch height. Is 45° guaranteed to maximize range at fixed speed?",
+      "options": [
+        "Yes; 45° is exact in every environment.",
+        "Yes; vertical displacement never matters.",
+        "No; unequal heights change the flight-time and range relationship.",
+        "No; range must always be zero."
+      ],
+      "correct_index": 2,
+      "guide": "The standard equal-height result cannot be applied uncritically.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A launch speed is 10 m/s at an angle with cosθ = 0.8 and sinθ = 0.6. What are initial horizontal and upward components?",
+      "options": [
+        "6 and 8 m/s.",
+        "10 and 10 m/s.",
+        "8 and 6 m/s.",
+        "18 and 16 m/s."
+      ],
+      "correct_index": 2,
+      "guide": "vx = v cosθ = 8; vy = v sinθ = 6.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A launch has horizontal component 9 m/s and upward component 12 m/s. What is launch speed?",
+      "options": [
+        "3 m/s",
+        "21 m/s",
+        "108 m/s",
+        "15 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "Magnitude = √(9² + 12²) = 15.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Initial upward velocity is 8 m/s. Use g = 10 m/s² without drag. How long to the highest point?",
+      "options": [
+        "8 s",
+        "0.8 s",
+        "1.6 s",
+        "80 s"
+      ],
+      "correct_index": 1,
+      "guide": "At top vy = 0; t = v_y0/g = 0.8 s.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A projectile launches with vx = 5 m/s and vy = 20 m/s upward, returning to launch height. Use g = 10 m/s² and no drag. What are total flight time and range?",
+      "options": [
+        "4 s and 80 m.",
+        "20 s and 100 m.",
+        "2 s and 10 m.",
+        "4 s and 20 m."
+      ],
+      "correct_index": 3,
+      "guide": "Time = 2vy/g = 4 s; range = vx t = 20 m.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Under which conditions does 45° maximize range for fixed launch speed?",
+      "options": [
+        "Only when gravity is absent.",
+        "Only when horizontal velocity is zero.",
+        "Equal launch/landing heights, uniform g, negligible air resistance.",
+        "All terrains and all drag forces."
+      ],
+      "correct_index": 2,
+      "guide": "The familiar angle result depends on these ideal assumptions.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A projectile lands far below its launch height. Is 45° guaranteed to maximize range at fixed speed?",
+      "options": [
+        "No; unequal heights change the flight-time and range relationship.",
+        "Yes; 45° is exact in every environment.",
+        "Yes; vertical displacement never matters.",
+        "No; range must always be zero."
+      ],
+      "correct_index": 0,
+      "guide": "The standard equal-height result cannot be applied uncritically.",
+      "target_slug": "u2.r2-predict-landing",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

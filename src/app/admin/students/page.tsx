@@ -9,6 +9,8 @@ import { useClassScope } from '@/lib/use-class-scope'
 import { useViewAs } from '@/lib/use-view-as'
 import { studentsHref, studentsView, teachingHref } from '@/lib/teaching-navigation'
 import styles from './students.module.css'
+import GradingTermSettings from '@/components/admin/GradingTermSettings'
+import { canChangeAssessmentScope } from '@/components/admin/useAssessmentReviewGuard'
 
 const loading = () => <p role="status" className="py-8 text-muted-foreground">Loading student tools…</p>
 const RosterManager = dynamic(() => import('@/components/admin/students/RosterManager'), { loading })
@@ -52,8 +54,9 @@ function StudentsWorkspace() {
     if (ready && params.has('class')) setClassScope(classId || null, courses.find(c => c.id === classId) ? label(courses.find(c => c.id === classId)!) : null)
   }, [ready, params, classId, courses, setClassScope])
   const selectClass = (id: string) => {
+    if (!canChangeAssessmentScope()) return
     setClassScope(id || null, courses.find(c => c.id === id) ? label(courses.find(c => c.id === id)!) : null)
-    router.push(studentsHref(view, id, view === 'rewards' ? section : undefined), { scroll: false })
+    router.push(studentsHref(view, id, view === 'rewards' ? section : view === 'settings' && params.get('section') === 'grading-terms' ? 'grading-terms' : undefined), { scroll: false })
   }
   const needsClass = view === 'roster' || view === 'activity'
   const unavailableClass = !!classId && !loadingClasses && !error && !courses.some(course => course.id === classId)
@@ -80,7 +83,7 @@ function StudentsWorkspace() {
         {view === 'activity' && (role === 'admin' ? <StudentActivity key={classId + params.get('student')} classId={classId} initialStudentId={params.get('student') ?? ''} /> : <TeacherActivity key={classId + params.get('student')} classId={classId} initialStudentId={params.get('student') ?? ''} />)}
       </>}
       {view === 'rewards' && <><p className={styles.scopeNote}>{section === 'challenges' ? 'The challenge board includes your classes. New challenges start with the class selected above; you can choose additional classes or individual students.' : 'Manage rewards across your classes. Each reward shows which classes can use it; redemption requests keep their existing account-wide scope.'}</p>{section === 'challenges' ? <ChallengesManager key={classId} classId={classId} /> : <RewardsManager />}</>}
-      {view === 'settings' && <><div className={styles.settingsLinks}><Link href={teachingHref('pacing', classId)}>Pacing &amp; meeting pattern <ArrowUpRight size={16} /></Link><Link href="/admin/teacher">Teacher setup &amp; XP goals <ArrowUpRight size={16} /></Link></div><p className={styles.scopeNote}>Google Classroom connections and synced classes are managed across your account.</p><RosterManager key={classId + view} classId={classId} mode="settings" /></>}
+      {view === 'settings' && (params.get('section') === 'grading-terms' ? <GradingTermSettings classId={classId || null}/> : <><div className={styles.settingsLinks}><Link href={studentsHref('settings', classId, 'grading-terms')}>Grading terms &amp; assignment placement <ArrowUpRight size={16}/></Link><Link href={teachingHref('pacing', classId)}>Pacing &amp; meeting pattern <ArrowUpRight size={16} /></Link><Link href="/admin/teacher">Teacher setup &amp; XP goals <ArrowUpRight size={16} /></Link></div><p className={styles.scopeNote}>Google Classroom connections and synced classes are managed across your account.</p><RosterManager key={classId + view} classId={classId} mode="settings" /></>)}
     </>}
   </div>
 }

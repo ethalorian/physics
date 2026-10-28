@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 8,
+  "day": 3,
+  "title": "Gears and wheels",
+  "target": "Use gear ratio and wheel circumference to predict an ideal travel speed.",
+  "criteria": [
+    "Connect gear teeth with speed ratio.",
+    "Calculate distance per wheel revolution.",
+    "Explain the tradeoff between ideal speed and available torque."
+  ],
+  "source_sha256": "87953695371a70323ca75a2c83f7820e61db10f67e94ae9b908551340fdf7f80",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.574Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 12-tooth driver turns a 36-tooth axle gear at 450 driver rpm. What is axle rpm?",
+      "options": [
+        "38 rpm",
+        "1,350 rpm",
+        "450 rpm",
+        "150 rpm"
+      ],
+      "correct_index": 3,
+      "guide": "Axle rpm = driver rpm × driver teeth / driven teeth = 450/3 = 150.",
+      "target_slug": "u8.k3-gear-relationship",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A motor gear drives a gear with four times as many teeth. In an ideal lossless pair, which comparison is correct?",
+      "options": [
+        "Axle rate quadruples; torque is unchanged.",
+        "Axle rate and torque both quadruple.",
+        "Axle rate is one-quarter; axle torque is four times the input torque.",
+        "Rate and torque are both unchanged."
+      ],
+      "correct_index": 2,
+      "guide": "The 4:1 reduction trades speed for torque; it does not multiply power.",
+      "target_slug": "u8.k3-gear-relationship",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A no-slip wheel has circumference 0.24 m and turns at 90 rpm. What is ideal ground speed?",
+      "options": [
+        "0.24 m/s",
+        "0.36 m/s",
+        "0.16 m/s",
+        "21.6 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "90 rpm = 1.5 revolutions per second. Multiply circumference by 1.5; do not treat minutes as seconds.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wheel diameter is 0.10 m. Use π = 3.14. How far does it travel in two complete turns without slipping?",
+      "options": [
+        "0.628 m",
+        "6.28 m",
+        "0.200 m",
+        "0.314 m"
+      ],
+      "correct_index": 0,
+      "guide": "One circumference is πd = 0.314 m; two turns cover 0.628 m.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At fixed axle torque, a larger wheel radius gives what ideal driving force at the ground?",
+      "options": [
+        "The same force regardless of radius.",
+        "A larger force because radius always increases torque.",
+        "Zero force for every larger wheel.",
+        "A smaller force because F = torque/radius."
+      ],
+      "correct_index": 3,
+      "guide": "At a fixed axle torque, increasing radius reduces tangential driving force. This explains the starting-effort tradeoff.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A team doubles wheel diameter and predicts twice the speed. Which condition is needed for that ideal prediction?",
+      "options": [
+        "The axle rate stays the same and the wheels do not slip.",
+        "Axle rate must also double.",
+        "The larger wheels must eliminate all losses.",
+        "The motor has no energy source."
+      ],
+      "correct_index": 0,
+      "guide": "Speed is circumference × axle rate. The diameter change doubles circumference only; real loading may change axle rate.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 24-tooth driver turns a 72-tooth axle gear at 450 driver rpm. What is axle rpm?",
+      "options": [
+        "38 rpm",
+        "150 rpm",
+        "1,350 rpm",
+        "450 rpm"
+      ],
+      "correct_index": 1,
+      "guide": "Axle rpm = driver rpm × driver teeth / driven teeth = 450/3 = 150.",
+      "target_slug": "u8.k3-gear-relationship",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A motor gear drives a gear with four times as many teeth. In an ideal lossless pair, which comparison is correct?",
+      "options": [
+        "Axle rate is one-quarter; axle torque is four times the input torque.",
+        "Rate and torque are both unchanged.",
+        "Axle rate quadruples; torque is unchanged.",
+        "Axle rate and torque both quadruple."
+      ],
+      "correct_index": 0,
+      "guide": "The 4:1 reduction trades speed for torque; it does not multiply power.",
+      "target_slug": "u8.k3-gear-relationship",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A no-slip wheel has circumference 0.48 m and turns at 90 rpm. What is ideal ground speed?",
+      "options": [
+        "0.48 m/s",
+        "43.2 m/s",
+        "0.32 m/s",
+        "0.72 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "90 rpm = 1.5 revolutions per second. Multiply circumference by 1.5; do not treat minutes as seconds.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wheel diameter is 0.10 m. Use π = 3.14. How far does it travel in two complete turns without slipping?",
+      "options": [
+        "0.628 m",
+        "0.314 m",
+        "6.28 m",
+        "0.200 m"
+      ],
+      "correct_index": 0,
+      "guide": "One circumference is πd = 0.314 m; two turns cover 0.628 m.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At fixed axle torque, a larger wheel radius gives what ideal driving force at the ground?",
+      "options": [
+        "The same force regardless of radius.",
+        "Zero force for every larger wheel.",
+        "A smaller force because F = torque/radius.",
+        "A larger force because radius always increases torque."
+      ],
+      "correct_index": 2,
+      "guide": "At a fixed axle torque, increasing radius reduces tangential driving force. This explains the starting-effort tradeoff.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A team doubles wheel diameter and predicts twice the speed. Which condition is needed for that ideal prediction?",
+      "options": [
+        "Axle rate must also double.",
+        "The axle rate stays the same and the wheels do not slip.",
+        "The larger wheels must eliminate all losses.",
+        "The motor has no energy source."
+      ],
+      "correct_index": 1,
+      "guide": "Speed is circumference × axle rate. The diameter change doubles circumference only; real loading may change axle rate.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

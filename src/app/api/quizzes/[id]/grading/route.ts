@@ -11,6 +11,8 @@ export const POST=withAuth<{id:string}>(async(req,ctx)=>{
  if(!quizStaff(ctx)||ctx.viewingAsTeacher)return quizJson({error:'Only the teacher can run grading checks.'},403)
  const {id}=await ctx.params;if(!QUIZ_UUID.test(id))return quizJson({error:'Quiz unavailable.'},404)
  const access=await accessQuiz(id,ctx);if(!access)return quizJson({error:'Quiz unavailable.'},404)
+ const {data:pair,error:pairError}=await supabaseAdmin.from('worksheet_assignments').select('id').eq('quiz_id',id).maybeSingle();if(pairError)throw pairError
+ if(pair)return quizJson({error:'Paired worksheet quizzes use answer-key scoring and teacher review. No AI analysis is needed.'},409)
  const body=await req.json().catch(()=>null)
  if(body?.action==='feedback'){
   const roster=new Set((await quizRoster(access.quiz)).map(s=>s.id)),work=await quizListWork([id])
@@ -31,9 +33,9 @@ export const POST=withAuth<{id:string}>(async(req,ctx)=>{
   return quizJson({message:`Refreshed AI feedback for ${updated} submission${updated===1?'':'s'} in your writing style. Scores, mastery decisions, and your saved feedback are unchanged.${failed?' '+failed+' could not be refreshed; their previous feedback is saved.':''}`})
  }
  if(body?.action==='check'){
-  const sample={...access.quiz,title:'Connection check — synthetic physics work',instructions:'Use the given answer guides.',questions:[{id:'sample-choice',kind:'choice' as const,prompt:'Which includes direction?',options:['Speed','Velocity'],correct_index:1,points:2,target_id:'',guide:'Velocity includes direction.'},{id:'sample-written',kind:'written' as const,prompt:'What is velocity?',points:4,target_id:'',guide:'4 points: speed and direction. 2 points: speed only. 0: unrelated.'},{id:'sample-drawing',kind:'problem' as const,prompt:'Draw and describe one force pointing right.',points:4,target_id:'',guide:'4 points for a rightward arrow, a force label, and a consistent written description. Accept a drawing plus concise text.'}]}
+  const sample={...access.quiz,title:'Connection check — synthetic physics work',instructions:'Use the given answer guides.',questions:[{id:'sample-choice',kind:'choice' as const,prompt:'Which includes direction?',options:['Speed','Velocity'],correct_index:1,points:2,target_id:'sample-target',guide:'Velocity includes direction.'},{id:'sample-written',kind:'written' as const,prompt:'What is velocity?',points:4,target_id:'sample-target',guide:'4 points: speed and direction. 2 points: speed only. 0: unrelated.'},{id:'sample-drawing',kind:'problem' as const,prompt:'Draw and describe one force pointing right.',points:4,target_id:'sample-target',guide:'4 points for a rightward arrow, a force label, and a consistent written description. Accept a drawing plus concise text.'}]}
   try{
-   const result=await assessQuiz(sample,{'sample-choice':'1','sample-written':'How fast an object moves and in which direction.','sample-drawing':{model:{text:'',mode:'drawing',strokes:[{tool:'arrow',color:'#000000',points:[{x:60,y:100},{x:220,y:100}],width:4},{tool:'text',color:'#000000',text:'Force',points:[{x:100,y:75}],width:16}]},plan:'Right is positive.',work:'The force arrow points right.',answer:'One force to the right.'}})
+   const result=await assessQuiz(sample,{'sample-choice':'1','sample-written':'How fast an object moves and in which direction.','sample-drawing':{model:{text:'',mode:'drawing',strokes:[{tool:'arrow',color:'#000000',points:[{x:60,y:100},{x:220,y:100}],width:4},{tool:'text',color:'#000000',text:'Force',points:[{x:100,y:75}],width:16}]},plan:'Right is positive.',work:'The force arrow points right.',answer:'One force to the right.'}},true)
    const unexpected=result.result.items.filter(i=>i.score!==(i.id==='sample-choice'?2:4))
    if(unexpected.length)return quizJson({error:`Claude connected, but the sample scores need inspection. ${unexpected.map(i=>`${i.id.replace('sample-','Sample ')}: ${i.score}/${i.id==='sample-choice'?2:4}. ${i.feedback}`).join(' ')} No student work was changed.`},502)
    return quizJson({ok:true,model:result.model,message:'Claude connection and sample scoring passed. No student work or mastery ratings were changed.'})

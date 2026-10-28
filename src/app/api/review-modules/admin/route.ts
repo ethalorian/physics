@@ -13,7 +13,7 @@ export const GET=withRole(['teacher','admin'],async (_request,ctx)=>{
  const slugs=scope.assignments.map(a=>a.slug)
  const [work,scores,courses]=await Promise.all([
   scope.users.length?supabaseAdmin.from('review_module_work').select('*,students(name,email)').in('module_slug',slugs).in('user_id',scope.users).order('updated_at',{ascending:false}):{data:[],error:null},
-  scope.users.length?supabaseAdmin.from('review_module_scores').select('module_slug,user_id,work_version,work_status,response_snapshot,rubric_version,status,result,overrides,score,model,error,revision,graded_at,lease_until,attempts').in('module_slug',slugs).in('user_id',scope.users):{data:[],error:null},
+  scope.users.length?supabaseAdmin.from('review_module_scores').select('module_slug,user_id,work_version,work_status,response_snapshot,rubric_version,status,result,overrides,score,model,error,revision,graded_at,lease_until,attempts,released_at,released_by').in('module_slug',slugs).in('user_id',scope.users):{data:[],error:null},
   scope.courseIds.length?supabaseAdmin.from('courses').select('id,name,section').in('id',scope.courseIds):{data:[],error:null}
  ])
  if(work.error)throw work.error;if(scores.error)throw scores.error;if(courses.error)throw courses.error

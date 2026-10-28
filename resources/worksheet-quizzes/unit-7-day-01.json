@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 1,
+  "title": "Charge and the electric car",
+  "target": "Explain charge interactions and trace an electric car’s energy transfers.",
+  "criteria": [
+    "Predict attraction or repulsion from charge signs.",
+    "Distinguish charge from energy.",
+    "Trace energy from a battery to moving wheels."
+  ],
+  "source_sha256": "2a582b70475ee82e2cadd14039eda37eb98284cf383e2661c578a6d1a9230f83",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.559Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Two small charged beads hang on insulating threads. Both beads have negative net charge. Which force direction is expected?",
+      "options": [
+        "Each is pushed away from the other.",
+        "Neither feels a force because both are negative.",
+        "Only the heavier bead feels a force.",
+        "Each is pulled toward the other."
+      ],
+      "correct_index": 0,
+      "guide": "Like charges repel. Each bead feels the interaction force.",
+      "target_slug": "u7.anchor-charge",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A positive bead is to the left of a negative bead. Which pair of electric forces is correct?",
+      "options": [
+        "Both forces: right.",
+        "Positive bead: right; negative bead: left.",
+        "Both forces: left.",
+        "Positive bead: left; negative bead: right."
+      ],
+      "correct_index": 1,
+      "guide": "Opposite charges attract; the forces point toward one another.",
+      "target_slug": "u7.anchor-charge",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A motor runs for a while. Which statement distinguishes charge from energy?",
+      "options": [
+        "Energy and charge are two names for the same quantity.",
+        "The wire creates a new supply of charge each second.",
+        "Charge circulates through the circuit while energy is transferred to motion and heating.",
+        "Charge is used up inside the motor."
+      ],
+      "correct_index": 2,
+      "guide": "Circuit charge is conserved; the battery transfers energy to the load.",
+      "target_slug": "u7.anchor-charge",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A battery transfers 18 J while 3 C passes. Which statement uses the units correctly?",
+      "options": [
+        "18 J describes energy; 3 C describes charge.",
+        "Both numbers describe electric force.",
+        "18 J is current; 3 C is power.",
+        "Both numbers describe mass."
+      ],
+      "correct_index": 0,
+      "guide": "Joules measure energy and coulombs measure charge.",
+      "target_slug": "u7.anchor-charge",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A battery-driven fan starts from rest. Which energy sequence explains its useful output?",
+      "options": [
+        "Current → creation of energy from nothing.",
+        "Blade rotation → new charge → battery chemical energy only.",
+        "Chemical energy → electric charge being destroyed.",
+        "Chemical energy → electrical transfer → blade rotation."
+      ],
+      "correct_index": 3,
+      "guide": "A battery supplies energy through the circuit and the motor produces mechanical rotation.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A toy winch lifts a load using a battery and motor. Which account is consistent with conservation?",
+      "options": [
+        "All battery energy disappears when the load stops.",
+        "Battery energy becomes increased gravitational energy plus thermal and other outputs.",
+        "The motor creates more energy than the battery supplies.",
+        "No energy transfers because circuit charge is conserved."
+      ],
+      "correct_index": 1,
+      "guide": "Charge conservation does not prevent energy transfer. Include useful and less useful outputs.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Two small charged beads hang on insulating threads. Both beads have negative net charge. Which force direction is expected?",
+      "options": [
+        "Only the heavier bead feels a force.",
+        "Neither feels a force because both are negative.",
+        "Each is pushed away from the other.",
+        "Each is pulled toward the other."
+      ],
+      "correct_index": 2,
+      "guide": "Like charges repel. Each bead feels the interaction force.",
+      "target_slug": "u7.anchor-charge",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A positive bead is to the left of a negative bead. Which pair of electric forces is correct?",
+      "options": [
+        "Both forces: left.",
+        "Positive bead: right; negative bead: left.",
+        "Both forces: right.",
+        "Positive bead: left; negative bead: right."
+      ],
+      "correct_index": 1,
+      "guide": "Opposite charges attract; the forces point toward one another.",
+      "target_slug": "u7.anchor-charge",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A motor runs for a while. Which statement distinguishes charge from energy?",
+      "options": [
+        "Charge circulates through the circuit while energy is transferred to motion and heating.",
+        "Energy and charge are two names for the same quantity.",
+        "Charge is used up inside the motor.",
+        "The wire creates a new supply of charge each second."
+      ],
+      "correct_index": 0,
+      "guide": "Circuit charge is conserved; the battery transfers energy to the load.",
+      "target_slug": "u7.anchor-charge",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A battery transfers 18 J while 3 C passes. Which statement uses the units correctly?",
+      "options": [
+        "Both numbers describe electric force.",
+        "18 J describes energy; 3 C describes charge.",
+        "18 J is current; 3 C is power.",
+        "Both numbers describe mass."
+      ],
+      "correct_index": 1,
+      "guide": "Joules measure energy and coulombs measure charge.",
+      "target_slug": "u7.anchor-charge",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A battery-driven fan starts from rest. Which energy sequence explains its useful output?",
+      "options": [
+        "Current → creation of energy from nothing.",
+        "Blade rotation → new charge → battery chemical energy only.",
+        "Chemical energy → electric charge being destroyed.",
+        "Chemical energy → electrical transfer → blade rotation."
+      ],
+      "correct_index": 3,
+      "guide": "A battery supplies energy through the circuit and the motor produces mechanical rotation.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A toy winch lifts a load using a battery and motor. Which account is consistent with conservation?",
+      "options": [
+        "All battery energy disappears when the load stops.",
+        "No energy transfers because circuit charge is conserved.",
+        "Battery energy becomes increased gravitational energy plus thermal and other outputs.",
+        "The motor creates more energy than the battery supplies."
+      ],
+      "correct_index": 2,
+      "guide": "Charge conservation does not prevent energy transfer. Include useful and less useful outputs.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

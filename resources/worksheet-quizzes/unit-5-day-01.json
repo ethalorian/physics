@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 1,
+  "title": "Heat is not temperature",
+  "target": "Distinguish temperature from energy transferred because of a temperature difference.",
+  "criteria": [
+    "Compare temperature with thermal energy.",
+    "Identify the direction of spontaneous heat transfer.",
+    "Explain why amount and material matter."
+  ],
+  "source_sha256": "9d17e773983e1e4f2f26a2c7e17bbb0cf181e089afb8b98f23593ad5e6230f0d",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.531Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Two samples of the same material are at the same temperature, but one has three times the mass. Which claim is best?",
+      "options": [
+        "Equal temperature does not mean equal total thermal energy.",
+        "The smaller sample must contain no particle motion.",
+        "The larger sample must have a higher temperature.",
+        "Equal temperature guarantees equal total thermal energy."
+      ],
+      "correct_index": 0,
+      "guide": "Temperature is an intensive measure; the amount of material affects total internal energy.",
+      "target_slug": "u5.anchor-heat-vs-temp",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A thermometer reads 45°C. What does this reading directly describe?",
+      "options": [
+        "The number of particles in the sample.",
+        "Heat flow in joules per second.",
+        "The total energy of any object at that reading.",
+        "Temperature, not an amount of heat in joules."
+      ],
+      "correct_index": 3,
+      "guide": "Temperature alone does not specify total energy or heat transfer.",
+      "target_slug": "u5.anchor-heat-vs-temp",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 48°C ceramic tile contacts a 16°C metal block. Initially, which way is spontaneous net heat transfer?",
+      "options": [
+        "Toward whichever object is heavier, regardless of temperature.",
+        "From tile to block.",
+        "Both transfer directions have equal net energy immediately.",
+        "From block to tile."
+      ],
+      "correct_index": 1,
+      "guide": "Net heat transfer is initially from hotter to colder, independent of which material is metal.",
+      "target_slug": "u5.anchor-heat-vs-temp",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two objects are in thermal equilibrium. What statement follows?",
+      "options": [
+        "They must contain equal total energy.",
+        "They must have equal masses.",
+        "All microscopic motion stops.",
+        "There is no net heat transfer due to a temperature difference."
+      ],
+      "correct_index": 3,
+      "guide": "Thermal equilibrium means equal temperature and no temperature-driven net heat flow.",
+      "target_slug": "u5.anchor-heat-vs-temp",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Equal masses of two materials receive equal energy with no loss or phase change. Their temperature rises differ. What property can explain the difference?",
+      "options": [
+        "One temperature rise must be invented.",
+        "Heat must always change mass instead.",
+        "Different specific heats.",
+        "Different definitions of a joule."
+      ],
+      "correct_index": 2,
+      "guide": "ΔT = Q/(mc); with equal Q and m, a different c changes the rise.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A cup and a tank contain the same liquid at 50°C. Both cool to 30°C with no phase change. Which releases more energy if the tank holds much more liquid?",
+      "options": [
+        "They release equal energy because initial temperatures match.",
+        "Neither can transfer energy below 50°C.",
+        "The tank, because more mass undergoes the same temperature change.",
+        "The cup, because small objects always contain more heat."
+      ],
+      "correct_index": 2,
+      "guide": "For the same material and ΔT, |Q| is proportional to mass.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Two samples of the same material are at the same temperature, but one has three times the mass. Which claim is best?",
+      "options": [
+        "Equal temperature does not mean equal total thermal energy.",
+        "The smaller sample must contain no particle motion.",
+        "The larger sample must have a higher temperature.",
+        "Equal temperature guarantees equal total thermal energy."
+      ],
+      "correct_index": 0,
+      "guide": "Temperature is an intensive measure; the amount of material affects total internal energy.",
+      "target_slug": "u5.anchor-heat-vs-temp",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A thermometer reads 45°C. What does this reading directly describe?",
+      "options": [
+        "The total energy of any object at that reading.",
+        "Temperature, not an amount of heat in joules.",
+        "The number of particles in the sample.",
+        "Heat flow in joules per second."
+      ],
+      "correct_index": 1,
+      "guide": "Temperature alone does not specify total energy or heat transfer.",
+      "target_slug": "u5.anchor-heat-vs-temp",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 48°C ceramic tile contacts a 16°C metal block. Initially, which way is spontaneous net heat transfer?",
+      "options": [
+        "Toward whichever object is heavier, regardless of temperature.",
+        "Both transfer directions have equal net energy immediately.",
+        "From block to tile.",
+        "From tile to block."
+      ],
+      "correct_index": 3,
+      "guide": "Net heat transfer is initially from hotter to colder, independent of which material is metal.",
+      "target_slug": "u5.anchor-heat-vs-temp",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two objects are in thermal equilibrium. What statement follows?",
+      "options": [
+        "They must contain equal total energy.",
+        "They must have equal masses.",
+        "All microscopic motion stops.",
+        "There is no net heat transfer due to a temperature difference."
+      ],
+      "correct_index": 3,
+      "guide": "Thermal equilibrium means equal temperature and no temperature-driven net heat flow.",
+      "target_slug": "u5.anchor-heat-vs-temp",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Equal masses of two materials receive equal energy with no loss or phase change. Their temperature rises differ. What property can explain the difference?",
+      "options": [
+        "Different specific heats.",
+        "One temperature rise must be invented.",
+        "Different definitions of a joule.",
+        "Heat must always change mass instead."
+      ],
+      "correct_index": 0,
+      "guide": "ΔT = Q/(mc); with equal Q and m, a different c changes the rise.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A cup and a tank contain the same liquid at 50°C. Both cool to 30°C with no phase change. Which releases more energy if the tank holds much more liquid?",
+      "options": [
+        "Neither can transfer energy below 50°C.",
+        "They release equal energy because initial temperatures match.",
+        "The tank, because more mass undergoes the same temperature change.",
+        "The cup, because small objects always contain more heat."
+      ],
+      "correct_index": 2,
+      "guide": "For the same material and ΔT, |Q| is proportional to mass.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 8,
+  "day": 5,
+  "title": "Axles and alignment",
+  "target": "Use measurements and observations to improve straight rolling.",
+  "criteria": [
+    "Check axle parallelism and wheel clearance.",
+    "Record a repeatable alignment test.",
+    "Use evidence to choose one adjustment."
+  ],
+  "source_sha256": "1e8fa5e238807ff15ed28ca7db76cd618ab89c362a7baddc8db105ca40b1794c",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.575Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A model car drifts sideways in repeated unpowered roll tests. What should be checked first?",
+      "options": [
+        "Axle parallelism and unequal wheel rubbing.",
+        "Whether the paint reflects light.",
+        "The motor voltage while disconnected.",
+        "Whether the switch label is large enough."
+      ],
+      "correct_index": 0,
+      "guide": "Unpowered drift can reveal alignment and asymmetric friction without motor effects.",
+      "target_slug": "u8.k4-veer-cause",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A wheel touches the chassis once each turn. Which change addresses this observation?",
+      "options": [
+        "Double the battery voltage to hide the rubbing.",
+        "Call the wheel free because it clears at one angle.",
+        "Adjust the fit to maintain clearance throughout a full turn, then retest.",
+        "Add more contact pressure."
+      ],
+      "correct_index": 2,
+      "guide": "Full-rotation clearance matters; periodic rubbing can create unequal resistance.",
+      "target_slug": "u8.k4-veer-cause",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which before-and-after free-roll comparison best tests an alignment adjustment?",
+      "options": [
+        "Powered trials before and unpowered trials after.",
+        "Same ramp release, surface, and distance; several trials for each alignment.",
+        "Different slopes and a single trial each.",
+        "Only the best result from each design."
+      ],
+      "correct_index": 1,
+      "guide": "Controls and repeats help separate alignment effects from test conditions and variation.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Example offsets after the same forward travel are 9, 8, 10 cm before and 3, 4, 2 cm after one adjustment. What is supported?",
+      "options": [
+        "The first readings were impossible.",
+        "The adjustment reduced sideways drift in these trials.",
+        "The adjustment doubled motor power.",
+        "The car will never drift again."
+      ],
+      "correct_index": 1,
+      "guide": "Every after value is smaller; the evidence supports reduced drift under tested conditions, not universal guarantees.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A free-roll test shows rubbing only at the left rear wheel. Which next step best isolates a cause of drift?",
+      "options": [
+        "Change wheels, battery, motor, and surface together.",
+        "Adjust only the paint pattern.",
+        "Record a better result without retesting.",
+        "Correct that contact and repeat the same test before changing other parts."
+      ],
+      "correct_index": 3,
+      "guide": "One controlled change gives interpretable evidence about the observed asymmetric resistance.",
+      "target_slug": "u8.k4-veer-cause",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "After an alignment revision, offsets remain 7, 8, and 7 cm; before they were 8, 7, and 8 cm. What is the strongest claim?",
+      "options": [
+        "The car is perfectly aligned.",
+        "The readings prove no physical cause exists.",
+        "These results show little clear improvement; more diagnosis is needed.",
+        "The revision proved a large improvement."
+      ],
+      "correct_index": 2,
+      "guide": "The overlapping ranges do not show a large reliable change. Check causes and measurement consistency.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A model car drifts sideways in repeated unpowered roll tests. What should be checked first?",
+      "options": [
+        "Whether the paint reflects light.",
+        "Axle parallelism and unequal wheel rubbing.",
+        "Whether the switch label is large enough.",
+        "The motor voltage while disconnected."
+      ],
+      "correct_index": 1,
+      "guide": "Unpowered drift can reveal alignment and asymmetric friction without motor effects.",
+      "target_slug": "u8.k4-veer-cause",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A wheel touches the chassis once each turn. Which change addresses this observation?",
+      "options": [
+        "Add more contact pressure.",
+        "Call the wheel free because it clears at one angle.",
+        "Adjust the fit to maintain clearance throughout a full turn, then retest.",
+        "Double the battery voltage to hide the rubbing."
+      ],
+      "correct_index": 2,
+      "guide": "Full-rotation clearance matters; periodic rubbing can create unequal resistance.",
+      "target_slug": "u8.k4-veer-cause",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which before-and-after free-roll comparison best tests an alignment adjustment?",
+      "options": [
+        "Same ramp release, surface, and distance; several trials for each alignment.",
+        "Different slopes and a single trial each.",
+        "Only the best result from each design.",
+        "Powered trials before and unpowered trials after."
+      ],
+      "correct_index": 0,
+      "guide": "Controls and repeats help separate alignment effects from test conditions and variation.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Example offsets after the same forward travel are 9, 8, 10 cm before and 3, 4, 2 cm after one adjustment. What is supported?",
+      "options": [
+        "The car will never drift again.",
+        "The adjustment doubled motor power.",
+        "The adjustment reduced sideways drift in these trials.",
+        "The first readings were impossible."
+      ],
+      "correct_index": 2,
+      "guide": "Every after value is smaller; the evidence supports reduced drift under tested conditions, not universal guarantees.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A free-roll test shows rubbing only at the left rear wheel. Which next step best isolates a cause of drift?",
+      "options": [
+        "Adjust only the paint pattern.",
+        "Change wheels, battery, motor, and surface together.",
+        "Record a better result without retesting.",
+        "Correct that contact and repeat the same test before changing other parts."
+      ],
+      "correct_index": 3,
+      "guide": "One controlled change gives interpretable evidence about the observed asymmetric resistance.",
+      "target_slug": "u8.k4-veer-cause",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "After an alignment revision, offsets remain 7, 8, and 7 cm; before they were 8, 7, and 8 cm. What is the strongest claim?",
+      "options": [
+        "The readings prove no physical cause exists.",
+        "The revision proved a large improvement.",
+        "The car is perfectly aligned.",
+        "These results show little clear improvement; more diagnosis is needed."
+      ],
+      "correct_index": 3,
+      "guide": "The overlapping ranges do not show a large reliable change. Check causes and measurement consistency.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

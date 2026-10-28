@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 3,
+  "title": "Wave speed",
+  "target": "Use speed, frequency and wavelength in a consistent relationship.",
+  "criteria": [
+    "Use v=fλ with matching units.",
+    "Check frequency and wavelength changes at fixed speed.",
+    "Distinguish medium speed from oscillation rate."
+  ],
+  "source_sha256": "d88c673bd91653f16c31815aa5239de808431e00b885badf0ead3498e17d8281",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.544Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A wave has frequency 6 Hz and wavelength 0.75 m. What is speed?",
+      "options": [
+        "0.125 m/s",
+        "6.75 m/s",
+        "8 m/s",
+        "4.5 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "v = fλ = 6 × 0.75 = 4.5 m/s.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wave moves at 18 m/s with wavelength 60 cm. What is frequency?",
+      "options": [
+        "0.30 Hz",
+        "1,080 Hz",
+        "30 Hz",
+        "10.8 Hz"
+      ],
+      "correct_index": 2,
+      "guide": "60 cm = 0.60 m; f = 18/0.60 = 30 Hz.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A medium keeps wave speed fixed. Frequency rises from 5 Hz to 15 Hz. What happens to wavelength?",
+      "options": [
+        "It triples.",
+        "It becomes one-third as large.",
+        "It stays fixed.",
+        "It increases ninefold."
+      ],
+      "correct_index": 1,
+      "guide": "λ = v/f; tripling f at fixed v divides wavelength by 3.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At fixed speed, wavelength changes from 2.4 m to 1.2 m. How does frequency change?",
+      "options": [
+        "It becomes zero.",
+        "It doubles.",
+        "It halves.",
+        "It stays fixed."
+      ],
+      "correct_index": 1,
+      "guide": "Halving wavelength requires doubled frequency to keep fλ fixed.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A string point moves up and down while a pulse travels right. Which distinction is correct?",
+      "options": [
+        "The point’s oscillation and the wave’s propagation describe different motions.",
+        "A transverse wave cannot carry energy.",
+        "The point’s maximum upward speed always equals wave speed.",
+        "The string point must travel right with the pulse."
+      ],
+      "correct_index": 0,
+      "guide": "Local material motion need not follow the propagation direction or speed.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A driver is adjusted to oscillate faster while string tension and mass per length remain fixed. In the ideal string model, what changes?",
+      "options": [
+        "Propagation speed must increase by the same factor.",
+        "Frequency stays fixed and only amplitude can change.",
+        "Frequency increases and wavelength decreases; propagation speed stays fixed.",
+        "Every string particle flows toward the far end."
+      ],
+      "correct_index": 2,
+      "guide": "The medium sets speed in this model; v = fλ requires a compensating wavelength change.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A wave has frequency 6 Hz and wavelength 0.75 m. What is speed?",
+      "options": [
+        "0.125 m/s",
+        "8 m/s",
+        "4.5 m/s",
+        "6.75 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "v = fλ = 6 × 0.75 = 4.5 m/s.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wave moves at 18 m/s with wavelength 60 cm. What is frequency?",
+      "options": [
+        "1,080 Hz",
+        "30 Hz",
+        "0.30 Hz",
+        "10.8 Hz"
+      ],
+      "correct_index": 1,
+      "guide": "60 cm = 0.60 m; f = 18/0.60 = 30 Hz.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A medium keeps wave speed fixed. Frequency rises from 5 Hz to 15 Hz. What happens to wavelength?",
+      "options": [
+        "It stays fixed.",
+        "It increases ninefold.",
+        "It triples.",
+        "It becomes one-third as large."
+      ],
+      "correct_index": 3,
+      "guide": "λ = v/f; tripling f at fixed v divides wavelength by 3.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At fixed speed, wavelength changes from 2.4 m to 1.2 m. How does frequency change?",
+      "options": [
+        "It halves.",
+        "It becomes zero.",
+        "It doubles.",
+        "It stays fixed."
+      ],
+      "correct_index": 2,
+      "guide": "Halving wavelength requires doubled frequency to keep fλ fixed.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A string point moves up and down while a pulse travels right. Which distinction is correct?",
+      "options": [
+        "A transverse wave cannot carry energy.",
+        "The point’s maximum upward speed always equals wave speed.",
+        "The string point must travel right with the pulse.",
+        "The point’s oscillation and the wave’s propagation describe different motions."
+      ],
+      "correct_index": 3,
+      "guide": "Local material motion need not follow the propagation direction or speed.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A driver is adjusted to oscillate faster while string tension and mass per length remain fixed. In the ideal string model, what changes?",
+      "options": [
+        "Frequency increases and wavelength decreases; propagation speed stays fixed.",
+        "Frequency stays fixed and only amplitude can change.",
+        "Every string particle flows toward the far end.",
+        "Propagation speed must increase by the same factor."
+      ],
+      "correct_index": 0,
+      "guide": "The medium sets speed in this model; v = fλ requires a compensating wavelength change.",
+      "target_slug": "u6.k2-wave-equation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 7,
+  "title": "Changing velocity",
+  "target": "Calculate acceleration and distinguish speeding up, slowing down, and turning.",
+  "criteria": [
+    "Calculate acceleration from velocity change and time.",
+    "Compare acceleration direction with velocity direction.",
+    "Explain why turning at steady speed is acceleration."
+  ],
+  "source_sha256": "0f1c76db474eea7ace02766d9ce95aad4dffe0bd4501543750ceb42d998250e1",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.474Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Velocity changes from +2 to +14 m/s in 4 s. What is average acceleration?",
+      "options": [
+        "+4 m/s²",
+        "+12 m/s²",
+        "−3 m/s²",
+        "+3 m/s²"
+      ],
+      "correct_index": 3,
+      "guide": "a_avg = (14 − 2)/4 = 3 m/s².",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "With east positive, velocity changes from −9 to −3 m/s in 2 s. What is average acceleration?",
+      "options": [
+        "−6 m/s² west.",
+        "+6 m/s² east.",
+        "+3 m/s² east.",
+        "−3 m/s² west."
+      ],
+      "correct_index": 2,
+      "guide": "Δv = −3 − (−9) = +6; divide by 2.",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart moves left while its acceleration points right. What happens to its speed initially?",
+      "options": [
+        "It increases.",
+        "It decreases.",
+        "It is necessarily zero already.",
+        "It remains constant under nonzero acceleration."
+      ],
+      "correct_index": 1,
+      "guide": "Opposing velocity and acceleration reduce speed initially.",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An object has negative velocity and negative acceleration along one axis. What is happening to its speed?",
+      "options": [
+        "It is increasing.",
+        "It is negative.",
+        "It is constant because both signs match.",
+        "It is decreasing necessarily."
+      ],
+      "correct_index": 0,
+      "guide": "Same-direction velocity and acceleration increase speed magnitude.",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A skater turns while keeping speed constant. Which statement is correct?",
+      "options": [
+        "Acceleration is zero because speed is constant.",
+        "Velocity changes direction, so acceleration is nonzero.",
+        "Velocity remains unchanged.",
+        "Acceleration must point opposite velocity."
+      ],
+      "correct_index": 1,
+      "guide": "Acceleration tracks change in the velocity vector.",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which motion necessarily has zero average acceleration over the interval?",
+      "options": [
+        "Initial and final velocity vectors are identical.",
+        "The path is curved at constant speed between different tangent directions.",
+        "The object ends at its starting position with unspecified velocities.",
+        "Initial and final speeds are equal but directions differ."
+      ],
+      "correct_index": 0,
+      "guide": "Average acceleration depends on vector Δv, not path length or displacement.",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Velocity changes from +2 to +14 m/s in 4 s. What is average acceleration?",
+      "options": [
+        "−3 m/s²",
+        "+3 m/s²",
+        "+12 m/s²",
+        "+4 m/s²"
+      ],
+      "correct_index": 1,
+      "guide": "a_avg = (14 − 2)/4 = 3 m/s².",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "With east positive, velocity changes from −9 to −3 m/s in 2 s. What is average acceleration?",
+      "options": [
+        "+3 m/s² east.",
+        "−3 m/s² west.",
+        "+6 m/s² east.",
+        "−6 m/s² west."
+      ],
+      "correct_index": 0,
+      "guide": "Δv = −3 − (−9) = +6; divide by 2.",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart moves left while its acceleration points right. What happens to its speed initially?",
+      "options": [
+        "It remains constant under nonzero acceleration.",
+        "It is necessarily zero already.",
+        "It decreases.",
+        "It increases."
+      ],
+      "correct_index": 2,
+      "guide": "Opposing velocity and acceleration reduce speed initially.",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An object has negative velocity and negative acceleration along one axis. What is happening to its speed?",
+      "options": [
+        "It is constant because both signs match.",
+        "It is increasing.",
+        "It is negative.",
+        "It is decreasing necessarily."
+      ],
+      "correct_index": 1,
+      "guide": "Same-direction velocity and acceleration increase speed magnitude.",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A skater turns while keeping speed constant. Which statement is correct?",
+      "options": [
+        "Acceleration is zero because speed is constant.",
+        "Acceleration must point opposite velocity.",
+        "Velocity changes direction, so acceleration is nonzero.",
+        "Velocity remains unchanged."
+      ],
+      "correct_index": 2,
+      "guide": "Acceleration tracks change in the velocity vector.",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which motion necessarily has zero average acceleration over the interval?",
+      "options": [
+        "Initial and final speeds are equal but directions differ.",
+        "The path is curved at constant speed between different tangent directions.",
+        "The object ends at its starting position with unspecified velocities.",
+        "Initial and final velocity vectors are identical."
+      ],
+      "correct_index": 3,
+      "guide": "Average acceleration depends on vector Δv, not path length or displacement.",
+      "target_slug": "u1.acceleration-rate-of-change",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 2,
+  "title": "Position, distance, displacement",
+  "target": "Distinguish a location, a total path length, and a change in position.",
+  "criteria": [
+    "Label the origin, start, turn and finish.",
+    "Calculate path distance and signed displacement separately.",
+    "Explain why position and displacement can differ."
+  ],
+  "source_sha256": "56763570b2c76ea1ae048db14620c81f24c0e38c59de65ebb405a0dd779284a1",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.467Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "On a number line with east positive, a rover starts at −3 m, turns at +5 m, and finishes at +1 m. Which label identifies its final position?",
+      "options": [
+        "+1 m",
+        "+5 m",
+        "0 m necessarily",
+        "−3 m"
+      ],
+      "correct_index": 0,
+      "guide": "Final position is the coordinate of the finish, relative to the chosen origin.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A route diagram marks a start S, a turn T, and finish F on a coordinate line. What must the origin label mean?",
+      "options": [
+        "The position assigned coordinate zero.",
+        "The start of every route necessarily.",
+        "The farthest point traveled.",
+        "The total path distance."
+      ],
+      "correct_index": 0,
+      "guide": "The chosen origin need not coincide with the start or finish.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A robot starts at 1 m, travels to 9 m, then returns to 4 m. What are total distance and displacement?",
+      "options": [
+        "8 m and +4 m.",
+        "3 m and +13 m.",
+        "13 m and −3 m.",
+        "13 m and +3 m."
+      ],
+      "correct_index": 3,
+      "guide": "Distance = 8 + 5 = 13; displacement = 4 − 1 = +3.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A walker goes 7 m west, then 2 m east. Taking east positive, what are distance and displacement?",
+      "options": [
+        "9 m and +5 m.",
+        "9 m and −5 m.",
+        "5 m and +9 m.",
+        "−9 m and −5 m."
+      ],
+      "correct_index": 1,
+      "guide": "Path length is 9; signed net change is −7 + 2 = −5.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An object starts at −6 m and finishes at +2 m. Why are final position and displacement different?",
+      "options": [
+        "Displacement always equals final position.",
+        "Position has no reference.",
+        "Distance can only be negative.",
+        "Final position is +2 m relative to the origin; displacement is +8 m relative to the start."
+      ],
+      "correct_index": 3,
+      "guide": "Δx = x_f − x_i = 2 − (−6) = 8 m.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "The coordinate origin moves 10 m east while the physical route stays unchanged. Which quantity remains unchanged?",
+      "options": [
+        "Every coordinate label.",
+        "The numerical final position necessarily.",
+        "Displacement.",
+        "The numerical initial position necessarily."
+      ],
+      "correct_index": 2,
+      "guide": "Both endpoint coordinates shift equally, so their difference is invariant.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "On a number line with east positive, a rover starts at −3 m, turns at +5 m, and finishes at +1 m. Which label identifies its final position?",
+      "options": [
+        "+1 m",
+        "+5 m",
+        "−3 m",
+        "0 m necessarily"
+      ],
+      "correct_index": 0,
+      "guide": "Final position is the coordinate of the finish, relative to the chosen origin.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A route diagram marks a start S, a turn T, and finish F on a coordinate line. What must the origin label mean?",
+      "options": [
+        "The start of every route necessarily.",
+        "The position assigned coordinate zero.",
+        "The total path distance.",
+        "The farthest point traveled."
+      ],
+      "correct_index": 1,
+      "guide": "The chosen origin need not coincide with the start or finish.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A robot starts at 1 m, travels to 9 m, then returns to 4 m. What are total distance and displacement?",
+      "options": [
+        "8 m and +4 m.",
+        "13 m and −3 m.",
+        "13 m and +3 m.",
+        "3 m and +13 m."
+      ],
+      "correct_index": 2,
+      "guide": "Distance = 8 + 5 = 13; displacement = 4 − 1 = +3.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A walker goes 7 m west, then 2 m east. Taking east positive, what are distance and displacement?",
+      "options": [
+        "9 m and −5 m.",
+        "−9 m and −5 m.",
+        "5 m and +9 m.",
+        "9 m and +5 m."
+      ],
+      "correct_index": 0,
+      "guide": "Path length is 9; signed net change is −7 + 2 = −5.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An object starts at −6 m and finishes at +2 m. Why are final position and displacement different?",
+      "options": [
+        "Displacement always equals final position.",
+        "Final position is +2 m relative to the origin; displacement is +8 m relative to the start.",
+        "Position has no reference.",
+        "Distance can only be negative."
+      ],
+      "correct_index": 1,
+      "guide": "Δx = x_f − x_i = 2 − (−6) = 8 m.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "The coordinate origin moves 10 m east while the physical route stays unchanged. Which quantity remains unchanged?",
+      "options": [
+        "The numerical initial position necessarily.",
+        "Every coordinate label.",
+        "The numerical final position necessarily.",
+        "Displacement."
+      ],
+      "correct_index": 3,
+      "guide": "Both endpoint coordinates shift equally, so their difference is invariant.",
+      "target_slug": "u1.vocab-position-distance-displacement",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

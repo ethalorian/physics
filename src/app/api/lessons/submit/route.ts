@@ -1,3 +1,5 @@
+import {checkRevisionBeforeSubmit,recordRevisionSubmitted} from '@/lib/review-desk/revision-server'
+import { suggestAfterSubmission } from '@/lib/assessment-results/suggestions-server'
 import { missingLessonAnswers, type SavedLessonAnswer } from '@/lib/lesson-completion'
 import { readLessonRows } from '@/lib/lesson-completion-server'
 import { NextResponse } from 'next/server'
@@ -33,6 +35,8 @@ export const POST = withAuth(async (request, ctx) => {
     const missing = missingLessonAnswers(access.document.blocks,answers)
     if (missing.length) return NextResponse.json({ error: `Finish the ${missing.length} remaining required response${missing.length===1?'':'s'} before submitting. Your saved work is kept.`, missingBlockIds: missing.map(b=>b.id) }, {status:422})
   }
+  const revisionMessage=await checkRevisionBeforeSubmit('lesson:'+lessonId,ctx.userId)
+  if(revisionMessage)return NextResponse.json({error:revisionMessage},{status:422})
   // An atomic database trigger captures the document and latest explicit responses.
   const { data, error } = await supabaseAdmin.from('lesson_submissions')
     .insert({ user_id: ctx.userId, user_email: ctx.email, lesson_id: lessonId, content_snapshot: access.document }).select('id, submitted_at').single()
@@ -46,5 +50,9 @@ export const POST = withAuth(async (request, ctx) => {
     const result = await supabaseAdmin.from('lesson_progress').upsert({user_id:ctx.userId,user_email:ctx.email,lesson_id:lessonId,lesson_slug:access.lesson.slug,status:'completed',progress_percentage:100,completed_at:data.submitted_at,last_accessed_at:data.submitted_at},{onConflict:'user_id,lesson_id'})
     if(result.error) console.error('Could not update submitted lesson progress:',result.error)
   }
+  await recordRevisionSubmitted('lesson:'+lessonId,ctx.userId)
+  suggestAfterSubmission('lesson',data.id)
   return NextResponse.json({ submissionId: data.id, submittedAt: data.submitted_at, locked: true }, { status: 201 })
 })
+
+export const maxDuration = 180

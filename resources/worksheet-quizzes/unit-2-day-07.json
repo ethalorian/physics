@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 7,
+  "title": "Gravity above the surface",
+  "target": "Use distance from a planet’s center to compare fields at altitude.",
+  "criteria": [
+    "Use r=R+h rather than altitude alone.",
+    "Compare fields with the inverse-square relation.",
+    "Explain why orbit is not a zero-gravity region."
+  ],
+  "source_sha256": "5f8d49fd20752f93676ad874cf7a36742fdeac7263dc19b199bd9fe3a871ebb3",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.493Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A planet has radius R. A probe is at altitude 3R. What is center distance?",
+      "options": [
+        "2R",
+        "4R",
+        "R/3",
+        "3R"
+      ],
+      "correct_index": 1,
+      "guide": "Center distance is radius plus altitude: R + 3R = 4R.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why is altitude alone unsuitable as r in GM/r² at the planet’s surface?",
+      "options": [
+        "The surface has no gravity.",
+        "Altitude is zero there, but center separation is the planet’s nonzero radius.",
+        "r always means the probe’s radius.",
+        "The planet’s mass becomes zero at its surface."
+      ],
+      "correct_index": 1,
+      "guide": "The inverse-square formula uses separation from the source center.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Surface field is 20 N/kg. What is field at center distance 2R in the spherical model?",
+      "options": [
+        "80 N/kg",
+        "10 N/kg",
+        "5 N/kg",
+        "40 N/kg"
+      ],
+      "correct_index": 2,
+      "guide": "Doubling r divides g by 4.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A probe moves from center distance 2R to 4R. How does local g change?",
+      "options": [
+        "It becomes one-quarter of its value at 2R.",
+        "It doubles.",
+        "It becomes one-half.",
+        "It quadruples."
+      ],
+      "correct_index": 0,
+      "guide": "The relevant ratio is 4R/(2R) = 2, then inverse square.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why can an astronaut appear weightless in orbit despite substantial gravity?",
+      "options": [
+        "The astronaut has zero mass.",
+        "Gravity is exactly zero in every orbit.",
+        "A spacecraft permanently blocks gravity.",
+        "The astronaut and spacecraft fall together."
+      ],
+      "correct_index": 3,
+      "guide": "Shared free fall removes the usual support force sensation.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An orbiting station is only a small fraction of a planetary radius above the surface. Which claim is most plausible?",
+      "options": [
+        "Gravity must be negligible solely because the station is in space.",
+        "Field strength must exceed the surface value.",
+        "Gravity remains substantial; apparent weightlessness is caused by free fall.",
+        "Every object inside loses inertia."
+      ],
+      "correct_index": 2,
+      "guide": "The center-distance change is modest, so inverse-square gravity remains significant.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A planet has radius R. A probe is at altitude 3R. What is center distance?",
+      "options": [
+        "R/3",
+        "3R",
+        "2R",
+        "4R"
+      ],
+      "correct_index": 3,
+      "guide": "Center distance is radius plus altitude: R + 3R = 4R.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why is altitude alone unsuitable as r in GM/r² at the planet’s surface?",
+      "options": [
+        "The surface has no gravity.",
+        "The planet’s mass becomes zero at its surface.",
+        "Altitude is zero there, but center separation is the planet’s nonzero radius.",
+        "r always means the probe’s radius."
+      ],
+      "correct_index": 2,
+      "guide": "The inverse-square formula uses separation from the source center.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Surface field is 20 N/kg. What is field at center distance 2R in the spherical model?",
+      "options": [
+        "40 N/kg",
+        "5 N/kg",
+        "10 N/kg",
+        "80 N/kg"
+      ],
+      "correct_index": 1,
+      "guide": "Doubling r divides g by 4.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A probe moves from center distance 2R to 4R. How does local g change?",
+      "options": [
+        "It becomes one-quarter of its value at 2R.",
+        "It becomes one-half.",
+        "It doubles.",
+        "It quadruples."
+      ],
+      "correct_index": 0,
+      "guide": "The relevant ratio is 4R/(2R) = 2, then inverse square.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why can an astronaut appear weightless in orbit despite substantial gravity?",
+      "options": [
+        "A spacecraft permanently blocks gravity.",
+        "The astronaut has zero mass.",
+        "Gravity is exactly zero in every orbit.",
+        "The astronaut and spacecraft fall together."
+      ],
+      "correct_index": 3,
+      "guide": "Shared free fall removes the usual support force sensation.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An orbiting station is only a small fraction of a planetary radius above the surface. Which claim is most plausible?",
+      "options": [
+        "Field strength must exceed the surface value.",
+        "Gravity must be negligible solely because the station is in space.",
+        "Gravity remains substantial; apparent weightlessness is caused by free fall.",
+        "Every object inside loses inertia."
+      ],
+      "correct_index": 2,
+      "guide": "The center-distance change is modest, so inverse-square gravity remains significant.",
+      "target_slug": "u2.r3-compare-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

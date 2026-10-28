@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 3,
+  "title": "Weight and local gravity",
+  "target": "Distinguish mass from gravitational weight.",
+  "criteria": [
+    "Use mass in kg and force in N.",
+    "Calculate weight using the stated local g.",
+    "Explain how weight changes while mass stays the same."
+  ],
+  "source_sha256": "5ac945b1ef44d02c4f8a144089556efb2c0f0f201ba6383c57276cc6264c5156",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.489Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Which units correctly distinguish mass and weight?",
+      "options": [
+        "Mass: kg; weight: N.",
+        "Mass: N; weight: kg.",
+        "Both: kg only.",
+        "Both: m/s."
+      ],
+      "correct_index": 0,
+      "guide": "Mass measures inertia; weight is gravitational force.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Remember",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spring scale reads 42 N. What quantity is it directly reporting?",
+      "options": [
+        "Speed.",
+        "Energy.",
+        "Mass in kilograms.",
+        "Force."
+      ],
+      "correct_index": 3,
+      "guide": "Newtons measure force; interpreting a mass would require local g.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 7 kg object is on a world with g = 4 N/kg. What is its weight?",
+      "options": [
+        "11 N",
+        "28 N",
+        "0.571 N",
+        "1.75 N"
+      ],
+      "correct_index": 1,
+      "guide": "F_g = mg = 7 × 4 = 28 N.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 5 kg object weighs 65 N at a location. What is local field strength?",
+      "options": [
+        "60 N/kg",
+        "325 N/kg",
+        "13 N/kg",
+        "0.077 N/kg"
+      ],
+      "correct_index": 2,
+      "guide": "g = F_g/m = 65/5 = 13 N/kg.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sealed 8 kg instrument moves to a world with half the gravitational field strength. What changes?",
+      "options": [
+        "Its mass halves; its weight stays fixed.",
+        "Both become zero.",
+        "Its weight halves; its mass remains 8 kg.",
+        "Both mass and weight must halve."
+      ],
+      "correct_index": 2,
+      "guide": "Mass is unchanged by location; weight depends on local g.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A student says an astronaut has no mass while orbiting. Which correction is accurate?",
+      "options": [
+        "The astronaut has negative mass.",
+        "The astronaut retains mass and can feel weightless while freely falling.",
+        "Orbital speed converts all mass to force.",
+        "Mass exists only where a scale supports an object."
+      ],
+      "correct_index": 1,
+      "guide": "Apparent weightlessness does not remove mass or gravitational attraction.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Which units correctly distinguish mass and weight?",
+      "options": [
+        "Mass: kg; weight: N.",
+        "Both: kg only.",
+        "Mass: N; weight: kg.",
+        "Both: m/s."
+      ],
+      "correct_index": 0,
+      "guide": "Mass measures inertia; weight is gravitational force.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Remember",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spring scale reads 42 N. What quantity is it directly reporting?",
+      "options": [
+        "Speed.",
+        "Energy.",
+        "Force.",
+        "Mass in kilograms."
+      ],
+      "correct_index": 2,
+      "guide": "Newtons measure force; interpreting a mass would require local g.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 7 kg object is on a world with g = 4 N/kg. What is its weight?",
+      "options": [
+        "11 N",
+        "0.571 N",
+        "1.75 N",
+        "28 N"
+      ],
+      "correct_index": 3,
+      "guide": "F_g = mg = 7 × 4 = 28 N.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 5 kg object weighs 65 N at a location. What is local field strength?",
+      "options": [
+        "0.077 N/kg",
+        "60 N/kg",
+        "325 N/kg",
+        "13 N/kg"
+      ],
+      "correct_index": 3,
+      "guide": "g = F_g/m = 65/5 = 13 N/kg.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sealed 8 kg instrument moves to a world with half the gravitational field strength. What changes?",
+      "options": [
+        "Both become zero.",
+        "Its mass halves; its weight stays fixed.",
+        "Its weight halves; its mass remains 8 kg.",
+        "Both mass and weight must halve."
+      ],
+      "correct_index": 2,
+      "guide": "Mass is unchanged by location; weight depends on local g.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A student says an astronaut has no mass while orbiting. Which correction is accurate?",
+      "options": [
+        "Mass exists only where a scale supports an object.",
+        "The astronaut retains mass and can feel weightless while freely falling.",
+        "Orbital speed converts all mass to force.",
+        "The astronaut has negative mass."
+      ],
+      "correct_index": 1,
+      "guide": "Apparent weightlessness does not remove mass or gravitational attraction.",
+      "target_slug": "u2.mass-vs-weight",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

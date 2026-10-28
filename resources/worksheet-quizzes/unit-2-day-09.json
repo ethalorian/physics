@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 9,
+  "title": "Independent projectile directions",
+  "target": "Explain why horizontal and vertical projectile motion share time but evolve differently.",
+  "criteria": [
+    "Identify horizontal and vertical velocity components.",
+    "Use the same elapsed time for both axes.",
+    "State the negligible-air-resistance assumption."
+  ],
+  "source_sha256": "bb78525db82206334f8379d95549cd893418e7eb2be7aee90e13c541846f4bfc",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.494Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A projectile moves with vx = 5 m/s and vy = −2 m/s, with upward positive. Which description is correct?",
+      "options": [
+        "Moving left and upward.",
+        "Moving only downward.",
+        "Moving right and upward.",
+        "Moving right and downward."
+      ],
+      "correct_index": 3,
+      "guide": "The components specify simultaneous horizontal and vertical motion.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In ideal projectile motion without air resistance, which acceleration components apply?",
+      "options": [
+        "ax = g; ay = 0.",
+        "Both are zero after launch.",
+        "ax = 0; ay = −g when upward is positive.",
+        "Both point along the current velocity."
+      ],
+      "correct_index": 2,
+      "guide": "Gravity supplies vertical acceleration only.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A projectile travels horizontally at 7 m/s for a flight lasting 1.5 s. What horizontal displacement results?",
+      "options": [
+        "8.5 m",
+        "4.67 m",
+        "21 m",
+        "10.5 m"
+      ],
+      "correct_index": 3,
+      "guide": "Δx = vx t = 7 × 1.5 = 10.5 m.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two horizontal launches from the same height have speeds 3 and 9 m/s. Ignore air resistance. Compare times to the same lower landing level.",
+      "options": [
+        "Equal.",
+        "The faster launch takes one-third as long.",
+        "The faster launch takes three times as long.",
+        "Neither can fall while moving horizontally."
+      ],
+      "correct_index": 0,
+      "guide": "Vertical initial velocity and vertical displacement are identical, so flight times match.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Which assumption allows horizontal velocity to remain constant after launch?",
+      "options": [
+        "Negligible horizontal force, including air resistance.",
+        "No gravitational force.",
+        "A continual forward pushing force.",
+        "An increasing horizontal acceleration."
+      ],
+      "correct_index": 0,
+      "guide": "Zero horizontal net force gives zero horizontal acceleration.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Strong air resistance slows a real projectile horizontally. What must change in the ideal model?",
+      "options": [
+        "Continue using constant vx without qualification.",
+        "Allow horizontal velocity to vary with time.",
+        "Remove elapsed time from both axes.",
+        "Set vertical acceleration to zero automatically."
+      ],
+      "correct_index": 1,
+      "guide": "Drag invalidates the constant-horizontal-velocity approximation.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A projectile moves with vx = 5 m/s and vy = −2 m/s, with upward positive. Which description is correct?",
+      "options": [
+        "Moving right and upward.",
+        "Moving only downward.",
+        "Moving right and downward.",
+        "Moving left and upward."
+      ],
+      "correct_index": 2,
+      "guide": "The components specify simultaneous horizontal and vertical motion.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In ideal projectile motion without air resistance, which acceleration components apply?",
+      "options": [
+        "Both are zero after launch.",
+        "ax = 0; ay = −g when upward is positive.",
+        "Both point along the current velocity.",
+        "ax = g; ay = 0."
+      ],
+      "correct_index": 1,
+      "guide": "Gravity supplies vertical acceleration only.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A projectile travels horizontally at 7 m/s for a flight lasting 1.5 s. What horizontal displacement results?",
+      "options": [
+        "8.5 m",
+        "10.5 m",
+        "21 m",
+        "4.67 m"
+      ],
+      "correct_index": 1,
+      "guide": "Δx = vx t = 7 × 1.5 = 10.5 m.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two horizontal launches from the same height have speeds 3 and 9 m/s. Ignore air resistance. Compare times to the same lower landing level.",
+      "options": [
+        "Equal.",
+        "The faster launch takes three times as long.",
+        "The faster launch takes one-third as long.",
+        "Neither can fall while moving horizontally."
+      ],
+      "correct_index": 0,
+      "guide": "Vertical initial velocity and vertical displacement are identical, so flight times match.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Which assumption allows horizontal velocity to remain constant after launch?",
+      "options": [
+        "No gravitational force.",
+        "An increasing horizontal acceleration.",
+        "A continual forward pushing force.",
+        "Negligible horizontal force, including air resistance."
+      ],
+      "correct_index": 3,
+      "guide": "Zero horizontal net force gives zero horizontal acceleration.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Strong air resistance slows a real projectile horizontally. What must change in the ideal model?",
+      "options": [
+        "Allow horizontal velocity to vary with time.",
+        "Remove elapsed time from both axes.",
+        "Set vertical acceleration to zero automatically.",
+        "Continue using constant vx without qualification."
+      ],
+      "correct_index": 0,
+      "guide": "Drag invalidates the constant-horizontal-velocity approximation.",
+      "target_slug": "u2.k3-projectile-independence",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

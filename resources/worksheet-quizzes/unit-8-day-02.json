@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 8,
+  "day": 2,
+  "title": "Circuit model and solder practice",
+  "target": "Test a circuit representation before making permanent connections.",
+  "criteria": [
+    "Build a complete battery-switch-motor circuit model.",
+    "Explain an open versus closed path.",
+    "Document a supervised solder-practice check."
+  ],
+  "source_sha256": "efe8f00b74c93123ed34b80992c8fde05eaa41a020dee02487fa6fbfb4fac010",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.573Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Which connection order describes one complete intended motor circuit?",
+      "options": [
+        "Both motor terminals connected only to the same battery terminal.",
+        "Battery positive → switch → motor → unconnected wire.",
+        "Battery positive → switch → motor → battery negative.",
+        "Battery positive → wire → battery negative, bypassing the motor."
+      ],
+      "correct_index": 2,
+      "guide": "A closed path includes the source and load, without a bypass short or disconnected return.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A simulation has one broken wire between a switch and motor. The battery is charged. Which change repairs the intended circuit?",
+      "options": [
+        "Remove the motor and expect its axle to turn.",
+        "Open a second connection.",
+        "Connect the battery terminals directly together.",
+        "Reconnect the broken wire to complete the motor path."
+      ],
+      "correct_index": 3,
+      "guide": "Current through the motor requires a continuous intended circuit, not a short across the battery.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "In a simple battery-switch-motor series model, what changes when the switch is opened?",
+      "options": [
+        "Steady current through the motor stops because the path is broken.",
+        "Current doubles because resistance disappears.",
+        "The wire turns into an energy source.",
+        "The battery loses all stored energy instantly."
+      ],
+      "correct_index": 0,
+      "guide": "An open switch interrupts the path. Stored battery energy can remain; the model has no steady motor current.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A closed simulated circuit runs its motor. A wire is disconnected while the switch remains closed. Which explanation fits the motor stopping?",
+      "options": [
+        "The motor needs an open path.",
+        "The wire used up the current.",
+        "Closing the switch destroys charge.",
+        "A closed switch alone is insufficient; the whole path must be complete."
+      ],
+      "correct_index": 3,
+      "guide": "Every part of the series loop must connect. Charge is not consumed by the motor.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Which record supports a supervised solder-practice check without claiming work that did not happen?",
+      "options": [
+        "Record the example joint as your own measurement.",
+        "Record the actual inspected scrap joint and the teacher’s feedback after the check.",
+        "Write “approved” before soldering.",
+        "Use a classmate’s photo as evidence of your joint."
+      ],
+      "correct_index": 1,
+      "guide": "The record must identify actual work and feedback; a quiz can check this reasoning but not demonstrate soldering skill.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A practice joint needs repair. Which plan follows a safe supervised workflow?",
+      "options": [
+        "Touch the hot tip to check temperature.",
+        "Repair it while the circuit is powered.",
+        "Disconnect power, let parts cool as needed, and follow the teacher’s soldering procedure.",
+        "Skip ventilation and eye protection to save time."
+      ],
+      "correct_index": 2,
+      "guide": "Work with power disconnected and the required tool safeguards. This question does not certify the student’s physical soldering skill.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Which connection order describes one complete intended motor circuit?",
+      "options": [
+        "Battery positive → wire → battery negative, bypassing the motor.",
+        "Battery positive → switch → motor → unconnected wire.",
+        "Battery positive → switch → motor → battery negative.",
+        "Both motor terminals connected only to the same battery terminal."
+      ],
+      "correct_index": 2,
+      "guide": "A closed path includes the source and load, without a bypass short or disconnected return.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A simulation has one broken wire between a switch and motor. The battery is charged. Which change repairs the intended circuit?",
+      "options": [
+        "Remove the motor and expect its axle to turn.",
+        "Open a second connection.",
+        "Connect the battery terminals directly together.",
+        "Reconnect the broken wire to complete the motor path."
+      ],
+      "correct_index": 3,
+      "guide": "Current through the motor requires a continuous intended circuit, not a short across the battery.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "In a simple battery-switch-motor series model, what changes when the switch is opened?",
+      "options": [
+        "Current doubles because resistance disappears.",
+        "The battery loses all stored energy instantly.",
+        "The wire turns into an energy source.",
+        "Steady current through the motor stops because the path is broken."
+      ],
+      "correct_index": 3,
+      "guide": "An open switch interrupts the path. Stored battery energy can remain; the model has no steady motor current.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A closed simulated circuit runs its motor. A wire is disconnected while the switch remains closed. Which explanation fits the motor stopping?",
+      "options": [
+        "A closed switch alone is insufficient; the whole path must be complete.",
+        "Closing the switch destroys charge.",
+        "The wire used up the current.",
+        "The motor needs an open path."
+      ],
+      "correct_index": 0,
+      "guide": "Every part of the series loop must connect. Charge is not consumed by the motor.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Which record supports a supervised solder-practice check without claiming work that did not happen?",
+      "options": [
+        "Record the actual inspected scrap joint and the teacher’s feedback after the check.",
+        "Record the example joint as your own measurement.",
+        "Use a classmate’s photo as evidence of your joint.",
+        "Write “approved” before soldering."
+      ],
+      "correct_index": 0,
+      "guide": "The record must identify actual work and feedback; a quiz can check this reasoning but not demonstrate soldering skill.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A practice joint needs repair. Which plan follows a safe supervised workflow?",
+      "options": [
+        "Repair it while the circuit is powered.",
+        "Disconnect power, let parts cool as needed, and follow the teacher’s soldering procedure.",
+        "Touch the hot tip to check temperature.",
+        "Skip ventilation and eye protection to save time."
+      ],
+      "correct_index": 1,
+      "guide": "Work with power disconnected and the required tool safeguards. This question does not certify the student’s physical soldering skill.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ]
+}

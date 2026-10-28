@@ -1,6 +1,7 @@
 import type { LibraryMetadata } from '../activity-library'
-export type ActivityKind = 'simulation' | 'interactive' | 'quiz' | 'reading' | 'review' | 'vocabulary' | 'math' | 'video' | 'lesson'
+export type ActivityKind = 'worksheet' | 'simulation' | 'interactive' | 'quiz' | 'reading' | 'review' | 'vocabulary' | 'math' | 'video' | 'lesson'
 export type PlanActivity = LibraryMetadata & {
+  quizSchedule?: import('../quiz-schedule').QuizSchedule;
   key: string; sourceId: string; kind: ActivityKind; title: string; unitIds: string[];
   targetIds: string[]; description: string; prompts: string[]; minutes: number | null;
   href: string; setupHref: string; teach: { label: string; href: string }[];

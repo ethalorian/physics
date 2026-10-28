@@ -107,3 +107,26 @@
 @media (max-width: 1000px) { .illustrated { grid-template-columns: 185px minmax(0, 1fr) 140px; gap: 22px; } .illustrated .portraitLink { height: 310px; } .illustration { height: 304px; } }
 @media (max-width: 740px) { .illustrated { grid-template-columns: 175px minmax(0, 1fr); gap: 24px 20px; } }
 @media (max-width: 540px) { .illustrated { grid-template-columns: minmax(0, 1fr); gap: 22px; padding-top: 15px; } .illustrated .identity { justify-content: center; gap: 20px; } .illustrated .portraitLink { width: 135px; height: 230px; } .illustration { height: 224px; } .illustrated .identityActions { flex: 1; max-width: 155px; gap: 13px; } .illustrated .lookName { font-size: var(--type-caption); } }
+
+/* Keep the greeting compact; the single grade and wallet share a side rail. */
+.progressRail .xpDisplay { padding: 16px 18px; }
+.progressRail .xpTotal { font-size: 2rem; margin: 7px 0 4px; }
+.progressRail .walletBottom { margin-top: 10px; padding-top: 10px; }
+.progressRail .balance { margin-bottom: 8px; }
+.progressRail .balance strong { display: inline; margin-right: 3px; font-size: 1rem; }
+.progressRail { position: relative; z-index: 1; min-width: 0; display: grid; gap: 14px; }
+.checkIn { grid-template-columns: clamp(136px, 18vw, 210px) minmax(0, 1fr) 192px; }
+.illustrated { grid-template-columns: clamp(200px, 25vw, 290px) minmax(0, 1fr) 192px; }
+@media (max-width: 1000px) { .checkIn { grid-template-columns: 130px minmax(0, 1fr) 168px; gap: 22px; } }
+@media (max-width: 740px) {
+  .checkIn { grid-template-columns: 130px minmax(0, 1fr); }
+  .progressRail { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .progressRail .xpDisplay { grid-column: auto; display: block; padding: 18px; }
+  .progressRail .walletBottom { margin-top: 18px; padding: 15px 0 0; border-left: 0; border-top: 1px solid #68471930; }
+}
+@media (max-width: 540px) {
+  .checkIn { grid-template-columns: minmax(0, 1fr); }
+  .progressRail { grid-template-columns: minmax(0, 1fr); }
+  .progressRail .xpDisplay { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .progressRail .walletBottom { margin: 0; padding: 0 0 0 14px; border-top: 0; border-left: 1px solid #68471930; }
+}

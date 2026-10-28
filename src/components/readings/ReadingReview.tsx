@@ -6,6 +6,7 @@ import type { ReadingDetail, ReadingSubmission } from '@/lib/textbook-assignment
 import { readingOverdue } from '@/lib/textbook-assignments'
 import { readingFetch, ReadingStatus, RATING_LABELS } from './ReadingShared'
 import styles from './readings.module.css'
+import SubmissionSuggestions from '@/components/admin/results/SubmissionSuggestions'
 
 export default function ReadingReview({ detail, onRefresh, initialStudent }: { detail: ReadingDetail; onRefresh: () => Promise<void>; initialStudent?: string | null }) {
   const [studentId, setStudentId] = useState(initialStudent && detail.students.some(s => s.id === initialStudent) ? initialStudent : detail.work.find(w => w.state === 'submitted')?.user_id ?? detail.students[0]?.id ?? '')
@@ -79,10 +80,11 @@ function ReviewForm({ detail, submission, onSaved }: { detail: ReadingDetail; su
     try { await readingFetch(`/api/readings/${detail.assignment.id}`, { method: 'POST', body: JSON.stringify({ action: 'review', submission_id: submission.id, request_id: requestId, decision, ratings: decision === 'rated' ? ratings : {}, note }) }); dirty.current = false; await onSaved() } catch (e) { setError((e as Error).message) } finally { setBusy(false) }
   }
   return <div className={styles.question}>
+    <SubmissionSuggestions source="reading" id={submission.id} disabled={busy} onRating={r=>{if(r.level!==null){dirty.current=true;setRatings(old=>({...old,[r.target_id]:r.level!}))}}} onFeedback={text=>{dirty.current=true;setNote(old=>old||text)}}/>
     <h3 className="text-title-3">Rate the understanding</h3><p className={styles.muted}>Use the quality of the explanation, not completion or word count. If there is not enough evidence, return it with a next step.</p>
     {targets.map(id => <fieldset key={id} disabled={busy} className={styles.stack}><legend className="mb-3 text-sm font-semibold">{detail.targets.find(t => t.id === id)?.statement ?? 'Mastery target'}</legend><div className={styles.ratings}>{RATING_LABELS.map((label, i) => <button key={label} type="button" aria-pressed={ratings[id] === i + 1} onClick={() => { dirty.current = true; setRatings(r => ({ ...r, [id]: i + 1 })) }}>{i + 1} · {label}</button>)}</div></fieldset>)}
-    <label className={styles.field}>Feedback and next step<textarea value={note} maxLength={2000} rows={3} onChange={e => { dirty.current = true; setNote(e.target.value) }} disabled={busy} placeholder="What is working? What should the student revisit?" /></label>
+    <label className={styles.field}>Feedback and next time<textarea value={note} maxLength={2000} rows={3} onChange={e => { dirty.current = true; setNote(e.target.value) }} disabled={busy} placeholder="What is working? What will help on a future assignment?" /></label>
     {error && <p role="alert" className={styles.error}>{error}</p>}
-    <div className={styles.actions}><Button disabled={busy} onClick={() => void submit('rated')}>{busy ? 'Saving…' : 'Save mastery & next'}</Button><Button variant="outline" disabled={busy} onClick={() => void submit('returned')}>Return for revision</Button></div>
+    <div className={styles.actions}><Button disabled={busy} onClick={() => void submit('rated')}>{busy ? 'Saving…' : 'Release mastery & feedback'}</Button><Button variant="outline" disabled={busy} onClick={() => void submit('returned')}>Return for revision</Button></div>
   </div>
 }

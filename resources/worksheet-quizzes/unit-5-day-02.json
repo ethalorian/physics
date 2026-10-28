@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 2,
+  "title": "Specific heat",
+  "target": "Use mass, material and temperature change to calculate heating energy.",
+  "criteria": [
+    "Identify ΔT rather than final temperature alone.",
+    "Use Q=mcΔT with matching units.",
+    "Compare materials through specific heat."
+  ],
+  "source_sha256": "2b42f77d2a2983df8f0991401e89271a934e59e3c78c27f71191085e6e74502a",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.533Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A sample warms from −8°C to 7°C without phase change. What temperature change belongs in Q = mcΔT?",
+      "options": [
+        "15°C",
+        "−1°C",
+        "7°C",
+        "−15°C"
+      ],
+      "correct_index": 0,
+      "guide": "ΔT = final − initial = 7 − (−8) = 15°C.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student uses 42°C as ΔT when a sample warms from 31°C to 42°C. What is the corrected ΔT?",
+      "options": [
+        "73°C",
+        "42°C",
+        "31°C",
+        "11°C"
+      ],
+      "correct_index": 3,
+      "guide": "Use the change, 42 − 31 = 11°C, not the final reading.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 0.50 kg sample with c = 800 J/(kg·°C) warms by 6°C. What heat input is required without losses?",
+      "options": [
+        "2,400 J",
+        "9,600 J",
+        "400 J",
+        "150 J"
+      ],
+      "correct_index": 0,
+      "guide": "Q = 0.50 × 800 × 6 = 2,400 J.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 250 g sample has c = 400 J/(kg·°C) and warms by 8°C. What is Q?",
+      "options": [
+        "100 J",
+        "800,000 J",
+        "800 J",
+        "12.5 J"
+      ],
+      "correct_index": 2,
+      "guide": "Convert 250 g to 0.250 kg: Q = 0.250 × 400 × 8 = 800 J.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Equal masses A and B receive equal heat with no phase change. A has twice B’s specific heat. Compare temperature rises.",
+      "options": [
+        "A cannot change temperature.",
+        "A’s rise is half B’s.",
+        "A’s rise is twice B’s.",
+        "The rises must match."
+      ],
+      "correct_index": 1,
+      "guide": "ΔT is inversely proportional to c for the same energy and mass.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 0.20 kg model sample needs 360 J to warm by 3°C. What specific heat fits the data?",
+      "options": [
+        "1,800 J/(kg·°C)",
+        "5,400 J/(kg·°C)",
+        "24 J/(kg·°C)",
+        "600 J/(kg·°C)"
+      ],
+      "correct_index": 3,
+      "guide": "c = Q/(mΔT) = 360/(0.20 × 3) = 600.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A sample warms from −8°C to 7°C without phase change. What temperature change belongs in Q = mcΔT?",
+      "options": [
+        "7°C",
+        "−1°C",
+        "15°C",
+        "−15°C"
+      ],
+      "correct_index": 2,
+      "guide": "ΔT = final − initial = 7 − (−8) = 15°C.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student uses 42°C as ΔT when a sample warms from 31°C to 42°C. What is the corrected ΔT?",
+      "options": [
+        "73°C",
+        "42°C",
+        "31°C",
+        "11°C"
+      ],
+      "correct_index": 3,
+      "guide": "Use the change, 42 − 31 = 11°C, not the final reading.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 0.50 kg sample with c = 800 J/(kg·°C) warms by 6°C. What heat input is required without losses?",
+      "options": [
+        "2,400 J",
+        "9,600 J",
+        "400 J",
+        "150 J"
+      ],
+      "correct_index": 0,
+      "guide": "Q = 0.50 × 800 × 6 = 2,400 J.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 250 g sample has c = 400 J/(kg·°C) and warms by 8°C. What is Q?",
+      "options": [
+        "800,000 J",
+        "800 J",
+        "12.5 J",
+        "100 J"
+      ],
+      "correct_index": 1,
+      "guide": "Convert 250 g to 0.250 kg: Q = 0.250 × 400 × 8 = 800 J.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Equal masses A and B receive equal heat with no phase change. A has twice B’s specific heat. Compare temperature rises.",
+      "options": [
+        "A cannot change temperature.",
+        "A’s rise is half B’s.",
+        "The rises must match.",
+        "A’s rise is twice B’s."
+      ],
+      "correct_index": 1,
+      "guide": "ΔT is inversely proportional to c for the same energy and mass.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 0.20 kg model sample needs 360 J to warm by 3°C. What specific heat fits the data?",
+      "options": [
+        "600 J/(kg·°C)",
+        "5,400 J/(kg·°C)",
+        "1,800 J/(kg·°C)",
+        "24 J/(kg·°C)"
+      ],
+      "correct_index": 0,
+      "guide": "c = Q/(mΔT) = 360/(0.20 × 3) = 600.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ]
+}

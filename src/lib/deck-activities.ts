@@ -1,4 +1,6 @@
 import catalog from '@/data/deck-activities.json'
+import worksheetCatalog from '@/data/worksheet-deck-activities.json'
+import { coursePlanAssessment } from '@/lib/course-plan-assessment'
 import etfCatalog from '@/data/trades-etf-deck-activities.json'
 import type { PresentationIdentity } from '@/lib/course-plan-presentation'
 
@@ -26,7 +28,9 @@ export function activitiesForDeck(identity: PresentationIdentity, targets: { id:
   const unit = identity.plan_unit_id ?? (legacy ? `unit-${legacy[1]}` : project ? 'proj-1' : etf ? `trades-etf-${etf[1]}` : null)
   const day = identity.plan_day ?? (legacy ? Number(legacy[2]) : project ? 10 + Number(project[1]) : etf ? Number(etf[2]) : null)
   const track = identity.plan_track === 'honors' ? 'honors' : 'cpa'
-  const source = unit?.startsWith('trades-etf-') ? etfCatalog : catalog
+  if (unit && day && coursePlanAssessment(unit,day)) return []
+  const worksheet = worksheetCatalog.some(a => a.unitId === unit && a.day === day && a.track === track)
+  const source = worksheet ? worksheetCatalog : unit?.startsWith('trades-etf-') ? etfCatalog : catalog
   return source.filter(a => a.unitId === unit && a.day === day && (a.track === 'shared' || a.track === track)).map(a => {
     const target = targets.find(t => t.slug === a.targetSlug)
     return { ...a, kind: a.kind as DeckActivity['kind'], targetId: target?.id ?? null, targetStatement: target?.statement ?? null }

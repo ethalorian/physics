@@ -1,4 +1,5 @@
 'use client'
+import RevisionCycle from '@/components/review-desk/RevisionCycle'
 import { useRef, useState } from 'react'
 import type { ChoiceOption, ChoiceSelection } from '@/lib/choice-calendar'
 import { MAX_ARTIFACT_BYTES } from '@/lib/lesson-artifacts'
@@ -31,6 +32,7 @@ export default function ChoiceLabArtifact({ sectionId, option, selection, userId
     } catch (e) { setError((e as Error).message) } finally { flight.current = false; setBusy(false) }
   }
   return <section className="space-y-3 rounded-xl border bg-card p-4" aria-label="Your lab artifact">
+    <RevisionCycle sourceKey={'choice:'+sectionId+':'+option.id}/>
     <h4 className="font-semibold">Turn in</h4><p>{option.artifactInstructions}</p>
     <p className="text-sm text-muted-foreground">{submitted ? 'Submitted. Your teacher will review your work.' : 'Submit your own work. Type a response or upload a photo/PDF.'}</p>
     {!selection?.selected && <p className="text-sm">Choose this lab to begin.</p>}

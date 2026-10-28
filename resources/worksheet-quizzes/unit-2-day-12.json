@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 12,
+  "title": "Circular motion",
+  "target": "Relate inward net force to a change in velocity direction.",
+  "criteria": [
+    "Draw tangent velocity and inward acceleration.",
+    "Use v²/r or a supplied acceleration.",
+    "Identify the real interaction providing centripetal force."
+  ],
+  "source_sha256": "1763cf875f3f0ee789f30e3589336746b8d6ecd93073cae49d8cae175e65358e",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.496Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A car follows a circle at constant speed. How are velocity and acceleration directed?",
+      "options": [
+        "Velocity inward; acceleration tangent.",
+        "Both outward.",
+        "Both tangent.",
+        "Velocity tangent; acceleration inward."
+      ],
+      "correct_index": 3,
+      "guide": "Direction change requires inward acceleration even at constant speed.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "At the rightmost point of a clockwise circle, which pair is correct?",
+      "options": [
+        "Velocity right; acceleration down.",
+        "Both vectors zero.",
+        "Velocity down; acceleration left.",
+        "Velocity up; acceleration right."
+      ],
+      "correct_index": 2,
+      "guide": "Clockwise tangent points down; center lies left.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An object moves at 6 m/s on a circle of radius 3 m. What is centripetal acceleration?",
+      "options": [
+        "18 m/s²",
+        "12 m/s²",
+        "108 m/s²",
+        "2 m/s²"
+      ],
+      "correct_index": 1,
+      "guide": "a_c = v²/r = 36/3 = 12.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 1.5 kg object has inward acceleration 8 m/s². What is inward net force?",
+      "options": [
+        "9.5 N",
+        "0.1875 N",
+        "5.33 N",
+        "12 N"
+      ],
+      "correct_index": 3,
+      "guide": "F_net = ma = 1.5 × 8 = 12 N.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ball moves in a horizontal circle on a string. Which interaction can supply the inward force?",
+      "options": [
+        "String tension.",
+        "An extra force named centripetal that exists separately from interactions.",
+        "Velocity itself acting as a force.",
+        "Inertia pushing inward."
+      ],
+      "correct_index": 0,
+      "guide": "Centripetal describes the inward role of real forces such as tension.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A car turns on a flat road with no banking. What commonly provides its inward horizontal force?",
+      "options": [
+        "The car’s speed with no interaction.",
+        "A separate inward force added on top of all interactions.",
+        "Static friction from the road.",
+        "Gravity alone, acting horizontally."
+      ],
+      "correct_index": 2,
+      "guide": "Tire-road friction can act toward the turn center.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A car follows a circle at constant speed. How are velocity and acceleration directed?",
+      "options": [
+        "Velocity tangent; acceleration inward.",
+        "Both outward.",
+        "Velocity inward; acceleration tangent.",
+        "Both tangent."
+      ],
+      "correct_index": 0,
+      "guide": "Direction change requires inward acceleration even at constant speed.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "At the rightmost point of a clockwise circle, which pair is correct?",
+      "options": [
+        "Velocity right; acceleration down.",
+        "Velocity up; acceleration right.",
+        "Both vectors zero.",
+        "Velocity down; acceleration left."
+      ],
+      "correct_index": 3,
+      "guide": "Clockwise tangent points down; center lies left.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An object moves at 6 m/s on a circle of radius 3 m. What is centripetal acceleration?",
+      "options": [
+        "18 m/s²",
+        "2 m/s²",
+        "12 m/s²",
+        "108 m/s²"
+      ],
+      "correct_index": 2,
+      "guide": "a_c = v²/r = 36/3 = 12.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 1.5 kg object has inward acceleration 8 m/s². What is inward net force?",
+      "options": [
+        "12 N",
+        "5.33 N",
+        "9.5 N",
+        "0.1875 N"
+      ],
+      "correct_index": 0,
+      "guide": "F_net = ma = 1.5 × 8 = 12 N.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ball moves in a horizontal circle on a string. Which interaction can supply the inward force?",
+      "options": [
+        "Velocity itself acting as a force.",
+        "An extra force named centripetal that exists separately from interactions.",
+        "Inertia pushing inward.",
+        "String tension."
+      ],
+      "correct_index": 3,
+      "guide": "Centripetal describes the inward role of real forces such as tension.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A car turns on a flat road with no banking. What commonly provides its inward horizontal force?",
+      "options": [
+        "The car’s speed with no interaction.",
+        "Static friction from the road.",
+        "Gravity alone, acting horizontally.",
+        "A separate inward force added on top of all interactions."
+      ],
+      "correct_index": 1,
+      "guide": "Tire-road friction can act toward the turn center.",
+      "target_slug": "u2.s3-centripetal-calc",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

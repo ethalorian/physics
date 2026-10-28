@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 14,
+  "title": "Transfer: momentum and impulse",
+  "target": "Apply momentum reasoning to new collisions and deflection cases.",
+  "criteria": [
+    "Define the system and positive direction.",
+    "Use conservation or impulse only when assumptions apply.",
+    "Explain energy and model limits clearly."
+  ],
+  "source_sha256": "507439231156fa5277b27d925e99002d9ea47bb335598cd8b99507a1febafa95",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.513Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A ball collides with a cart. To use total momentum conservation, which choice is appropriate?",
+      "options": [
+        "Analyze only the ball while ignoring the cart force.",
+        "Assign a different unconverted sign convention to each object.",
+        "Assume every individual momentum is conserved.",
+        "Include both objects, choose one axis, and check external impulse."
+      ],
+      "correct_index": 3,
+      "guide": "System, common axis, and external-impulse condition are essential.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Take west as positive. A 2 kg cart moves east at 7 m/s. What is its momentum?",
+      "options": [
+        "+14 kg·m/s",
+        "−3.5 kg·m/s",
+        "−14 kg·m/s",
+        "+9 kg·m/s"
+      ],
+      "correct_index": 2,
+      "guide": "East is negative under this convention; p = 2(−7) = −14.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg cart slows from +6 to +1 m/s over 2 s. What is average net force?",
+      "options": [
+        "+10 N",
+        "−10 N",
+        "−20 N",
+        "+20 N"
+      ],
+      "correct_index": 1,
+      "guide": "Δp = 4(1 − 6) = −20; divide by 2 s.",
+      "target_slug": "u3.s1-compute-impulse",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two objects have initial total momentum +22 kg·m/s and receive external impulse −6 N·s. What is final total momentum?",
+      "options": [
+        "+22 kg·m/s",
+        "+16 kg·m/s",
+        "−16 kg·m/s",
+        "+28 kg·m/s"
+      ],
+      "correct_index": 1,
+      "guide": "p_f = p_i + J_external = 22 − 6 = 16.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An isolated collision conserves momentum but loses kinetic energy. What follows?",
+      "options": [
+        "Total energy has been destroyed.",
+        "Both objects must have negative mass.",
+        "It is inelastic; energy has changed form or transferred within the full account.",
+        "Momentum conservation must be false."
+      ],
+      "correct_index": 2,
+      "guide": "Kinetic energy is only one part of total energy.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A tiny impulse is predicted to produce a large offset after a long time. What should be checked before applying that prediction to an asteroid?",
+      "options": [
+        "Target mass, lead time, ejecta, and orbital assumptions.",
+        "Whether momentum is a scalar.",
+        "Only the target’s name.",
+        "Whether all gravity can be ignored forever."
+      ],
+      "correct_index": 0,
+      "guide": "The simple impulse-and-drift model requires explicit limits in a real orbital setting.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A ball collides with a cart. To use total momentum conservation, which choice is appropriate?",
+      "options": [
+        "Analyze only the ball while ignoring the cart force.",
+        "Assign a different unconverted sign convention to each object.",
+        "Assume every individual momentum is conserved.",
+        "Include both objects, choose one axis, and check external impulse."
+      ],
+      "correct_index": 3,
+      "guide": "System, common axis, and external-impulse condition are essential.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Take west as positive. A 2 kg cart moves east at 7 m/s. What is its momentum?",
+      "options": [
+        "+9 kg·m/s",
+        "+14 kg·m/s",
+        "−14 kg·m/s",
+        "−3.5 kg·m/s"
+      ],
+      "correct_index": 2,
+      "guide": "East is negative under this convention; p = 2(−7) = −14.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg cart slows from +6 to +1 m/s over 2 s. What is average net force?",
+      "options": [
+        "+20 N",
+        "−10 N",
+        "+10 N",
+        "−20 N"
+      ],
+      "correct_index": 1,
+      "guide": "Δp = 4(1 − 6) = −20; divide by 2 s.",
+      "target_slug": "u3.s1-compute-impulse",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two objects have initial total momentum +22 kg·m/s and receive external impulse −6 N·s. What is final total momentum?",
+      "options": [
+        "+16 kg·m/s",
+        "+28 kg·m/s",
+        "+22 kg·m/s",
+        "−16 kg·m/s"
+      ],
+      "correct_index": 0,
+      "guide": "p_f = p_i + J_external = 22 − 6 = 16.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An isolated collision conserves momentum but loses kinetic energy. What follows?",
+      "options": [
+        "Momentum conservation must be false.",
+        "Total energy has been destroyed.",
+        "It is inelastic; energy has changed form or transferred within the full account.",
+        "Both objects must have negative mass."
+      ],
+      "correct_index": 2,
+      "guide": "Kinetic energy is only one part of total energy.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A tiny impulse is predicted to produce a large offset after a long time. What should be checked before applying that prediction to an asteroid?",
+      "options": [
+        "Only the target’s name.",
+        "Whether all gravity can be ignored forever.",
+        "Whether momentum is a scalar.",
+        "Target mass, lead time, ejecta, and orbital assumptions."
+      ],
+      "correct_index": 3,
+      "guide": "The simple impulse-and-drift model requires explicit limits in a real orbital setting.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

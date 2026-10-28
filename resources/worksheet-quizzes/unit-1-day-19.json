@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 19,
+  "title": "Diagnose, repair, recheck",
+  "target": "Identify a reasoning error and demonstrate the repaired method on a new problem.",
+  "criteria": [
+    "Locate the first incorrect step.",
+    "Show a corrected method with units.",
+    "Apply the repair to a different problem."
+  ],
+  "source_sha256": "9496acd1823607cb4f81f6c1b92a0c5b24161417714d91f7b7a319ca046d4252",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.483Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A student finds acceleration under 21 N right and 6 N left by dividing 21 by mass. Which is the first incorrect step?",
+      "options": [
+        "Choosing right as positive.",
+        "Writing force in newtons.",
+        "Using the object’s mass.",
+        "Using one force instead of the net force."
+      ],
+      "correct_index": 3,
+      "guide": "First combine signed forces: net is 15 N right.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A robot moves from x = 5 m to x = 17 m in 4 s. A student reports average velocity 17/4 m/s. What did the student omit?",
+      "options": [
+        "Adding final position twice.",
+        "Subtracting the initial position.",
+        "Converting seconds to newtons.",
+        "Squaring the mass."
+      ],
+      "correct_index": 1,
+      "guide": "Average velocity uses displacement, not final position alone.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 3 kg cart has 21 N right and 6 N left. What is corrected acceleration?",
+      "options": [
+        "7 m/s² right.",
+        "9 m/s² right.",
+        "5 m/s² right.",
+        "45 m/s² right."
+      ],
+      "correct_index": 2,
+      "guide": "Net = 15 N right; a = 15/3 = 5 m/s².",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A robot moves from 5 m to 17 m in 4 s. What is corrected average velocity?",
+      "options": [
+        "+3 m/s",
+        "+4.25 m/s",
+        "−3 m/s",
+        "+5.5 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "(17 − 5)/4 = 3 m/s.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In a new case, a 4 kg cart has 8 N right and 28 N left. Apply the repaired force method.",
+      "options": [
+        "a = 9 m/s² right.",
+        "a = 5 m/s² left.",
+        "a = 80 m/s² left.",
+        "a = 7 m/s² left."
+      ],
+      "correct_index": 1,
+      "guide": "Net = 20 N left; divide by 4 kg.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A different rover goes from −4 m to +11 m in 3 s. Which calculation correctly transfers the repaired position method?",
+      "options": [
+        "[11 − (−4)]/3 = +5 m/s.",
+        "11/3 = +3.67 m/s.",
+        "(11 − 4)/3 = +2.33 m/s.",
+        "(−4 − 11)/3 = −5 m/s."
+      ],
+      "correct_index": 0,
+      "guide": "Subtract the signed initial coordinate before dividing by elapsed time.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A student finds acceleration under 21 N right and 6 N left by dividing 21 by mass. Which is the first incorrect step?",
+      "options": [
+        "Using the object’s mass.",
+        "Writing force in newtons.",
+        "Choosing right as positive.",
+        "Using one force instead of the net force."
+      ],
+      "correct_index": 3,
+      "guide": "First combine signed forces: net is 15 N right.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A robot moves from x = 5 m to x = 17 m in 4 s. A student reports average velocity 17/4 m/s. What did the student omit?",
+      "options": [
+        "Squaring the mass.",
+        "Subtracting the initial position.",
+        "Converting seconds to newtons.",
+        "Adding final position twice."
+      ],
+      "correct_index": 1,
+      "guide": "Average velocity uses displacement, not final position alone.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 3 kg cart has 21 N right and 6 N left. What is corrected acceleration?",
+      "options": [
+        "45 m/s² right.",
+        "5 m/s² right.",
+        "7 m/s² right.",
+        "9 m/s² right."
+      ],
+      "correct_index": 1,
+      "guide": "Net = 15 N right; a = 15/3 = 5 m/s².",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A robot moves from 5 m to 17 m in 4 s. What is corrected average velocity?",
+      "options": [
+        "−3 m/s",
+        "+4.25 m/s",
+        "+3 m/s",
+        "+5.5 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "(17 − 5)/4 = 3 m/s.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In a new case, a 4 kg cart has 8 N right and 28 N left. Apply the repaired force method.",
+      "options": [
+        "a = 5 m/s² left.",
+        "a = 9 m/s² right.",
+        "a = 7 m/s² left.",
+        "a = 80 m/s² left."
+      ],
+      "correct_index": 0,
+      "guide": "Net = 20 N left; divide by 4 kg.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A different rover goes from −4 m to +11 m in 3 s. Which calculation correctly transfers the repaired position method?",
+      "options": [
+        "(−4 − 11)/3 = −5 m/s.",
+        "11/3 = +3.67 m/s.",
+        "[11 − (−4)]/3 = +5 m/s.",
+        "(11 − 4)/3 = +2.33 m/s."
+      ],
+      "correct_index": 2,
+      "guide": "Subtract the signed initial coordinate before dividing by elapsed time.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ]
+}

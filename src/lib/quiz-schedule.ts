@@ -1,7 +1,8 @@
 import { SCHOOL_TZ, schoolDayKey, schoolDayStart } from './school-day'
 
-export type QuizSchedule = 'regular' | 'vocabulary'
+export type QuizSchedule = 'regular' | 'vocabulary' | 'daily'
 export const QUIZ_SCHEDULE_LABELS = {
+  daily: 'Daily lesson quizzes follow the review, three school days after the foundation.',
   regular: 'Quizzes are scheduled on Mondays, Wednesdays, and Fridays.',
   vocabulary: 'Vocabulary quizzes are scheduled on Tuesdays and Thursdays.',
 } as const
@@ -15,6 +16,7 @@ export function quizScheduleError(due: string | null, schedule: QuizSchedule): s
   if (due === null) return null
   const day = calendarDate(due) ? due : /^\d{4}-\d{2}-\d{2}T/.test(due) && Number.isFinite(Date.parse(due)) ? schoolDayKey(new Date(due)) : null
   if (!day) return 'Choose a valid due date.'
+  if(schedule==='daily')return null
   const weekday = new Date(day + 'T12:00:00Z').getUTCDay()
   return (schedule === 'vocabulary' ? [2, 4] : [1, 3, 5]).includes(weekday) ? null : QUIZ_SCHEDULE_LABELS[schedule]
 }

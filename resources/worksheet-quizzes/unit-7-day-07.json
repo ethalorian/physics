@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 7,
+  "title": "Series circuits",
+  "target": "Use current continuity and voltage drops in a single-path circuit.",
+  "criteria": [
+    "Identify a single current path.",
+    "Add series resistances.",
+    "Check that voltage drops add to the supply voltage."
+  ],
+  "source_sha256": "063979b360bad68edda53d437bcbf8d8f51057331f354ed9f830d8da58853897",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.563Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A battery, switch, and two resistors form one loop with no branches. Which statement is correct for steady current?",
+      "options": [
+        "Each resistor must have the same voltage.",
+        "Both resistors carry the same current.",
+        "Current doubles after each resistor.",
+        "The second resistor always carries zero current."
+      ],
+      "correct_index": 1,
+      "guide": "One path requires the same steady charge flow through each component; voltage drops can differ.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "One connection in a simple two-resistor series loop opens. What happens after transients settle?",
+      "options": [
+        "The other resistor doubles its current.",
+        "The open gap has zero voltage in every case.",
+        "Only the second resistor loses current.",
+        "Current stops throughout the loop."
+      ],
+      "correct_index": 3,
+      "guide": "Opening the only path stops steady loop current.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Resistors of 7 Ω and 11 Ω are in series. What is equivalent resistance?",
+      "options": [
+        "18 Ω",
+        "4.28 Ω",
+        "77 Ω",
+        "4 Ω"
+      ],
+      "correct_index": 0,
+      "guide": "Series resistances add: 7 + 11 = 18 Ω.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal 20 V source supplies series resistors of 4 Ω and 6 Ω. What current passes through the 6 Ω resistor?",
+      "options": [
+        "5 A",
+        "3.33 A",
+        "0.5 A",
+        "2 A"
+      ],
+      "correct_index": 3,
+      "guide": "Equivalent resistance is 10 Ω. Loop current is 20/10 = 2 A through both.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In a 14 V series loop, two component drops are 5 V and 3 V. What is the third drop with ideal wires?",
+      "options": [
+        "8 V",
+        "22 V",
+        "6 V",
+        "14 V"
+      ],
+      "correct_index": 2,
+      "guide": "The drops sum to supply voltage: 14 − 5 − 3 = 6 V.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student reports 2 A through series resistors of 3 Ω and 8 Ω powered by 22 V. Which check confirms consistency?",
+      "options": [
+        "The currents must add to 4 A at the battery.",
+        "Each resistor must drop 22 V.",
+        "Drops are 6 V and 16 V, totaling 22 V.",
+        "Drops are 3 V and 8 V, totaling 11 V."
+      ],
+      "correct_index": 2,
+      "guide": "V = IR gives 6 and 16 V; the same current passes through both.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A battery, switch, and two resistors form one loop with no branches. Which statement is correct for steady current?",
+      "options": [
+        "Both resistors carry the same current.",
+        "Each resistor must have the same voltage.",
+        "Current doubles after each resistor.",
+        "The second resistor always carries zero current."
+      ],
+      "correct_index": 0,
+      "guide": "One path requires the same steady charge flow through each component; voltage drops can differ.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "One connection in a simple two-resistor series loop opens. What happens after transients settle?",
+      "options": [
+        "The open gap has zero voltage in every case.",
+        "The other resistor doubles its current.",
+        "Only the second resistor loses current.",
+        "Current stops throughout the loop."
+      ],
+      "correct_index": 3,
+      "guide": "Opening the only path stops steady loop current.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Resistors of 7 Ω and 11 Ω are in series. What is equivalent resistance?",
+      "options": [
+        "18 Ω",
+        "4.28 Ω",
+        "77 Ω",
+        "4 Ω"
+      ],
+      "correct_index": 0,
+      "guide": "Series resistances add: 7 + 11 = 18 Ω.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal 20 V source supplies series resistors of 4 Ω and 6 Ω. What current passes through the 6 Ω resistor?",
+      "options": [
+        "0.5 A",
+        "2 A",
+        "3.33 A",
+        "5 A"
+      ],
+      "correct_index": 1,
+      "guide": "Equivalent resistance is 10 Ω. Loop current is 20/10 = 2 A through both.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In a 14 V series loop, two component drops are 5 V and 3 V. What is the third drop with ideal wires?",
+      "options": [
+        "8 V",
+        "14 V",
+        "22 V",
+        "6 V"
+      ],
+      "correct_index": 3,
+      "guide": "The drops sum to supply voltage: 14 − 5 − 3 = 6 V.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student reports 2 A through series resistors of 3 Ω and 8 Ω powered by 22 V. Which check confirms consistency?",
+      "options": [
+        "Drops are 3 V and 8 V, totaling 11 V.",
+        "The currents must add to 4 A at the battery.",
+        "Drops are 6 V and 16 V, totaling 22 V.",
+        "Each resistor must drop 22 V."
+      ],
+      "correct_index": 2,
+      "guide": "V = IR gives 6 and 16 V; the same current passes through both.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

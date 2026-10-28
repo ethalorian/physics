@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-labelledby="diagram-title diagram-description">
+<title id="diagram-title">Delivery robot approaching a crossing</title><desc id="diagram-description">At detection, the front of the robot is 5.0 metres from the near edge of the pedestrian crossing and moves toward it at 3.0 metres per second. The diagram shows the starting situation, not the stopping result. Sketch not to scale.</desc>
+<style>text{font-family:Arial,sans-serif}.scenario-caption{fill:#233d46}.scene-label{font-weight:700;fill:#f8fbff}.motion-arrow{stroke:#263f43;stroke-width:4;fill:none}.human{fill:#e8bf76}.diagram-bg{fill:#182c31;stroke:#6d8785;stroke-width:1}.rain,.puddles{opacity:1}.path-surface{fill:#9eaeba}.grass{fill:#283d45}.canopy{fill:#42665e}</style><defs><pattern id="crosswalk" width="38" height="180" patternUnits="userSpaceOnUse"><rect x="4" width="23" height="180" fill="#f3f2e8"/></pattern><pattern id="rainfall" width="110" height="90" patternUnits="userSpaceOnUse"><path d="M20 10l-7 16 M82 45l-7 16" stroke="#c4dfed" stroke-width="2" opacity=".4"/></pattern><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0 0L8 4 0 8" fill="none" stroke="#263f43" stroke-width="1.4"/></marker></defs>
+<rect class="grass" width="900" height="420" fill="#2b4540"/>
+<path d="M-10 55C170 118 237 20 449 69S714 101 920 57" stroke="#3a5750" stroke-width="3" fill="none"/>
+<path d="M-10 377C126 331 256 389 450 359S732 372 920 339" stroke="#3a5750" stroke-width="3" fill="none"/>
+<g opacity=".8"><circle cx="75" cy="64" r="59" fill="#1c3632"/><circle class="canopy" cx="66" cy="53" r="44" fill="#54745b"/><circle class="canopy" cx="102" cy="60" r="27" fill="#638062"/><circle cx="827" cy="362" r="54" fill="#1c3632"/><circle class="canopy" cx="818" cy="350" r="45" fill="#54745b"/><circle class="canopy" cx="850" cy="354" r="26" fill="#638062"/></g>
+<rect x="684" y="0" width="128" height="420" fill="#a6b2a7"/>
+<rect class="path-surface" x="0" y="140" width="900" height="166" fill="#dedbcd"/>
+<path d="M0 140H900M0 306H900" stroke="#f4eddb" stroke-width="4" opacity=".8"/>
+<rect x="684" y="153" width="128" height="140" fill="url(#crosswalk)"/>
+<path d="M0 225H75M357 225H416M460 225H519M563 225H622M850 225H900" stroke="#a5a897" stroke-width="3" stroke-dasharray="12 16"/>
+<g class="puddles" fill="#7696ac" opacity="0"><ellipse cx="462" cy="271" rx="100" ry="13" opacity=".45"/><ellipse cx="78" cy="173" rx="45" ry="8" opacity=".45"/><ellipse cx="598" cy="174" rx="60" ry="8" opacity=".45"/></g>
+<g aria-hidden="true"><ellipse cx="185" cy="245" rx="97" ry="38" fill="#182932" opacity=".17"/><rect x="108" y="170" width="34" height="28" rx="9" fill="#1e2933"/><rect x="108" y="251" width="34" height="28" rx="9" fill="#1e2933"/><rect x="231" y="170" width="34" height="28" rx="9" fill="#1e2933"/><rect x="231" y="251" width="34" height="28" rx="9" fill="#1e2933"/><rect x="104" y="186" width="171" height="78" rx="26" fill="#77709f"/><rect x="104" y="177" width="171" height="78" rx="26" fill="#e5e1f3"/><rect x="121" y="188" width="125" height="55" rx="13" fill="#b6acf2"/><rect x="250" y="198" width="15" height="36" rx="7" fill="#293347"/><circle cx="258" cy="207" r="3" fill="#a6eae8"/><circle cx="258" cy="226" r="3" fill="#a6eae8"/><path d="M165 205h38m-29 12h20m-29 12h38" stroke="#6d629e" stroke-width="3" stroke-linecap="round"/></g>
+<path d="M289 211H387" class="motion-arrow" marker-end="url(#arrow)"/>
+<text x="338" y="191" font-size="24" font-weight="750" text-anchor="middle" class="scenario-caption">3.0 m/s</text>
+<path d="M275 125V98H684V125" fill="none" stroke="#f3cf87" stroke-width="2"/>
+<path d="M275 278V328M684 293V328" fill="none" stroke="#b4c6bf" stroke-width="1.5" stroke-dasharray="4 5"/>
+<rect x="369" y="75" width="224" height="43" rx="10" fill="#f3cf87"/><text x="481" y="103" font-size="20" font-weight="750" text-anchor="middle" fill="#332d20" font-family="inherit">5.0 m to the crossing</text>
+<g aria-hidden="true"><ellipse cx="748" cy="74" rx="20" ry="26" fill="#425c55" opacity=".35"/><path d="M738 72l-5 26m19-26 9 23" stroke="#263748" stroke-width="9" stroke-linecap="round"/><rect class="human" x="731" y="48" width="32" height="32" rx="13"/><circle cx="747" cy="46" r="11" fill="#f0d6b7"/><path d="M732 56l-8 17m40-17 8 14" stroke="#e8bf76" stroke-width="7" stroke-linecap="round"/></g>
+<rect x="100" y="334" width="259" height="51" rx="12" class="diagram-bg"/><circle cx="123" cy="359" r="10" fill="#b5adff"/><text x="145" y="365" class="scene-label" font-size="17">Crossing detected here</text>
+<rect x="602" y="334" width="184" height="51" rx="12" class="diagram-bg"/><text x="694" y="365" class="scene-label" font-size="17" text-anchor="middle">Pedestrian crossing</text>
+<rect class="rain" width="900" height="420" fill="url(#rainfall)" pointer-events="none"/>
+</svg>

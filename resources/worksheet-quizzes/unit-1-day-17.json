@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 17,
+  "title": "Static and kinetic friction",
+  "target": "Distinguish adjustable static friction from sliding friction.",
+  "criteria": [
+    "Compare a push with the static-friction limit.",
+    "Find actual friction for rest or sliding.",
+    "Explain friction direction using relative slipping."
+  ],
+  "source_sha256": "ec75051b4069c1b0d3f8113f238fe615f29e1ff096646651bebe04d89e29eb99",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.482Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Maximum static friction is 24 N. A horizontal 15 N push leaves a box at rest with no other horizontal forces. What is actual friction?",
+      "options": [
+        "0 N because the box is stationary.",
+        "39 N opposite the push.",
+        "24 N opposite the push.",
+        "15 N opposite the push."
+      ],
+      "correct_index": 3,
+      "guide": "Static friction adjusts to balance the push up to its limit.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A resting box has a 24 N static-friction limit. The horizontal push rises to 30 N with no other horizontal forces. What does the model predict?",
+      "options": [
+        "Static friction automatically becomes 30 N despite its limit.",
+        "Static friction cannot hold it at rest.",
+        "It must remain at rest because friction exists.",
+        "Its normal force must become zero."
+      ],
+      "correct_index": 1,
+      "guide": "The required balancing friction exceeds the maximum.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A box slides right under a 30 N rightward push and 18 N kinetic friction. What is net force?",
+      "options": [
+        "12 N right.",
+        "48 N right.",
+        "18 N left.",
+        "12 N left."
+      ],
+      "correct_index": 0,
+      "guide": "Use actual kinetic friction: 30 − 18 = 12 N.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sliding object has μ_k = 0.25 and normal force 40 N. What is kinetic-friction magnitude?",
+      "options": [
+        "160 N",
+        "40.25 N",
+        "0.00625 N",
+        "10 N"
+      ],
+      "correct_index": 3,
+      "guide": "f_k = μ_k N = 0.25 × 40 = 10 N.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A box slides right relative to a stationary floor. Which way does floor friction act on the box?",
+      "options": [
+        "Up.",
+        "Right.",
+        "Left.",
+        "Down."
+      ],
+      "correct_index": 2,
+      "guide": "Kinetic friction opposes relative slipping.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A moving conveyor belt carries a box without slipping and accelerates it to the right. Can static friction on the box point right?",
+      "options": [
+        "No; friction always points opposite motion relative to the room.",
+        "No; static friction is always zero.",
+        "Yes; it can prevent relative slipping and accelerate the box with the belt.",
+        "Yes; but only if the box has negative mass."
+      ],
+      "correct_index": 2,
+      "guide": "Friction concerns relative motion or its tendency at contact, not a universal opposition to room-frame velocity.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Maximum static friction is 24 N. A horizontal 15 N push leaves a box at rest with no other horizontal forces. What is actual friction?",
+      "options": [
+        "15 N opposite the push.",
+        "24 N opposite the push.",
+        "39 N opposite the push.",
+        "0 N because the box is stationary."
+      ],
+      "correct_index": 0,
+      "guide": "Static friction adjusts to balance the push up to its limit.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A resting box has a 24 N static-friction limit. The horizontal push rises to 30 N with no other horizontal forces. What does the model predict?",
+      "options": [
+        "It must remain at rest because friction exists.",
+        "Static friction automatically becomes 30 N despite its limit.",
+        "Static friction cannot hold it at rest.",
+        "Its normal force must become zero."
+      ],
+      "correct_index": 2,
+      "guide": "The required balancing friction exceeds the maximum.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A box slides right under a 30 N rightward push and 18 N kinetic friction. What is net force?",
+      "options": [
+        "12 N right.",
+        "18 N left.",
+        "12 N left.",
+        "48 N right."
+      ],
+      "correct_index": 0,
+      "guide": "Use actual kinetic friction: 30 − 18 = 12 N.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sliding object has μ_k = 0.25 and normal force 40 N. What is kinetic-friction magnitude?",
+      "options": [
+        "40.25 N",
+        "0.00625 N",
+        "160 N",
+        "10 N"
+      ],
+      "correct_index": 3,
+      "guide": "f_k = μ_k N = 0.25 × 40 = 10 N.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A box slides right relative to a stationary floor. Which way does floor friction act on the box?",
+      "options": [
+        "Right.",
+        "Left.",
+        "Up.",
+        "Down."
+      ],
+      "correct_index": 1,
+      "guide": "Kinetic friction opposes relative slipping.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A moving conveyor belt carries a box without slipping and accelerates it to the right. Can static friction on the box point right?",
+      "options": [
+        "Yes; but only if the box has negative mass.",
+        "No; static friction is always zero.",
+        "No; friction always points opposite motion relative to the room.",
+        "Yes; it can prevent relative slipping and accelerate the box with the belt."
+      ],
+      "correct_index": 3,
+      "guide": "Friction concerns relative motion or its tendency at contact, not a universal opposition to room-frame velocity.",
+      "target_slug": "u1.friction-static-kinetic",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

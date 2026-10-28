@@ -17,7 +17,8 @@ import { rotationChapters } from './rotation-chapters'
 import { mechanicsChapters } from './mechanics-chapters'
 import { motionChapters } from './motion-chapters'
 import type { ConnectedChapter } from './lesson-contract'
-export const CONNECTED_CHAPTERS: readonly ConnectedChapter[] = [
+import { reviseChapter } from './source-revisions'
+const BASE_CHAPTERS: readonly ConnectedChapter[] = [
   {definition:inertiaDefinition,lessons:inertiaLessons,intro:{headline:['A world','in motion.'],invitation:'A coin keeps up with a moving train. A puck coasts across the ice. A loaded cart resists your push. Connect these experiences through inertia.',bigIdea:'Explain changes in motion by looking for a net force.',detail:'A force is an interaction. Inertia is a property. Velocity describes motion. Keep their roles distinct.'}},
   ...motionChapters,
   ...mechanicsChapters,
@@ -38,4 +39,5 @@ export const CONNECTED_CHAPTERS: readonly ConnectedChapter[] = [
   ...frontierChapters,
   {definition:newtonDefinition,lessons:newtonLessons,intro:{headline:['One system.','Three laws.'],invitation:'Before using an equation, decide what you are studying. Draw the interactions, combine the forces, and explain what happens to velocity.',bigIdea:'The system boundary comes before the equation.',detail:'Forces on the same system combine. Interaction partners act on different systems.'}},
 ]
+export const CONNECTED_CHAPTERS: readonly ConnectedChapter[] = BASE_CHAPTERS.map(reviseChapter)
 export function connectedChapter(book:string,chapter:number) {return CONNECTED_CHAPTERS.find(c=>c.definition.book===book&&c.definition.chapter===chapter)}

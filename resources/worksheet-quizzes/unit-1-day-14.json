@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 14,
+  "title": "Forces on two objects",
+  "target": "Identify an equal-and-opposite interaction pair on different objects.",
+  "criteria": [
+    "Name both objects in an interaction pair.",
+    "Place the two equal-and-opposite forces on different objects.",
+    "Explain why equal forces can produce unequal accelerations."
+  ],
+  "source_sha256": "72adabae670b28eb27a0a475c6f556e5923cec78f059c73d12f22f1ef2574ac8",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.480Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A person’s hand pushes on a wall. What is the third-law partner?",
+      "options": [
+        "The floor pushes on the person.",
+        "The hand’s motion pushes on itself.",
+        "The wall pushes on the hand.",
+        "Gravity pulls on the hand."
+      ],
+      "correct_index": 2,
+      "guide": "The interaction pair exchanges source and recipient.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Earth pulls gravitationally on a satellite. Which is the partner force?",
+      "options": [
+        "An unrelated engine force on the satellite.",
+        "The satellite pulls gravitationally on Earth.",
+        "The satellite’s velocity.",
+        "The satellite’s weight on itself."
+      ],
+      "correct_index": 1,
+      "guide": "Both forces belong to the same gravitational interaction between two bodies.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rope pulls a crate right with 16 N. What force does the crate exert on the rope?",
+      "options": [
+        "16 N right.",
+        "A larger force if the crate accelerates.",
+        "Zero because the crate is heavy.",
+        "16 N left."
+      ],
+      "correct_index": 3,
+      "guide": "The forces are equal and opposite even during acceleration.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why do third-law partners not cancel on one object’s free-body diagram?",
+      "options": [
+        "One is imaginary.",
+        "One force occurs later.",
+        "Their magnitudes are unequal.",
+        "They act on different objects."
+      ],
+      "correct_index": 3,
+      "guide": "Each object’s diagram includes only the force acting on that object.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart and a 6 kg cart push each other with equal force magnitudes. Compare acceleration magnitudes due to that interaction.",
+      "options": [
+        "The 2 kg cart’s is three times as large.",
+        "Both accelerations must be equal.",
+        "Both accelerations must be zero.",
+        "The 6 kg cart’s is three times as large."
+      ],
+      "correct_index": 0,
+      "guide": "a = F/m; the smaller mass has three times the acceleration.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A large truck and small car collide. Which statement separates force from acceleration correctly?",
+      "options": [
+        "Mutual force magnitudes are equal; acceleration magnitudes depend on each mass and other forces.",
+        "The truck necessarily exerts a greater mutual force.",
+        "The car exerts no force on the truck.",
+        "Equal mutual forces guarantee identical total accelerations."
+      ],
+      "correct_index": 0,
+      "guide": "Third-law forces are equal, but each object has its own mass and net-force account.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A person’s hand pushes on a wall. What is the third-law partner?",
+      "options": [
+        "The hand’s motion pushes on itself.",
+        "The floor pushes on the person.",
+        "The wall pushes on the hand.",
+        "Gravity pulls on the hand."
+      ],
+      "correct_index": 2,
+      "guide": "The interaction pair exchanges source and recipient.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Earth pulls gravitationally on a satellite. Which is the partner force?",
+      "options": [
+        "An unrelated engine force on the satellite.",
+        "The satellite’s weight on itself.",
+        "The satellite’s velocity.",
+        "The satellite pulls gravitationally on Earth."
+      ],
+      "correct_index": 3,
+      "guide": "Both forces belong to the same gravitational interaction between two bodies.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rope pulls a crate right with 16 N. What force does the crate exert on the rope?",
+      "options": [
+        "16 N left.",
+        "A larger force if the crate accelerates.",
+        "Zero because the crate is heavy.",
+        "16 N right."
+      ],
+      "correct_index": 0,
+      "guide": "The forces are equal and opposite even during acceleration.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why do third-law partners not cancel on one object’s free-body diagram?",
+      "options": [
+        "One force occurs later.",
+        "They act on different objects.",
+        "Their magnitudes are unequal.",
+        "One is imaginary."
+      ],
+      "correct_index": 1,
+      "guide": "Each object’s diagram includes only the force acting on that object.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart and a 6 kg cart push each other with equal force magnitudes. Compare acceleration magnitudes due to that interaction.",
+      "options": [
+        "The 2 kg cart’s is three times as large.",
+        "The 6 kg cart’s is three times as large.",
+        "Both accelerations must be zero.",
+        "Both accelerations must be equal."
+      ],
+      "correct_index": 0,
+      "guide": "a = F/m; the smaller mass has three times the acceleration.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A large truck and small car collide. Which statement separates force from acceleration correctly?",
+      "options": [
+        "The car exerts no force on the truck.",
+        "Mutual force magnitudes are equal; acceleration magnitudes depend on each mass and other forces.",
+        "The truck necessarily exerts a greater mutual force.",
+        "Equal mutual forces guarantee identical total accelerations."
+      ],
+      "correct_index": 1,
+      "guide": "Third-law forces are equal, but each object has its own mass and net-force account.",
+      "target_slug": "u1.third-law-pairs",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

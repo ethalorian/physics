@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 14,
+  "title": "Kepler’s laws",
+  "target": "Use orbital shape, equal areas and period comparisons.",
+  "criteria": [
+    "Place the central body at a focus of an ellipse.",
+    "Compare speed near and far from the central body.",
+    "Use T²=a³ only with the specified units and central body."
+  ],
+  "source_sha256": "8cba85f606e2d98ca6bd32ae6967223e1f447fea93638b867c59c188907adeaa",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.498Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Where is the Sun located in the ideal elliptical orbit model?",
+      "options": [
+        "At one focus.",
+        "At both foci simultaneously.",
+        "At the ellipse’s center necessarily.",
+        "At every point on the orbit."
+      ],
+      "correct_index": 0,
+      "guide": "Kepler’s first law places the central body at a focus.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Remember",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ellipse has two foci. Must a second star occupy the unused focus of a planetary orbit?",
+      "options": [
+        "No; a focus is a geometric location, not necessarily another object.",
+        "Yes; the planet sits permanently at the other focus.",
+        "No; elliptical orbits have no foci.",
+        "Yes; every ellipse requires two stars."
+      ],
+      "correct_index": 0,
+      "guide": "Only one focus contains the central body in this ideal model.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Where does an object in an elliptical solar orbit move faster?",
+      "options": [
+        "Only when crossing Earth’s orbit.",
+        "Nearer the Sun.",
+        "Farther from the Sun.",
+        "Its speed is identical everywhere in every ellipse."
+      ],
+      "correct_index": 1,
+      "guide": "Equal swept areas in equal times require greater speed near perihelion.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two orbit segments sweep equal areas about the Sun. What does Kepler’s second law say about their elapsed times?",
+      "options": [
+        "The farther segment takes zero time.",
+        "Equal.",
+        "The nearer segment always takes twice as long.",
+        "Area provides no timing relation."
+      ],
+      "correct_index": 1,
+      "guide": "Equal areas correspond to equal times.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For a Sun-orbit with a in AU and T in years, T² = a³. If a = 9 AU, what is T?",
+      "options": [
+        "3 years",
+        "729 years",
+        "27 years",
+        "81 years"
+      ],
+      "correct_index": 2,
+      "guide": "T = √9³ = √729 = 27.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Can T² = a³ with AU and years be used unchanged for an orbit around a star with a different mass?",
+      "options": [
+        "Yes; central mass never matters.",
+        "Only if distance is written without units.",
+        "Yes; changing the name of the star is enough.",
+        "No; the central mass changes the proportionality."
+      ],
+      "correct_index": 3,
+      "guide": "The unit-normalized relation assumes the Sun’s mass; the general law includes central mass.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Where is the Sun located in the ideal elliptical orbit model?",
+      "options": [
+        "At every point on the orbit.",
+        "At one focus.",
+        "At the ellipse’s center necessarily.",
+        "At both foci simultaneously."
+      ],
+      "correct_index": 1,
+      "guide": "Kepler’s first law places the central body at a focus.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Remember",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ellipse has two foci. Must a second star occupy the unused focus of a planetary orbit?",
+      "options": [
+        "No; a focus is a geometric location, not necessarily another object.",
+        "Yes; the planet sits permanently at the other focus.",
+        "Yes; every ellipse requires two stars.",
+        "No; elliptical orbits have no foci."
+      ],
+      "correct_index": 0,
+      "guide": "Only one focus contains the central body in this ideal model.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Where does an object in an elliptical solar orbit move faster?",
+      "options": [
+        "Farther from the Sun.",
+        "Its speed is identical everywhere in every ellipse.",
+        "Only when crossing Earth’s orbit.",
+        "Nearer the Sun."
+      ],
+      "correct_index": 3,
+      "guide": "Equal swept areas in equal times require greater speed near perihelion.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two orbit segments sweep equal areas about the Sun. What does Kepler’s second law say about their elapsed times?",
+      "options": [
+        "The farther segment takes zero time.",
+        "The nearer segment always takes twice as long.",
+        "Equal.",
+        "Area provides no timing relation."
+      ],
+      "correct_index": 2,
+      "guide": "Equal areas correspond to equal times.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For a Sun-orbit with a in AU and T in years, T² = a³. If a = 9 AU, what is T?",
+      "options": [
+        "729 years",
+        "27 years",
+        "3 years",
+        "81 years"
+      ],
+      "correct_index": 1,
+      "guide": "T = √9³ = √729 = 27.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Can T² = a³ with AU and years be used unchanged for an orbit around a star with a different mass?",
+      "options": [
+        "Yes; changing the name of the star is enough.",
+        "Yes; central mass never matters.",
+        "No; the central mass changes the proportionality.",
+        "Only if distance is written without units."
+      ],
+      "correct_index": 2,
+      "guide": "The unit-normalized relation assumes the Sun’s mass; the general law includes central mass.",
+      "target_slug": "u2.k4-keplers-laws",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

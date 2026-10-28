@@ -6,6 +6,7 @@ import AssignmentChecklist from './AssignmentChecklist'
 import AssignmentTeachingTool from './AssignmentTeachingTool'
 import { AssignmentAvatarProvider } from './AssignmentAvatar'
 import s from './assignment.module.css'
+import briefStyle from './TransferBriefWorkspace.module.css'
 
 type View = 'watch' | 'work' | 'side'
 type Place = {id: string; offset: number}
@@ -17,7 +18,7 @@ export default function AssignmentWorkspace({lesson, answers, submitted, childre
   children: ReactNode
   renderTool?: (visible: boolean) => ReactNode
   sampleStudent?: boolean
-  resourceLabel?: 'Read'
+  resourceLabel?: 'Read' | 'Slides' | 'Brief'
 }) {
   const [choice, setChoice] = useState<View | null>(null)
   const [wide, setWide] = useState(false)
@@ -75,6 +76,11 @@ export default function AssignmentWorkspace({lesson, answers, submitted, childre
     const frame = requestAnimationFrame(() => restore(view, target))
     return () => cancelAnimationFrame(frame)
   }, [view])
+
+  if (lesson.transferBrief) return <AssignmentAvatarProvider sample={sampleStudent} workVisible><div className={briefStyle.workspace}>
+    <div id="assignment-watch" className={briefStyle.visual}>{renderTool?.(true)}</div>
+    <div id="assignment-work" ref={content} tabIndex={-1} className={briefStyle.work}>{children}</div>
+  </div></AssignmentAvatarProvider>
 
   return <AssignmentAvatarProvider sample={sampleStudent} workVisible={view === 'work' || view === 'side'}><div className={s.lessonWorkspace} data-view={view} data-simulation={!!lesson.simulation}>
     <div ref={controls} className={s.workspaceControls}>

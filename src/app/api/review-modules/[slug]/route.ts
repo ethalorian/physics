@@ -1,4 +1,6 @@
+import {checkRevisionBeforeSubmit,recordRevisionSubmitted} from '@/lib/review-desk/revision-server'
 import { NextResponse,after } from 'next/server'
+import { suggestAfterSubmission } from '@/lib/assessment-results/suggestions-server'
 import { queueReviewScores,processReviewScore } from '@/lib/review-modules/grading-server'
 export const maxDuration=180
 import { withAuth } from '@/lib/api-auth'
@@ -40,10 +42,13 @@ export const POST=withAuth<{slug:string}>(async(request,ctx)=>{
   const missing=missingReviewFields(body.state,manifest)
   if(missing.length)return json({error:`Complete ${missing.length} remaining response${missing.length===1?'':'s'} before submitting.`,missing},400)
  }
+ if(body.action==='submit'){const message=await checkRevisionBeforeSubmit('review:'+slug,ctx.userId);if(message)return json({error:message},422)}
  if(r.work.status==='submitted')return json({error:'This work is already submitted. Ask your teacher to reopen it if you need to change it.'},409)
  const {data,error}=await supabaseAdmin.from('review_module_work').update({state:body.state,status:body.action==='submit'?'submitted':'draft',submitted_at:body.action==='submit'?new Date().toISOString():null,updated_at:new Date().toISOString(),version:body.version+1}).eq('module_slug',slug).eq('user_id',ctx.userId).eq('version',body.version).eq('status','draft').eq('unlocked_version',r.assignment.code_version).select('version,status,submitted_at').maybeSingle()
  if(error)throw error
  if(!data)return json({error:'This assignment changed in another tab. Keep this page open, copy any unsaved responses, and reload before continuing.'},409)
+ if(body.action==='submit')await recordRevisionSubmitted('review:'+slug,ctx.userId)
+ if(body.action==='submit')suggestAfterSubmission('review',slug+':'+ctx.userId)
  if(body.action==='submit')after(async()=>{try{await queueReviewScores([slug],[ctx.userId]);await processReviewScore([slug],[ctx.userId])}catch{console.warn('[review-grading] Automatic scoring could not finish; teacher can resume from dashboard.')}})
  return json(data)
 })

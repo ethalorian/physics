@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 11,
+  "title": "A kinetic-impact deflection model",
+  "target": "Estimate a velocity change and explain the value of lead time.",
+  "criteria": [
+    "State the simplified collision model.",
+    "Connect delivered momentum to target velocity change.",
+    "Explain why real deflection includes ejecta and orbital effects."
+  ],
+  "source_sha256": "86064919f24289cc5ce8951d1d89196c21e061462bac0c63ac7598a7a592f03d",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.509Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A simplified kinetic-impact model treats a small probe as sticking to a target with negligible external impulse during impact. Which equation governs their shared final velocity?",
+      "options": [
+        "Momentum is ignored because the target is large.",
+        "Final velocity = probe mass alone.",
+        "Every impact conserves kinetic energy.",
+        "Total initial momentum = combined mass × final velocity."
+      ],
+      "correct_index": 3,
+      "guide": "Use a perfectly inelastic momentum balance over the brief collision.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "What does a straight-line drift estimate Δx = Δv × t assume after a brief sideways push?",
+      "options": [
+        "The target instantly travels the full offset.",
+        "The added sideways velocity stays approximately constant over the modeled interval.",
+        "A continued sideways acceleration of Δv occurs every second.",
+        "The velocity change is measured in meters."
+      ],
+      "correct_index": 1,
+      "guide": "The equation models constant added velocity after the impulse.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 2,000 kg target receives a sideways impulse of 10 N·s. What is its sideways velocity change?",
+      "options": [
+        "0.05 m/s",
+        "20,000 m/s",
+        "200 m/s",
+        "0.005 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "Δv = J/M = 10/2,000 = 0.005 m/s.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An added sideways velocity of 0.03 m/s persists for 400 s in a drift model. What offset results?",
+      "options": [
+        "12 m",
+        "120 m",
+        "400.03 m",
+        "0.000075 m"
+      ],
+      "correct_index": 0,
+      "guide": "Δx = Δv t = 0.03 × 400 = 12 m.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why can real impact momentum transfer differ from a simple sticking model?",
+      "options": [
+        "Impulse exists only in air.",
+        "Momentum has no direction in space.",
+        "Ejected material can carry momentum away.",
+        "Target mass never matters."
+      ],
+      "correct_index": 2,
+      "guide": "Ejecta must be included in the full system momentum account.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A long-term orbital deflection is predicted using only a straight-line offset. What limitation should be stated?",
+      "options": [
+        "The simple formula predicts exact ground damage.",
+        "A small velocity change cannot accumulate any offset.",
+        "Gravity and orbital geometry can alter how the initial velocity change develops.",
+        "Long-term gravity is always exactly zero."
+      ],
+      "correct_index": 2,
+      "guide": "The drift approximation is useful over limited conditions but not a full orbital forecast.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A simplified kinetic-impact model treats a small probe as sticking to a target with negligible external impulse during impact. Which equation governs their shared final velocity?",
+      "options": [
+        "Every impact conserves kinetic energy.",
+        "Final velocity = probe mass alone.",
+        "Momentum is ignored because the target is large.",
+        "Total initial momentum = combined mass × final velocity."
+      ],
+      "correct_index": 3,
+      "guide": "Use a perfectly inelastic momentum balance over the brief collision.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "What does a straight-line drift estimate Δx = Δv × t assume after a brief sideways push?",
+      "options": [
+        "The added sideways velocity stays approximately constant over the modeled interval.",
+        "The velocity change is measured in meters.",
+        "A continued sideways acceleration of Δv occurs every second.",
+        "The target instantly travels the full offset."
+      ],
+      "correct_index": 0,
+      "guide": "The equation models constant added velocity after the impulse.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 2,000 kg target receives a sideways impulse of 10 N·s. What is its sideways velocity change?",
+      "options": [
+        "200 m/s",
+        "20,000 m/s",
+        "0.005 m/s",
+        "0.05 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Δv = J/M = 10/2,000 = 0.005 m/s.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An added sideways velocity of 0.03 m/s persists for 400 s in a drift model. What offset results?",
+      "options": [
+        "0.000075 m",
+        "12 m",
+        "400.03 m",
+        "120 m"
+      ],
+      "correct_index": 1,
+      "guide": "Δx = Δv t = 0.03 × 400 = 12 m.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why can real impact momentum transfer differ from a simple sticking model?",
+      "options": [
+        "Momentum has no direction in space.",
+        "Target mass never matters.",
+        "Impulse exists only in air.",
+        "Ejected material can carry momentum away."
+      ],
+      "correct_index": 3,
+      "guide": "Ejecta must be included in the full system momentum account.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A long-term orbital deflection is predicted using only a straight-line offset. What limitation should be stated?",
+      "options": [
+        "Gravity and orbital geometry can alter how the initial velocity change develops.",
+        "Long-term gravity is always exactly zero.",
+        "The simple formula predicts exact ground damage.",
+        "A small velocity change cannot accumulate any offset."
+      ],
+      "correct_index": 0,
+      "guide": "The drift approximation is useful over limited conditions but not a full orbital forecast.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

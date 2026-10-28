@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 9,
+  "title": "Sound speed and resonance",
+  "target": "Use travel time and resonant conditions to interpret sound.",
+  "criteria": [
+    "Account for round-trip distance in an echo.",
+    "Identify resonance as a response near a natural frequency.",
+    "Use an appropriate wavelength relationship."
+  ],
+  "source_sha256": "bba1e3dc4f220e1c458f239fe294ab8aac5d3dabfef7fac8e3fc89328ce54c8e",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.550Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "An echo returns 0.50 s after a pulse. Use sound speed 340 m/s. How far away is the wall?",
+      "options": [
+        "85 m",
+        "680 m",
+        "170 m",
+        "42.5 m"
+      ],
+      "correct_index": 0,
+      "guide": "The 170 m total path includes out and back; one-way range is 340 × 0.50 / 2 = 85 m.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wall is 51 m away and sound speed is 340 m/s. What round-trip echo time is expected?",
+      "options": [
+        "6.67 s",
+        "0.30 s",
+        "0.15 s",
+        "173.4 s"
+      ],
+      "correct_index": 1,
+      "guide": "Round-trip path is 102 m; time = 102/340 = 0.30 s.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A tuning fork drives a nearby object strongly near that object’s natural frequency. What explains the large response?",
+      "options": [
+        "An absence of any oscillation.",
+        "A guarantee that energy is created.",
+        "Resonance.",
+        "A frequency becoming a force unit."
+      ],
+      "correct_index": 2,
+      "guide": "Periodic driving near a natural frequency can transfer energy efficiently into the motion.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A swing is pushed at a rhythm close to its natural rhythm. Why can its amplitude grow?",
+      "options": [
+        "Properly timed pushes transfer energy during repeated cycles.",
+        "Gravity turns off each cycle.",
+        "Frequency alone creates energy without pushes.",
+        "The swing loses its mass."
+      ],
+      "correct_index": 0,
+      "guide": "A resonant response uses energy from the driving force, not energy creation.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "An ideal string fixed at both ends vibrates in its fundamental mode. Its length is 0.90 m. Use L = λ/2. What is wavelength?",
+      "options": [
+        "0.90 m",
+        "3.60 m",
+        "0.45 m",
+        "1.80 m"
+      ],
+      "correct_index": 3,
+      "guide": "The fundamental spans half a wavelength, so λ = 2L = 1.80 m.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal pipe closed at one end has fundamental L = λ/4. If L = 0.25 m and sound speed is 320 m/s, what is fundamental frequency?",
+      "options": [
+        "640 Hz",
+        "1,280 Hz",
+        "80 Hz",
+        "320 Hz"
+      ],
+      "correct_index": 3,
+      "guide": "λ = 4L = 1.0 m; f = v/λ = 320 Hz.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "An echo returns 0.50 s after a pulse. Use sound speed 340 m/s. How far away is the wall?",
+      "options": [
+        "170 m",
+        "85 m",
+        "42.5 m",
+        "680 m"
+      ],
+      "correct_index": 1,
+      "guide": "The 170 m total path includes out and back; one-way range is 340 × 0.50 / 2 = 85 m.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wall is 51 m away and sound speed is 340 m/s. What round-trip echo time is expected?",
+      "options": [
+        "0.30 s",
+        "0.15 s",
+        "6.67 s",
+        "173.4 s"
+      ],
+      "correct_index": 0,
+      "guide": "Round-trip path is 102 m; time = 102/340 = 0.30 s.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A tuning fork drives a nearby object strongly near that object’s natural frequency. What explains the large response?",
+      "options": [
+        "Resonance.",
+        "A guarantee that energy is created.",
+        "A frequency becoming a force unit.",
+        "An absence of any oscillation."
+      ],
+      "correct_index": 0,
+      "guide": "Periodic driving near a natural frequency can transfer energy efficiently into the motion.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A swing is pushed at a rhythm close to its natural rhythm. Why can its amplitude grow?",
+      "options": [
+        "The swing loses its mass.",
+        "Frequency alone creates energy without pushes.",
+        "Properly timed pushes transfer energy during repeated cycles.",
+        "Gravity turns off each cycle."
+      ],
+      "correct_index": 2,
+      "guide": "A resonant response uses energy from the driving force, not energy creation.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "An ideal string fixed at both ends vibrates in its fundamental mode. Its length is 0.90 m. Use L = λ/2. What is wavelength?",
+      "options": [
+        "0.90 m",
+        "1.80 m",
+        "3.60 m",
+        "0.45 m"
+      ],
+      "correct_index": 1,
+      "guide": "The fundamental spans half a wavelength, so λ = 2L = 1.80 m.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal pipe closed at one end has fundamental L = λ/4. If L = 0.25 m and sound speed is 320 m/s, what is fundamental frequency?",
+      "options": [
+        "80 Hz",
+        "640 Hz",
+        "1,280 Hz",
+        "320 Hz"
+      ],
+      "correct_index": 3,
+      "guide": "λ = 4L = 1.0 m; f = v/λ = 320 Hz.",
+      "target_slug": "u6.r2-resonance",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ]
+}

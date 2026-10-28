@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 7,
+  "title": "Collision lab",
+  "target": "Test momentum conservation with measured before-and-after velocities.",
+  "criteria": [
+    "Record masses, signs and velocities consistently.",
+    "Compare total momentum before and after.",
+    "Discuss external impulse and measurement variation."
+  ],
+  "source_sha256": "7ccec6f36fa3c3e3cf2d47e9fe7664f0194fcabd76bafb5034e70d0991646041",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.506Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Two carts approach each other along one track. How should velocities be recorded?",
+      "options": [
+        "Record only masses and omit velocities.",
+        "Choose one positive direction for both carts and use opposite signs.",
+        "Choose a separate positive direction toward each cart’s motion.",
+        "Make both velocities positive because both are moving."
+      ],
+      "correct_index": 1,
+      "guide": "A common axis is needed for a valid momentum sum.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A motion sensor reports velocity in cm/s. What is required before combining it with kg and m/s data?",
+      "options": [
+        "Treat cm/s as identical to m/s.",
+        "Delete negative signs.",
+        "Convert cm/s to m/s consistently.",
+        "Change mass to force."
+      ],
+      "correct_index": 2,
+      "guide": "Matching units prevent a factor-of-100 error.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Supplied data: 2 kg at +3 m/s and 1 kg at −1 m/s. What is total initial momentum?",
+      "options": [
+        "−5 kg·m/s",
+        "+2 kg·m/s",
+        "+5 kg·m/s",
+        "+7 kg·m/s"
+      ],
+      "correct_index": 2,
+      "guide": "2(3) + 1(−1) = +5.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Supplied totals are 5.0 kg·m/s before and 4.8 kg·m/s after. Using |after−before|/|before| × 100%, what is the relative difference?",
+      "options": [
+        "0.2%",
+        "96%",
+        "20%",
+        "4%"
+      ],
+      "correct_index": 3,
+      "guide": "0.2/5.0 × 100% = 4%. The denominator is explicitly specified.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A collision trial’s momentum mismatch exceeds estimated uncertainty. What is a credible next check?",
+      "options": [
+        "Track slope, friction, sensor calibration, and matching measurement intervals.",
+        "Declare conservation false without checking the system.",
+        "Change only the cart colors.",
+        "Erase the mismatch."
+      ],
+      "correct_index": 0,
+      "guide": "External impulse and measurement problems can affect the comparison.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Initial total momentum is near zero. Why can a percentage using initial momentum as denominator be misleading?",
+      "options": [
+        "Momentum units become kilograms only.",
+        "Every measurement must be exact near zero.",
+        "A percentage automatically removes uncertainty.",
+        "Dividing by a near-zero value can magnify small absolute errors."
+      ],
+      "correct_index": 3,
+      "guide": "Report absolute difference and uncertainty or use a justified alternative scale.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Two carts approach each other along one track. How should velocities be recorded?",
+      "options": [
+        "Make both velocities positive because both are moving.",
+        "Record only masses and omit velocities.",
+        "Choose one positive direction for both carts and use opposite signs.",
+        "Choose a separate positive direction toward each cart’s motion."
+      ],
+      "correct_index": 2,
+      "guide": "A common axis is needed for a valid momentum sum.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A motion sensor reports velocity in cm/s. What is required before combining it with kg and m/s data?",
+      "options": [
+        "Convert cm/s to m/s consistently.",
+        "Delete negative signs.",
+        "Change mass to force.",
+        "Treat cm/s as identical to m/s."
+      ],
+      "correct_index": 0,
+      "guide": "Matching units prevent a factor-of-100 error.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Supplied data: 2 kg at +3 m/s and 1 kg at −1 m/s. What is total initial momentum?",
+      "options": [
+        "+2 kg·m/s",
+        "+7 kg·m/s",
+        "−5 kg·m/s",
+        "+5 kg·m/s"
+      ],
+      "correct_index": 3,
+      "guide": "2(3) + 1(−1) = +5.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Supplied totals are 5.0 kg·m/s before and 4.8 kg·m/s after. Using |after−before|/|before| × 100%, what is the relative difference?",
+      "options": [
+        "96%",
+        "4%",
+        "0.2%",
+        "20%"
+      ],
+      "correct_index": 1,
+      "guide": "0.2/5.0 × 100% = 4%. The denominator is explicitly specified.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A collision trial’s momentum mismatch exceeds estimated uncertainty. What is a credible next check?",
+      "options": [
+        "Erase the mismatch.",
+        "Change only the cart colors.",
+        "Declare conservation false without checking the system.",
+        "Track slope, friction, sensor calibration, and matching measurement intervals."
+      ],
+      "correct_index": 3,
+      "guide": "External impulse and measurement problems can affect the comparison.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Initial total momentum is near zero. Why can a percentage using initial momentum as denominator be misleading?",
+      "options": [
+        "Dividing by a near-zero value can magnify small absolute errors.",
+        "A percentage automatically removes uncertainty.",
+        "Momentum units become kilograms only.",
+        "Every measurement must be exact near zero."
+      ],
+      "correct_index": 0,
+      "guide": "Report absolute difference and uncertainty or use a justified alternative scale.",
+      "target_slug": "u3.s4-vernier-collisions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

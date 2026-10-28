@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 4,
+  "title": "Waves at boundaries",
+  "target": "Describe reflection and transmission at a boundary.",
+  "criteria": [
+    "Identify incident, reflected and transmitted waves.",
+    "Distinguish fixed-end from free-end pulse reflection.",
+    "Track energy without assuming equal amplitudes."
+  ],
+  "source_sha256": "1d2b5ba148816d423e0349b585f9de0a4bc51fa815043bd5d7210867f4acf237",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.545Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A pulse travels toward a boundary, then one pulse returns and another continues into a second medium. What is the returning pulse?",
+      "options": [
+        "The transmitted pulse.",
+        "A new source of energy.",
+        "The incident pulse before arrival.",
+        "The reflected pulse."
+      ],
+      "correct_index": 3,
+      "guide": "Reflected waves travel back into the original medium.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A sound wave reaches a wall. Part passes through into the next room. What is that part called?",
+      "options": [
+        "Reflected back to the source.",
+        "Destroyed energy.",
+        "Transmitted.",
+        "Incident after it returns."
+      ],
+      "correct_index": 2,
+      "guide": "Transmission carries energy beyond the boundary.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An upward displacement pulse reflects from an ideal fixed end of a rope. What returns?",
+      "options": [
+        "An inverted downward pulse.",
+        "A pulse that must double in height.",
+        "An upright upward pulse.",
+        "No wave can reflect."
+      ],
+      "correct_index": 0,
+      "guide": "At a fixed end, displacement reflection is inverted in the ideal model.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An upward rope pulse reflects from an ideal free end. What is its displacement orientation?",
+      "options": [
+        "Always horizontal only.",
+        "Inverted.",
+        "It becomes permanent matter flow.",
+        "Upright."
+      ],
+      "correct_index": 3,
+      "guide": "An ideal free-end displacement reflection is not inverted.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An incident pulse carries 18 J. Reflected energy is 5 J and absorbed energy is 2 J. What is transmitted energy?",
+      "options": [
+        "13 J",
+        "7 J",
+        "11 J",
+        "25 J"
+      ],
+      "correct_index": 2,
+      "guide": "Conservation: 18 − 5 − 2 = 11 J.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A boundary produces reflected and transmitted waves. Why is equal amplitude not automatically guaranteed?",
+      "options": [
+        "Every boundary must absorb all energy.",
+        "Energy division and amplitude depend on the media and boundary conditions.",
+        "Conservation requires every outgoing amplitude to equal the incoming amplitude.",
+        "Amplitude is always the same as energy in joules."
+      ],
+      "correct_index": 1,
+      "guide": "Reflection and transmission can have different amplitudes; amplitude and energy are distinct quantities.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A pulse travels toward a boundary, then one pulse returns and another continues into a second medium. What is the returning pulse?",
+      "options": [
+        "A new source of energy.",
+        "The incident pulse before arrival.",
+        "The reflected pulse.",
+        "The transmitted pulse."
+      ],
+      "correct_index": 2,
+      "guide": "Reflected waves travel back into the original medium.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A sound wave reaches a wall. Part passes through into the next room. What is that part called?",
+      "options": [
+        "Destroyed energy.",
+        "Reflected back to the source.",
+        "Incident after it returns.",
+        "Transmitted."
+      ],
+      "correct_index": 3,
+      "guide": "Transmission carries energy beyond the boundary.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An upward displacement pulse reflects from an ideal fixed end of a rope. What returns?",
+      "options": [
+        "An inverted downward pulse.",
+        "A pulse that must double in height.",
+        "An upright upward pulse.",
+        "No wave can reflect."
+      ],
+      "correct_index": 0,
+      "guide": "At a fixed end, displacement reflection is inverted in the ideal model.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An upward rope pulse reflects from an ideal free end. What is its displacement orientation?",
+      "options": [
+        "It becomes permanent matter flow.",
+        "Always horizontal only.",
+        "Inverted.",
+        "Upright."
+      ],
+      "correct_index": 3,
+      "guide": "An ideal free-end displacement reflection is not inverted.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An incident pulse carries 18 J. Reflected energy is 5 J and absorbed energy is 2 J. What is transmitted energy?",
+      "options": [
+        "11 J",
+        "25 J",
+        "7 J",
+        "13 J"
+      ],
+      "correct_index": 0,
+      "guide": "Conservation: 18 − 5 − 2 = 11 J.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A boundary produces reflected and transmitted waves. Why is equal amplitude not automatically guaranteed?",
+      "options": [
+        "Amplitude is always the same as energy in joules.",
+        "Energy division and amplitude depend on the media and boundary conditions.",
+        "Every boundary must absorb all energy.",
+        "Conservation requires every outgoing amplitude to equal the incoming amplitude."
+      ],
+      "correct_index": 1,
+      "guide": "Reflection and transmission can have different amplitudes; amplitude and energy are distinct quantities.",
+      "target_slug": "u6.k3-reflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

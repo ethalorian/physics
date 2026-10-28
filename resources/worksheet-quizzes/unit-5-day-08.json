@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 8,
+  "title": "The second law",
+  "target": "Explain the direction of heat transfer and the limits of energy conversion.",
+  "criteria": [
+    "Predict spontaneous net heat flow.",
+    "Explain why moving heat from cold to hot needs an additional process.",
+    "Distinguish energy conservation from process direction."
+  ],
+  "source_sha256": "6aa9943c400b0fb089986b0b0f6c8ba7552d46674538400be53f1d503c5996e6",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.537Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A warm container and a cooler block touch with no powered device. Which spontaneous net heat flow is expected initially?",
+      "options": [
+        "Warm container to cooler block.",
+        "Toward the lighter object regardless of temperature.",
+        "No flow unless temperatures are equal.",
+        "Cooler block to warm container."
+      ],
+      "correct_index": 0,
+      "guide": "Spontaneous net heat transfer is from higher to lower temperature.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two objects reach equal temperature in an isolated setup. What is expected about temperature-driven net heat transfer?",
+      "options": [
+        "All particle motion stops.",
+        "It must flow from heavier to lighter.",
+        "It is zero at thermal equilibrium.",
+        "It grows because temperatures match."
+      ],
+      "correct_index": 2,
+      "guide": "Equal temperature removes the driving temperature difference for net heat transfer.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A refrigerator moves energy from a cold interior to a warmer room. What additional input supports that process?",
+      "options": [
+        "A destruction of energy in the cold space.",
+        "A reversal of every physical law.",
+        "Work supplied to the refrigerator.",
+        "No input is needed because cold creates heat."
+      ],
+      "correct_index": 2,
+      "guide": "A refrigerator uses work to move heat against its spontaneous direction.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A modeled refrigerator removes 75 J from its cold space and receives 25 J of work per cycle. How much energy is rejected to the room?",
+      "options": [
+        "50 J",
+        "25 J",
+        "75 J",
+        "100 J"
+      ],
+      "correct_index": 3,
+      "guide": "For a full cycle with no net stored-energy change, Q_hot = Q_cold + W = 100 J.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A proposed unpowered process transfers 10 J from a colder object to a hotter object with no other change. What distinguishes the two laws?",
+      "options": [
+        "It violates the first law solely because heat moves.",
+        "The energy amounts balance, but the proposed direction conflicts with the second law.",
+        "The second law says energy is never conserved.",
+        "Both laws permit it just because energy balances."
+      ],
+      "correct_index": 1,
+      "guide": "Energy conservation alone does not establish that a process direction is possible.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A heat pump’s energy balance is correct on paper. What additional question tests physical feasibility?",
+      "options": [
+        "Whether temperatures can be ignored in every process.",
+        "Whether the heat-flow direction and required work are consistent with the second law.",
+        "Whether the symbols are written in a favorite color.",
+        "Whether energy is allowed to appear from nothing."
+      ],
+      "correct_index": 1,
+      "guide": "A consistent balance is necessary but process direction and work requirements also matter.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A warm container and a cooler block touch with no powered device. Which spontaneous net heat flow is expected initially?",
+      "options": [
+        "Warm container to cooler block.",
+        "Cooler block to warm container.",
+        "Toward the lighter object regardless of temperature.",
+        "No flow unless temperatures are equal."
+      ],
+      "correct_index": 0,
+      "guide": "Spontaneous net heat transfer is from higher to lower temperature.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two objects reach equal temperature in an isolated setup. What is expected about temperature-driven net heat transfer?",
+      "options": [
+        "It grows because temperatures match.",
+        "It must flow from heavier to lighter.",
+        "It is zero at thermal equilibrium.",
+        "All particle motion stops."
+      ],
+      "correct_index": 2,
+      "guide": "Equal temperature removes the driving temperature difference for net heat transfer.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A refrigerator moves energy from a cold interior to a warmer room. What additional input supports that process?",
+      "options": [
+        "A reversal of every physical law.",
+        "No input is needed because cold creates heat.",
+        "A destruction of energy in the cold space.",
+        "Work supplied to the refrigerator."
+      ],
+      "correct_index": 3,
+      "guide": "A refrigerator uses work to move heat against its spontaneous direction.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A modeled refrigerator removes 75 J from its cold space and receives 25 J of work per cycle. How much energy is rejected to the room?",
+      "options": [
+        "75 J",
+        "100 J",
+        "25 J",
+        "50 J"
+      ],
+      "correct_index": 1,
+      "guide": "For a full cycle with no net stored-energy change, Q_hot = Q_cold + W = 100 J.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A proposed unpowered process transfers 10 J from a colder object to a hotter object with no other change. What distinguishes the two laws?",
+      "options": [
+        "The second law says energy is never conserved.",
+        "It violates the first law solely because heat moves.",
+        "The energy amounts balance, but the proposed direction conflicts with the second law.",
+        "Both laws permit it just because energy balances."
+      ],
+      "correct_index": 2,
+      "guide": "Energy conservation alone does not establish that a process direction is possible.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A heat pump’s energy balance is correct on paper. What additional question tests physical feasibility?",
+      "options": [
+        "Whether energy is allowed to appear from nothing.",
+        "Whether the symbols are written in a favorite color.",
+        "Whether temperatures can be ignored in every process.",
+        "Whether the heat-flow direction and required work are consistent with the second law."
+      ],
+      "correct_index": 3,
+      "guide": "A consistent balance is necessary but process direction and work requirements also matter.",
+      "target_slug": "u5.r1-second-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 6,
+  "title": "Diffraction",
+  "target": "Explain spreading around edges and through openings.",
+  "criteria": [
+    "Compare opening size with wavelength.",
+    "Distinguish diffraction from refraction.",
+    "Use a wave picture to justify spreading."
+  ],
+  "source_sha256": "148737e974c7217977afc3d0953e97f7b7decf539b2d827ce169fa93812ba304",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.546Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Waves of wavelength 0.8 m encounter openings 0.8 m and 8 m wide. Which gives more pronounced spreading relative to opening width?",
+      "options": [
+        "The 8 m opening.",
+        "The 0.8 m opening.",
+        "Both always produce no spreading.",
+        "Only opening color matters."
+      ],
+      "correct_index": 1,
+      "guide": "Diffraction is pronounced when opening size is comparable to wavelength.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An opening is fixed. Wavelength increases from 2 cm to 6 cm. What general trend is expected?",
+      "options": [
+        "The waves must stop carrying energy.",
+        "More noticeable diffraction.",
+        "Less noticeable diffraction in every geometry.",
+        "No possible change."
+      ],
+      "correct_index": 1,
+      "guide": "Larger wavelength relative to the opening generally produces greater angular spreading.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wave spreads after passing through a narrow gap without entering a new medium. What effect is this?",
+      "options": [
+        "Doppler shift caused by a moving source.",
+        "Refraction caused by a new propagation speed.",
+        "Diffraction.",
+        "A change in electric charge."
+      ],
+      "correct_index": 2,
+      "guide": "Gap-induced spreading is diffraction, even without a medium change.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A ray changes direction at a stationary water-depth boundary because its speed changes. Which name best fits?",
+      "options": [
+        "Complete destructive interference.",
+        "Diffraction solely because any direction changed.",
+        "Reflection necessarily back to its source.",
+        "Refraction."
+      ],
+      "correct_index": 3,
+      "guide": "Refraction is associated with propagation-speed change at a boundary.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Which wavefront description best represents strong diffraction through a small opening?",
+      "options": [
+        "Curved fronts spread outward from the opening.",
+        "The fronts become solid moving material.",
+        "The fronts terminate because energy cannot pass.",
+        "All fronts remain narrow straight segments forever."
+      ],
+      "correct_index": 0,
+      "guide": "A small aperture can act like a spreading wave source; curved fronts indicate multiple propagation directions.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Low-frequency sound is heard around a doorway more readily than very high-frequency sound in a simple diffraction comparison. What explains the trend?",
+      "options": [
+        "Its longer wavelength is larger relative to the doorway.",
+        "All high-frequency sound is destroyed at corners.",
+        "Low-frequency sound has no need for a medium.",
+        "Its wave speed must be much higher in the same air."
+      ],
+      "correct_index": 0,
+      "guide": "At similar sound speed, lower f means longer λ and generally more diffraction around the opening.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Waves of wavelength 0.8 m encounter openings 0.8 m and 8 m wide. Which gives more pronounced spreading relative to opening width?",
+      "options": [
+        "Only opening color matters.",
+        "The 8 m opening.",
+        "The 0.8 m opening.",
+        "Both always produce no spreading."
+      ],
+      "correct_index": 2,
+      "guide": "Diffraction is pronounced when opening size is comparable to wavelength.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An opening is fixed. Wavelength increases from 2 cm to 6 cm. What general trend is expected?",
+      "options": [
+        "Less noticeable diffraction in every geometry.",
+        "The waves must stop carrying energy.",
+        "No possible change.",
+        "More noticeable diffraction."
+      ],
+      "correct_index": 3,
+      "guide": "Larger wavelength relative to the opening generally produces greater angular spreading.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wave spreads after passing through a narrow gap without entering a new medium. What effect is this?",
+      "options": [
+        "Refraction caused by a new propagation speed.",
+        "Diffraction.",
+        "A change in electric charge.",
+        "Doppler shift caused by a moving source."
+      ],
+      "correct_index": 1,
+      "guide": "Gap-induced spreading is diffraction, even without a medium change.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A ray changes direction at a stationary water-depth boundary because its speed changes. Which name best fits?",
+      "options": [
+        "Refraction.",
+        "Diffraction solely because any direction changed.",
+        "Reflection necessarily back to its source.",
+        "Complete destructive interference."
+      ],
+      "correct_index": 0,
+      "guide": "Refraction is associated with propagation-speed change at a boundary.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Which wavefront description best represents strong diffraction through a small opening?",
+      "options": [
+        "The fronts terminate because energy cannot pass.",
+        "All fronts remain narrow straight segments forever.",
+        "Curved fronts spread outward from the opening.",
+        "The fronts become solid moving material."
+      ],
+      "correct_index": 2,
+      "guide": "A small aperture can act like a spreading wave source; curved fronts indicate multiple propagation directions.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Low-frequency sound is heard around a doorway more readily than very high-frequency sound in a simple diffraction comparison. What explains the trend?",
+      "options": [
+        "Its wave speed must be much higher in the same air.",
+        "Its longer wavelength is larger relative to the doorway.",
+        "Low-frequency sound has no need for a medium.",
+        "All high-frequency sound is destroyed at corners."
+      ],
+      "correct_index": 1,
+      "guide": "At similar sound speed, lower f means longer λ and generally more diffraction around the opening.",
+      "target_slug": "u6.k5-diffraction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

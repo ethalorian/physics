@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 5,
+  "title": "Current: charge flow rate",
+  "target": "Calculate current as charge transferred per time.",
+  "criteria": [
+    "Use I=q/t with seconds and coulombs.",
+    "Describe conventional current direction.",
+    "Explain steady charge conservation at a junction."
+  ],
+  "source_sha256": "4806a2ceeec413d0f7b7873df70bdc5f9b6e7c49c52bea9f3dba310e720ccd32",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.561Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A wire carries 15 C past one point in 6.0 s. What is average current?",
+      "options": [
+        "2.5 A",
+        "90 A",
+        "9 A",
+        "0.40 A"
+      ],
+      "correct_index": 0,
+      "guide": "I = q/t = 15/6 = 2.5 C/s = 2.5 A.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A steady current is 0.40 A. How much charge passes a point in 25 s?",
+      "options": [
+        "10 C",
+        "0.016 C",
+        "25.4 C",
+        "62.5 C"
+      ],
+      "correct_index": 0,
+      "guide": "q = It = 0.40 × 25 = 10 C.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In the external wire of a simple DC circuit, what direction is conventional current?",
+      "options": [
+        "Always in the direction electrons drift in a metal.",
+        "Always toward geographic north.",
+        "From the switch toward both terminals regardless of polarity.",
+        "From the positive terminal toward the negative terminal."
+      ],
+      "correct_index": 3,
+      "guide": "Conventional current follows positive-charge motion; electrons in metal drift oppositely.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An arrow follows electron drift in a metal wire. How should a conventional-current arrow be drawn?",
+      "options": [
+        "At right angles to the wire.",
+        "No arrow is possible because electrons carry no charge.",
+        "In the opposite direction.",
+        "In the same direction by definition."
+      ],
+      "correct_index": 2,
+      "guide": "Negative charge motion corresponds to conventional current in the opposite direction.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "At a junction, 1.8 A enters and one outgoing branch carries 0.65 A. With no charge buildup, what leaves in the other branch?",
+      "options": [
+        "1.8 A",
+        "1.15 A",
+        "0.65 A",
+        "2.45 A"
+      ],
+      "correct_index": 1,
+      "guide": "Incoming current equals outgoing sum: 1.8 − 0.65 = 1.15 A.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student says a resistor consumes current, so less current returns to the battery in a steady series circuit. Which correction is accurate?",
+      "options": [
+        "The return current must be zero.",
+        "Charge is conserved; the same steady current passes through each series part while energy transfers.",
+        "The battery creates new electrons to replace those destroyed.",
+        "The student is right because current is energy."
+      ],
+      "correct_index": 1,
+      "guide": "Series current does not disappear in the load. Energy transfer and charge flow are different quantities.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A wire carries 15 C past one point in 6.0 s. What is average current?",
+      "options": [
+        "9 A",
+        "2.5 A",
+        "90 A",
+        "0.40 A"
+      ],
+      "correct_index": 1,
+      "guide": "I = q/t = 15/6 = 2.5 C/s = 2.5 A.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A steady current is 0.40 A. How much charge passes a point in 25 s?",
+      "options": [
+        "10 C",
+        "0.016 C",
+        "25.4 C",
+        "62.5 C"
+      ],
+      "correct_index": 0,
+      "guide": "q = It = 0.40 × 25 = 10 C.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In the external wire of a simple DC circuit, what direction is conventional current?",
+      "options": [
+        "From the switch toward both terminals regardless of polarity.",
+        "Always in the direction electrons drift in a metal.",
+        "From the positive terminal toward the negative terminal.",
+        "Always toward geographic north."
+      ],
+      "correct_index": 2,
+      "guide": "Conventional current follows positive-charge motion; electrons in metal drift oppositely.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An arrow follows electron drift in a metal wire. How should a conventional-current arrow be drawn?",
+      "options": [
+        "At right angles to the wire.",
+        "In the opposite direction.",
+        "In the same direction by definition.",
+        "No arrow is possible because electrons carry no charge."
+      ],
+      "correct_index": 1,
+      "guide": "Negative charge motion corresponds to conventional current in the opposite direction.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "At a junction, 1.8 A enters and one outgoing branch carries 0.65 A. With no charge buildup, what leaves in the other branch?",
+      "options": [
+        "0.65 A",
+        "2.45 A",
+        "1.15 A",
+        "1.8 A"
+      ],
+      "correct_index": 2,
+      "guide": "Incoming current equals outgoing sum: 1.8 − 0.65 = 1.15 A.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student says a resistor consumes current, so less current returns to the battery in a steady series circuit. Which correction is accurate?",
+      "options": [
+        "The return current must be zero.",
+        "The battery creates new electrons to replace those destroyed.",
+        "The student is right because current is energy.",
+        "Charge is conserved; the same steady current passes through each series part while energy transfers."
+      ],
+      "correct_index": 3,
+      "guide": "Series current does not disappear in the load. Energy transfer and charge flow are different quantities.",
+      "target_slug": "u7.k4-current",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

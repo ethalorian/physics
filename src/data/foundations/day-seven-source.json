@@ -1,0 +1,91 @@
+{
+  "collaboration": {
+    "maxGroupSize": 4,
+    "primaryRoles": [
+      "Slideshow lead",
+      "Whiteboard scribe"
+    ],
+    "secondaryDuties": [
+      "Timekeeper",
+      "Checker"
+    ],
+    "individualResponses": true
+  },
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 7 Acceleration.dc.html",
+  "sourceSha256": "3861134fac8d95cfcc8cd1e16672082b04dce4bf550591769fd08541949fa37a",
+  "runtimeSha256": {
+    "support": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe",
+    "stage": "f3d3d0a662c08eefb5a8757a6da3139572485f4be32ac33785c5047061926a8a"
+  },
+  "packagedSha256": "e7ef3a488cc497b7620dcf3da79c7507f6c80a880c414e7be77e11d429e14d16",
+  "cover": {
+    "file": "art/asteroid-briefing.png",
+    "sha256": "ae90f10457a275a673a1662f651ce0c04ea070027eaa74f289e37b0c8819de62"
+  },
+  "studentSlides": 30,
+  "originalStudentSlides": 26,
+  "teacherSlidesExcluded": 3,
+  "timers": 1,
+  "answerReveals": 5,
+  "transition": {
+    "type": "fade",
+    "durationMs": 260,
+    "respectsReducedMotion": true
+  },
+  "snapshots": [
+    {
+      "after": 9,
+      "page": 25,
+      "file": "page-01.webp",
+      "y": 1174,
+      "height": 310,
+      "title": "What changes each second?",
+      "alt": "Nadia and Mei describe acceleration as how much velocity changes each second and in which direction. Their notebook shows acceleration equals change in velocity divided by elapsed time.",
+      "body": "Acceleration describes a change in velocity. Its units are meters per second, per second.",
+      "question": "How does a velocity change differ from a velocity? Explain with your own example.",
+      "work": "Part 1 · Compare velocity changes",
+      "sha256": "d60338a5734c772a6d99672610adea2264acb4a70a93fceef1b6f3406bd760d5"
+    },
+    {
+      "after": 15,
+      "page": 26,
+      "file": "page-02.webp",
+      "y": 353,
+      "height": 310,
+      "title": "Read the slope, not the height",
+      "alt": "Supplied practice data on a velocity–time graph rise from zero meters per second at zero seconds to twelve meters per second at four seconds. The slope is positive three meters per second squared.",
+      "body": "The graph’s height gives velocity. Its slope gives acceleration. These are supplied practice data.",
+      "question": "What changes if the line is flat at +5 m/s instead?",
+      "work": "Part 2 · Check the graph and prediction",
+      "sha256": "c2af76475da2ed3e00dbbf501cc19fb3abbfd4527e104efe1c0b5d59563ae559"
+    },
+    {
+      "after": 18,
+      "page": 27,
+      "file": "page-03.webp",
+      "y": 1109,
+      "height": 365,
+      "title": "Keep the initial velocity",
+      "alt": "Eli presents a practice cart with initial velocity two meters per second, acceleration three meters per second squared and time four seconds. Nadia calculates final velocity as two plus three times four, which equals fourteen meters per second.",
+      "body": "The cart already moves at the start. Under constant acceleration, v = v₀ + at.",
+      "question": "Why does at give the velocity change, rather than always giving the final velocity?",
+      "work": "Part 2 · Check the graph and prediction",
+      "sha256": "e295ae0924a4d7da09cb818402158e6bb6553a4cde602f24da979c64618db01f"
+    },
+    {
+      "after": 20,
+      "page": 28,
+      "file": "page-04.webp",
+      "y": 380,
+      "height": 522,
+      "title": "A small change is still a change",
+      "alt": "An Earth-only classroom estimate gives acceleration magnitude 2.8 times ten to the minus eight meters per second squared. If constant for 1.6 times ten to the seven seconds, the change is about 0.448 meters per second. Mr. Antocci says the Sun’s effect is larger here and gravity changes along the path.",
+      "body": "This is a conditional estimate for a fictional scenario. It is not a complete orbit forecast.",
+      "question": "Which assumptions must you check before extending this estimate across a long interval?",
+      "work": "Part 3 · Challenge the model claim",
+      "sha256": "604154e1d7c66762f00a040e551c18ce18c3d727605570eaf8a56e0420da036e"
+    }
+  ],
+  "notes": "Original executable logic, the two-minute exit timer and five reveal controls unchanged. Teacher-only slides and notes removed. Four snapshots use viewport crops of approved Day 7 pages 25–28 with text companions; artwork bytes are unchanged. Original cover uses its relative URL. Clarified separate individual responses. Replaced the unsupported claim that a small Earth-only acceleration validates the full constant-velocity forecast: the estimate excludes the Sun and changes along the path. Supplied examples are not collected measurements. Original export archived unchanged."
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 3,
+  "title": "Angled and negative work",
+  "target": "Use force direction to determine work’s sign and size.",
+  "criteria": [
+    "Compare force direction with displacement.",
+    "Use the parallel force component.",
+    "Explain positive, negative and zero work."
+  ],
+  "source_sha256": "959e167b8aa9c46dbe7d2c2bcad0697af8e6dc6046f71e2cebe2fc1f7c7a4b68",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.517Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A sled moves west while a rope’s force points west. What is the sign of rope work?",
+      "options": [
+        "Cannot be positive because west is negative on one axis.",
+        "Negative.",
+        "Positive.",
+        "Zero."
+      ],
+      "correct_index": 2,
+      "guide": "Work sign depends on relative force and displacement directions, not the chosen axis sign.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart moves north while a braking force points south. What sign is the braking work?",
+      "options": [
+        "Negative.",
+        "Its sign depends only on the cart’s mass.",
+        "Positive.",
+        "Zero."
+      ],
+      "correct_index": 0,
+      "guide": "Opposite force and displacement produce negative work.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 25 N angled force has a 15 N component along a 4 m displacement. What is its work?",
+      "options": [
+        "40 J",
+        "100 J",
+        "6.25 J",
+        "60 J"
+      ],
+      "correct_index": 3,
+      "guide": "Use the parallel component: 15 × 4 = 60 J.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 20 N force makes 60° with a 3 m displacement. Use cos 60° = 0.50. What work does it do?",
+      "options": [
+        "30 J",
+        "10 J",
+        "60 J",
+        "120 J"
+      ],
+      "correct_index": 0,
+      "guide": "W = Fd cosθ = 20 × 3 × 0.50 = 30 J.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A box moves 5 m horizontally. Its upward normal force is 40 N. What is work by the normal force?",
+      "options": [
+        "−200 J",
+        "200 J",
+        "8 J",
+        "0 J"
+      ],
+      "correct_index": 3,
+      "guide": "The normal force is perpendicular to the horizontal displacement.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A pulling force does +52 J while friction does −19 J. No other force does work. What is net work?",
+      "options": [
+        "−33 J",
+        "+33 J",
+        "+71 J",
+        "−71 J"
+      ],
+      "correct_index": 1,
+      "guide": "Add signed contributions: 52 − 19 = 33 J.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A sled moves west while a rope’s force points west. What is the sign of rope work?",
+      "options": [
+        "Positive.",
+        "Cannot be positive because west is negative on one axis.",
+        "Negative.",
+        "Zero."
+      ],
+      "correct_index": 0,
+      "guide": "Work sign depends on relative force and displacement directions, not the chosen axis sign.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart moves north while a braking force points south. What sign is the braking work?",
+      "options": [
+        "Its sign depends only on the cart’s mass.",
+        "Negative.",
+        "Zero.",
+        "Positive."
+      ],
+      "correct_index": 1,
+      "guide": "Opposite force and displacement produce negative work.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 25 N angled force has a 15 N component along a 4 m displacement. What is its work?",
+      "options": [
+        "6.25 J",
+        "100 J",
+        "40 J",
+        "60 J"
+      ],
+      "correct_index": 3,
+      "guide": "Use the parallel component: 15 × 4 = 60 J.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 20 N force makes 60° with a 3 m displacement. Use cos 60° = 0.50. What work does it do?",
+      "options": [
+        "30 J",
+        "120 J",
+        "10 J",
+        "60 J"
+      ],
+      "correct_index": 0,
+      "guide": "W = Fd cosθ = 20 × 3 × 0.50 = 30 J.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A box moves 5 m horizontally. Its upward normal force is 40 N. What is work by the normal force?",
+      "options": [
+        "−200 J",
+        "200 J",
+        "0 J",
+        "8 J"
+      ],
+      "correct_index": 2,
+      "guide": "The normal force is perpendicular to the horizontal displacement.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A pulling force does +52 J while friction does −19 J. No other force does work. What is net work?",
+      "options": [
+        "−33 J",
+        "+33 J",
+        "−71 J",
+        "+71 J"
+      ],
+      "correct_index": 1,
+      "guide": "Add signed contributions: 52 − 19 = 33 J.",
+      "target_slug": "u4.r1-work-angle",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

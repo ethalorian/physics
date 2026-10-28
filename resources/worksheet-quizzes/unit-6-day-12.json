@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 12,
+  "title": "The electromagnetic spectrum",
+  "target": "Relate electromagnetic wavelength, frequency and propagation.",
+  "criteria": [
+    "Use c=fλ in vacuum.",
+    "Order spectral regions by wavelength.",
+    "Distinguish electromagnetic from mechanical waves."
+  ],
+  "source_sha256": "afc9cd37f096de2291818336d323e167e1d5f4b39005f524151663b29e87dd54",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.552Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "An electromagnetic wave in vacuum has frequency 5.0 × 10⁸ Hz. Use c = 3.0 × 10⁸ m/s. What is wavelength?",
+      "options": [
+        "1.67 m",
+        "60 m",
+        "1.5 × 10¹⁷ m",
+        "0.60 m"
+      ],
+      "correct_index": 3,
+      "guide": "λ = c/f = 0.60 m.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Vacuum light has wavelength 750 nm. Use c = 3.0 × 10⁸ m/s. What is frequency?",
+      "options": [
+        "4.0 × 10⁵ Hz",
+        "2.5 × 10⁻¹⁵ Hz",
+        "4.0 × 10¹⁴ Hz",
+        "2.25 × 10¹¹ Hz"
+      ],
+      "correct_index": 2,
+      "guide": "750 nm = 7.50 × 10⁻⁷ m; f = c/λ = 4.0 × 10¹⁴ Hz.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which sequence goes from longer to shorter electromagnetic wavelength?",
+      "options": [
+        "Infrared → ultraviolet → radio → visible.",
+        "Visible → radio → ultraviolet → infrared.",
+        "Radio → infrared → visible → ultraviolet.",
+        "Ultraviolet → visible → infrared → radio."
+      ],
+      "correct_index": 2,
+      "guide": "The standard spectrum progresses from radio through infrared and visible to ultraviolet and higher frequencies.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "In vacuum, which has the shorter wavelength: a microwave or an X-ray?",
+      "options": [
+        "The X-ray.",
+        "Neither has a wavelength.",
+        "The microwave.",
+        "They must have equal wavelength because their speeds match."
+      ],
+      "correct_index": 0,
+      "guide": "Higher-frequency X-rays have shorter wavelengths at the same vacuum speed.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which signal can cross an ideal vacuum without a material medium?",
+      "options": [
+        "A pressure sound wave in air.",
+        "A radio wave.",
+        "A wave on a rope with no rope present.",
+        "An ocean surface wave with no water present."
+      ],
+      "correct_index": 1,
+      "guide": "Electromagnetic waves propagate in vacuum; mechanical waves require a medium.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An astronaut sees a distant flash across empty space. Which conclusion is appropriate?",
+      "options": [
+        "Sound and light both require air on the path.",
+        "The flash proves sound travels faster.",
+        "Light transported all the source matter to the observer.",
+        "Light can arrive through vacuum; an ordinary sound wave cannot travel that empty path."
+      ],
+      "correct_index": 3,
+      "guide": "Distinguish electromagnetic propagation from mechanical sound.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "An electromagnetic wave in vacuum has frequency 5.0 × 10⁸ Hz. Use c = 3.0 × 10⁸ m/s. What is wavelength?",
+      "options": [
+        "0.60 m",
+        "1.67 m",
+        "1.5 × 10¹⁷ m",
+        "60 m"
+      ],
+      "correct_index": 0,
+      "guide": "λ = c/f = 0.60 m.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Vacuum light has wavelength 750 nm. Use c = 3.0 × 10⁸ m/s. What is frequency?",
+      "options": [
+        "4.0 × 10⁵ Hz",
+        "2.5 × 10⁻¹⁵ Hz",
+        "2.25 × 10¹¹ Hz",
+        "4.0 × 10¹⁴ Hz"
+      ],
+      "correct_index": 3,
+      "guide": "750 nm = 7.50 × 10⁻⁷ m; f = c/λ = 4.0 × 10¹⁴ Hz.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which sequence goes from longer to shorter electromagnetic wavelength?",
+      "options": [
+        "Infrared → ultraviolet → radio → visible.",
+        "Radio → infrared → visible → ultraviolet.",
+        "Visible → radio → ultraviolet → infrared.",
+        "Ultraviolet → visible → infrared → radio."
+      ],
+      "correct_index": 1,
+      "guide": "The standard spectrum progresses from radio through infrared and visible to ultraviolet and higher frequencies.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "In vacuum, which has the shorter wavelength: a microwave or an X-ray?",
+      "options": [
+        "The X-ray.",
+        "The microwave.",
+        "They must have equal wavelength because their speeds match.",
+        "Neither has a wavelength."
+      ],
+      "correct_index": 0,
+      "guide": "Higher-frequency X-rays have shorter wavelengths at the same vacuum speed.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which signal can cross an ideal vacuum without a material medium?",
+      "options": [
+        "A pressure sound wave in air.",
+        "An ocean surface wave with no water present.",
+        "A wave on a rope with no rope present.",
+        "A radio wave."
+      ],
+      "correct_index": 3,
+      "guide": "Electromagnetic waves propagate in vacuum; mechanical waves require a medium.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An astronaut sees a distant flash across empty space. Which conclusion is appropriate?",
+      "options": [
+        "The flash proves sound travels faster.",
+        "Sound and light both require air on the path.",
+        "Light can arrive through vacuum; an ordinary sound wave cannot travel that empty path.",
+        "Light transported all the source matter to the observer."
+      ],
+      "correct_index": 2,
+      "guide": "Distinguish electromagnetic propagation from mechanical sound.",
+      "target_slug": "u6.k7-em-spectrum",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 8,
+  "day": 1,
+  "title": "Electric car: launch the design",
+  "target": "Plan a safe team workflow and identify the car’s energy pathway.",
+  "criteria": [
+    "Label the battery, switch, motor and connections.",
+    "Identify safety checkpoints before tools or power.",
+    "Connect a design choice with a measurable outcome."
+  ],
+  "source_sha256": "3edf3ea154769ce9994be4f1f5f291ed517375c62e0c3bbaf90c3e25e40b7e63",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.572Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A model delivery car has a charged battery, wires, a motor, and an open switch. Which part must change state to complete the intended path?",
+      "options": [
+        "The switch must close.",
+        "The battery must be shorted.",
+        "The wires must be removed.",
+        "The motor must become a battery."
+      ],
+      "correct_index": 0,
+      "guide": "Closing the switch completes the intended series path through the motor. A short bypasses the load and is unsafe.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A diagram labels the battery as the part that directly turns the axle. Which correction makes the diagram accurate?",
+      "options": [
+        "The wires store all the car’s fuel.",
+        "The wheels create charge.",
+        "The switch creates the chemical energy.",
+        "The motor converts electrical input into axle rotation."
+      ],
+      "correct_index": 3,
+      "guide": "The battery supplies energy; the motor produces rotation. The other parts do not create energy or charge.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A team wants to adjust a loose wire near a moving gear during a powered test. Which is the appropriate first step?",
+      "options": [
+        "Hold the gear while the motor runs.",
+        "Increase voltage to move the wire away.",
+        "Stop and disconnect power before adjusting the wire.",
+        "Use a metal tool across the battery terminals."
+      ],
+      "correct_index": 2,
+      "guide": "Disconnecting power prevents unexpected motion and short circuits during adjustment.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student has a marked chassis but has not received the required tool checkpoint. What should happen before cutting?",
+      "options": [
+        "Cut quickly before asking.",
+        "Get the teacher checkpoint and follow the tool’s safe-use procedure.",
+        "Have an untrained partner hold it by the blade.",
+        "Treat a sketch as permission to use any tool."
+      ],
+      "correct_index": 1,
+      "guide": "A design drawing does not replace supervision and the required safety checkpoint.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A team predicts that removing wheel rubbing will improve straight travel. Which result would directly test that prediction?",
+      "options": [
+        "Compare the paint colors.",
+        "Compare sideways drift over the same measured path before and after the adjustment.",
+        "Record only whether the motor makes noise.",
+        "Compare unrelated cars on different slopes."
+      ],
+      "correct_index": 1,
+      "guide": "A controlled same-path comparison links the change to a measurable motion outcome.",
+      "target_slug": "u8.r4-three-physics-choices",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Two proposed cars differ only in wheel diameter. Which planning statement is testable?",
+      "options": [
+        "Large wheels guarantee a win on any course.",
+        "Wheel size has no measurable effect.",
+        "At the same measured axle rate, the larger wheel should travel farther per second.",
+        "The larger wheel is always the best-looking design."
+      ],
+      "correct_index": 2,
+      "guide": "Distance per turn is circumference. At fixed axle rate, larger diameter increases ideal speed; winning also depends on torque, slip, and the course.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A model delivery car has a charged battery, wires, a motor, and an open switch. Which part must change state to complete the intended path?",
+      "options": [
+        "The motor must become a battery.",
+        "The battery must be shorted.",
+        "The wires must be removed.",
+        "The switch must close."
+      ],
+      "correct_index": 3,
+      "guide": "Closing the switch completes the intended series path through the motor. A short bypasses the load and is unsafe.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A diagram labels the battery as the part that directly turns the axle. Which correction makes the diagram accurate?",
+      "options": [
+        "The wheels create charge.",
+        "The wires store all the car’s fuel.",
+        "The motor converts electrical input into axle rotation.",
+        "The switch creates the chemical energy."
+      ],
+      "correct_index": 2,
+      "guide": "The battery supplies energy; the motor produces rotation. The other parts do not create energy or charge.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A team wants to adjust a loose wire near a moving gear during a powered test. Which is the appropriate first step?",
+      "options": [
+        "Increase voltage to move the wire away.",
+        "Use a metal tool across the battery terminals.",
+        "Stop and disconnect power before adjusting the wire.",
+        "Hold the gear while the motor runs."
+      ],
+      "correct_index": 2,
+      "guide": "Disconnecting power prevents unexpected motion and short circuits during adjustment.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student has a marked chassis but has not received the required tool checkpoint. What should happen before cutting?",
+      "options": [
+        "Cut quickly before asking.",
+        "Have an untrained partner hold it by the blade.",
+        "Treat a sketch as permission to use any tool.",
+        "Get the teacher checkpoint and follow the tool’s safe-use procedure."
+      ],
+      "correct_index": 3,
+      "guide": "A design drawing does not replace supervision and the required safety checkpoint.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A team predicts that removing wheel rubbing will improve straight travel. Which result would directly test that prediction?",
+      "options": [
+        "Compare sideways drift over the same measured path before and after the adjustment.",
+        "Compare unrelated cars on different slopes.",
+        "Compare the paint colors.",
+        "Record only whether the motor makes noise."
+      ],
+      "correct_index": 0,
+      "guide": "A controlled same-path comparison links the change to a measurable motion outcome.",
+      "target_slug": "u8.r4-three-physics-choices",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Two proposed cars differ only in wheel diameter. Which planning statement is testable?",
+      "options": [
+        "Large wheels guarantee a win on any course.",
+        "At the same measured axle rate, the larger wheel should travel farther per second.",
+        "The larger wheel is always the best-looking design.",
+        "Wheel size has no measurable effect."
+      ],
+      "correct_index": 1,
+      "guide": "Distance per turn is circumference. At fixed axle rate, larger diameter increases ideal speed; winning also depends on torque, slip, and the course.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

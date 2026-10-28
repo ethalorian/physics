@@ -1,0 +1,113 @@
+.header {
+  --header-base: #202039;
+  --header-glow: #7162b0;
+  --header-accent: #888db5;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(ellipse at 100% 0%, color-mix(in srgb, var(--header-accent) 44%, transparent), transparent 58%),
+    radial-gradient(ellipse at 82% 120%, var(--header-glow), transparent 65%),
+    var(--header-base);
+  color: #f6f6fb;
+  margin-bottom: 1.5rem;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0 0 0 1px #ffffff14;
+}
+
+.texture {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  opacity: .38;
+  background:
+    repeating-linear-gradient(118deg, transparent 0 39px, #e5deff24 40px, transparent 41px 80px),
+    repeating-linear-gradient(0deg, #ffffff0b 0 1px, transparent 1px 3px);
+  mask-image: linear-gradient(90deg, transparent, #0008 45%, #000);
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--header-base) 75%, transparent), transparent);
+}
+
+.header[data-quiz-topic='motion'] { --header-base: #20203b; --header-glow: #60549a; --header-accent: #b0a2cd; }
+.header[data-quiz-topic='forces'] { --header-base: #252735; --header-glow: #5e628c; --header-accent: #aaa1b6; }
+.header[data-quiz-topic='gravity'] { --header-base: #1c2039; --header-glow: #514b8a; --header-accent: #7e87bc; }
+.header[data-quiz-topic='momentum'] { --header-base: #292039; --header-glow: #875983; --header-accent: #b894b4; }
+.header[data-quiz-topic='energy'] { --header-base: #2c2438; --header-glow: #8b6264; --header-accent: #c2a17e; }
+.header[data-quiz-topic='thermal'] { --header-base: #302333; --header-glow: #9b626a; --header-accent: #c2977d; }
+.header[data-quiz-topic='waves'] { --header-base: #1e253e; --header-glow: #5c6b9f; --header-accent: #a1a5d0; }
+.header[data-quiz-topic='optics'] { --header-base: #27223e; --header-glow: #806391; --header-accent: #b9a0bf; }
+.header[data-quiz-topic='electricity'] { --header-base: #20243c; --header-glow: #6664a0; --header-accent: #b5adc9; }
+.header[data-quiz-topic='magnetism'] { --header-base: #27203c; --header-glow: #745b9a; --header-accent: #9e96bf; }
+.header[data-quiz-topic='engineering'] { --header-base: #282738; --header-glow: #6e6787; --header-accent: #aaa29c; }
+.header[data-quiz-topic='measurement'] { --header-base: #242739; --header-glow: #626e8b; --header-accent: #a6adbd; }
+
+.header:is([data-quiz-topic='gravity'], [data-quiz-topic='waves'], [data-quiz-topic='magnetism']) .texture {
+  background:
+    repeating-radial-gradient(ellipse at 110% 140%, transparent 0 27px, #e5deff32 28px, transparent 29px 56px),
+    repeating-linear-gradient(0deg, #ffffff0b 0 1px, transparent 1px 3px);
+}
+
+.header:is([data-quiz-topic='forces'], [data-quiz-topic='electricity'], [data-quiz-topic='engineering'], [data-quiz-topic='measurement']) .texture {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 31px, #e5deff20 32px, transparent 33px 64px),
+    repeating-linear-gradient(90deg, transparent 0 31px, #e5deff20 32px, transparent 33px 64px),
+    radial-gradient(#ffffff28 .6px, transparent .9px) 0 0 / 4px 4px;
+}
+
+.header:is([data-quiz-topic='energy'], [data-quiz-topic='thermal'], [data-quiz-topic='optics']) .texture {
+  background:
+    repeating-linear-gradient(155deg, transparent 0 79px, #e5deff1f 80px, transparent 82px 160px),
+    radial-gradient(#ffffff24 .6px, transparent .9px) 0 0 / 3px 3px;
+}
+
+.content {
+  width: 100%;
+  padding: clamp(1.5rem, 4vw, 2.6rem);
+  overflow-wrap: anywhere;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: .7rem;
+  font-weight: 700;
+  color: #e0daee;
+  margin-bottom: .8rem;
+}
+
+.content h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.13;
+  text-wrap: balance;
+  margin-bottom: 1rem;
+  max-width: 25ch;
+}
+
+.details { max-width: 72ch; font-size: .95rem; line-height: 1.65; }
+.details > :last-child { margin-bottom: 0; }
+.details a { color: #ddd9ff; }
+
+@media (max-width: 640px) {
+  .header { min-height: 0; }
+  .content h1 { font-size: clamp(1.8rem, 6vw, 2.2rem); }
+}
+
+@media print {
+  .header { min-height: 0; background: transparent; color: #15162d; border-radius: 0; }
+  .texture, .header::after { display: none; }
+  .content { width: 100%; padding: 0; }
+  .eyebrow { color: inherit; }
+}

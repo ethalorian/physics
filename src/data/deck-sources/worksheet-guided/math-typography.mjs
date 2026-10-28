@@ -7,7 +7,7 @@ const subvalues='0123456789+-=()aehijklmnoprstuvxyg';
 const subs=Object.fromEntries([...subchars].map((c,i)=>[c,subvalues[i]]));
 const supchars='⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻';
 const supers=Object.fromEntries([...supchars].map((c,i)=>[c,'0123456789+-'[i]]));
-const suffixes='initial|final|average|perpendicular|translation|mechanical|projectile|reflected|incident|electrical|circular|resultant|surface|rotation|absorbed|parallel|predicted|measured|thermal|arrival|driver|driven|flight|escape|spring|before|after|total|sound|water|useful|losses|input|wheel|target|series|start|range|echo|cold|hot|peak|next|now|inward|right|left|atrest|avg|net|drive|pull|out|top|max|obs|eq|in|by|up|[xyzifgschrokedAB0123456789]';
+const suffixes='Earth|Moon|initial|final|average|perpendicular|translation|mechanical|projectile|reflected|incident|electrical|circular|resultant|surface|rotation|absorbed|parallel|predicted|measured|thermal|arrival|driver|driven|flight|escape|spring|before|after|total|sound|water|useful|losses|input|wheel|target|series|start|range|echo|cold|hot|peak|next|now|inward|right|left|atrest|avg|net|drive|pull|out|top|max|obs|eq|in|by|up|[xyzifgschrokedAB0123456789]';
 const underscore=new RegExp('([A-Za-zΑ-ω])_('+suffixes+')(?![a-z_])','g');
 const flat=new Map();
 for(const [base,tails] of Object.entries({
@@ -50,6 +50,7 @@ const tokenPattern=/[_^]\{[^{}]+\}|[\p{L}]+(?:[_^]\{[^{}]+\})*(?:\d+(?:[_^]\{[^{
 function isMath(token,index,tokens,svg){
  if(/[_^]\{/.test(token)||/^\d|^\.\d|^[½¼¾√∞]$/.test(token))return true;
  if(single.test(token)){
+  if(token==='s'&&/[’']$/.test(tokens.slice(0,index).join('')))return false;
   if(!/[AaI]/.test(token))return true;
   const before=tokens.slice(0,index).join(''),after=tokens.slice(index+1).join('');
   // Leave articles and the pronoun I in prose. They are variables only in an

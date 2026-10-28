@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 10,
+  "title": "Conserve mechanical energy",
+  "target": "Track kinetic and potential energy when nonconservative work is negligible.",
+  "criteria": [
+    "Identify the energy system and assumptions.",
+    "Keep the total energy consistent between positions.",
+    "Explain how height and speed trade off."
+  ],
+  "source_sha256": "4eb024ad4b9fc7f95c3f4ace425edb82e892de655dc8211f189e88046535a789",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.523Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A falling ball has negligible air resistance. Which system includes gravitational potential energy internally?",
+      "options": [
+        "Only the ball, with Earth excluded and gravity ignored.",
+        "Only the surrounding air.",
+        "The ball’s speed alone.",
+        "Ball and Earth together."
+      ],
+      "correct_index": 3,
+      "guide": "Gravitational potential energy belongs to the interacting ball-Earth system.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A cart rolls down a track with substantial friction. Which claim needs correction?",
+      "options": [
+        "K + U is necessarily constant for the cart-Earth system.",
+        "Friction can increase internal energy.",
+        "A system boundary must be specified.",
+        "Total energy is conserved when all forms and transfers are counted."
+      ],
+      "correct_index": 0,
+      "guide": "Mechanical energy can decrease when friction converts it to internal energy.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "An ideal system has total mechanical energy 46 J and potential energy 17 J. What is kinetic energy?",
+      "options": [
+        "−29 J",
+        "29 J",
+        "63 J",
+        "17 J"
+      ],
+      "correct_index": 1,
+      "guide": "K = E − U = 46 − 17 = 29 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A frictionless object starts with K = 9 J and U = 25 J. Later U = 14 J. What is later K?",
+      "options": [
+        "−2 J",
+        "34 J",
+        "20 J",
+        "48 J"
+      ],
+      "correct_index": 2,
+      "guide": "Total energy is 34 J; later K = 34 − 14 = 20 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A point mass starts from rest and falls vertically 1.8 m without resistance. Use g = 10 m/s². What is its speed?",
+      "options": [
+        "18 m/s",
+        "3 m/s",
+        "36 m/s",
+        "6 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "mgh = ½mv² gives v = √(2 × 10 × 1.8) = 6 m/s.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two point masses of different masses start from rest and descend equal vertical heights on frictionless tracks. Which is true?",
+      "options": [
+        "Path length alone determines final speed.",
+        "Both must have equal kinetic energy.",
+        "They reach equal speeds even though their kinetic energies can differ.",
+        "The heavier one always has twice the speed."
+      ],
+      "correct_index": 2,
+      "guide": "Mass cancels in v² = 2gΔh; K still scales with mass.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A falling ball has negligible air resistance. Which system includes gravitational potential energy internally?",
+      "options": [
+        "The ball’s speed alone.",
+        "Only the ball, with Earth excluded and gravity ignored.",
+        "Only the surrounding air.",
+        "Ball and Earth together."
+      ],
+      "correct_index": 3,
+      "guide": "Gravitational potential energy belongs to the interacting ball-Earth system.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A cart rolls down a track with substantial friction. Which claim needs correction?",
+      "options": [
+        "A system boundary must be specified.",
+        "K + U is necessarily constant for the cart-Earth system.",
+        "Total energy is conserved when all forms and transfers are counted.",
+        "Friction can increase internal energy."
+      ],
+      "correct_index": 1,
+      "guide": "Mechanical energy can decrease when friction converts it to internal energy.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "An ideal system has total mechanical energy 46 J and potential energy 17 J. What is kinetic energy?",
+      "options": [
+        "63 J",
+        "17 J",
+        "−29 J",
+        "29 J"
+      ],
+      "correct_index": 3,
+      "guide": "K = E − U = 46 − 17 = 29 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A frictionless object starts with K = 9 J and U = 25 J. Later U = 14 J. What is later K?",
+      "options": [
+        "20 J",
+        "48 J",
+        "34 J",
+        "−2 J"
+      ],
+      "correct_index": 0,
+      "guide": "Total energy is 34 J; later K = 34 − 14 = 20 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A point mass starts from rest and falls vertically 1.8 m without resistance. Use g = 10 m/s². What is its speed?",
+      "options": [
+        "6 m/s",
+        "36 m/s",
+        "18 m/s",
+        "3 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "mgh = ½mv² gives v = √(2 × 10 × 1.8) = 6 m/s.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two point masses of different masses start from rest and descend equal vertical heights on frictionless tracks. Which is true?",
+      "options": [
+        "Path length alone determines final speed.",
+        "Both must have equal kinetic energy.",
+        "They reach equal speeds even though their kinetic energies can differ.",
+        "The heavier one always has twice the speed."
+      ],
+      "correct_index": 2,
+      "guide": "Mass cancels in v² = 2gΔh; K still scales with mass.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

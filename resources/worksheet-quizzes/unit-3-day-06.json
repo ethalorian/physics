@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 6,
+  "title": "Kinds of collisions",
+  "target": "Separate momentum conservation from kinetic-energy conservation.",
+  "criteria": [
+    "Identify the system and external-impulse assumption.",
+    "Recognize sticking as perfectly inelastic.",
+    "Use kinetic energy to distinguish elastic from inelastic."
+  ],
+  "source_sha256": "0dc8168fcad9dd8fda076944d3e987a85ae851066fdc0150106b4e12fe57ac39",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.505Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Which condition permits total momentum conservation during a collision?",
+      "options": [
+        "Negligible net external impulse on the chosen system.",
+        "Equal object masses.",
+        "Identical initial speeds.",
+        "Zero force between the colliding objects."
+      ],
+      "correct_index": 0,
+      "guide": "Internal collision forces can be large while external impulse is negligible.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A wall gives a colliding cart a large impulse. Is the cart alone an isolated momentum system?",
+      "options": [
+        "Yes; the wall’s mass is large.",
+        "No; the wall exerts an external impulse on the cart.",
+        "No; momentum can never be used for a cart.",
+        "Yes; collisions always conserve each object’s momentum."
+      ],
+      "correct_index": 1,
+      "guide": "Include the external impulse or expand the system.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two objects remain joined after impact. What is this collision called?",
+      "options": [
+        "Elastic by definition.",
+        "A collision with no momentum.",
+        "Perfectly inelastic.",
+        "A collision with no impulse."
+      ],
+      "correct_index": 2,
+      "guide": "Sticking defines a perfectly inelastic collision.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Remember",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg cart at +3 m/s sticks to a stationary 2 kg cart. With negligible external impulse, what is final velocity?",
+      "options": [
+        "−2 m/s",
+        "+2 m/s",
+        "+6 m/s",
+        "+3 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "Initial p = 12; combined mass = 6; v = 2 m/s.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An isolated collision conserves momentum, but total kinetic energy drops from 24 J to 18 J. How is it classified?",
+      "options": [
+        "Perfectly inelastic necessarily, even without knowing whether objects stick.",
+        "Impossible because momentum was conserved.",
+        "Elastic.",
+        "Inelastic."
+      ],
+      "correct_index": 3,
+      "guide": "A decrease in total K identifies inelasticity; sticking needs separate evidence.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Carts bounce apart after a collision. Which further check is needed to call it elastic?",
+      "options": [
+        "Check only that momentum has units.",
+        "Check only that one cart was initially stationary.",
+        "Compare total kinetic energy before and after.",
+        "Check only that they separated."
+      ],
+      "correct_index": 2,
+      "guide": "Bouncing alone does not guarantee conservation of kinetic energy.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Which condition permits total momentum conservation during a collision?",
+      "options": [
+        "Equal object masses.",
+        "Identical initial speeds.",
+        "Negligible net external impulse on the chosen system.",
+        "Zero force between the colliding objects."
+      ],
+      "correct_index": 2,
+      "guide": "Internal collision forces can be large while external impulse is negligible.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A wall gives a colliding cart a large impulse. Is the cart alone an isolated momentum system?",
+      "options": [
+        "Yes; collisions always conserve each object’s momentum.",
+        "Yes; the wall’s mass is large.",
+        "No; the wall exerts an external impulse on the cart.",
+        "No; momentum can never be used for a cart."
+      ],
+      "correct_index": 2,
+      "guide": "Include the external impulse or expand the system.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two objects remain joined after impact. What is this collision called?",
+      "options": [
+        "A collision with no impulse.",
+        "Perfectly inelastic.",
+        "A collision with no momentum.",
+        "Elastic by definition."
+      ],
+      "correct_index": 1,
+      "guide": "Sticking defines a perfectly inelastic collision.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Remember",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg cart at +3 m/s sticks to a stationary 2 kg cart. With negligible external impulse, what is final velocity?",
+      "options": [
+        "+6 m/s",
+        "−2 m/s",
+        "+3 m/s",
+        "+2 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "Initial p = 12; combined mass = 6; v = 2 m/s.",
+      "target_slug": "u3.s2-inelastic-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An isolated collision conserves momentum, but total kinetic energy drops from 24 J to 18 J. How is it classified?",
+      "options": [
+        "Inelastic.",
+        "Elastic.",
+        "Impossible because momentum was conserved.",
+        "Perfectly inelastic necessarily, even without knowing whether objects stick."
+      ],
+      "correct_index": 0,
+      "guide": "A decrease in total K identifies inelasticity; sticking needs separate evidence.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Carts bounce apart after a collision. Which further check is needed to call it elastic?",
+      "options": [
+        "Check only that momentum has units.",
+        "Check only that one cart was initially stationary.",
+        "Check only that they separated.",
+        "Compare total kinetic energy before and after."
+      ],
+      "correct_index": 3,
+      "guide": "Bouncing alone does not guarantee conservation of kinetic energy.",
+      "target_slug": "u3.k4-collision-types",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

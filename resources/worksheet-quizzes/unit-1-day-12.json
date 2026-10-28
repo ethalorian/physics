@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 12,
+  "title": "Cart lab: change driving force",
+  "target": "Use controlled data to describe how net force affects acceleration.",
+  "criteria": [
+    "Change driving force while keeping total mass fixed.",
+    "Use data or a graph to compare accelerations.",
+    "Explain how resistance affects the ideal relationship."
+  ],
+  "source_sha256": "01727e03e30132d92e3e17a01ceb34814fdefd770e21777fc5d6dca9b98832a5",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.478Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "How can a cart-and-hanger setup increase driving force while keeping total moving mass fixed?",
+      "options": [
+        "Transfer a small mass from the cart to the hanger.",
+        "Add new mass to the hanger from outside the system.",
+        "Keep the hanging mass fixed and add mass only to the cart.",
+        "Remove the cart entirely."
+      ],
+      "correct_index": 0,
+      "guide": "Redistributing existing mass increases hanger weight without changing total moving mass.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Adding a mass from a supply box to the hanger changes which two quantities?",
+      "options": [
+        "Only hanger weight.",
+        "Only total moving mass.",
+        "Hanger weight and total moving mass.",
+        "Neither quantity."
+      ],
+      "correct_index": 2,
+      "guide": "The added object contributes both gravitational driving force and inertia.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 4 kg system experiences net forces of 8 N and 20 N in two trials. What accelerations are predicted?",
+      "options": [
+        "0.5 and 0.2 m/s².",
+        "32 and 80 m/s².",
+        "2 and 5 m/s².",
+        "4 and 10 m/s²."
+      ],
+      "correct_index": 2,
+      "guide": "Divide each net force by the fixed 4 kg mass.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At fixed mass, net force rises by a factor of 1.5. How should acceleration change?",
+      "options": [
+        "Decrease by a factor of 1.5.",
+        "Increase by a factor of 1.5.",
+        "Increase by a factor of 2.25.",
+        "Remain unchanged."
+      ],
+      "correct_index": 1,
+      "guide": "a = F_net/m is linear in net force for fixed mass.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A drive force is 14 N while resistance is 2 N opposite motion. Which force enters a = F_net/m?",
+      "options": [
+        "14 N regardless of resistance.",
+        "2 N only.",
+        "16 N in the drive direction.",
+        "12 N in the drive direction."
+      ],
+      "correct_index": 3,
+      "guide": "Subtract opposing resistance to obtain net force.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A graph of acceleration against applied pull does not pass through the origin. What might explain this?",
+      "options": [
+        "An automatic change in units from m/s² to kg.",
+        "An opposing resistive force that was not subtracted from the applied pull.",
+        "A requirement that all experimental data be erased.",
+        "A proof that net force never affects acceleration."
+      ],
+      "correct_index": 1,
+      "guide": "Applied pull can differ from net force; resistance shifts the relationship.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "How can a cart-and-hanger setup increase driving force while keeping total moving mass fixed?",
+      "options": [
+        "Keep the hanging mass fixed and add mass only to the cart.",
+        "Transfer a small mass from the cart to the hanger.",
+        "Add new mass to the hanger from outside the system.",
+        "Remove the cart entirely."
+      ],
+      "correct_index": 1,
+      "guide": "Redistributing existing mass increases hanger weight without changing total moving mass.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Adding a mass from a supply box to the hanger changes which two quantities?",
+      "options": [
+        "Only total moving mass.",
+        "Neither quantity.",
+        "Only hanger weight.",
+        "Hanger weight and total moving mass."
+      ],
+      "correct_index": 3,
+      "guide": "The added object contributes both gravitational driving force and inertia.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 4 kg system experiences net forces of 8 N and 20 N in two trials. What accelerations are predicted?",
+      "options": [
+        "2 and 5 m/s².",
+        "4 and 10 m/s².",
+        "32 and 80 m/s².",
+        "0.5 and 0.2 m/s²."
+      ],
+      "correct_index": 0,
+      "guide": "Divide each net force by the fixed 4 kg mass.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At fixed mass, net force rises by a factor of 1.5. How should acceleration change?",
+      "options": [
+        "Increase by a factor of 2.25.",
+        "Remain unchanged.",
+        "Increase by a factor of 1.5.",
+        "Decrease by a factor of 1.5."
+      ],
+      "correct_index": 2,
+      "guide": "a = F_net/m is linear in net force for fixed mass.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A drive force is 14 N while resistance is 2 N opposite motion. Which force enters a = F_net/m?",
+      "options": [
+        "14 N regardless of resistance.",
+        "16 N in the drive direction.",
+        "2 N only.",
+        "12 N in the drive direction."
+      ],
+      "correct_index": 3,
+      "guide": "Subtract opposing resistance to obtain net force.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A graph of acceleration against applied pull does not pass through the origin. What might explain this?",
+      "options": [
+        "An automatic change in units from m/s² to kg.",
+        "A proof that net force never affects acceleration.",
+        "An opposing resistive force that was not subtracted from the applied pull.",
+        "A requirement that all experimental data be erased."
+      ],
+      "correct_index": 2,
+      "guide": "Applied pull can differ from net force; resistance shifts the relationship.",
+      "target_slug": "u1.lab-accel-vs-force",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

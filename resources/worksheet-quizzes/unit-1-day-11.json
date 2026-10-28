@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 11,
+  "title": "Cart lab: change mass",
+  "target": "Use a controlled comparison to describe the effect of system mass on acceleration.",
+  "criteria": [
+    "Identify total moving mass and keep driving force fixed.",
+    "Compare acceleration values using a fair test.",
+    "Separate model data from measured evidence."
+  ],
+  "source_sha256": "c07ea4fa4b7fc91426fcd2fe3ff3bc03801b2ec106211af2e2e2559e621a9a7c",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.478Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "In a connected cart-and-hanger experiment, which mass determines acceleration for the complete moving system?",
+      "options": [
+        "Only the mass of the table.",
+        "Only the cart’s empty mass in every setup.",
+        "The total moving mass of cart, hanger, and carried loads.",
+        "Only the hanging mass in every setup."
+      ],
+      "correct_index": 2,
+      "guide": "The chosen system includes all masses that accelerate together.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "To test acceleration versus total mass fairly, which quantity must be held fixed?",
+      "options": [
+        "Net driving force.",
+        "Acceleration itself.",
+        "Only the cart’s color.",
+        "Total mass itself."
+      ],
+      "correct_index": 0,
+      "guide": "Mass is the varied quantity; hold net force constant.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A fixed 12 N net force accelerates a 3 kg system. What acceleration is predicted?",
+      "options": [
+        "9 m/s²",
+        "4 m/s²",
+        "0.25 m/s²",
+        "36 m/s²"
+      ],
+      "correct_index": 1,
+      "guide": "a = F_net/m = 12/3 = 4.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At unchanged net force, a system’s mass triples. How does its acceleration change?",
+      "options": [
+        "It stays equal.",
+        "It triples.",
+        "It becomes one-ninth.",
+        "It becomes one-third."
+      ],
+      "correct_index": 3,
+      "guide": "a ∝ 1/m when net force is fixed.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A worksheet supplies mass and acceleration values. What can a student legitimately report from analyzing them?",
+      "options": [
+        "A measurement uncertainty of exactly zero.",
+        "A relationship supported by the supplied example data.",
+        "Proof that all real friction is zero.",
+        "A claim that they personally measured every value."
+      ],
+      "correct_index": 1,
+      "guide": "Analyzing model data does not substitute for performing a measurement.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A measured trial disagrees with F_net/m using hanger weight as F_net. Which check is useful?",
+      "options": [
+        "Whether resistance was omitted and whether the chosen system includes the hanger.",
+        "Ignore the system boundary.",
+        "Assume hanger weight always equals tension and net cart force.",
+        "Change the reported acceleration to fit."
+      ],
+      "correct_index": 0,
+      "guide": "Hanger weight, tension, and net cart force are distinct; choose the system consistently.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "In a connected cart-and-hanger experiment, which mass determines acceleration for the complete moving system?",
+      "options": [
+        "Only the cart’s empty mass in every setup.",
+        "Only the mass of the table.",
+        "The total moving mass of cart, hanger, and carried loads.",
+        "Only the hanging mass in every setup."
+      ],
+      "correct_index": 2,
+      "guide": "The chosen system includes all masses that accelerate together.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "To test acceleration versus total mass fairly, which quantity must be held fixed?",
+      "options": [
+        "Acceleration itself.",
+        "Total mass itself.",
+        "Only the cart’s color.",
+        "Net driving force."
+      ],
+      "correct_index": 3,
+      "guide": "Mass is the varied quantity; hold net force constant.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A fixed 12 N net force accelerates a 3 kg system. What acceleration is predicted?",
+      "options": [
+        "0.25 m/s²",
+        "36 m/s²",
+        "4 m/s²",
+        "9 m/s²"
+      ],
+      "correct_index": 2,
+      "guide": "a = F_net/m = 12/3 = 4.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At unchanged net force, a system’s mass triples. How does its acceleration change?",
+      "options": [
+        "It becomes one-third.",
+        "It stays equal.",
+        "It becomes one-ninth.",
+        "It triples."
+      ],
+      "correct_index": 0,
+      "guide": "a ∝ 1/m when net force is fixed.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A worksheet supplies mass and acceleration values. What can a student legitimately report from analyzing them?",
+      "options": [
+        "A claim that they personally measured every value.",
+        "A relationship supported by the supplied example data.",
+        "A measurement uncertainty of exactly zero.",
+        "Proof that all real friction is zero."
+      ],
+      "correct_index": 1,
+      "guide": "Analyzing model data does not substitute for performing a measurement.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A measured trial disagrees with F_net/m using hanger weight as F_net. Which check is useful?",
+      "options": [
+        "Change the reported acceleration to fit.",
+        "Whether resistance was omitted and whether the chosen system includes the hanger.",
+        "Ignore the system boundary.",
+        "Assume hanger weight always equals tension and net cart force."
+      ],
+      "correct_index": 1,
+      "guide": "Hanger weight, tension, and net cart force are distinct; choose the system consistently.",
+      "target_slug": "u1.lab-accel-vs-mass",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

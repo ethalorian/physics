@@ -1,3 +1,4 @@
+import { suggestAfterSubmission } from '@/lib/assessment-results/suggestions-server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { readingJson, readingStaff } from '@/lib/textbook-assignments-server'
@@ -84,7 +85,7 @@ export const POST = withAuth(async (req, ctx) => {
   if (!section || !course) return bad('Choice section unavailable.', 404)
   if (body.action === 'rate-lab-artifact') {
     if (!staff) return bad('Only the class teacher can rate mastery.', 403)
-    if (!uuid.test(body.user_id ?? '') || !uuid.test(body.target_id ?? '') || typeof body.option_id !== 'string' || !Number.isInteger(body.version) || ![1,2,3].includes(body.level) || typeof body.note !== 'string' || !body.note.trim() || body.note.length > 2000) return bad('Choose a target rating and describe the evidence.')
+    if (!uuid.test(body.user_id ?? '') || !uuid.test(body.target_id ?? '') || typeof body.option_id !== 'string' || !Number.isInteger(body.version) || ![1,2,3].includes(body.level) || typeof body.note !== 'string' || body.note.length > 2000) return bad('Choose a target rating and optional feedback.')
     const rated = await supabaseAdmin.rpc('rate_choice_lab_artifact', { p_section: section.id, p_option: body.option_id, p_user: body.user_id, p_target: body.target_id, p_version: body.version, p_level: body.level, p_note: body.note.trim(), p_actor: course.teacher_email })
     if (rated.error) return bad(rated.error.code === 'P0001' ? rated.error.message : 'Could not save the mastery rating.', rated.error.code === 'P0001' ? 409 : 500)
     return readingJson(rated.data, 201)
@@ -94,6 +95,7 @@ export const POST = withAuth(async (req, ctx) => {
     if (typeof body.option_id !== 'string' || !section.options.some(o => o.id === body.option_id && o.lab && o.artifactInstructions?.trim()) || !Number.isInteger(body.version) || body.version < 0 || typeof body.text !== 'string' || body.text.length > 30000 || typeof body.submit !== 'boolean' || body.file_id != null && !uuid.test(body.file_id)) return bad('Check the lab response.')
     const saved = await supabaseAdmin.rpc('save_choice_lab_artifact', { p_section: section.id, p_option: body.option_id, p_user: ctx.userId, p_version: body.version, p_text: body.text, p_file: body.file_id ?? null, p_submit: body.submit })
     if (saved.error) return bad(saved.error.code === 'P0001' ? saved.error.message : 'Could not save your lab work.', saved.error.code === 'P0001' ? 409 : 500)
+    if(body.submit) suggestAfterSubmission('choice',section.id+':'+body.option_id+':'+ctx.userId)
     return readingJson(saved.data)
   }
   if (body.action === 'suggest-groups') {
@@ -133,3 +135,5 @@ export const POST = withAuth(async (req, ctx) => {
   if (saved.error) return bad(saved.error.code === 'P0001' ? saved.error.message : 'Could not save the calendar change. Please refresh and retry.', saved.error.code === 'P0001' ? 409 : 500)
   return readingJson(saved.data)
 })
+
+export const maxDuration = 180

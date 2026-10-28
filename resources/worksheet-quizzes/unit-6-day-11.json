@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 11,
+  "title": "Intensity, decibels and Doppler",
+  "target": "Distinguish intensity change from frequency shift.",
+  "criteria": [
+    "Use an intensity ratio separately from pitch.",
+    "Interpret a logarithmic sound-level difference.",
+    "Predict approach and recession Doppler trends."
+  ],
+  "source_sha256": "0ea21f58399c6f22e999db4c6ac4cc346e3d1cb5fd36d8e86585fea7a30e4013",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.552Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Two steady tones have the same frequency but different intensities. Which distinction is correct?",
+      "options": [
+        "Intensity is measured in hertz.",
+        "The stronger tone must have twice the pitch.",
+        "They can have similar pitch but different loudness.",
+        "Frequency and intensity are identical."
+      ],
+      "correct_index": 2,
+      "guide": "Intensity relates to energy flow per area; pitch is mainly associated with frequency.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "At one location, sound intensity rises from 2 × 10⁻⁶ to 8 × 10⁻⁶ W/m² while frequency is fixed. Which statement is supported?",
+      "options": [
+        "Intensity quadruples; frequency and hence nominal pitch stay fixed.",
+        "Sound speed must quadruple.",
+        "Intensity halves.",
+        "Pitch quadruples."
+      ],
+      "correct_index": 0,
+      "guide": "Compare intensity ratio 8/2 = 4 without confusing it with frequency.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Use Δβ = 10 log₁₀(I₂/I₁). If intensity increases by 1,000, what is sound-level change?",
+      "options": [
+        "3 dB",
+        "30 dB",
+        "100 dB",
+        "1,000 dB"
+      ],
+      "correct_index": 1,
+      "guide": "log₁₀(1000) = 3, so Δβ = 30 dB.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Using the same logarithmic rule, a 20 dB increase corresponds to what intensity ratio?",
+      "options": [
+        "2",
+        "10",
+        "100",
+        "20"
+      ],
+      "correct_index": 2,
+      "guide": "20 = 10 log₁₀(ratio), so ratio = 10² = 100.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A steady-frequency siren approaches a stationary observer through still air. Compared with emitted frequency, observed frequency is…",
+      "options": [
+        "lower.",
+        "higher.",
+        "unchanged in every approach.",
+        "zero."
+      ],
+      "correct_index": 1,
+      "guide": "Approach compresses arriving wavefront spacing, increasing received frequency.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A source emits the same tone as it passes an observer and then recedes. What change is expected between approach and recession?",
+      "options": [
+        "Only loudness can change; frequency cannot.",
+        "Observed pitch increases because the source is farther away.",
+        "The emitted frequency must change for any observed shift.",
+        "Observed pitch drops as the Doppler shift changes from higher to lower."
+      ],
+      "correct_index": 3,
+      "guide": "Relative motion changes received frequency even with constant emitted frequency.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Two steady tones have the same frequency but different intensities. Which distinction is correct?",
+      "options": [
+        "Intensity is measured in hertz.",
+        "Frequency and intensity are identical.",
+        "The stronger tone must have twice the pitch.",
+        "They can have similar pitch but different loudness."
+      ],
+      "correct_index": 3,
+      "guide": "Intensity relates to energy flow per area; pitch is mainly associated with frequency.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "At one location, sound intensity rises from 2 × 10⁻⁶ to 8 × 10⁻⁶ W/m² while frequency is fixed. Which statement is supported?",
+      "options": [
+        "Pitch quadruples.",
+        "Intensity halves.",
+        "Intensity quadruples; frequency and hence nominal pitch stay fixed.",
+        "Sound speed must quadruple."
+      ],
+      "correct_index": 2,
+      "guide": "Compare intensity ratio 8/2 = 4 without confusing it with frequency.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Use Δβ = 10 log₁₀(I₂/I₁). If intensity increases by 1,000, what is sound-level change?",
+      "options": [
+        "30 dB",
+        "100 dB",
+        "1,000 dB",
+        "3 dB"
+      ],
+      "correct_index": 0,
+      "guide": "log₁₀(1000) = 3, so Δβ = 30 dB.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Using the same logarithmic rule, a 20 dB increase corresponds to what intensity ratio?",
+      "options": [
+        "20",
+        "100",
+        "2",
+        "10"
+      ],
+      "correct_index": 1,
+      "guide": "20 = 10 log₁₀(ratio), so ratio = 10² = 100.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A steady-frequency siren approaches a stationary observer through still air. Compared with emitted frequency, observed frequency is…",
+      "options": [
+        "zero.",
+        "unchanged in every approach.",
+        "higher.",
+        "lower."
+      ],
+      "correct_index": 2,
+      "guide": "Approach compresses arriving wavefront spacing, increasing received frequency.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A source emits the same tone as it passes an observer and then recedes. What change is expected between approach and recession?",
+      "options": [
+        "The emitted frequency must change for any observed shift.",
+        "Only loudness can change; frequency cannot.",
+        "Observed pitch increases because the source is farther away.",
+        "Observed pitch drops as the Doppler shift changes from higher to lower."
+      ],
+      "correct_index": 3,
+      "guide": "Relative motion changes received frequency even with constant emitted frequency.",
+      "target_slug": "u6.r3-doppler",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 8,
+  "title": "Sound: pitch and amplitude",
+  "target": "Use a longitudinal-wave model to distinguish pitch and sound level.",
+  "criteria": [
+    "Describe compressions and rarefactions.",
+    "Connect pitch primarily with frequency.",
+    "Separate particle motion from sound propagation."
+  ],
+  "source_sha256": "e551dfab5922a43262df4d15ac427f9f030bd2f585c94c5fcb86c9057bf2b8b2",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.548Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "In a sound wave in air, what is a compression?",
+      "options": [
+        "A permanent pile of air at the speaker.",
+        "A region with no air molecules.",
+        "A region of higher pressure and density than equilibrium.",
+        "A sideways motion of all air across the room."
+      ],
+      "correct_index": 2,
+      "guide": "Longitudinal sound produces alternating pressure/density increases and decreases.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which description represents a rarefaction in an air sound wave?",
+      "options": [
+        "A vacuum that must persist forever.",
+        "A region where sound becomes electromagnetic.",
+        "A pressure maximum.",
+        "A local pressure and density decrease relative to equilibrium."
+      ],
+      "correct_index": 3,
+      "guide": "Rarefaction is a lower-pressure portion of the oscillating medium.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Tones A and B have equal amplitudes. Frequencies are 350 Hz and 700 Hz. Which has higher pitch?",
+      "options": [
+        "Both must have the same pitch because amplitude is equal.",
+        "A.",
+        "B.",
+        "Neither has pitch because frequency is positive."
+      ],
+      "correct_index": 2,
+      "guide": "Pitch is primarily associated with frequency; B has the higher frequency.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A speaker doubles displacement amplitude while keeping its driving frequency fixed. Which statement is best?",
+      "options": [
+        "Sound speed must double in the same air.",
+        "Sound intensity can increase while pitch remains approximately unchanged.",
+        "Pitch must double.",
+        "Frequency must halve."
+      ],
+      "correct_index": 1,
+      "guide": "Amplitude mainly affects intensity; pitch depends mainly on frequency.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Sound travels east through air. In the simple longitudinal model, how do nearby air particles move?",
+      "options": [
+        "Back and forth approximately east-west around their equilibrium positions.",
+        "Only north-south.",
+        "Continuously east all the way to the listener.",
+        "They remain perfectly still while pressure changes."
+      ],
+      "correct_index": 0,
+      "guide": "Particle motion is parallel to propagation but oscillatory, not bulk transport from speaker to listener.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A distant clap is heard before any breeze from the source arrives. What distinction explains this?",
+      "options": [
+        "Sound in air requires no medium.",
+        "Sound is the same as bulk wind speed.",
+        "Air particles must move at light speed.",
+        "A pressure disturbance propagates; the original source air need not travel to the listener."
+      ],
+      "correct_index": 3,
+      "guide": "Signal propagation differs from the bulk transport of the source material.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "In a sound wave in air, what is a compression?",
+      "options": [
+        "A region of higher pressure and density than equilibrium.",
+        "A region with no air molecules.",
+        "A permanent pile of air at the speaker.",
+        "A sideways motion of all air across the room."
+      ],
+      "correct_index": 0,
+      "guide": "Longitudinal sound produces alternating pressure/density increases and decreases.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which description represents a rarefaction in an air sound wave?",
+      "options": [
+        "A pressure maximum.",
+        "A region where sound becomes electromagnetic.",
+        "A vacuum that must persist forever.",
+        "A local pressure and density decrease relative to equilibrium."
+      ],
+      "correct_index": 3,
+      "guide": "Rarefaction is a lower-pressure portion of the oscillating medium.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Tones A and B have equal amplitudes. Frequencies are 350 Hz and 700 Hz. Which has higher pitch?",
+      "options": [
+        "Neither has pitch because frequency is positive.",
+        "B.",
+        "Both must have the same pitch because amplitude is equal.",
+        "A."
+      ],
+      "correct_index": 1,
+      "guide": "Pitch is primarily associated with frequency; B has the higher frequency.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A speaker doubles displacement amplitude while keeping its driving frequency fixed. Which statement is best?",
+      "options": [
+        "Frequency must halve.",
+        "Pitch must double.",
+        "Sound speed must double in the same air.",
+        "Sound intensity can increase while pitch remains approximately unchanged."
+      ],
+      "correct_index": 3,
+      "guide": "Amplitude mainly affects intensity; pitch depends mainly on frequency.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Sound travels east through air. In the simple longitudinal model, how do nearby air particles move?",
+      "options": [
+        "Back and forth approximately east-west around their equilibrium positions.",
+        "Only north-south.",
+        "Continuously east all the way to the listener.",
+        "They remain perfectly still while pressure changes."
+      ],
+      "correct_index": 0,
+      "guide": "Particle motion is parallel to propagation but oscillatory, not bulk transport from speaker to listener.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A distant clap is heard before any breeze from the source arrives. What distinction explains this?",
+      "options": [
+        "Air particles must move at light speed.",
+        "Sound is the same as bulk wind speed.",
+        "A pressure disturbance propagates; the original source air need not travel to the listener.",
+        "Sound in air requires no medium."
+      ],
+      "correct_index": 2,
+      "guide": "Signal propagation differs from the bulk transport of the source material.",
+      "target_slug": "u6.k6-sound-longitudinal",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

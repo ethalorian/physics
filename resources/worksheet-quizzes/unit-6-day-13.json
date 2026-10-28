@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 13,
+  "title": "Plane mirrors",
+  "target": "Use the reflection law and locate a virtual image.",
+  "criteria": [
+    "Measure angles from the normal.",
+    "Use equal incidence and reflection angles.",
+    "Place the image the same perpendicular distance behind the mirror."
+  ],
+  "source_sha256": "2cdbfb4fbe6183511bd97a5bade1480edc53d08ffc0419db042c6ef6f8d01217",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.553Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A ray strikes a mirror at 32° from the normal. Which angle convention is being used?",
+      "options": [
+        "From the line perpendicular to the mirror surface.",
+        "From the mirror surface itself.",
+        "From any horizontal line regardless of mirror orientation.",
+        "From the reflected ray only."
+      ],
+      "correct_index": 0,
+      "guide": "The normal is perpendicular to the surface at the incidence point.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A ray makes 18° with a flat mirror’s surface. What is incidence angle from its normal?",
+      "options": [
+        "108°",
+        "36°",
+        "72°",
+        "18°"
+      ],
+      "correct_index": 2,
+      "guide": "Incidence from normal is 90 − 18 = 72°.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ray arrives at 37° from a plane mirror’s normal. What is reflection angle from the normal?",
+      "options": [
+        "0°",
+        "37°",
+        "53°",
+        "74°"
+      ],
+      "correct_index": 1,
+      "guide": "For specular reflection, incidence and reflection angles are equal.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A diagram shows incidence 24° and reflection 66°, both labeled from the normal. What should be corrected?",
+      "options": [
+        "The two angles must add to 90° when both use the normal.",
+        "The incidence angle must always be 90°.",
+        "Nothing; all angle pairs are allowed.",
+        "The reflected angle should be 24° from the normal."
+      ],
+      "correct_index": 3,
+      "guide": "The law equates the two angles measured from the same normal.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A candle is 0.75 m in front of a plane mirror. Where is its virtual image?",
+      "options": [
+        "At the mirror surface.",
+        "1.50 m behind the mirror.",
+        "0.75 m in front of the mirror.",
+        "0.75 m behind the mirror."
+      ],
+      "correct_index": 3,
+      "guide": "A plane mirror places the virtual image the same perpendicular distance behind.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An object is 1.4 m in front of a plane mirror and is moved 0.3 m toward it. What is the new object-to-image separation?",
+      "options": [
+        "2.2 m",
+        "3.4 m",
+        "1.1 m",
+        "2.8 m"
+      ],
+      "correct_index": 0,
+      "guide": "New object distance is 1.1 m. Image is 1.1 m behind; separation is 2.2 m.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A ray strikes a mirror at 32° from the normal. Which angle convention is being used?",
+      "options": [
+        "From the line perpendicular to the mirror surface.",
+        "From any horizontal line regardless of mirror orientation.",
+        "From the reflected ray only.",
+        "From the mirror surface itself."
+      ],
+      "correct_index": 0,
+      "guide": "The normal is perpendicular to the surface at the incidence point.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A ray makes 18° with a flat mirror’s surface. What is incidence angle from its normal?",
+      "options": [
+        "108°",
+        "72°",
+        "36°",
+        "18°"
+      ],
+      "correct_index": 1,
+      "guide": "Incidence from normal is 90 − 18 = 72°.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ray arrives at 37° from a plane mirror’s normal. What is reflection angle from the normal?",
+      "options": [
+        "0°",
+        "37°",
+        "74°",
+        "53°"
+      ],
+      "correct_index": 1,
+      "guide": "For specular reflection, incidence and reflection angles are equal.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A diagram shows incidence 24° and reflection 66°, both labeled from the normal. What should be corrected?",
+      "options": [
+        "The reflected angle should be 24° from the normal.",
+        "Nothing; all angle pairs are allowed.",
+        "The incidence angle must always be 90°.",
+        "The two angles must add to 90° when both use the normal."
+      ],
+      "correct_index": 0,
+      "guide": "The law equates the two angles measured from the same normal.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A candle is 0.75 m in front of a plane mirror. Where is its virtual image?",
+      "options": [
+        "1.50 m behind the mirror.",
+        "At the mirror surface.",
+        "0.75 m in front of the mirror.",
+        "0.75 m behind the mirror."
+      ],
+      "correct_index": 3,
+      "guide": "A plane mirror places the virtual image the same perpendicular distance behind.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An object is 1.4 m in front of a plane mirror and is moved 0.3 m toward it. What is the new object-to-image separation?",
+      "options": [
+        "2.8 m",
+        "1.1 m",
+        "2.2 m",
+        "3.4 m"
+      ],
+      "correct_index": 2,
+      "guide": "New object distance is 1.1 m. Image is 1.1 m behind; separation is 2.2 m.",
+      "target_slug": "u6.k8-mirrors",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

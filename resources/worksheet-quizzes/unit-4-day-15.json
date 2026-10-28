@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 15,
+  "title": "Spring potential energy",
+  "target": "Calculate stored spring energy and distinguish it from force.",
+  "criteria": [
+    "Use displacement in meters.",
+    "Apply the squared relationship for spring energy.",
+    "Explain how stored energy can become motion."
+  ],
+  "source_sha256": "e9335095a974df9aeb02619386e6d96017983358420e981b656800592370d86d",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.525Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A spring is compressed 8 cm. Which x belongs in U_s = ½kx² with k in N/m?",
+      "options": [
+        "0.8 m",
+        "80 m",
+        "0.08 m",
+        "8 m"
+      ],
+      "correct_index": 2,
+      "guide": "Convert centimeters to meters: 8/100 = 0.08.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spring has k = 500 N/m and compression 0.02 m. What is stored energy?",
+      "options": [
+        "0.20 J",
+        "5 J",
+        "10 J",
+        "0.10 J"
+      ],
+      "correct_index": 3,
+      "guide": "½ × 500 × 0.02² = 0.10 J.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal spring stores 5 J at a certain extension. What does it store at three times that extension?",
+      "options": [
+        "45 J",
+        "90 J",
+        "5/3 J",
+        "15 J"
+      ],
+      "correct_index": 0,
+      "guide": "Energy scales with x²; tripling x multiplies energy by 9.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two ideal springs have equal k. One is compressed by 0.06 m and the other stretched by 0.06 m. Compare their stored energies.",
+      "options": [
+        "Equal.",
+        "Compressed spring has negative energy.",
+        "Both have zero energy.",
+        "Stretched spring has twice the energy."
+      ],
+      "correct_index": 0,
+      "guide": "Squaring x gives equal nonnegative energy for equal displacement magnitudes.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A spring releases 8 J to a 1 kg cart initially at rest, without losses. What is the cart’s final speed?",
+      "options": [
+        "16 m/s",
+        "8 m/s",
+        "2 m/s",
+        "4 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "½mv² = 8 gives v² = 16 and v = 4 m/s.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A launcher’s spring releases 14 J, while 3 J goes to internal energy and 2 J to wheel rotation. What translational energy can the initially stationary cart gain?",
+      "options": [
+        "11 J",
+        "9 J",
+        "14 J",
+        "19 J"
+      ],
+      "correct_index": 1,
+      "guide": "Subtract other destinations: 14 − 3 − 2 = 9 J.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A spring is compressed 8 cm. Which x belongs in U_s = ½kx² with k in N/m?",
+      "options": [
+        "80 m",
+        "0.8 m",
+        "0.08 m",
+        "8 m"
+      ],
+      "correct_index": 2,
+      "guide": "Convert centimeters to meters: 8/100 = 0.08.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spring has k = 500 N/m and compression 0.02 m. What is stored energy?",
+      "options": [
+        "5 J",
+        "0.20 J",
+        "10 J",
+        "0.10 J"
+      ],
+      "correct_index": 3,
+      "guide": "½ × 500 × 0.02² = 0.10 J.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal spring stores 5 J at a certain extension. What does it store at three times that extension?",
+      "options": [
+        "15 J",
+        "45 J",
+        "5/3 J",
+        "90 J"
+      ],
+      "correct_index": 1,
+      "guide": "Energy scales with x²; tripling x multiplies energy by 9.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two ideal springs have equal k. One is compressed by 0.06 m and the other stretched by 0.06 m. Compare their stored energies.",
+      "options": [
+        "Equal.",
+        "Stretched spring has twice the energy.",
+        "Both have zero energy.",
+        "Compressed spring has negative energy."
+      ],
+      "correct_index": 0,
+      "guide": "Squaring x gives equal nonnegative energy for equal displacement magnitudes.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A spring releases 8 J to a 1 kg cart initially at rest, without losses. What is the cart’s final speed?",
+      "options": [
+        "4 m/s",
+        "16 m/s",
+        "8 m/s",
+        "2 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "½mv² = 8 gives v² = 16 and v = 4 m/s.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A launcher’s spring releases 14 J, while 3 J goes to internal energy and 2 J to wheel rotation. What translational energy can the initially stationary cart gain?",
+      "options": [
+        "11 J",
+        "9 J",
+        "19 J",
+        "14 J"
+      ],
+      "correct_index": 1,
+      "guide": "Subtract other destinations: 14 − 3 − 2 = 9 J.",
+      "target_slug": "u4.s5-spring-pe",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

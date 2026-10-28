@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 17,
+  "title": "Plan the electric car",
+  "target": "Use circuit and mechanical evidence to plan a controlled motor-car test.",
+  "criteria": [
+    "Draw the battery-switch-motor circuit.",
+    "Predict effects of an open switch and a changed connection.",
+    "Plan one controlled performance comparison."
+  ],
+  "source_sha256": "e7472951a452f8ed217d9982014e0e8dc30d7eabb1aa11ff8563c328ca0ce808",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.570Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Which sketch description makes a complete intended simple car circuit?",
+      "options": [
+        "Battery positive → switch → motor → battery negative.",
+        "Battery positive → motor → unconnected wire.",
+        "Both motor terminals connected to the same battery terminal only.",
+        "Battery positive → wire → battery negative, bypassing the motor."
+      ],
+      "correct_index": 0,
+      "guide": "The complete path includes both battery terminals and the load.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "What role should the switch play in a simple car circuit?",
+      "options": [
+        "Replace the motor’s rotating shaft.",
+        "Open or close the motor’s intended current path.",
+        "Use up all current before it reaches the motor.",
+        "Create the battery’s chemical energy."
+      ],
+      "correct_index": 1,
+      "guide": "A series switch controls circuit continuity.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A car’s switch is closed but one return wire is loose and disconnected. Why will the simple model not run?",
+      "options": [
+        "A closed switch guarantees current regardless of the other wires.",
+        "A return wire is never needed.",
+        "The motor must consume all battery charge at once.",
+        "The full circuit is open despite the closed switch."
+      ],
+      "correct_index": 3,
+      "guide": "Every part of the intended series loop must connect.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "In an ideal simple permanent-magnet DC motor model, the supply polarity is reversed. What change is expected?",
+      "options": [
+        "The current is converted into mass.",
+        "The motor torque and rotation direction reverse.",
+        "The battery voltage must become zero.",
+        "The switch disappears from the circuit."
+      ],
+      "correct_index": 1,
+      "guide": "Reversing current relative to a fixed magnetic field reverses the turning effect.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A team wants to test wheel size. Which comparison best isolates that change?",
+      "options": [
+        "Use predicted times as if measured.",
+        "Choose the single fastest run from unrelated cars.",
+        "Use the same car, battery condition, surface, and timing path; change wheel size and repeat trials.",
+        "Change motor, wheels, slope, and battery together."
+      ],
+      "correct_index": 2,
+      "guide": "Keep other important conditions consistent and repeat to evaluate variation.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Example runs over 3 m take 5.0, 5.2, and 4.8 s with one wheel set. What should be planned for a fair comparison with a second set?",
+      "options": [
+        "Measure repeated times over the same 3 m under the same test conditions.",
+        "Select a result before testing.",
+        "Record just a guessed time.",
+        "Use a different downhill course for the second set."
+      ],
+      "correct_index": 0,
+      "guide": "Consistent distance and conditions plus repeated measurements support the comparison.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Which sketch description makes a complete intended simple car circuit?",
+      "options": [
+        "Battery positive → motor → unconnected wire.",
+        "Battery positive → switch → motor → battery negative.",
+        "Both motor terminals connected to the same battery terminal only.",
+        "Battery positive → wire → battery negative, bypassing the motor."
+      ],
+      "correct_index": 1,
+      "guide": "The complete path includes both battery terminals and the load.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "What role should the switch play in a simple car circuit?",
+      "options": [
+        "Use up all current before it reaches the motor.",
+        "Create the battery’s chemical energy.",
+        "Open or close the motor’s intended current path.",
+        "Replace the motor’s rotating shaft."
+      ],
+      "correct_index": 2,
+      "guide": "A series switch controls circuit continuity.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A car’s switch is closed but one return wire is loose and disconnected. Why will the simple model not run?",
+      "options": [
+        "The full circuit is open despite the closed switch.",
+        "A closed switch guarantees current regardless of the other wires.",
+        "The motor must consume all battery charge at once.",
+        "A return wire is never needed."
+      ],
+      "correct_index": 0,
+      "guide": "Every part of the intended series loop must connect.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "In an ideal simple permanent-magnet DC motor model, the supply polarity is reversed. What change is expected?",
+      "options": [
+        "The battery voltage must become zero.",
+        "The motor torque and rotation direction reverse.",
+        "The current is converted into mass.",
+        "The switch disappears from the circuit."
+      ],
+      "correct_index": 1,
+      "guide": "Reversing current relative to a fixed magnetic field reverses the turning effect.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A team wants to test wheel size. Which comparison best isolates that change?",
+      "options": [
+        "Choose the single fastest run from unrelated cars.",
+        "Change motor, wheels, slope, and battery together.",
+        "Use the same car, battery condition, surface, and timing path; change wheel size and repeat trials.",
+        "Use predicted times as if measured."
+      ],
+      "correct_index": 2,
+      "guide": "Keep other important conditions consistent and repeat to evaluate variation.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Example runs over 3 m take 5.0, 5.2, and 4.8 s with one wheel set. What should be planned for a fair comparison with a second set?",
+      "options": [
+        "Use a different downhill course for the second set.",
+        "Select a result before testing.",
+        "Record just a guessed time.",
+        "Measure repeated times over the same 3 m under the same test conditions."
+      ],
+      "correct_index": 3,
+      "guide": "Consistent distance and conditions plus repeated measurements support the comparison.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 5,
+  "title": "Calorimetry lab",
+  "target": "Use an energy balance to analyze mixing and heat transfer.",
+  "criteria": [
+    "Identify hot and cold samples and their masses.",
+    "Balance energy gained and lost in an ideal model.",
+    "Discuss heat exchange with the container and surroundings."
+  ],
+  "source_sha256": "7c5dea7edf2ec71f4bd5fc5b60307506c27d30dbbec491175b0936a63f4a8515",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.535Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 0.15 kg metal sample at 82°C is placed in 0.25 kg water at 22°C. Which is initially the hot sample?",
+      "options": [
+        "The water because it has more mass.",
+        "Neither because both temperatures are below boiling.",
+        "The metal.",
+        "Both are equally hot because they touch."
+      ],
+      "correct_index": 2,
+      "guide": "Initial temperature identifies hotter and colder samples; mass alone does not.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A record lists 180 g water and 60 g metal. Specific heats will use kg. Which masses should be used?",
+      "options": [
+        "1.80 kg water and 0.60 kg metal.",
+        "0.018 kg water and 0.006 kg metal.",
+        "180 kg water and 60 kg metal.",
+        "0.180 kg water and 0.060 kg metal."
+      ],
+      "correct_index": 3,
+      "guide": "Divide grams by 1,000 to obtain kilograms.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In an ideal isolated two-sample mixture, a hot sample loses 420 J. How much does the cold sample gain?",
+      "options": [
+        "0 J",
+        "210 J",
+        "420 J",
+        "840 J"
+      ],
+      "correct_index": 2,
+      "guide": "With no container or surrounding exchange, energy lost by one equals gained by the other.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Equal masses of the same liquid at 18°C and 54°C mix without loss or phase change. What final temperature is predicted?",
+      "options": [
+        "54°C",
+        "72°C",
+        "27°C",
+        "36°C"
+      ],
+      "correct_index": 3,
+      "guide": "Equal heat capacities give the mean: (18 + 54)/2 = 36°C.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A hot sample loses 500 J. The container gains 80 J and surroundings gain 40 J. What is left for the initially cold water?",
+      "options": [
+        "380 J",
+        "500 J",
+        "620 J",
+        "460 J"
+      ],
+      "correct_index": 0,
+      "guide": "Energy balance: 500 − 80 − 40 = 380 J.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculation assumes an insulated cup absorbs no energy, but the cup actually warms. Which conclusion is justified?",
+      "options": [
+        "The temperature data prove energy is destroyed.",
+        "The model omitted an energy recipient and needs a container term.",
+        "The cup’s warming should be erased from the record.",
+        "The metal’s specific heat must be exactly zero."
+      ],
+      "correct_index": 1,
+      "guide": "The cup can absorb part of the hot sample’s energy, altering the inferred sample balance.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 0.15 kg metal sample at 82°C is placed in 0.25 kg water at 22°C. Which is initially the hot sample?",
+      "options": [
+        "Both are equally hot because they touch.",
+        "The metal.",
+        "The water because it has more mass.",
+        "Neither because both temperatures are below boiling."
+      ],
+      "correct_index": 1,
+      "guide": "Initial temperature identifies hotter and colder samples; mass alone does not.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A record lists 180 g water and 60 g metal. Specific heats will use kg. Which masses should be used?",
+      "options": [
+        "0.180 kg water and 0.060 kg metal.",
+        "0.018 kg water and 0.006 kg metal.",
+        "1.80 kg water and 0.60 kg metal.",
+        "180 kg water and 60 kg metal."
+      ],
+      "correct_index": 0,
+      "guide": "Divide grams by 1,000 to obtain kilograms.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In an ideal isolated two-sample mixture, a hot sample loses 420 J. How much does the cold sample gain?",
+      "options": [
+        "840 J",
+        "0 J",
+        "210 J",
+        "420 J"
+      ],
+      "correct_index": 3,
+      "guide": "With no container or surrounding exchange, energy lost by one equals gained by the other.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Equal masses of the same liquid at 18°C and 54°C mix without loss or phase change. What final temperature is predicted?",
+      "options": [
+        "36°C",
+        "27°C",
+        "72°C",
+        "54°C"
+      ],
+      "correct_index": 0,
+      "guide": "Equal heat capacities give the mean: (18 + 54)/2 = 36°C.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A hot sample loses 500 J. The container gains 80 J and surroundings gain 40 J. What is left for the initially cold water?",
+      "options": [
+        "500 J",
+        "460 J",
+        "380 J",
+        "620 J"
+      ],
+      "correct_index": 2,
+      "guide": "Energy balance: 500 − 80 − 40 = 380 J.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculation assumes an insulated cup absorbs no energy, but the cup actually warms. Which conclusion is justified?",
+      "options": [
+        "The metal’s specific heat must be exactly zero.",
+        "The temperature data prove energy is destroyed.",
+        "The cup’s warming should be erased from the record.",
+        "The model omitted an energy recipient and needs a container term."
+      ],
+      "correct_index": 3,
+      "guide": "The cup can absorb part of the hot sample’s energy, altering the inferred sample balance.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

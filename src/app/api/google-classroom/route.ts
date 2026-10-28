@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
-import { googleClassroomAPI } from '@/lib/google-classroom'
+import { GoogleClassroomAPI } from '@/lib/google-classroom'
 
 // Staff-only proxy to the Google Classroom API. The caller supplies their own
 // Google OAuth access token (Bearer header), so Google still enforces what the
@@ -20,6 +20,7 @@ export const GET = withRole(['teacher', 'admin'], async (request) => {
       )
     }
 
+    const googleClassroomAPI = new GoogleClassroomAPI()
     googleClassroomAPI.setAccessToken(accessToken)
 
     switch (action) {
@@ -84,6 +85,7 @@ export const POST = withRole(['teacher', 'admin'], async (request) => {
       )
     }
 
+    const googleClassroomAPI = new GoogleClassroomAPI()
     googleClassroomAPI.setAccessToken(accessToken)
 
     switch (action) {

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 22,
+  "title": "Transfer: energy and work",
+  "target": "Choose and justify energy methods in new physical situations.",
+  "criteria": [
+    "Choose the correct energy terms and units.",
+    "Show a consistent numerical balance.",
+    "Explain model assumptions and limitations."
+  ],
+  "source_sha256": "8e94a9edd1109f3fc954d0cfe40e32d400cf77177f1e0a6dfd9af5c3f74e9669",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.529Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A spring launches a cart up a ramp. Which ideal energy account includes the needed storage terms?",
+      "options": [
+        "Only force times time.",
+        "Only the final height without any initial energy.",
+        "Only momentum and temperature.",
+        "Spring potential, gravitational potential, and kinetic energy."
+      ],
+      "correct_index": 3,
+      "guide": "The relevant stores change between spring compression, motion, and elevation.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A student combines 400 J with 0.6 kJ and reports 400.6 J. What is the corrected sum?",
+      "options": [
+        "1,000 J",
+        "640 J",
+        "400.6 J",
+        "4,600 J"
+      ],
+      "correct_index": 0,
+      "guide": "0.6 kJ = 600 J; sum = 1,000 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 1.5 kg object descends 3 m from rest with g = 10 N/kg. Resistance transfers 9 J out of mechanical energy. What is final K?",
+      "options": [
+        "9 J",
+        "36 J",
+        "54 J",
+        "45 J"
+      ],
+      "correct_index": 1,
+      "guide": "Gravitational loss is 45 J; subtract 9 J to get 36 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A lift delivers 240 J in 12 s. What is average useful power?",
+      "options": [
+        "2,880 W",
+        "228 W",
+        "20 W",
+        "0.05 W"
+      ],
+      "correct_index": 2,
+      "guide": "P = E/t = 240/12 = 20 W.",
+      "target_slug": "u4.k7-power",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A model predicts an impact’s energy accurately. What additional information is needed to predict detailed damage?",
+      "options": [
+        "Only the object’s name.",
+        "No additional information is ever needed.",
+        "Material response, contact geometry, and energy-transfer details.",
+        "Only a change from joules to watts."
+      ],
+      "correct_index": 2,
+      "guide": "Energy constrains possibilities but does not uniquely determine damage.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Two routes have the same drop, but one includes resistance and the other is ideal. Which comparison is defensible for identical starts?",
+      "options": [
+        "Both must have identical kinetic energy under all conditions.",
+        "Resistance creates additional kinetic energy automatically.",
+        "The ideal route violates total energy conservation.",
+        "The resisted route can end with less kinetic energy because some energy changes form."
+      ],
+      "correct_index": 3,
+      "guide": "Include resistive transfers when applying an energy model to a new situation.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A spring launches a cart up a ramp. Which ideal energy account includes the needed storage terms?",
+      "options": [
+        "Spring potential, gravitational potential, and kinetic energy.",
+        "Only force times time.",
+        "Only the final height without any initial energy.",
+        "Only momentum and temperature."
+      ],
+      "correct_index": 0,
+      "guide": "The relevant stores change between spring compression, motion, and elevation.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A student combines 400 J with 0.6 kJ and reports 400.6 J. What is the corrected sum?",
+      "options": [
+        "400.6 J",
+        "640 J",
+        "1,000 J",
+        "4,600 J"
+      ],
+      "correct_index": 2,
+      "guide": "0.6 kJ = 600 J; sum = 1,000 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 1.5 kg object descends 3 m from rest with g = 10 N/kg. Resistance transfers 9 J out of mechanical energy. What is final K?",
+      "options": [
+        "36 J",
+        "9 J",
+        "45 J",
+        "54 J"
+      ],
+      "correct_index": 0,
+      "guide": "Gravitational loss is 45 J; subtract 9 J to get 36 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A lift delivers 240 J in 12 s. What is average useful power?",
+      "options": [
+        "2,880 W",
+        "228 W",
+        "0.05 W",
+        "20 W"
+      ],
+      "correct_index": 3,
+      "guide": "P = E/t = 240/12 = 20 W.",
+      "target_slug": "u4.k7-power",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A model predicts an impact’s energy accurately. What additional information is needed to predict detailed damage?",
+      "options": [
+        "Only the object’s name.",
+        "No additional information is ever needed.",
+        "Only a change from joules to watts.",
+        "Material response, contact geometry, and energy-transfer details."
+      ],
+      "correct_index": 3,
+      "guide": "Energy constrains possibilities but does not uniquely determine damage.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Two routes have the same drop, but one includes resistance and the other is ideal. Which comparison is defensible for identical starts?",
+      "options": [
+        "Resistance creates additional kinetic energy automatically.",
+        "The resisted route can end with less kinetic energy because some energy changes form.",
+        "Both must have identical kinetic energy under all conditions.",
+        "The ideal route violates total energy conservation."
+      ],
+      "correct_index": 1,
+      "guide": "Include resistive transfers when applying an energy model to a new situation.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

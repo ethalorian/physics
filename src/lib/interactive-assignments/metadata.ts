@@ -1,8 +1,21 @@
+import {TRANSFER_BRIEFS} from './transfer-briefs'
 import {INVESTIGATIONS} from './investigation-definitions'
+import type {ActivityType} from '../assignment-presentation'
+interface AssignmentMetadata {slug:string;day:number;title:string;activityType?:ActivityType;topicTitle?:string;focusQuestion?:string}
 // Lightweight homepage titles; full learning content stays in catalog.ts.
-export const ASSIGNMENT_METADATA=[
-  ...INVESTIGATIONS.map(lab=>({slug:'simulation-'+lab.id,day:lab.day,title:lab.title+' · '+lab.question})),
-  {slug:"simulation-race-track", day:3, title:"Race Track · A full lap. How far did you go?"},
+export const ASSIGNMENT_METADATA:AssignmentMetadata[]=[
+  ...TRANSFER_BRIEFS.map(b=>({slug:b.slug,day:b.day,title:b.title,topicTitle:b.title,focusQuestion:b.transferBrief!.question,activityType:'transfer-brief' as const})),
+  {"slug":"day-1-foundation-briefing","day":1,"title":"Day 1 · Foundation: The briefing","activityType":"foundation"},
+  {"slug":"day-2-foundation-motion","day":2,"title":"Day 2 · Foundation: Talking about motion","activityType":"foundation"},
+  {"slug":"day-3-foundation-velocity","day":3,"title":"Day 3 · Foundation lab: Velocity","activityType":"foundation-lab"},
+  {"slug":"day-4-foundation-vectors","day":4,"title":"Day 4 · Foundation: Velocity–time graphs and vectors","activityType":"foundation"},
+  {"slug":"day-5-foundation-prediction","day":5,"title":"Day 5 · Foundation: Predicting position and uncertainty","activityType":"foundation"},
+  {"slug":"day-6-foundation-vector-tools","day":6,"title":"Day 6 · Foundation: Vector addition and decomposition","activityType":"foundation"},
+  {"slug":"day-7-foundation-acceleration","day":7,"title":"Day 7 · Foundation: Acceleration","activityType":"foundation"},
+  {"slug":"day-8-foundation-kinematics","day":8,"title":"Day 8 · Foundation: Constant acceleration problem-solving","activityType":"foundation"},
+  {"slug":"day-9-foundation-inertia","day":9,"title":"Day 9 · Foundation: Newton’s first law and inertia","activityType":"foundation"},
+  ...INVESTIGATIONS.map(lab=>({slug:'simulation-'+lab.id,day:lab.day,title:lab.title+' · '+lab.question,topicTitle:lab.title,focusQuestion:lab.question,activityType:'simulation-lab' as const})),
+  {slug:"simulation-race-track", day:3, title:"Race Track · A full lap. How far did you go?",topicTitle:"Race Track",focusQuestion:"A full lap. How far did you go?",activityType:"simulation-lab"},
   {
     "slug": "day-1-the-briefing",
     "day": 1,

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 17,
+  "title": "Collision energy revisited",
+  "target": "Use energy as well as momentum to classify a collision.",
+  "criteria": [
+    "Calculate total momentum before and after.",
+    "Calculate total kinetic energy independently.",
+    "Account for reduced kinetic energy without losing total energy."
+  ],
+  "source_sha256": "c773e1165c31d3d9888f3e34c30fed3add42e476baec75b44040c32c7b0b26b2",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.526Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 2 kg cart moves at +3 m/s and a 1 kg cart at −2 m/s. What is their total momentum?",
+      "options": [
+        "+1 kg·m/s",
+        "+8 kg·m/s",
+        "+4 kg·m/s",
+        "−4 kg·m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Sum signed momenta: 2(3) + 1(−2) = +4.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two carts stick together during a collision with negligible external impulse. Which quantity must be conserved for both carts together?",
+      "options": [
+        "Each cart’s speed.",
+        "Each cart’s individual momentum.",
+        "Kinetic energy in every sticking collision.",
+        "Total momentum."
+      ],
+      "correct_index": 3,
+      "guide": "Negligible external impulse conserves system momentum.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart at +3 m/s sticks to a stationary 1 kg cart. What is their shared final speed?",
+      "options": [
+        "2 m/s",
+        "1 m/s",
+        "3 m/s",
+        "6 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "Initial momentum 6; total mass 3; final speed 6/3 = 2 m/s.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For a 2 kg cart at 3 m/s sticking to a stationary 1 kg cart, final speed is 2 m/s. What happens to total kinetic energy?",
+      "options": [
+        "It falls from 18 J to 12 J.",
+        "It falls from 9 J to 6 J.",
+        "It increases from 6 J to 9 J.",
+        "It stays at 9 J."
+      ],
+      "correct_index": 1,
+      "guide": "Initial K = ½(2)(9) = 9 J; final K = ½(3)(4) = 6 J.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A collision reduces the system’s kinetic energy by 7 J. What is a consistent destination?",
+      "options": [
+        "Destruction of total energy.",
+        "Internal energy, deformation, and sound.",
+        "Automatic loss of all system momentum.",
+        "Negative mass."
+      ],
+      "correct_index": 1,
+      "guide": "Kinetic energy can transform while total energy remains conserved.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A report says momentum was conserved, so kinetic energy must also have been conserved. What is the flaw?",
+      "options": [
+        "Any conserved momentum implies zero velocity.",
+        "Momentum and kinetic energy are the same quantity.",
+        "Momentum conservation alone does not establish an elastic collision.",
+        "Kinetic energy is never conserved in any collision."
+      ],
+      "correct_index": 2,
+      "guide": "Check kinetic energy separately; inelastic collisions can conserve momentum.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 2 kg cart moves at +3 m/s and a 1 kg cart at −2 m/s. What is their total momentum?",
+      "options": [
+        "−4 kg·m/s",
+        "+1 kg·m/s",
+        "+8 kg·m/s",
+        "+4 kg·m/s"
+      ],
+      "correct_index": 3,
+      "guide": "Sum signed momenta: 2(3) + 1(−2) = +4.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two carts stick together during a collision with negligible external impulse. Which quantity must be conserved for both carts together?",
+      "options": [
+        "Total momentum.",
+        "Each cart’s speed.",
+        "Each cart’s individual momentum.",
+        "Kinetic energy in every sticking collision."
+      ],
+      "correct_index": 0,
+      "guide": "Negligible external impulse conserves system momentum.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart at +3 m/s sticks to a stationary 1 kg cart. What is their shared final speed?",
+      "options": [
+        "6 m/s",
+        "2 m/s",
+        "3 m/s",
+        "1 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "Initial momentum 6; total mass 3; final speed 6/3 = 2 m/s.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For a 2 kg cart at 3 m/s sticking to a stationary 1 kg cart, final speed is 2 m/s. What happens to total kinetic energy?",
+      "options": [
+        "It increases from 6 J to 9 J.",
+        "It stays at 9 J.",
+        "It falls from 9 J to 6 J.",
+        "It falls from 18 J to 12 J."
+      ],
+      "correct_index": 2,
+      "guide": "Initial K = ½(2)(9) = 9 J; final K = ½(3)(4) = 6 J.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A collision reduces the system’s kinetic energy by 7 J. What is a consistent destination?",
+      "options": [
+        "Destruction of total energy.",
+        "Negative mass.",
+        "Internal energy, deformation, and sound.",
+        "Automatic loss of all system momentum."
+      ],
+      "correct_index": 2,
+      "guide": "Kinetic energy can transform while total energy remains conserved.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A report says momentum was conserved, so kinetic energy must also have been conserved. What is the flaw?",
+      "options": [
+        "Momentum and kinetic energy are the same quantity.",
+        "Any conserved momentum implies zero velocity.",
+        "Kinetic energy is never conserved in any collision.",
+        "Momentum conservation alone does not establish an elastic collision."
+      ],
+      "correct_index": 3,
+      "guide": "Check kinetic energy separately; inelastic collisions can conserve momentum.",
+      "target_slug": "u4.r4-ke-collisions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

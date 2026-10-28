@@ -1,4 +1,5 @@
 'use client'
+import RevisionCycle from '@/components/review-desk/RevisionCycle'
 import Link from 'next/link'
 import {useCallback,useEffect,useRef,useState} from 'react'
 import {useRouter} from 'next/navigation'
@@ -7,6 +8,7 @@ import {gradeLabel} from '@/lib/quizzes/types'
 import {QuestionInput,QuestionPrompt,AnswerDisplay,QuizFeedback,answerComplete,dueLabel,quizFetch,useQuizData} from './shared'
 import s from './Quiz.module.css'
 import QuizContent from './QuizContent'
+import QuizHeader from './QuizHeader'
 export default function QuizStudentWork({id}:{id:string}){const {data,error,loading,load}=useQuizData<QuizDetail>(`/api/quizzes/${id}`);return <div className={s.app}>{error&&<div role="alert" className={s.error}>{error}<button className={s.secondary} onClick={()=>void load()}>Try again</button></div>}{loading&&!data&&<p role="status">Loading your quiz…</p>}{data?.staff?<Link className={s.link} href={`/admin/quizzes?id=${id}`}>Open teacher review →</Link>:data&&<QuizSession key={`${id}:${data.work[0]?.submission_id??'draft'}:${data.work[0]?.state??'new'}`} data={data} reload={load}/>}</div>}
 export function QuizSession({data,reload}:{data:QuizDetail;reload:()=>Promise<void>}){
  const {quiz,targets}=data,initial=data.work[0],router=useRouter()
@@ -37,8 +39,9 @@ export function QuizSession({data,reload}:{data:QuizDetail;reload:()=>Promise<vo
  async function submit(){if(busy)return;setBusy(true);setError('');try{await flush();submitRequest.current??=crypto.randomUUID();await quizFetch(`/api/quizzes/${quiz.id}`,{action:'submit',version:version.current,request_id:submitRequest.current,answers:current.current});setStatus('Submitted for teacher review');await reload()}catch(e){setError((e as Error).message)}finally{setBusy(false)}}
  async function leave(){setBusy(true);try{await flush();router.push('/quizzes')}catch{}finally{setBusy(false)}}
  const completed=quiz.questions.filter(q=>answerComplete(q,answers)).length,question=quiz.questions[index]
- return <><div className={`${s.row} ${s.toolbar}`}><button className={s.secondary} disabled={busy} onClick={()=>void leave()}>← All quizzes</button><span className={s.muted} role="status">{locked?(initial?.state==='graded'?'Grade returned':initial?.state==='submitted'?'Submitted · waiting for your teacher':'Quiz closed'):status}</span></div>
- <header className={s.hero}><p className={s.eyebrow}>SHOW WHAT YOU UNDERSTAND</p><h1>{quiz.title}</h1><QuizContent content={quiz.instructions}/><div className="mt-4"><span>{quiz.questions.length} questions · {quiz.questions.reduce((n,q)=>n+q.points,0)} points · {dueLabel(quiz.due_at)}</span></div></header>
+ return <><RevisionCycle sourceKey={'quiz:'+quiz.id} submitted={initial?.state==='submitted'||initial?.state==='graded'}/><div className={`${s.row} ${s.toolbar}`}><button className={s.secondary} disabled={busy} onClick={()=>void leave()}>← All quizzes</button><span className={s.muted} role="status">{locked?(initial?.state==='graded'?'Grade returned':initial?.state==='submitted'?'Submitted · waiting for your teacher':'Quiz closed'):status}</span></div>
+ <QuizHeader quiz={quiz} targets={targets} eyebrow="SHOW WHAT YOU UNDERSTAND"><QuizContent content={quiz.instructions}/><div className="mt-4"><span>{quiz.questions.length} questions · {quiz.questions.reduce((n,q)=>n+q.points,0)} points · {dueLabel(quiz.due_at)}</span></div></QuizHeader>
+ {data.worksheet&&<p className={`${s.notice} mb-4`}>Paired paper worksheet: <Link className={s.link} href={'/worksheet-assignments/'+data.worksheet.id}>{data.worksheet.title} →</Link> · {dueLabel(data.worksheet.due_at)}</p>}
  <details className={`${s.card} mb-4`}><summary>Learning targets for this quiz</summary>{targets.map(t=><div key={t.id} className={s.foot}><QuizContent content={t.statement}/></div>)}<p className={s.muted}>Your quiz grade and mastery ratings are separate. Your teacher decides what this evidence demonstrates.</p></details>
  {error&&<div role="alert" className={s.error}>{error}<button className={s.secondary} disabled={busy} onClick={()=>void flush().catch(()=>{})}>Retry saving</button></div>}
  {latestReview&&<div className="mb-4"><QuizFeedback review={latestReview} targets={targets}/></div>}

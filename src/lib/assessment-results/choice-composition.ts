@@ -5,7 +5,7 @@ export function composeChoiceResults(activities:ResultActivity[]) {
  const owned=new Set<string>()
  for(const choice of activities.filter(a=>a.kind==='choice')) {
    const keys=choice.sourceKeys??(choice.lessonIds??[]).map(id=>'lesson:'+id)
-   const sources=activities.filter(a=>a.kind!=='choice'&&(keys.includes(a.key)||['reflection','video'].includes(a.kind)&&keys.includes('lesson:'+a.sourceId)))
+   const sources=activities.filter(a=>a.kind!=='choice'&&(keys.includes(a.key)||['reflection','video','lesson'].includes(a.kind)&&keys.includes('lesson:'+a.sourceId)))
    choice.evidenceActivities=sources
    choice.targetIds=[...new Set([...(choice.targetIds??[]),...sources.flatMap(s=>s.targetIds??[])])]
    choice.unitIds=[...new Set([...choice.unitIds,...sources.flatMap(s=>s.unitIds)])]

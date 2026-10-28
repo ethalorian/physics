@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 4,
+  "title": "Universal gravitation",
+  "target": "Predict how gravitational force changes with mass and separation.",
+  "criteria": [
+    "Use center-to-center separation.",
+    "Apply direct mass and inverse-square distance comparisons.",
+    "Identify equal forces on the two interacting bodies."
+  ],
+  "source_sha256": "b860fd0707312d317dcb77af835b3de1def57655aceb7b3211490f03b46854df",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.490Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Two spherical objects have radii 1 m and 2 m with a 5 m surface gap. Which distance goes into the inverse-square force model?",
+      "options": [
+        "5 m",
+        "2 m",
+        "3 m",
+        "8 m"
+      ],
+      "correct_index": 3,
+      "guide": "Center separation is 1 + 5 + 2 = 8 m.",
+      "target_slug": "u2.k1-universal-gravitation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A satellite is 300 km above a planet of radius 6,000 km. What is center separation?",
+      "options": [
+        "5,700 km",
+        "300 km",
+        "6,300 km",
+        "18,000 km"
+      ],
+      "correct_index": 2,
+      "guide": "Center distance equals radius plus altitude: 6,000 + 300 = 6,300 km.",
+      "target_slug": "u2.k1-universal-gravitation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Both interacting masses double while separation stays fixed. How does gravitational force change?",
+      "options": [
+        "It doubles.",
+        "It quadruples.",
+        "It stays fixed.",
+        "It halves."
+      ],
+      "correct_index": 1,
+      "guide": "F is proportional to m₁m₂, so the product grows by 4.",
+      "target_slug": "u2.k1-universal-gravitation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Separation triples while masses stay fixed. How does gravitational force change?",
+      "options": [
+        "It becomes one-ninth.",
+        "It becomes nine times as large.",
+        "It becomes one-third.",
+        "It triples."
+      ],
+      "correct_index": 0,
+      "guide": "F ∝ 1/r²; 3² = 9.",
+      "target_slug": "u2.r1-scale-f",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A planet attracts a much smaller moon. Compare their mutual gravitational forces.",
+      "options": [
+        "Only the moon feels a force.",
+        "The moon’s force is always zero.",
+        "Equal magnitude and opposite direction.",
+        "The planet’s force on the moon is larger."
+      ],
+      "correct_index": 2,
+      "guide": "Newton’s third law applies to the interaction pair.",
+      "target_slug": "u2.k1-universal-gravitation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Equal mutual forces act on a large planet and a small probe. Why can their accelerations differ greatly?",
+      "options": [
+        "Only the lighter body has inertia.",
+        "Equal forces always imply equal acceleration.",
+        "The probe feels no real force.",
+        "Acceleration is force divided by each body’s mass."
+      ],
+      "correct_index": 3,
+      "guide": "The smaller mass has larger acceleration under the same force magnitude.",
+      "target_slug": "u2.k1-universal-gravitation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Two spherical objects have radii 1 m and 2 m with a 5 m surface gap. Which distance goes into the inverse-square force model?",
+      "options": [
+        "5 m",
+        "2 m",
+        "3 m",
+        "8 m"
+      ],
+      "correct_index": 3,
+      "guide": "Center separation is 1 + 5 + 2 = 8 m.",
+      "target_slug": "u2.k1-universal-gravitation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A satellite is 300 km above a planet of radius 6,000 km. What is center separation?",
+      "options": [
+        "6,300 km",
+        "5,700 km",
+        "18,000 km",
+        "300 km"
+      ],
+      "correct_index": 0,
+      "guide": "Center distance equals radius plus altitude: 6,000 + 300 = 6,300 km.",
+      "target_slug": "u2.k1-universal-gravitation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Both interacting masses double while separation stays fixed. How does gravitational force change?",
+      "options": [
+        "It halves.",
+        "It stays fixed.",
+        "It doubles.",
+        "It quadruples."
+      ],
+      "correct_index": 3,
+      "guide": "F is proportional to m₁m₂, so the product grows by 4.",
+      "target_slug": "u2.k1-universal-gravitation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Separation triples while masses stay fixed. How does gravitational force change?",
+      "options": [
+        "It becomes one-third.",
+        "It triples.",
+        "It becomes one-ninth.",
+        "It becomes nine times as large."
+      ],
+      "correct_index": 2,
+      "guide": "F ∝ 1/r²; 3² = 9.",
+      "target_slug": "u2.r1-scale-f",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A planet attracts a much smaller moon. Compare their mutual gravitational forces.",
+      "options": [
+        "Only the moon feels a force.",
+        "Equal magnitude and opposite direction.",
+        "The moon’s force is always zero.",
+        "The planet’s force on the moon is larger."
+      ],
+      "correct_index": 1,
+      "guide": "Newton’s third law applies to the interaction pair.",
+      "target_slug": "u2.k1-universal-gravitation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Equal mutual forces act on a large planet and a small probe. Why can their accelerations differ greatly?",
+      "options": [
+        "Acceleration is force divided by each body’s mass.",
+        "Equal forces always imply equal acceleration.",
+        "Only the lighter body has inertia.",
+        "The probe feels no real force."
+      ],
+      "correct_index": 0,
+      "guide": "The smaller mass has larger acceleration under the same force magnitude.",
+      "target_slug": "u2.k1-universal-gravitation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

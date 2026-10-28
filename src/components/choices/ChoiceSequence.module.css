@@ -69,3 +69,8 @@
 .filters select { width:100%; }
 .libraryCard a { color:var(--primary); font-size:.8rem; text-decoration:underline; }
 .libraryBody > .details { margin-bottom:1rem; }
+@media(max-width:600px) {
+  .library { overflow-y:auto; }
+  .filters > label { flex-basis:auto; }
+  .libraryBody { flex:none; overflow:visible; min-height:0; }
+}

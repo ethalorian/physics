@@ -17,6 +17,7 @@ import { useAssessmentReviewGuard } from '@/components/admin/useAssessmentReview
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import MathWorkReview from './MathWorkReview'
 import styles from './MathControlRoom.module.css'
+import SubmissionSuggestions from '@/components/admin/results/SubmissionSuggestions'
 import { ReviewRatings, ReviewFeedback, ReviewQueueRail, ReviewStudentBar } from "@/components/review/ReviewDeskControls"
 import type { MathResponse } from '@/lib/math-response'
 
@@ -75,7 +76,7 @@ const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Go
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 const CHECKED_REVISION_REPLY = 'I have checked your response. Your next step is a fresh independent check on this skill.'
 
-export default function MathControlRoom({ classId, teacher, initialStudentId, competencyId, embedded = false, onClose, onSaved }: { classId?: string | null; teacher?: string | null; initialStudentId?: string; competencyId?: string; embedded?: boolean; onClose?: () => void; onSaved?: () => void }) {
+export default function MathControlRoom({ classId, teacher, initialStudentId, initialSubmissionId, competencyId, embedded = false, onClose, onSaved }: { classId?: string | null; teacher?: string | null; initialStudentId?: string; initialSubmissionId?:string; competencyId?: string; embedded?: boolean; onClose?: () => void; onSaved?: () => void }) {
   // class + (admin-only) teacher scope, as one query string.
   const scopeParams = new URLSearchParams()
   if (classId) scopeParams.set('class', classId)
@@ -145,11 +146,11 @@ export default function MathControlRoom({ classId, teacher, initialStudentId, co
     // The grading drawer is YOUR roster only — admin included. Other teachers'
     // students stay visible in the snapshot grid, but never open here.
     if (grid?.students.find((st) => st.id === studentId)?.ratable === false) return
-    setSubmissionId(null)
+    setSubmissionId(initialSubmissionId??null)
     setSel({ studentId, name })
     setSubs([])
     loadStudent(studentId)
-  }, [loadStudent, grid, savingKey])
+  }, [loadStudent, grid, savingKey, initialSubmissionId])
 
   const closeDrawer = useCallback(() => { if (savingKey) return; if (embedded) { onClose?.(); return }; studentLoad.current++; setSel(null); setSubs([]); setNextGate(null); onClose?.() }, [savingKey, onClose, embedded])
 
@@ -572,7 +573,7 @@ export default function MathControlRoom({ classId, teacher, initialStudentId, co
                   <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Shortcut: <b>1 · 2 · 3</b> to select. Your review saves when you continue.</p>
                 )}
 </section>}
-                <div className={styles.paper}><div className={styles.paperHeading}><span>{activeSub.revision ? activeSub.revision.needs_help ? 'STUDENT HELP REQUEST' : 'STUDENT CORRECTION' : 'STUDENT WORK'}</span><span aria-hidden="true">✎</span></div>{activeSub.revision ? <><p className="mb-3 whitespace-pre-wrap">{activeSub.revision.message}</p><MathWorkReview key={activeSub.revision.id} value={activeSub.revision.response_json} /></> : <WarmupAnswer sub={activeSub} />}</div>
+                {<SubmissionSuggestions source="math" id={activeSub.id} disabled={savingKey!==null} onRating={activeSub.revision?undefined:r=>{if(r.target_id===activeSub.competency_id)setSelectedLevel(r.level)}} onFeedback={text=>setFbText(old=>old||text)}/>}<div className={styles.paper}><div className={styles.paperHeading}><span>{activeSub.revision ? activeSub.revision.needs_help ? 'STUDENT HELP REQUEST' : 'STUDENT CORRECTION' : 'STUDENT WORK'}</span><span aria-hidden="true">✎</span></div>{activeSub.revision ? <><p className="mb-3 whitespace-pre-wrap">{activeSub.revision.message}</p><MathWorkReview key={activeSub.revision.id} value={activeSub.revision.response_json} /></> : <WarmupAnswer sub={activeSub} />}</div>
                 {activeSub.feedback?.map((f,i) => <p key={i} className="my-3 rounded border p-3"><b>Your feedback:</b> {f.message}</p>)}
                 {activeSub.revision && <section className="mt-4 border-t pt-4" aria-label="Original submission"><h4 className="mb-3 font-bold">Original submission</h4><WarmupAnswer sub={activeSub} /></section>}
               </div>
@@ -595,7 +596,7 @@ export default function MathControlRoom({ classId, teacher, initialStudentId, co
                 <div className={styles.actions}>
                   <p className="text-xs text-muted-foreground">1 / 2 / 3 rate · ← → responses · Shift + ← → students · F feedback · ⌘ / Ctrl + Enter save</p>
                   <p className="text-xs text-muted-foreground" role="status">{activeSub.revision ? !revisionOutcome ? 'Choose a next step to continue.' : !revisionMessage ? 'Add a message explaining the practice or help the student needs.' : 'Ready to acknowledge this response and continue reviewing.' : requestRevision ? (fbText.trim() ? 'Ready to send a request for more evidence.' : 'Add a next step to request a response.') : selectedLevel ? `${levelWord(selectedLevel)} selected · ready to save` : 'Choose a rating to continue.'}</p>
-                  <button data-math-save type="button" className="min-h-11 w-full rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50" disabled={savingKey !== null || (activeSub.revision ? !revisionReady : (!selectedLevel && !requestRevision) || (requestRevision && !fbText.trim()))} onClick={() => rate(activeSub, activeSub.competency_id, selectedLevel)}>{savingKey ? 'Saving…' : activeSub.revision ? 'Acknowledge & continue' : 'Save review and continue'}</button>
+                  <button data-math-save type="button" className="min-h-11 w-full rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50" disabled={savingKey !== null || (activeSub.revision ? !revisionReady : (!selectedLevel && !requestRevision) || (requestRevision && !fbText.trim()))} onClick={() => rate(activeSub, activeSub.competency_id, selectedLevel)}>{savingKey ? 'Saving…' : activeSub.revision ? 'Acknowledge & continue' : 'Release review and continue'}</button>
                   {activeSub.revision && <p className="text-xs text-muted-foreground">Acknowledging a coached correction adds no fluency rating. Check independence on a later task.</p>}
                   {flash && <p role="status" className="text-sm">{flash}</p>}
                 </div>

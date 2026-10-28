@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 1,
+  "title": "Notice, question, predict",
+  "target": "Use observations to make a prediction that can be tested.",
+  "criteria": [
+    "Separate stated evidence from unsupported claims.",
+    "Extend a position pattern and state an assumption.",
+    "Name an observation that could test the prediction."
+  ],
+  "source_sha256": "cc62e524e909a32baae9d70e3adf588cd9f1dbadcb4d63e478d3b561cdfe8f29",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.447Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A report states that repeated observations show an object getting closer, but its future path is uncertain. Which claim is supported?",
+      "options": [
+        "Its speed must be constant forever.",
+        "It will certainly collide with Earth.",
+        "Its distance is decreasing during the observed interval.",
+        "Its mass is known exactly."
+      ],
+      "correct_index": 2,
+      "guide": "Approach is stated evidence; impact, constant speed, and mass are not established.",
+      "target_slug": "u1.anchor-know-unknow",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A table lists measured positions at 0, 2, and 4 s. A position at 6 s was calculated by extending the pattern. Which is a prediction?",
+      "options": [
+        "The unit second.",
+        "Every position is a measurement.",
+        "The recorded position at 0 s only.",
+        "The calculated position at 6 s."
+      ],
+      "correct_index": 3,
+      "guide": "A calculated future value is distinct from an observation.",
+      "target_slug": "u1.anchor-know-unknow",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rover is observed at 4, 9, and 14 m at 0, 1, and 2 s. If the same constant-velocity pattern continues, where will it be at 4 s?",
+      "options": [
+        "24 m",
+        "28 m",
+        "20 m",
+        "19 m"
+      ],
+      "correct_index": 0,
+      "guide": "The pattern is +5 m each second; x(4) = 4 + 5(4) = 24 m.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A robot is at 18, 14, and 10 m at 0, 2, and 4 s. Under a constant-velocity continuation, what is its position at 6 s?",
+      "options": [
+        "2 m",
+        "−2 m",
+        "14 m",
+        "6 m"
+      ],
+      "correct_index": 3,
+      "guide": "Each 2 s interval changes position by −4 m; next position is 6 m.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A model predicts 24 m at 4 s. Which new observation most directly tests that prediction?",
+      "options": [
+        "The rover’s paint color.",
+        "A measured position and uncertainty at 4 s.",
+        "A repeated statement of the prediction.",
+        "A photograph with no scale or time."
+      ],
+      "correct_index": 1,
+      "guide": "A matched timed position provides a comparison with the model.",
+      "target_slug": "u1.anchor-know-unknow",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A constant-velocity model predicts 30 m, but a calibrated measurement is 26 ± 1 m at the same time. What should happen next?",
+      "options": [
+        "Conclude that the object must have vanished.",
+        "Declare the prediction confirmed exactly.",
+        "Check the motion assumptions and inputs because the prediction lies outside the measured interval.",
+        "Ignore the measurement because models cannot be revised."
+      ],
+      "correct_index": 2,
+      "guide": "The interval is 25–27 m; 30 m disagrees, but the mismatch alone does not identify the cause.",
+      "target_slug": "u1.anchor-know-unknow",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A report states that repeated observations show an object getting closer, but its future path is uncertain. Which claim is supported?",
+      "options": [
+        "It will certainly collide with Earth.",
+        "Its speed must be constant forever.",
+        "Its mass is known exactly.",
+        "Its distance is decreasing during the observed interval."
+      ],
+      "correct_index": 3,
+      "guide": "Approach is stated evidence; impact, constant speed, and mass are not established.",
+      "target_slug": "u1.anchor-know-unknow",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A table lists measured positions at 0, 2, and 4 s. A position at 6 s was calculated by extending the pattern. Which is a prediction?",
+      "options": [
+        "The calculated position at 6 s.",
+        "The recorded position at 0 s only.",
+        "The unit second.",
+        "Every position is a measurement."
+      ],
+      "correct_index": 0,
+      "guide": "A calculated future value is distinct from an observation.",
+      "target_slug": "u1.anchor-know-unknow",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rover is observed at 4, 9, and 14 m at 0, 1, and 2 s. If the same constant-velocity pattern continues, where will it be at 4 s?",
+      "options": [
+        "24 m",
+        "19 m",
+        "20 m",
+        "28 m"
+      ],
+      "correct_index": 0,
+      "guide": "The pattern is +5 m each second; x(4) = 4 + 5(4) = 24 m.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A robot is at 18, 14, and 10 m at 0, 2, and 4 s. Under a constant-velocity continuation, what is its position at 6 s?",
+      "options": [
+        "2 m",
+        "−2 m",
+        "14 m",
+        "6 m"
+      ],
+      "correct_index": 3,
+      "guide": "Each 2 s interval changes position by −4 m; next position is 6 m.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A model predicts 24 m at 4 s. Which new observation most directly tests that prediction?",
+      "options": [
+        "A photograph with no scale or time.",
+        "A measured position and uncertainty at 4 s.",
+        "The rover’s paint color.",
+        "A repeated statement of the prediction."
+      ],
+      "correct_index": 1,
+      "guide": "A matched timed position provides a comparison with the model.",
+      "target_slug": "u1.anchor-know-unknow",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A constant-velocity model predicts 30 m, but a calibrated measurement is 26 ± 1 m at the same time. What should happen next?",
+      "options": [
+        "Declare the prediction confirmed exactly.",
+        "Conclude that the object must have vanished.",
+        "Check the motion assumptions and inputs because the prediction lies outside the measured interval.",
+        "Ignore the measurement because models cannot be revised."
+      ],
+      "correct_index": 2,
+      "guide": "The interval is 25–27 m; 30 m disagrees, but the mismatch alone does not identify the cause.",
+      "target_slug": "u1.anchor-know-unknow",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

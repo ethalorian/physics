@@ -12,21 +12,36 @@ for(const deck of ledger.decks){
  assert.deepEqual(deck.questions.map(q=>q.number),questions.map(q=>q.number));
  const html=fs.readFileSync(path.join('resources/worksheet-decks/generated',deck.file),'utf8');
  const slides=[...html.matchAll(/<section class="slide[\s\S]*?<\/section>/g)].map(s=>s[0]);assert.equal(slides.length,m.slides);
- assert.ok(html.includes('data-walk-kind='));assert.ok(html.includes('Choose worksheet problem'));
+ assert.ok(html.includes('data-phase="connect"'));assert.ok(html.includes('Words to get started'));assert.ok(html.includes('Choose worksheet problem'));
  assert.ok(fs.existsSync(`public/worksheets/unit-${deck.unit}/${deck.track}/day-${String(deck.day).padStart(2,'0')}.pdf`));
  for(const [i,q] of questions.entries()){
-  const entry=deck.questions[i];assert.equal(entry.prompt,q.prompt);assert.equal(entry.answer,q.answer);
+  const entry=deck.questions[i];assert.equal(entry.prompt,q.prompt);assert.equal(entry.answer,q.answer);assert.equal(entry.projectedAnswer,q.answer);assert.deepEqual(entry.visual,q.visual||null);
   const range=slides.slice(entry.start,entry.end+1);const prompts=range.filter(s=>s.includes('data-solution="false"'));const answers=range.filter(s=>s.includes('data-solution="true"'));
   assert.ok(answers.length,deck.file+' Q'+q.number+' answer missing');
-  const body=s=>(s.match(/<div class="content">([\s\S]*)<\/div><footer>/)||[])[1]||'';
+  const body=s=>(s.match(/<div class="content">([\s\S]*)<footer>/)||[])[1]||'';
+  if(q.worked)for(const part of q.worked.split(/<br\s*\/?>|;\s+|(?<=[.!?])\s+(?=[A-Z“(])/).filter(Boolean))assert.ok(norm(prompts.map(body).join('')).includes(norm(part)),deck.file+' worked example '+q.number);
   for(const part of q.prompt.split(/<br\s*\/?>|(?<=[.!?;])\s+/).filter(Boolean))assert.ok(norm(prompts.map(body).join('')).includes(norm(part)),deck.file+' prompt '+q.number+': '+part);
   for(const part of (entry.projectedAnswer||q.answer).split(/<br\s*\/?>|;\s+|(?<=[.!?])\s+(?=[A-Z“(])/).filter(Boolean))assert.ok(answers.some(s=>norm(body(s)).includes(norm(part))),deck.file+' answer '+q.number+': '+part);
   checked++;
  }
 }
-assert.equal(checked,2124);assert.deepEqual(fs.readdirSync('public/decks/worksheet-guided').sort(),['motion.js','runtime.js','solutions.css','style.css']);
+assert.equal(checked,2124);const presets=read('src/data/worksheet-deck-activities.json');assert.equal(presets.length,1862);for(const a of presets){const d=ledger.decks.find(d=>'unit-'+d.unit===a.unitId&&d.day===a.day&&d.track===a.track);assert.ok(d.questions.some(q=>q.promptSlide+1===a.slide));assert.ok(a.prompt.length<=1000);assert.ok(a.id.startsWith('worksheet-v2-'));}assert.deepEqual(fs.readdirSync('public/decks/worksheet-guided').sort(),['motion.js','runtime.js','solutions.css','style.css']);
 // Exercise the real authorization wrapper, mocking only identity providers.
 (async()=>{
+ const {diagram}=await import('../src/data/deck-sources/worksheet-guided/diagrams.mjs');
+ const {guidance}=await import('../src/data/deck-sources/worksheet-guided/guidance.mjs');
+ const thermalReview=source.find(d=>d.unit===5&&d.day===2);assert.equal(guidance(thermalReview,thermalReview.honors[0]).family,'energy');
+ const electricReview=source.find(d=>d.unit===7&&d.day===10);assert.equal(guidance(electricReview,electricReview.honors[6]).family,'graph');
+ for(const day of source)for(const track of ['cpa','honors'])for(const q of day[track]){
+  if(q.visual?.kind!=='graph')continue;
+  const svg=diagram(q.visual);assert.ok(!/NaN|Infinity/.test(svg));
+  for(const axis of ['x','y']){
+   const ticks=[...svg.matchAll(new RegExp('<text data-axis="'+axis+'"[^>]*>([^<]+)</text>','g'))].map(m=>Number(m[1]));
+   assert.ok(ticks.length>=2);assert.ok(ticks.every((v,i)=>i===0||v>ticks[i-1]),'Rounded duplicate axis values '+day.unit+'/'+day.day+'/'+track+'/'+q.number);
+   assert.ok(Math.abs(ticks[0]-(q.visual[axis+'min']||0))<1e-8);
+  }
+ }
+
  const out=fs.mkdtempSync('/private/tmp/worksheet-deck-route-');
  const mocks={
   '@/lib/auth':'export const auth=async()=>globalThis.testSession',

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 11,
+  "title": "Thermal effects and energy budgets",
+  "target": "Estimate a temperature change only after stating how much energy enters the material.",
+  "criteria": [
+    "Apply an explicit absorbed-energy fraction.",
+    "Use mass and specific heat in a temperature estimate.",
+    "State the no-phase-change and no-loss assumptions."
+  ],
+  "source_sha256": "e3966974800d34a248be025f8faffcd761ad6bb41d5ebdd91791ea51ad0aa65c",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.538Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A source releases 2,000 J. A model says a nearby sample absorbs 15%. What absorbed energy should be used in its heating calculation?",
+      "options": [
+        "2,000 J",
+        "300 J",
+        "30,000 J",
+        "15 J"
+      ],
+      "correct_index": 1,
+      "guide": "Q_abs = 0.15 × 2000 = 300 J.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two samples receive fractions 0.08 and 0.12 of the same 5,000 J source energy. How much do they absorb respectively?",
+      "options": [
+        "625 J and 417 J.",
+        "5,000 J each.",
+        "40 J and 60 J.",
+        "400 J and 600 J."
+      ],
+      "correct_index": 3,
+      "guide": "Multiply the source energy by each assigned fraction; do not treat source energy as entirely absorbed by each.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 0.60 kg sample with c = 500 J/(kg·°C) absorbs 900 J with no loss or phase change. What is ΔT?",
+      "options": [
+        "750°C",
+        "0.33°C",
+        "3.0°C",
+        "300°C"
+      ],
+      "correct_index": 2,
+      "guide": "ΔT = Q/(mc) = 900/(0.60 × 500) = 3°C.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2.0 kg sample with c = 750 J/(kg·°C) must warm by 4°C. What absorbed energy is needed in the no-loss model?",
+      "options": [
+        "1,500 J",
+        "6,000 J",
+        "375 J",
+        "3,000 J"
+      ],
+      "correct_index": 1,
+      "guide": "Q = mcΔT = 2 × 750 × 4 = 6,000 J.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculation uses Q = mcΔT across a temperature interval where the sample melts. What is missing?",
+      "options": [
+        "A latent-energy term for the phase-change stage.",
+        "No term can ever be missing.",
+        "A rule that temperature must rise during every phase change.",
+        "A conversion of mass into current."
+      ],
+      "correct_index": 0,
+      "guide": "The simple warming relation does not account for latent energy during a transition.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A no-loss temperature prediction is higher than an observed rise. Which possibility should be checked before rejecting the data?",
+      "options": [
+        "Some assigned energy escaped or went to other energy changes.",
+        "The observed value must be replaced with the prediction.",
+        "The energy difference proves conservation fails.",
+        "Specific heat is never relevant."
+      ],
+      "correct_index": 0,
+      "guide": "Losses, containers, phase changes, and model assumptions can affect the temperature rise.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A source releases 2,000 J. A model says a nearby sample absorbs 15%. What absorbed energy should be used in its heating calculation?",
+      "options": [
+        "300 J",
+        "2,000 J",
+        "15 J",
+        "30,000 J"
+      ],
+      "correct_index": 0,
+      "guide": "Q_abs = 0.15 × 2000 = 300 J.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two samples receive fractions 0.08 and 0.12 of the same 5,000 J source energy. How much do they absorb respectively?",
+      "options": [
+        "40 J and 60 J.",
+        "400 J and 600 J.",
+        "625 J and 417 J.",
+        "5,000 J each."
+      ],
+      "correct_index": 1,
+      "guide": "Multiply the source energy by each assigned fraction; do not treat source energy as entirely absorbed by each.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 0.60 kg sample with c = 500 J/(kg·°C) absorbs 900 J with no loss or phase change. What is ΔT?",
+      "options": [
+        "300°C",
+        "750°C",
+        "3.0°C",
+        "0.33°C"
+      ],
+      "correct_index": 2,
+      "guide": "ΔT = Q/(mc) = 900/(0.60 × 500) = 3°C.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2.0 kg sample with c = 750 J/(kg·°C) must warm by 4°C. What absorbed energy is needed in the no-loss model?",
+      "options": [
+        "1,500 J",
+        "375 J",
+        "6,000 J",
+        "3,000 J"
+      ],
+      "correct_index": 2,
+      "guide": "Q = mcΔT = 2 × 750 × 4 = 6,000 J.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculation uses Q = mcΔT across a temperature interval where the sample melts. What is missing?",
+      "options": [
+        "A rule that temperature must rise during every phase change.",
+        "No term can ever be missing.",
+        "A conversion of mass into current.",
+        "A latent-energy term for the phase-change stage."
+      ],
+      "correct_index": 3,
+      "guide": "The simple warming relation does not account for latent energy during a transition.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A no-loss temperature prediction is higher than an observed rise. Which possibility should be checked before rejecting the data?",
+      "options": [
+        "The observed value must be replaced with the prediction.",
+        "Some assigned energy escaped or went to other energy changes.",
+        "Specific heat is never relevant.",
+        "The energy difference proves conservation fails."
+      ],
+      "correct_index": 1,
+      "guide": "Losses, containers, phase changes, and model assumptions can affect the temperature rise.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

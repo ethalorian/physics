@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 16,
+  "title": "Magnetosphere and changing fields",
+  "target": "Use evidence to distinguish a magnetic-field model from an unsupported space-weather claim.",
+  "criteria": [
+    "Connect changing magnetic fields with induced electric effects.",
+    "Distinguish an assumption from an observation.",
+    "Name evidence required for a space-weather prediction."
+  ],
+  "source_sha256": "998bb3d09369bed9bc3a7a4613e6adcb011edcf35e1b3483ca96f92e00ce6db0",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.570Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A changing external magnetic field passes through a conducting loop. Which mechanism could produce an electrical effect?",
+      "options": [
+        "Magnetic fields are identical to gravitational fields.",
+        "Constant magnetic flux always consumes charge.",
+        "Changing flux can induce emf in the loop.",
+        "The loop must directly touch the source."
+      ],
+      "correct_index": 2,
+      "guide": "Faraday induction can link changing magnetic conditions to electrical effects.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "In a coil model, tripling the flux-change rate triples induced emf when other conditions are fixed. If the original magnitude is 1.5 V, what is the new magnitude?",
+      "options": [
+        "2.25 V",
+        "0.50 V",
+        "1.5 V",
+        "4.5 V"
+      ],
+      "correct_index": 3,
+      "guide": "Emf magnitude is proportional to flux-change rate for the same coil.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A model assumes an Earth field is uniform across a loop. Which observation would directly challenge that assumption?",
+      "options": [
+        "The model uses the word uniform.",
+        "Measurements show substantially different field strengths at opposite sides of the loop.",
+        "The loop has a familiar shape.",
+        "One measurement was taken somewhere else last year."
+      ],
+      "correct_index": 1,
+      "guide": "Spatial variation across the actual modeled loop challenges uniformity there.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A report says “a voltage pulse was measured” and “the pulse was caused by a particular space event.” Which distinction is correct?",
+      "options": [
+        "Neither could ever be tested.",
+        "A measured voltage uniquely identifies any remote cause.",
+        "Both statements are automatically direct observations.",
+        "The measured pulse is evidence; the proposed cause needs additional supporting evidence."
+      ],
+      "correct_index": 3,
+      "guide": "An electrical observation does not by itself establish a unique external cause.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Which data would help assess an induction-based space-weather prediction for a long circuit?",
+      "options": [
+        "Time-varying magnetic measurements plus the circuit geometry and electrical properties.",
+        "Only a dramatic headline.",
+        "Only a single constant field value with no time information.",
+        "Only the circuit’s paint color."
+      ],
+      "correct_index": 0,
+      "guide": "Induction depends on change, geometry, and response of the receiving system.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A simplified model predicts a voltage pulse but omits shielding and circuit response. What claim is justified?",
+      "options": [
+        "It suggests a possible induced effect, but cannot by itself determine actual equipment damage.",
+        "All equipment will certainly fail.",
+        "Model uncertainty proves no field change occurred.",
+        "All equipment will certainly be safe."
+      ],
+      "correct_index": 0,
+      "guide": "Real consequences require coupling, protection, and device-response evidence beyond the simplified prediction.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A changing external magnetic field passes through a conducting loop. Which mechanism could produce an electrical effect?",
+      "options": [
+        "Magnetic fields are identical to gravitational fields.",
+        "Changing flux can induce emf in the loop.",
+        "Constant magnetic flux always consumes charge.",
+        "The loop must directly touch the source."
+      ],
+      "correct_index": 1,
+      "guide": "Faraday induction can link changing magnetic conditions to electrical effects.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "In a coil model, tripling the flux-change rate triples induced emf when other conditions are fixed. If the original magnitude is 1.5 V, what is the new magnitude?",
+      "options": [
+        "2.25 V",
+        "0.50 V",
+        "4.5 V",
+        "1.5 V"
+      ],
+      "correct_index": 2,
+      "guide": "Emf magnitude is proportional to flux-change rate for the same coil.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A model assumes an Earth field is uniform across a loop. Which observation would directly challenge that assumption?",
+      "options": [
+        "The loop has a familiar shape.",
+        "The model uses the word uniform.",
+        "One measurement was taken somewhere else last year.",
+        "Measurements show substantially different field strengths at opposite sides of the loop."
+      ],
+      "correct_index": 3,
+      "guide": "Spatial variation across the actual modeled loop challenges uniformity there.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A report says “a voltage pulse was measured” and “the pulse was caused by a particular space event.” Which distinction is correct?",
+      "options": [
+        "The measured pulse is evidence; the proposed cause needs additional supporting evidence.",
+        "Neither could ever be tested.",
+        "Both statements are automatically direct observations.",
+        "A measured voltage uniquely identifies any remote cause."
+      ],
+      "correct_index": 0,
+      "guide": "An electrical observation does not by itself establish a unique external cause.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Which data would help assess an induction-based space-weather prediction for a long circuit?",
+      "options": [
+        "Only a single constant field value with no time information.",
+        "Time-varying magnetic measurements plus the circuit geometry and electrical properties.",
+        "Only a dramatic headline.",
+        "Only the circuit’s paint color."
+      ],
+      "correct_index": 1,
+      "guide": "Induction depends on change, geometry, and response of the receiving system.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A simplified model predicts a voltage pulse but omits shielding and circuit response. What claim is justified?",
+      "options": [
+        "It suggests a possible induced effect, but cannot by itself determine actual equipment damage.",
+        "All equipment will certainly fail.",
+        "Model uncertainty proves no field change occurred.",
+        "All equipment will certainly be safe."
+      ],
+      "correct_index": 0,
+      "guide": "Real consequences require coupling, protection, and device-response evidence beyond the simplified prediction.",
+      "target_slug": "u7.r3-magnetosphere-emp",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 15,
+  "title": "Timing a possible encounter",
+  "target": "Separate orbital period from an encounter time.",
+  "criteria": [
+    "Use a clearly stated period and time reference.",
+    "Check positions of both bodies at the same time.",
+    "Explain why geometry and uncertainty matter."
+  ],
+  "source_sha256": "536495349031518483e21dcc8b6ca3857a55491291de6914d0de81f9c71e88f3",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.498Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A toy orbit repeats every 6 years, with an object at marker Q in year 3. When are its next two returns?",
+      "options": [
+        "Years 9 and 15.",
+        "Years 6 and 12.",
+        "Years 12 and 18.",
+        "Years 3 and 6."
+      ],
+      "correct_index": 0,
+      "guide": "Add the period to the stated reference year each time.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two orbit predictions quote the same period but use different starting epochs. What else must be matched to compare positions?",
+      "options": [
+        "Only the objects’ names.",
+        "Only the distance unit.",
+        "Orbital phase or position at a common time reference.",
+        "Only the period’s numerical value."
+      ],
+      "correct_index": 2,
+      "guide": "A period tells repetition duration, not where a body is at a chosen time.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two orbital paths cross geometrically. What is required for a collision at the crossing?",
+      "options": [
+        "Their periods must be different.",
+        "Both bodies must reach the same place at the same time.",
+        "One must have zero speed.",
+        "Either body reaches the crossing at any date."
+      ],
+      "correct_index": 1,
+      "guide": "A path crossing alone does not establish simultaneous occupancy.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A toy object reaches crossing C in year 10. Earth reaches C in years 9.5 and 10.5. Does this establish a collision at year 10?",
+      "options": [
+        "No; orbiting bodies can never collide.",
+        "Yes; half a year is the same instant.",
+        "Yes; a shared crossing guarantees collision.",
+        "No; the listed arrivals are not simultaneous."
+      ],
+      "correct_index": 3,
+      "guide": "Compare positions at matching times, not just shared geometry.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Why should an encounter prediction include uncertainty?",
+      "options": [
+        "Uncertainty guarantees collision.",
+        "Small initial-position or velocity uncertainties can affect later predicted positions.",
+        "Every orbital calculation is meaningless.",
+        "A period is always exact."
+      ],
+      "correct_index": 1,
+      "guide": "Predictions depend on imperfect measurements and models.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which evidence is most useful beyond period for assessing a close approach?",
+      "options": [
+        "Only the year of discovery.",
+        "Only a photograph’s color palette.",
+        "Orbit orientation, size/shape, phase, and uncertainty at the same epoch.",
+        "Only a label saying near-Earth."
+      ],
+      "correct_index": 2,
+      "guide": "Geometry and synchronized position estimates are needed to evaluate separation.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A toy orbit repeats every 6 years, with an object at marker Q in year 3. When are its next two returns?",
+      "options": [
+        "Years 12 and 18.",
+        "Years 9 and 15.",
+        "Years 3 and 6.",
+        "Years 6 and 12."
+      ],
+      "correct_index": 1,
+      "guide": "Add the period to the stated reference year each time.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two orbit predictions quote the same period but use different starting epochs. What else must be matched to compare positions?",
+      "options": [
+        "Only the objects’ names.",
+        "Only the distance unit.",
+        "Only the period’s numerical value.",
+        "Orbital phase or position at a common time reference."
+      ],
+      "correct_index": 3,
+      "guide": "A period tells repetition duration, not where a body is at a chosen time.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two orbital paths cross geometrically. What is required for a collision at the crossing?",
+      "options": [
+        "One must have zero speed.",
+        "Either body reaches the crossing at any date.",
+        "Both bodies must reach the same place at the same time.",
+        "Their periods must be different."
+      ],
+      "correct_index": 2,
+      "guide": "A path crossing alone does not establish simultaneous occupancy.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A toy object reaches crossing C in year 10. Earth reaches C in years 9.5 and 10.5. Does this establish a collision at year 10?",
+      "options": [
+        "No; the listed arrivals are not simultaneous.",
+        "Yes; half a year is the same instant.",
+        "No; orbiting bodies can never collide.",
+        "Yes; a shared crossing guarantees collision."
+      ],
+      "correct_index": 0,
+      "guide": "Compare positions at matching times, not just shared geometry.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Why should an encounter prediction include uncertainty?",
+      "options": [
+        "A period is always exact.",
+        "Uncertainty guarantees collision.",
+        "Every orbital calculation is meaningless.",
+        "Small initial-position or velocity uncertainties can affect later predicted positions."
+      ],
+      "correct_index": 3,
+      "guide": "Predictions depend on imperfect measurements and models.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which evidence is most useful beyond period for assessing a close approach?",
+      "options": [
+        "Only a photograph’s color palette.",
+        "Only a label saying near-Earth.",
+        "Orbit orientation, size/shape, phase, and uncertainty at the same epoch.",
+        "Only the year of discovery."
+      ],
+      "correct_index": 2,
+      "guide": "Geometry and synchronized position estimates are needed to evaluate separation.",
+      "target_slug": "u2.r4-closest-approach",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

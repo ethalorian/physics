@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { CalendarDays, ChevronDown, Table2, ArrowLeft, BookOpen, ListOrdered, MonitorPlay } from 'lucide-react'
 import { assessmentCenterHref, type AssessmentView } from '@/lib/assessment-center'
 import styles from '@/app/admin/control-room/student-work.module.css'
@@ -22,6 +23,11 @@ interface Props {
 }
 
 export default function StudentWorkHeader({ view, search, classId, classLabel, classes, teachers, teacher, onTeacherChange, unitId, units, program, onClassChange, onUnitChange, onNavigate }: Props) {
+  const [pendingCount,setPendingCount] = useState<number|null>(null)
+  useEffect(()=>{setPendingCount(null);const receive=(e:Event)=>{const d=(e as CustomEvent).detail;if(d.classId===classId&&d.unitId===unitId)setPendingCount(d.count)};window.addEventListener('results-review-count',receive);return()=>window.removeEventListener('results-review-count',receive)},[classId,unitId])
+  const resultParams = new URLSearchParams(search)
+  const resultTab = view === 'mastery' ? resultParams.get('masteryKind') === 'math' ? 'math' : 'targets' : resultParams.get('resultView') || 'overview'
+  const resultHref = (tab: string) => { const p = new URLSearchParams(href(tab === 'targets' || tab === 'math' ? 'mastery' : 'results').split('?')[1]); p.set('resultView', tab); p.delete('resultKind'); p.delete('resultReviewAssignment'); p.delete('resultAssignment'); if (tab === 'math') p.set('masteryKind','math'); else p.delete('masteryKind'); return '/admin/control-room?' + p }
   const resultsHome = view === 'results' || view === 'mastery'
   const sourceDetail = new URLSearchParams(search).get('fromResults') === '1'
   const plan = ['plan', 'choices', 'guide', 'access', 'tasks'].includes(view)
@@ -54,6 +60,7 @@ export default function StudentWorkHeader({ view, search, classId, classLabel, c
       </div>
       <details className={styles.tools}><summary>Tools <ChevronDown size={15} /></summary><div>
         <Link href={href('guide')}><BookOpen size={15} /> Course guide</Link>
+        <Link href={`/admin/worksheets?${context}`}>Worksheets & paired quizzes</Link>
         <Link href={`/admin/quizzes?${context}`}>Create or manage quizzes</Link>
         <Link href={`/admin/readings?view=syllabus&course_id=${classId ?? ''}`}>Reading plans & linked activities</Link>
         <Link href={`/admin/interactive-assignments?${context}`}>Interactive assignment settings</Link>
@@ -72,8 +79,8 @@ export default function StudentWorkHeader({ view, search, classId, classLabel, c
     {(plan) && <nav className={styles.planNavigation} aria-label="Plan view"><Link href={href('plan')} aria-current={view === 'plan' ? 'page' : undefined} onClick={onNavigate}>Unit sequence</Link>{(program === 'physics' || view === 'choices') && <Link href={href('choices')} aria-current={view === 'choices' ? 'page' : undefined} onClick={onNavigate}>Student choice</Link>}<Link href={href('guide')} aria-current={view === 'guide' ? 'page' : undefined} onClick={onNavigate}><BookOpen size={16} /> Course guide</Link><Link href={href('access')} aria-current={view === 'access' ? 'page' : undefined} onClick={onNavigate}>Student access</Link><Link href={href('tasks')} aria-current={view === 'tasks' ? 'page' : undefined} onClick={onNavigate}>Vocabulary tasks</Link></nav>}
     {calendar && <nav className={styles.planNavigation} aria-label="Calendar view"><Link href={href('calendar')} aria-current={view === 'calendar' ? 'page' : undefined}>Teaching schedule</Link><Link href={href('pacing')} aria-current={view === 'pacing' ? 'page' : undefined}>Pacing &amp; meeting pattern</Link><Link href={href('assignments')} aria-current={view === 'assignments' ? 'page' : undefined}>Assigned work &amp; deadlines</Link></nav>}
     {!planning && !live && view !== 'assignments' && <div className={styles.resultsNavigation}>
-      {resultsHome ? <nav aria-label="Results view"><Link data-quiz-leave data-reading-leave href={href('results')} aria-current={view === 'results' ? 'page' : undefined} scroll={false} onClick={onNavigate}>Gradebook</Link><Link data-quiz-leave data-reading-leave href={href('mastery')} aria-current={view === 'mastery' ? 'page' : undefined} scroll={false} onClick={onNavigate}>Mastery</Link></nav> : <div className={styles.resultsTrail}><Link data-quiz-leave data-reading-leave href={href('results')} scroll={false} onClick={onNavigate}><ArrowLeft size={15} /> Gradebook</Link><span>{labels[view]}</span><Link data-quiz-leave data-reading-leave href={href('mastery')} scroll={false} onClick={onNavigate}>Mastery</Link></div>}
-      <div className="flex flex-wrap items-center gap-3">{classId && <Link className="inline-flex min-h-11 items-center text-sm text-primary" href={studentLessonHref(classId, new URLSearchParams(search).get('resultStudent') ?? '', '', unitId)}>View student lesson</Link>}<details className={styles.tools}><summary>Activity tools <ChevronDown size={15} /></summary><div>{evidenceViews.map(([id, label]) => <Link key={id} data-quiz-leave data-reading-leave href={href(id)} scroll={false} onClick={onNavigate}>{label}</Link>)}</div></details></div>
+      {resultsHome ? <nav aria-label="Results view">{[['overview','Overview'],['gradebook','Gradebook'],['targets','Learning targets'],['math','Math Spine'],['review','Review']].map(([tab,label]) => <Link key={tab} data-quiz-leave data-reading-leave href={resultHref(tab)} aria-current={resultTab === tab || tab === 'gradebook' && resultTab === 'entry' ? 'page' : undefined} scroll={false} onClick={onNavigate}>{label}{tab==='review'&&pendingCount!==null&&pendingCount>0&&<span className={styles.reviewCount}>{pendingCount}</span>}</Link>)}</nav> : <div className={styles.resultsTrail}><Link data-quiz-leave data-reading-leave href={href('results')} scroll={false} onClick={onNavigate}><ArrowLeft size={15} /> Gradebook</Link><span>{labels[view]}</span><Link data-quiz-leave data-reading-leave href={href('mastery')} scroll={false} onClick={onNavigate}>Mastery</Link></div>}
+      <div className="flex flex-wrap items-center gap-3">{classId && <Link className="inline-flex min-h-11 items-center text-sm text-primary" href={studentLessonHref(classId, new URLSearchParams(search).get('resultStudent') ?? '', '', unitId)}>View student lesson</Link>}<details className={styles.tools}><summary>Activity tools <ChevronDown size={15} /></summary><div><Link href={`/admin/worksheets?${context}`}>Worksheets & paired quizzes</Link>{evidenceViews.map(([id, label]) => <Link key={id} data-quiz-leave data-reading-leave href={href(id)} scroll={false} onClick={onNavigate}>{label}</Link>)}</div></details></div>
     </div>}
   </header>
 }

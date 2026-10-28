@@ -1,0 +1,11 @@
+/* Presentation only: slides stay mounted, preserving their interactive state. */
+@keyframes foundation-slide-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media screen and (prefers-reduced-motion: no-preference) {
+  deck-stage > section[data-deck-active] {
+    animation: foundation-slide-fade 260ms ease-out;
+  }
+}

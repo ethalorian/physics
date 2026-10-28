@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 6,
+  "title": "Work-energy lab",
+  "target": "Compare measured work with kinetic-energy change.",
+  "criteria": [
+    "Find work from force-displacement area.",
+    "Calculate kinetic energy from measured mass and speed.",
+    "Discuss disagreements without inventing measurements."
+  ],
+  "source_sha256": "24e7ff0a2f6ea9da4490f86a69bf190c42200f25fb95e1c980eea016c9e23bf4",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.520Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "An example force-displacement graph is a rectangle at +6 N from x = 0 to 2.5 m. What work does its area represent?",
+      "options": [
+        "+2.4 J",
+        "+8.5 J",
+        "+30 J",
+        "+15 J"
+      ],
+      "correct_index": 3,
+      "guide": "Rectangle area FΔx = 6 × 2.5 = 15 J.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An example force rises linearly from 0 to 12 N over 3 m. What is work under that force-displacement line?",
+      "options": [
+        "36 J",
+        "4 J",
+        "18 J",
+        "9 J"
+      ],
+      "correct_index": 2,
+      "guide": "Triangle area = ½ × 3 × 12 = 18 J.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A supplied trial uses mass 0.80 kg and speed 5.0 m/s. What kinetic energy follows?",
+      "options": [
+        "4 J",
+        "2 J",
+        "20 J",
+        "10 J"
+      ],
+      "correct_index": 3,
+      "guide": "K = ½ × 0.80 × 25 = 10 J. These are supplied data, not a claim of student measurement.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A supplied 1.5 kg cart slows from 4 to 2 m/s. What is its kinetic-energy change?",
+      "options": [
+        "−15 J",
+        "−3 J",
+        "−9 J",
+        "+9 J"
+      ],
+      "correct_index": 2,
+      "guide": "ΔK = ½ × 1.5 × (4 − 16) = −9 J.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Measured net work and kinetic-energy change disagree beyond estimated uncertainty. Which next step is appropriate?",
+      "options": [
+        "Ignore which object was measured.",
+        "Check force sign, sensor calibration, all forces, and matching start/end intervals.",
+        "Replace measured values with model predictions.",
+        "Conclude energy was created without checking."
+      ],
+      "correct_index": 1,
+      "guide": "A valid comparison requires consistent system, intervals, and measurements.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A force sensor records work from x = 0 to 2 m, but velocities are measured at x = 1 and 3 m. What is wrong with the comparison?",
+      "options": [
+        "Work and ΔK refer to different motion intervals.",
+        "Work-energy requires a different mass at every point.",
+        "No correction is needed in any setup.",
+        "The speed readings must be identical."
+      ],
+      "correct_index": 0,
+      "guide": "The theorem compares net work and kinetic-energy change over the same start and end states.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "An example force-displacement graph is a rectangle at +6 N from x = 0 to 2.5 m. What work does its area represent?",
+      "options": [
+        "+15 J",
+        "+8.5 J",
+        "+30 J",
+        "+2.4 J"
+      ],
+      "correct_index": 0,
+      "guide": "Rectangle area FΔx = 6 × 2.5 = 15 J.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An example force rises linearly from 0 to 12 N over 3 m. What is work under that force-displacement line?",
+      "options": [
+        "36 J",
+        "4 J",
+        "9 J",
+        "18 J"
+      ],
+      "correct_index": 3,
+      "guide": "Triangle area = ½ × 3 × 12 = 18 J.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A supplied trial uses mass 0.80 kg and speed 5.0 m/s. What kinetic energy follows?",
+      "options": [
+        "10 J",
+        "2 J",
+        "20 J",
+        "4 J"
+      ],
+      "correct_index": 0,
+      "guide": "K = ½ × 0.80 × 25 = 10 J. These are supplied data, not a claim of student measurement.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A supplied 1.5 kg cart slows from 4 to 2 m/s. What is its kinetic-energy change?",
+      "options": [
+        "+9 J",
+        "−9 J",
+        "−15 J",
+        "−3 J"
+      ],
+      "correct_index": 1,
+      "guide": "ΔK = ½ × 1.5 × (4 − 16) = −9 J.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Measured net work and kinetic-energy change disagree beyond estimated uncertainty. Which next step is appropriate?",
+      "options": [
+        "Conclude energy was created without checking.",
+        "Ignore which object was measured.",
+        "Replace measured values with model predictions.",
+        "Check force sign, sensor calibration, all forces, and matching start/end intervals."
+      ],
+      "correct_index": 3,
+      "guide": "A valid comparison requires consistent system, intervals, and measurements.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A force sensor records work from x = 0 to 2 m, but velocities are measured at x = 1 and 3 m. What is wrong with the comparison?",
+      "options": [
+        "No correction is needed in any setup.",
+        "The speed readings must be identical.",
+        "Work and ΔK refer to different motion intervals.",
+        "Work-energy requires a different mass at every point."
+      ],
+      "correct_index": 2,
+      "guide": "The theorem compares net work and kinetic-energy change over the same start and end states.",
+      "target_slug": "u4.s2-vernier-ke-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

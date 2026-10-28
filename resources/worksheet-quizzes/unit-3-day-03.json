@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 3,
+  "title": "Impulse changes momentum",
+  "target": "Connect force over time to momentum change.",
+  "criteria": [
+    "Calculate impulse from force and duration.",
+    "Match impulse direction to momentum change.",
+    "Use impulse to find a final velocity."
+  ],
+  "source_sha256": "02954f066339b801f6d23c768b128b971178bf59210a9a9de29df075d5a238a3",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.503Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "An average net force of 8 N acts for 0.75 s. What is impulse magnitude?",
+      "options": [
+        "10.67 N·s",
+        "8.75 N·s",
+        "6 N·s",
+        "0.094 N·s"
+      ],
+      "correct_index": 2,
+      "guide": "J = F_avg Δt = 8 × 0.75 = 6 N·s.",
+      "target_slug": "u3.k2-impulse-theorem",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A net impulse of 12 N·s acts over 3 s. What is average net force magnitude?",
+      "options": [
+        "15 N",
+        "9 N",
+        "36 N",
+        "4 N"
+      ],
+      "correct_index": 3,
+      "guide": "F_avg = J/Δt = 12/3 = 4 N.",
+      "target_slug": "u3.k2-impulse-theorem",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Take right as positive. Momentum changes from +5 to −3 kg·m/s. What is impulse?",
+      "options": [
+        "−2 N·s",
+        "+8 N·s",
+        "−8 N·s",
+        "+2 N·s"
+      ],
+      "correct_index": 2,
+      "guide": "J = p_f − p_i = −3 − 5 = −8 N·s.",
+      "target_slug": "u3.k2-impulse-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart moving left receives a rightward net impulse too small to reverse it. What happens?",
+      "options": [
+        "Its momentum change points left.",
+        "Its leftward speed decreases.",
+        "Its mass becomes negative.",
+        "Its leftward speed increases."
+      ],
+      "correct_index": 1,
+      "guide": "The impulse changes momentum toward the right, reducing its initial leftward magnitude.",
+      "target_slug": "u3.k2-impulse-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 3 kg cart starts at +2 m/s and receives +9 N·s impulse. What is final velocity?",
+      "options": [
+        "+11 m/s",
+        "−1 m/s",
+        "+3 m/s",
+        "+5 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "p_i = 6; p_f = 15; v_f = 15/3 = 5 m/s.",
+      "target_slug": "u3.s1-compute-impulse",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart initially moves at +4 m/s. A net impulse of −12 N·s acts. What is final velocity?",
+      "options": [
+        "−2 m/s",
+        "−6 m/s",
+        "+2 m/s",
+        "+10 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "p_f = 8 − 12 = −4; v_f = −4/2 = −2 m/s.",
+      "target_slug": "u3.s1-compute-impulse",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "An average net force of 8 N acts for 0.75 s. What is impulse magnitude?",
+      "options": [
+        "10.67 N·s",
+        "6 N·s",
+        "0.094 N·s",
+        "8.75 N·s"
+      ],
+      "correct_index": 1,
+      "guide": "J = F_avg Δt = 8 × 0.75 = 6 N·s.",
+      "target_slug": "u3.k2-impulse-theorem",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A net impulse of 12 N·s acts over 3 s. What is average net force magnitude?",
+      "options": [
+        "15 N",
+        "36 N",
+        "4 N",
+        "9 N"
+      ],
+      "correct_index": 2,
+      "guide": "F_avg = J/Δt = 12/3 = 4 N.",
+      "target_slug": "u3.k2-impulse-theorem",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Take right as positive. Momentum changes from +5 to −3 kg·m/s. What is impulse?",
+      "options": [
+        "−2 N·s",
+        "+2 N·s",
+        "+8 N·s",
+        "−8 N·s"
+      ],
+      "correct_index": 3,
+      "guide": "J = p_f − p_i = −3 − 5 = −8 N·s.",
+      "target_slug": "u3.k2-impulse-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart moving left receives a rightward net impulse too small to reverse it. What happens?",
+      "options": [
+        "Its leftward speed decreases.",
+        "Its mass becomes negative.",
+        "Its leftward speed increases.",
+        "Its momentum change points left."
+      ],
+      "correct_index": 0,
+      "guide": "The impulse changes momentum toward the right, reducing its initial leftward magnitude.",
+      "target_slug": "u3.k2-impulse-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 3 kg cart starts at +2 m/s and receives +9 N·s impulse. What is final velocity?",
+      "options": [
+        "+11 m/s",
+        "−1 m/s",
+        "+3 m/s",
+        "+5 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "p_i = 6; p_f = 15; v_f = 15/3 = 5 m/s.",
+      "target_slug": "u3.s1-compute-impulse",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart initially moves at +4 m/s. A net impulse of −12 N·s acts. What is final velocity?",
+      "options": [
+        "−2 m/s",
+        "−6 m/s",
+        "+2 m/s",
+        "+10 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "p_f = 8 − 12 = −4; v_f = −4/2 = −2 m/s.",
+      "target_slug": "u3.s1-compute-impulse",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ]
+}

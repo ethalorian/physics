@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 13,
+  "title": "An orbit is continuous falling",
+  "target": "Explain a circular orbit with gravity and sideways motion.",
+  "criteria": [
+    "Describe orbit as free fall rather than absent gravity.",
+    "Distinguish tangent velocity from inward force.",
+    "Connect circular speed to orbital radius."
+  ],
+  "source_sha256": "a5b2a032e7683a56327e7198c25bb366df9c637792181e123cfbf3ff3c86e5cc",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.497Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Why does an ideal satellite orbit a planet?",
+      "options": [
+        "A constant outward force cancels gravity in an inertial frame.",
+        "It is beyond all gravitational influence.",
+        "Its mass vanishes in space.",
+        "It continually falls while moving sideways around the planet."
+      ],
+      "correct_index": 3,
+      "guide": "Gravity bends the path while tangential motion carries it around the planet.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A satellite follows a circular orbit at constant speed. Is it accelerating?",
+      "options": [
+        "No; gravity cannot act in orbit.",
+        "Only when an engine fires.",
+        "No; acceleration requires changing speed.",
+        "Yes; its velocity direction continually changes."
+      ],
+      "correct_index": 3,
+      "guide": "Velocity changes direction, requiring inward acceleration.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "At the top of a counterclockwise circular orbit, which pair is correct?",
+      "options": [
+        "Velocity left; gravity down toward the center.",
+        "Both vectors point left.",
+        "Velocity right; gravity up.",
+        "Velocity down; gravity left."
+      ],
+      "correct_index": 0,
+      "guide": "The tangent is left for counterclockwise motion; the center is below.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "If gravity suddenly vanished in an ideal orbit, what would happen immediately after?",
+      "options": [
+        "The object would continue along the instantaneous tangent at constant velocity.",
+        "It would fly radially outward from rest.",
+        "It would keep curving at the same rate with no force.",
+        "It would immediately stop."
+      ],
+      "correct_index": 0,
+      "guide": "Without net force, velocity remains the tangent velocity at release.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "For a given central mass, circular speed is √(GM/r). What happens if orbital radius quadruples?",
+      "options": [
+        "Speed quadruples.",
+        "Speed doubles.",
+        "Speed halves.",
+        "Speed stays fixed."
+      ],
+      "correct_index": 2,
+      "guide": "The inverse square root of 4 is 1/2.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student claims a larger circular orbit requires greater speed because the path is longer. Which correction is supported by gravity?",
+      "options": [
+        "Every orbit has the same period.",
+        "Circular speed decreases with radius; period also depends on path length.",
+        "Path length alone determines speed.",
+        "Gravity increases with radius."
+      ],
+      "correct_index": 1,
+      "guide": "v = √(GM/r); longer circumference does not imply faster motion.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Why does an ideal satellite orbit a planet?",
+      "options": [
+        "It continually falls while moving sideways around the planet.",
+        "A constant outward force cancels gravity in an inertial frame.",
+        "It is beyond all gravitational influence.",
+        "Its mass vanishes in space."
+      ],
+      "correct_index": 0,
+      "guide": "Gravity bends the path while tangential motion carries it around the planet.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A satellite follows a circular orbit at constant speed. Is it accelerating?",
+      "options": [
+        "Yes; its velocity direction continually changes.",
+        "No; gravity cannot act in orbit.",
+        "No; acceleration requires changing speed.",
+        "Only when an engine fires."
+      ],
+      "correct_index": 0,
+      "guide": "Velocity changes direction, requiring inward acceleration.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "At the top of a counterclockwise circular orbit, which pair is correct?",
+      "options": [
+        "Velocity down; gravity left.",
+        "Velocity left; gravity down toward the center.",
+        "Both vectors point left.",
+        "Velocity right; gravity up."
+      ],
+      "correct_index": 1,
+      "guide": "The tangent is left for counterclockwise motion; the center is below.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "If gravity suddenly vanished in an ideal orbit, what would happen immediately after?",
+      "options": [
+        "It would fly radially outward from rest.",
+        "The object would continue along the instantaneous tangent at constant velocity.",
+        "It would immediately stop.",
+        "It would keep curving at the same rate with no force."
+      ],
+      "correct_index": 1,
+      "guide": "Without net force, velocity remains the tangent velocity at release.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "For a given central mass, circular speed is √(GM/r). What happens if orbital radius quadruples?",
+      "options": [
+        "Speed doubles.",
+        "Speed stays fixed.",
+        "Speed quadruples.",
+        "Speed halves."
+      ],
+      "correct_index": 3,
+      "guide": "The inverse square root of 4 is 1/2.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student claims a larger circular orbit requires greater speed because the path is longer. Which correction is supported by gravity?",
+      "options": [
+        "Path length alone determines speed.",
+        "Every orbit has the same period.",
+        "Circular speed decreases with radius; period also depends on path length.",
+        "Gravity increases with radius."
+      ],
+      "correct_index": 2,
+      "guide": "v = √(GM/r); longer circumference does not imply faster motion.",
+      "target_slug": "u2.k5-orbit-free-fall",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-labelledby="title desc">
+  <title id="title">Can the shuttle reach traffic speed in an 18 m lane?</title>
+  <desc id="desc">An overhead planning sketch. At the left, the shuttle starts from rest. It accelerates forward at 0.80 metres per second squared along the proposed 18 metre lane toward the merge point on the right. Its target speed at that point is 6.0 metres per second. The needed time and distance are not shown.</desc>
+  <defs>
+    <pattern id="grass" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M4 8l3-3m12 18l3-3" stroke="#35544b" stroke-width="2"/></pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0l10 5-10 5z" fill="#b7afff"/></marker>
+    <marker id="flow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0l10 5-10 5z" fill="#acbbb8"/></marker>
+  </defs>
+  <rect width="900" height="420" rx="20" fill="#142622"/>
+  <rect width="900" height="420" rx="20" fill="url(#grass)"/>
+  <path d="M0 114H900V299H747L669 312H0Z" fill="#2d3443"/>
+  <path d="M0 116H900M0 310H669L747 297H900" stroke="#a2aaba" stroke-width="4" fill="none"/>
+  <path d="M0 210H656" stroke="#d3dae5" stroke-width="3" stroke-dasharray="20 18"/>
+  <path d="M754 210H900" stroke="#d3dae5" stroke-width="3" stroke-dasharray="20 18"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="34" y="50" fill="#d9e9e2" font-size="21" font-weight="700">CAMPUS LOOP</text>
+    <path d="M285 160H415M526 160H656M767 160H859" stroke="#acbbb8" stroke-width="4" marker-end="url(#flow)"/>
+    <rect x="34" y="135" width="177" height="49" rx="9" fill="#1a2431"/>
+    <text x="122" y="165" fill="#e6eaf3" font-size="21" text-anchor="middle">Traffic: 6.0 m/s</text>
+    <rect x="560" y="23" width="306" height="67" rx="10" fill="#25263c" stroke="#b7afff"/>
+    <text x="713" y="50" fill="#c7c1ff" font-size="17" text-anchor="middle">TARGET AT MERGE POINT</text>
+    <text x="713" y="76" fill="#f5f3ff" font-size="24" font-weight="700" text-anchor="middle">6.0 m/s</text>
+    <path d="M714 90V110" stroke="#b7afff" stroke-width="3"/>
+    <path d="M714 216V308" stroke="#c7c1ff" stroke-width="4" stroke-dasharray="7 6"/>
+    <text x="786" y="253" fill="#e3deff" font-size="18" text-anchor="middle">Merge</text>
+    <text x="786" y="278" fill="#e3deff" font-size="18" text-anchor="middle">point</text>
+    <path d="M220 217V309" stroke="#9ae1cc" stroke-width="3" stroke-dasharray="7 6"/>
+    <g>
+      <rect x="73" y="223" width="147" height="76" rx="19" fill="#83d7bf" stroke="#c2f4e4" stroke-width="2"/>
+      <rect x="87" y="218" width="29" height="8" rx="3" fill="#111826"/><rect x="87" y="296" width="29" height="8" rx="3" fill="#111826"/>
+      <rect x="173" y="218" width="29" height="8" rx="3" fill="#111826"/><rect x="173" y="296" width="29" height="8" rx="3" fill="#111826"/>
+      <rect x="173" y="234" width="30" height="54" rx="7" fill="#20394c"/>
+      <rect x="90" y="236" width="68" height="50" rx="8" fill="#3a8778"/>
+      <text x="124" y="267" fill="#effff9" font-size="16" font-weight="700" text-anchor="middle">SHUTTLE</text>
+    </g>
+    <path d="M272 266H604" stroke="#b7afff" stroke-width="5" marker-end="url(#arrow)"/>
+    <text x="440" y="247" fill="#e3deff" font-size="21" text-anchor="middle">a = 0.80 m/s²</text>
+    <path d="M220 339V366M714 339V366M220 353H714" stroke="#a9e9d5" stroke-width="3"/>
+    <rect x="338" y="332" width="258" height="39" rx="8" fill="#142622"/>
+    <text x="467" y="358" fill="#d0f6e9" font-size="23" font-weight="700" text-anchor="middle">Proposed lane: 18 m</text>
+    <text x="144" y="398" fill="#d0f6e9" font-size="19" text-anchor="middle">Start: 0 m/s</text>
+    <text x="721" y="398" fill="#cad3d7" font-size="17" text-anchor="middle">Straight-line planning model</text>
+  </g>
+</svg>

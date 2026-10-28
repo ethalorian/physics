@@ -14,7 +14,7 @@ export function vocabularyProgress(task: VocabTask, checks: VocabEvidenceCheck[]
   const done = checks.filter(c => c.completed_at).sort((a, b) => b.completed_at!.localeCompare(a.completed_at!))
   const review = reviews.filter(r => r.target_id === task.target_id).sort((a, b) => b.created_at.localeCompare(a.created_at))[0] ?? null
   const evidenceKey = evidenceIdentity(done)
-  const needsQuizReview = done.some(c => c.result?.some(r => r.correct === null))
+  const needsQuizReview = done.some(c => c.requires_release&&!c.reviewed_at || c.result?.some(r => r.correct === null))
   return {
     ...summarizeWords(task, done), checks: done, evidenceKey, review,
     quiz: task.task_kind === 'quiz' ? quizSummary(done, true) : null,

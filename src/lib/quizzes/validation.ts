@@ -54,7 +54,7 @@ export function quizScore(questions:QuizQuestion[],answers:QuizAnswers,scores:Re
  return {earned,possible,pending,percent:pending?null:Math.round(100*earned/possible)}
 }
 export function validateReview(b:unknown,quiz:Quiz,draftOnly=false){
- if(!object(b)||!QUIZ_UUID.test(String(b.submission_id))||!QUIZ_UUID.test(String(b.request_id))||!['graded','returned'].includes(String(b.decision))||!text(b.note,3000,!draftOnly)||!object(b.scores)||!object(b.ratings)||!object(b.question_notes))throw Error('Add feedback and complete this review.')
+ if(!object(b)||!QUIZ_UUID.test(String(b.submission_id))||!QUIZ_UUID.test(String(b.request_id))||!['graded','returned'].includes(String(b.decision))||!text(b.note,3000,!draftOnly&&b.decision==='returned')||!object(b.scores)||!object(b.ratings)||!object(b.question_notes))throw Error('Complete this review. Add feedback when requesting a revision.')
  for(const [id,score]of Object.entries(b.scores)){const q=quiz.questions.find(q=>q.id===id&&q.kind!=='choice');if(!q||typeof score!=='number'||!Number.isFinite(score)||score<0||score>q.points||!Number.isInteger(score*2))throw Error('Score written work in half-point steps within its available points.')}
  for(const [id,note]of Object.entries(b.question_notes))if(!quiz.questions.some(q=>q.id===id)||!text(note,2000,false))throw Error('Invalid question feedback.')
  const targets=[...new Set(quiz.questions.map(q=>q.target_id))]

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 5,
+  "title": "Calculate gravitational force",
+  "target": "Calculate a gravitational interaction with consistent units.",
+  "criteria": [
+    "Identify both masses and the center separation.",
+    "Square the distance before dividing.",
+    "Check units and the scale of the result."
+  ],
+  "source_sha256": "562ac35246c145e33e7a57880f0486ff80787b3b4897933f8e977d04d36a2aae",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.491Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Which entries are needed to compute F = Gm₁m₂/r²?",
+      "options": [
+        "Only the objects’ speeds.",
+        "Only one mass and surface altitude.",
+        "Only the elapsed time.",
+        "Both masses and their center-to-center separation."
+      ],
+      "correct_index": 3,
+      "guide": "The equation depends on two masses and center separation.",
+      "target_slug": "u2.s1-compute-gravitation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A spherical planet has radius 4 × 10⁶ m. A probe is 1 × 10⁶ m above its surface. What r should be used?",
+      "options": [
+        "1 × 10⁶ m",
+        "4 × 10¹² m",
+        "3 × 10⁶ m",
+        "5 × 10⁶ m"
+      ],
+      "correct_index": 3,
+      "guide": "Add radius and altitude before squaring.",
+      "target_slug": "u2.s1-compute-gravitation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A model supplies Gm₁m₂ = 75 N·m² and r = 5 m. What is F?",
+      "options": [
+        "3 N",
+        "15 N",
+        "375 N",
+        "1,875 N"
+      ],
+      "correct_index": 0,
+      "guide": "F = 75/5² = 75/25 = 3 N.",
+      "target_slug": "u2.s1-compute-gravitation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Gm₁m₂ = 8.0 × 10¹² N·m² and r = 2.0 × 10⁶ m. What is F?",
+      "options": [
+        "4.0 N",
+        "2.0 N",
+        "4.0 × 10⁶ N",
+        "2.0 × 10⁶ N"
+      ],
+      "correct_index": 1,
+      "guide": "r² = 4.0 × 10¹² m²; dividing gives 2.0 N.",
+      "target_slug": "u2.s1-compute-gravitation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculation divides N·m² by m². What unit remains?",
+      "options": [
+        "N",
+        "m/s",
+        "kg only",
+        "N·m⁴"
+      ],
+      "correct_index": 0,
+      "guide": "The squared length units cancel.",
+      "target_slug": "u2.s1-compute-gravitation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student doubles r but reports twice the gravitational force for unchanged masses. Which check identifies the error?",
+      "options": [
+        "Mass units cancel all distance effects.",
+        "Force must grow linearly with distance.",
+        "Inverse-square scaling predicts one-quarter the force.",
+        "The original force must be zero."
+      ],
+      "correct_index": 2,
+      "guide": "Check the distance square and whether division was applied correctly.",
+      "target_slug": "u2.r1-scale-f",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Which entries are needed to compute F = Gm₁m₂/r²?",
+      "options": [
+        "Both masses and their center-to-center separation.",
+        "Only the elapsed time.",
+        "Only one mass and surface altitude.",
+        "Only the objects’ speeds."
+      ],
+      "correct_index": 0,
+      "guide": "The equation depends on two masses and center separation.",
+      "target_slug": "u2.s1-compute-gravitation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A spherical planet has radius 4 × 10⁶ m. A probe is 1 × 10⁶ m above its surface. What r should be used?",
+      "options": [
+        "3 × 10⁶ m",
+        "5 × 10⁶ m",
+        "1 × 10⁶ m",
+        "4 × 10¹² m"
+      ],
+      "correct_index": 1,
+      "guide": "Add radius and altitude before squaring.",
+      "target_slug": "u2.s1-compute-gravitation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A model supplies Gm₁m₂ = 75 N·m² and r = 5 m. What is F?",
+      "options": [
+        "1,875 N",
+        "375 N",
+        "3 N",
+        "15 N"
+      ],
+      "correct_index": 2,
+      "guide": "F = 75/5² = 75/25 = 3 N.",
+      "target_slug": "u2.s1-compute-gravitation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Gm₁m₂ = 8.0 × 10¹² N·m² and r = 2.0 × 10⁶ m. What is F?",
+      "options": [
+        "2.0 N",
+        "4.0 × 10⁶ N",
+        "4.0 N",
+        "2.0 × 10⁶ N"
+      ],
+      "correct_index": 0,
+      "guide": "r² = 4.0 × 10¹² m²; dividing gives 2.0 N.",
+      "target_slug": "u2.s1-compute-gravitation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculation divides N·m² by m². What unit remains?",
+      "options": [
+        "m/s",
+        "kg only",
+        "N·m⁴",
+        "N"
+      ],
+      "correct_index": 3,
+      "guide": "The squared length units cancel.",
+      "target_slug": "u2.s1-compute-gravitation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student doubles r but reports twice the gravitational force for unchanged masses. Which check identifies the error?",
+      "options": [
+        "Force must grow linearly with distance.",
+        "Inverse-square scaling predicts one-quarter the force.",
+        "The original force must be zero.",
+        "Mass units cancel all distance effects."
+      ],
+      "correct_index": 1,
+      "guide": "Check the distance square and whether division was applied correctly.",
+      "target_slug": "u2.r1-scale-f",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

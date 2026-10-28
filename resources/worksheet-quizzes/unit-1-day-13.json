@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 13,
+  "title": "Net force first",
+  "target": "Combine forces before using mass to predict acceleration.",
+  "criteria": [
+    "Find net force before dividing by mass.",
+    "State acceleration with units and direction.",
+    "Separate acceleration direction from motion direction."
+  ],
+  "source_sha256": "33673e8ac561bd0338f82fa8628588a126ff519f139a3ac11036f42bda2f1ae4",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.479Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 5 kg cart experiences 32 N right and 12 N left. What is net force?",
+      "options": [
+        "32 N right.",
+        "20 N left.",
+        "44 N right.",
+        "20 N right."
+      ],
+      "correct_index": 3,
+      "guide": "Take right positive: 32 − 12 = +20 N.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student uses only a 24 N pull to calculate acceleration, ignoring 9 N friction. What is the first correction?",
+      "options": [
+        "Find net force as 24 − 9 = 15 N.",
+        "Ignore the cart’s mass too.",
+        "Multiply the forces.",
+        "Add both magnitudes to get 33 N."
+      ],
+      "correct_index": 0,
+      "guide": "Acceleration responds to the vector sum of forces.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 5 kg cart has net force 20 N left. What is acceleration?",
+      "options": [
+        "100 m/s² left.",
+        "4 m/s² left.",
+        "4 m/s² right.",
+        "4 m/s left."
+      ],
+      "correct_index": 1,
+      "guide": "a = F_net/m = 20/5 = 4 m/s² in the force direction.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 6 kg object has 10 N right and 28 N left. What is acceleration?",
+      "options": [
+        "6.33 m/s² left.",
+        "3 m/s² right.",
+        "108 m/s² left.",
+        "3 m/s² left."
+      ],
+      "correct_index": 3,
+      "guide": "Net force is 18 N left; a = 18/6 = 3 m/s² left.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart moves right while its net force points left. What happens initially?",
+      "options": [
+        "It instantly moves left regardless of initial speed.",
+        "Its acceleration points right.",
+        "Its rightward speed decreases.",
+        "Its speed necessarily increases."
+      ],
+      "correct_index": 2,
+      "guide": "Force sets acceleration; opposite velocity and acceleration initially slow the cart.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An object moves left with zero net force. Which prediction follows?",
+      "options": [
+        "It accelerates right to cancel the leftward velocity.",
+        "It must speed up left.",
+        "Its velocity stays constant unless a net force later acts.",
+        "It immediately stops."
+      ],
+      "correct_index": 2,
+      "guide": "Zero net force gives zero acceleration, not zero velocity.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 5 kg cart experiences 32 N right and 12 N left. What is net force?",
+      "options": [
+        "20 N left.",
+        "32 N right.",
+        "20 N right.",
+        "44 N right."
+      ],
+      "correct_index": 2,
+      "guide": "Take right positive: 32 − 12 = +20 N.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student uses only a 24 N pull to calculate acceleration, ignoring 9 N friction. What is the first correction?",
+      "options": [
+        "Multiply the forces.",
+        "Add both magnitudes to get 33 N.",
+        "Ignore the cart’s mass too.",
+        "Find net force as 24 − 9 = 15 N."
+      ],
+      "correct_index": 3,
+      "guide": "Acceleration responds to the vector sum of forces.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 5 kg cart has net force 20 N left. What is acceleration?",
+      "options": [
+        "4 m/s² left.",
+        "4 m/s² right.",
+        "100 m/s² left.",
+        "4 m/s left."
+      ],
+      "correct_index": 0,
+      "guide": "a = F_net/m = 20/5 = 4 m/s² in the force direction.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 6 kg object has 10 N right and 28 N left. What is acceleration?",
+      "options": [
+        "6.33 m/s² left.",
+        "3 m/s² left.",
+        "3 m/s² right.",
+        "108 m/s² left."
+      ],
+      "correct_index": 1,
+      "guide": "Net force is 18 N left; a = 18/6 = 3 m/s² left.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart moves right while its net force points left. What happens initially?",
+      "options": [
+        "Its rightward speed decreases.",
+        "It instantly moves left regardless of initial speed.",
+        "Its speed necessarily increases.",
+        "Its acceleration points right."
+      ],
+      "correct_index": 0,
+      "guide": "Force sets acceleration; opposite velocity and acceleration initially slow the cart.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An object moves left with zero net force. Which prediction follows?",
+      "options": [
+        "It immediately stops.",
+        "It accelerates right to cancel the leftward velocity.",
+        "It must speed up left.",
+        "Its velocity stays constant unless a net force later acts."
+      ],
+      "correct_index": 3,
+      "guide": "Zero net force gives zero acceleration, not zero velocity.",
+      "target_slug": "u1.fma-solve-net-force",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

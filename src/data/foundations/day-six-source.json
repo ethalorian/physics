@@ -1,0 +1,91 @@
+{
+  "collaboration": {
+    "maxGroupSize": 4,
+    "primaryRoles": [
+      "Slideshow lead",
+      "Whiteboard scribe"
+    ],
+    "secondaryDuties": [
+      "Timekeeper",
+      "Checker"
+    ],
+    "individualResponses": true
+  },
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 6 Vector Addition and Decomposition.dc.html",
+  "sourceSha256": "e789d6dabea6d9b88b066b0521dadc38258cf99f61d6bc72878c16438073c49f",
+  "runtimeSha256": {
+    "support": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe",
+    "stage": "f3d3d0a662c08eefb5a8757a6da3139572485f4be32ac33785c5047061926a8a"
+  },
+  "packagedSha256": "6c7d67ff64752b09d3c0e0d93323995dd4e01ceb015ba21b8e44aa540b498a89",
+  "cover": {
+    "file": "art/asteroid-briefing.png",
+    "sha256": "ae90f10457a275a673a1662f651ce0c04ea070027eaa74f289e37b0c8819de62"
+  },
+  "studentSlides": 30,
+  "originalStudentSlides": 26,
+  "teacherSlidesExcluded": 3,
+  "timers": 4,
+  "answerReveals": 5,
+  "transition": {
+    "type": "fade",
+    "durationMs": 260,
+    "respectsReducedMotion": true
+  },
+  "snapshots": [
+    {
+      "after": 7,
+      "page": 21,
+      "file": "page-01.webp",
+      "y": 1187,
+      "height": 300,
+      "title": "The route and the shortcut",
+      "alt": "Nadia asks how far Eli is from his start. The notebook shows three meters east followed by four meters north, a seven-meter walking route. The straight displacement still needs to be found.",
+      "body": "The novel walks 3 m east, then 4 m north. The preceding slide swaps those two legs.",
+      "question": "Which results stay the same when the legs swap? Which direction changes?",
+      "work": "Part 1 · Check the route and resultant",
+      "sha256": "c19afbfe2f4d54892e62b54ce47babfcc3bc497ad489dfbc796fe8b66cdbc3ee"
+    },
+    {
+      "after": 10,
+      "page": 22,
+      "file": "page-02.webp",
+      "y": 355,
+      "height": 440,
+      "title": "The resultant has a direction",
+      "alt": "A schematic triangle joins a three-meter east arrow to a four-meter north arrow. The resultant runs from the first tail to the final tip. Its magnitude is five meters and its direction is 53.1 degrees north of east.",
+      "body": "Translate an arrow without turning or stretching it. Use a stated scale for your own drawing.",
+      "question": "How would a rotated or stretched arrow change the result?",
+      "work": "Part 1 · Check the route and resultant",
+      "sha256": "3fefe5d63af5a32166cf9d7d2f235c09547ba241984b8b23a5554448ae0beeab"
+    },
+    {
+      "after": 15,
+      "page": 24,
+      "file": "page-04.webp",
+      "y": 380,
+      "height": 275,
+      "title": "Rebuild the fictional velocity",
+      "alt": "The classroom model points positive x away from Earth. The velocity components are negative 8210 meters per second in x and positive 2200 in y. They give speed about 8500 meters per second and direction about 15 degrees from toward Earth toward positive y.",
+      "body": "With +x away from Earth, vₓ = −8,210 m/s and vᵧ = +2,200 m/s.",
+      "question": "Why is the direction about 165° from +x, rather than 15° from +x?",
+      "work": "Part 2 · Check components and direction",
+      "sha256": "979258168149d8f9097f9d1e7a8237f3664f37771c85e46dda800feefbbf3744"
+    },
+    {
+      "after": 24,
+      "page": 23,
+      "file": "page-03.webp",
+      "y": 380,
+      "height": 585,
+      "title": "Check the angle before choosing sine or cosine",
+      "alt": "The same ten-meter-per-second vector is shown 30 degrees above horizontal, equivalently 60 degrees from vertical. Its components stay 8.66 horizontally and 5 vertically. Mr. Antocci explains that cosine belongs to the component beside the marked angle.",
+      "body": "Changing the reference angle does not change the arrow. Cosine goes with the adjacent component.",
+      "question": "How can both angle descriptions produce the same two components?",
+      "work": "Part 3 · Defend your reference angle",
+      "sha256": "543494b48c0a0e7a6c38ae239a47b788a7b83fe5ddabf16f34a5d6e2a7b447cc"
+    }
+  ],
+  "notes": "Original executable logic, four timers and five reveal controls unchanged. Teacher-only slides and notes removed. Four snapshots use viewport crops of approved Day 6 pages 21–24 with text companions; source artwork bytes are unchanged. Original cover uses its relative URL. Clarified separate individual responses. Timer captions match the original runtime defaults of 12, 12, 5 and 2 minutes. The in-deck mini-quiz is labeled practice to distinguish it from the separately gated daily quiz. Asteroid component labels explicitly use the novel’s fixed axes, positive x away from Earth and positive y sideways; this does not change the speed calculation. Original export archived unchanged."
+}

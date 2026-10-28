@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 3,
+  "title": "Electric fields",
+  "target": "Use field arrows to predict the force on a test charge.",
+  "criteria": [
+    "Draw electric field arrows for isolated positive and negative charges.",
+    "Use the positive-test-charge convention.",
+    "Distinguish the field from a particular test charge’s force."
+  ],
+  "source_sha256": "2c8ae1c4ece4dfc6e94d10927100e62cead216a2eada5d17e7cb42c7b5c894c5",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.560Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "At a point directly above an isolated positive source charge, which way does the electric field point?",
+      "options": [
+        "Nowhere unless a test charge is present.",
+        "Downward, toward the source.",
+        "Upward, away from the source.",
+        "Rightward around the source."
+      ],
+      "correct_index": 2,
+      "guide": "The field of a positive source points radially outward.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A field arrow at a point to the left of an isolated negative source points right. Is that consistent?",
+      "options": [
+        "No; every field arrow points left.",
+        "Yes; the arrow points toward the negative source.",
+        "No; negative sources have outward arrows.",
+        "Yes, because fields show electron velocity."
+      ],
+      "correct_index": 1,
+      "guide": "The arrow describes force on a positive test charge, toward a negative source.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A field points west. A small negative test charge is placed there. Which way is its electric force?",
+      "options": [
+        "West.",
+        "North.",
+        "East.",
+        "Zero solely because the charge is negative."
+      ],
+      "correct_index": 2,
+      "guide": "F = qE; a negative q reverses force direction relative to the field.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A positive 0.50 C model test charge experiences 3.0 N north. What is the field?",
+      "options": [
+        "6.0 N/C north.",
+        "6.0 C/N south.",
+        "3.0 N/C south.",
+        "1.5 N/C north."
+      ],
+      "correct_index": 0,
+      "guide": "E = F/q = 3.0/0.50 = 6.0 N/C; positive charge gives the same direction.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "The source charges stay fixed. A tiny positive test charge is replaced by one with twice the charge. Ignoring its effect on the source, what changes?",
+      "options": [
+        "Field reverses direction.",
+        "Field doubles; force is unchanged.",
+        "Both field and force vanish.",
+        "Force doubles; the source field is unchanged."
+      ],
+      "correct_index": 3,
+      "guide": "E is set by the source configuration; F = qE scales with test charge.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A model field is 12 N/C downward. Which test charge would feel a 6 N upward force?",
+      "options": [
+        "−2.0 C",
+        "+2.0 C",
+        "+0.50 C",
+        "−0.50 C"
+      ],
+      "correct_index": 3,
+      "guide": "Magnitude |q| = 6/12 = 0.50 C. Opposite force and field directions require negative charge.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "At a point directly above an isolated positive source charge, which way does the electric field point?",
+      "options": [
+        "Rightward around the source.",
+        "Downward, toward the source.",
+        "Upward, away from the source.",
+        "Nowhere unless a test charge is present."
+      ],
+      "correct_index": 2,
+      "guide": "The field of a positive source points radially outward.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A field arrow at a point to the left of an isolated negative source points right. Is that consistent?",
+      "options": [
+        "Yes, because fields show electron velocity.",
+        "Yes; the arrow points toward the negative source.",
+        "No; negative sources have outward arrows.",
+        "No; every field arrow points left."
+      ],
+      "correct_index": 1,
+      "guide": "The arrow describes force on a positive test charge, toward a negative source.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A field points west. A small negative test charge is placed there. Which way is its electric force?",
+      "options": [
+        "East.",
+        "Zero solely because the charge is negative.",
+        "North.",
+        "West."
+      ],
+      "correct_index": 0,
+      "guide": "F = qE; a negative q reverses force direction relative to the field.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A positive 0.50 C model test charge experiences 3.0 N north. What is the field?",
+      "options": [
+        "6.0 C/N south.",
+        "1.5 N/C north.",
+        "3.0 N/C south.",
+        "6.0 N/C north."
+      ],
+      "correct_index": 3,
+      "guide": "E = F/q = 3.0/0.50 = 6.0 N/C; positive charge gives the same direction.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "The source charges stay fixed. A tiny positive test charge is replaced by one with twice the charge. Ignoring its effect on the source, what changes?",
+      "options": [
+        "Force doubles; the source field is unchanged.",
+        "Field doubles; force is unchanged.",
+        "Both field and force vanish.",
+        "Field reverses direction."
+      ],
+      "correct_index": 0,
+      "guide": "E is set by the source configuration; F = qE scales with test charge.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A model field is 12 N/C downward. Which test charge would feel a 6 N upward force?",
+      "options": [
+        "−2.0 C",
+        "+2.0 C",
+        "+0.50 C",
+        "−0.50 C"
+      ],
+      "correct_index": 3,
+      "guide": "Magnitude |q| = 6/12 = 0.50 C. Opposite force and field directions require negative charge.",
+      "target_slug": "u7.k2-electric-field",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ]
+}

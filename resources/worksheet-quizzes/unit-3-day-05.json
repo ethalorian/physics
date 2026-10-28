@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 5,
+  "title": "Recoil and explosions",
+  "target": "Use momentum conservation for an isolated system.",
+  "criteria": [
+    "Choose a system and check external impulse.",
+    "Add momentum with signs.",
+    "Explain equal-and-opposite momentum changes."
+  ],
+  "source_sha256": "f562676d9473807663f6c0f9feb26cd2bdbdeadc8151c53ba8bedf9798af1aef",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.504Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Two carts push apart on a nearly frictionless track. Which system supports momentum conservation during the push?",
+      "options": [
+        "One cart while ignoring the other’s force.",
+        "Both carts, with negligible net external impulse.",
+        "Only the spring’s color.",
+        "Both carts only if both final speeds are equal."
+      ],
+      "correct_index": 1,
+      "guide": "Internal forces redistribute momentum within the chosen two-cart system.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An explosion occurs while a large external impulse acts on the fragments. Which account is valid?",
+      "options": [
+        "Only the largest fragment has momentum.",
+        "All fragment momenta must individually be zero.",
+        "Final system momentum equals initial momentum plus external impulse.",
+        "Momentum must remain unchanged regardless of external impulse."
+      ],
+      "correct_index": 2,
+      "guide": "System momentum changes according to external impulse.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two carts initially at rest separate. One has final momentum −15 kg·m/s. With negligible external impulse, what is the other’s momentum?",
+      "options": [
+        "0 kg·m/s",
+        "+15 kg·m/s",
+        "+30 kg·m/s",
+        "−15 kg·m/s"
+      ],
+      "correct_index": 1,
+      "guide": "Initial total is zero; the final momenta must sum to zero.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 3 kg cart recoils at −2 m/s. Its 2 kg partner moves right. Both began at rest with negligible external impulse. What is the partner’s velocity?",
+      "options": [
+        "+3 m/s",
+        "+2 m/s",
+        "+6 m/s",
+        "−3 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "3(−2) + 2v = 0 gives v = +3 m/s.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two unequal-mass carts push apart. Their mutual forces act over the same interval. Compare their momentum changes.",
+      "options": [
+        "Equal magnitude and opposite direction.",
+        "Both changes point the same way.",
+        "Equal velocity changes in all cases.",
+        "The heavier cart gets more impulse."
+      ],
+      "correct_index": 0,
+      "guide": "Equal-opposite forces over equal durations give equal-opposite impulses.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A lighter and a heavier cart begin at rest and push apart in isolation. Which cart has greater speed afterward?",
+      "options": [
+        "Neither can move if total momentum stays zero.",
+        "Both must have equal speed.",
+        "The heavier cart, because its momentum must be greater.",
+        "The lighter cart, because equal momentum magnitudes divide by different masses."
+      ],
+      "correct_index": 3,
+      "guide": "|v| = |p|/m; equal |p| implies greater speed for smaller mass.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Two carts push apart on a nearly frictionless track. Which system supports momentum conservation during the push?",
+      "options": [
+        "Only the spring’s color.",
+        "Both carts, with negligible net external impulse.",
+        "Both carts only if both final speeds are equal.",
+        "One cart while ignoring the other’s force."
+      ],
+      "correct_index": 1,
+      "guide": "Internal forces redistribute momentum within the chosen two-cart system.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An explosion occurs while a large external impulse acts on the fragments. Which account is valid?",
+      "options": [
+        "Momentum must remain unchanged regardless of external impulse.",
+        "Only the largest fragment has momentum.",
+        "All fragment momenta must individually be zero.",
+        "Final system momentum equals initial momentum plus external impulse."
+      ],
+      "correct_index": 3,
+      "guide": "System momentum changes according to external impulse.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two carts initially at rest separate. One has final momentum −15 kg·m/s. With negligible external impulse, what is the other’s momentum?",
+      "options": [
+        "−15 kg·m/s",
+        "0 kg·m/s",
+        "+15 kg·m/s",
+        "+30 kg·m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Initial total is zero; the final momenta must sum to zero.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 3 kg cart recoils at −2 m/s. Its 2 kg partner moves right. Both began at rest with negligible external impulse. What is the partner’s velocity?",
+      "options": [
+        "+6 m/s",
+        "+3 m/s",
+        "+2 m/s",
+        "−3 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "3(−2) + 2v = 0 gives v = +3 m/s.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two unequal-mass carts push apart. Their mutual forces act over the same interval. Compare their momentum changes.",
+      "options": [
+        "The heavier cart gets more impulse.",
+        "Equal velocity changes in all cases.",
+        "Equal magnitude and opposite direction.",
+        "Both changes point the same way."
+      ],
+      "correct_index": 2,
+      "guide": "Equal-opposite forces over equal durations give equal-opposite impulses.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A lighter and a heavier cart begin at rest and push apart in isolation. Which cart has greater speed afterward?",
+      "options": [
+        "The lighter cart, because equal momentum magnitudes divide by different masses.",
+        "The heavier cart, because its momentum must be greater.",
+        "Neither can move if total momentum stays zero.",
+        "Both must have equal speed."
+      ],
+      "correct_index": 0,
+      "guide": "|v| = |p|/m; equal |p| implies greater speed for smaller mass.",
+      "target_slug": "u3.k3-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

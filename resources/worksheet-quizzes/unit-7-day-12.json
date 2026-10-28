@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 12,
+  "title": "Magnetic fields",
+  "target": "Interpret magnetic field patterns and compass direction.",
+  "criteria": [
+    "Label north and south poles.",
+    "Trace external field direction from north toward south.",
+    "Explain why field-line drawings are models."
+  ],
+  "source_sha256": "7031ffd41e41715f2163e572850820af19515d5524685c70144e1c78b7c3c9f6",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.566Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Two bar magnets approach with south poles facing. What is expected?",
+      "options": [
+        "They repel.",
+        "They attract.",
+        "Both poles turn electrically positive.",
+        "Only one magnet feels force."
+      ],
+      "correct_index": 0,
+      "guide": "Like magnetic poles repel.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A bar magnet’s north end faces another magnet’s south end. What interaction is expected?",
+      "options": [
+        "Attraction.",
+        "No force unless they touch.",
+        "Repulsion.",
+        "Creation of an isolated north pole."
+      ],
+      "correct_index": 0,
+      "guide": "Unlike magnetic poles attract.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Along the outside of a bar magnet, which direction convention do field arrows follow?",
+      "options": [
+        "From south toward north.",
+        "Away from both poles to infinity only.",
+        "From north toward south.",
+        "Along the direction a negative electric charge must travel."
+      ],
+      "correct_index": 2,
+      "guide": "Outside the magnet, arrows follow the north-seeking compass direction, north to south.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A compass is placed just outside a magnet’s north pole on its axis. Which way does the compass’s north-seeking end point in the magnet’s dominant field?",
+      "options": [
+        "Always toward the ceiling.",
+        "Toward that north pole.",
+        "At right angles to every field line.",
+        "Away from that north pole."
+      ],
+      "correct_index": 3,
+      "guide": "The external field emerges from the north pole; the compass north end aligns with it.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A drawing uses more closely spaced field lines near one location. What does that convention indicate?",
+      "options": [
+        "More physical strings inside the magnet.",
+        "A stronger field there, using the same drawing convention.",
+        "A larger electric current is proved.",
+        "An exact numerical field value without a scale."
+      ],
+      "correct_index": 1,
+      "guide": "Line density is a qualitative model of field strength, not a count of physical lines.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A student says a magnet has no field between the drawn lines. Which correction is best?",
+      "options": [
+        "Adding ink would strengthen the actual magnet.",
+        "Field exists only at the poles’ surfaces.",
+        "The student is right because only ink carries the force.",
+        "Lines sample a continuous field; spaces in the drawing do not mean zero field."
+      ],
+      "correct_index": 3,
+      "guide": "A field-line diagram is a representation; its drawn lines are not isolated physical objects.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Two bar magnets approach with south poles facing. What is expected?",
+      "options": [
+        "Both poles turn electrically positive.",
+        "Only one magnet feels force.",
+        "They attract.",
+        "They repel."
+      ],
+      "correct_index": 3,
+      "guide": "Like magnetic poles repel.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A bar magnet’s north end faces another magnet’s south end. What interaction is expected?",
+      "options": [
+        "Creation of an isolated north pole.",
+        "Repulsion.",
+        "Attraction.",
+        "No force unless they touch."
+      ],
+      "correct_index": 2,
+      "guide": "Unlike magnetic poles attract.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Along the outside of a bar magnet, which direction convention do field arrows follow?",
+      "options": [
+        "Away from both poles to infinity only.",
+        "From north toward south.",
+        "Along the direction a negative electric charge must travel.",
+        "From south toward north."
+      ],
+      "correct_index": 1,
+      "guide": "Outside the magnet, arrows follow the north-seeking compass direction, north to south.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A compass is placed just outside a magnet’s north pole on its axis. Which way does the compass’s north-seeking end point in the magnet’s dominant field?",
+      "options": [
+        "Toward that north pole.",
+        "Away from that north pole.",
+        "Always toward the ceiling.",
+        "At right angles to every field line."
+      ],
+      "correct_index": 1,
+      "guide": "The external field emerges from the north pole; the compass north end aligns with it.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A drawing uses more closely spaced field lines near one location. What does that convention indicate?",
+      "options": [
+        "A stronger field there, using the same drawing convention.",
+        "A larger electric current is proved.",
+        "More physical strings inside the magnet.",
+        "An exact numerical field value without a scale."
+      ],
+      "correct_index": 0,
+      "guide": "Line density is a qualitative model of field strength, not a count of physical lines.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A student says a magnet has no field between the drawn lines. Which correction is best?",
+      "options": [
+        "Lines sample a continuous field; spaces in the drawing do not mean zero field.",
+        "Field exists only at the poles’ surfaces.",
+        "Adding ink would strengthen the actual magnet.",
+        "The student is right because only ink carries the force."
+      ],
+      "correct_index": 0,
+      "guide": "A field-line diagram is a representation; its drawn lines are not isolated physical objects.",
+      "target_slug": "u7.k7-magnetism",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

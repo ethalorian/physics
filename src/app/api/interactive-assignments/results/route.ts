@@ -1,3 +1,4 @@
+import type {LabGrade} from '@/lib/interactive-assignments/lab-grades'
 import {NextResponse} from 'next/server'
 import {withAuth} from '@/lib/api-auth'
 import {supabaseAdmin} from '@/lib/supabase'
@@ -40,11 +41,12 @@ export const GET = withAuth(async (request, ctx) => {
   ])
   const currentVersions = new Set(work.filter(w => w.status === 'submitted').map(w => w.assignment_id + ':' + w.user_id + ':' + w.version))
   const currentIds = versions.filter(s => currentVersions.has(s.assignment_id + ':' + s.user_id + ':' + s.version)).map(s => s.id)
-  const [submissions, reviews, ai] = await Promise.all([
+  const [submissions, reviews, ai, grades] = await Promise.all([
     batches<Submission>(currentIds, batch => pages((from, to) => supabaseAdmin.from('interactive_assignment_submissions').select('id,assignment_id,user_id,state,version,submitted_at').in('id', batch).order('id').range(from, to))),
     batches<Review>(currentIds, batch => pages((from, to) => supabaseAdmin.from('interactive_assignment_reviews').select('id,submission_id,target_id,level,feedback,created_at').in('submission_id', batch).order('id').range(from, to))),
-    batches<AiReview>(currentIds, batch => pages((from, to) => supabaseAdmin.from('interactive_assignment_ai_reviews').select('submission_id,status,result,model,error,updated_at,locked_until').in('submission_id', batch).order('submission_id').range(from, to)))
+    batches<AiReview>(currentIds, batch => pages((from, to) => supabaseAdmin.from('interactive_assignment_ai_reviews').select('submission_id,status,result,model,error,updated_at,locked_until').in('submission_id', batch).order('submission_id').range(from, to))),
+    batches<Pick<LabGrade,'submission_id'|'earned'|'possible'|'rubric_version'|'items'>>(currentIds,batch=>pages((from,to)=>supabaseAdmin.from('simulation_lab_grades').select('submission_id,earned,possible,rubric_version,items').in('submission_id',batch).order('submission_id').range(from,to)))
   ])
   // Return summaries; full student answers stay in the existing, class-scoped review endpoint.
-  return NextResponse.json({...base, ...simulationResults({assignments, students, work, submissions, reviews, ai})}, {headers: privateHeaders})
+  return NextResponse.json({...base, ...simulationResults({assignments, students, work, submissions, reviews, ai, grades})}, {headers: privateHeaders})
 })

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 2,
+  "title": "Momentum",
+  "target": "Calculate and compare signed momentum.",
+  "criteria": [
+    "Multiply mass by velocity with correct units.",
+    "Include direction or a sign.",
+    "Distinguish zero total momentum from no motion."
+  ],
+  "source_sha256": "dcc06d58be64773ba8366ec0896777061b74f6612a17af45984c9572962cca36",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.502Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 7 kg cart moves at 3 m/s. What is momentum magnitude?",
+      "options": [
+        "10 kg·m/s",
+        "21 kg·m/s",
+        "31.5 J",
+        "2.33 kg·m/s"
+      ],
+      "correct_index": 1,
+      "guide": "p = mv = 7 × 3 = 21 kg·m/s.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sample has momentum magnitude 15 kg·m/s and mass 2.5 kg. What is its speed?",
+      "options": [
+        "12.5 m/s",
+        "37.5 m/s",
+        "6 m/s",
+        "0.167 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "v = p/m = 15/2.5 = 6 m/s.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Take east as positive. A 3 kg object moves west at 4 m/s. What is momentum?",
+      "options": [
+        "+48 kg·m/s",
+        "−1 kg·m/s",
+        "−12 kg·m/s",
+        "+12 kg·m/s"
+      ],
+      "correct_index": 2,
+      "guide": "West velocity is −4; p = 3(−4) = −12.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two carts have momenta +9 and −5 kg·m/s. What is total momentum?",
+      "options": [
+        "−4 kg·m/s",
+        "+4 kg·m/s",
+        "+14 kg·m/s",
+        "−14 kg·m/s"
+      ],
+      "correct_index": 1,
+      "guide": "Add signed momenta: 9 − 5 = 4.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart at +5 m/s and a 5 kg cart at −2 m/s form a system. What is its total momentum?",
+      "options": [
+        "Zero, so both carts are stationary.",
+        "−20 kg·m/s.",
+        "+20 kg·m/s.",
+        "Zero, even though both carts are moving."
+      ],
+      "correct_index": 3,
+      "guide": "Their momenta +10 and −10 cancel, not their individual motions.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A system’s total momentum is zero. Which motion is possible?",
+      "options": [
+        "Two objects moving with equal and opposite momenta.",
+        "Only a state where every object is at rest.",
+        "A single positive-mass object moving at nonzero velocity.",
+        "Every positive-mass object moving east."
+      ],
+      "correct_index": 0,
+      "guide": "Zero vector sum can include nonzero individual vectors.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 7 kg cart moves at 3 m/s. What is momentum magnitude?",
+      "options": [
+        "21 kg·m/s",
+        "10 kg·m/s",
+        "2.33 kg·m/s",
+        "31.5 J"
+      ],
+      "correct_index": 0,
+      "guide": "p = mv = 7 × 3 = 21 kg·m/s.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sample has momentum magnitude 15 kg·m/s and mass 2.5 kg. What is its speed?",
+      "options": [
+        "0.167 m/s",
+        "37.5 m/s",
+        "6 m/s",
+        "12.5 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "v = p/m = 15/2.5 = 6 m/s.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Take east as positive. A 3 kg object moves west at 4 m/s. What is momentum?",
+      "options": [
+        "+48 kg·m/s",
+        "+12 kg·m/s",
+        "−1 kg·m/s",
+        "−12 kg·m/s"
+      ],
+      "correct_index": 3,
+      "guide": "West velocity is −4; p = 3(−4) = −12.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two carts have momenta +9 and −5 kg·m/s. What is total momentum?",
+      "options": [
+        "−14 kg·m/s",
+        "−4 kg·m/s",
+        "+4 kg·m/s",
+        "+14 kg·m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Add signed momenta: 9 − 5 = 4.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart at +5 m/s and a 5 kg cart at −2 m/s form a system. What is its total momentum?",
+      "options": [
+        "+20 kg·m/s.",
+        "Zero, so both carts are stationary.",
+        "−20 kg·m/s.",
+        "Zero, even though both carts are moving."
+      ],
+      "correct_index": 3,
+      "guide": "Their momenta +10 and −10 cancel, not their individual motions.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A system’s total momentum is zero. Which motion is possible?",
+      "options": [
+        "Every positive-mass object moving east.",
+        "Two objects moving with equal and opposite momenta.",
+        "A single positive-mass object moving at nonzero velocity.",
+        "Only a state where every object is at rest."
+      ],
+      "correct_index": 1,
+      "guide": "Zero vector sum can include nonzero individual vectors.",
+      "target_slug": "u3.k1-momentum-vector",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

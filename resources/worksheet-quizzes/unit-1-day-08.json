@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 8,
+  "title": "Choose a motion method",
+  "target": "Choose a motion relationship and justify its assumptions.",
+  "criteria": [
+    "Choose a relationship using the known quantities.",
+    "Show linked calculations with units and directions.",
+    "State when constant velocity or acceleration applies."
+  ],
+  "source_sha256": "42ccdd57a28fe62c694dc53e9e3e7416545c3735952963e5b2c9233f1affb7bb",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.476Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Given initial velocity, constant acceleration, and elapsed time, which relation directly gives final velocity?",
+      "options": [
+        "v_f = at² only",
+        "v_f = Fm",
+        "v_f = v_i + at",
+        "v_f = x_i + t"
+      ],
+      "correct_index": 2,
+      "guide": "Use the relation connecting the specified quantities.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Given initial and final velocities and constant acceleration, but no time, which relation can find displacement?",
+      "options": [
+        "v_f = v_i + a/Δx",
+        "Δx = v_f/t",
+        "v_f² = v_i² + 2aΔx",
+        "F = ma only"
+      ],
+      "correct_index": 2,
+      "guide": "This equation eliminates time for constant acceleration.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rover starts at +3 m/s and accelerates at +2 m/s² for 4 s. What is final velocity?",
+      "options": [
+        "+20 m/s",
+        "+11 m/s",
+        "+8 m/s",
+        "−5 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "v_f = 3 + 2(4) = 11 m/s.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart starts from rest and reaches 8 m/s in 4 s with constant acceleration. What are average velocity and displacement?",
+      "options": [
+        "4 m/s and 16 m.",
+        "4 m/s and 32 m.",
+        "2 m/s and 8 m.",
+        "8 m/s and 32 m."
+      ],
+      "correct_index": 0,
+      "guide": "v_avg = (0 + 8)/2 = 4; Δx = 4(4) = 16.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "When is Δx = vt with one fixed v justified over an interval?",
+      "options": [
+        "Only when the object starts at the origin.",
+        "When velocity is constant throughout the interval.",
+        "Whenever the final speed is known.",
+        "Whenever any force exists."
+      ],
+      "correct_index": 1,
+      "guide": "A fixed velocity must describe the entire interval, or v must explicitly be the average.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A motor’s force varies substantially during a run. Can one constant-acceleration formula automatically describe the whole run?",
+      "options": [
+        "Yes; changing force never affects acceleration.",
+        "Yes; every motor produces constant acceleration.",
+        "No; motion cannot be analyzed at all.",
+        "No; justify an approximation or model the varying acceleration."
+      ],
+      "correct_index": 3,
+      "guide": "Fixed mass with varying net force generally has varying acceleration.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Given initial velocity, constant acceleration, and elapsed time, which relation directly gives final velocity?",
+      "options": [
+        "v_f = at² only",
+        "v_f = x_i + t",
+        "v_f = v_i + at",
+        "v_f = Fm"
+      ],
+      "correct_index": 2,
+      "guide": "Use the relation connecting the specified quantities.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Given initial and final velocities and constant acceleration, but no time, which relation can find displacement?",
+      "options": [
+        "v_f = v_i + a/Δx",
+        "F = ma only",
+        "Δx = v_f/t",
+        "v_f² = v_i² + 2aΔx"
+      ],
+      "correct_index": 3,
+      "guide": "This equation eliminates time for constant acceleration.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rover starts at +3 m/s and accelerates at +2 m/s² for 4 s. What is final velocity?",
+      "options": [
+        "+8 m/s",
+        "+20 m/s",
+        "−5 m/s",
+        "+11 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "v_f = 3 + 2(4) = 11 m/s.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart starts from rest and reaches 8 m/s in 4 s with constant acceleration. What are average velocity and displacement?",
+      "options": [
+        "4 m/s and 16 m.",
+        "8 m/s and 32 m.",
+        "2 m/s and 8 m.",
+        "4 m/s and 32 m."
+      ],
+      "correct_index": 0,
+      "guide": "v_avg = (0 + 8)/2 = 4; Δx = 4(4) = 16.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "When is Δx = vt with one fixed v justified over an interval?",
+      "options": [
+        "Only when the object starts at the origin.",
+        "When velocity is constant throughout the interval.",
+        "Whenever the final speed is known.",
+        "Whenever any force exists."
+      ],
+      "correct_index": 1,
+      "guide": "A fixed velocity must describe the entire interval, or v must explicitly be the average.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A motor’s force varies substantially during a run. Can one constant-acceleration formula automatically describe the whole run?",
+      "options": [
+        "Yes; every motor produces constant acceleration.",
+        "No; motion cannot be analyzed at all.",
+        "No; justify an approximation or model the varying acceleration.",
+        "Yes; changing force never affects acceleration."
+      ],
+      "correct_index": 2,
+      "guide": "Fixed mass with varying net force generally has varying acceleration.",
+      "target_slug": "u1.pick-equation-of-motion",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

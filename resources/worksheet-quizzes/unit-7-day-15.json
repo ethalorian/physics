@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 15,
+  "title": "Motors and generators",
+  "target": "Distinguish electrical-to-mechanical transfer from mechanical-to-electrical transfer.",
+  "criteria": [
+    "Trace energy through a motor and a generator.",
+    "Identify magnetic interactions in rotation or induction.",
+    "Include less useful energy transfers."
+  ],
+  "source_sha256": "1c96e61a93fe2455401636e23fb561ef72c06615ebe62042a57c06270f98b8c4",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.568Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A falling weight turns a generator that lights an LED. What is the useful conversion in the generator?",
+      "options": [
+        "Creation of energy without an input.",
+        "Electrical input into chemical fuel.",
+        "Thermal energy into extra mass.",
+        "Mechanical input into electrical output."
+      ],
+      "correct_index": 3,
+      "guide": "The rotating generator transfers mechanical energy into electrical energy.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A battery powers a small motor that turns a drill shaft. What is the motor’s useful conversion?",
+      "options": [
+        "Thermal energy into charge created from nothing.",
+        "Charge into destroyed matter.",
+        "Electrical input into mechanical rotation.",
+        "Mechanical rotation into battery fuel only."
+      ],
+      "correct_index": 2,
+      "guide": "A motor uses electrical input to produce mechanical motion.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "What produces the turning effect in a simple current-driven motor?",
+      "options": [
+        "The switch supplies mechanical fuel.",
+        "A steady field always causes any stationary loop to spin without current.",
+        "Magnetic forces on current-carrying parts create torque.",
+        "Charge disappears from the wire."
+      ],
+      "correct_index": 2,
+      "guide": "Forces on appropriate current-carrying conductors create a net torque.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Why can rotating a coil in a magnetic field produce generator voltage?",
+      "options": [
+        "Rotation converts electrons into protons.",
+        "Rotation changes magnetic flux through the coil.",
+        "Voltage requires a permanently open magnetic field line.",
+        "The magnet supplies unlimited energy without mechanical work."
+      ],
+      "correct_index": 1,
+      "guide": "Changing flux induces emf; electrical output requires an energy input.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A motor receives 240 J electrically and supplies 180 J of useful mechanical energy. What is efficiency?",
+      "options": [
+        "75%",
+        "25%",
+        "133%",
+        "60%"
+      ],
+      "correct_index": 0,
+      "guide": "Efficiency = 180/240 × 100 = 75%; 60 J goes to other outputs.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A generator receives 500 J mechanically and delivers 350 J electrically. Which energy account is consistent?",
+      "options": [
+        "150 J is destroyed.",
+        "The generator creates 850 J.",
+        "Efficiency is 500/350 = 143%.",
+        "150 J is transferred to thermal and other non-useful outputs."
+      ],
+      "correct_index": 3,
+      "guide": "Conservation accounts for the difference. Useful efficiency is 70%, not the inverse ratio.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A falling weight turns a generator that lights an LED. What is the useful conversion in the generator?",
+      "options": [
+        "Mechanical input into electrical output.",
+        "Creation of energy without an input.",
+        "Electrical input into chemical fuel.",
+        "Thermal energy into extra mass."
+      ],
+      "correct_index": 0,
+      "guide": "The rotating generator transfers mechanical energy into electrical energy.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A battery powers a small motor that turns a drill shaft. What is the motor’s useful conversion?",
+      "options": [
+        "Mechanical rotation into battery fuel only.",
+        "Electrical input into mechanical rotation.",
+        "Thermal energy into charge created from nothing.",
+        "Charge into destroyed matter."
+      ],
+      "correct_index": 1,
+      "guide": "A motor uses electrical input to produce mechanical motion.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "What produces the turning effect in a simple current-driven motor?",
+      "options": [
+        "Magnetic forces on current-carrying parts create torque.",
+        "The switch supplies mechanical fuel.",
+        "Charge disappears from the wire.",
+        "A steady field always causes any stationary loop to spin without current."
+      ],
+      "correct_index": 0,
+      "guide": "Forces on appropriate current-carrying conductors create a net torque.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Why can rotating a coil in a magnetic field produce generator voltage?",
+      "options": [
+        "Voltage requires a permanently open magnetic field line.",
+        "Rotation converts electrons into protons.",
+        "Rotation changes magnetic flux through the coil.",
+        "The magnet supplies unlimited energy without mechanical work."
+      ],
+      "correct_index": 2,
+      "guide": "Changing flux induces emf; electrical output requires an energy input.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A motor receives 240 J electrically and supplies 180 J of useful mechanical energy. What is efficiency?",
+      "options": [
+        "25%",
+        "133%",
+        "60%",
+        "75%"
+      ],
+      "correct_index": 3,
+      "guide": "Efficiency = 180/240 × 100 = 75%; 60 J goes to other outputs.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A generator receives 500 J mechanically and delivers 350 J electrically. Which energy account is consistent?",
+      "options": [
+        "150 J is destroyed.",
+        "The generator creates 850 J.",
+        "Efficiency is 500/350 = 143%.",
+        "150 J is transferred to thermal and other non-useful outputs."
+      ],
+      "correct_index": 3,
+      "guide": "Conservation accounts for the difference. Useful efficiency is 70%, not the inverse ratio.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

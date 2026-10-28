@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 7,
+  "title": "Superposition and interference",
+  "target": "Add signed displacements and distinguish interference from lost energy.",
+  "criteria": [
+    "Add wave displacements at the same place and time.",
+    "Recognize constructive and destructive interference.",
+    "Explain that pulses continue after crossing in a linear medium."
+  ],
+  "source_sha256": "9f140ad7423733629e7de16fd007f9ac5dd99ef59e5992c41a730a63a5bdf5c0",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.547Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "At one string location and instant, two pulse displacements are +6 mm and −2 mm. What is total displacement in a linear medium?",
+      "options": [
+        "−8 mm",
+        "+8 mm",
+        "+4 mm",
+        "−4 mm"
+      ],
+      "correct_index": 2,
+      "guide": "Add signed displacements: +6 + (−2) = +4 mm.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At a point, two pulses contribute −3 cm and −5 cm. What is the total displacement?",
+      "options": [
+        "+2 cm",
+        "−8 cm",
+        "−2 cm",
+        "+8 cm"
+      ],
+      "correct_index": 1,
+      "guide": "Both displacements point downward, so they add to −8 cm.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two equal upward crests meet at one location. What is the displacement there during overlap?",
+      "options": [
+        "Larger upward displacement: constructive interference.",
+        "Both crests disappear permanently.",
+        "The medium’s mass doubles.",
+        "Zero displacement: destructive interference."
+      ],
+      "correct_index": 0,
+      "guide": "Same-sign displacements reinforce.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A +4 mm pulse and a −4 mm pulse overlap exactly in a linear medium. Which description is correct at that instant?",
+      "options": [
+        "Zero energy everywhere forever.",
+        "An 8 mm upward crest.",
+        "A permanent knot containing both pulses.",
+        "Zero net displacement from destructive interference."
+      ],
+      "correct_index": 3,
+      "guide": "Displacements cancel locally; that does not imply permanent destruction of both waves.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two pulses cross on an ideal linear string. What happens after overlap ends?",
+      "options": [
+        "Both remain stuck at the crossing.",
+        "All wave energy must disappear.",
+        "Each continues along its original direction with its original shape.",
+        "Both necessarily reverse direction."
+      ],
+      "correct_index": 2,
+      "guide": "Superposition is temporary addition; ideal linear pulses continue through one another.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A string looks momentarily flat when opposite pulses overlap. What later observation would be consistent with linear superposition?",
+      "options": [
+        "Both pulses become matter traveling together.",
+        "The pulses reappear on opposite sides, moving onward.",
+        "Only a fixed-end reflection could explain the overlap.",
+        "The string remains permanently flat because all energy was destroyed."
+      ],
+      "correct_index": 1,
+      "guide": "Temporary displacement cancellation is compatible with continued wave motion and energy.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "At one string location and instant, two pulse displacements are +6 mm and −2 mm. What is total displacement in a linear medium?",
+      "options": [
+        "+8 mm",
+        "−8 mm",
+        "+4 mm",
+        "−4 mm"
+      ],
+      "correct_index": 2,
+      "guide": "Add signed displacements: +6 + (−2) = +4 mm.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At a point, two pulses contribute −3 cm and −5 cm. What is the total displacement?",
+      "options": [
+        "+8 cm",
+        "+2 cm",
+        "−2 cm",
+        "−8 cm"
+      ],
+      "correct_index": 3,
+      "guide": "Both displacements point downward, so they add to −8 cm.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two equal upward crests meet at one location. What is the displacement there during overlap?",
+      "options": [
+        "Both crests disappear permanently.",
+        "The medium’s mass doubles.",
+        "Larger upward displacement: constructive interference.",
+        "Zero displacement: destructive interference."
+      ],
+      "correct_index": 2,
+      "guide": "Same-sign displacements reinforce.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A +4 mm pulse and a −4 mm pulse overlap exactly in a linear medium. Which description is correct at that instant?",
+      "options": [
+        "An 8 mm upward crest.",
+        "Zero net displacement from destructive interference.",
+        "Zero energy everywhere forever.",
+        "A permanent knot containing both pulses."
+      ],
+      "correct_index": 1,
+      "guide": "Displacements cancel locally; that does not imply permanent destruction of both waves.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two pulses cross on an ideal linear string. What happens after overlap ends?",
+      "options": [
+        "Each continues along its original direction with its original shape.",
+        "Both necessarily reverse direction.",
+        "All wave energy must disappear.",
+        "Both remain stuck at the crossing."
+      ],
+      "correct_index": 0,
+      "guide": "Superposition is temporary addition; ideal linear pulses continue through one another.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A string looks momentarily flat when opposite pulses overlap. What later observation would be consistent with linear superposition?",
+      "options": [
+        "Only a fixed-end reflection could explain the overlap.",
+        "The string remains permanently flat because all energy was destroyed.",
+        "Both pulses become matter traveling together.",
+        "The pulses reappear on opposite sides, moving onward."
+      ],
+      "correct_index": 3,
+      "guide": "Temporary displacement cancellation is compatible with continued wave motion and energy.",
+      "target_slug": "u6.r1-interference",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

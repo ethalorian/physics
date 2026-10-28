@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 5,
+  "title": "Use work-energy to solve motion",
+  "target": "Choose work-energy when force and displacement are known.",
+  "criteria": [
+    "List all forces doing work.",
+    "Calculate the kinetic-energy change.",
+    "Check whether the result is physically possible."
+  ],
+  "source_sha256": "08cf1674f03bab04ac3a7b2c26ddb7cd85610b27d82cb788282bf4bbb92437a8",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.518Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A crate slides horizontally. A rope pulls forward, friction acts backward, and gravity and normal forces are vertical. Which forces do nonzero work in this model?",
+      "options": [
+        "Only gravity and normal.",
+        "Rope and friction.",
+        "All four do equal positive work.",
+        "No force can do work on a sliding object."
+      ],
+      "correct_index": 1,
+      "guide": "Vertical forces are perpendicular to displacement; forward and backward components do work.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A student calculates net work using only a drive force and ignores a stated opposing friction force. What correction is needed?",
+      "options": [
+        "Remove the displacement term.",
+        "Add friction’s magnitude as positive work.",
+        "Assume friction never transfers energy.",
+        "Include friction’s negative work in the sum."
+      ],
+      "correct_index": 3,
+      "guide": "Net work requires every force’s signed contribution over the same displacement.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A cart has 28 J of kinetic energy. The net work over an interval is −10 J. What is final kinetic energy?",
+      "options": [
+        "18 J",
+        "38 J",
+        "−38 J",
+        "−18 J"
+      ],
+      "correct_index": 0,
+      "guide": "K_final = 28 − 10 = 18 J.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart’s speed increases from 3 to 5 m/s. What net work was done?",
+      "options": [
+        "34 J",
+        "25 J",
+        "16 J",
+        "4 J"
+      ],
+      "correct_index": 2,
+      "guide": "ΔK = ½ × 2 × (25 − 9) = 16 J.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A moving cart has 15 J of kinetic energy. A proposed calculation gives final kinetic energy −5 J. What does that indicate?",
+      "options": [
+        "Mass must automatically become negative.",
+        "The result is valid if the cart moves left.",
+        "The assumed motion interval or model is invalid; kinetic energy cannot be negative.",
+        "Negative kinetic energy means ordinary motion in the negative direction."
+      ],
+      "correct_index": 2,
+      "guide": "For ordinary positive mass, ½mv² ≥ 0; examine whether stopping occurs before the assumed interval ends.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "An object starts with 27 J of kinetic energy. A constant 9 N opposing force is the only force doing work. How far does it move before stopping?",
+      "options": [
+        "0.33 m",
+        "3 m",
+        "243 m",
+        "18 m"
+      ],
+      "correct_index": 1,
+      "guide": "To stop, negative work must be −27 J: −9d = −27 gives d = 3 m.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A crate slides horizontally. A rope pulls forward, friction acts backward, and gravity and normal forces are vertical. Which forces do nonzero work in this model?",
+      "options": [
+        "No force can do work on a sliding object.",
+        "Only gravity and normal.",
+        "Rope and friction.",
+        "All four do equal positive work."
+      ],
+      "correct_index": 2,
+      "guide": "Vertical forces are perpendicular to displacement; forward and backward components do work.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A student calculates net work using only a drive force and ignores a stated opposing friction force. What correction is needed?",
+      "options": [
+        "Add friction’s magnitude as positive work.",
+        "Assume friction never transfers energy.",
+        "Remove the displacement term.",
+        "Include friction’s negative work in the sum."
+      ],
+      "correct_index": 3,
+      "guide": "Net work requires every force’s signed contribution over the same displacement.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A cart has 28 J of kinetic energy. The net work over an interval is −10 J. What is final kinetic energy?",
+      "options": [
+        "−18 J",
+        "−38 J",
+        "38 J",
+        "18 J"
+      ],
+      "correct_index": 3,
+      "guide": "K_final = 28 − 10 = 18 J.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart’s speed increases from 3 to 5 m/s. What net work was done?",
+      "options": [
+        "4 J",
+        "34 J",
+        "16 J",
+        "25 J"
+      ],
+      "correct_index": 2,
+      "guide": "ΔK = ½ × 2 × (25 − 9) = 16 J.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A moving cart has 15 J of kinetic energy. A proposed calculation gives final kinetic energy −5 J. What does that indicate?",
+      "options": [
+        "Mass must automatically become negative.",
+        "The assumed motion interval or model is invalid; kinetic energy cannot be negative.",
+        "The result is valid if the cart moves left.",
+        "Negative kinetic energy means ordinary motion in the negative direction."
+      ],
+      "correct_index": 1,
+      "guide": "For ordinary positive mass, ½mv² ≥ 0; examine whether stopping occurs before the assumed interval ends.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "An object starts with 27 J of kinetic energy. A constant 9 N opposing force is the only force doing work. How far does it move before stopping?",
+      "options": [
+        "3 m",
+        "0.33 m",
+        "243 m",
+        "18 m"
+      ],
+      "correct_index": 0,
+      "guide": "To stop, negative work must be −27 J: −9d = −27 gives d = 3 m.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ]
+}

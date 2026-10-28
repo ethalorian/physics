@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 7,
+  "title": "Gravitational potential energy",
+  "target": "Relate height change to near-surface gravitational energy.",
+  "criteria": [
+    "Choose a height reference.",
+    "Use ΔU=mgΔh with the stated g.",
+    "Distinguish potential energy from force."
+  ],
+  "source_sha256": "6d17894ffd43c41d2fe18953a38691759307be47dc8fde4f5ce5af1e49ebbd51",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.520Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A book is on a shelf. One group sets U = 0 at the floor; another at the shelf. Which statement is correct?",
+      "options": [
+        "They can assign different U values but agree on ΔU for the same lift.",
+        "The shelf group must have negative mass.",
+        "Changing zero changes the actual gravitational force.",
+        "Only the floor can ever be a zero reference."
+      ],
+      "correct_index": 0,
+      "guide": "Potential-energy zero is a convention; physical energy differences are invariant.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A model uses U = 0 at a platform. An object is 0.4 m below it. What sign is U = mgh with upward height positive?",
+      "options": [
+        "Positive in every reference.",
+        "Zero because height cannot be negative.",
+        "Negative.",
+        "It has no sign because force is downward."
+      ],
+      "correct_index": 2,
+      "guide": "Relative height is negative, so U is negative under that chosen zero.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2.5 kg object is raised 1.6 m. Use g = 10 N/kg. What is ΔU?",
+      "options": [
+        "25 J",
+        "16 J",
+        "4 J",
+        "40 J"
+      ],
+      "correct_index": 3,
+      "guide": "ΔU = mgΔh = 2.5 × 10 × 1.6 = 40 J.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg object drops from 2.2 m to 0.7 m above a reference. Use g = 10 N/kg. What is ΔU?",
+      "options": [
+        "−60 J",
+        "−116 J",
+        "+60 J",
+        "+28 J"
+      ],
+      "correct_index": 0,
+      "guide": "Δh = 0.7 − 2.2 = −1.5 m; ΔU = 4 × 10 × (−1.5) = −60 J.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 3 kg object has weight 30 N and is 2 m above the chosen zero. Which is its gravitational potential energy?",
+      "options": [
+        "6 N",
+        "60 J",
+        "30 N",
+        "15 J"
+      ],
+      "correct_index": 1,
+      "guide": "Weight is force; U = weight × height = 60 J.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A lift raises an object twice as high in the same near-surface constant-g model. What happens to its weight and potential-energy gain?",
+      "options": [
+        "Weight doubles; energy gain is unchanged.",
+        "Both become zero at the top.",
+        "Both weight and energy gain double.",
+        "Weight stays the same; energy gain doubles."
+      ],
+      "correct_index": 3,
+      "guide": "Weight mg is fixed here, while ΔU = mgΔh scales with height change.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A book is on a shelf. One group sets U = 0 at the floor; another at the shelf. Which statement is correct?",
+      "options": [
+        "Only the floor can ever be a zero reference.",
+        "They can assign different U values but agree on ΔU for the same lift.",
+        "The shelf group must have negative mass.",
+        "Changing zero changes the actual gravitational force."
+      ],
+      "correct_index": 1,
+      "guide": "Potential-energy zero is a convention; physical energy differences are invariant.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A model uses U = 0 at a platform. An object is 0.4 m below it. What sign is U = mgh with upward height positive?",
+      "options": [
+        "Zero because height cannot be negative.",
+        "Positive in every reference.",
+        "Negative.",
+        "It has no sign because force is downward."
+      ],
+      "correct_index": 2,
+      "guide": "Relative height is negative, so U is negative under that chosen zero.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2.5 kg object is raised 1.6 m. Use g = 10 N/kg. What is ΔU?",
+      "options": [
+        "40 J",
+        "16 J",
+        "4 J",
+        "25 J"
+      ],
+      "correct_index": 0,
+      "guide": "ΔU = mgΔh = 2.5 × 10 × 1.6 = 40 J.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg object drops from 2.2 m to 0.7 m above a reference. Use g = 10 N/kg. What is ΔU?",
+      "options": [
+        "−60 J",
+        "+28 J",
+        "+60 J",
+        "−116 J"
+      ],
+      "correct_index": 0,
+      "guide": "Δh = 0.7 − 2.2 = −1.5 m; ΔU = 4 × 10 × (−1.5) = −60 J.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 3 kg object has weight 30 N and is 2 m above the chosen zero. Which is its gravitational potential energy?",
+      "options": [
+        "15 J",
+        "60 J",
+        "6 N",
+        "30 N"
+      ],
+      "correct_index": 1,
+      "guide": "Weight is force; U = weight × height = 60 J.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A lift raises an object twice as high in the same near-surface constant-g model. What happens to its weight and potential-energy gain?",
+      "options": [
+        "Both weight and energy gain double.",
+        "Both become zero at the top.",
+        "Weight doubles; energy gain is unchanged.",
+        "Weight stays the same; energy gain doubles."
+      ],
+      "correct_index": 3,
+      "guide": "Weight mg is fixed here, while ΔU = mgΔh scales with height change.",
+      "target_slug": "u4.k3-gpe-mgh",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

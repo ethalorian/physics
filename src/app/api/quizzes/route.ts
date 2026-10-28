@@ -1,3 +1,4 @@
+import {missingDailyLessons} from '@/lib/interactive-assignments/foundations/sequence-server'
 import {choiceQuizDispositions} from '@/lib/choice-calendar-server'
 import { calendarAssigned, CALENDAR_ASSIGNMENT_MESSAGE } from '@/lib/calendar-assignment'
 import {mcasItem} from '@/lib/mcas/bank'
@@ -20,6 +21,9 @@ export const GET=withAuth(async(req,ctx)=>{
   const readings=prerequisites.size?await quizRows<{id:string;course_id:string;title:string}>((a,b)=>supabaseAdmin.from('textbook_assignments').select('id,course_id,title').in('id',[...prerequisites.values()]).eq('status','published').order('id').range(a,b)):[]
   for(const q of quizzes){const reading=readings.find(r=>r.id===prerequisites.get(q.id)&&r.course_id===q.course_id);if(q.status==='published'&&reading)locked.push({kind:q.kind,id:q.id,course_id:q.course_id,title:q.title,due_at:q.due_at,created_at:q.created_at,reading_id:reading.id,reading_title:reading.title})}
   quizzes=quizzes.filter(q=>!prerequisites.has(q.id))
+  const daily=await missingDailyLessons(quizzes.filter(q=>q.daily_sequence_key).map(q=>q.id),ctx.userId)
+  for(const q of quizzes){const missing=daily.filter(m=>m.quiz_id===q.id);if(missing.length)locked.push({kind:q.kind,id:q.id,course_id:q.course_id,title:q.title,due_at:q.due_at,created_at:q.created_at,daily_sequence_key:q.daily_sequence_key,prerequisites:missing.map(({id,title,role})=>({id,title,role}))})}
+  quizzes=quizzes.filter(q=>!daily.some(m=>m.quiz_id===q.id))
  }
 
  const work=await quizListWork(quizzes.map(q=>q.id),staff?undefined:ctx.userId),pending:Record<string,number>={}

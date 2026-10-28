@@ -41,7 +41,7 @@ test('due work takes precedence over optional future work and the warm-up', () =
   assert.equal(task([quiz])?.kind, 'Vocabulary quiz')
   assert.equal(task([quiz])?.label, 'Start quiz')
   assert.equal(task([assignment({ due: '2026-10-25' })])?.kind, 'Math warm-up')
-  assert.equal(task([assignment()], { math: null })?.kind, 'Assignment')
+  assert.equal(task([assignment()], { math: null })?.kind, 'Reading & response')
 })
 
 test('submitted, unavailable, and prerequisite-gated work keep their real actions', () => {

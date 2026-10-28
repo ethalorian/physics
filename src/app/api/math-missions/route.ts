@@ -1,3 +1,4 @@
+import { suggestAfterSubmission } from '@/lib/assessment-results/suggestions-server'
 import {NextResponse} from 'next/server'
 import {randomInt} from 'node:crypto'
 import {withAuth} from '@/lib/api-auth'
@@ -51,6 +52,6 @@ export const POST=withAuth(async(request,ctx)=>{
   const next=transition(session,body.action,body.answer);
   // Completion pays a bounded practice reward, independent of hints or accuracy.
   const {data:saved,error:saveError}=await supabaseAdmin.rpc('save_math_mission',{p_user:ctx.userId,p_session:session.id,p_revision:session.revision,p_state:next.state,p_complete:next.complete,p_ranked:next.ranked,p_score:next.score,p_xp:PRACTICE_XP});
-  if(saveError)return fail(saveError);return NextResponse.json({session:viewSession(saved as Session)});
+  if(saveError)return fail(saveError);if(next.complete&&session.assignment_id&&!session.staff)suggestAfterSubmission('mission',session.id);return NextResponse.json({session:viewSession(saved as Session)});
  }catch(e){return NextResponse.json({error:e instanceof Error?e.message:'Could not check this step.'},{status:400});}
 })

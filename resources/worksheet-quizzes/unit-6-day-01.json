@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 1,
+  "title": "What can waves tell us?",
+  "target": "Distinguish a signal’s travel from the motion of its source.",
+  "criteria": [
+    "Identify what a wave can carry.",
+    "Separate signal travel time from source speed.",
+    "Name evidence needed to interpret an observation."
+  ],
+  "source_sha256": "01e25e35700c0a5e7cb08ef5391483bf570fc79ec7d053065174aa94aa4e8b0d",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.542Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A floating marker bobs as a small water wave passes. What can travel onward even though the marker stays near its location?",
+      "options": [
+        "Only the marker’s mass, with no energy.",
+        "All the marker’s matter must travel with the crest.",
+        "Nothing, because waves cannot move.",
+        "Energy carried by the wave."
+      ],
+      "correct_index": 3,
+      "guide": "In the simple wave model, energy propagates while material oscillates locally.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rope pulse reaches a hanging bell and moves it. Which observation supports energy transfer?",
+      "options": [
+        "The rope must be flowing continuously into the bell.",
+        "The bell begins moving after the pulse arrives.",
+        "The entire rope becomes part of the bell.",
+        "The pulse creates matter."
+      ],
+      "correct_index": 1,
+      "guide": "Work on the bell demonstrates transferred energy; bulk rope transport is unnecessary.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A signal travels 84 m from a stationary source at 28 m/s. What is one-way travel time?",
+      "options": [
+        "2,352 s",
+        "0.33 s",
+        "3.0 s",
+        "28 s"
+      ],
+      "correct_index": 2,
+      "guide": "t = d/v = 84/28 = 3.0 s. Signal speed does not imply source motion.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A stationary lighthouse sends a flash. The flash travels away rapidly. What can be inferred about the lighthouse’s own speed from signal speed alone?",
+      "options": [
+        "Nothing definite; signal propagation and source motion are different.",
+        "It must accelerate with the flash.",
+        "It must move toward the observer.",
+        "It must move at the speed of light."
+      ],
+      "correct_index": 0,
+      "guide": "A source can remain still while its signal propagates.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "To infer distance from a measured one-way signal delay, what additional information is essential?",
+      "options": [
+        "Signal speed along the path.",
+        "Only the observer’s favorite unit.",
+        "Only the source’s color.",
+        "Only the receiver’s mass."
+      ],
+      "correct_index": 0,
+      "guide": "Distance equals propagation speed times travel time in the constant-speed model.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A receiver detects a later pulse than expected. Which evidence would help distinguish a farther source from a slower propagation path?",
+      "options": [
+        "An assumption that later always means faster.",
+        "Only the pulse arrival time again.",
+        "The receiver’s label.",
+        "Independent information about the path’s signal speed or the source distance."
+      ],
+      "correct_index": 3,
+      "guide": "Travel time depends on both distance and speed; one delay cannot uniquely determine both.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A floating marker bobs as a small water wave passes. What can travel onward even though the marker stays near its location?",
+      "options": [
+        "All the marker’s matter must travel with the crest.",
+        "Energy carried by the wave.",
+        "Only the marker’s mass, with no energy.",
+        "Nothing, because waves cannot move."
+      ],
+      "correct_index": 1,
+      "guide": "In the simple wave model, energy propagates while material oscillates locally.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rope pulse reaches a hanging bell and moves it. Which observation supports energy transfer?",
+      "options": [
+        "The bell begins moving after the pulse arrives.",
+        "The rope must be flowing continuously into the bell.",
+        "The pulse creates matter.",
+        "The entire rope becomes part of the bell."
+      ],
+      "correct_index": 0,
+      "guide": "Work on the bell demonstrates transferred energy; bulk rope transport is unnecessary.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A signal travels 84 m from a stationary source at 28 m/s. What is one-way travel time?",
+      "options": [
+        "28 s",
+        "2,352 s",
+        "3.0 s",
+        "0.33 s"
+      ],
+      "correct_index": 2,
+      "guide": "t = d/v = 84/28 = 3.0 s. Signal speed does not imply source motion.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A stationary lighthouse sends a flash. The flash travels away rapidly. What can be inferred about the lighthouse’s own speed from signal speed alone?",
+      "options": [
+        "It must accelerate with the flash.",
+        "It must move toward the observer.",
+        "It must move at the speed of light.",
+        "Nothing definite; signal propagation and source motion are different."
+      ],
+      "correct_index": 3,
+      "guide": "A source can remain still while its signal propagates.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "To infer distance from a measured one-way signal delay, what additional information is essential?",
+      "options": [
+        "Signal speed along the path.",
+        "Only the source’s color.",
+        "Only the receiver’s mass.",
+        "Only the observer’s favorite unit."
+      ],
+      "correct_index": 0,
+      "guide": "Distance equals propagation speed times travel time in the constant-speed model.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A receiver detects a later pulse than expected. Which evidence would help distinguish a farther source from a slower propagation path?",
+      "options": [
+        "Only the pulse arrival time again.",
+        "Independent information about the path’s signal speed or the source distance.",
+        "An assumption that later always means faster.",
+        "The receiver’s label."
+      ],
+      "correct_index": 1,
+      "guide": "Travel time depends on both distance and speed; one delay cannot uniquely determine both.",
+      "target_slug": "u6.anchor-energy-not-matter",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

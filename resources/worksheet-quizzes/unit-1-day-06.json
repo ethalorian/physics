@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 6,
+  "title": "Vector addition",
+  "target": "Add displacement vectors and use a model to explain where an object ends up.",
+  "criteria": [
+    "Place arrows tip to tail without rotating them.",
+    "Combine east-west and north-south components separately.",
+    "State the resultant with units and a clear direction."
+  ],
+  "source_sha256": "cc0b3203733d90e41c4d1a7b79a1139097f1772912d6e096922922fd5d90ac0f",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.473Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "To add displacement B to A tip-to-tail, what is done to B?",
+      "options": [
+        "Double its length first.",
+        "Rotate it until both point the same way.",
+        "Place its tip at A’s tail and reverse it.",
+        "Translate it so its tail meets A’s tip without changing its direction or length."
+      ],
+      "correct_index": 3,
+      "guide": "A free vector can be translated while preserving magnitude and direction.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "After two displacements are placed tip-to-tail, where does the resultant arrow run?",
+      "options": [
+        "Between the two individual arrow tips only.",
+        "From the first tail to the last tip.",
+        "From the last tip back to the first tail.",
+        "Always from the origin northward."
+      ],
+      "correct_index": 1,
+      "guide": "The resultant connects the overall start to the overall finish.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Displacement A is 8 m east and 3 m north. B is 5 m west and 4 m north. What are total components?",
+      "options": [
+        "13 m west and 1 m south.",
+        "13 m east and 7 m north.",
+        "3 m west and 1 m north.",
+        "3 m east and 7 m north."
+      ],
+      "correct_index": 3,
+      "guide": "Combine east-west and north-south independently: 8 − 5 = 3; 3 + 4 = 7.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A drone moves 9 m south, then 4 m north and 6 m east. What are net components?",
+      "options": [
+        "6 m east and 5 m south.",
+        "5 m east and 6 m south.",
+        "6 m east and 13 m south.",
+        "6 m west and 5 m north."
+      ],
+      "correct_index": 0,
+      "guide": "North-south sum is −9 + 4 = −5; east component is +6.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A displacement has components 5 m west and 12 m north. What are magnitude and general direction?",
+      "options": [
+        "17 m, northwest.",
+        "13 m, northeast.",
+        "13 m, northwest.",
+        "7 m, southwest."
+      ],
+      "correct_index": 2,
+      "guide": "Magnitude = √(25 + 144) = 13; signs give northwest.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A route totals 10 m east, 6 m north, and 10 m west. Which describes its distance and displacement?",
+      "options": [
+        "26 m traveled; 6 m north displacement.",
+        "6 m traveled; zero displacement.",
+        "26 m traveled; zero displacement.",
+        "6 m traveled; 26 m north displacement."
+      ],
+      "correct_index": 0,
+      "guide": "East-west components cancel, while path length includes every leg.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "To add displacement B to A tip-to-tail, what is done to B?",
+      "options": [
+        "Double its length first.",
+        "Translate it so its tail meets A’s tip without changing its direction or length.",
+        "Place its tip at A’s tail and reverse it.",
+        "Rotate it until both point the same way."
+      ],
+      "correct_index": 1,
+      "guide": "A free vector can be translated while preserving magnitude and direction.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "After two displacements are placed tip-to-tail, where does the resultant arrow run?",
+      "options": [
+        "From the first tail to the last tip.",
+        "From the last tip back to the first tail.",
+        "Between the two individual arrow tips only.",
+        "Always from the origin northward."
+      ],
+      "correct_index": 0,
+      "guide": "The resultant connects the overall start to the overall finish.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Displacement A is 8 m east and 3 m north. B is 5 m west and 4 m north. What are total components?",
+      "options": [
+        "3 m east and 7 m north.",
+        "13 m west and 1 m south.",
+        "3 m west and 1 m north.",
+        "13 m east and 7 m north."
+      ],
+      "correct_index": 0,
+      "guide": "Combine east-west and north-south independently: 8 − 5 = 3; 3 + 4 = 7.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A drone moves 9 m south, then 4 m north and 6 m east. What are net components?",
+      "options": [
+        "5 m east and 6 m south.",
+        "6 m east and 13 m south.",
+        "6 m east and 5 m south.",
+        "6 m west and 5 m north."
+      ],
+      "correct_index": 2,
+      "guide": "North-south sum is −9 + 4 = −5; east component is +6.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A displacement has components 5 m west and 12 m north. What are magnitude and general direction?",
+      "options": [
+        "17 m, northwest.",
+        "13 m, northwest.",
+        "13 m, northeast.",
+        "7 m, southwest."
+      ],
+      "correct_index": 1,
+      "guide": "Magnitude = √(25 + 144) = 13; signs give northwest.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A route totals 10 m east, 6 m north, and 10 m west. Which describes its distance and displacement?",
+      "options": [
+        "6 m traveled; zero displacement.",
+        "6 m traveled; 26 m north displacement.",
+        "26 m traveled; zero displacement.",
+        "26 m traveled; 6 m north displacement."
+      ],
+      "correct_index": 3,
+      "guide": "East-west components cancel, while path length includes every leg.",
+      "target_slug": "u1.vectors-tip-to-tail",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

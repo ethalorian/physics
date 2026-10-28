@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { summarizeEvidence, type EvidenceDecision } from "@/lib/evidence-rating";
 import { orderReviewQueue, reviewItemKey, type MasteryReviewItem } from "@/lib/mastery-review-queue";
+import SubmissionSuggestions from '@/components/admin/results/SubmissionSuggestions';
 import { ReviewRatings, ReviewFeedback, ReviewQueueRail, ReviewStudentBar } from "@/components/review/ReviewDeskControls";
 import styles from "./MasteryReviewDesk.module.css";
 
@@ -252,6 +253,7 @@ function ReviewForm({ studentId, targetId, unitId, initialLessonId, submissionId
       <Dialog.Description className={styles.srOnly}>Review lesson evidence, record a mastery rating, and send feedback.</Dialog.Description>
       <div className={styles.layout}>
         <main className={styles.work} ref={answerRef}>
+          {(actualSubmission || lessonId.startsWith('presentation:') && evidence[0]?.evidenceKey) && <SubmissionSuggestions source={actualSubmission ? 'lesson' : 'presentation'} id={actualSubmission ?? evidence[0]!.evidenceKey!} disabled={frozen} onRating={rating=>{if(rating.target_id===targetId)update({mode:'target',level:rating.level})}} onFeedback={note=>update({note:draft.note||note})}/>} 
           <h3 className={styles.step}><span>1</span> Review the work</h3>
           <p className={styles.lessonTitle}>{lessons.find(([id]) => id === lessonId)?.[1] ?? "Lesson evidence"}</p>
           {active && <p className={styles.hint}>{lessonId.startsWith("presentation:") ? "Submitted class response" : actualSubmission ? "Submitted lesson" : "Saved work · not yet submitted"} · {new Date(active.createdAt).toLocaleString()}</p>}
@@ -298,9 +300,9 @@ function ReviewForm({ studentId, targetId, unitId, initialLessonId, submissionId
             {reassessing && <p className={styles.hint}>This adds a new assessment. The previous rating remains in the history.</p>}
           </div>
           <div className={styles.actions}>
-            {saved ? <button className={styles.primary} disabled={saving} onClick={() => advance()}>{next ? "Continue to pending work" : "Finish review"}</button> : <button className={styles.primary} disabled={saving || !canSave} onClick={() => void save(true)}>{saving ? "Saving…" : draft.attempted ? "Retry review and continue" : "Save review and continue"}</button>}
-            {!saved && <div className={styles.secondaryActions}><button disabled={saving || !canSave} onClick={() => void save(false)}>Save & stay</button><button disabled={saving || !!draft.attempted} onClick={() => advance(true)}>Skip for now</button></div>}
-            <div className={styles.saveStatus} aria-live="polite">{historyError ? <p role="alert">{historyError} <button onClick={() => setHistoryVersion(v => v + 1)}>Retry saved reviews</button></p> : !historyReady || !ready ? <p>Loading saved reviews…</p> : error ? <p role="alert" className={styles.error}>{error}</p> : <p>{notice || (saved ? `Saved for ${student?.name}: ${saved.overall_level} · ${word(saved.overall_level)}.` : "Draft kept in this tab until saved.")}</p>}</div>
+            {saved ? <button className={styles.primary} disabled={saving} onClick={() => advance()}>{next ? "Continue to pending work" : "Finish review"}</button> : <button className={styles.primary} disabled={saving || !canSave} onClick={() => void save(true)}>{saving ? "Saving…" : draft.attempted ? "Retry review and continue" : "Release review and continue"}</button>}
+            {!saved && <div className={styles.secondaryActions}><button disabled={saving || !canSave} onClick={() => void save(false)}>Release & stay</button><button disabled={saving || !!draft.attempted} onClick={() => advance(true)}>Skip for now</button></div>}
+            <div className={styles.saveStatus} aria-live="polite">{historyError ? <p role="alert">{historyError} <button onClick={() => setHistoryVersion(v => v + 1)}>Retry saved reviews</button></p> : !historyReady || !ready ? <p>Loading saved reviews…</p> : error ? <p role="alert" className={styles.error}>{error}</p> : <p>{notice || (saved ? `Saved for ${student?.name}: ${saved.overall_level} · ${word(saved.overall_level)}.` : "Private draft kept in this tab until you release it.")}</p>}</div>
             <button className={styles.shortcuts} onClick={() => setHelp(true)}>1 · 2 · 3 rate · F feedback · ⌘/Ctrl + Enter save</button>
           </div>
         </aside>

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 2,
+  "title": "Free fall",
+  "target": "Describe and calculate ideal free fall near Earth.",
+  "criteria": [
+    "State the no-air-resistance assumption.",
+    "Use equal velocity changes in equal times.",
+    "Separate acceleration from mass and current velocity."
+  ],
+  "source_sha256": "c10733a57e7ec81b5d478fc75ffe9900f6ab6fc6435c0c0ef338490af5f1c58d",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.489Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Which condition is required for the simple near-surface free-fall model?",
+      "options": [
+        "The object has no mass.",
+        "Air resistance is negligible and gravity is approximately uniform.",
+        "Its velocity is always downward.",
+        "Gravity becomes stronger every second."
+      ],
+      "correct_index": 1,
+      "guide": "Free fall describes motion under gravity alone; constant g is a near-surface approximation.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A feather and a metal sphere are released together in a vacuum near the surface. Which ideal prediction is correct?",
+      "options": [
+        "They have the same acceleration.",
+        "The feather has no gravitational force.",
+        "The metal sphere must accelerate faster because it is heavier.",
+        "Neither falls without air."
+      ],
+      "correct_index": 0,
+      "guide": "With negligible resistance, gravitational acceleration does not depend on test mass.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Take downward as positive and g = 10 m/s². A ball initially moves downward at 3 m/s. What is velocity 2 s later in free fall?",
+      "options": [
+        "+20 m/s",
+        "−17 m/s",
+        "+23 m/s",
+        "+13 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "v = v₀ + gt = 3 + 20 = 23.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In constant-g free fall, velocity changes by 9.8 m/s in 1 s. What is the change over 0.5 s?",
+      "options": [
+        "4.9 m/s downward.",
+        "19.6 m/s downward.",
+        "9.8 m/s upward.",
+        "Zero because less than one second elapsed."
+      ],
+      "correct_index": 0,
+      "guide": "Δv = gΔt = 9.8 × 0.5 = 4.9 downward.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At the highest point of an upward toss without air resistance, which is true?",
+      "options": [
+        "Acceleration points upward.",
+        "Vertical velocity is zero momentarily; acceleration remains downward.",
+        "Both velocity and acceleration are zero.",
+        "Gravity acts only while the ball moves downward."
+      ],
+      "correct_index": 1,
+      "guide": "Zero instantaneous velocity does not imply zero acceleration.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two falling objects have different current downward speeds in the same uniform field without resistance. Compare accelerations.",
+      "options": [
+        "The slower object necessarily accelerates more.",
+        "The faster object necessarily accelerates more.",
+        "Both accelerations are zero because they already move.",
+        "Equal downward accelerations."
+      ],
+      "correct_index": 3,
+      "guide": "In this model acceleration is set by g, not current speed.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Which condition is required for the simple near-surface free-fall model?",
+      "options": [
+        "Its velocity is always downward.",
+        "Air resistance is negligible and gravity is approximately uniform.",
+        "The object has no mass.",
+        "Gravity becomes stronger every second."
+      ],
+      "correct_index": 1,
+      "guide": "Free fall describes motion under gravity alone; constant g is a near-surface approximation.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A feather and a metal sphere are released together in a vacuum near the surface. Which ideal prediction is correct?",
+      "options": [
+        "The metal sphere must accelerate faster because it is heavier.",
+        "Neither falls without air.",
+        "They have the same acceleration.",
+        "The feather has no gravitational force."
+      ],
+      "correct_index": 2,
+      "guide": "With negligible resistance, gravitational acceleration does not depend on test mass.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Take downward as positive and g = 10 m/s². A ball initially moves downward at 3 m/s. What is velocity 2 s later in free fall?",
+      "options": [
+        "+23 m/s",
+        "−17 m/s",
+        "+13 m/s",
+        "+20 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "v = v₀ + gt = 3 + 20 = 23.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In constant-g free fall, velocity changes by 9.8 m/s in 1 s. What is the change over 0.5 s?",
+      "options": [
+        "9.8 m/s upward.",
+        "4.9 m/s downward.",
+        "19.6 m/s downward.",
+        "Zero because less than one second elapsed."
+      ],
+      "correct_index": 1,
+      "guide": "Δv = gΔt = 9.8 × 0.5 = 4.9 downward.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At the highest point of an upward toss without air resistance, which is true?",
+      "options": [
+        "Acceleration points upward.",
+        "Gravity acts only while the ball moves downward.",
+        "Both velocity and acceleration are zero.",
+        "Vertical velocity is zero momentarily; acceleration remains downward."
+      ],
+      "correct_index": 3,
+      "guide": "Zero instantaneous velocity does not imply zero acceleration.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two falling objects have different current downward speeds in the same uniform field without resistance. Compare accelerations.",
+      "options": [
+        "The faster object necessarily accelerates more.",
+        "The slower object necessarily accelerates more.",
+        "Equal downward accelerations.",
+        "Both accelerations are zero because they already move."
+      ],
+      "correct_index": 2,
+      "guide": "In this model acceleration is set by g, not current speed.",
+      "target_slug": "u2.free-fall-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

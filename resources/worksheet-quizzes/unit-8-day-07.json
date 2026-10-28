@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 8,
+  "day": 7,
+  "title": "Secure wiring and finish the design",
+  "target": "Document permanent connections and evaluate added mass or friction.",
+  "criteria": [
+    "Check circuit continuity and mechanical security.",
+    "Preserve moving-part clearance during decoration.",
+    "Relate a design revision to an energy transfer or force."
+  ],
+  "source_sha256": "30c1dd2acf805dd1d9fb8f79457856d97a09460493c48e17d3f5163f4edc0705",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.577Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A wire joint separates when the battery shifts. What revision addresses both mechanical and electrical reliability?",
+      "options": [
+        "Secure the battery and repair the insulated joint using the supervised procedure.",
+        "Bypass the motor with a wire.",
+        "Pull the wire tighter across a gear.",
+        "Leave exposed wire touching the chassis hardware."
+      ],
+      "correct_index": 0,
+      "guide": "Mechanical restraint and a secure insulated connection protect the intended circuit.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A motor stops whenever its supply wire is moved. Which testable explanation best fits?",
+      "options": [
+        "Current is permanently consumed by the wire.",
+        "Moving a wire always increases battery energy.",
+        "An intermittent connection may be opening the circuit.",
+        "The motor has become a switch by definition."
+      ],
+      "correct_index": 2,
+      "guide": "Motion-sensitive loss of operation suggests an intermittent path; inspect safely rather than assuming proof.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A decorative flag clears the wheel when still but bends into it during a run. Which revision should be tested?",
+      "options": [
+        "Shorten or relocate the flag and check clearance during motion.",
+        "Tape it to the rotating tire.",
+        "Increase rubbing to stabilize it.",
+        "Check only its resting position again."
+      ],
+      "correct_index": 0,
+      "guide": "Dynamic clearance is needed because flexible decoration can move during operation.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which finishing plan best preserves a working drivetrain?",
+      "options": [
+        "Hide the switch beneath a permanent panel.",
+        "Glue the axle to the chassis.",
+        "Cover gears with loose threads.",
+        "Keep decorations outside gear and wheel motion and make the switch accessible."
+      ],
+      "correct_index": 3,
+      "guide": "Finishing must retain mechanical clearance and control access.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A model car’s mass changes from 0.30 kg to 0.36 kg. If net forward force remains 0.90 N, what happens to acceleration?",
+      "options": [
+        "It rises from 3.0 to 3.6 m/s².",
+        "It stays 0.90 m/s².",
+        "It becomes zero because mass increased.",
+        "It falls from 3.0 to 2.5 m/s²."
+      ],
+      "correct_index": 3,
+      "guide": "a = F/m: 0.90/0.30 = 3.0 and 0.90/0.36 = 2.5. The force assumption must be checked in a real car.",
+      "target_slug": "u8.r4-three-physics-choices",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "After a decoration is moved away from a wheel, the car travels farther in a coast test. Which explanation is consistent with that evidence?",
+      "options": [
+        "Energy conservation stopped applying.",
+        "Less rubbing may transfer less mechanical energy into thermal energy.",
+        "The decoration created charge.",
+        "Friction vanished everywhere."
+      ],
+      "correct_index": 1,
+      "guide": "Reducing a contact loss can preserve mechanical energy longer; the trial does not prove every loss disappeared.",
+      "target_slug": "u8.k2-energy-chain",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A wire joint separates when the battery shifts. What revision addresses both mechanical and electrical reliability?",
+      "options": [
+        "Bypass the motor with a wire.",
+        "Secure the battery and repair the insulated joint using the supervised procedure.",
+        "Leave exposed wire touching the chassis hardware.",
+        "Pull the wire tighter across a gear."
+      ],
+      "correct_index": 1,
+      "guide": "Mechanical restraint and a secure insulated connection protect the intended circuit.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A motor stops whenever its supply wire is moved. Which testable explanation best fits?",
+      "options": [
+        "Moving a wire always increases battery energy.",
+        "The motor has become a switch by definition.",
+        "Current is permanently consumed by the wire.",
+        "An intermittent connection may be opening the circuit."
+      ],
+      "correct_index": 3,
+      "guide": "Motion-sensitive loss of operation suggests an intermittent path; inspect safely rather than assuming proof.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A decorative flag clears the wheel when still but bends into it during a run. Which revision should be tested?",
+      "options": [
+        "Tape it to the rotating tire.",
+        "Shorten or relocate the flag and check clearance during motion.",
+        "Increase rubbing to stabilize it.",
+        "Check only its resting position again."
+      ],
+      "correct_index": 1,
+      "guide": "Dynamic clearance is needed because flexible decoration can move during operation.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which finishing plan best preserves a working drivetrain?",
+      "options": [
+        "Keep decorations outside gear and wheel motion and make the switch accessible.",
+        "Hide the switch beneath a permanent panel.",
+        "Glue the axle to the chassis.",
+        "Cover gears with loose threads."
+      ],
+      "correct_index": 0,
+      "guide": "Finishing must retain mechanical clearance and control access.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A model car’s mass changes from 0.30 kg to 0.36 kg. If net forward force remains 0.90 N, what happens to acceleration?",
+      "options": [
+        "It becomes zero because mass increased.",
+        "It stays 0.90 m/s².",
+        "It falls from 3.0 to 2.5 m/s².",
+        "It rises from 3.0 to 3.6 m/s²."
+      ],
+      "correct_index": 2,
+      "guide": "a = F/m: 0.90/0.30 = 3.0 and 0.90/0.36 = 2.5. The force assumption must be checked in a real car.",
+      "target_slug": "u8.r4-three-physics-choices",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "After a decoration is moved away from a wheel, the car travels farther in a coast test. Which explanation is consistent with that evidence?",
+      "options": [
+        "Less rubbing may transfer less mechanical energy into thermal energy.",
+        "Friction vanished everywhere.",
+        "The decoration created charge.",
+        "Energy conservation stopped applying."
+      ],
+      "correct_index": 0,
+      "guide": "Reducing a contact loss can preserve mechanical energy longer; the trial does not prove every loss disappeared.",
+      "target_slug": "u8.k2-energy-chain",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 4,
+  "title": "Velocity graphs and components",
+  "target": "Read a velocity graph and describe motion in two directions.",
+  "criteria": [
+    "Use signed velocity-time area to find displacement.",
+    "Represent horizontal and vertical components separately.",
+    "Distinguish graph height, slope and vector magnitude."
+  ],
+  "source_sha256": "388412291b2740c7c3679580d765f0e485a1128aad19aecd0cb352dad7aef637",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.471Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A velocity-time graph is constant at +3 m/s for 4 s. What is displacement?",
+      "options": [
+        "+0.75 m",
+        "+12 m",
+        "+7 m",
+        "+12 m/s²"
+      ],
+      "correct_index": 1,
+      "guide": "Signed area is 3 × 4 = 12 m.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart moves at −4 m/s for 2 s, then +2 m/s for 3 s. What is net displacement?",
+      "options": [
+        "+2 m",
+        "+14 m",
+        "−2 m",
+        "−14 m"
+      ],
+      "correct_index": 2,
+      "guide": "Add signed areas: −8 + 6 = −2 m.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A drone’s velocity components are 7 m/s east and 2 m/s south. What is its general direction?",
+      "options": [
+        "Southwest.",
+        "Southeast.",
+        "Northwest.",
+        "Northeast."
+      ],
+      "correct_index": 1,
+      "guide": "Combine eastward and southward components.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A velocity has components +6 m/s in x and −8 m/s in y. What is its magnitude?",
+      "options": [
+        "10 m/s",
+        "48 m/s",
+        "14 m/s",
+        "−2 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "Magnitude = √(6² + 8²) = 10 m/s.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "On a velocity-time graph, which feature represents acceleration?",
+      "options": [
+        "Signed area.",
+        "Graph height alone.",
+        "Slope.",
+        "The velocity-axis label alone."
+      ],
+      "correct_index": 2,
+      "guide": "Slope is Δv/Δt; height is velocity and area is displacement.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A horizontal v–t segment sits at −5 m/s. Which interpretation is correct?",
+      "options": [
+        "Positive displacement because time increases.",
+        "Negative acceleration because the graph is below zero.",
+        "Zero velocity because the line is flat.",
+        "Constant negative velocity, zero acceleration, and negative displacement over positive elapsed time."
+      ],
+      "correct_index": 3,
+      "guide": "Height, slope, and signed area describe different quantities.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A velocity-time graph is constant at +3 m/s for 4 s. What is displacement?",
+      "options": [
+        "+12 m/s²",
+        "+12 m",
+        "+7 m",
+        "+0.75 m"
+      ],
+      "correct_index": 1,
+      "guide": "Signed area is 3 × 4 = 12 m.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart moves at −4 m/s for 2 s, then +2 m/s for 3 s. What is net displacement?",
+      "options": [
+        "−14 m",
+        "+2 m",
+        "−2 m",
+        "+14 m"
+      ],
+      "correct_index": 2,
+      "guide": "Add signed areas: −8 + 6 = −2 m.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A drone’s velocity components are 7 m/s east and 2 m/s south. What is its general direction?",
+      "options": [
+        "Southwest.",
+        "Northeast.",
+        "Northwest.",
+        "Southeast."
+      ],
+      "correct_index": 3,
+      "guide": "Combine eastward and southward components.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A velocity has components +6 m/s in x and −8 m/s in y. What is its magnitude?",
+      "options": [
+        "−2 m/s",
+        "14 m/s",
+        "10 m/s",
+        "48 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Magnitude = √(6² + 8²) = 10 m/s.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "On a velocity-time graph, which feature represents acceleration?",
+      "options": [
+        "Slope.",
+        "The velocity-axis label alone.",
+        "Signed area.",
+        "Graph height alone."
+      ],
+      "correct_index": 0,
+      "guide": "Slope is Δv/Δt; height is velocity and area is displacement.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A horizontal v–t segment sits at −5 m/s. Which interpretation is correct?",
+      "options": [
+        "Negative acceleration because the graph is below zero.",
+        "Positive displacement because time increases.",
+        "Zero velocity because the line is flat.",
+        "Constant negative velocity, zero acceleration, and negative displacement over positive elapsed time."
+      ],
+      "correct_index": 3,
+      "guide": "Height, slope, and signed area describe different quantities.",
+      "target_slug": "u1.read-vt-graph-components",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

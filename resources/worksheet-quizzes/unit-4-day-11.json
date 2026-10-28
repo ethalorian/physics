@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 11,
+  "title": "Sliding, swinging and rolling",
+  "target": "Choose the energy terms that match the type of motion.",
+  "criteria": [
+    "Distinguish translational and rotational kinetic energy.",
+    "Use equal height changes to compare ideal energy changes.",
+    "State when a simple point-mass model is insufficient."
+  ],
+  "source_sha256": "649f4a4409bb573bf647ce5bb351d6c1770480a00daab0528fe7032299498bfc",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.523Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A rigid wheel rolls along a surface. Which motion energies can it have?",
+      "options": [
+        "Translational and rotational kinetic energy.",
+        "Only potential energy because contact is stationary momentarily.",
+        "Only translational kinetic energy in every model.",
+        "Negative rotational kinetic energy."
+      ],
+      "correct_index": 0,
+      "guide": "Its center translates while the wheel rotates.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rolling object loses 32 J of gravitational potential energy. It gains 12 J of rotational energy with negligible losses. What is its translational energy gain?",
+      "options": [
+        "12 J",
+        "32 J",
+        "44 J",
+        "20 J"
+      ],
+      "correct_index": 3,
+      "guide": "The 32 J splits into 12 J rotational and 20 J translational.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sliding point mass and a swinging point mass start from rest and descend the same height without resistance. Compare final speeds.",
+      "options": [
+        "Speed depends only on travel time.",
+        "Sliding must be faster because the path is straighter.",
+        "Swinging must be faster because the path is curved.",
+        "Equal."
+      ],
+      "correct_index": 3,
+      "guide": "For each point mass, ½mv² = mgΔh.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two ideal point masses descend 0.8 m and 3.2 m from rest. What is the ratio of the second speed to the first?",
+      "options": [
+        "1/4",
+        "2",
+        "4",
+        "16"
+      ],
+      "correct_index": 1,
+      "guide": "Speed scales with the square root of height; √(3.2/0.8) = 2.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student assigns all lost gravitational energy to the center-of-mass motion of a rolling ball. What was omitted?",
+      "options": [
+        "Rotational kinetic energy.",
+        "A negative gravitational force.",
+        "A mandatory increase in mass.",
+        "A universal doubling of energy."
+      ],
+      "correct_index": 0,
+      "guide": "Rolling can store energy in rotation as well as translation.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A rolling cylinder arrives slower than a frictionless sliding block after equal drops from rest. Does this alone prove energy loss?",
+      "options": [
+        "Yes; any rotating body violates conservation.",
+        "No; the cylinder must gain mass instead.",
+        "No; some cylinder energy can be rotational.",
+        "Yes; speed alone measures every form of energy."
+      ],
+      "correct_index": 2,
+      "guide": "Compare all energy terms before concluding that energy left the mechanical account.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A rigid wheel rolls along a surface. Which motion energies can it have?",
+      "options": [
+        "Translational and rotational kinetic energy.",
+        "Only translational kinetic energy in every model.",
+        "Only potential energy because contact is stationary momentarily.",
+        "Negative rotational kinetic energy."
+      ],
+      "correct_index": 0,
+      "guide": "Its center translates while the wheel rotates.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rolling object loses 32 J of gravitational potential energy. It gains 12 J of rotational energy with negligible losses. What is its translational energy gain?",
+      "options": [
+        "20 J",
+        "44 J",
+        "12 J",
+        "32 J"
+      ],
+      "correct_index": 0,
+      "guide": "The 32 J splits into 12 J rotational and 20 J translational.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sliding point mass and a swinging point mass start from rest and descend the same height without resistance. Compare final speeds.",
+      "options": [
+        "Speed depends only on travel time.",
+        "Swinging must be faster because the path is curved.",
+        "Sliding must be faster because the path is straighter.",
+        "Equal."
+      ],
+      "correct_index": 3,
+      "guide": "For each point mass, ½mv² = mgΔh.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two ideal point masses descend 0.8 m and 3.2 m from rest. What is the ratio of the second speed to the first?",
+      "options": [
+        "4",
+        "2",
+        "16",
+        "1/4"
+      ],
+      "correct_index": 1,
+      "guide": "Speed scales with the square root of height; √(3.2/0.8) = 2.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student assigns all lost gravitational energy to the center-of-mass motion of a rolling ball. What was omitted?",
+      "options": [
+        "A universal doubling of energy.",
+        "Rotational kinetic energy.",
+        "A mandatory increase in mass.",
+        "A negative gravitational force."
+      ],
+      "correct_index": 1,
+      "guide": "Rolling can store energy in rotation as well as translation.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A rolling cylinder arrives slower than a frictionless sliding block after equal drops from rest. Does this alone prove energy loss?",
+      "options": [
+        "No; the cylinder must gain mass instead.",
+        "Yes; speed alone measures every form of energy.",
+        "No; some cylinder energy can be rotational.",
+        "Yes; any rotating body violates conservation."
+      ],
+      "correct_index": 2,
+      "guide": "Compare all energy terms before concluding that energy left the mechanical account.",
+      "target_slug": "u4.s3-conservation-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

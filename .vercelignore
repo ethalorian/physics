@@ -1,4 +1,6 @@
 .env*
+service-account-key.json
+credentials/
 .private
 .next
 node_modules

@@ -1,3 +1,4 @@
+import RevisionCycle from '@/components/review-desk/RevisionCycle'
 import { supabaseAdmin } from '@/lib/supabase'
 import Link from 'next/link'
 import { authorizeLesson, lessonForReader } from '@/lib/lesson-access'
@@ -25,6 +26,6 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
   }
   const lesson = lessonForReader(access.lesson, access.document)
   const LessonReader = lesson.content_blocks?.blocks.some(b=>b.vocational) ? TradeLessonShell : BlockLessonViewer
-  const reader = <LessonReader lesson={lesson} staffView={access.viewer.role === 'admin'} previewReturnHref={context.realRole === 'observer' ? '/lessons' : undefined} />
+  const reader = <>{context.realRole==='student'&&<RevisionCycle sourceKey={'lesson:'+lesson.id}/>}<LessonReader lesson={lesson} staffView={access.viewer.role === 'admin'} previewReturnHref={context.realRole === 'observer' ? '/lessons' : undefined} /></>
   return access.viewer.role === 'admin' ? reader : <LessonActivityTracker lessonId={lesson.id}>{reader}</LessonActivityTracker>
 }

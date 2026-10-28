@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 18,
+  "title": "The energy that becomes thermal",
+  "target": "Account for mechanical energy changes through heating and deformation.",
+  "criteria": [
+    "Track system boundaries in an energy balance.",
+    "Distinguish thermal energy from temperature.",
+    "Use energy differences to quantify a transfer."
+  ],
+  "source_sha256": "010ea14e1b3f0089d61fee82482e5542b9e13a9c178d5ea6908e6500c32aa9d3",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.527Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A block slides across a rough floor. Which system can contain the friction-related internal-energy increase in both surfaces?",
+      "options": [
+        "The block with all floor interactions ignored.",
+        "Only the block’s speed.",
+        "Block and floor together.",
+        "Only the ruler used to measure distance."
+      ],
+      "correct_index": 2,
+      "guide": "The system boundary should include the interacting surfaces when counting their internal energy.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Mechanical energy leaves a selected system through heating. What must the energy account include?",
+      "options": [
+        "An energy transfer across its boundary.",
+        "An automatic increase in kinetic energy.",
+        "A violation of total energy conservation.",
+        "A negative temperature."
+      ],
+      "correct_index": 0,
+      "guide": "Energy can cross a chosen system boundary; the account must track it.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which distinction between temperature and internal energy is correct?",
+      "options": [
+        "Temperature is measured in joules.",
+        "A warmer tiny sample must store more internal energy than any large sample.",
+        "Equal temperatures always imply equal total internal energies.",
+        "Temperature is not the same quantity as total internal energy."
+      ],
+      "correct_index": 3,
+      "guide": "Internal energy also depends on amount and material; temperature alone is insufficient.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two samples of the same material have equal mass and initial temperature. One receives twice the heating energy, with constant heat capacity and no phase change. Compare temperature rises.",
+      "options": [
+        "Both rises must be equal.",
+        "The twice-heated sample has twice the rise.",
+        "Its rise is four times as large.",
+        "Its rise must be negative."
+      ],
+      "correct_index": 1,
+      "guide": "With identical mc, ΔT = Q/(mc) scales with Q.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A constant 6 N friction force opposes a 4 m slide. What is friction’s work on the block?",
+      "options": [
+        "−1.5 J",
+        "+24 J",
+        "−24 J",
+        "+10 J"
+      ],
+      "correct_index": 2,
+      "guide": "Friction opposes displacement: W = −6 × 4 = −24 J.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A system receives 50 J. Its motion energy rises 18 J and its internal energy rises 27 J. If no other stored form changes, how much energy leaves the system?",
+      "options": [
+        "95 J",
+        "9 J",
+        "45 J",
+        "5 J"
+      ],
+      "correct_index": 3,
+      "guide": "Input 50 = stored increase 45 + output 5.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A block slides across a rough floor. Which system can contain the friction-related internal-energy increase in both surfaces?",
+      "options": [
+        "Only the block’s speed.",
+        "Block and floor together.",
+        "Only the ruler used to measure distance.",
+        "The block with all floor interactions ignored."
+      ],
+      "correct_index": 1,
+      "guide": "The system boundary should include the interacting surfaces when counting their internal energy.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Mechanical energy leaves a selected system through heating. What must the energy account include?",
+      "options": [
+        "A violation of total energy conservation.",
+        "An automatic increase in kinetic energy.",
+        "A negative temperature.",
+        "An energy transfer across its boundary."
+      ],
+      "correct_index": 3,
+      "guide": "Energy can cross a chosen system boundary; the account must track it.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which distinction between temperature and internal energy is correct?",
+      "options": [
+        "Equal temperatures always imply equal total internal energies.",
+        "A warmer tiny sample must store more internal energy than any large sample.",
+        "Temperature is measured in joules.",
+        "Temperature is not the same quantity as total internal energy."
+      ],
+      "correct_index": 3,
+      "guide": "Internal energy also depends on amount and material; temperature alone is insufficient.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two samples of the same material have equal mass and initial temperature. One receives twice the heating energy, with constant heat capacity and no phase change. Compare temperature rises.",
+      "options": [
+        "The twice-heated sample has twice the rise.",
+        "Its rise must be negative.",
+        "Its rise is four times as large.",
+        "Both rises must be equal."
+      ],
+      "correct_index": 0,
+      "guide": "With identical mc, ΔT = Q/(mc) scales with Q.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A constant 6 N friction force opposes a 4 m slide. What is friction’s work on the block?",
+      "options": [
+        "+24 J",
+        "−1.5 J",
+        "−24 J",
+        "+10 J"
+      ],
+      "correct_index": 2,
+      "guide": "Friction opposes displacement: W = −6 × 4 = −24 J.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A system receives 50 J. Its motion energy rises 18 J and its internal energy rises 27 J. If no other stored form changes, how much energy leaves the system?",
+      "options": [
+        "5 J",
+        "95 J",
+        "45 J",
+        "9 J"
+      ],
+      "correct_index": 0,
+      "guide": "Input 50 = stored increase 45 + output 5.",
+      "target_slug": "u4.r5-heat-bridge",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 'use client'
 
-import { type CSSProperties, type RefObject } from 'react'
+import { type CSSProperties, type ReactNode, type RefObject } from 'react'
 import Link from 'next/link'
 import { ArrowUpRight, ArrowRight, Flame, MessageCircle, Pencil, Sparkles, Sprout, UserRound } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
@@ -26,12 +26,15 @@ interface StudentCheckInProps {
   onGrowth?: () => void
   onFeedback?: () => void
   growthActive?: boolean
+  progressHref?: string
+  feedbackHref?: string
+  progressSummary?: ReactNode
   illustratedLook?: IllustratedAvatarLook
   onChangeLook?: () => void
   changeLookRef?: RefObject<HTMLButtonElement | null>
 }
 
-export default function StudentCheckIn({ name, streak, points, loading, today, task, onGrowth, onFeedback, growthActive, illustratedLook, onChangeLook, changeLookRef }: StudentCheckInProps) {
+export default function StudentCheckIn({ name, streak, points, loading, today, task, onGrowth, onFeedback, growthActive, progressHref, feedbackHref, progressSummary, illustratedLook, onChangeLook, changeLookRef }: StudentCheckInProps) {
   const { portrait, loaded, error: avatarError } = useAvatarPortrait(!illustratedLook)
   const avatarLoading = !loaded
 
@@ -75,20 +78,23 @@ export default function StudentCheckIn({ name, streak, points, loading, today, t
           <p className={styles.taskMeta}>{task?.meta ?? 'Finding your next learning step'}</p>
           {task && <Link href={task.href} className={`${styles.raisedButton} ${styles.startLearning}`}>{task.label}<span className={styles.actionArrow}><ArrowRight size={18} aria-hidden="true" /></span></Link>}
           <div className={styles.welcomeActions}>
-            {onGrowth && <button type="button" className={styles.raisedButton} onClick={onGrowth} aria-controls="learning-dashboard-content" aria-current={growthActive ? 'page' : undefined}><Sprout size={17} aria-hidden="true" />My growth</button>}
-            {onFeedback && <button type="button" className={styles.feedback} onClick={onFeedback} aria-controls="learning-dashboard-content"><MessageCircle size={16} aria-hidden="true" />Feedback</button>}
+            {progressHref ? <Link className={styles.raisedButton} href={progressHref}><Sprout size={17} aria-hidden="true" />My progress</Link> : onGrowth && <button type="button" className={styles.raisedButton} onClick={onGrowth} aria-controls="learning-dashboard-content" aria-current={growthActive ? 'page' : undefined}><Sprout size={17} aria-hidden="true" />My progress</button>}
+            {feedbackHref ? <Link className={styles.feedback} href={feedbackHref}><MessageCircle size={16} aria-hidden="true" />Feedback</Link> : onFeedback && <button type="button" className={styles.feedback} onClick={onFeedback} aria-controls="learning-dashboard-content"><MessageCircle size={16} aria-hidden="true" />Feedback</button>}
           </div>
         </div>
       </div>
-      <div className={styles.xpDisplay} aria-label="Your earned XP and spending balance">
-        <div>
-          <p className={styles.xpLabel}><Sparkles size={16} aria-hidden="true" />Lifetime XP</p>
-          <p className={styles.xpTotal}><span aria-hidden="true">{points ? formatXp(points.xp) : '—'}</span><span className="sr-only">{points ? `${points.xp.toLocaleString('en-US')} lifetime XP` : 'XP unavailable'}</span></p>
-          {!points && <p className={styles.xpCaption} role="status">{loading ? 'Loading your XP…' : 'XP is unavailable right now.'}</p>}
-        </div>
-        <div className={styles.walletBottom}>
-          <p className={styles.balance}><strong><span aria-hidden="true">{points ? formatXp(points.balance) : '—'}</span><span className="sr-only">{points ? points.balance.toLocaleString('en-US') : 'Unavailable'}</span></strong> XP to spend</p>
-          <Link href="/store" className={`${styles.raisedButton} ${styles.store}`}>Visit store<ArrowUpRight size={16} aria-hidden="true" /></Link>
+      <div className={styles.progressRail}>
+        {progressSummary}
+        <div className={styles.xpDisplay} aria-label="Your earned XP and spending balance">
+          <div>
+            <p className={styles.xpLabel}><Sparkles size={16} aria-hidden="true" />Lifetime XP</p>
+            <p className={styles.xpTotal}><span aria-hidden="true">{points ? formatXp(points.xp) : '—'}</span><span className="sr-only">{points ? `${points.xp.toLocaleString('en-US')} lifetime XP` : 'XP unavailable'}</span></p>
+            {!points && <p className={styles.xpCaption} role="status">{loading ? 'Loading your XP…' : 'XP is unavailable right now.'}</p>}
+          </div>
+          <div className={styles.walletBottom}>
+            <p className={styles.balance}><strong><span aria-hidden="true">{points ? formatXp(points.balance) : '—'}</span><span className="sr-only">{points ? points.balance.toLocaleString('en-US') : 'Unavailable'}</span></strong> XP to spend</p>
+            <Link href="/store" className={`${styles.raisedButton} ${styles.store}`}>Visit store<ArrowUpRight size={16} aria-hidden="true" /></Link>
+          </div>
         </div>
       </div>
     </section>

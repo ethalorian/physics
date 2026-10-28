@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 17,
+  "title": "Mechanical waves and distant effects",
+  "target": "Use travel-time reasoning while distinguishing waves from the motion of material.",
+  "criteria": [
+    "Identify the medium carrying the wave.",
+    "Use speed and distance to estimate travel time.",
+    "Explain why a simple travel time does not predict damage."
+  ],
+  "source_sha256": "7985d403bdf96a03090d4ed40d88bf16bd9e07a8defdc189f554a032e13da1b5",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.555Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A seismic disturbance travels through rock. What is the material medium in this case?",
+      "options": [
+        "Empty space around Earth.",
+        "Only the seismometer’s display.",
+        "The time axis on a graph.",
+        "The rock."
+      ],
+      "correct_index": 3,
+      "guide": "Mechanical seismic waves propagate through a material medium.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A long ocean wave passes a floating marker. Which distinction is appropriate in a simple wave model?",
+      "options": [
+        "The disturbance travels across water while a water parcel moves locally.",
+        "Every parcel must travel from the source to the shore at wave speed.",
+        "The marker carries all wave energy by drifting to shore.",
+        "Ocean waves require no water."
+      ],
+      "correct_index": 0,
+      "guide": "Wave propagation differs from bulk transport of water from source to destination.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A model wave travels 360 km at a constant 180 km/h. What is travel time?",
+      "options": [
+        "180 h",
+        "64,800 h",
+        "2.0 h",
+        "0.50 h"
+      ],
+      "correct_index": 2,
+      "guide": "t = d/v = 360/180 = 2 h with matching units.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Sensors are 1,500 m apart along a wave path. Speed is assumed constant at 75 m/s. What arrival-time difference is expected?",
+      "options": [
+        "1,425 s",
+        "20 s",
+        "112,500 s",
+        "0.05 s"
+      ],
+      "correct_index": 1,
+      "guide": "Δt = 1500/75 = 20 s in the stated constant-speed model.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A simple model predicts when a coastal wave arrives. What else is needed to estimate local damage?",
+      "options": [
+        "Nothing; arrival time uniquely determines damage.",
+        "Only the predicted arrival time.",
+        "Only the distance in kilometers.",
+        "Wave size and energy, coastal geometry, and local exposure or vulnerability."
+      ],
+      "correct_index": 3,
+      "guide": "Travel time alone does not specify wave amplitude, local amplification, or affected structures.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Two coastal sites have the same modeled arrival time but different shoreline shapes. Which claim is justified?",
+      "options": [
+        "They need not experience the same wave height or damage.",
+        "They must experience identical damage.",
+        "Neither can receive wave energy.",
+        "Equal time proves equal water depth everywhere."
+      ],
+      "correct_index": 0,
+      "guide": "Local geometry, depth changes, and exposure can alter the response independently of arrival time.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A seismic disturbance travels through rock. What is the material medium in this case?",
+      "options": [
+        "The rock.",
+        "Empty space around Earth.",
+        "Only the seismometer’s display.",
+        "The time axis on a graph."
+      ],
+      "correct_index": 0,
+      "guide": "Mechanical seismic waves propagate through a material medium.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A long ocean wave passes a floating marker. Which distinction is appropriate in a simple wave model?",
+      "options": [
+        "Ocean waves require no water.",
+        "Every parcel must travel from the source to the shore at wave speed.",
+        "The disturbance travels across water while a water parcel moves locally.",
+        "The marker carries all wave energy by drifting to shore."
+      ],
+      "correct_index": 2,
+      "guide": "Wave propagation differs from bulk transport of water from source to destination.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A model wave travels 360 km at a constant 180 km/h. What is travel time?",
+      "options": [
+        "180 h",
+        "0.50 h",
+        "64,800 h",
+        "2.0 h"
+      ],
+      "correct_index": 3,
+      "guide": "t = d/v = 360/180 = 2 h with matching units.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Sensors are 1,500 m apart along a wave path. Speed is assumed constant at 75 m/s. What arrival-time difference is expected?",
+      "options": [
+        "20 s",
+        "112,500 s",
+        "1,425 s",
+        "0.05 s"
+      ],
+      "correct_index": 0,
+      "guide": "Δt = 1500/75 = 20 s in the stated constant-speed model.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A simple model predicts when a coastal wave arrives. What else is needed to estimate local damage?",
+      "options": [
+        "Only the predicted arrival time.",
+        "Wave size and energy, coastal geometry, and local exposure or vulnerability.",
+        "Nothing; arrival time uniquely determines damage.",
+        "Only the distance in kilometers."
+      ],
+      "correct_index": 1,
+      "guide": "Travel time alone does not specify wave amplitude, local amplification, or affected structures.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Two coastal sites have the same modeled arrival time but different shoreline shapes. Which claim is justified?",
+      "options": [
+        "Equal time proves equal water depth everywhere.",
+        "They need not experience the same wave height or damage.",
+        "They must experience identical damage.",
+        "Neither can receive wave energy."
+      ],
+      "correct_index": 1,
+      "guide": "Local geometry, depth changes, and exposure can alter the response independently of arrival time.",
+      "target_slug": "u6.r7-tsunami",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

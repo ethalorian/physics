@@ -1,0 +1,78 @@
+{
+  "collaboration": {
+    "maxGroupSize": 4,
+    "primaryRoles": [
+      "Slideshow lead",
+      "Whiteboard scribe"
+    ],
+    "secondaryDuties": [
+      "Timekeeper",
+      "Checker"
+    ],
+    "individualResponses": true
+  },
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 2 Talking About Motion.dc.html",
+  "sourceSha256": "1d2be8365945e57b669cefc3d5d217a4a2b69a5ca2df399b8212a8984db8f3a8",
+  "runtimeSha256": {
+    "support": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe",
+    "stage": "f3d3d0a662c08eefb5a8757a6da3139572485f4be32ac33785c5047061926a8a"
+  },
+  "packagedSha256": "efe81e121fb21adcf5860664adab0b8c26f4209ca76807366a7d6f7857598389",
+  "cover": {
+    "file": "art/asteroid-briefing.png",
+    "sha256": "ae90f10457a275a673a1662f651ce0c04ea070027eaa74f289e37b0c8819de62"
+  },
+  "studentSlides": 29,
+  "originalStudentSlides": 26,
+  "teacherSlidesExcluded": 3,
+  "timers": 3,
+  "answerReveals": 3,
+  "transition": {
+    "type": "fade",
+    "durationMs": 260,
+    "respectsReducedMotion": true
+  },
+  "snapshots": [
+    {
+      "after": 10,
+      "page": 6,
+      "file": "day-02-page-02.webp",
+      "y": 307,
+      "height": 521,
+      "title": "Eli’s return trip",
+      "alt": "Eli walks 6 m east from the starting marker, then 6 m west back to it.",
+      "body": "Follow both arrows. Then compare the starting and finishing markers.",
+      "question": "How can the same trip have 12 m of distance and zero displacement?",
+      "work": "Part 1 · Compare the path and endpoints",
+      "sha256": "a770d3266c6bfc89d0cb3acf7e6d9c7ab993e4c1299d80aa9b5b0b4366e575d5"
+    },
+    {
+      "after": 19,
+      "page": 7,
+      "file": "day-02-page-03.webp",
+      "y": 837,
+      "height": 280,
+      "title": "The courtyard route",
+      "alt": "A notebook shows five equal steps north, three east, and five south. The whole route is 13 step-lengths; its displacement is 3 step-lengths east.",
+      "body": "The dashed route follows every leg. The direct arrow joins the start to the finish.",
+      "question": "What must be true about the steps for the north and south changes to cancel?",
+      "work": "Part 2 · Check the walking model",
+      "sha256": "81eabc1712c9a7083566452272cdf93ac1dc1af34f411254dc73d7b865242343"
+    },
+    {
+      "after": 21,
+      "page": 8,
+      "file": "day-02-page-04.webp",
+      "y": 448,
+      "height": 241,
+      "title": "A number needs a direction",
+      "alt": "Two alternative one-million-kilometer displacements start at the same asteroid position. One points toward Earth and one points away. These are possibilities, not a forecast.",
+      "body": "The two arrows have the same magnitude and different endpoints. Neither is a forecast.",
+      "question": "What information and observations would distinguish these possibilities?",
+      "work": "Part 3 · Give the headline a direction",
+      "sha256": "3e3197f007f002f36b29069b4982a21f92345077ac6df2b11fbbb0eebe0350bd"
+    }
+  ],
+  "notes": "Original executable logic, timers and reveal controls unchanged. Teacher-only slides/notes removed. Three snapshots use viewport crops of existing immutable artwork with text companions. Original cover PNG and comic assets are separately cacheable; the original cover URL avoids the export’s data-URL CSS parsing bug. Corrected the unsupported 200 m track displacement and labeled the scenario fictional. Original export archived unchanged."
+}

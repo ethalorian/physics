@@ -16,7 +16,7 @@ import styles from './AssignedWork.module.css'
 export interface VideoHomework {
   id: string; slug: string; title: string; sequence: number; due_at: string | null; complete: boolean
 }
-const ICONS = { review: ClipboardCheck, video: Play, reading: BookOpen, quiz: ClipboardCheck, vocabulary: SpellCheck }
+const ICONS = { worksheet: ClipboardCheck, review: ClipboardCheck, video: Play, lesson: ClipboardCheck, reading: BookOpen, quiz: ClipboardCheck, vocabulary: SpellCheck }
 const VIEWS: { id: AssignmentView; label: string }[] = [{ id: 'todo', label: 'To do' }, { id: 'overdue', label: 'Past due' }, { id: 'upcoming', label: 'Next 7 days' }, { id: 'submitted', label: 'Submitted / done' }]
 
 function AssignmentRow({ item, now }: { item: StudentAssignment; now: number }) {

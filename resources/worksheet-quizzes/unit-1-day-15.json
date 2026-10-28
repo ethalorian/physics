@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 15,
+  "title": "Free-body diagrams",
+  "target": "Draw only the external forces on one chosen object.",
+  "criteria": [
+    "Choose one object and list its external interactions.",
+    "Draw force arrows in physically correct directions.",
+    "Remove velocity and net force as extra interaction arrows."
+  ],
+  "source_sha256": "c0c841587c3a9b9f9efad0a9babe49ff76a8575dec6bd1365bcd960691f72cb9",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.481Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "For the free-body diagram of a crate, which list is appropriate on a rough level floor while a rope pulls it?",
+      "options": [
+        "Velocity, acceleration, and momentum as three extra forces.",
+        "Earth on crate, floor normal on crate, floor friction on crate, rope on crate.",
+        "Crate on Earth, crate on floor, crate on rope only.",
+        "Only the largest force."
+      ],
+      "correct_index": 1,
+      "guide": "List external interactions acting on the chosen crate.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "When drawing forces on a bicycle rider, which proposed arrow belongs to a different object?",
+      "options": [
+        "Air’s force on the rider.",
+        "Earth’s force on the rider.",
+        "The rider’s force on the seat.",
+        "The seat’s force on the rider."
+      ],
+      "correct_index": 2,
+      "guide": "The rider-on-seat force acts on the seat, not the rider.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A sled slides left on a rough horizontal surface after a push ends. Which direction is kinetic friction on the sled?",
+      "options": [
+        "Right.",
+        "Up.",
+        "Down.",
+        "Left."
+      ],
+      "correct_index": 0,
+      "guide": "Friction opposes relative sliding at the contact.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ball is descending after release with air resistance neglected. Which forces act on it?",
+      "options": [
+        "No forces because the hand released it.",
+        "Gravity down and a downward motion force.",
+        "Gravity down and an upward launch force still attached.",
+        "Gravity downward only."
+      ],
+      "correct_index": 3,
+      "guide": "After release, no hand force remains; in this model only gravity acts.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A diagram already shows every individual interaction force. Should net force be added as another interaction arrow?",
+      "options": [
+        "Only if velocity is positive.",
+        "No; net force is the sum of those forces, not an additional interaction.",
+        "Yes; adding it doubles the physical force correctly.",
+        "Yes; it replaces mass."
+      ],
+      "correct_index": 1,
+      "guide": "A separate resultant can be labeled as a sum, but must not be counted again.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A moving cart’s force diagram includes a rightward arrow labeled velocity among the forces. What repair is appropriate?",
+      "options": [
+        "Show velocity separately as motion information and omit it from the force sum.",
+        "Count velocity as an extra force in newtons.",
+        "Replace gravity with velocity.",
+        "Keep it only if the cart moves right."
+      ],
+      "correct_index": 0,
+      "guide": "Velocity is measured in m/s and is not an interaction force.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "For the free-body diagram of a crate, which list is appropriate on a rough level floor while a rope pulls it?",
+      "options": [
+        "Only the largest force.",
+        "Crate on Earth, crate on floor, crate on rope only.",
+        "Earth on crate, floor normal on crate, floor friction on crate, rope on crate.",
+        "Velocity, acceleration, and momentum as three extra forces."
+      ],
+      "correct_index": 2,
+      "guide": "List external interactions acting on the chosen crate.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "When drawing forces on a bicycle rider, which proposed arrow belongs to a different object?",
+      "options": [
+        "Earth’s force on the rider.",
+        "The rider’s force on the seat.",
+        "The seat’s force on the rider.",
+        "Air’s force on the rider."
+      ],
+      "correct_index": 1,
+      "guide": "The rider-on-seat force acts on the seat, not the rider.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A sled slides left on a rough horizontal surface after a push ends. Which direction is kinetic friction on the sled?",
+      "options": [
+        "Right.",
+        "Down.",
+        "Up.",
+        "Left."
+      ],
+      "correct_index": 0,
+      "guide": "Friction opposes relative sliding at the contact.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ball is descending after release with air resistance neglected. Which forces act on it?",
+      "options": [
+        "No forces because the hand released it.",
+        "Gravity downward only.",
+        "Gravity down and an upward launch force still attached.",
+        "Gravity down and a downward motion force."
+      ],
+      "correct_index": 1,
+      "guide": "After release, no hand force remains; in this model only gravity acts.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A diagram already shows every individual interaction force. Should net force be added as another interaction arrow?",
+      "options": [
+        "Only if velocity is positive.",
+        "Yes; it replaces mass.",
+        "Yes; adding it doubles the physical force correctly.",
+        "No; net force is the sum of those forces, not an additional interaction."
+      ],
+      "correct_index": 3,
+      "guide": "A separate resultant can be labeled as a sum, but must not be counted again.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A moving cart’s force diagram includes a rightward arrow labeled velocity among the forces. What repair is appropriate?",
+      "options": [
+        "Count velocity as an extra force in newtons.",
+        "Replace gravity with velocity.",
+        "Show velocity separately as motion information and omit it from the force sum.",
+        "Keep it only if the cart moves right."
+      ],
+      "correct_index": 2,
+      "guide": "Velocity is measured in m/s and is not an interaction force.",
+      "target_slug": "u1.draw-fbd",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

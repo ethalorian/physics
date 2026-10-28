@@ -537,7 +537,7 @@ function ControlRoom() {
           <div><strong>{loading || gridError ? '—' : totalPendingInView}</strong><span>lesson target reviews waiting</span></div>
           <div><strong>{loading || gridError || !totalCells ? '—' : `${Math.round(ratedCells / totalCells * 100)}%`}</strong><span>student targets rated</span></div>
         </div>
-        <div className={styles.gridHeading}><div><h2>Learning-target mastery</h2><p>{unitLabel} · Select a cell to see the evidence and record mastery.</p></div>
+        <div className={styles.gridHeading}><div><h2>{params.get('masteryKind') === 'math' ? 'Math Spine mastery' : 'Learning-target mastery'}</h2><p>{unitLabel} · Select a cell to see the evidence and record mastery.</p></div>
           <Link href={assessmentCenterHref('lessons', null, classId, params.toString())}>Open lesson inbox →</Link>
         </div>
       </>}

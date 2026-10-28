@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 8,
+  "day": 4,
+  "title": "Theme and chassis layout",
+  "target": "Make a dimensioned layout that supports the circuit and drivetrain.",
+  "criteria": [
+    "Label component locations and clearances.",
+    "Use dimensions to check that parts fit.",
+    "Explain a structural choice with evidence."
+  ],
+  "source_sha256": "fa12ba35a165cc034aa3a380978ee73c492f20d79da8ef28de0868ed32b00d2a",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.574Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A cardboard decoration will pass close to a rotating wheel. Which layout check is most useful?",
+      "options": [
+        "Show the wheel’s full moving outline and leave clearance from the decoration.",
+        "Place the decoration against the tire for support.",
+        "Check only the car’s color.",
+        "Ignore the wheel until race day."
+      ],
+      "correct_index": 0,
+      "guide": "A moving-part envelope identifies interference even when the car looks clear at rest.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A top-view drawing omits the switch location. Which revision best supports building and use?",
+      "options": [
+        "Hide it under a permanently fixed battery.",
+        "Replace it with a theme title.",
+        "Place it against the axle so it holds the axle still.",
+        "Label an accessible switch position and its wire route clear of gears."
+      ],
+      "correct_index": 3,
+      "guide": "The plan must locate functional parts and preserve access and clearance.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A 21 cm chassis needs a 7 cm battery region, a 6 cm motor region, and two 1.5 cm gaps along its length. How much length remains?",
+      "options": [
+        "5 cm",
+        "8 cm",
+        "2 cm",
+        "11 cm"
+      ],
+      "correct_index": 0,
+      "guide": "21 − 7 − 6 − 1.5 − 1.5 = 5 cm. Include the specified gaps.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A planned gap is 4 mm. The required minimum moving clearance is 6 mm. Which decision follows the dimensions?",
+      "options": [
+        "Accept it because 4 is close to 6.",
+        "Remove all clearance.",
+        "Revise the layout to add at least 2 mm of clearance.",
+        "Change millimeters to centimeters without converting."
+      ],
+      "correct_index": 2,
+      "guide": "The plan is 2 mm short of the stated minimum; dimensions, not appearance, decide fit.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A test panel sags into the axle path. Which revision has a physical justification?",
+      "options": [
+        "Disconnect the switch permanently.",
+        "Add a light support outside the moving path and retest clearance under load.",
+        "Add decoration directly onto the axle.",
+        "Ignore sag because the drawing is straight."
+      ],
+      "correct_index": 1,
+      "guide": "A support can limit deflection while preserving movement; the loaded retest checks the claim.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Two layouts fit the theme. Layout A leaves the battery unsecured; B includes a secure holder clear of gears. Which evidence favors B?",
+      "options": [
+        "Theme appearance proves mechanical reliability.",
+        "A holder can prevent battery motion from pulling wires or contacting moving parts.",
+        "The holder creates extra electrical energy.",
+        "A loose battery always improves steering."
+      ],
+      "correct_index": 1,
+      "guide": "Mechanical restraint protects wiring and clearance. It does not generate energy.",
+      "target_slug": "u8.r4-three-physics-choices",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A cardboard decoration will pass close to a rotating wheel. Which layout check is most useful?",
+      "options": [
+        "Check only the car’s color.",
+        "Ignore the wheel until race day.",
+        "Place the decoration against the tire for support.",
+        "Show the wheel’s full moving outline and leave clearance from the decoration."
+      ],
+      "correct_index": 3,
+      "guide": "A moving-part envelope identifies interference even when the car looks clear at rest.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A top-view drawing omits the switch location. Which revision best supports building and use?",
+      "options": [
+        "Replace it with a theme title.",
+        "Label an accessible switch position and its wire route clear of gears.",
+        "Place it against the axle so it holds the axle still.",
+        "Hide it under a permanently fixed battery."
+      ],
+      "correct_index": 1,
+      "guide": "The plan must locate functional parts and preserve access and clearance.",
+      "target_slug": "u8.k1-circuit-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A 21 cm chassis needs a 7 cm battery region, a 6 cm motor region, and two 1.5 cm gaps along its length. How much length remains?",
+      "options": [
+        "8 cm",
+        "2 cm",
+        "5 cm",
+        "11 cm"
+      ],
+      "correct_index": 2,
+      "guide": "21 − 7 − 6 − 1.5 − 1.5 = 5 cm. Include the specified gaps.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A planned gap is 4 mm. The required minimum moving clearance is 6 mm. Which decision follows the dimensions?",
+      "options": [
+        "Accept it because 4 is close to 6.",
+        "Revise the layout to add at least 2 mm of clearance.",
+        "Change millimeters to centimeters without converting.",
+        "Remove all clearance."
+      ],
+      "correct_index": 1,
+      "guide": "The plan is 2 mm short of the stated minimum; dimensions, not appearance, decide fit.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A test panel sags into the axle path. Which revision has a physical justification?",
+      "options": [
+        "Add decoration directly onto the axle.",
+        "Ignore sag because the drawing is straight.",
+        "Add a light support outside the moving path and retest clearance under load.",
+        "Disconnect the switch permanently."
+      ],
+      "correct_index": 2,
+      "guide": "A support can limit deflection while preserving movement; the loaded retest checks the claim.",
+      "target_slug": "u8.r5-theme-commit",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Two layouts fit the theme. Layout A leaves the battery unsecured; B includes a secure holder clear of gears. Which evidence favors B?",
+      "options": [
+        "A holder can prevent battery motion from pulling wires or contacting moving parts.",
+        "A loose battery always improves steering.",
+        "The holder creates extra electrical energy.",
+        "Theme appearance proves mechanical reliability."
+      ],
+      "correct_index": 0,
+      "guide": "Mechanical restraint protects wiring and clearance. It does not generate energy.",
+      "target_slug": "u8.r4-three-physics-choices",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

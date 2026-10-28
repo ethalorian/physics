@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 8,
+  "title": "When constant g is not enough",
+  "target": "Recognize the limits of the near-surface mgh model.",
+  "criteria": [
+    "Compare altitude with planetary radius.",
+    "Explain that gravitational field weakens with center distance.",
+    "Choose a model appropriate to the height interval."
+  ],
+  "source_sha256": "9069b8755f076557767f1d369d3f58b43470c40d6cc4b06ece0aa8911ace826c",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.521Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A lift rises 8 m above a planet of radius 6,000,000 m. Which approximation is reasonable for gravity over that lift?",
+      "options": [
+        "Approximately constant g.",
+        "g must halve every meter.",
+        "Altitude should replace center distance in every inverse-square equation.",
+        "Gravity becomes zero above the ground."
+      ],
+      "correct_index": 0,
+      "guide": "The height change is tiny compared with planetary radius.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A spacecraft rises from a planet’s surface to an altitude equal to the planet’s radius R. What is its final center distance?",
+      "options": [
+        "0",
+        "2R",
+        "R",
+        "R/2"
+      ],
+      "correct_index": 1,
+      "guide": "Center distance r = R + h = 2R; this is not a small relative change.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At the surface a spherical planet has field g₀. At center distance 3R, what is field in the inverse-square model?",
+      "options": [
+        "g₀/3",
+        "9g₀",
+        "3g₀",
+        "g₀/9"
+      ],
+      "correct_index": 3,
+      "guide": "Field scales as 1/r²; tripling center distance reduces it by 9.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spacecraft moves outward from radius R to 2R. Which field trend is expected?",
+      "options": [
+        "Field increases to four times its initial value.",
+        "Field suddenly becomes zero just above the surface.",
+        "Field decreases continuously to one-quarter its initial value.",
+        "Field stays fixed solely because the mass is unchanged."
+      ],
+      "correct_index": 2,
+      "guide": "The source field varies with center distance, even if spacecraft mass stays fixed.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Using constant surface g for a large outward lift gives what bias relative to the spherical inverse-square model?",
+      "options": [
+        "It predicts negative required work in every lift.",
+        "It overestimates required lifting energy because actual force weakens with height.",
+        "It must be exact for every distance.",
+        "It underestimates because actual g grows with height."
+      ],
+      "correct_index": 1,
+      "guide": "The constant surface force exceeds the actual force at points above the surface.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Which model choice is most defensible for lifting a spacecraft through a height comparable to planetary radius?",
+      "options": [
+        "Use changing gravity or universal potential energy and state the assumptions.",
+        "Use surface mgh without checking its range.",
+        "Use altitude alone as the separation from the planet’s center.",
+        "Ignore gravity above the surface."
+      ],
+      "correct_index": 0,
+      "guide": "Large relative height changes require accounting for the varying field.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A lift rises 8 m above a planet of radius 6,000,000 m. Which approximation is reasonable for gravity over that lift?",
+      "options": [
+        "Gravity becomes zero above the ground.",
+        "Approximately constant g.",
+        "Altitude should replace center distance in every inverse-square equation.",
+        "g must halve every meter."
+      ],
+      "correct_index": 1,
+      "guide": "The height change is tiny compared with planetary radius.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A spacecraft rises from a planet’s surface to an altitude equal to the planet’s radius R. What is its final center distance?",
+      "options": [
+        "2R",
+        "R/2",
+        "R",
+        "0"
+      ],
+      "correct_index": 0,
+      "guide": "Center distance r = R + h = 2R; this is not a small relative change.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At the surface a spherical planet has field g₀. At center distance 3R, what is field in the inverse-square model?",
+      "options": [
+        "3g₀",
+        "g₀/3",
+        "g₀/9",
+        "9g₀"
+      ],
+      "correct_index": 2,
+      "guide": "Field scales as 1/r²; tripling center distance reduces it by 9.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spacecraft moves outward from radius R to 2R. Which field trend is expected?",
+      "options": [
+        "Field stays fixed solely because the mass is unchanged.",
+        "Field decreases continuously to one-quarter its initial value.",
+        "Field suddenly becomes zero just above the surface.",
+        "Field increases to four times its initial value."
+      ],
+      "correct_index": 1,
+      "guide": "The source field varies with center distance, even if spacecraft mass stays fixed.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Using constant surface g for a large outward lift gives what bias relative to the spherical inverse-square model?",
+      "options": [
+        "It predicts negative required work in every lift.",
+        "It underestimates because actual g grows with height.",
+        "It must be exact for every distance.",
+        "It overestimates required lifting energy because actual force weakens with height."
+      ],
+      "correct_index": 3,
+      "guide": "The constant surface force exceeds the actual force at points above the surface.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Which model choice is most defensible for lifting a spacecraft through a height comparable to planetary radius?",
+      "options": [
+        "Use surface mgh without checking its range.",
+        "Use altitude alone as the separation from the planet’s center.",
+        "Use changing gravity or universal potential energy and state the assumptions.",
+        "Ignore gravity above the surface."
+      ],
+      "correct_index": 2,
+      "guide": "Large relative height changes require accounting for the varying field.",
+      "target_slug": "u4.r2-mgh-limits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

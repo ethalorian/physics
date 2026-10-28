@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 14,
+  "title": "Lenses and image formation",
+  "target": "Use ray directions to explain converging and diverging lens behavior.",
+  "criteria": [
+    "Distinguish converging and diverging lenses.",
+    "Trace principal rays with a clear optical axis.",
+    "State whether an image is real or virtual in the given case."
+  ],
+  "source_sha256": "23aa2ec52b50ec5d74ec15dbe9ff56038e18ca52456a97ce5f3526724ff57e7e",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.554Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "An ideal thin lens bends parallel rays toward a common point on the far side. What type is it?",
+      "options": [
+        "Diverging.",
+        "A sound source.",
+        "Converging.",
+        "A plane mirror."
+      ],
+      "correct_index": 2,
+      "guide": "Converging lenses bring initially parallel rays toward a focus.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Parallel rays spread after passing through an ideal thin lens and appear to come from a near-side focus. What type is it?",
+      "options": [
+        "Diverging.",
+        "A flat reflector.",
+        "Converging in this ray description.",
+        "A perfect absorber."
+      ],
+      "correct_index": 0,
+      "guide": "A diverging lens makes parallel rays spread as though emitted from its near focus.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "For a converging lens, a ray initially parallel to the optical axis refracts along which path?",
+      "options": [
+        "Back along its incident path.",
+        "Through the lens center regardless of its entry height.",
+        "Parallel to the axis forever.",
+        "Through the far-side focal point."
+      ],
+      "correct_index": 3,
+      "guide": "This is a principal ray rule for an ideal thin converging lens.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In the ideal thin-lens model, how is a ray through the optical center usually drawn?",
+      "options": [
+        "Stopped at the center.",
+        "Straight through without significant angular deflection.",
+        "Always reflected back.",
+        "Along the axis even if it entered at an angle."
+      ],
+      "correct_index": 1,
+      "guide": "The optical-center principal ray is drawn approximately undeviated.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A real object is placed beyond twice the focal length of a converging lens. Which image type is predicted?",
+      "options": [
+        "No image is possible.",
+        "Real and inverted, between f and 2f on the far side.",
+        "Real and upright at infinity.",
+        "Virtual and upright on the object side."
+      ],
+      "correct_index": 1,
+      "guide": "Principal rays intersect on the far side between f and 2f, giving a real inverted image.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A magnifying glass is used with the object closer to the lens than its focal length. Which image is predicted by the ideal converging-lens model?",
+      "options": [
+        "Upright and virtual on the object side.",
+        "No image can be seen.",
+        "Inverted and real on a screen beyond the lens.",
+        "Always smaller and real."
+      ],
+      "correct_index": 0,
+      "guide": "Refracted rays diverge; backward extensions meet on the object side in a virtual enlarged image.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "An ideal thin lens bends parallel rays toward a common point on the far side. What type is it?",
+      "options": [
+        "Diverging.",
+        "A plane mirror.",
+        "Converging.",
+        "A sound source."
+      ],
+      "correct_index": 2,
+      "guide": "Converging lenses bring initially parallel rays toward a focus.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Parallel rays spread after passing through an ideal thin lens and appear to come from a near-side focus. What type is it?",
+      "options": [
+        "Converging in this ray description.",
+        "Diverging.",
+        "A flat reflector.",
+        "A perfect absorber."
+      ],
+      "correct_index": 1,
+      "guide": "A diverging lens makes parallel rays spread as though emitted from its near focus.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "For a converging lens, a ray initially parallel to the optical axis refracts along which path?",
+      "options": [
+        "Through the far-side focal point.",
+        "Parallel to the axis forever.",
+        "Through the lens center regardless of its entry height.",
+        "Back along its incident path."
+      ],
+      "correct_index": 0,
+      "guide": "This is a principal ray rule for an ideal thin converging lens.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "In the ideal thin-lens model, how is a ray through the optical center usually drawn?",
+      "options": [
+        "Always reflected back.",
+        "Stopped at the center.",
+        "Straight through without significant angular deflection.",
+        "Along the axis even if it entered at an angle."
+      ],
+      "correct_index": 2,
+      "guide": "The optical-center principal ray is drawn approximately undeviated.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A real object is placed beyond twice the focal length of a converging lens. Which image type is predicted?",
+      "options": [
+        "Virtual and upright on the object side.",
+        "Real and inverted, between f and 2f on the far side.",
+        "Real and upright at infinity.",
+        "No image is possible."
+      ],
+      "correct_index": 1,
+      "guide": "Principal rays intersect on the far side between f and 2f, giving a real inverted image.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A magnifying glass is used with the object closer to the lens than its focal length. Which image is predicted by the ideal converging-lens model?",
+      "options": [
+        "Inverted and real on a screen beyond the lens.",
+        "No image can be seen.",
+        "Always smaller and real.",
+        "Upright and virtual on the object side."
+      ],
+      "correct_index": 3,
+      "guide": "Refracted rays diverge; backward extensions meet on the object side in a virtual enlarged image.",
+      "target_slug": "u6.r4-lenses",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

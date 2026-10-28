@@ -24,3 +24,8 @@ test('calendar moves preserve Eastern due time across DST and allow assignment w
   assert.equal(moveDeadline('2026-10-22', '2026-10-25', true), '2026-10-25')
   assert.throws(() => moveDeadline(null, '2026-02-30'), /valid/)
 })
+
+test('daily lesson quizzes stay on the review day, including Tuesday and weekends', () => {
+  for(const day of ['2026-10-27','2026-11-07','2026-11-08','2026-11-09T04:59:00.000Z']) assert.equal(quizScheduleError(day,'daily'),null)
+  assert.match(quizScheduleError('2026-02-30','daily')!,/valid/)
+})

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 10,
+  "title": "Name the force and its source",
+  "target": "Identify forces on a chosen object and name each interaction partner.",
+  "criteria": [
+    "Name the chosen object and each force source.",
+    "Distinguish mass from weight with units.",
+    "Include only forces acting on the chosen object."
+  ],
+  "source_sha256": "d3ce04240353cafc348cd854f3c5ac6fbdbb7fb0806b1dd16923dd75b33e00e9",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.477Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "For a hanging lantern, what interaction supplies the upward force?",
+      "options": [
+        "The cord pulls on the lantern.",
+        "The lantern’s upward velocity.",
+        "The lantern pulls on the cord.",
+        "The Earth pulls upward on the lantern."
+      ],
+      "correct_index": 0,
+      "guide": "Name the source and recipient; the cord exerts tension on the lantern.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "For a book resting on a table, what supplies the upward normal force?",
+      "options": [
+        "The book pushes on the table.",
+        "Earth pulls upward.",
+        "The table pushes on the book.",
+        "The book’s mass acts upward."
+      ],
+      "correct_index": 2,
+      "guide": "The normal force is the table’s contact force on the book.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 6 kg package is where g = 10 N/kg. What are its mass and weight?",
+      "options": [
+        "60 N and 6 kg.",
+        "60 kg and 6 N.",
+        "6 N and 60 kg.",
+        "6 kg and 60 N."
+      ],
+      "correct_index": 3,
+      "guide": "Mass is 6 kg; weight = mg = 60 N.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A label says a sample’s mass is 4 N. What is wrong?",
+      "options": [
+        "Newtons are a speed unit.",
+        "Newtons measure force; mass should use kilograms or another mass unit.",
+        "Four is too small to be a mass.",
+        "Mass has no units."
+      ],
+      "correct_index": 1,
+      "guide": "Distinguish physical quantity from unit.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Which force belongs on the free-body diagram of a bag hanging from a rope?",
+      "options": [
+        "A velocity arrow counted as a force.",
+        "The bag’s force on Earth.",
+        "The bag’s force on the rope.",
+        "The rope’s force on the bag."
+      ],
+      "correct_index": 3,
+      "guide": "Only forces acting on the chosen bag belong on its diagram.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A lamp rests on a desk with no cord attached. Which proposed force should be removed from its diagram?",
+      "options": [
+        "An upward tension force.",
+        "Downward gravity.",
+        "The desk’s support force, also called the normal force.",
+        "Upward normal force."
+      ],
+      "correct_index": 0,
+      "guide": "Without a cord or similar pulling connection there is no tension interaction.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "For a hanging lantern, what interaction supplies the upward force?",
+      "options": [
+        "The lantern pulls on the cord.",
+        "The lantern’s upward velocity.",
+        "The cord pulls on the lantern.",
+        "The Earth pulls upward on the lantern."
+      ],
+      "correct_index": 2,
+      "guide": "Name the source and recipient; the cord exerts tension on the lantern.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "For a book resting on a table, what supplies the upward normal force?",
+      "options": [
+        "Earth pulls upward.",
+        "The table pushes on the book.",
+        "The book’s mass acts upward.",
+        "The book pushes on the table."
+      ],
+      "correct_index": 1,
+      "guide": "The normal force is the table’s contact force on the book.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 6 kg package is where g = 10 N/kg. What are its mass and weight?",
+      "options": [
+        "60 kg and 6 N.",
+        "6 N and 60 kg.",
+        "60 N and 6 kg.",
+        "6 kg and 60 N."
+      ],
+      "correct_index": 3,
+      "guide": "Mass is 6 kg; weight = mg = 60 N.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A label says a sample’s mass is 4 N. What is wrong?",
+      "options": [
+        "Newtons are a speed unit.",
+        "Newtons measure force; mass should use kilograms or another mass unit.",
+        "Mass has no units.",
+        "Four is too small to be a mass."
+      ],
+      "correct_index": 1,
+      "guide": "Distinguish physical quantity from unit.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Which force belongs on the free-body diagram of a bag hanging from a rope?",
+      "options": [
+        "The rope’s force on the bag.",
+        "The bag’s force on the rope.",
+        "A velocity arrow counted as a force.",
+        "The bag’s force on Earth."
+      ],
+      "correct_index": 0,
+      "guide": "Only forces acting on the chosen bag belong on its diagram.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A lamp rests on a desk with no cord attached. Which proposed force should be removed from its diagram?",
+      "options": [
+        "An upward tension force.",
+        "Downward gravity.",
+        "The desk’s support force, also called the normal force.",
+        "Upward normal force."
+      ],
+      "correct_index": 0,
+      "guide": "Without a cord or similar pulling connection there is no tension interaction.",
+      "target_slug": "u1.identify-forces",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

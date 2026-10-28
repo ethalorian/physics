@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 10,
+  "title": "Horizontal launches",
+  "target": "Find flight time from vertical motion and then horizontal range.",
+  "criteria": [
+    "Separate vertical and horizontal givens.",
+    "Find or use fall time before calculating range.",
+    "Check units and interpret the landing point."
+  ],
+  "source_sha256": "641201e22a0ef3ca5795aeb9d406d458ec93f591cdf00b2a04a55c61d14ee272",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.495Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A ball leaves a ledge horizontally at 8 m/s. What is its initial vertical velocity?",
+      "options": [
+        "8 m/s downward",
+        "It equals g in m/s.",
+        "8 m/s upward",
+        "0 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "A horizontal launch has zero initial vertical component.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A platform is 3.2 m high and launch speed is 6 m/s horizontally. Which values determine fall time in the ideal model?",
+      "options": [
+        "Mass and color.",
+        "Horizontal speed alone.",
+        "Height, initial vertical velocity, and g.",
+        "Horizontal range before it is known."
+      ],
+      "correct_index": 2,
+      "guide": "Use vertical motion to determine time.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A horizontal launch falls 1.25 m. Use g = 10 m/s² and no drag. What is fall time?",
+      "options": [
+        "5 s",
+        "0.5 s",
+        "0.125 s",
+        "2 s"
+      ],
+      "correct_index": 1,
+      "guide": "h = ½gt²; t = √(2h/g) = √0.25 = 0.5 s.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ball’s horizontal speed is 8 m/s and fall time is 0.75 s. What is range?",
+      "options": [
+        "0.094 m",
+        "6 m",
+        "10.67 m",
+        "8.75 m"
+      ],
+      "correct_index": 1,
+      "guide": "Range = vx t = 8 × 0.75 = 6 m.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculated range is 9 m. What does that mean for a horizontal launch?",
+      "options": [
+        "It lands 9 m horizontally from the point directly below the launch.",
+        "Its final speed must be 9 m/s.",
+        "Its vertical fall must be 9 m.",
+        "Its path length must be exactly 9 m."
+      ],
+      "correct_index": 0,
+      "guide": "Range is horizontal displacement, not height, path length, or speed.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "At fixed height, an ideal horizontal launch speed is reduced to one-third. What happens to range?",
+      "options": [
+        "It becomes one-third; fall time is unchanged.",
+        "It becomes one-ninth; fall time triples.",
+        "It triples.",
+        "It stays fixed; fall time triples."
+      ],
+      "correct_index": 0,
+      "guide": "Vertical motion fixes the same time; range scales with horizontal speed.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A ball leaves a ledge horizontally at 8 m/s. What is its initial vertical velocity?",
+      "options": [
+        "8 m/s downward",
+        "It equals g in m/s.",
+        "0 m/s",
+        "8 m/s upward"
+      ],
+      "correct_index": 2,
+      "guide": "A horizontal launch has zero initial vertical component.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A platform is 3.2 m high and launch speed is 6 m/s horizontally. Which values determine fall time in the ideal model?",
+      "options": [
+        "Height, initial vertical velocity, and g.",
+        "Horizontal speed alone.",
+        "Mass and color.",
+        "Horizontal range before it is known."
+      ],
+      "correct_index": 0,
+      "guide": "Use vertical motion to determine time.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A horizontal launch falls 1.25 m. Use g = 10 m/s² and no drag. What is fall time?",
+      "options": [
+        "5 s",
+        "0.125 s",
+        "2 s",
+        "0.5 s"
+      ],
+      "correct_index": 3,
+      "guide": "h = ½gt²; t = √(2h/g) = √0.25 = 0.5 s.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ball’s horizontal speed is 8 m/s and fall time is 0.75 s. What is range?",
+      "options": [
+        "0.094 m",
+        "6 m",
+        "10.67 m",
+        "8.75 m"
+      ],
+      "correct_index": 1,
+      "guide": "Range = vx t = 8 × 0.75 = 6 m.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A calculated range is 9 m. What does that mean for a horizontal launch?",
+      "options": [
+        "Its path length must be exactly 9 m.",
+        "It lands 9 m horizontally from the point directly below the launch.",
+        "Its final speed must be 9 m/s.",
+        "Its vertical fall must be 9 m."
+      ],
+      "correct_index": 1,
+      "guide": "Range is horizontal displacement, not height, path length, or speed.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "At fixed height, an ideal horizontal launch speed is reduced to one-third. What happens to range?",
+      "options": [
+        "It stays fixed; fall time triples.",
+        "It triples.",
+        "It becomes one-third; fall time is unchanged.",
+        "It becomes one-ninth; fall time triples."
+      ],
+      "correct_index": 2,
+      "guide": "Vertical motion fixes the same time; range scales with horizontal speed.",
+      "target_slug": "u2.s2-projectile-calc",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

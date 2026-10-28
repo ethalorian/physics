@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 9,
+  "title": "Inertia and balanced forces",
+  "target": "Predict motion when the net force is zero.",
+  "criteria": [
+    "Add forces to decide whether they balance.",
+    "Predict constant velocity when net force is zero.",
+    "Explain why changing direction requires net force."
+  ],
+  "source_sha256": "d19b82d2ed6e2b382790965fa945d490ad117b0b184bb7510ed680857eb59ce2",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.476Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A cart has 14 N right and 14 N left horizontally. What is horizontal net force?",
+      "options": [
+        "28 N left",
+        "14 N right",
+        "0 N",
+        "28 N right"
+      ],
+      "correct_index": 2,
+      "guide": "Equal opposing forces sum to zero.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An object has 18 N up, 18 N down, and 5 N right with no left force. Are all forces balanced?",
+      "options": [
+        "No; net force is 41 N down.",
+        "No; the net force is 5 N right.",
+        "Yes; the vertical forces cancel everything.",
+        "Yes; any equal pair means full equilibrium."
+      ],
+      "correct_index": 1,
+      "guide": "Balance must be checked on each axis.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A puck moves west on an ideal frictionless horizontal surface after the push ends. What happens to its horizontal velocity?",
+      "options": [
+        "It remains westward and constant.",
+        "It reverses east automatically.",
+        "It immediately becomes zero.",
+        "It steadily decreases without a force."
+      ],
+      "correct_index": 0,
+      "guide": "Zero horizontal net force means constant horizontal velocity.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A drifting probe has zero net force for 20 s. Which motion is possible?",
+      "options": [
+        "Turning at constant speed.",
+        "A spontaneous direction reversal.",
+        "Straight motion at a constant nonzero velocity.",
+        "Steadily increasing speed."
+      ],
+      "correct_index": 2,
+      "guide": "Newton’s first law allows rest or uniform straight motion.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Why does turning at constant speed require a net force?",
+      "options": [
+        "The object must lose mass.",
+        "It does not require a force.",
+        "Speed alone is a force.",
+        "The velocity direction changes."
+      ],
+      "correct_index": 3,
+      "guide": "A changing velocity requires acceleration and therefore net force.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A claim says zero net force means the object is stationary. Which is a counterexample?",
+      "options": [
+        "A rocket accelerating forward.",
+        "A car turning at constant speed.",
+        "A falling ball speeding up.",
+        "A puck gliding straight at constant velocity with balanced forces."
+      ],
+      "correct_index": 3,
+      "guide": "Zero net force constrains change in velocity, not the velocity value.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A cart has 14 N right and 14 N left horizontally. What is horizontal net force?",
+      "options": [
+        "28 N left",
+        "28 N right",
+        "14 N right",
+        "0 N"
+      ],
+      "correct_index": 3,
+      "guide": "Equal opposing forces sum to zero.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An object has 18 N up, 18 N down, and 5 N right with no left force. Are all forces balanced?",
+      "options": [
+        "Yes; any equal pair means full equilibrium.",
+        "No; the net force is 5 N right.",
+        "Yes; the vertical forces cancel everything.",
+        "No; net force is 41 N down."
+      ],
+      "correct_index": 1,
+      "guide": "Balance must be checked on each axis.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A puck moves west on an ideal frictionless horizontal surface after the push ends. What happens to its horizontal velocity?",
+      "options": [
+        "It steadily decreases without a force.",
+        "It reverses east automatically.",
+        "It remains westward and constant.",
+        "It immediately becomes zero."
+      ],
+      "correct_index": 2,
+      "guide": "Zero horizontal net force means constant horizontal velocity.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A drifting probe has zero net force for 20 s. Which motion is possible?",
+      "options": [
+        "Straight motion at a constant nonzero velocity.",
+        "Turning at constant speed.",
+        "A spontaneous direction reversal.",
+        "Steadily increasing speed."
+      ],
+      "correct_index": 0,
+      "guide": "Newton’s first law allows rest or uniform straight motion.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Why does turning at constant speed require a net force?",
+      "options": [
+        "The velocity direction changes.",
+        "Speed alone is a force.",
+        "The object must lose mass.",
+        "It does not require a force."
+      ],
+      "correct_index": 0,
+      "guide": "A changing velocity requires acceleration and therefore net force.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A claim says zero net force means the object is stationary. Which is a counterexample?",
+      "options": [
+        "A car turning at constant speed.",
+        "A rocket accelerating forward.",
+        "A falling ball speeding up.",
+        "A puck gliding straight at constant velocity with balanced forces."
+      ],
+      "correct_index": 3,
+      "guide": "Zero net force constrains change in velocity, not the velocity value.",
+      "target_slug": "u1.newtons-first-law-inertia",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

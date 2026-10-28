@@ -1,0 +1,66 @@
+// Runs in the disposable Day 1–9 database fixture with actual routes and triggers.
+const assert=require('node:assert/strict'),{randomUUID}=require('node:crypto');
+module.exports=async f=>{
+ const {api,sql,q,json,id,rows,request,call,student,teacher,course,otherCourse,alice,bob,foundation,review,quiz,questions,foundationLesson,reviewLesson,answers,body,ok}=f;
+ const date=(key)=>rows('interactive_assignments').find(a=>a.id===key).due_on;
+ const schedule=async(slug,due_on)=>{const r=await api.schedule(request({...body,slug,due_on}));assert.equal(r.status,200,await r.clone().text());return r.json()};
+ const checkDates=(fd,rd)=>{assert.equal(date(foundation),fd);assert.equal(date(review),rd);assert.equal(sql(`select (due_at at time zone 'America/New_York')::date from quiz_assignments where id=${q(quiz)}`),rd);assert.equal(rows('quiz_assignments').length,1);assert.deepEqual(rows('quiz_assignments')[0].questions,questions)};
+ teacher();
+ let result=await schedule(foundationLesson.slug,'2026-10-26');checkDates('2026-10-26','2026-10-29');assert.equal(result.linkedAssignments.length,2);assert.deepEqual(result.sequence,{foundationDue:'2026-10-26',reviewDue:'2026-10-29'});
+ const version=rows('quiz_assignments')[0].version;await schedule(foundationLesson.slug,'2026-10-26');assert.equal(rows('quiz_assignments')[0].version,version);
+ await schedule(foundationLesson.slug,'2026-10-30');checkDates('2026-10-30','2026-11-04');assert.equal(rows('quiz_assignments')[0].due_at,'2026-11-04T23:59:00-05:00');
+ await schedule(reviewLesson.slug,'2026-11-04');checkDates('2026-10-30','2026-11-04');
+ sql("update rotation_calendar set no_school_dates=array['2026-11-02'::date]");
+ await schedule(foundationLesson.slug,'2026-10-30');checkDates('2026-10-30','2026-11-05');
+ await schedule(reviewLesson.slug,'2026-11-05');checkDates('2026-10-30','2026-11-05');
+ sql("update rotation_calendar set no_school_dates='{}'");
+ await schedule(foundationLesson.slug,'2026-03-06');checkDates('2026-03-06','2026-03-11');assert.equal(rows('quiz_assignments')[0].due_at,'2026-03-11T23:59:00-04:00');
+ await schedule(foundationLesson.slug,'2026-12-31');checkDates('2026-12-31','2027-01-05');
+ await schedule(reviewLesson.slug,null);assert.equal(date(foundation),null);assert.equal(date(review),null);assert.equal(rows('quiz_assignments')[0].status,'archived');
+ await schedule(foundationLesson.slug,'2026-10-26');checkDates('2026-10-26','2026-10-29');
+ await schedule(foundationLesson.slug,null);assert.equal(date(review),null);assert.equal(rows('quiz_assignments')[0].status,'archived');
+ await schedule(reviewLesson.slug,body.due_on);checkDates('2026-10-22','2026-10-27');
+ const unchanged=JSON.stringify(rows('interactive_assignments'));
+ assert.throws(()=>sql(`set role service_role;select set_interactive_assignment_date(${q(course)},${q(foundationLesson.slug)},${q(rows('learning_targets')[0].id)},'2026-10-26','other@example.test')`),/Class unavailable/);
+ assert.equal(JSON.stringify(rows('interactive_assignments')),unchanged);
+ const originalTarget=rows('interactive_assignments').find(a=>a.id===foundation).target_id;
+ sql(`insert into learning_targets(id,slug,unit_id,statement,program) values(${q(id(998))},'fixture-other-target','unit-1','Other target','physics');set role service_role;select set_interactive_assignment_date(${q(course)},${q(foundationLesson.slug)},${q(id(998))},'2026-10-26','teacher@example.test')`);
+ assert.equal(rows('interactive_assignments').find(a=>a.id===foundation).target_id,originalTarget);
+ sql(`delete from learning_targets where id=${q(id(998))};update quiz_assignments set deleted_at=now() where id=${q(quiz)}`);
+ const beforeFailure=JSON.stringify(rows('interactive_assignments'));
+ assert.equal((await api.schedule(request({...body,slug:foundationLesson.slug,due_on:'2026-11-03'}))).status,409);
+ assert.equal(JSON.stringify(rows('interactive_assignments')),beforeFailure);
+ sql(`update quiz_assignments set deleted_at=null where id=${q(quiz)}`);await schedule(reviewLesson.slug,body.due_on);
+ // First placement can also start with a foundation in a fresh class.
+ const first=JSON.parse(sql(`insert into interactive_assignments(course_id,slug,target_id,due_on) values(${q(otherCourse)},${q(foundationLesson.slug)},${q(rows('learning_targets')[0].id)},'2026-10-26') returning to_jsonb(interactive_assignments)`));
+ const second=rows('daily_lesson_sequences').find(b=>b.course_id===otherCourse);assert.equal(second.foundation_id,first.id);assert.equal(date(second.review_id),'2026-10-29');
+ // Remove only these unused fictional setup records, before the original scenarios.
+ sql(`delete from daily_lesson_sequences where course_id=${q(otherCourse)};delete from quiz_assignments where id=${q(second.quiz_id)};delete from interactive_assignments where course_id=${q(otherCourse)}`);
+ ok('Both placement directions, retries, moves, removals, closures, DST and year boundaries preserve one sequence; ownership, original targets and atomic failure hold');
+ student();
+ let locked=await call('lessonGet',review);assert.equal(locked.status,403);let detail=await locked.json();assert.equal(detail.locked,true);assert.equal(detail.prerequisites[0].id,foundation);assert(!('work' in detail));assert(!('target' in detail));
+ for(const extra of [{},{submitId:randomUUID()}])assert.equal((await call('lessonSave',review,{version:0,state:answers(reviewLesson),...extra})).status,403);
+ assert.throws(()=>sql(`set role service_role;select write_interactive_assignment(${q(review)},${q(alice)},0,${json(answers(reviewLesson))},null)`),/Submit your foundation/);
+ assert.throws(()=>sql(`insert into interactive_assignment_submissions(id,assignment_id,user_id,state,version) values(${q(randomUUID())},${q(review)},${q(alice)},${json(answers(reviewLesson))},1)`),/Submit your foundation/);
+ assert.equal(rows('interactive_assignment_work').length,0);assert.equal(rows('interactive_assignment_submissions').length,0);
+ const list=await(await api.assignmentList(new Request('http://fixture/api/interactive-assignments?slug='+foundationLesson.slug))).json();assert.equal(list.assignments.find(a=>a.id===review).prerequisites[0].id,foundation);assert.equal(list.assignments.find(a=>a.id===foundation).prerequisites.length,0);
+ const progress=await(await api.progress(new Request('http://fixture/api/student-progress?class='+course))).json();const row=progress.rows.find(r=>r.key==='interactive:'+review);assert.equal(row.statusLabel,'Locked · finish foundation');assert.equal(row.href,'/interactive-assignments/'+foundation);
+ student(bob);assert.equal((await call('lessonGet',review)).status,403);
+ teacher();assert.equal((await call('lessonGet',review)).status,200);student();
+ assert.equal(sql("select has_function_privilege('authenticated','daily_review_missing(uuid[],uuid)','execute')"),'f');assert.equal(sql("select has_function_privilege('anon','lesson_school_day_shift(date,integer)','execute')"),'f');
+ ok('Review locks are individual, visible in calendar/gradebook, enforced for reads/drafts/submissions in API and database, and do not block teacher preview');
+ teacher();
+ const steps=[foundationLesson,reviewLesson].map(l=>({id:randomUUID(),activityKey:'interactive:'+l.slug,title:l.title,kind:'interactive',purpose:'',optional:false,notes:''}));
+ const plan=JSON.parse(sql(`set role service_role;select save_teaching_plan('teacher@example.test',${q(course)},'unit-1',0,${json(steps)},'teacher@example.test')`));
+ const placement={action:'schedule',classId:course,unitId:'unit-1',version:0,planVersion:plan.version,stepId:steps[0].id,slot:{date:'2026-10-26',block:'G'}};
+ let r=await api.teachingPost(request(placement));assert.equal(r.status,200,await r.clone().text());let state=(await r.json()).state;checkDates('2026-10-26','2026-10-29');
+ r=await api.teachingPost(request({...placement,version:state.version,stepId:steps[1].id,slot:{date:'2026-10-29',block:'G'}}));assert.equal(r.status,200,await r.clone().text());state=(await r.json()).state;checkDates('2026-10-26','2026-10-29');
+ const remove={...placement,action:'unassign',version:state.version,stepId:steps[1].id,expected:{sourceId:reviewLesson.slug,dueAt:'2026-10-29',version:null,opensAt:null,closesAt:null}};
+ r=await api.teachingPost(request(remove));assert.equal(r.status,200,await r.clone().text());state=(await r.json()).state;assert.equal(date(foundation),null);assert.equal(date(review),null);assert.equal(rows('quiz_assignments')[0].status,'archived');
+ const stale=await api.teachingPost(request(placement));assert.equal(stale.status,409);assert.equal(date(foundation),null);
+ await schedule(reviewLesson.slug,body.due_on);
+ ok('Actual teaching-calendar route and transactions assign both directions, remove the linked group and reject stale changes');
+ student();
+ // Restore the expected initial version for the original quiz lifecycle checks.
+ sql(`update quiz_assignments set version=1 where id=${q(quiz)}`);
+};

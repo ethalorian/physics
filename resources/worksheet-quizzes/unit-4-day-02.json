@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 2,
+  "title": "Work along a displacement",
+  "target": "Calculate work and identify when a force does no work.",
+  "criteria": [
+    "Identify the force component along displacement.",
+    "Use meters and newtons to obtain joules.",
+    "Distinguish effort from mechanical work on an object."
+  ],
+  "source_sha256": "38cd6980e28956b0c0b5597966cdfddfa6bdfc652673e6eec6fb826dcfa02e21",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.516Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A crate moves horizontally while a person pulls at an upward angle. Which part of the pull determines its work on that horizontal displacement?",
+      "options": [
+        "Only the vertical component.",
+        "The full magnitude regardless of angle.",
+        "Only the person’s body weight.",
+        "The horizontal component along the displacement."
+      ],
+      "correct_index": 3,
+      "guide": "Work is the force-displacement dot product; only the parallel component contributes.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An object moves east while a force acts north. What is that force’s work over the eastward displacement?",
+      "options": [
+        "Zero.",
+        "Equal to force divided by distance.",
+        "Positive because a force exists.",
+        "Negative because north is not east."
+      ],
+      "correct_index": 0,
+      "guide": "A perpendicular force has zero component along displacement.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A constant 14 N pull acts along a 2.5 m displacement. What is work by that pull?",
+      "options": [
+        "16.5 J",
+        "35 J",
+        "5.6 J",
+        "0.179 J"
+      ],
+      "correct_index": 1,
+      "guide": "W = Fd = 14 × 2.5 = 35 N·m = 35 J.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 30 N force acts forward through 40 cm. What is its work?",
+      "options": [
+        "75 J",
+        "0.75 J",
+        "12 J",
+        "1,200 J"
+      ],
+      "correct_index": 2,
+      "guide": "40 cm = 0.40 m; W = 30 × 0.40 = 12 J.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A person holds a heavy bag stationary. What is mechanical work done on the bag by the supporting force during the stationary interval?",
+      "options": [
+        "Positive solely because the person feels effort.",
+        "Negative because gravity points down.",
+        "Equal to the bag’s weight in joules.",
+        "Zero, because the bag’s displacement is zero."
+      ],
+      "correct_index": 3,
+      "guide": "Mechanical work on the bag requires displacement; bodily energy use is a different account.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A mover pushes against an immovable cabinet for 10 s. Which statement separates effort from work on the cabinet?",
+      "options": [
+        "Mechanical work equals force times waiting time.",
+        "All expended body energy must become cabinet kinetic energy.",
+        "The mover may expend energy even though the force does no mechanical work on the stationary cabinet.",
+        "Any effort proves a nonzero displacement."
+      ],
+      "correct_index": 2,
+      "guide": "The cabinet has no displacement. Muscles can still consume energy internally.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A crate moves horizontally while a person pulls at an upward angle. Which part of the pull determines its work on that horizontal displacement?",
+      "options": [
+        "The horizontal component along the displacement.",
+        "The full magnitude regardless of angle.",
+        "Only the vertical component.",
+        "Only the person’s body weight."
+      ],
+      "correct_index": 0,
+      "guide": "Work is the force-displacement dot product; only the parallel component contributes.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An object moves east while a force acts north. What is that force’s work over the eastward displacement?",
+      "options": [
+        "Positive because a force exists.",
+        "Zero.",
+        "Equal to force divided by distance.",
+        "Negative because north is not east."
+      ],
+      "correct_index": 1,
+      "guide": "A perpendicular force has zero component along displacement.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A constant 14 N pull acts along a 2.5 m displacement. What is work by that pull?",
+      "options": [
+        "0.179 J",
+        "5.6 J",
+        "16.5 J",
+        "35 J"
+      ],
+      "correct_index": 3,
+      "guide": "W = Fd = 14 × 2.5 = 35 N·m = 35 J.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 30 N force acts forward through 40 cm. What is its work?",
+      "options": [
+        "12 J",
+        "1,200 J",
+        "0.75 J",
+        "75 J"
+      ],
+      "correct_index": 0,
+      "guide": "40 cm = 0.40 m; W = 30 × 0.40 = 12 J.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A person holds a heavy bag stationary. What is mechanical work done on the bag by the supporting force during the stationary interval?",
+      "options": [
+        "Positive solely because the person feels effort.",
+        "Equal to the bag’s weight in joules.",
+        "Negative because gravity points down.",
+        "Zero, because the bag’s displacement is zero."
+      ],
+      "correct_index": 3,
+      "guide": "Mechanical work on the bag requires displacement; bodily energy use is a different account.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A mover pushes against an immovable cabinet for 10 s. Which statement separates effort from work on the cabinet?",
+      "options": [
+        "All expended body energy must become cabinet kinetic energy.",
+        "Any effort proves a nonzero displacement.",
+        "The mover may expend energy even though the force does no mechanical work on the stationary cabinet.",
+        "Mechanical work equals force times waiting time."
+      ],
+      "correct_index": 2,
+      "guide": "The cabinet has no displacement. Muscles can still consume energy internally.",
+      "target_slug": "u4.k1-work",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import 'server-only'
+import { worksheetTeachingAssignment } from './worksheets-server'
 import { supabaseAdmin } from '@/lib/supabase'
 import type { AuthContext } from '@/lib/api-auth'
 import type { ReadingCourse } from '@/lib/textbook-assignments'
@@ -18,6 +19,7 @@ import { vocabularyFor } from '@/lib/vocab-scope-server'
  * first-time reading preparation, happen together inside the scheduling RPC. */
 export async function teachingAssignment(ctx: AuthContext, course: ReadingCourse, key: string) {
   const split = key.indexOf(':'), kind = key.slice(0, split), id = key.slice(split + 1)
+  if (kind === 'worksheet-template') return worksheetTeachingAssignment(course, key)
   if (kind === 'interactive') {
     const activity = assignmentBySlug(id)
     if (!activity || course.program !== 'physics') throw Error('This interactive assignment is unavailable.')
@@ -59,6 +61,10 @@ export async function teachingAssignment(ctx: AuthContext, course: ReadingCourse
     const saved = await supabaseAdmin.from('quiz_assignments').select('*').eq('id', id).eq('course_id', course.id).is('deleted_at', null).maybeSingle()
     if (saved.error) throw saved.error
     if (!saved.data) throw Error('Prepare this quiz in this class before placing it on the calendar.')
+    if (saved.data.daily_sequence_key) throw Error('Place the linked foundation or review on the calendar to schedule this quiz with its lesson sequence.')
+    const pair = await supabaseAdmin.from('worksheet_assignments').select('id').eq('quiz_id',id).maybeSingle()
+    if (pair.error) throw pair.error
+    if (pair.data) throw Error('Place the linked paper worksheet on the calendar to assign both activities together.')
     validateQuiz({ ...saved.data, status: 'published' })
     return { quizVersion: saved.data.version }
   }

@@ -1,19 +1,57 @@
+import type {LabDimensionScore} from './lab-rubric'
+import type { LabScore } from "./lab-grades"
 import {QUESTIONS,correctAnswer,type VelocityState} from './velocity'
 import {assignmentByDay,objectiveQuestion,type LessonAssignment,type LessonQuestion} from './catalog'
 export const CONCEPTS=['Distance & displacement','Speed & velocity','Unit conversions','Slope & velocity','Axis direction','Independent explanation'] as const
 export type EvidenceAssessment={status:'complete'|'partial'|'incorrect'|'unclear';reason:string}
 export type SuggestedRating={target_slug:string;level:1|2|3;confidence:'high'|'medium'|'low';rationale:string;feedback:string}
-export type Assessment={level:1|2|3;confidence:'high'|'medium'|'low';rationale:string;feedback:string;explanation:EvidenceAssessment;items?:({id:string}&EvidenceAssessment)[];ratings?:SuggestedRating[];weakpoints:{question_ids:string[];concept:string;reason:string;next_step:string}[]}
+export type Assessment={lab_dimensions?:LabDimensionScore[];lab_scores?:LabScore[];level:1|2|3;confidence:'high'|'medium'|'low';rationale:string;feedback:string;explanation:EvidenceAssessment;items?:({id:string}&EvidenceAssessment)[];ratings?:SuggestedRating[];weakpoints:{question_ids:string[];concept:string;reason:string;next_step:string}[]}
 export type AiReview={submission_id:string;status:'queued'|'processing'|'ready'|'error';result:Assessment|null;model:string|null;error:string|null;updated_at:string;locked_until:string|null}
+/** Static field paths only: safe to log without student answers or generated feedback. */
+export function assessmentValidationIssues(raw:unknown,lesson?:LessonAssignment):string[]{
+ const issues:string[]=[],record=(value:unknown):value is Record<string,unknown>=>!!value&&typeof value==='object'&&!Array.isArray(value)
+ if(!record(raw))return ['assessment.object']
+ const questions=lesson?.questions??QUESTIONS,concepts=lesson?.sections.map(s=>s.title)??[...CONCEPTS]
+ const short=(value:unknown,max:number,path:string)=>{if(typeof value!=='string'||!value.trim()||value.length>max)issues.push(path)}
+ const rating=(value:unknown,path:string)=>{
+  if(!record(value)){issues.push(path+'.object');return}
+  if(![1,2,3].includes(value.level as number))issues.push(path+'.level')
+  if(!['high','medium','low'].includes(value.confidence as string))issues.push(path+'.confidence')
+  short(value.rationale,1600,path+'.rationale');short(value.feedback,1600,path+'.feedback')
+ }
+ const item=(value:unknown,path:string)=>{
+  if(!record(value)){issues.push(path+'.object');return}
+  if(!['complete','partial','incorrect','unclear'].includes(value.status as string))issues.push(path+'.status')
+  short(value.reason,800,path+'.reason')
+ }
+ rating(raw,'assessment');item(raw.explanation,'explanation')
+ if(!Array.isArray(raw.weakpoints)||raw.weakpoints.length>6)issues.push('weakpoints.count')
+ if(Array.isArray(raw.weakpoints))raw.weakpoints.forEach((value,index)=>{
+  const path='weakpoints.'+index
+  if(!record(value)){issues.push(path+'.object');return}
+  if(!concepts.includes(value.concept as string))issues.push(path+'.concept')
+  short(value.reason,800,path+'.reason');short(value.next_step,800,path+'.next_step')
+  const ids=value.question_ids
+  if(!Array.isArray(ids)||!ids.length||ids.length>questions.length||new Set(ids).size!==ids.length||!ids.every(id=>questions.some(q=>q.id===id)))issues.push(path+'.question_ids')
+ })
+ if(lesson){
+  const written=questions.filter(q=>!objectiveQuestion(q)&&!q.reflection)
+  const items=raw.items,ratings=raw.ratings
+  if(!Array.isArray(items)||items.length!==written.length||new Set(items.map(value=>record(value)?value.id:undefined)).size!==written.length)issues.push('items.coverage')
+  if(Array.isArray(items))items.forEach((value,index)=>{
+   if(!record(value)||!written.some(q=>q.id===value.id))issues.push('items.'+index+'.id')
+   item(value,'items.'+index)
+  })
+  if(!Array.isArray(ratings)||ratings.length!==lesson.targets.length||new Set(ratings.map(value=>record(value)?value.target_slug:undefined)).size!==lesson.targets.length)issues.push('ratings.coverage')
+  if(Array.isArray(ratings))ratings.forEach((value,index)=>{
+   if(!record(value)||!lesson.targets.includes(value.target_slug as string))issues.push('ratings.'+index+'.target_slug')
+   rating(value,'ratings.'+index)
+  })
+ }
+ return issues
+}
 export function validAssessment(raw:unknown,lesson?:LessonAssignment):raw is Assessment{
- if(!raw||typeof raw!=='object')return false
- const r=raw as Assessment,short=(s:unknown,max:number)=>typeof s==='string'&&s.trim().length>0&&s.length<=max,questions=lesson?.questions??QUESTIONS,concepts=lesson?.sections.map(s=>s.title)??[...CONCEPTS]
- const rating=(x:Assessment|SuggestedRating)=>!!x&&[1,2,3].includes(x.level)&&['high','medium','low'].includes(x.confidence)&&short(x.rationale,1600)&&short(x.feedback,1600)
- const item=(x:EvidenceAssessment)=>!!x&&['complete','partial','incorrect','unclear'].includes(x.status)&&short(x.reason,800)
- if(!rating(r)||!item(r.explanation)||!Array.isArray(r.weakpoints)||r.weakpoints.length>6||!r.weakpoints.every(w=>!!w&&typeof w==='object'&&concepts.includes(w.concept)&&short(w.reason,800)&&short(w.next_step,800)&&Array.isArray(w.question_ids)&&w.question_ids.length>0&&w.question_ids.length<=questions.length&&new Set(w.question_ids).size===w.question_ids.length&&w.question_ids.every(id=>questions.some(q=>q.id===id))))return false
- if(!lesson)return true // Supports previously saved Day 3 assessments.
- const written=questions.filter(q=>!objectiveQuestion(q)&&!('reflection' in q&&q.reflection))
- return Array.isArray(r.items)&&r.items.length===written.length&&new Set(r.items.map(i=>i.id)).size===written.length&&r.items.every(i=>written.some(q=>q.id===i.id)&&item(i))&&Array.isArray(r.ratings)&&r.ratings.length===lesson.targets.length&&new Set(r.ratings.map(t=>t.target_slug)).size===lesson.targets.length&&r.ratings.every(t=>lesson.targets.includes(t.target_slug)&&rating(t))
+ return assessmentValidationIssues(raw,lesson).length===0
 }
 export function evidenceStatus(q:LessonQuestion,state:VelocityState,ai?:AiReview){
  if(!state.answers[q.id]?.trim())return 'missing'

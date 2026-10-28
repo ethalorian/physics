@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 4,
+  "title": "Phase changes",
+  "target": "Account for energy transfer during a phase change without a temperature rise.",
+  "criteria": [
+    "Identify a constant-temperature phase-change interval.",
+    "Use Q=mL for that interval.",
+    "Separate warming energy from phase-change energy."
+  ],
+  "source_sha256": "7a724f5f03eb9a70f0efa9baa01f5984a6b278abb7a697523f791ea737899193",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.535Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A pure substance melts at fixed pressure while added energy does not change its temperature. Which heating-curve feature represents this interval?",
+      "options": [
+        "A vertical jump to infinite temperature.",
+        "A steadily falling temperature solely because heat enters.",
+        "A constant-temperature plateau.",
+        "No energy transfer at all."
+      ],
+      "correct_index": 2,
+      "guide": "During an ideal phase-change plateau, energy changes phase rather than raising temperature.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A sample remains at its boiling temperature while liquid gradually becomes gas. What does continued energy input primarily do in this model?",
+      "options": [
+        "Raises temperature at the same rate as before boiling.",
+        "Destroys mass.",
+        "Supports the phase change.",
+        "Proves the heater is off."
+      ],
+      "correct_index": 2,
+      "guide": "At fixed-pressure boiling, latent energy is associated with the phase transition.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 0.40 kg sample completely melts at its melting temperature. L = 250,000 J/kg. What heat is required for melting alone?",
+      "options": [
+        "250,000 J",
+        "100,000 J",
+        "1.6 × 10⁻⁶ J",
+        "625,000 J"
+      ],
+      "correct_index": 1,
+      "guide": "Q = mL = 0.40 × 250,000 = 100,000 J.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 1.5 kg model substance releases latent energy with magnitude L = 120 J/kg while freezing. What energy magnitude is released?",
+      "options": [
+        "121.5 J",
+        "180 J",
+        "0 J",
+        "80 J"
+      ],
+      "correct_index": 1,
+      "guide": "|Q| = mL = 1.5 × 120 = 180 J. Freezing releases energy to surroundings.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sample starts below its melting point. Which method gives total energy to warm it to the melting point and melt it?",
+      "options": [
+        "Use mL and ignore warming.",
+        "Use mcΔT through the entire phase change with no latent term.",
+        "Multiply temperature in Celsius by latent heat.",
+        "Add mcΔT for warming and mL for melting."
+      ],
+      "correct_index": 3,
+      "guide": "Different stages require different relationships; sum their energies.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A model sample needs 900 J to reach its transition temperature and 1,600 J to complete its phase change. What total input is needed with no losses?",
+      "options": [
+        "2,500 J",
+        "1,600 J",
+        "900 J",
+        "700 J"
+      ],
+      "correct_index": 0,
+      "guide": "Energy for sequential stages adds: 900 + 1,600 = 2,500 J.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A pure substance melts at fixed pressure while added energy does not change its temperature. Which heating-curve feature represents this interval?",
+      "options": [
+        "No energy transfer at all.",
+        "A steadily falling temperature solely because heat enters.",
+        "A constant-temperature plateau.",
+        "A vertical jump to infinite temperature."
+      ],
+      "correct_index": 2,
+      "guide": "During an ideal phase-change plateau, energy changes phase rather than raising temperature.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A sample remains at its boiling temperature while liquid gradually becomes gas. What does continued energy input primarily do in this model?",
+      "options": [
+        "Proves the heater is off.",
+        "Destroys mass.",
+        "Raises temperature at the same rate as before boiling.",
+        "Supports the phase change."
+      ],
+      "correct_index": 3,
+      "guide": "At fixed-pressure boiling, latent energy is associated with the phase transition.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 0.40 kg sample completely melts at its melting temperature. L = 250,000 J/kg. What heat is required for melting alone?",
+      "options": [
+        "100,000 J",
+        "1.6 × 10⁻⁶ J",
+        "250,000 J",
+        "625,000 J"
+      ],
+      "correct_index": 0,
+      "guide": "Q = mL = 0.40 × 250,000 = 100,000 J.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 1.5 kg model substance releases latent energy with magnitude L = 120 J/kg while freezing. What energy magnitude is released?",
+      "options": [
+        "0 J",
+        "121.5 J",
+        "180 J",
+        "80 J"
+      ],
+      "correct_index": 2,
+      "guide": "|Q| = mL = 1.5 × 120 = 180 J. Freezing releases energy to surroundings.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sample starts below its melting point. Which method gives total energy to warm it to the melting point and melt it?",
+      "options": [
+        "Multiply temperature in Celsius by latent heat.",
+        "Use mcΔT through the entire phase change with no latent term.",
+        "Use mL and ignore warming.",
+        "Add mcΔT for warming and mL for melting."
+      ],
+      "correct_index": 3,
+      "guide": "Different stages require different relationships; sum their energies.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A model sample needs 900 J to reach its transition temperature and 1,600 J to complete its phase change. What total input is needed with no losses?",
+      "options": [
+        "1,600 J",
+        "2,500 J",
+        "700 J",
+        "900 J"
+      ],
+      "correct_index": 1,
+      "guide": "Energy for sequential stages adds: 900 + 1,600 = 2,500 J.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ]
+}

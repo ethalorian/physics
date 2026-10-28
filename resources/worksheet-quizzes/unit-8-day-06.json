@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 8,
+  "day": 6,
+  "title": "Gears, motor and first power",
+  "target": "Compare a gear-based prediction with a supervised first powered test.",
+  "criteria": [
+    "Check gear mesh and secure connections before power.",
+    "Calculate ideal wheel speed from measured or supplied rpm.",
+    "Document first-test evidence and one revision."
+  ],
+  "source_sha256": "ceb509b6e6496c8a0733dfe5469efd73b9ae2eb94eede539c242c8b4b4efa230",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.575Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Before first power, gears bind during a slow hand check with power disconnected. Which action is appropriate?",
+      "options": [
+        "Power the motor harder until teeth bend.",
+        "Record successful operation without testing.",
+        "Correct the mesh and clearance before a supervised powered test.",
+        "Put a finger between powered gears."
+      ],
+      "correct_index": 2,
+      "guide": "A binding drivetrain should be corrected before power is applied.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wire can touch an exposed rotating gear. Which first-test preparation addresses the risk?",
+      "options": [
+        "Secure and insulate the wiring away from the gear’s full motion.",
+        "Remove the switch so testing is faster.",
+        "Rest the wire on the teeth.",
+        "Hold the wire by hand during the powered run."
+      ],
+      "correct_index": 0,
+      "guide": "Secure routing prevents entanglement and electrical faults without hands near motion.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 16-tooth motor gear turns at 480 rpm and drives a 48-tooth axle gear. What is axle rate?",
+      "options": [
+        "30 rpm",
+        "1,440 rpm",
+        "480 rpm",
+        "160 rpm"
+      ],
+      "correct_index": 3,
+      "guide": "480 × 16/48 = 160 rpm; the larger driven gear turns more slowly.",
+      "target_slug": "u8.k3-gear-relationship",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "The wheel rate is 150 rpm and circumference is 0.28 m. What is ideal no-slip speed?",
+      "options": [
+        "0.28 m/s",
+        "0.112 m/s",
+        "42 m/s",
+        "0.70 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "150/60 = 2.5 turns/s; 2.5 × 0.28 = 0.70 m/s.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "On a first supervised run, the motor turns but the driven gear does not. Which record and next step best use that evidence?",
+      "options": [
+        "Reach into the gears while powered.",
+        "Assume the battery is empty despite motor rotation.",
+        "Record the observation, disconnect power, and inspect gear engagement.",
+        "Record “perfect run” and continue racing."
+      ],
+      "correct_index": 2,
+      "guide": "The observation points to transmission/engagement; inspect safely before concluding a cause.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Which first-test note separates observation from explanation?",
+      "options": [
+        "“Axle spun at 200 rpm,” when it was not timed.",
+        "“Motor rotates; axle is still. Possible loose coupling; inspect after disconnecting power.”",
+        "“The car is bad.”",
+        "“Teacher approved,” before a checkpoint."
+      ],
+      "correct_index": 1,
+      "guide": "The first statement records visible evidence and labels the proposed cause as tentative.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Before first power, gears bind during a slow hand check with power disconnected. Which action is appropriate?",
+      "options": [
+        "Put a finger between powered gears.",
+        "Power the motor harder until teeth bend.",
+        "Record successful operation without testing.",
+        "Correct the mesh and clearance before a supervised powered test."
+      ],
+      "correct_index": 3,
+      "guide": "A binding drivetrain should be corrected before power is applied.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wire can touch an exposed rotating gear. Which first-test preparation addresses the risk?",
+      "options": [
+        "Rest the wire on the teeth.",
+        "Secure and insulate the wiring away from the gear’s full motion.",
+        "Hold the wire by hand during the powered run.",
+        "Remove the switch so testing is faster."
+      ],
+      "correct_index": 1,
+      "guide": "Secure routing prevents entanglement and electrical faults without hands near motion.",
+      "target_slug": "u8.k5-safety-zones",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 16-tooth motor gear turns at 480 rpm and drives a 48-tooth axle gear. What is axle rate?",
+      "options": [
+        "160 rpm",
+        "1,440 rpm",
+        "480 rpm",
+        "30 rpm"
+      ],
+      "correct_index": 0,
+      "guide": "480 × 16/48 = 160 rpm; the larger driven gear turns more slowly.",
+      "target_slug": "u8.k3-gear-relationship",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "The wheel rate is 150 rpm and circumference is 0.28 m. What is ideal no-slip speed?",
+      "options": [
+        "0.70 m/s",
+        "0.28 m/s",
+        "42 m/s",
+        "0.112 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "150/60 = 2.5 turns/s; 2.5 × 0.28 = 0.70 m/s.",
+      "target_slug": "u8.r1-ratio-reasoning-wheels",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "On a first supervised run, the motor turns but the driven gear does not. Which record and next step best use that evidence?",
+      "options": [
+        "Reach into the gears while powered.",
+        "Record “perfect run” and continue racing.",
+        "Assume the battery is empty despite motor rotation.",
+        "Record the observation, disconnect power, and inspect gear engagement."
+      ],
+      "correct_index": 3,
+      "guide": "The observation points to transmission/engagement; inspect safely before concluding a cause.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Which first-test note separates observation from explanation?",
+      "options": [
+        "“Teacher approved,” before a checkpoint.",
+        "“The car is bad.”",
+        "“Motor rotates; axle is still. Possible loose coupling; inspect after disconnecting power.”",
+        "“Axle spun at 200 rpm,” when it was not timed."
+      ],
+      "correct_index": 2,
+      "guide": "The first statement records visible evidence and labels the proposed cause as tentative.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

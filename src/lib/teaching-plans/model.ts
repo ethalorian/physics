@@ -56,7 +56,7 @@ export function validateSteps(raw: unknown, catalog: PlanActivity[], previous: P
     return { id: s.id, activityKey: s.activityKey, title: activity?.title ?? old!.title, kind: activity?.kind ?? old!.kind, purpose: s.purpose.trim(), notes: s.notes.trim(), optional: s.optional }
   })
 }
-export const kindLabel: Record<PlanActivity['kind'], string> = { simulation: 'Simulation', interactive: 'Interactive assignment', quiz: 'Quiz', reading: 'Reading', review: 'Review', vocabulary: 'Vocabulary', math: 'Math mission', video: 'Video', lesson: 'Lesson' }
+export const kindLabel: Record<PlanActivity['kind'], string> = { worksheet: 'Worksheet · Paper', simulation: 'Simulation', interactive: 'Interactive assignment', quiz: 'Quiz', reading: 'Reading', review: 'Review', vocabulary: 'Vocabulary', math: 'Math mission', video: 'Video', lesson: 'Lesson' }
 export function planChanges(before: PlanStep[], after: PlanStep[]) {
   return { added: after.filter(s => !before.some(b => b.id === s.id)).length, removed: before.filter(s => !after.some(a => a.id === s.id)).length, reordered: before.filter(s => after.some(a => a.id === s.id)).map(s => s.id).join() !== after.filter(s => before.some(b => b.id === s.id)).map(s => s.id).join() }
 }

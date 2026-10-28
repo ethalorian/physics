@@ -36,6 +36,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
   const { data: session, status } = useSession()
   const isAdmin = role === 'admin'
   const pathname = usePathname()
+  const calendarView = pathname === '/admin/control-room' && new URLSearchParams(search).get('view') === 'calendar'
   // Observer: read-only sidebar — the FULL Insights group (mastery analytics,
   // app oversight, leaderboard) plus curriculum resources. adminOnly flags don't apply;
   // the observer role is itself the gate, and every destination is read-only.
@@ -128,17 +129,17 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
   )
 
   return (
-    <div className="lg:grid lg:items-start" style={{ gridTemplateColumns: '248px minmax(0, 1fr)' }}>
+    <div className={calendarView ? undefined : "lg:grid lg:items-start"} style={{ gridTemplateColumns: '248px minmax(0, 1fr)' }}>
       {/* L-1 · the lobby launcher rides on every staff surface (press L) */}
       {role !== 'observer' && <LobbyLauncher />}
       {/* desktop sidebar */}
-      <aside className="hidden lg:block sticky top-0" style={{ height: '100vh', borderRight: '1px solid var(--border)' }}>
+      <aside className={calendarView ? "hidden" : "hidden lg:block sticky top-0"} style={{ height: '100vh', borderRight: '1px solid var(--border)' }}>
         {NavBody}
       </aside>
 
       {/* mobile drawer */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 flex" onMouseDown={() => setMobileOpen(false)}>
+        <div className={`${calendarView ? '' : 'lg:hidden '}fixed inset-0 z-50 flex`} onMouseDown={() => setMobileOpen(false)}>
           <div className="absolute inset-0" style={{ background: 'color-mix(in oklch, var(--foreground) 28%, transparent)' }} />
           <div className="relative" style={{ width: 264, maxWidth: '82vw', boxShadow: '0 24px 60px -12px color-mix(in oklch, var(--primary) 35%, transparent)' }} onMouseDown={(e) => e.stopPropagation()}>
             <button
@@ -163,7 +164,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
           <button
             onClick={() => setMobileOpen(true)}
             aria-label="Open navigation"
-            className="lg:hidden grid place-items-center shrink-0"
+            className={`${calendarView ? '' : 'lg:hidden '}grid place-items-center shrink-0`}
             style={{ width: 44, height: 44, borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--card)', cursor: 'pointer', color: 'var(--foreground)' }}
           >
             <Menu size={18} />

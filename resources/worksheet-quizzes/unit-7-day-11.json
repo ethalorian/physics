@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 11,
+  "title": "Electrical power and energy",
+  "target": "Calculate electrical transfer rate and energy use.",
+  "criteria": [
+    "Use P=IV with watts, amps and volts.",
+    "Use E=Pt with seconds for joules.",
+    "Distinguish power from total energy."
+  ],
+  "source_sha256": "8d88105f8a9212046518447081aec7b5b7a3b1217aed832242ad13cc704748e2",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.565Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A device draws 0.75 A at 8 V. What electrical power enters it?",
+      "options": [
+        "0.09375 W",
+        "10.67 W",
+        "8.75 W",
+        "6 W"
+      ],
+      "correct_index": 3,
+      "guide": "P = VI = 8 × 0.75 = 6 W.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 12 W device operates at 6 V. What is input current?",
+      "options": [
+        "18 A",
+        "2 A",
+        "72 A",
+        "0.50 A"
+      ],
+      "correct_index": 1,
+      "guide": "I = P/V = 12/6 = 2 A.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 7 W lamp runs for 40 s. What energy does it receive?",
+      "options": [
+        "47 J",
+        "280 W",
+        "0.175 J",
+        "280 J"
+      ],
+      "correct_index": 3,
+      "guide": "E = Pt = 7 × 40 = 280 J.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 10 W device runs for 3 minutes. What energy does it receive?",
+      "options": [
+        "30 J",
+        "200 J",
+        "1,800 J",
+        "600 J"
+      ],
+      "correct_index": 2,
+      "guide": "Convert 3 minutes to 180 s, then E = 10 × 180 = 1,800 J.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two devices each transfer 120 J. A takes 10 s and B takes 30 s. Which has greater average power?",
+      "options": [
+        "B has three times A’s average power.",
+        "Neither has power because energy is conserved.",
+        "A has three times B’s average power.",
+        "They have equal power because energy is equal."
+      ],
+      "correct_index": 2,
+      "guide": "A: 12 W; B: 4 W. Power measures rate, not total energy.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 4 W motor runs for 50 s; a 10 W motor runs for 15 s. Which receives more energy?",
+      "options": [
+        "The 4 W motor: 200 J versus 150 J.",
+        "Both receive 14 J.",
+        "The 10 W motor, because its power is larger.",
+        "The 4 W motor receives 80 J."
+      ],
+      "correct_index": 0,
+      "guide": "Compare Pt for both: 4 × 50 = 200; 10 × 15 = 150.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A device draws 0.75 A at 8 V. What electrical power enters it?",
+      "options": [
+        "0.09375 W",
+        "10.67 W",
+        "6 W",
+        "8.75 W"
+      ],
+      "correct_index": 2,
+      "guide": "P = VI = 8 × 0.75 = 6 W.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 12 W device operates at 6 V. What is input current?",
+      "options": [
+        "18 A",
+        "0.50 A",
+        "72 A",
+        "2 A"
+      ],
+      "correct_index": 3,
+      "guide": "I = P/V = 12/6 = 2 A.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 7 W lamp runs for 40 s. What energy does it receive?",
+      "options": [
+        "280 J",
+        "0.175 J",
+        "280 W",
+        "47 J"
+      ],
+      "correct_index": 0,
+      "guide": "E = Pt = 7 × 40 = 280 J.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 10 W device runs for 3 minutes. What energy does it receive?",
+      "options": [
+        "600 J",
+        "200 J",
+        "30 J",
+        "1,800 J"
+      ],
+      "correct_index": 3,
+      "guide": "Convert 3 minutes to 180 s, then E = 10 × 180 = 1,800 J.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two devices each transfer 120 J. A takes 10 s and B takes 30 s. Which has greater average power?",
+      "options": [
+        "B has three times A’s average power.",
+        "A has three times B’s average power.",
+        "They have equal power because energy is equal.",
+        "Neither has power because energy is conserved."
+      ],
+      "correct_index": 1,
+      "guide": "A: 12 W; B: 4 W. Power measures rate, not total energy.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 4 W motor runs for 50 s; a 10 W motor runs for 15 s. Which receives more energy?",
+      "options": [
+        "The 4 W motor: 200 J versus 150 J.",
+        "The 4 W motor receives 80 J.",
+        "Both receive 14 J.",
+        "The 10 W motor, because its power is larger."
+      ],
+      "correct_index": 0,
+      "guide": "Compare Pt for both: 4 × 50 = 200; 10 × 15 = 150.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

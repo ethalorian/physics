@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 13,
+  "title": "Momentum analysis: put it together",
+  "target": "Use a model to compare a deflection option and its limits.",
+  "criteria": [
+    "Compute the required change before evaluating an option.",
+    "Keep impulse, velocity change and displacement distinct.",
+    "Communicate assumptions with the numerical result."
+  ],
+  "source_sha256": "64674f8d5a31968d46e5af0c538296bb3461b3319bd645272012478f0c70d6b2",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.512Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 300 kg target needs a 9 m sideways offset after 60 s of ideal drift. What added sideways velocity is required?",
+      "options": [
+        "540 m/s",
+        "0.15 m/s",
+        "6.67 m/s",
+        "0.03 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "Δv = Δx/t = 9/60 = 0.15 m/s.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 300 kg target needs Δv = 0.15 m/s. What impulse is required?",
+      "options": [
+        "45 N·s",
+        "2,000 N·s",
+        "300.15 N·s",
+        "0.0005 N·s"
+      ],
+      "correct_index": 0,
+      "guide": "J = MΔv = 300 × 0.15 = 45 N·s.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which set correctly distinguishes the quantities?",
+      "options": [
+        "All three have units of m/s.",
+        "Impulse: m; velocity change: N; offset: kg.",
+        "Impulse: N·s; velocity change: m/s; offset: m.",
+        "All three are forces."
+      ],
+      "correct_index": 2,
+      "guide": "J changes momentum; Δv describes motion change; Δx is displacement.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 6 N·s impulse acts on a 120 kg target, followed by 80 s of ideal drift. What offset results?",
+      "options": [
+        "0.05 m",
+        "16 m",
+        "480 m",
+        "4 m"
+      ],
+      "correct_index": 3,
+      "guide": "Δv = 6/120 = 0.05 m/s; offset = 0.05 × 80 = 4 m.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which statement properly reports an ideal drift prediction?",
+      "options": [
+        "An 8 m offset, assuming the added sideways velocity remains constant.",
+        "An 8 N offset because impulse is a distance.",
+        "8 m/s of displacement with no stated model.",
+        "Exactly 8 m in every possible orbit."
+      ],
+      "correct_index": 0,
+      "guide": "A useful result includes units and the assumptions supporting it.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A proposal halves delivered impulse but doubles lead time for the same target. In the constant-drift model, compare offsets.",
+      "options": [
+        "The new offset halves.",
+        "Equal.",
+        "The new offset quadruples.",
+        "The new offset doubles."
+      ],
+      "correct_index": 1,
+      "guide": "Δx = (J/M)t; halving J and doubling t cancel.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 300 kg target needs a 9 m sideways offset after 60 s of ideal drift. What added sideways velocity is required?",
+      "options": [
+        "540 m/s",
+        "6.67 m/s",
+        "0.15 m/s",
+        "0.03 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Δv = Δx/t = 9/60 = 0.15 m/s.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 300 kg target needs Δv = 0.15 m/s. What impulse is required?",
+      "options": [
+        "0.0005 N·s",
+        "45 N·s",
+        "2,000 N·s",
+        "300.15 N·s"
+      ],
+      "correct_index": 1,
+      "guide": "J = MΔv = 300 × 0.15 = 45 N·s.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which set correctly distinguishes the quantities?",
+      "options": [
+        "Impulse: N·s; velocity change: m/s; offset: m.",
+        "Impulse: m; velocity change: N; offset: kg.",
+        "All three are forces.",
+        "All three have units of m/s."
+      ],
+      "correct_index": 0,
+      "guide": "J changes momentum; Δv describes motion change; Δx is displacement.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 6 N·s impulse acts on a 120 kg target, followed by 80 s of ideal drift. What offset results?",
+      "options": [
+        "480 m",
+        "16 m",
+        "0.05 m",
+        "4 m"
+      ],
+      "correct_index": 3,
+      "guide": "Δv = 6/120 = 0.05 m/s; offset = 0.05 × 80 = 4 m.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which statement properly reports an ideal drift prediction?",
+      "options": [
+        "An 8 N offset because impulse is a distance.",
+        "8 m/s of displacement with no stated model.",
+        "An 8 m offset, assuming the added sideways velocity remains constant.",
+        "Exactly 8 m in every possible orbit."
+      ],
+      "correct_index": 2,
+      "guide": "A useful result includes units and the assumptions supporting it.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A proposal halves delivered impulse but doubles lead time for the same target. In the constant-drift model, compare offsets.",
+      "options": [
+        "The new offset halves.",
+        "Equal.",
+        "The new offset quadruples.",
+        "The new offset doubles."
+      ],
+      "correct_index": 1,
+      "guide": "Δx = (J/M)t; halving J and doubling t cancel.",
+      "target_slug": "u3.r3-deflection",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

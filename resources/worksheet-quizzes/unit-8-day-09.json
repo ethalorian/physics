@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 8,
+  "day": 9,
+  "title": "Race, explain and transfer",
+  "target": "Evaluate a model against measured performance and defend design decisions.",
+  "criteria": [
+    "Report measured distance, time and average speed.",
+    "Compare actual speed with a stated prediction.",
+    "Use evidence to explain three physical design choices."
+  ],
+  "source_sha256": "bed713d5a718c21dbbe02dad3cb28bcb8d9ab907bb51b6c23d27b9a526b3ec0b",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.578Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "In a supplied race example, a car travels 6.3 m in 9.0 s. Which report has the correct average speed and units?",
+      "options": [
+        "0.70 m/s²",
+        "56.7 m/s",
+        "0.70 m/s",
+        "1.43 s/m as speed"
+      ],
+      "correct_index": 2,
+      "guide": "6.3/9.0 = 0.70 m/s. Average speed uses length per time, not acceleration units.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which report separates a real observation from a model prediction?",
+      "options": [
+        "“Our car must match the example because it is the same color.”",
+        "“Measured 0.60 m/s,” copied from the model without timing.",
+        "“Predicted and measured mean the same thing.”",
+        "“Measured time: 8.2 s over 4.1 m; model speed: 0.60 m/s.”"
+      ],
+      "correct_index": 3,
+      "guide": "Measured distance and time are evidence; a predicted speed comes from a model and must be labeled separately.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A model predicts 0.80 m/s. Example measured average speed is 0.60 m/s. Relative to the prediction, how much lower is the measured speed?",
+      "options": [
+        "75%",
+        "20%",
+        "25%",
+        "33.3%"
+      ],
+      "correct_index": 2,
+      "guide": "Difference = 0.20; 0.20/0.80 × 100 = 25%. Use the stated reference in the denominator.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Measured speed is below a no-slip, no-loss prediction. Which explanation is appropriately cautious?",
+      "options": [
+        "Rubbing, slip, or lower loaded motor rate could contribute; test these possibilities.",
+        "The measurement proves energy was destroyed.",
+        "Only the wheel color can explain it.",
+        "The model must be exact because it contains numbers."
+      ],
+      "correct_index": 0,
+      "guide": "Ideal assumptions can omit losses and load effects. A mismatch does not uniquely identify its cause.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Which explanation connects three design choices to physics?",
+      "options": [
+        "Larger wheels always win; alignment never matters; current disappears at the motor.",
+        "Larger wheels change distance per turn; alignment limits unequal rubbing; secure wiring maintains the intended circuit.",
+        "Wheel size, alignment, and wiring only change appearance.",
+        "Paint creates power; alignment stores charge; wires provide fuel."
+      ],
+      "correct_index": 1,
+      "guide": "The correct set connects geometry, forces, and electrical continuity without unconditional performance claims.",
+      "target_slug": "u8.r4-three-physics-choices",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A new race course starts on a steeper ramp. Why might a slower gear reduction be useful even though its ideal top speed is lower?",
+      "options": [
+        "It guarantees greater speed and torque at unchanged power.",
+        "It can provide greater axle torque to overcome the required driving load.",
+        "It creates energy from the gears.",
+        "It removes gravity from the car."
+      ],
+      "correct_index": 1,
+      "guide": "A reduction trades rotational speed for torque. Whether it improves the race requires testing the new course.",
+      "target_slug": "u8.k3-gear-relationship",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "In a supplied race example, a car travels 6.3 m in 9.0 s. Which report has the correct average speed and units?",
+      "options": [
+        "56.7 m/s",
+        "1.43 s/m as speed",
+        "0.70 m/s",
+        "0.70 m/s²"
+      ],
+      "correct_index": 2,
+      "guide": "6.3/9.0 = 0.70 m/s. Average speed uses length per time, not acceleration units.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which report separates a real observation from a model prediction?",
+      "options": [
+        "“Measured 0.60 m/s,” copied from the model without timing.",
+        "“Predicted and measured mean the same thing.”",
+        "“Our car must match the example because it is the same color.”",
+        "“Measured time: 8.2 s over 4.1 m; model speed: 0.60 m/s.”"
+      ],
+      "correct_index": 3,
+      "guide": "Measured distance and time are evidence; a predicted speed comes from a model and must be labeled separately.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A model predicts 0.80 m/s. Example measured average speed is 0.60 m/s. Relative to the prediction, how much lower is the measured speed?",
+      "options": [
+        "20%",
+        "75%",
+        "33.3%",
+        "25%"
+      ],
+      "correct_index": 3,
+      "guide": "Difference = 0.20; 0.20/0.80 × 100 = 25%. Use the stated reference in the denominator.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Measured speed is below a no-slip, no-loss prediction. Which explanation is appropriately cautious?",
+      "options": [
+        "Rubbing, slip, or lower loaded motor rate could contribute; test these possibilities.",
+        "The model must be exact because it contains numbers.",
+        "The measurement proves energy was destroyed.",
+        "Only the wheel color can explain it."
+      ],
+      "correct_index": 0,
+      "guide": "Ideal assumptions can omit losses and load effects. A mismatch does not uniquely identify its cause.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Which explanation connects three design choices to physics?",
+      "options": [
+        "Paint creates power; alignment stores charge; wires provide fuel.",
+        "Larger wheels change distance per turn; alignment limits unequal rubbing; secure wiring maintains the intended circuit.",
+        "Larger wheels always win; alignment never matters; current disappears at the motor.",
+        "Wheel size, alignment, and wiring only change appearance."
+      ],
+      "correct_index": 1,
+      "guide": "The correct set connects geometry, forces, and electrical continuity without unconditional performance claims.",
+      "target_slug": "u8.r4-three-physics-choices",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A new race course starts on a steeper ramp. Why might a slower gear reduction be useful even though its ideal top speed is lower?",
+      "options": [
+        "It guarantees greater speed and torque at unchanged power.",
+        "It creates energy from the gears.",
+        "It can provide greater axle torque to overcome the required driving load.",
+        "It removes gravity from the car."
+      ],
+      "correct_index": 2,
+      "guide": "A reduction trades rotational speed for torque. Whether it improves the race requires testing the new course.",
+      "target_slug": "u8.k3-gear-relationship",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

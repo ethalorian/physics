@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 21,
+  "title": "An energy budget",
+  "target": "Connect work, motion, heating and an honest model conclusion.",
+  "criteria": [
+    "Keep all terms in consistent energy units.",
+    "Distinguish mechanical-energy change from total-energy loss.",
+    "Report assumptions with the energy budget."
+  ],
+  "source_sha256": "dcda0b7b49077f15227a0426245e15fa09cb995746b12a5ade5f7bf0c7622ae7",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.529Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "An energy budget lists input as 2 kJ and output as 500 J. What is input in matching units?",
+      "options": [
+        "2,000 J",
+        "0.002 J",
+        "200 J",
+        "2 J"
+      ],
+      "correct_index": 0,
+      "guide": "1 kJ = 1,000 J, so 2 kJ = 2,000 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 3 kg cart moves at 2 m/s. Which is its kinetic energy?",
+      "options": [
+        "12 J",
+        "6 J",
+        "3 J",
+        "6 kg·m/s"
+      ],
+      "correct_index": 1,
+      "guide": "K = ½ × 3 × 2² = 6 J; equal numerical momentum does not make the units interchangeable.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A machine receives 80 J and delivers 50 J of useful mechanical energy with no net stored-energy change. Where must the remaining energy be counted?",
+      "options": [
+        "As negative input energy.",
+        "As destroyed energy.",
+        "As an extra 30 J of useful work without evidence.",
+        "Other outputs such as thermal energy and sound."
+      ],
+      "correct_index": 3,
+      "guide": "Conservation requires accounting for all outputs: 80 − 50 = 30 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A cart starts with 16 J, receives 12 J of work, and transfers 5 J to internal energy outside the cart’s motion account. What is final kinetic energy?",
+      "options": [
+        "33 J",
+        "23 J",
+        "7 J",
+        "9 J"
+      ],
+      "correct_index": 1,
+      "guide": "K_final = 16 + 12 − 5 = 23 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which claim is required before treating K + U as constant?",
+      "options": [
+        "Every force must vanish.",
+        "The system must have zero mass.",
+        "No unaccounted nonconservative transfers or energy forms affect that account.",
+        "The object must always move in a straight line."
+      ],
+      "correct_index": 2,
+      "guide": "Mechanical conservation is conditional; total energy accounting is broader.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A budget’s output is larger than input, but the device also loses stored energy. Which interpretation is possible?",
+      "options": [
+        "The result necessarily creates energy.",
+        "The input must be ignored.",
+        "The extra output can come from decreasing stored energy.",
+        "Stored energy cannot ever power an output."
+      ],
+      "correct_index": 2,
+      "guide": "Input plus decrease of storage can supply output; include initial and final storage.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "An energy budget lists input as 2 kJ and output as 500 J. What is input in matching units?",
+      "options": [
+        "2,000 J",
+        "200 J",
+        "0.002 J",
+        "2 J"
+      ],
+      "correct_index": 0,
+      "guide": "1 kJ = 1,000 J, so 2 kJ = 2,000 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 3 kg cart moves at 2 m/s. Which is its kinetic energy?",
+      "options": [
+        "3 J",
+        "6 kg·m/s",
+        "12 J",
+        "6 J"
+      ],
+      "correct_index": 3,
+      "guide": "K = ½ × 3 × 2² = 6 J; equal numerical momentum does not make the units interchangeable.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A machine receives 80 J and delivers 50 J of useful mechanical energy with no net stored-energy change. Where must the remaining energy be counted?",
+      "options": [
+        "As negative input energy.",
+        "Other outputs such as thermal energy and sound.",
+        "As an extra 30 J of useful work without evidence.",
+        "As destroyed energy."
+      ],
+      "correct_index": 1,
+      "guide": "Conservation requires accounting for all outputs: 80 − 50 = 30 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A cart starts with 16 J, receives 12 J of work, and transfers 5 J to internal energy outside the cart’s motion account. What is final kinetic energy?",
+      "options": [
+        "9 J",
+        "7 J",
+        "23 J",
+        "33 J"
+      ],
+      "correct_index": 2,
+      "guide": "K_final = 16 + 12 − 5 = 23 J.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which claim is required before treating K + U as constant?",
+      "options": [
+        "The system must have zero mass.",
+        "The object must always move in a straight line.",
+        "No unaccounted nonconservative transfers or energy forms affect that account.",
+        "Every force must vanish."
+      ],
+      "correct_index": 2,
+      "guide": "Mechanical conservation is conditional; total energy accounting is broader.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A budget’s output is larger than input, but the device also loses stored energy. Which interpretation is possible?",
+      "options": [
+        "The input must be ignored.",
+        "Stored energy cannot ever power an output.",
+        "The result necessarily creates energy.",
+        "The extra output can come from decreasing stored energy."
+      ],
+      "correct_index": 3,
+      "guide": "Input plus decrease of storage can supply output; include initial and final storage.",
+      "target_slug": "u4.k5-conservation",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

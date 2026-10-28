@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 3,
+  "title": "Conduction, convection, radiation",
+  "target": "Identify mechanisms of heat transfer and support each classification.",
+  "criteria": [
+    "Describe contact transfer, bulk fluid motion and electromagnetic transfer.",
+    "Use evidence from the situation.",
+    "Recognize that more than one mechanism can act."
+  ],
+  "source_sha256": "9a94f98c2576ff80f8effe34deefc9596927873df778ae2d696c9222852212b9",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.534Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A metal handle warms because energy passes through the solid from a hot pan. Which mechanism is most directly described?",
+      "options": [
+        "Convection of the solid handle as a flowing fluid.",
+        "Conduction.",
+        "A loss of energy conservation.",
+        "Only radiation through empty space."
+      ],
+      "correct_index": 1,
+      "guide": "Conduction transfers energy through matter without bulk transport of the whole material.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A warm air plume rises above a heater and circulates through a room. What mechanism is this?",
+      "options": [
+        "Convection.",
+        "Radiation only.",
+        "Mechanical energy creation.",
+        "Conduction only, with no fluid motion."
+      ],
+      "correct_index": 0,
+      "guide": "Convection involves bulk fluid motion carrying energy.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A sealed vacuum gap reduces contact and fluid transfer between two surfaces. Which mechanism can still carry energy across it?",
+      "options": [
+        "Conduction through absent gas.",
+        "Air convection through a perfect vacuum.",
+        "Only sound waves in the vacuum.",
+        "Radiation."
+      ],
+      "correct_index": 3,
+      "guide": "Electromagnetic radiation can propagate without matter.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which observation specifically supports convection in heated water?",
+      "options": [
+        "Colored tracer rises with warm water and sinks elsewhere in a circulating loop.",
+        "A thermometer alone reads a temperature.",
+        "A shiny lid reflects light.",
+        "The pot’s metal handle warms without moving."
+      ],
+      "correct_index": 0,
+      "guide": "The tracer demonstrates bulk fluid transport; warming alone does not identify convection.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A person near a campfire feels radiation and warm rising air. Which statement is correct?",
+      "options": [
+        "Convection cannot occur in air.",
+        "Only one mechanism is ever allowed in a real setting.",
+        "More than one heat-transfer mechanism can operate at once.",
+        "Radiation requires touching the fire."
+      ],
+      "correct_index": 2,
+      "guide": "Real energy transfer often combines mechanisms.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A hot mug loses energy through its ceramic wall and then to moving room air; it also emits infrared radiation. Which account is best?",
+      "options": [
+        "Only radiation exists because the mug is warm.",
+        "Conduction, convection, and radiation can all contribute.",
+        "Only conduction exists because the mug is solid.",
+        "Only convection exists because the room has air."
+      ],
+      "correct_index": 1,
+      "guide": "Different parts of the transfer path involve different mechanisms simultaneously.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A metal handle warms because energy passes through the solid from a hot pan. Which mechanism is most directly described?",
+      "options": [
+        "Only radiation through empty space.",
+        "Convection of the solid handle as a flowing fluid.",
+        "A loss of energy conservation.",
+        "Conduction."
+      ],
+      "correct_index": 3,
+      "guide": "Conduction transfers energy through matter without bulk transport of the whole material.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A warm air plume rises above a heater and circulates through a room. What mechanism is this?",
+      "options": [
+        "Radiation only.",
+        "Convection.",
+        "Conduction only, with no fluid motion.",
+        "Mechanical energy creation."
+      ],
+      "correct_index": 1,
+      "guide": "Convection involves bulk fluid motion carrying energy.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A sealed vacuum gap reduces contact and fluid transfer between two surfaces. Which mechanism can still carry energy across it?",
+      "options": [
+        "Only sound waves in the vacuum.",
+        "Conduction through absent gas.",
+        "Radiation.",
+        "Air convection through a perfect vacuum."
+      ],
+      "correct_index": 2,
+      "guide": "Electromagnetic radiation can propagate without matter.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Which observation specifically supports convection in heated water?",
+      "options": [
+        "The pot’s metal handle warms without moving.",
+        "A thermometer alone reads a temperature.",
+        "Colored tracer rises with warm water and sinks elsewhere in a circulating loop.",
+        "A shiny lid reflects light."
+      ],
+      "correct_index": 2,
+      "guide": "The tracer demonstrates bulk fluid transport; warming alone does not identify convection.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A person near a campfire feels radiation and warm rising air. Which statement is correct?",
+      "options": [
+        "More than one heat-transfer mechanism can operate at once.",
+        "Only one mechanism is ever allowed in a real setting.",
+        "Convection cannot occur in air.",
+        "Radiation requires touching the fire."
+      ],
+      "correct_index": 0,
+      "guide": "Real energy transfer often combines mechanisms.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A hot mug loses energy through its ceramic wall and then to moving room air; it also emits infrared radiation. Which account is best?",
+      "options": [
+        "Only conduction exists because the mug is solid.",
+        "Conduction, convection, and radiation can all contribute.",
+        "Only radiation exists because the mug is warm.",
+        "Only convection exists because the room has air."
+      ],
+      "correct_index": 1,
+      "guide": "Different parts of the transfer path involve different mechanisms simultaneously.",
+      "target_slug": "u5.k2-transfer-modes",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

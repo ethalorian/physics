@@ -1,3 +1,4 @@
+import { ownerEmailsFor } from '@/lib/identity-aliases'
 import { calendarAssigned, CALENDAR_ASSIGNMENT_MESSAGE } from '@/lib/calendar-assignment'
 import {NextResponse} from 'next/server'
 import {withRole} from '@/lib/api-auth'
@@ -16,6 +17,7 @@ export const GET=withRole(['teacher','admin'],async(request,ctx)=>{
  return NextResponse.json({sessions:s.data,assignments:a.data});
 })
 export const POST=withRole(['teacher','admin'],async(request,ctx)=>{
+ if(ctx.viewingAsTeacher||request.headers.get('origin')!==request.nextUrl.origin)return NextResponse.json({error:'Use your own account and reload before saving.'},{status:403});
  const body=await request.json().catch(()=>null);
  if(body?.action==='assign'){
   const m=missionBySlug(body.mission);if(!m||!(m.codes as readonly string[]).includes(body.code)||typeof body.userId!=='string')return NextResponse.json({error:'Choose a student and skill.'},{status:400});
@@ -25,11 +27,10 @@ export const POST=withRole(['teacher','admin'],async(request,ctx)=>{
   const {data,error}=await supabaseAdmin.from('math_mission_assignments').insert({teacher_email:ctx.scopeEmail,user_id:body.userId,mission:m.slug,code:body.code,title:`${m.name} · ${body.code}`,due_at:body.dueAt||null}).select().single();
   return error?NextResponse.json({error:'Could not assign mission.'},{status:503}):NextResponse.json({assignment:data});
  }
- if(body?.action==='review'&&typeof body.id==='string'&&typeof body.note==='string'&&body.note.trim()&&body.note.length<=4000){
-  const {data:s,error}=await supabaseAdmin.from('math_mission_sessions').select('id,user_id').eq('id',body.id).eq('status','completed').maybeSingle();if(error||!s)return NextResponse.json({error:'Session not found'},{status:404});
-  if(ctx.role==='teacher'&&!await teacherCanAccessStudent(ctx.scopeEmail,s.user_id))return NextResponse.json({error:'Student not on your roster'},{status:403});
-  const saved=await supabaseAdmin.from('math_mission_sessions').update({review_note:body.note.trim(),reviewed_by:ctx.scopeEmail,reviewed_at:new Date().toISOString()}).eq('id',s.id);
-  return saved.error?NextResponse.json({error:'Could not save feedback.'},{status:503}):NextResponse.json({ok:true});
+ if(body?.action==='review'){
+  if(typeof body.id!=='string'||!Number.isInteger(body.revision)||![1,2,3,null].includes(body.level)||typeof body.note!=='string'||body.note.length>4000)return NextResponse.json({error:'Choose mastery or skip, and optional feedback.'},{status:400});
+  const {error}=await supabaseAdmin.rpc('release_math_mission_review',{p_id:body.id,p_actor:ctx.scopeEmail,p_owner_emails:ownerEmailsFor(ctx.scopeEmail),p_revision:body.revision,p_level:body.level,p_note:body.note.trim()});
+  return error?NextResponse.json({error:'This review changed or is unavailable. Refresh before releasing.'},{status:409}):NextResponse.json({ok:true});
  }
  if(body?.action==='cancel'&&typeof body.id==='string'){
   const {data:a}=await supabaseAdmin.from('math_mission_assignments').select('id,user_id,teacher_email').eq('id',body.id).maybeSingle();

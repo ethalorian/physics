@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 14,
+  "title": "Hooke’s law",
+  "target": "Connect spring displacement with restoring force.",
+  "criteria": [
+    "Measure displacement from the natural length.",
+    "Use spring constant in N/m.",
+    "Point the spring force back toward equilibrium."
+  ],
+  "source_sha256": "5708f8e0733968fd2a11b14c01ae35ac34668a8ee80e94e69793cfdf75929c6e",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.525Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A spring’s natural length is 15 cm and its stretched length is 19 cm. What is extension x in meters?",
+      "options": [
+        "0.04 m",
+        "0.19 m",
+        "4 m",
+        "0.15 m"
+      ],
+      "correct_index": 0,
+      "guide": "Extension is 19 − 15 = 4 cm = 0.04 m.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spring is compressed from its natural length of 30 cm to 27 cm. What is the compression magnitude?",
+      "options": [
+        "0.30 m",
+        "0.27 m",
+        "0.03 m",
+        "3 m"
+      ],
+      "correct_index": 2,
+      "guide": "Compression is the 3 cm change from natural length.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 9 N force stretches an ideal spring by 0.03 m. What is k?",
+      "options": [
+        "30 N/m",
+        "300 N/m",
+        "0.27 N/m",
+        "3 N/m"
+      ],
+      "correct_index": 1,
+      "guide": "k = F/x = 9/0.03 = 300 N/m.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal spring with k = 80 N/m is stretched 0.05 m. What is restoring-force magnitude?",
+      "options": [
+        "1,600 N",
+        "85 N",
+        "0.000625 N",
+        "4 N"
+      ],
+      "correct_index": 3,
+      "guide": "|F| = k|x| = 80 × 0.05 = 4 N.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spring is stretched to the right from equilibrium. In which direction does it pull the attached object?",
+      "options": [
+        "It exerts no force until released.",
+        "Always upward.",
+        "Left, toward equilibrium.",
+        "Right, away from equilibrium."
+      ],
+      "correct_index": 2,
+      "guide": "The restoring force opposes displacement from equilibrium.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A student writes F = +kx for the spring’s force when positive x points away from equilibrium. What correction is needed?",
+      "options": [
+        "Set k negative for every spring.",
+        "Square mass instead of x.",
+        "Replace displacement with total spring length.",
+        "Use F = −kx for the restoring force."
+      ],
+      "correct_index": 3,
+      "guide": "With that sign convention, spring force is opposite x; k remains positive.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A spring’s natural length is 15 cm and its stretched length is 19 cm. What is extension x in meters?",
+      "options": [
+        "0.04 m",
+        "0.15 m",
+        "0.19 m",
+        "4 m"
+      ],
+      "correct_index": 0,
+      "guide": "Extension is 19 − 15 = 4 cm = 0.04 m.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spring is compressed from its natural length of 30 cm to 27 cm. What is the compression magnitude?",
+      "options": [
+        "0.03 m",
+        "0.27 m",
+        "3 m",
+        "0.30 m"
+      ],
+      "correct_index": 0,
+      "guide": "Compression is the 3 cm change from natural length.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 9 N force stretches an ideal spring by 0.03 m. What is k?",
+      "options": [
+        "3 N/m",
+        "30 N/m",
+        "300 N/m",
+        "0.27 N/m"
+      ],
+      "correct_index": 2,
+      "guide": "k = F/x = 9/0.03 = 300 N/m.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal spring with k = 80 N/m is stretched 0.05 m. What is restoring-force magnitude?",
+      "options": [
+        "85 N",
+        "4 N",
+        "0.000625 N",
+        "1,600 N"
+      ],
+      "correct_index": 1,
+      "guide": "|F| = k|x| = 80 × 0.05 = 4 N.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spring is stretched to the right from equilibrium. In which direction does it pull the attached object?",
+      "options": [
+        "Right, away from equilibrium.",
+        "It exerts no force until released.",
+        "Always upward.",
+        "Left, toward equilibrium."
+      ],
+      "correct_index": 3,
+      "guide": "The restoring force opposes displacement from equilibrium.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A student writes F = +kx for the spring’s force when positive x points away from equilibrium. What correction is needed?",
+      "options": [
+        "Square mass instead of x.",
+        "Replace displacement with total spring length.",
+        "Set k negative for every spring.",
+        "Use F = −kx for the restoring force."
+      ],
+      "correct_index": 3,
+      "guide": "With that sign convention, spring force is opposite x; k remains positive.",
+      "target_slug": "u4.k6-hookes-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

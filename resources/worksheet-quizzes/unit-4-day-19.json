@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 19,
+  "title": "Impact energy and TNT equivalents",
+  "target": "Convert an energy estimate without claiming a complete damage prediction.",
+  "criteria": [
+    "Convert speed units before squaring.",
+    "Calculate kinetic energy from stated model values.",
+    "Distinguish an energy equivalent from an explosion or damage forecast."
+  ],
+  "source_sha256": "a0b17746f983779319716dd5cf9c24f1359bff4a1a62fcc683c3876f74fd3b98",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.528Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "An impact speed is listed as 7 km/s. Which value belongs in a kinetic-energy formula using kilograms and meters?",
+      "options": [
+        "0.007 m/s",
+        "700 m/s",
+        "7,000 m/s",
+        "7 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Multiply kilometers by 1,000.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg object moves at 2 km/s. What is kinetic energy?",
+      "options": [
+        "8,000 J",
+        "8,000,000 J",
+        "8 J",
+        "16,000,000 J"
+      ],
+      "correct_index": 1,
+      "guide": "v = 2,000 m/s; K = ½ × 4 × 2,000² = 8,000,000 J.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Use 1 ton TNT equivalent = 4.184 × 10⁹ J. An energy is 12.552 × 10⁹ J. What is its equivalent?",
+      "options": [
+        "12.552 tons TNT",
+        "52.52 tons TNT",
+        "0.333 tons TNT",
+        "3 tons TNT"
+      ],
+      "correct_index": 3,
+      "guide": "Divide energy by energy per ton: 12.552/4.184 = 3.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For fixed mass, an impact speed doubles. How does the TNT energy equivalent change?",
+      "options": [
+        "It halves.",
+        "It stays unchanged.",
+        "It doubles.",
+        "It quadruples."
+      ],
+      "correct_index": 3,
+      "guide": "Both kinetic energy and its equivalent scale with speed squared.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "What does a quoted TNT energy equivalent specify?",
+      "options": [
+        "An energy comparison, not proof that the event is a chemical explosion.",
+        "The exact pressure at every distance.",
+        "The exact radius of damage in all environments.",
+        "The event’s chemical composition."
+      ],
+      "correct_index": 0,
+      "guide": "Equivalent compares energy magnitudes without specifying mechanisms or detailed effects.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two impacts have the same TNT energy equivalent but different impact angles and materials. Which claim is justified?",
+      "options": [
+        "Equal total energy does not guarantee equal local damage.",
+        "The crater diameters must match exactly.",
+        "Different damage would prove energy conservation false.",
+        "Every building must receive identical force in both events."
+      ],
+      "correct_index": 0,
+      "guide": "Coupling, geometry, and material response affect where and how energy is transferred.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "An impact speed is listed as 7 km/s. Which value belongs in a kinetic-energy formula using kilograms and meters?",
+      "options": [
+        "0.007 m/s",
+        "700 m/s",
+        "7,000 m/s",
+        "7 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Multiply kilometers by 1,000.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg object moves at 2 km/s. What is kinetic energy?",
+      "options": [
+        "8,000,000 J",
+        "8 J",
+        "8,000 J",
+        "16,000,000 J"
+      ],
+      "correct_index": 0,
+      "guide": "v = 2,000 m/s; K = ½ × 4 × 2,000² = 8,000,000 J.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Use 1 ton TNT equivalent = 4.184 × 10⁹ J. An energy is 12.552 × 10⁹ J. What is its equivalent?",
+      "options": [
+        "3 tons TNT",
+        "12.552 tons TNT",
+        "0.333 tons TNT",
+        "52.52 tons TNT"
+      ],
+      "correct_index": 0,
+      "guide": "Divide energy by energy per ton: 12.552/4.184 = 3.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For fixed mass, an impact speed doubles. How does the TNT energy equivalent change?",
+      "options": [
+        "It stays unchanged.",
+        "It doubles.",
+        "It halves.",
+        "It quadruples."
+      ],
+      "correct_index": 3,
+      "guide": "Both kinetic energy and its equivalent scale with speed squared.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "What does a quoted TNT energy equivalent specify?",
+      "options": [
+        "The event’s chemical composition.",
+        "An energy comparison, not proof that the event is a chemical explosion.",
+        "The exact radius of damage in all environments.",
+        "The exact pressure at every distance."
+      ],
+      "correct_index": 1,
+      "guide": "Equivalent compares energy magnitudes without specifying mechanisms or detailed effects.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two impacts have the same TNT energy equivalent but different impact angles and materials. Which claim is justified?",
+      "options": [
+        "The crater diameters must match exactly.",
+        "Equal total energy does not guarantee equal local damage.",
+        "Every building must receive identical force in both events.",
+        "Different damage would prove energy conservation false."
+      ],
+      "correct_index": 1,
+      "guide": "Coupling, geometry, and material response affect where and how energy is transferred.",
+      "target_slug": "u4.r6-tnt-yield",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

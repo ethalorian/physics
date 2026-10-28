@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 12,
+  "title": "Transfer: thermal energy",
+  "target": "Choose an energy-transfer model and communicate its limits.",
+  "criteria": [
+    "Distinguish warming, phase change and work.",
+    "Use correct signs and units.",
+    "Explain why a model result depends on its assumptions."
+  ],
+  "source_sha256": "7148c163fe6d7eee2a63b55286ee58b3fd51d3c41e919f77bfcbed5b421a88e9",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.539Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Sample A warms without changing phase; B melts at constant temperature. Which pair of energy models fits?",
+      "options": [
+        "Both: final temperature alone.",
+        "A: mcΔT; B: mL.",
+        "A: mL; B: mcΔT only.",
+        "Neither can gain energy."
+      ],
+      "correct_index": 1,
+      "guide": "Use sensible heat for warming and latent heat for phase change.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A gas is compressed while thermally insulated. What can increase its internal energy?",
+      "options": [
+        "Heat from the insulation despite the no-heat assumption.",
+        "Only a phase change.",
+        "Work done on the gas.",
+        "Energy created by the volume decrease."
+      ],
+      "correct_index": 2,
+      "guide": "Adiabatic does not mean constant internal energy; compression can add work.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Use ΔU = Q − W_by. A system absorbs 110 J as heat and does 45 J of work. What is ΔU?",
+      "options": [
+        "+155 J",
+        "+65 J",
+        "−155 J",
+        "−65 J"
+      ],
+      "correct_index": 1,
+      "guide": "Subtract work output from heat input: 110 − 45 = 65 J.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 0.80 kg sample with c = 250 J/(kg·°C) warms by 7°C. What heat input is needed?",
+      "options": [
+        "200 J",
+        "2,187.5 J",
+        "1,400 J",
+        "14 J"
+      ],
+      "correct_index": 2,
+      "guide": "Q = 0.80 × 250 × 7 = 1,400 J.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A predicted final temperature assumes no heat loss. Which observation directly calls that assumption into question?",
+      "options": [
+        "The surrounding container measurably warms during the trial.",
+        "The calculation includes units.",
+        "The sample has a known mass.",
+        "The thermometer has a display."
+      ],
+      "correct_index": 0,
+      "guide": "Container warming is evidence of an additional energy recipient.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A heating model predicts an 8°C rise if all 1,200 J enters a sample. Measurements show only 900 J reaches it, with other assumptions unchanged. What rise should the revised model predict?",
+      "options": [
+        "8°C",
+        "10.7°C",
+        "3°C",
+        "6°C"
+      ],
+      "correct_index": 3,
+      "guide": "For fixed mc and no phase change, ΔT scales with Q: 8 × 900/1200 = 6°C.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Sample A warms without changing phase; B melts at constant temperature. Which pair of energy models fits?",
+      "options": [
+        "Both: final temperature alone.",
+        "A: mL; B: mcΔT only.",
+        "A: mcΔT; B: mL.",
+        "Neither can gain energy."
+      ],
+      "correct_index": 2,
+      "guide": "Use sensible heat for warming and latent heat for phase change.",
+      "target_slug": "u5.k3-latent-heat",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A gas is compressed while thermally insulated. What can increase its internal energy?",
+      "options": [
+        "Heat from the insulation despite the no-heat assumption.",
+        "Only a phase change.",
+        "Energy created by the volume decrease.",
+        "Work done on the gas."
+      ],
+      "correct_index": 3,
+      "guide": "Adiabatic does not mean constant internal energy; compression can add work.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Use ΔU = Q − W_by. A system absorbs 110 J as heat and does 45 J of work. What is ΔU?",
+      "options": [
+        "−65 J",
+        "+155 J",
+        "+65 J",
+        "−155 J"
+      ],
+      "correct_index": 2,
+      "guide": "Subtract work output from heat input: 110 − 45 = 65 J.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 0.80 kg sample with c = 250 J/(kg·°C) warms by 7°C. What heat input is needed?",
+      "options": [
+        "14 J",
+        "200 J",
+        "2,187.5 J",
+        "1,400 J"
+      ],
+      "correct_index": 3,
+      "guide": "Q = 0.80 × 250 × 7 = 1,400 J.",
+      "target_slug": "u5.k1-specific-heat",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A predicted final temperature assumes no heat loss. Which observation directly calls that assumption into question?",
+      "options": [
+        "The surrounding container measurably warms during the trial.",
+        "The sample has a known mass.",
+        "The calculation includes units.",
+        "The thermometer has a display."
+      ],
+      "correct_index": 0,
+      "guide": "Container warming is evidence of an additional energy recipient.",
+      "target_slug": "u5.s1-calorimetry-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A heating model predicts an 8°C rise if all 1,200 J enters a sample. Measurements show only 900 J reaches it, with other assumptions unchanged. What rise should the revised model predict?",
+      "options": [
+        "8°C",
+        "6°C",
+        "10.7°C",
+        "3°C"
+      ],
+      "correct_index": 1,
+      "guide": "For fixed mc and no phase change, ΔT scales with Q: 8 × 900/1200 = 6°C.",
+      "target_slug": "u5.r4-thermal-damage",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

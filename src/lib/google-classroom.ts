@@ -53,7 +53,7 @@ export interface GoogleClassroomEnrollment {
   }
 }
 
-class GoogleClassroomAPI {
+export class GoogleClassroomAPI {
   private accessToken: string | null = null
   private readonly baseUrl = 'https://classroom.googleapis.com/v1'
 
@@ -105,14 +105,25 @@ class GoogleClassroomAPI {
    * Get students enrolled in a specific course
    */
   async getStudents(courseId: string): Promise<GoogleClassroomStudent[]> {
-    try {
-      // Request only essential profile fields (name only, no email or photo)
-      const response = await this.makeRequest(`/courses/${courseId}/students?fields=students(userId,profile(id,name))`) as { students?: GoogleClassroomStudent[] }
-      return response.students || []
-    } catch (error) {
-      console.error('Error fetching students:', error)
-      throw error
-    }
+    const students = new Map<string, GoogleClassroomStudent>()
+    const visited = new Set<string>()
+    let pageToken = ''
+    do {
+      // A roster is authoritative only after every page succeeds. Keep the
+      // token in the partial-response fields; omitting it silently truncates.
+      const params = new URLSearchParams({ pageSize: '100', fields: 'students(userId,profile(id,name)),nextPageToken' })
+      if (pageToken) params.set('pageToken', pageToken)
+      const response = await this.makeRequest(`/courses/${encodeURIComponent(courseId)}/students?${params}`) as { students?: GoogleClassroomStudent[]; nextPageToken?: string }
+      if (!response || typeof response !== 'object' || Array.isArray(response) || (response.students !== undefined && !Array.isArray(response.students)) || (response.nextPageToken !== undefined && typeof response.nextPageToken !== 'string')) throw new Error('Google Classroom returned an invalid roster page.')
+      for (const student of response.students ?? []) {
+        if (!student?.userId || typeof student.userId !== 'string' || typeof student.profile?.name?.fullName !== 'string' || !student.profile.name.fullName.trim()) throw new Error('Google Classroom returned an incomplete student record.')
+        students.set(student.userId, student)
+      }
+      pageToken = response.nextPageToken ?? ''
+      if (pageToken && visited.has(pageToken)) throw new Error('Google Classroom repeated a roster page.')
+      visited.add(pageToken)
+    } while (pageToken)
+    return [...students.values()]
   }
 
   /**
@@ -132,7 +143,7 @@ class GoogleClassroomAPI {
    */
   async getCourse(courseId: string): Promise<GoogleClassroomCourse> {
     try {
-      return await this.makeRequest(`/courses/${courseId}`) as GoogleClassroomCourse
+      return await this.makeRequest(`/courses/${encodeURIComponent(courseId)}`) as GoogleClassroomCourse
     } catch (error) {
       throw error
     }

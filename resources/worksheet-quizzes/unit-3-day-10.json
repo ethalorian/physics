@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 10,
+  "title": "Momentum in two dimensions",
+  "target": "Conserve momentum separately along perpendicular axes.",
+  "criteria": [
+    "Choose and label two axes.",
+    "Add momentum components along matching directions.",
+    "Connect component sums to the final motion."
+  ],
+  "source_sha256": "795e54feb72c9677397382cd609da35bf506568e1301d66f2a8782198344622c",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.508Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "For a horizontal collision, which coordinate choice is valid?",
+      "options": [
+        "Remove all signs because there are two axes.",
+        "Define east as +x and north as +y for every object.",
+        "Treat all northward momentum as x momentum.",
+        "Use east as positive for one object and west for another without converting."
+      ],
+      "correct_index": 1,
+      "guide": "Use a consistent pair of perpendicular axes.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "With east +x and north +y, a momentum points southwest. What signs do its components have?",
+      "options": [
+        "Both negative.",
+        "x negative, y positive.",
+        "Both positive.",
+        "x positive, y negative."
+      ],
+      "correct_index": 0,
+      "guide": "West is negative x; south is negative y.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Object A has momentum components (8, 3), and B has (−2, 5), in kg·m/s. What is total momentum?",
+      "options": [
+        "(24, −10) kg·m/s",
+        "(6, 8) kg·m/s",
+        "(10, 8) kg·m/s",
+        "(6, −2) kg·m/s"
+      ],
+      "correct_index": 1,
+      "guide": "Add matching components: x = 8 − 2 = 6; y = 3 + 5 = 8.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Total initial y momentum is −9 kg·m/s. After an isolated collision, one object has y momentum −4. What is the other’s y momentum?",
+      "options": [
+        "+13 kg·m/s",
+        "+5 kg·m/s",
+        "−5 kg·m/s",
+        "−13 kg·m/s"
+      ],
+      "correct_index": 2,
+      "guide": "−4 + p_y = −9 gives p_y = −5.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Objects stick with total mass 5 kg and total momentum (15, −20) kg·m/s. What are final velocity components?",
+      "options": [
+        "(+15, −20) m/s",
+        "(−3, +4) m/s",
+        "(+3, −4) m/s",
+        "(+75, −100) m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Divide each momentum component by the combined mass.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A joined object has velocity components +3 m/s east and −4 m/s north. What are its speed and general direction?",
+      "options": [
+        "7 m/s, northeast.",
+        "1 m/s, southwest.",
+        "5 m/s, northwest.",
+        "5 m/s, southeast."
+      ],
+      "correct_index": 3,
+      "guide": "Speed = √(3² + 4²) = 5; positive x and negative y mean southeast.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "For a horizontal collision, which coordinate choice is valid?",
+      "options": [
+        "Use east as positive for one object and west for another without converting.",
+        "Define east as +x and north as +y for every object.",
+        "Treat all northward momentum as x momentum.",
+        "Remove all signs because there are two axes."
+      ],
+      "correct_index": 1,
+      "guide": "Use a consistent pair of perpendicular axes.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "With east +x and north +y, a momentum points southwest. What signs do its components have?",
+      "options": [
+        "x positive, y negative.",
+        "Both positive.",
+        "x negative, y positive.",
+        "Both negative."
+      ],
+      "correct_index": 3,
+      "guide": "West is negative x; south is negative y.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Object A has momentum components (8, 3), and B has (−2, 5), in kg·m/s. What is total momentum?",
+      "options": [
+        "(10, 8) kg·m/s",
+        "(24, −10) kg·m/s",
+        "(6, 8) kg·m/s",
+        "(6, −2) kg·m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Add matching components: x = 8 − 2 = 6; y = 3 + 5 = 8.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Total initial y momentum is −9 kg·m/s. After an isolated collision, one object has y momentum −4. What is the other’s y momentum?",
+      "options": [
+        "−5 kg·m/s",
+        "+5 kg·m/s",
+        "−13 kg·m/s",
+        "+13 kg·m/s"
+      ],
+      "correct_index": 0,
+      "guide": "−4 + p_y = −9 gives p_y = −5.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Objects stick with total mass 5 kg and total momentum (15, −20) kg·m/s. What are final velocity components?",
+      "options": [
+        "(+15, −20) m/s",
+        "(+75, −100) m/s",
+        "(−3, +4) m/s",
+        "(+3, −4) m/s"
+      ],
+      "correct_index": 3,
+      "guide": "Divide each momentum component by the combined mass.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A joined object has velocity components +3 m/s east and −4 m/s north. What are its speed and general direction?",
+      "options": [
+        "5 m/s, northwest.",
+        "7 m/s, northeast.",
+        "5 m/s, southeast.",
+        "1 m/s, southwest."
+      ],
+      "correct_index": 2,
+      "guide": "Speed = √(3² + 4²) = 5; positive x and negative y mean southeast.",
+      "target_slug": "u3.r2-2d-components",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

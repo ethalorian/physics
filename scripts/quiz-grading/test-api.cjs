@@ -12,7 +12,7 @@ const assert=require('node:assert/strict');const {createFixture}=require('./fixt
  role('student',id(4));d=await(await call('detail','GET')).json();assert.equal(d.submissions.length,0);assert.equal(d.work.length,0);
  role('teacher');assert.equal((await call('detail','GET',{},id(11))).status,404);d=await(await call('list','GET')).json();assert.equal(d.pending[id(10)],1);assert.equal(d.work.length,0);fx.rows.quiz_assignments[0].status='archived';d=await(await call('list','GET')).json();assert.equal(d.pending[id(10)],1);fx.rows.quiz_assignments[0].status='published';
  let review={action:'review',submission_id:id(30),request_id:id(32),draft_version:0,decision:'graded',scores:{[id(21)]:4,[id(22)]:3.5},ratings:{[id(3)]:3,[id(5)]:null},note:'Clear evidence; refine your final units.',question_notes:{},grade_value:null};
- assert.equal((await call('detail','POST',{...review,note:''})).status,400);assert.equal((await call('detail','POST',{...review,ratings:{}})).status,400);
+ assert.equal((await call('detail','POST',{...review,decision:'returned',scores:{},ratings:{},note:''})).status,400);assert.equal((await call('detail','POST',{...review,ratings:{}})).status,400);
  fx.context.viewingAsTeacher=true;assert.equal((await call('detail','POST',review)).status,403);assert.equal((await call('list','POST',seed)).status,403);fx.context.viewingAsTeacher=false;
  assert.equal((await call('detail','POST',{...review,action:'save_review'})).status,200);assert.equal(fx.mastery.length,0);
  role('student');d=await(await call('detail','GET')).json();assert.equal(d.drafts.length,0);assert.equal(d.reviews.length,0);assert.equal(d.submissions[0].snapshot.questions[0].correct_index,undefined);

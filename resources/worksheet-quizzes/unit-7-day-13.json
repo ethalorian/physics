@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 13,
+  "title": "Current makes a magnetic field",
+  "target": "Connect current direction with the magnetic field around a wire.",
+  "criteria": [
+    "Sketch circular field lines around a straight wire.",
+    "Use a stated right-hand rule.",
+    "Predict the effect of reversing current."
+  ],
+  "source_sha256": "0058a53df8bfb09327c6e867383db8aadcac155a2d901fcfcf44b2bc3de8c1dc",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.566Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Around a long straight current-carrying wire, what shape do magnetic field lines have?",
+      "options": [
+        "Straight lines only along the wire.",
+        "No pattern until the wire touches a magnet.",
+        "Straight radial spokes pointing away.",
+        "Circles centered on the wire."
+      ],
+      "correct_index": 3,
+      "guide": "Symmetry gives circular magnetic field lines around the current.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two points are equally far from a long straight wire in a uniform surrounding material. What does the ideal model predict about field magnitude?",
+      "options": [
+        "Zero at one point solely because it is left of the wire.",
+        "Equal magnitudes at both points.",
+        "The field points radially outward at both.",
+        "Magnitude depends only on compass color."
+      ],
+      "correct_index": 1,
+      "guide": "For the ideal straight wire, magnitude depends on current and radial distance, not angular position.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Conventional current points into the page. Point your right thumb into the page. Which way do your curled fingers indicate the field?",
+      "options": [
+        "Clockwise.",
+        "Straight into the page everywhere.",
+        "Radially outward.",
+        "Counterclockwise."
+      ],
+      "correct_index": 0,
+      "guide": "The right-hand grip rule gives clockwise circles for current into the page.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Current points out of the page. At a point directly above the wire, which way is the magnetic field?",
+      "options": [
+        "Left.",
+        "Right.",
+        "Up.",
+        "Down."
+      ],
+      "correct_index": 0,
+      "guide": "Out-of-page current gives counterclockwise circles; the tangent at the top points left.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "The current through a straight wire reverses with unchanged magnitude. What happens to the field at a fixed point?",
+      "options": [
+        "The circles become radial spokes.",
+        "Direction reverses; magnitude stays the same.",
+        "Field disappears permanently.",
+        "Magnitude doubles; direction stays the same."
+      ],
+      "correct_index": 1,
+      "guide": "Field direction follows current direction; magnitude depends on its absolute value.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "At a fixed distance from a straight wire, current changes from 2 A out of the page to 6 A into the page. Use B ∝ |I|. What changes?",
+      "options": [
+        "Magnitude triples but direction stays the same.",
+        "Magnitude stays fixed and direction reverses.",
+        "Field magnitude triples and direction reverses.",
+        "Magnitude falls to one-third and direction reverses."
+      ],
+      "correct_index": 2,
+      "guide": "The current magnitude increases by 3 and its sign reverses.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Around a long straight current-carrying wire, what shape do magnetic field lines have?",
+      "options": [
+        "Straight lines only along the wire.",
+        "Circles centered on the wire.",
+        "No pattern until the wire touches a magnet.",
+        "Straight radial spokes pointing away."
+      ],
+      "correct_index": 1,
+      "guide": "Symmetry gives circular magnetic field lines around the current.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two points are equally far from a long straight wire in a uniform surrounding material. What does the ideal model predict about field magnitude?",
+      "options": [
+        "Magnitude depends only on compass color.",
+        "The field points radially outward at both.",
+        "Equal magnitudes at both points.",
+        "Zero at one point solely because it is left of the wire."
+      ],
+      "correct_index": 2,
+      "guide": "For the ideal straight wire, magnitude depends on current and radial distance, not angular position.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Conventional current points into the page. Point your right thumb into the page. Which way do your curled fingers indicate the field?",
+      "options": [
+        "Radially outward.",
+        "Counterclockwise.",
+        "Clockwise.",
+        "Straight into the page everywhere."
+      ],
+      "correct_index": 2,
+      "guide": "The right-hand grip rule gives clockwise circles for current into the page.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Current points out of the page. At a point directly above the wire, which way is the magnetic field?",
+      "options": [
+        "Left.",
+        "Right.",
+        "Up.",
+        "Down."
+      ],
+      "correct_index": 0,
+      "guide": "Out-of-page current gives counterclockwise circles; the tangent at the top points left.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "The current through a straight wire reverses with unchanged magnitude. What happens to the field at a fixed point?",
+      "options": [
+        "The circles become radial spokes.",
+        "Magnitude doubles; direction stays the same.",
+        "Field disappears permanently.",
+        "Direction reverses; magnitude stays the same."
+      ],
+      "correct_index": 3,
+      "guide": "Field direction follows current direction; magnitude depends on its absolute value.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "At a fixed distance from a straight wire, current changes from 2 A out of the page to 6 A into the page. Use B ∝ |I|. What changes?",
+      "options": [
+        "Magnitude falls to one-third and direction reverses.",
+        "Field magnitude triples and direction reverses.",
+        "Magnitude stays fixed and direction reverses.",
+        "Magnitude triples but direction stays the same."
+      ],
+      "correct_index": 1,
+      "guide": "The current magnitude increases by 3 and its sign reverses.",
+      "target_slug": "u7.k8-oersted",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

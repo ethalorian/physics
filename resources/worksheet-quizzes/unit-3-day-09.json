@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 9,
+  "title": "Bounce-apart calculations",
+  "target": "Use momentum and energy to check an elastic collision.",
+  "criteria": [
+    "Write a signed momentum balance.",
+    "Check kinetic energy separately.",
+    "Reject an elastic claim when kinetic energy changes."
+  ],
+  "source_sha256": "1a8bc56908878a935a12672be7c04a6fb06b063f80888faa2fe6f60fbc67b81c",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.508Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 0.5 kg ball changes velocity from +6 m/s to −4 m/s. What is its momentum change?",
+      "options": [
+        "+1 kg·m/s",
+        "−5 kg·m/s",
+        "+5 kg·m/s",
+        "−1 kg·m/s"
+      ],
+      "correct_index": 1,
+      "guide": "Δp = 0.5(−4 − 6) = −5.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Equal-mass carts have velocities +7 and −2 m/s before an ideal 1D elastic collision. What are their respective final velocities?",
+      "options": [
+        "+7 and −2 m/s.",
+        "+2.5 and +2.5 m/s.",
+        "−2 and +7 m/s.",
+        "−7 and +2 m/s."
+      ],
+      "correct_index": 2,
+      "guide": "In a nontrivial 1D elastic collision of equal masses, the velocities exchange.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart moves at 3 m/s. What kinetic energy must be included in the collision account?",
+      "options": [
+        "18 J",
+        "3 J",
+        "6 J",
+        "9 J"
+      ],
+      "correct_index": 3,
+      "guide": "K = ½mv² = ½ × 2 × 9 = 9 J.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two 1 kg carts have speeds 5 and 1 m/s before a collision. What is their total kinetic energy?",
+      "options": [
+        "13 J",
+        "3 J",
+        "6 J",
+        "26 J"
+      ],
+      "correct_index": 0,
+      "guide": "K_total = ½(25 + 1) = 13 J.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A proposed isolated collision has equal total momentum before and after, but K changes from 13 J to 9 J. Is it elastic?",
+      "options": [
+        "No; momentum is never conserved in elastic collisions.",
+        "No; total kinetic energy is not conserved.",
+        "Yes; any nonzero K means elastic.",
+        "Yes; momentum conservation alone is sufficient."
+      ],
+      "correct_index": 1,
+      "guide": "Elasticity requires both momentum and kinetic-energy conservation.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Two equal carts initially move at +5 and −1 m/s. A proposed final state has both at +2 m/s. What does the energy check show?",
+      "options": [
+        "Momentum is conserved, but kinetic energy drops, so this is not elastic.",
+        "Both momentum and kinetic energy increase.",
+        "Momentum cannot be conserved when objects stick.",
+        "Kinetic energy is conserved because speeds are equal afterward."
+      ],
+      "correct_index": 0,
+      "guide": "Per unit cart mass, initial K = 13 and final K = 4; initial and final p = 4.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 0.5 kg ball changes velocity from +6 m/s to −4 m/s. What is its momentum change?",
+      "options": [
+        "+5 kg·m/s",
+        "−1 kg·m/s",
+        "−5 kg·m/s",
+        "+1 kg·m/s"
+      ],
+      "correct_index": 2,
+      "guide": "Δp = 0.5(−4 − 6) = −5.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Equal-mass carts have velocities +7 and −2 m/s before an ideal 1D elastic collision. What are their respective final velocities?",
+      "options": [
+        "−2 and +7 m/s.",
+        "−7 and +2 m/s.",
+        "+2.5 and +2.5 m/s.",
+        "+7 and −2 m/s."
+      ],
+      "correct_index": 0,
+      "guide": "In a nontrivial 1D elastic collision of equal masses, the velocities exchange.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2 kg cart moves at 3 m/s. What kinetic energy must be included in the collision account?",
+      "options": [
+        "3 J",
+        "6 J",
+        "18 J",
+        "9 J"
+      ],
+      "correct_index": 3,
+      "guide": "K = ½mv² = ½ × 2 × 9 = 9 J.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two 1 kg carts have speeds 5 and 1 m/s before a collision. What is their total kinetic energy?",
+      "options": [
+        "3 J",
+        "13 J",
+        "6 J",
+        "26 J"
+      ],
+      "correct_index": 1,
+      "guide": "K_total = ½(25 + 1) = 13 J.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A proposed isolated collision has equal total momentum before and after, but K changes from 13 J to 9 J. Is it elastic?",
+      "options": [
+        "Yes; momentum conservation alone is sufficient.",
+        "No; total kinetic energy is not conserved.",
+        "No; momentum is never conserved in elastic collisions.",
+        "Yes; any nonzero K means elastic."
+      ],
+      "correct_index": 1,
+      "guide": "Elasticity requires both momentum and kinetic-energy conservation.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "Two equal carts initially move at +5 and −1 m/s. A proposed final state has both at +2 m/s. What does the energy check show?",
+      "options": [
+        "Both momentum and kinetic energy increase.",
+        "Kinetic energy is conserved because speeds are equal afterward.",
+        "Momentum is conserved, but kinetic energy drops, so this is not elastic.",
+        "Momentum cannot be conserved when objects stick."
+      ],
+      "correct_index": 2,
+      "guide": "Per unit cart mass, initial K = 13 and final K = 4; initial and final p = 4.",
+      "target_slug": "u3.s3-elastic-solve",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

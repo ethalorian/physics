@@ -1,3 +1,5 @@
+import {FOUR_DIMENSION_LAB_VERSION, labDimensionGrade} from './lab-rubric'
+import type {LabGrade} from './lab-grades'
 import type {Assignment, Work, Submission, Review} from './server'
 import {assignmentBySlug} from './catalog'
 import {evidenceStatus, type AiReview} from './analytics'
@@ -9,7 +11,7 @@ export type ResultRow = {
   status: 'not-started' | 'draft' | 'review' | 'rated'
   analysis: 'none' | AiReview['status']; ratedTargets: number; totalTargets: number
   trials: number | null; responsesToReview: number; pendingResponses: number
-  submittedAt: string | null
+  grade?: Pick<LabGrade, 'earned'|'possible'> & {letter?:string}; submittedAt: string | null
 }
 export type QuestionPattern = {id: string; prompt: string; section: string; assessed: number; needsReview: number; pending: number}
 export type ActivityResult = {
@@ -20,8 +22,8 @@ export type ActivityResult = {
 export type SimulationResults = {activities: ActivityResult[]; rows: ResultRow[]}
 
 /** Use only the current submitted version. A draft/revision never inherits old AI or teacher results. */
-export function simulationResults({assignments, students, work, submissions, reviews, ai}: {
-  assignments: Assignment[]; students: ResultsStudent[]; work: Omit<Work, 'state'>[]; submissions: Submission[]; reviews: Review[]; ai: AiReview[]
+export function simulationResults({assignments, students, work, submissions, reviews, ai, grades = []}: {
+  assignments: Assignment[]; students: ResultsStudent[]; work: Omit<Work, 'state'>[]; submissions: Submission[]; reviews: Review[]; ai: AiReview[]; grades?: (Pick<LabGrade, 'submission_id'|'earned'|'possible'> & Partial<Pick<LabGrade,'rubric_version'|'items'>>)[]
 }): SimulationResults {
   const rows: ResultRow[] = [], activities: ActivityResult[] = []
   const workByKey = new Map(work.map(w => [w.assignment_id + ':' + w.user_id, w]))
@@ -37,8 +39,9 @@ export function simulationResults({assignments, students, work, submissions, rev
       const sub = w?.status === 'submitted' ? subByKey.get(assignment.id + ':' + student.id + ':' + w.version) : undefined
       const analysis = sub ? aiById.get(sub.id) : undefined
       const ratings = sub ? [...new Map(reviews.filter(r => r.submission_id === sub.id).map(r => [r.target_id, r])).values()] : []
-      const fullyRated = ratings.length >= lesson.targets.length
-      const row: ResultRow = {studentId: student.id, name: student.name, assignmentId: assignment.id, slug: lesson.slug, status: sub ? fullyRated ? 'rated' : 'review' : w ? 'draft' : 'not-started', analysis: analysis?.status ?? 'none', ratedTargets: ratings.length, totalTargets: lesson.targets.length, trials: sub ? recordedSimulationEvidence(lesson.simulation, sub.state).length : null, responsesToReview: 0, pendingResponses: 0, submittedAt: sub?.submitted_at ?? null}
+      const grade = sub ? grades.find(g=>g.submission_id===sub.id) : undefined
+      const fullyRated = !!grade
+      const row: ResultRow = {grade:grade?{earned:grade.earned,possible:grade.possible,letter:grade.rubric_version===FOUR_DIMENSION_LAB_VERSION?labDimensionGrade(grade.items)?.letter:undefined}:undefined,studentId: student.id, name: student.name, assignmentId: assignment.id, slug: lesson.slug, status: sub ? fullyRated ? 'rated' : 'review' : w ? 'draft' : 'not-started', analysis: analysis?.status ?? 'none', ratedTargets: ratings.length, totalTargets: lesson.targets.length, trials: sub ? recordedSimulationEvidence(lesson.simulation, sub.state).length : null, responsesToReview: 0, pendingResponses: 0, submittedAt: sub?.submitted_at ?? null}
       if (sub) {
         activity.submitted++
         if (fullyRated) activity.rated++; else activity.awaiting++

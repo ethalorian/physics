@@ -1,3 +1,5 @@
+import {pendingRevision,revisionRequirements,recordRevisionSubmitted} from '@/lib/review-desk/revision-server'
+import { suggestAfterSubmission } from '@/lib/assessment-results/suggestions-server'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -11,7 +13,7 @@ export const POST = withAuth(async (request, ctx) => {
   if (body.action !== undefined && body.action !== 'acknowledge') return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
   const message = typeof body.message === 'string' ? body.message.trim() : ''
   if (typeof body.submission_id !== 'string' || !message || message.length > 2000) return NextResponse.json({ error: 'Include a response of 1–2000 characters.' }, { status: 400 })
-  const { data: sub, error } = await supabaseAdmin.from('math_warmup_submissions').select('id,user_id,status,revision_requested,response_json').eq('id', body.submission_id).maybeSingle()
+  const { data: sub, error } = await supabaseAdmin.from('math_warmup_submissions').select('id,user_id,competency_id,status,revision_requested,response_json').eq('id', body.submission_id).maybeSingle()
   if (error) return NextResponse.json({ error: 'Could not load this work' }, { status: 503 })
   if (!sub) return NextResponse.json({ error: 'Work not found' }, { status: 404 })
   if (body.action === 'acknowledge') {
@@ -27,5 +29,10 @@ export const POST = withAuth(async (request, ctx) => {
   if (!validateMathResponse(body.response_json)) return NextResponse.json({ error: 'Invalid response' }, { status: 400 })
   const saved = await supabaseAdmin.from('math_warmup_revisions').upsert({ submission_id: sub.id, user_id: ctx.userId, response_json: { ...body.response_json, needsGraph: sub.response_json?.needsGraph === true }, message, needs_help: body.needs_help === true }, { onConflict: 'submission_id', ignoreDuplicates: true }).select('id')
   if (saved.error) return NextResponse.json({ error: 'Response was not saved. Your draft is safe; please retry.' }, { status: 503 })
+  if(saved.data?.length){
+    const revision=await pendingRevision('math:'+sub.competency_id,ctx.userId)
+    if(revision){const update=await supabaseAdmin.from('review_desk_revisions').update({change_summary:message,addressed:revisionRequirements(revision.evidence)}).eq('id',revision.id).eq('user_id',ctx.userId);if(update.error)throw update.error;await recordRevisionSubmitted('math:'+sub.competency_id,ctx.userId)}
+    suggestAfterSubmission('math',sub.id)
+  }
   return NextResponse.json({ saved: true })
 })

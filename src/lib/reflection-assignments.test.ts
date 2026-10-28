@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createReflectionAssignment } from './reflection-assignments'
+import { createReflectionAssignment, createReadyReflection } from './reflection-assignments'
+import { lessonTargetReferences } from './lesson-target-references'
 import { isBlockComplete, isRequiredCaptureBlock } from '@/data/content-blocks'
 import { validateBlockDocument } from '@/data/block-registry'
 import { checkedLessonResponse } from './lesson-response-validation'
@@ -31,6 +32,18 @@ test('manga needs a private upload receipt without an extra written answer', () 
   assert.equal(checkedLessonResponse(block, { attachmentId: 'https://example.test/page.png', text: 'caption' }).ok, false)
   assert.deepEqual(checkedLessonResponse(block, { attachmentId, text: 'caption', path: 'another student/file' }), { ok: true, response: { attachmentId, text: 'caption' } })
   assert(isBlockComplete({ id: 'legacy', type: 'sketch', capture: true, instruction: 'Describe' }, { text: 'Legacy keyboard answer.' }), 'existing sketches unchanged')
+})
+test('ready reflections retain unit targets for review without arbitrary evidence attribution', () => {
+  for (const kind of ['manga', 'story'] as const) {
+    const document = createReadyReflection(kind, ['motion', 'forces', 'motion'])
+    assert.deepEqual(validateBlockDocument(document, true), [])
+    assert.deepEqual(lessonTargetReferences(document), ['motion', 'forces'])
+    assert.equal(document.blocks.length, 1)
+    assert.equal(document.blocks[0].targetId, undefined, 'the actual product determines its target')
+    const focused = createReadyReflection(kind, ['motion'])
+    assert.equal(focused.blocks[0].targetId, 'motion')
+    assert(validateBlockDocument(createReadyReflection(kind, []), true).length, 'empty target scope cannot publish')
+  }
 })
 test('uploads accept image/PDF signatures, not renamed HTML or SVG', () => {
   assert.equal(artifactFileType(new TextEncoder().encode('%PDF-1.7'))?.type, 'application/pdf')

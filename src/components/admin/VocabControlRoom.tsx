@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import SubmissionSuggestions from '@/components/admin/results/SubmissionSuggestions'
 import CheckpointTeacher from '@/components/vocabulary/checkpoint/CheckpointTeacher'
 import VocabQuizReview from '@/components/vocabulary/VocabQuizReview'
 import VocabAssignmentSettings from '@/components/vocabulary/VocabAssignmentSettings'
@@ -17,6 +18,7 @@ const statusLabel = (s: VocabStudentProgress) => s.status === 'rated' ? `Rated $
 export default function VocabControlRoom({ classId, unitId, teacher, nameFilter, onSaved, initialTaskId, initialStudentId, detailOnly = false }: {
   classId: string | null; unitId: string; teacher: string; nameFilter: string; onSaved: () => void; initialTaskId?: string; initialStudentId?: string; detailOnly?: boolean
 }) {
+  const [chosenLevel,setChosenLevel]=useState<number|null>(null)
   const [data, setData] = useState<VocabMasteryData | null>(null)
   const [view, setView] = useState<'overview' | 'review' | 'checkpoints'>(detailOnly ? 'review' : 'overview')
   const reviewHeading = useRef<HTMLHeadingElement>(null)
@@ -25,7 +27,7 @@ export default function VocabControlRoom({ classId, unitId, teacher, nameFilter,
   const [loading, setLoading] = useState(true), [busy, setBusy] = useState(false)
   const [error, setError] = useState(''), [notice, setNotice] = useState('')
   const [note, setNote] = useState(''), [rerating, setRerating] = useState(false), [next, setNext] = useState(!detailOnly)
-  useAssessmentReviewGuard(busy || !!note.trim())
+  useAssessmentReviewGuard(busy || !!note.trim() || chosenLevel!==null)
   const saving = useRef(false), version = useRef(0)
   const retry = useRef<{ key: string; id: string } | null>(null)
   const load = useCallback(async () => {
@@ -62,7 +64,7 @@ export default function VocabControlRoom({ classId, unitId, teacher, nameFilter,
   const target = data?.targets.find(t => t.id === task?.target_id)
   const pending = task?.progress.filter(s => s.status === 'pending' || s.status === 'quiz-review').length ?? 0
   const rated = task?.progress.filter(s => s.status === 'rated').length ?? 0
-  useEffect(() => { setNote(''); setRerating(false); retry.current = null }, [task?.id, student?.studentId])
+  useEffect(() => { setNote(''); setChosenLevel(null); setRerating(false); retry.current = null }, [task?.id, student?.studentId])
   useEffect(() => { if (view === 'review') reviewHeading.current?.focus() }, [view, task?.id, student?.studentId])
 
   function openReview(assignmentId: string, learnerId: string) {
@@ -97,7 +99,7 @@ export default function VocabControlRoom({ classId, unitId, teacher, nameFilter,
       const review = result as VocabMasteryReview
       setData(d => d && ({ ...d, tasks: d.tasks.map(t => t.id === task.id ? { ...t, progress: t.progress.map(s => s.studentId === student.studentId ? { ...s, status: 'rated', review } : s) } : t) }))
       setNotice(`Saved ${level} · ${labels[level - 1]} for ${student.name}.`)
-      setNote(''); setRerating(false); retry.current = null
+      setNote(''); setChosenLevel(null); setRerating(false); retry.current = null
       if (next) {
         const index = students.findIndex(s => s.studentId === student.studentId)
         const upcoming = [...students.slice(index + 1), ...students.slice(0, index)].find(s => s.status === 'pending')
@@ -151,11 +153,11 @@ export default function VocabControlRoom({ classId, unitId, teacher, nameFilter,
         {student && <article className={styles.review}>
           <div className={styles.studentHeading}><div><p className={styles.eyebrow}>Reviewing vocabulary</p><h3 ref={reviewHeading} tabIndex={-1}>{student.name}</h3><p>{statusLabel(student)}</p></div>{!detailOnly && <label className={styles.toggle}><input type="checkbox" checked={next} disabled={busy} onChange={e => setNext(e.target.checked)} /> Next after rating</label>}</div>
           <div className={styles.metrics}><span><b>{task.quiz_format==='checkpoint'?(student.quiz?.score==null?'Pending':`${student.quiz.score}%`):student.accuracy == null ? '—' : `${student.accuracy}%`}</b> {task.quiz_format==='checkpoint'?'quiz grade':'check accuracy'}</span><span><b>{student.ready} / {student.total}</b> words at practice goal</span><span><b>{student.checks.length}</b> completed checks</span></div>
-          <div className={styles.ratingBox}>
-            <div className={styles.ratingHeading}><strong>Rate Knowledge mastery</strong><span>Tap a rating to save</span></div>
+          {student.checks[0]?.id && task.quiz_format!=='checkpoint' && <SubmissionSuggestions source="vocabulary" id={student.checks[0].id} disabled={busy} onRating={r=>{if(r.target_id===target?.id)setChosenLevel(r.level)}} onFeedback={text=>setNote(old=>old||text)}/>}<div className={styles.ratingBox}>
+            <div className={styles.ratingHeading}><strong>Rate Knowledge mastery</strong><span>Choose privately, then release</span></div>
             {student.status === 'rated' && !rerating ? <div className={styles.saved}><p>Rated <strong>{student.review!.level} · {labels[student.review!.level - 1]}</strong> on {new Date(student.review!.created_at).toLocaleDateString()}{student.review!.note && ` — ${student.review!.note}`}</p><button className={styles.button} disabled={busy} onClick={() => setRerating(true)}>Record a new rating</button></div> : <>
-              <div className={styles.ratings}>{labels.map((label, i) => <button key={label} className={styles.rating} data-level={i + 1} disabled={busy || loading || !target || !['pending', 'rated'].includes(student.status)} onClick={() => void rate(i + 1)}><b>{i + 1}</b><span>{label}</span></button>)}</div>
-              <details className={styles.note}><summary>Teacher note (optional)</summary><textarea aria-label="Vocabulary teacher note" value={note} disabled={busy} maxLength={2000} onChange={e => setNote(e.target.value)} placeholder="Evidence or a next step…" /></details>
+              <div className={styles.ratings}>{labels.map((label, i) => <button key={label} className={styles.rating} data-level={i + 1} disabled={busy || loading || !target || !['pending', 'rated'].includes(student.status)} aria-pressed={chosenLevel===i+1} onClick={() => setChosenLevel(i+1)}><b>{i + 1}</b><span>{label}</span></button>)}</div>
+              <button className={styles.button} disabled={busy||!chosenLevel||!target} onClick={()=>{if(chosenLevel)void rate(chosenLevel)}}>Release mastery & feedback</button><details className={styles.note}><summary>Teacher note (optional)</summary><textarea aria-label="Vocabulary teacher note" value={note} disabled={busy} maxLength={2000} onChange={e => setNote(e.target.value)} placeholder="Evidence or a next step…" /></details>
             </>}
             <p className={styles.help}>{!target ? 'Choose a Knowledge target above to enable rating.' : student.status === 'no-evidence' ? 'Waiting for a completed vocabulary check.' : student.status === 'quiz-review' ? 'Review the quiz answers below before rating Knowledge mastery.' : 'Your judgment updates Knowledge mastery. Check scores and game activity never assign a mastery grade.'}</p>
           </div>

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 16,
+  "title": "Thermal radiation and color",
+  "target": "Use peak wavelength as one piece of evidence about a thermal spectrum.",
+  "criteria": [
+    "Relate higher temperature to shorter peak wavelength.",
+    "Use kelvin in Wien’s law.",
+    "Distinguish spectral peak from perceived color."
+  ],
+  "source_sha256": "3087ac9b0322ee006bc91f5f59cbfa7b72d47c74820d193407fa6b194adc2b64",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.555Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A thermal emitter’s absolute temperature triples. What happens to its peak wavelength in Wien’s law?",
+      "options": [
+        "It becomes nine times longer.",
+        "It remains fixed.",
+        "It becomes one-third as long.",
+        "It triples."
+      ],
+      "correct_index": 2,
+      "guide": "λ_peak T is constant, so peak wavelength varies inversely with kelvin temperature.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Emitter A peaks at 1.2 micrometers and B at 0.6 micrometers. For ideal thermal emitters, which is hotter?",
+      "options": [
+        "A has twice B’s absolute temperature.",
+        "Peak wavelength cannot relate to temperature.",
+        "They have the same temperature.",
+        "B has twice A’s absolute temperature."
+      ],
+      "correct_index": 3,
+      "guide": "The shorter peak wavelength indicates higher temperature; the ratio is 1.2/0.6 = 2.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Use λ_peak T = 2.9 × 10⁻³ m·K. What is peak wavelength at 5,000 K?",
+      "options": [
+        "5.8 × 10⁻⁷ m",
+        "5.8 × 10⁻⁴ m",
+        "1.45 × 10¹ m",
+        "1.72 × 10⁶ m"
+      ],
+      "correct_index": 0,
+      "guide": "Divide the Wien constant by temperature: 2.9×10⁻³/5000 = 5.8×10⁻⁷ m.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A temperature is 727°C. Using T(K) ≈ T(°C) + 273, which temperature belongs in Wien’s law?",
+      "options": [
+        "454 K",
+        "727 K",
+        "0 K",
+        "1,000 K"
+      ],
+      "correct_index": 3,
+      "guide": "Proportional temperature laws use absolute kelvin temperature.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A thermal spectrum peaks in the infrared. Which statement about the full spectrum is correct?",
+      "options": [
+        "Its visible appearance must equal a single peak color.",
+        "It can still emit visible wavelengths; the peak is not its only emitted wavelength.",
+        "It emits exactly one infrared wavelength and nothing else.",
+        "It cannot transfer energy."
+      ],
+      "correct_index": 1,
+      "guide": "Thermal emission is broad; a peak marks a maximum, not an exclusive wavelength.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A distant hot object appears redder through a dusty path. Why is visible color alone an uncertain thermometer?",
+      "options": [
+        "All red objects must have identical temperatures.",
+        "Wien’s law requires Celsius and so always fails.",
+        "Filtering, emission properties, and observation conditions can alter perceived color.",
+        "A spectrum contains no temperature information."
+      ],
+      "correct_index": 2,
+      "guide": "Use the spectrum and model assumptions; apparent color can change without a temperature change.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A thermal emitter’s absolute temperature triples. What happens to its peak wavelength in Wien’s law?",
+      "options": [
+        "It remains fixed.",
+        "It triples.",
+        "It becomes nine times longer.",
+        "It becomes one-third as long."
+      ],
+      "correct_index": 3,
+      "guide": "λ_peak T is constant, so peak wavelength varies inversely with kelvin temperature.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Emitter A peaks at 1.2 micrometers and B at 0.6 micrometers. For ideal thermal emitters, which is hotter?",
+      "options": [
+        "Peak wavelength cannot relate to temperature.",
+        "They have the same temperature.",
+        "A has twice B’s absolute temperature.",
+        "B has twice A’s absolute temperature."
+      ],
+      "correct_index": 3,
+      "guide": "The shorter peak wavelength indicates higher temperature; the ratio is 1.2/0.6 = 2.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Use λ_peak T = 2.9 × 10⁻³ m·K. What is peak wavelength at 5,000 K?",
+      "options": [
+        "5.8 × 10⁻⁷ m",
+        "1.72 × 10⁶ m",
+        "1.45 × 10¹ m",
+        "5.8 × 10⁻⁴ m"
+      ],
+      "correct_index": 0,
+      "guide": "Divide the Wien constant by temperature: 2.9×10⁻³/5000 = 5.8×10⁻⁷ m.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A temperature is 727°C. Using T(K) ≈ T(°C) + 273, which temperature belongs in Wien’s law?",
+      "options": [
+        "454 K",
+        "727 K",
+        "1,000 K",
+        "0 K"
+      ],
+      "correct_index": 2,
+      "guide": "Proportional temperature laws use absolute kelvin temperature.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A thermal spectrum peaks in the infrared. Which statement about the full spectrum is correct?",
+      "options": [
+        "It cannot transfer energy.",
+        "It can still emit visible wavelengths; the peak is not its only emitted wavelength.",
+        "It emits exactly one infrared wavelength and nothing else.",
+        "Its visible appearance must equal a single peak color."
+      ],
+      "correct_index": 1,
+      "guide": "Thermal emission is broad; a peak marks a maximum, not an exclusive wavelength.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A distant hot object appears redder through a dusty path. Why is visible color alone an uncertain thermometer?",
+      "options": [
+        "Filtering, emission properties, and observation conditions can alter perceived color.",
+        "All red objects must have identical temperatures.",
+        "A spectrum contains no temperature information.",
+        "Wien’s law requires Celsius and so always fails."
+      ],
+      "correct_index": 0,
+      "guide": "Use the spectrum and model assumptions; apparent color can change without a temperature change.",
+      "target_slug": "u6.r6-wiens-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -50,7 +50,7 @@ export default function RosterManager({ classId, mode }: { classId: string; mode
   const [importing, setImporting] = useState<string | null>(null)
   // Class type chosen at import, per Google Classroom course (defaults to CPA).
   const [typeFor, setTypeFor] = useState<Record<string, ClassType>>({})
-  const [status, setStatus] = useState<string | null>(null)
+  const [status, setStatus] = useState<{ message: string; error: boolean } | null>(null)
   // Name editor (fixes how a student's name splits for the Aspen sort)
   const [roster, setRoster] = useState<RosterStudent[]>([])
   const [edits, setEdits] = useState<Record<string, { first: string; last: string }>>({})
@@ -174,11 +174,11 @@ export default function RosterManager({ classId, mode }: { classId: string; mode
       })
       const d = await res.json()
       if (!res.ok) throw new Error(d?.details || d?.error || 'Import failed')
-      setStatus(`Imported ${d.studentsSynced ?? 0} of ${d.studentsTotal ?? 0} students from ${course.name}.`)
+      setStatus({ message: `Roster synced for ${course.name}: ${d.studentsAdded ?? 0} added, ${d.studentsRemoved ?? 0} removed. ${d.studentsTotal ?? 0} students now in this class.`, error: false })
       loadImported()
       loadRoster()
     } catch (e) {
-      setStatus(`Import failed: ${e instanceof Error ? e.message : 'Unknown error'}`)
+      setStatus({ message: `Sync failed: ${e instanceof Error ? e.message : 'Unknown error'}`, error: true })
     } finally {
       setImporting(null)
     }
@@ -198,8 +198,8 @@ export default function RosterManager({ classId, mode }: { classId: string; mode
               <div className="text-title-3" >Google Classroom</div>
               <div className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
                 {hasClassroom
-                  ? 'Connected. This only reads your course list and student rosters — no coursework or grades.'
-                  : 'Connect to sync your class rosters. Rosters only — no coursework or grades are touched.'}
+                  ? 'Refresh adds new students and removes students no longer in Google Classroom. Saved work and grades are kept.'
+                  : 'Connect to sync your class rosters. Refresh adds new students and removes students no longer in Google Classroom. Saved work and grades are kept.'}
               </div>
             </div>
           </div>
@@ -210,7 +210,7 @@ export default function RosterManager({ classId, mode }: { classId: string; mode
                 className="inline-flex items-center gap-1.5 text-sm rounded-lg border px-3 py-2"
                 style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
               >
-                <RefreshCw size={14} /> Refresh
+                <RefreshCw size={14} /> Refresh classes
               </button>
             )}
             <button
@@ -271,7 +271,7 @@ export default function RosterManager({ classId, mode }: { classId: string; mode
                         className="text-xs rounded-md border px-2.5 py-1.5 whitespace-nowrap"
                         style={{ borderColor: 'var(--border)', background: already ? 'var(--card)' : 'color-mix(in oklch, var(--success) 14%, transparent)', color: already ? 'var(--muted-foreground)' : 'var(--foreground)' }}
                       >
-                        {importing === c.id ? 'Importing…' : already ? 'Re-sync' : 'Import roster'}
+                        {importing === c.id ? 'Syncing…' : already ? 'Refresh roster' : 'Import roster'}
                       </button>
                     </div>
                   </div>
@@ -286,9 +286,9 @@ export default function RosterManager({ classId, mode }: { classId: string; mode
         )}
 
         {status && (
-          <div className="mt-4 flex items-center gap-2 text-sm rounded-lg p-3" style={{ background: 'color-mix(in oklch, var(--success) 14%, transparent)' }}>
-            <CheckCircle2 size={16} style={{ color: 'var(--success)' }} />
-            <span>{status}</span>
+          <div role={status.error ? 'alert' : 'status'} className="mt-4 flex items-center gap-2 text-sm rounded-lg p-3" style={{ background: `color-mix(in oklch, var(${status.error ? '--viz-down' : '--success'}) 14%, transparent)` }}>
+            {status.error ? <AlertCircle size={16} className="shrink-0" style={{ color: 'var(--viz-down)' }} /> : <CheckCircle2 size={16} className="shrink-0" style={{ color: 'var(--success)' }} />}
+            <span>{status.message}</span>
           </div>
         )}
       </div>

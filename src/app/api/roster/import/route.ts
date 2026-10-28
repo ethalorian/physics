@@ -1,292 +1,73 @@
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { googleClassroomAPI } from '@/lib/google-classroom'
+import { GoogleClassroomAPI } from '@/lib/google-classroom'
+import { ownerEmailsFor } from '@/lib/identity-aliases'
 
-// POST - Import roster from Google Classroom
+// Download the entire authoritative roster before making any database changes.
+// The RPC reconciles membership in one transaction, preserving student records.
 export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
-  try {
-    console.log('🚀 Starting roster import...')
-
-    const body = await request.json()
-    const { courseId, accessToken } = body
-    // Class type chosen at import. Only honors is acted on here (cpa is the default);
-    // an invalid value is ignored rather than rejected.
-    const track: string | null = body.track === 'honors' || body.track === 'cpa' ? body.track : null
-    // Active curricula share the physics video catalog or Trades.
-    if (body.program === 'projects') return NextResponse.json({ error: 'Project Physics is retired. Choose Physics for video lessons.' }, { status: 400 })
-    // Other invalid values retain the existing import defaults.
-    const program: string | null = body.program === 'physics' || body.program === 'trades' ? body.program : null
-    console.log('📋 Import request for course:', courseId, 'track:', track ?? '(default cpa)', 'program:', program ?? '(default physics)')
-
-    if (!courseId || !accessToken) {
-      console.log('❌ Missing required fields')
-      return NextResponse.json({ error: 'Course ID and access token are required' }, { status: 400 })
-    }
-
-    // Set the access token for Google Classroom API
-    googleClassroomAPI.setAccessToken(accessToken)
-    console.log('🔑 Access token set for Google Classroom API')
-
-    // Fetch course information
-    console.log('📚 Fetching course information...')
-    const course = await googleClassroomAPI.getCourse(courseId)
-    if (!course) {
-      console.log('❌ Course not found in Google Classroom')
-      return NextResponse.json({ error: 'Course not found' }, { status: 404 })
-    }
-    console.log('✅ Course fetched:', course.name)
-
-    // Sync course to database
-    console.log('💾 Syncing course to database...')
-    const { data: courseData, error: courseError } = await supabaseAdmin
-      .rpc('sync_course', {
-        p_google_course_id: course.id,
-        p_name: course.name,
-        p_section: course.section || null,
-        p_description: course.description || null,
-        p_room: course.room || null,
-        p_teacher_email: ctx.email
-      })
-
-    if (courseError) {
-      console.error('❌ Error syncing course:', courseError)
-      console.error('Course data attempted:', {
-        id: course.id,
-        name: course.name,
-        section: course.section
-      })
-      return NextResponse.json({ 
-        error: 'Failed to sync course data', 
-        details: courseError.message,
-        hint: 'Check if database tables and functions exist'
-      }, { status: 500 })
-    }
-    console.log('✅ Course synced successfully, course UUID:', courseData)
-
-    // Apply the class type chosen at import. Matched by google_course_id (stable),
-    // so it works whether this is a first import or a re-sync.
-    if (track || program) {
-      const typed: Record<string, string> = {}
-      if (track) typed.track = track
-      if (program) typed.program = program
-      const { error: trackError } = await supabaseAdmin
-        .from('courses')
-        .update(typed)
-        .eq('google_course_id', course.id)
-      if (trackError) console.error('⚠️ Could not set course type:', trackError.message)
-      else console.log('🏷️ Course typed as:', typed)
-    }
-
-    // Fetch students from Google Classroom
-    console.log('👥 Fetching students from Google Classroom...')
-    const students = await googleClassroomAPI.getStudents(courseId)
-    console.log(`📊 Found ${students.length} students in Google Classroom`)
-    
-    // Get the section name from the course for automatic section assignment
-    const sectionName = course.section || 'Default Section'
-    console.log(`📋 Section name for auto-assignment: "${sectionName}"`)
-    
-    let syncedStudents = 0
-    let sectionsCreated = 0
-    const errors: string[] = []
-
-    // Sync each student to database with automatic section assignment
-    console.log(`👥 Syncing ${students.length} students to course UUID: ${courseData} (Section: ${sectionName})`)
-    for (const student of students) {
-      try {
-        // Use Google User ID as the unique identifier (no email needed)
-        const googleUserId = student.userId
-        const fullName = student.profile?.name?.fullName || 'Unknown Student'
-        // Google gives us authoritative name parts — capture them so the
-        // gradebook can sort by last name exactly like Aspen X2 (no guessing
-        // from the full-name string). Fall back to splitting fullName only if
-        // a part is missing.
-        // Fallback split (only if Google omits a part): first token = first
-        // name, EVERYTHING after = surname — matches how Aspen files compound
-        // Hispanic surnames (e.g. "Mendez Hernandez" under M).
-        const nameParts = fullName.trim().split(/\s+/)
-        const firstName = student.profile?.name?.givenName || nameParts[0] || fullName
-        const lastName = student.profile?.name?.familyName || (nameParts.length > 1 ? nameParts.slice(1).join(' ') : '')
-        // Which students row does this roster entry belong to? In order:
-        //   1. the real address, when Classroom returns one;
-        //   2. an existing signed-in account with exactly this name (students
-        //      often sign in BEFORE the roster is imported — without this, the
-        //      import made a placeholder twin and the real account stayed
-        //      un-enrolled, showing the class-code gate);
-        //   3. a placeholder `<google_sub>@classroom.local` for a student who
-        //      hasn't signed in yet (ensureStudentRecord reclaims it by name
-        //      at their first sign-in).
-        let internalEmail = student.profile?.emailAddress?.trim().toLowerCase() || ''
-        if (!internalEmail) {
-          const { data: byName } = await supabaseAdmin
-            .from('students')
-            .select('id, email')
-            .ilike('name', fullName)
-            .not('email', 'like', '%@classroom.local')
-          if (byName && byName.length === 1) {
-            internalEmail = (byName[0] as { email: string }).email
-            console.log(`  🔗 Matched roster entry to existing account by name: ${fullName} → ${internalEmail}`)
-          }
-        }
-        if (!internalEmail) internalEmail = `${googleUserId}@classroom.local`
-
-        console.log(`  📝 Syncing student: ${fullName} (Google ID: ${googleUserId}) to section: ${sectionName}`)
-
-        // Use the new sync_student_with_section function that handles section assignment
-        // Identity is carried by the synthetic internal email (which embeds the
-        // Google sub); the students row no longer stores the sub as a column.
-        const { data: studentData, error: studentError } = await supabaseAdmin
-          .rpc('sync_student_with_section', {
-            p_email: internalEmail,
-            p_name: fullName,
-            p_photo_url: null,
-            p_course_id: courseData,
-            p_section_name: sectionName,
-            p_teacher_email: ctx.email
-          })
-
-        if (studentError) {
-          // Fall back to original sync_student if new function doesn't exist yet
-          console.log(`  ⚠️ sync_student_with_section failed, falling back to sync_student: ${studentError.message}`)
-          
-          const { data: fallbackData, error: fallbackError } = await supabaseAdmin
-            .rpc('sync_student', {
-              p_email: internalEmail,
-              p_name: fullName,
-              p_photo_url: null,
-              p_course_id: courseData
-            })
-          
-          if (fallbackError) {
-            console.error(`  ❌ Error syncing student ${fullName}:`, fallbackError)
-            errors.push(`Failed to sync student: ${fullName} - ${fallbackError.message}`)
-          } else {
-            console.log(`  ✅ Student synced (without section): ${fullName}, student UUID: ${fallbackData}`)
-            syncedStudents++
-          }
-        } else {
-          const result = Array.isArray(studentData) ? studentData[0] : studentData
-          console.log(`  ✅ Student synced with section: ${fullName}, student UUID: ${result?.student_id}, section UUID: ${result?.section_id}`)
-          syncedStudents++
-          
-          // Track if this was the first student in a new section
-          if (result?.section_id) {
-            sectionsCreated = 1 // At least one section was created/used
-          }
-        }
-
-        // Persist the authoritative name parts (the sync RPCs only take the
-        // full name). Keyed on the synthetic internal email, which embeds the
-        // Google sub and is unique per student (the sub column is gone —
-        // identity now lives in student_identities / students.id).
-        const { error: nameError } = await supabaseAdmin
-          .from('students')
-          .update({ first_name: firstName, last_name: lastName })
-          .eq('email', internalEmail)
-        if (nameError) console.error(`  ⚠️ Could not store name parts for ${fullName}:`, nameError.message)
-      } catch (studentErr) {
-        console.error(`  ❌ Exception processing student:`, studentErr)
-        errors.push(`Failed to process student: ${student.profile?.name?.fullName || student.userId}`)
-      }
-    }
-    
-    console.log(`✅ Synced ${syncedStudents} out of ${students.length} students`)
-
-    // Update course student count
-    await supabaseAdmin.rpc('update_course_student_counts')
-
-    // Return results
-    const response = {
-      success: true,
-      course: {
-        id: course.id,
-        name: course.name,
-        section: course.section
-      },
-      section: {
-        name: sectionName,
-        created: sectionsCreated > 0
-      },
-      studentsTotal: students.length,
-      studentsSynced: syncedStudents,
-      studentsAssignedToSection: syncedStudents, // All synced students are assigned to section
-      errors: errors.length > 0 ? errors : undefined
-    }
-
-    console.log(`✅ Import complete: ${syncedStudents} students synced to section "${sectionName}"`)
-    return NextResponse.json(response)
-
-  } catch (error) {
-    console.error('❌ Roster import error:', error)
-    
-    // Provide more specific error information
-    let errorMessage = 'Internal server error'
-    let errorDetails = error instanceof Error ? error.message : 'Unknown error'
-    const hints: string[] = []
-
-    if (error instanceof Error) {
-      if (error.message.includes('function sync_course') || error.message.includes('does not exist')) {
-        errorMessage = 'Database functions not found'
-        errorDetails = 'The required database functions are missing'
-        hints.push('Run the database migration: create_student_activity_tables.sql')
-        hints.push('Check if the sync_course and sync_student functions exist in Supabase')
-      } else if (error.message.includes('relation') && error.message.includes('does not exist')) {
-        errorMessage = 'Database tables not found'
-        errorDetails = 'Required database tables are missing'
-        hints.push('Run the database migration to create students and courses tables')
-      } else if (error.message.includes('Google')) {
-        errorMessage = 'Google Classroom API error'
-        errorDetails = error.message
-        hints.push('Check Google Classroom API access token')
-        hints.push('Verify course ID is correct')
-      }
-    }
-
-    return NextResponse.json({ 
-      error: errorMessage,
-      details: errorDetails,
-      hints: hints.length > 0 ? hints : undefined,
-      timestamp: new Date().toISOString()
-    }, { status: 500 })
+  const body = await request.json().catch(() => null)
+  if (!body || typeof body.courseId !== 'string' || !body.courseId.trim() || typeof body.accessToken !== 'string' || !body.accessToken.trim()) {
+    return NextResponse.json({ error: 'Course ID and access token are required' }, { status: 400 })
   }
+  if (body.program === 'projects') return NextResponse.json({ error: 'Project Physics is retired. Choose Physics for video lessons.' }, { status: 400 })
+  const track = body.track === 'honors' || body.track === 'cpa' ? body.track : null
+  const program = body.program === 'physics' || body.program === 'trades' ? body.program : null
+  const snapshotStartedAt = new Date().toISOString()
+  const google = new GoogleClassroomAPI()
+  google.setAccessToken(body.accessToken)
+
+  let course
+  let students
+  try {
+    course = await google.getCourse(body.courseId)
+    if (!course?.id || typeof course.name !== 'string' || !course.name.trim()) throw new Error('Invalid course')
+    students = await google.getStudents(course.id)
+  } catch {
+    return NextResponse.json({ error: 'Could not download the complete Google Classroom roster. Your class has not changed. Reconnect to Google Classroom and try again.' }, { status: 502 })
+  }
+
+  const { data, error } = await supabaseAdmin.rpc('sync_classroom_roster', {
+    p_course: { id: course.id, name: course.name, section: course.section ?? null, description: course.description ?? null, room: course.room ?? null, track, program },
+    p_students: students.map(student => {
+      const name = student.profile.name.fullName.trim()
+      const parts = name.split(/\s+/)
+      return {
+        google_id: student.userId,
+        name,
+        first_name: student.profile.name.givenName || parts[0],
+        last_name: student.profile.name.familyName || parts.slice(1).join(' '),
+        email: student.profile.emailAddress?.trim().toLowerCase() || null,
+      }
+    }),
+    p_teacher_email: ctx.scopeEmail,
+    p_owner_emails: ownerEmailsFor(ctx.scopeEmail),
+    p_is_admin: ctx.role === 'admin',
+    p_snapshot_started_at: snapshotStartedAt,
+  })
+
+  if (error) {
+    if (error.message.includes('ROSTER_FORBIDDEN')) return NextResponse.json({ error: 'You can only refresh classes you manage.' }, { status: 403 })
+    if (error.message.includes('ROSTER_STALE')) return NextResponse.json({ error: 'A newer roster refresh has already finished. Refresh again to get the latest roster.' }, { status: 409 })
+    if (error.message.includes('ROSTER_AMBIGUOUS')) return NextResponse.json({ error: 'Some students could not be matched safely to their saved accounts. Your class has not changed. Check for duplicate student accounts before trying again.' }, { status: 409 })
+    console.error('Roster reconciliation failed:', error.code)
+    return NextResponse.json({ error: 'The roster could not be saved. Your class has not changed. Please try again.' }, { status: 500 })
+  }
+
+  return NextResponse.json({ success: true, ...data, course: { id: course.id, name: course.name, section: course.section } })
 })
 
-// GET - Get imported roster data
 export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
-    const { searchParams } = new URL(request.url)
-    const courseId = searchParams.get('course_id')
+  const courseId = new URL(request.url).searchParams.get('course_id')
+  if (!courseId) return NextResponse.json({ error: 'Course ID is required' }, { status: 400 })
 
-    if (!courseId) {
-      return NextResponse.json({ error: 'Course ID is required' }, { status: 400 })
-    }
+  let query = supabaseAdmin.from('courses').select('*').eq('google_course_id', courseId)
+  if (ctx.role !== 'admin') query = query.in('teacher_email', ownerEmailsFor(ctx.scopeEmail))
+  const { data: course, error: courseError } = await query.single()
+  if (courseError || !course) return NextResponse.json({ error: 'Course not found' }, { status: 404 })
 
-    // Get course information
-    const { data: courseData, error: courseError } = await supabaseAdmin
-      .from('courses')
-      .select('*')
-      .eq('google_course_id', courseId)
-      .single()
-
-    if (courseError) {
-      console.error('Error fetching course:', courseError)
-      return NextResponse.json({ error: 'Course not found' }, { status: 404 })
-    }
-
-    // Get students for the course (use internal UUID, not Google course ID)
-    const { data: studentsData, error: studentsError } = await supabaseAdmin
-      .rpc('get_course_students', { p_course_id: courseData.id })
-
-    if (studentsError) {
-      console.error('Error fetching students:', studentsError)
-      return NextResponse.json({ error: 'Failed to fetch students' }, { status: 500 })
-    }
-
-    const response = {
-      course: courseData,
-      students: studentsData || [],
-      totalStudents: studentsData?.length || 0
-    }
-
-    return NextResponse.json(response)
+  const { data: students, error } = await supabaseAdmin.rpc('get_course_students', { p_course_id: course.id })
+  if (error) return NextResponse.json({ error: 'Failed to fetch students' }, { status: 500 })
+  return NextResponse.json({ course, students: students ?? [], totalStudents: students?.length ?? 0 })
 })

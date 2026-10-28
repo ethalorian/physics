@@ -1,4 +1,5 @@
 'use client'
+import RevisionCycle from '@/components/review-desk/RevisionCycle'
 import { useEffect, useId, useState } from 'react'
 import Link from 'next/link'
 import WarmupAnswer from './WarmupAnswer'
@@ -56,7 +57,7 @@ function ResponseForm({ sub, saved }: { sub: Submission; saved: () => void }) {
 }
 function WorkConversation({ sub, feedback, revision, saved }: { sub: Submission; feedback: Feedback[]; revision?: Revision; saved: () => void }) {
   const [respond, setRespond] = useState(sub.revision_requested)
-  return <div className="space-y-4">
+  return <div className="space-y-4"><RevisionCycle sourceKey={'math:'+sub.competency_id} submitted={!!revision}/>
     <p className="font-semibold">{sub.prompt}</p>
     {sub.resulting_level !== null && <p className="text-sm"><b>Teacher observation on this task:</b> {OBSERVATION_LABEL[sub.resulting_level] ?? 'Reviewed'}. This is one piece of your skill evidence.</p>}
     {feedback.length > 0 && <section className="space-y-2 rounded-lg bg-muted p-4"><h4 className="font-semibold">Your teacher’s feedback</h4>{feedback.map(f=><p key={f.id} className="whitespace-pre-wrap">{f.message}</p>)}</section>}

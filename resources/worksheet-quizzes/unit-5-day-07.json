@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 7,
+  "title": "The first law",
+  "target": "Use a consistent sign convention in an energy balance.",
+  "criteria": [
+    "State whether heat enters or leaves.",
+    "Distinguish work done by the system from work done on it.",
+    "Apply ΔU=Q-W with the stated signs."
+  ],
+  "source_sha256": "4cccb1829c0e94abae6b1040deadc41878d44fe7a3410abb6fce5da957608abe",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.536Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Use ΔU = Q − W_by. A system receives 65 J as heat. What sign and value should Q have?",
+      "options": [
+        "+65 J",
+        "0 J",
+        "−65 J",
+        "+65 W"
+      ],
+      "correct_index": 0,
+      "guide": "Heat entering is positive under the stated convention.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Under the same convention, a system releases 28 J as heat. What is Q?",
+      "options": [
+        "−28 K",
+        "−28 J",
+        "0 J",
+        "+28 J"
+      ],
+      "correct_index": 1,
+      "guide": "Heat leaving the chosen system gives negative Q.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A gas expands and does 45 J of work on its surroundings. In ΔU = Q − W_by, what is W_by?",
+      "options": [
+        "+45 J",
+        "+45 N",
+        "0 J",
+        "−45 J"
+      ],
+      "correct_index": 0,
+      "guide": "Work done by the system is positive in this convention.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A piston compresses a gas and does 35 J of work on it. What is W_by for the gas?",
+      "options": [
+        "+35 J",
+        "−35 J",
+        "−35 K",
+        "0 J"
+      ],
+      "correct_index": 1,
+      "guide": "Work on the gas means negative work by the gas.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A gas absorbs 95 J as heat and does 30 J of work. What is ΔU?",
+      "options": [
+        "−65 J",
+        "−125 J",
+        "+125 J",
+        "+65 J"
+      ],
+      "correct_index": 3,
+      "guide": "ΔU = 95 − 30 = +65 J.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A system loses 20 J as heat while the surroundings do 70 J of work on it. What is ΔU?",
+      "options": [
+        "−90 J",
+        "−50 J",
+        "+50 J",
+        "+90 J"
+      ],
+      "correct_index": 2,
+      "guide": "Q = −20 J and W_by = −70 J, so ΔU = −20 − (−70) = +50 J.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Use ΔU = Q − W_by. A system receives 65 J as heat. What sign and value should Q have?",
+      "options": [
+        "−65 J",
+        "+65 J",
+        "+65 W",
+        "0 J"
+      ],
+      "correct_index": 1,
+      "guide": "Heat entering is positive under the stated convention.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Under the same convention, a system releases 28 J as heat. What is Q?",
+      "options": [
+        "−28 K",
+        "−28 J",
+        "+28 J",
+        "0 J"
+      ],
+      "correct_index": 1,
+      "guide": "Heat leaving the chosen system gives negative Q.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A gas expands and does 45 J of work on its surroundings. In ΔU = Q − W_by, what is W_by?",
+      "options": [
+        "0 J",
+        "−45 J",
+        "+45 J",
+        "+45 N"
+      ],
+      "correct_index": 2,
+      "guide": "Work done by the system is positive in this convention.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A piston compresses a gas and does 35 J of work on it. What is W_by for the gas?",
+      "options": [
+        "−35 J",
+        "−35 K",
+        "0 J",
+        "+35 J"
+      ],
+      "correct_index": 0,
+      "guide": "Work on the gas means negative work by the gas.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A gas absorbs 95 J as heat and does 30 J of work. What is ΔU?",
+      "options": [
+        "−65 J",
+        "+125 J",
+        "−125 J",
+        "+65 J"
+      ],
+      "correct_index": 3,
+      "guide": "ΔU = 95 − 30 = +65 J.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A system loses 20 J as heat while the surroundings do 70 J of work on it. What is ΔU?",
+      "options": [
+        "+90 J",
+        "−90 J",
+        "+50 J",
+        "−50 J"
+      ],
+      "correct_index": 2,
+      "guide": "Q = −20 J and W_by = −70 J, so ΔU = −20 − (−70) = +50 J.",
+      "target_slug": "u5.k5-first-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

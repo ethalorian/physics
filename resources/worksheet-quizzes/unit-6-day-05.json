@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 5,
+  "title": "Refraction",
+  "target": "Connect a change in wave speed to wavelength and direction.",
+  "criteria": [
+    "Measure ray angles from the normal.",
+    "Explain frequency continuity at a stationary boundary.",
+    "Predict bending toward or away from the normal."
+  ],
+  "source_sha256": "c586cfc185cff740504568f7645e86f90e32abe0bfa04bdc5b258c3cf5bab3dd",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.545Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A ray makes 25° with a flat boundary surface. What is its angle from the normal?",
+      "options": [
+        "90°",
+        "115°",
+        "25°",
+        "65°"
+      ],
+      "correct_index": 3,
+      "guide": "The normal is perpendicular to the surface: 90 − 25 = 65°.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student measures a ray angle from the surface while the refraction rule uses the normal. What should be corrected?",
+      "options": [
+        "Measure distance instead of angle.",
+        "Use the perpendicular-to-surface reference before comparing angles.",
+        "Use any reference because angles never depend on it.",
+        "Add 180° to every angle."
+      ],
+      "correct_index": 1,
+      "guide": "Refraction angles are conventionally measured from the normal.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 7 Hz wave crosses a stationary boundary into a slower medium. What is its frequency there?",
+      "options": [
+        "7 Hz",
+        "Zero.",
+        "Less than 7 Hz solely because speed falls.",
+        "Greater than 7 Hz solely because speed falls."
+      ],
+      "correct_index": 0,
+      "guide": "The driving oscillation rate stays continuous across a stationary boundary.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wave has frequency 4 Hz and speed changes from 20 to 12 m/s at a stationary boundary. What are wavelengths before and after?",
+      "options": [
+        "3 m and 5 m.",
+        "5 m and 5 m.",
+        "80 m and 48 m.",
+        "5 m and 3 m."
+      ],
+      "correct_index": 3,
+      "guide": "λ = v/f; frequency stays 4 Hz, so wavelengths are 20/4 and 12/4.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ray enters a slower medium obliquely, with ordinary positive refractive indices. Which way does it bend?",
+      "options": [
+        "Toward the normal.",
+        "Away from the normal.",
+        "Always along the boundary.",
+        "It must reverse direction."
+      ],
+      "correct_index": 0,
+      "guide": "Lower wave speed produces a smaller angle to the normal in ordinary refraction.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ray enters a faster medium at an angle below any critical-angle condition. Which change is expected?",
+      "options": [
+        "Its frequency falls to zero.",
+        "It bends toward the normal and frequency doubles.",
+        "It bends away from the normal while frequency stays the same.",
+        "Its speed cannot change between media."
+      ],
+      "correct_index": 2,
+      "guide": "Faster transmitted speed gives a larger normal angle; the stationary boundary preserves frequency.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A ray makes 25° with a flat boundary surface. What is its angle from the normal?",
+      "options": [
+        "25°",
+        "115°",
+        "90°",
+        "65°"
+      ],
+      "correct_index": 3,
+      "guide": "The normal is perpendicular to the surface: 90 − 25 = 65°.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A student measures a ray angle from the surface while the refraction rule uses the normal. What should be corrected?",
+      "options": [
+        "Add 180° to every angle.",
+        "Use any reference because angles never depend on it.",
+        "Use the perpendicular-to-surface reference before comparing angles.",
+        "Measure distance instead of angle."
+      ],
+      "correct_index": 2,
+      "guide": "Refraction angles are conventionally measured from the normal.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 7 Hz wave crosses a stationary boundary into a slower medium. What is its frequency there?",
+      "options": [
+        "7 Hz",
+        "Greater than 7 Hz solely because speed falls.",
+        "Zero.",
+        "Less than 7 Hz solely because speed falls."
+      ],
+      "correct_index": 0,
+      "guide": "The driving oscillation rate stays continuous across a stationary boundary.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A wave has frequency 4 Hz and speed changes from 20 to 12 m/s at a stationary boundary. What are wavelengths before and after?",
+      "options": [
+        "80 m and 48 m.",
+        "5 m and 3 m.",
+        "3 m and 5 m.",
+        "5 m and 5 m."
+      ],
+      "correct_index": 1,
+      "guide": "λ = v/f; frequency stays 4 Hz, so wavelengths are 20/4 and 12/4.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ray enters a slower medium obliquely, with ordinary positive refractive indices. Which way does it bend?",
+      "options": [
+        "It must reverse direction.",
+        "Toward the normal.",
+        "Away from the normal.",
+        "Always along the boundary."
+      ],
+      "correct_index": 1,
+      "guide": "Lower wave speed produces a smaller angle to the normal in ordinary refraction.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ray enters a faster medium at an angle below any critical-angle condition. Which change is expected?",
+      "options": [
+        "It bends away from the normal while frequency stays the same.",
+        "Its frequency falls to zero.",
+        "It bends toward the normal and frequency doubles.",
+        "Its speed cannot change between media."
+      ],
+      "correct_index": 0,
+      "guide": "Faster transmitted speed gives a larger normal angle; the stationary boundary preserves frequency.",
+      "target_slug": "u6.k4-refraction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

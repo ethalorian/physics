@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 1,
+  "title": "Why impact also needs energy",
+  "target": "Explain why momentum does not tell the whole impact story.",
+  "criteria": [
+    "Compare momentum and kinetic energy as different quantities.",
+    "Identify speed as a squared factor in kinetic energy.",
+    "Name where energy can go in an impact."
+  ],
+  "source_sha256": "fe59537b1715c204b1f116284eb0d308012d49843fc7be437136e73112d424fb",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.516Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Two identical pucks move in opposite directions at equal speeds. Compare their kinetic energies and momenta.",
+      "options": [
+        "Equal kinetic energies; opposite momenta.",
+        "Both kinetic energies must be negative.",
+        "Both momenta are zero individually.",
+        "Opposite kinetic energies; equal momenta."
+      ],
+      "correct_index": 0,
+      "guide": "Kinetic energy uses speed squared; momentum includes velocity direction.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Object A has mass 2 kg and speed 6 m/s; B has mass 4 kg and speed 3 m/s, in the same direction. Which comparison is correct?",
+      "options": [
+        "Equal momentum and equal kinetic energy.",
+        "B has twice A’s energy.",
+        "A has twice B’s momentum and half its energy.",
+        "Equal momentum; A has twice B’s kinetic energy."
+      ],
+      "correct_index": 3,
+      "guide": "Both momenta are 12 kg·m/s. K_A = 36 J and K_B = 18 J.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "For the same object, speed rises from 4 to 12 m/s. By what factor does kinetic energy change?",
+      "options": [
+        "6",
+        "9",
+        "3",
+        "1/9"
+      ],
+      "correct_index": 1,
+      "guide": "Speed triples, so its square increases by 9.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A moving sample has kinetic energy 48 J. Its mass is unchanged and speed halves. What is its new kinetic energy?",
+      "options": [
+        "96 J",
+        "12 J",
+        "24 J",
+        "192 J"
+      ],
+      "correct_index": 1,
+      "guide": "Halving speed reduces energy to one-quarter: 48/4 = 12 J.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ball hits a deformable surface and comes to rest without rebounding. Where can its initial kinetic energy go?",
+      "options": [
+        "It must be destroyed because the ball stopped.",
+        "It must all remain translational kinetic energy.",
+        "Internal energy, deformation, sound, and other energy transfers.",
+        "It must become extra electric charge."
+      ],
+      "correct_index": 2,
+      "guide": "Stopping removes motion energy but conserves total energy through other forms and transfers.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two impacts have equal kinetic energy. Why can their damage still differ?",
+      "options": [
+        "Equal energy always guarantees identical damage.",
+        "Kinetic energy alone specifies every force and deformation.",
+        "Contact area, material response, and energy-transfer pathways can differ.",
+        "One impact must violate conservation."
+      ],
+      "correct_index": 2,
+      "guide": "Energy is relevant but insufficient for a detailed damage prediction.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Two identical pucks move in opposite directions at equal speeds. Compare their kinetic energies and momenta.",
+      "options": [
+        "Both momenta are zero individually.",
+        "Both kinetic energies must be negative.",
+        "Opposite kinetic energies; equal momenta.",
+        "Equal kinetic energies; opposite momenta."
+      ],
+      "correct_index": 3,
+      "guide": "Kinetic energy uses speed squared; momentum includes velocity direction.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Object A has mass 2 kg and speed 6 m/s; B has mass 4 kg and speed 3 m/s, in the same direction. Which comparison is correct?",
+      "options": [
+        "Equal momentum and equal kinetic energy.",
+        "B has twice A’s energy.",
+        "Equal momentum; A has twice B’s kinetic energy.",
+        "A has twice B’s momentum and half its energy."
+      ],
+      "correct_index": 2,
+      "guide": "Both momenta are 12 kg·m/s. K_A = 36 J and K_B = 18 J.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "For the same object, speed rises from 4 to 12 m/s. By what factor does kinetic energy change?",
+      "options": [
+        "9",
+        "1/9",
+        "3",
+        "6"
+      ],
+      "correct_index": 0,
+      "guide": "Speed triples, so its square increases by 9.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A moving sample has kinetic energy 48 J. Its mass is unchanged and speed halves. What is its new kinetic energy?",
+      "options": [
+        "192 J",
+        "96 J",
+        "24 J",
+        "12 J"
+      ],
+      "correct_index": 3,
+      "guide": "Halving speed reduces energy to one-quarter: 48/4 = 12 J.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A ball hits a deformable surface and comes to rest without rebounding. Where can its initial kinetic energy go?",
+      "options": [
+        "It must be destroyed because the ball stopped.",
+        "It must all remain translational kinetic energy.",
+        "Internal energy, deformation, sound, and other energy transfers.",
+        "It must become extra electric charge."
+      ],
+      "correct_index": 2,
+      "guide": "Stopping removes motion energy but conserves total energy through other forms and transfers.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two impacts have equal kinetic energy. Why can their damage still differ?",
+      "options": [
+        "One impact must violate conservation.",
+        "Contact area, material response, and energy-transfer pathways can differ.",
+        "Kinetic energy alone specifies every force and deformation.",
+        "Equal energy always guarantees identical damage."
+      ],
+      "correct_index": 1,
+      "guide": "Energy is relevant but insufficient for a detailed damage prediction.",
+      "target_slug": "u4.anchor-damage-energy",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 12,
+  "title": "What momentum says about impact",
+  "target": "Connect stopping impulse to average force without claiming a complete damage forecast.",
+  "criteria": [
+    "Compute momentum change during a stop.",
+    "Compare average force for different stopping times.",
+    "Name information beyond momentum needed for damage."
+  ],
+  "source_sha256": "ef554b1ee40e02a77a0cc0fc9f1f45de13a4244ffd8cebe6c970b703ace52614",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.512Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 12 kg model object moving at +5 m/s comes to rest. What is its momentum change?",
+      "options": [
+        "−60 kg·m/s",
+        "−12 kg·m/s",
+        "0 kg·m/s",
+        "+60 kg·m/s"
+      ],
+      "correct_index": 0,
+      "guide": "Δp = 12(0 − 5) = −60.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 3 kg object rebounds from +4 to −2 m/s. What is |Δp|?",
+      "options": [
+        "6 kg·m/s",
+        "18 kg·m/s",
+        "12 kg·m/s",
+        "24 kg·m/s"
+      ],
+      "correct_index": 1,
+      "guide": "|3(−2 − 4)| = 18.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A model impact changes momentum by −84 kg·m/s over 0.7 s. What is average force?",
+      "options": [
+        "−58.8 N",
+        "+120 N",
+        "−120 N",
+        "−83.3 N"
+      ],
+      "correct_index": 2,
+      "guide": "F_avg = −84/0.7 = −120 N.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For a fixed momentum change, one surface stops an object in three times the duration of another. Compare average force magnitudes.",
+      "options": [
+        "Three times as large.",
+        "Equal regardless of duration.",
+        "Nine times as large.",
+        "One-third as large on the longer-duration surface."
+      ],
+      "correct_index": 3,
+      "guide": "Force is inversely proportional to duration at fixed impulse.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why can an impact produce a large local force while changing Earth’s speed very little?",
+      "options": [
+        "Local force has no relation to impulse.",
+        "Equal forces require equal accelerations.",
+        "Earth receives no momentum in any collision.",
+        "Earth’s enormous mass makes its Δv = J/M tiny for the transferred impulse."
+      ],
+      "correct_index": 3,
+      "guide": "Large force over a short time can transfer momentum to a very massive Earth with small Δv.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "What information beyond momentum change is needed to assess local damage?",
+      "options": [
+        "Stopping time, contact area, materials, and energy transfer.",
+        "No other information.",
+        "Only the sign convention.",
+        "Only whether momentum is measured in SI units."
+      ],
+      "correct_index": 0,
+      "guide": "Momentum alone cannot specify force distribution or material failure.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 12 kg model object moving at +5 m/s comes to rest. What is its momentum change?",
+      "options": [
+        "−60 kg·m/s",
+        "0 kg·m/s",
+        "−12 kg·m/s",
+        "+60 kg·m/s"
+      ],
+      "correct_index": 0,
+      "guide": "Δp = 12(0 − 5) = −60.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 3 kg object rebounds from +4 to −2 m/s. What is |Δp|?",
+      "options": [
+        "12 kg·m/s",
+        "6 kg·m/s",
+        "24 kg·m/s",
+        "18 kg·m/s"
+      ],
+      "correct_index": 3,
+      "guide": "|3(−2 − 4)| = 18.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A model impact changes momentum by −84 kg·m/s over 0.7 s. What is average force?",
+      "options": [
+        "+120 N",
+        "−58.8 N",
+        "−120 N",
+        "−83.3 N"
+      ],
+      "correct_index": 2,
+      "guide": "F_avg = −84/0.7 = −120 N.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For a fixed momentum change, one surface stops an object in three times the duration of another. Compare average force magnitudes.",
+      "options": [
+        "One-third as large on the longer-duration surface.",
+        "Equal regardless of duration.",
+        "Three times as large.",
+        "Nine times as large."
+      ],
+      "correct_index": 0,
+      "guide": "Force is inversely proportional to duration at fixed impulse.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why can an impact produce a large local force while changing Earth’s speed very little?",
+      "options": [
+        "Local force has no relation to impulse.",
+        "Earth’s enormous mass makes its Δv = J/M tiny for the transferred impulse.",
+        "Earth receives no momentum in any collision.",
+        "Equal forces require equal accelerations."
+      ],
+      "correct_index": 1,
+      "guide": "Large force over a short time can transfer momentum to a very massive Earth with small Δv.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "What information beyond momentum change is needed to assess local damage?",
+      "options": [
+        "No other information.",
+        "Stopping time, contact area, materials, and energy transfer.",
+        "Only the sign convention.",
+        "Only whether momentum is measured in SI units."
+      ],
+      "correct_index": 1,
+      "guide": "Momentum alone cannot specify force distribution or material failure.",
+      "target_slug": "u3.r4-impact-analysis",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

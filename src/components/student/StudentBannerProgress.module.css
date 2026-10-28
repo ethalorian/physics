@@ -1,0 +1,15 @@
+.summary { min-width: 0; padding: 19px 18px 13px; border: 1px solid color-mix(in srgb, var(--banner-ink) 30%, transparent); border-radius: var(--radius-xl); background: color-mix(in srgb, var(--season-low) 68%, transparent); color: var(--banner-ink); }
+.summary h2 { font-size: 12px; font-weight: 600; line-height: 1.4; }
+.value { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; margin: 8px 0; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.value > strong, .value > span:only-child { font-size: 38px; font-weight: 700; letter-spacing: -.04em; }
+.value strong span { font-size: 20px; margin-left: 2px; }
+.letter { font-size: 17px; font-weight: 600; }
+.status, .preview { color: var(--banner-muted); font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+.preview { margin-top: 4px; }
+.term { display: grid; gap: 4px; margin-top: 13px; color: var(--banner-muted); font-size: 11px; }
+.term select { width: 100%; min-width: 0; max-width: 100%; min-height: 36px; border: 1px solid color-mix(in srgb, var(--banner-ink) 25%, transparent); border-radius: var(--radius-sm); padding: 5px 7px; background: var(--card); color: var(--foreground); font-size: 12px; }
+.details, .retry { display: inline-flex; align-items: center; gap: 5px; min-height: 36px; margin-top: 6px; color: inherit; font-size: 11px; text-decoration: underline; text-underline-offset: 3px; }
+.summary :is(select, a, button):focus-visible { outline: 2px solid var(--banner-ink); outline-offset: 3px; }
+@media (max-width: 1000px) { .summary { padding: 17px 13px 11px; }.value > strong, .value > span:only-child { font-size: 34px; } }
+@media (max-width: 540px) { .summary { padding: 17px 18px 12px; }.term select { font-size: 16px; min-height: 44px; }.details, .retry { min-height: 44px; } }
+@media (pointer: coarse) { .term select, .details, .retry { min-height: 44px; } }

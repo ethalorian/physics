@@ -8,7 +8,7 @@ import s from './ChoiceSequence.module.css'
 
 type DraftOption = Omit<ChoiceOption, 'steps'> & { steps: string[] }
 const localTime = (iso?: string) => { if (!iso) return ''; const date = new Date(iso); return new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16) }
-const newChoice = (step?: ChoiceStep): DraftOption => ({ id: crypto.randomUUID(), title: step?.title ?? 'Instructor lab', category: step ? 'Independent' : 'Lab', lab: !step, steps: step ? [sourceKey(step)] : [], targetIds: step && 'targetIds' in step ? (step as ChoiceStep & {targetIds:string[]}).targetIds : step?.targetId ? [step.targetId] : [], ...(!step ? { labType: 'hands-on' as const, artifactInstructions: 'Your lab work.' } : {}) })
+const newChoice = (step?: ChoiceStep): DraftOption => ({ id: crypto.randomUUID(), title: step?.title ?? 'Instructor lab', category: step ? 'Independent' : 'Lab', lab: !step, steps: step ? [sourceKey(step)] : [], targetIds: step && 'reflectionTemplate' in step ? [] : step && 'targetIds' in step ? (step as ChoiceStep & {targetIds:string[]}).targetIds : step?.targetId ? [step.targetId] : [], ...(!step ? { labType: 'hands-on' as const, artifactInstructions: 'Your lab work.' } : {}) })
 export default function ChoiceSectionEditor({ courseId, unitId = '', initial, onSave, onCancel, busy }: { courseId: string; unitId?: string; initial?: ChoiceSection; onSave: (body: Record<string, unknown>) => Promise<boolean>; onCancel: () => void; busy: boolean }) {
   const locked = !!(initial?.published || initial?.published_at)
   const [catalogVersion, setCatalogVersion] = useState(0), [catalog, setCatalog] = useState<ChoiceCatalog | null>(null), [error, setError] = useState('')
@@ -68,6 +68,6 @@ export default function ChoiceSectionEditor({ courseId, unitId = '', initial, on
     {error && <p role="alert" className={s.error}>{error} {!catalog && <button type="button" onClick={() => setCatalogVersion(v => v + 1)}>Retry library</button>}</p>}
     {!catalog && !error && <p role="status">Loading activities…</p>}
     <div className={s.footer}><span>A draft stays private until you publish it.</span><button type="button" disabled={busy} onClick={onCancel}>Cancel</button><button className={s.primary} disabled={busy || !options.length || (!catalog && !locked)}>{initial ? 'Save changes' : 'Save sequence'}</button></div>
-    {library && catalog && <ChoiceActivityLibrary courseId={courseId} unitId={unitId} catalog={catalog} used={options.flatMap(o => o.steps)} onClose={() => setLibrary(false)} onRefresh={() => setCatalogVersion(v => v + 1)} onAdd={steps => { if (options.length + steps.length > 40) { setError('A menu can contain up to 40 choices.'); return } setOptions(old => [...old, ...steps.map(newChoice)]) }}/>}
+    {library && catalog && <ChoiceActivityLibrary courseId={courseId} unitId={unitId} catalog={catalog} used={options.flatMap(o => o.steps)} onClose={() => setLibrary(false)} onRefresh={() => setCatalogVersion(v => v + 1)} onAdd={steps => { if (options.length + steps.length > 40) { setError('A menu can contain up to 40 choices.'); return } setCatalog(old => old ? { ...old, steps: [...new Map([...old.steps, ...steps].map(s => [sourceKey(s), s])).values()] } : old); setOptions(old => [...old, ...steps.map(newChoice)]) }}/>}
   </form>
 }

@@ -1,0 +1,38 @@
+{
+  "collaboration": {
+    "maxGroupSize": 4,
+    "primaryRoles": [
+      "Slideshow lead",
+      "Whiteboard scribe"
+    ],
+    "secondaryDuties": [
+      "Timekeeper",
+      "Checker"
+    ],
+    "individualResponses": true
+  },
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 1 Briefing.dc.html",
+  "sourceSha256": "7de22da148eaa89a941ff570a46f3ca2b09cee4753faf9ff926b5d88ed8619dc",
+  "runtimeSha256": {
+    "support": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe",
+    "stage": "f3d3d0a662c08eefb5a8757a6da3139572485f4be32ac33785c5047061926a8a"
+  },
+  "packagedSha256": "5416aaa7d501e7155db07907147741d0f0a98fb13bcb4994813b1af62d7067db",
+  "studentSlides": 26,
+  "teacherSlidesExcluded": 3,
+  "cover": {
+    "file": "art/asteroid-briefing.png",
+    "sha256": "ae90f10457a275a673a1662f651ce0c04ea070027eaa74f289e37b0c8819de62"
+  },
+  "adaptedSlides": [
+    9,
+    20
+  ],
+  "transition": {
+    "type": "fade",
+    "durationMs": 260,
+    "respectsReducedMotion": true
+  },
+  "notes": "Original slide markup, artwork, four timers, four answer reveals, support.js, deck-stage.js, and inline logic retained. Student copy excludes teacher-only slides and speaker notes; fills the approved handout from source facts, corrects the eight-unit heading, and renumbers 26 slides. Editor rail hidden. Original export archived unchanged. Runtime libraries pinned and integrity-checked, bundled locally. Original cover PNG is copied unchanged as a separate asset to preserve the export’s CSS parsing. Sandbox permits scripts only; no application storage or network API access. Navigation uses an event-driven bridge. Fonts may load once from Google Fonts. Student submissions, collaboration, mastery and grades remain in the app."
+}

@@ -26,7 +26,7 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
   const taskIds = visible.map(t => t.id)
   const [enrollments, checks, reviews] = await Promise.all([
     vocabRows((a, b) => supabaseAdmin.from('course_students').select('course_id,student_id,students(id,name)').in('course_id', courseIds).eq('enrollment_state', 'ACTIVE').order('id').range(a, b)),
-    vocabRows<VocabEvidenceCheck>((a, b) => supabaseAdmin.from('vocab_checks').select('id,task_id,user_id,completed_at,result,review_version').in('task_id', taskIds).not('completed_at', 'is', null).order('id').range(a, b)),
+    vocabRows<VocabEvidenceCheck>((a, b) => supabaseAdmin.from('vocab_checks').select('id,task_id,user_id,completed_at,result,review_version,requires_release,reviewed_at').in('task_id', taskIds).not('completed_at', 'is', null).order('id').range(a, b)),
     vocabRows<VocabMasteryReview>((a, b) => supabaseAdmin.from('vocab_mastery_reviews').select('id,task_id,user_id,target_id,level,evidence_key,note,created_at,reviewer_email').in('task_id', taskIds).order('id').range(a, b)),
   ])
   const roster = [...new Map(enrollments.map(e => {

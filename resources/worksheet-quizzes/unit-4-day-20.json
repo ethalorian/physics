@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 20,
+  "title": "Escape speed",
+  "target": "Explain escape in an ideal gravitational-energy model.",
+  "criteria": [
+    "State the zero-at-infinity energy convention.",
+    "Distinguish escape speed from circular-orbit speed.",
+    "Name neglected effects in the ideal calculation."
+  ],
+  "source_sha256": "2a3b50bfecafd832ff2d04763085c05184092152f62fd7240b4477fa9a578883",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.528Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "With U = 0 at infinity, an object starts with U = −72 J. What minimum initial K allows it to reach infinity with zero final speed in the ideal model?",
+      "options": [
+        "36 J",
+        "−72 J",
+        "0 J",
+        "72 J"
+      ],
+      "correct_index": 3,
+      "guide": "Minimum escape has total E = 0, requiring K = −U = 72 J.",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A probe starts with K = 95 J and U = −65 J, then coasts without losses. What is its kinetic energy at infinity?",
+      "options": [
+        "30 J",
+        "65 J",
+        "0 J",
+        "160 J"
+      ],
+      "correct_index": 0,
+      "guide": "Total energy is +30 J; U approaches zero, leaving K = 30 J.",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At the same radius, how does ideal escape speed compare with circular-orbit speed?",
+      "options": [
+        "They are identical.",
+        "Escape speed is √2 times circular speed.",
+        "Circular speed is always zero.",
+        "Escape speed is half circular speed."
+      ],
+      "correct_index": 1,
+      "guide": "v_escape = √(2GM/r); v_circular = √(GM/r).",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spacecraft is in a stable circular orbit with no thrust. Which claim is correct?",
+      "options": [
+        "Any nonzero altitude means escape.",
+        "It must be moving at escape speed.",
+        "It is continually falling around the planet and has not necessarily escaped.",
+        "Circular orbit means gravity is zero."
+      ],
+      "correct_index": 2,
+      "guide": "Circular motion is bound by gravity; escape requires sufficient total energy.",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which assumption belongs to the simple escape-speed model?",
+      "options": [
+        "Negligible atmospheric drag and no later propulsion.",
+        "The launch speed can be zero for any planet.",
+        "Mass grows continuously as the craft rises.",
+        "Gravity becomes zero immediately above the surface."
+      ],
+      "correct_index": 0,
+      "guide": "The basic energy model neglects drag and further engine work.",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A launch has exactly the ideal minimum escape energy but encounters drag. What can be concluded?",
+      "options": [
+        "The planet must lose all gravity.",
+        "The ideal result no longer guarantees escape because drag removes mechanical energy.",
+        "Drag always increases orbital energy.",
+        "Escape is still guaranteed regardless of losses."
+      ],
+      "correct_index": 1,
+      "guide": "With losses, initial energy must account for the energy removed as well.",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "With U = 0 at infinity, an object starts with U = −72 J. What minimum initial K allows it to reach infinity with zero final speed in the ideal model?",
+      "options": [
+        "−72 J",
+        "0 J",
+        "36 J",
+        "72 J"
+      ],
+      "correct_index": 3,
+      "guide": "Minimum escape has total E = 0, requiring K = −U = 72 J.",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A probe starts with K = 95 J and U = −65 J, then coasts without losses. What is its kinetic energy at infinity?",
+      "options": [
+        "65 J",
+        "30 J",
+        "160 J",
+        "0 J"
+      ],
+      "correct_index": 1,
+      "guide": "Total energy is +30 J; U approaches zero, leaving K = 30 J.",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At the same radius, how does ideal escape speed compare with circular-orbit speed?",
+      "options": [
+        "Escape speed is √2 times circular speed.",
+        "Circular speed is always zero.",
+        "They are identical.",
+        "Escape speed is half circular speed."
+      ],
+      "correct_index": 0,
+      "guide": "v_escape = √(2GM/r); v_circular = √(GM/r).",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A spacecraft is in a stable circular orbit with no thrust. Which claim is correct?",
+      "options": [
+        "Circular orbit means gravity is zero.",
+        "It must be moving at escape speed.",
+        "It is continually falling around the planet and has not necessarily escaped.",
+        "Any nonzero altitude means escape."
+      ],
+      "correct_index": 2,
+      "guide": "Circular motion is bound by gravity; escape requires sufficient total energy.",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which assumption belongs to the simple escape-speed model?",
+      "options": [
+        "Gravity becomes zero immediately above the surface.",
+        "Mass grows continuously as the craft rises.",
+        "Negligible atmospheric drag and no later propulsion.",
+        "The launch speed can be zero for any planet."
+      ],
+      "correct_index": 2,
+      "guide": "The basic energy model neglects drag and further engine work.",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A launch has exactly the ideal minimum escape energy but encounters drag. What can be concluded?",
+      "options": [
+        "Drag always increases orbital energy.",
+        "The ideal result no longer guarantees escape because drag removes mechanical energy.",
+        "Escape is still guaranteed regardless of losses.",
+        "The planet must lose all gravity."
+      ],
+      "correct_index": 1,
+      "guide": "With losses, initial energy must account for the energy removed as well.",
+      "target_slug": "u4.r7-escape-velocity",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

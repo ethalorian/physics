@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 8,
+  "title": "Parallel circuits",
+  "target": "Relate branch currents to a shared potential difference.",
+  "criteria": [
+    "Identify branches connected across the same two nodes.",
+    "Use equal voltage across parallel branches.",
+    "Add branch currents to find supply current."
+  ],
+  "source_sha256": "38fb6055a3681c03b53465d90e4ae98d9bf69fcf7580baea1b57045542156930",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.564Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 4 Ω resistor and an 8 Ω resistor each connect directly between the same two nodes. What arrangement is this?",
+      "options": [
+        "Series, because both are resistors.",
+        "An open circuit by definition.",
+        "Parallel.",
+        "A single resistor of 12 Ω."
+      ],
+      "correct_index": 2,
+      "guide": "Parallel elements share both endpoint nodes.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "One branch of an ideal parallel circuit opens. Other branches remain connected across an ideal constant-voltage supply. What can happen?",
+      "options": [
+        "The other branches continue carrying their previous currents.",
+        "All branches must stop.",
+        "The voltage of every other branch must double.",
+        "Current must cross the open branch."
+      ],
+      "correct_index": 0,
+      "guide": "The other complete paths remain across the same ideal supply voltage.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Resistors of 5 Ω and 10 Ω connect in parallel across 15 V. What voltage is across each?",
+      "options": [
+        "5 V across one and 10 V across the other.",
+        "30 V across each.",
+        "7.5 V across each.",
+        "15 V across each."
+      ],
+      "correct_index": 3,
+      "guide": "Both connect to the same two supply nodes.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 16 Ω branch is connected across an 8 V ideal supply. What is branch current?",
+      "options": [
+        "2 A",
+        "128 A",
+        "8 A",
+        "0.50 A"
+      ],
+      "correct_index": 3,
+      "guide": "I = V/R = 8/16 = 0.50 A.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Three outgoing parallel branch currents are 0.40 A, 0.25 A, and 0.15 A. What is supply current?",
+      "options": [
+        "0.40 A",
+        "0.80 A",
+        "0.20 A",
+        "0.015 A"
+      ],
+      "correct_index": 1,
+      "guide": "Conservation at the junction: 0.40 + 0.25 + 0.15 = 0.80 A.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 12 V ideal supply feeds 4 Ω and 12 Ω parallel resistors. Which total-current calculation is correct?",
+      "options": [
+        "12/4 + 12/12 = 4 A.",
+        "Both branches carry 3 A, so total is 6 A.",
+        "12/(4 + 12) = 0.75 A.",
+        "4 + 12 = 16 A."
+      ],
+      "correct_index": 0,
+      "guide": "Branch currents are 3 and 1 A. Add currents; do not add parallel resistances directly.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 4 Ω resistor and an 8 Ω resistor each connect directly between the same two nodes. What arrangement is this?",
+      "options": [
+        "Parallel.",
+        "Series, because both are resistors.",
+        "An open circuit by definition.",
+        "A single resistor of 12 Ω."
+      ],
+      "correct_index": 0,
+      "guide": "Parallel elements share both endpoint nodes.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "One branch of an ideal parallel circuit opens. Other branches remain connected across an ideal constant-voltage supply. What can happen?",
+      "options": [
+        "The other branches continue carrying their previous currents.",
+        "Current must cross the open branch.",
+        "All branches must stop.",
+        "The voltage of every other branch must double."
+      ],
+      "correct_index": 0,
+      "guide": "The other complete paths remain across the same ideal supply voltage.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Resistors of 5 Ω and 10 Ω connect in parallel across 15 V. What voltage is across each?",
+      "options": [
+        "7.5 V across each.",
+        "15 V across each.",
+        "30 V across each.",
+        "5 V across one and 10 V across the other."
+      ],
+      "correct_index": 1,
+      "guide": "Both connect to the same two supply nodes.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 16 Ω branch is connected across an 8 V ideal supply. What is branch current?",
+      "options": [
+        "2 A",
+        "8 A",
+        "128 A",
+        "0.50 A"
+      ],
+      "correct_index": 3,
+      "guide": "I = V/R = 8/16 = 0.50 A.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Three outgoing parallel branch currents are 0.40 A, 0.25 A, and 0.15 A. What is supply current?",
+      "options": [
+        "0.20 A",
+        "0.80 A",
+        "0.015 A",
+        "0.40 A"
+      ],
+      "correct_index": 1,
+      "guide": "Conservation at the junction: 0.40 + 0.25 + 0.15 = 0.80 A.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 12 V ideal supply feeds 4 Ω and 12 Ω parallel resistors. Which total-current calculation is correct?",
+      "options": [
+        "4 + 12 = 16 A.",
+        "Both branches carry 3 A, so total is 6 A.",
+        "12/4 + 12/12 = 4 A.",
+        "12/(4 + 12) = 0.75 A."
+      ],
+      "correct_index": 2,
+      "guide": "Branch currents are 3 and 1 A. Add currents; do not add parallel resistances directly.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

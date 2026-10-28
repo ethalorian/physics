@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 4,
+  "title": "Stopping time and force",
+  "target": "Explain how a longer stop can reduce average force.",
+  "criteria": [
+    "Keep momentum change fixed in a fair comparison.",
+    "Compare force using impulse divided by time.",
+    "State why cushioning does not remove momentum change."
+  ],
+  "source_sha256": "b79311145b8ba639fc3a12294b9c609d2151ea9a6f76cfc1d2faed5c935a1cc5",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.503Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Which comparison isolates the effect of stopping time on average stopping force?",
+      "options": [
+        "Same mass and initial/final velocities; different stopping times.",
+        "Same color only.",
+        "Same time but unspecified velocities.",
+        "Different masses, speeds, and stopping times together."
+      ],
+      "correct_index": 0,
+      "guide": "Holding Δp fixed lets force vary only with duration.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two tests use the same ball and initial speed. One stops it; the other rebounds it at its original speed. Are momentum changes equal?",
+      "options": [
+        "No; the rebound has twice the magnitude of momentum change.",
+        "Yes; final direction never matters.",
+        "No; the stopping test has twice the magnitude.",
+        "Yes; initial momentum alone determines Δp."
+      ],
+      "correct_index": 0,
+      "guide": "Stopping changes mv to 0; reversal changes +mv to −mv.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A package loses 36 kg·m/s of momentum in 0.6 s. What is average stopping-force magnitude?",
+      "options": [
+        "21.6 N",
+        "60 N",
+        "36.6 N",
+        "0.0167 N"
+      ],
+      "correct_index": 1,
+      "guide": "|F_avg| = 36/0.6 = 60 N.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For the same momentum change, stopping time increases from 0.2 s to 0.8 s. How does average force magnitude change?",
+      "options": [
+        "It stays equal.",
+        "It becomes one-sixteenth as large.",
+        "It quadruples.",
+        "It becomes one-quarter as large."
+      ],
+      "correct_index": 3,
+      "guide": "Duration quadruples, so fixed impulse requires one-quarter the average force.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cushion stops an object from the same initial velocity as a rigid surface. What can remain the same?",
+      "options": [
+        "Average force must remain the same.",
+        "Deformation must remain the same.",
+        "Stopping time must remain the same.",
+        "Momentum change."
+      ],
+      "correct_index": 3,
+      "guide": "Equal initial and final momenta mean equal Δp, regardless of time.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Why can a padded catcher’s glove reduce average force when stopping a ball?",
+      "options": [
+        "It guarantees zero force throughout contact.",
+        "It eliminates all required impulse.",
+        "It lengthens the stopping time for essentially the same momentum change.",
+        "It destroys the ball’s mass."
+      ],
+      "correct_index": 2,
+      "guide": "Padding spreads the required impulse over more time.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Which comparison isolates the effect of stopping time on average stopping force?",
+      "options": [
+        "Same mass and initial/final velocities; different stopping times.",
+        "Different masses, speeds, and stopping times together.",
+        "Same time but unspecified velocities.",
+        "Same color only."
+      ],
+      "correct_index": 0,
+      "guide": "Holding Δp fixed lets force vary only with duration.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two tests use the same ball and initial speed. One stops it; the other rebounds it at its original speed. Are momentum changes equal?",
+      "options": [
+        "Yes; initial momentum alone determines Δp.",
+        "Yes; final direction never matters.",
+        "No; the rebound has twice the magnitude of momentum change.",
+        "No; the stopping test has twice the magnitude."
+      ],
+      "correct_index": 2,
+      "guide": "Stopping changes mv to 0; reversal changes +mv to −mv.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A package loses 36 kg·m/s of momentum in 0.6 s. What is average stopping-force magnitude?",
+      "options": [
+        "60 N",
+        "36.6 N",
+        "0.0167 N",
+        "21.6 N"
+      ],
+      "correct_index": 0,
+      "guide": "|F_avg| = 36/0.6 = 60 N.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For the same momentum change, stopping time increases from 0.2 s to 0.8 s. How does average force magnitude change?",
+      "options": [
+        "It stays equal.",
+        "It becomes one-quarter as large.",
+        "It becomes one-sixteenth as large.",
+        "It quadruples."
+      ],
+      "correct_index": 1,
+      "guide": "Duration quadruples, so fixed impulse requires one-quarter the average force.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cushion stops an object from the same initial velocity as a rigid surface. What can remain the same?",
+      "options": [
+        "Deformation must remain the same.",
+        "Stopping time must remain the same.",
+        "Average force must remain the same.",
+        "Momentum change."
+      ],
+      "correct_index": 3,
+      "guide": "Equal initial and final momenta mean equal Δp, regardless of time.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Why can a padded catcher’s glove reduce average force when stopping a ball?",
+      "options": [
+        "It eliminates all required impulse.",
+        "It lengthens the stopping time for essentially the same momentum change.",
+        "It guarantees zero force throughout contact.",
+        "It destroys the ball’s mass."
+      ],
+      "correct_index": 1,
+      "guide": "Padding spreads the required impulse over more time.",
+      "target_slug": "u3.r1-extend-time",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

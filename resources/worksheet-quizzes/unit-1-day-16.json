@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 16,
+  "title": "From force diagrams to motion",
+  "target": "Use a force diagram to predict acceleration and velocity change.",
+  "criteria": [
+    "Write a force sum along each chosen axis.",
+    "Connect net force and mass to acceleration.",
+    "Use velocity direction to decide the initial speed change."
+  ],
+  "source_sha256": "7f3ad6b4801b2cdc8e1bc5ef6eae4d1cab45ecd6ef847ba9c56d62c2f07c08b5",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.482Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Take right and up as positive. Forces are 17 N right, 5 N left, 22 N up, and 22 N down. What are net components?",
+      "options": [
+        "Fx = −12 N; Fy = 0 N.",
+        "Fx = +22 N; Fy = +44 N.",
+        "Fx = +12 N; Fy = 0 N.",
+        "Fx = 0 N; Fy = +12 N."
+      ],
+      "correct_index": 2,
+      "guide": "Sum each axis independently: 17 − 5 = 12; 22 − 22 = 0.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A block slides down a ramp. Gravity’s along-ramp component is 18 N down and friction is 6 N up. With down-ramp positive, what is the force sum?",
+      "options": [
+        "6 − 18 = +12 N.",
+        "−18 − 6 = −24 N.",
+        "+18 − 6 = +12 N.",
+        "+18 + 6 = +24 N."
+      ],
+      "correct_index": 2,
+      "guide": "Opposing forces need opposite signs on the chosen axis.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg block has net force 12 N down a ramp. What is along-ramp acceleration?",
+      "options": [
+        "48 m/s² down the ramp.",
+        "0 m/s² because it is on a ramp.",
+        "3 m/s² perpendicular to the ramp.",
+        "3 m/s² down the ramp."
+      ],
+      "correct_index": 3,
+      "guide": "a = F_net/m = 12/4 = 3 along the net force.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2.5 kg cart has net components Fx = −10 N and Fy = 0. What are acceleration components?",
+      "options": [
+        "ax = −25 m/s²; ay = 0.",
+        "ax = −4 m/s²; ay = 0.",
+        "ax = +4 m/s²; ay = 0.",
+        "ax = 0; ay = −4 m/s²."
+      ],
+      "correct_index": 1,
+      "guide": "Divide each force component by 2.5 kg.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart’s velocity is 5 m/s left and acceleration is 2 m/s² left. What is the initial speed change?",
+      "options": [
+        "Speed increases.",
+        "Speed decreases.",
+        "Speed becomes negative.",
+        "Speed stays constant."
+      ],
+      "correct_index": 0,
+      "guide": "Acceleration and velocity point the same way.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A cart moves right with a constant leftward net force. Which sequence is possible if the force continues long enough?",
+      "options": [
+        "It keeps the same rightward velocity forever.",
+        "It slows, stops momentarily, then speeds up left.",
+        "It loses mass until force vanishes.",
+        "It instantly reverses without slowing."
+      ],
+      "correct_index": 1,
+      "guide": "Leftward acceleration first reduces positive velocity, then makes it negative.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Take right and up as positive. Forces are 17 N right, 5 N left, 22 N up, and 22 N down. What are net components?",
+      "options": [
+        "Fx = −12 N; Fy = 0 N.",
+        "Fx = +22 N; Fy = +44 N.",
+        "Fx = +12 N; Fy = 0 N.",
+        "Fx = 0 N; Fy = +12 N."
+      ],
+      "correct_index": 2,
+      "guide": "Sum each axis independently: 17 − 5 = 12; 22 − 22 = 0.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A block slides down a ramp. Gravity’s along-ramp component is 18 N down and friction is 6 N up. With down-ramp positive, what is the force sum?",
+      "options": [
+        "6 − 18 = +12 N.",
+        "+18 − 6 = +12 N.",
+        "+18 + 6 = +24 N.",
+        "−18 − 6 = −24 N."
+      ],
+      "correct_index": 1,
+      "guide": "Opposing forces need opposite signs on the chosen axis.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg block has net force 12 N down a ramp. What is along-ramp acceleration?",
+      "options": [
+        "3 m/s² perpendicular to the ramp.",
+        "0 m/s² because it is on a ramp.",
+        "3 m/s² down the ramp.",
+        "48 m/s² down the ramp."
+      ],
+      "correct_index": 2,
+      "guide": "a = F_net/m = 12/4 = 3 along the net force.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 2.5 kg cart has net components Fx = −10 N and Fy = 0. What are acceleration components?",
+      "options": [
+        "ax = +4 m/s²; ay = 0.",
+        "ax = −25 m/s²; ay = 0.",
+        "ax = 0; ay = −4 m/s².",
+        "ax = −4 m/s²; ay = 0."
+      ],
+      "correct_index": 3,
+      "guide": "Divide each force component by 2.5 kg.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cart’s velocity is 5 m/s left and acceleration is 2 m/s² left. What is the initial speed change?",
+      "options": [
+        "Speed becomes negative.",
+        "Speed decreases.",
+        "Speed stays constant.",
+        "Speed increases."
+      ],
+      "correct_index": 3,
+      "guide": "Acceleration and velocity point the same way.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A cart moves right with a constant leftward net force. Which sequence is possible if the force continues long enough?",
+      "options": [
+        "It slows, stops momentarily, then speeds up left.",
+        "It keeps the same rightward velocity forever.",
+        "It loses mass until force vanishes.",
+        "It instantly reverses without slowing."
+      ],
+      "correct_index": 0,
+      "guide": "Leftward acceleration first reduces positive velocity, then makes it negative.",
+      "target_slug": "u1.net-force-from-fbd",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

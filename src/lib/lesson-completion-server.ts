@@ -16,7 +16,8 @@ export async function readLessonRows<T>(read: (from: number, to: number) => Prom
   }
 }
 export async function getLessonCompletions(userId: string, lessons: { id: string; content_blocks?: BlockDocument | null }[], track: string | null): Promise<Record<string, LessonCompletion>> {
-  const current = lessons.filter(l => l.content_blocks?.presentation === 'physics-path')
+  // Reflection assignments use the same saved responses and submission receipts.
+  const current = lessons.filter(l => l.content_blocks?.presentation === 'physics-path' || l.content_blocks?.reflection?.version === 1)
   if (!current.length) return {}
   const ids = current.map(l => l.id)
   const [answers, submissions, drafts] = await Promise.all([

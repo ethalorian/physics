@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 6,
+  "title": "Ohm’s law",
+  "target": "Connect voltage, current and resistance for an ohmic component.",
+  "criteria": [
+    "Identify the voltage across a resistor.",
+    "Use V=IR with appropriate units.",
+    "Predict changes while stating what stays fixed."
+  ],
+  "source_sha256": "c8046292e785a24578a398ea1ee9f70765ce719d5b94cc66c629c801840f986e",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.562Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 15 V ideal supply connects across a single 5 Ω resistor with ideal wires. Which voltage belongs in V = IR for that resistor?",
+      "options": [
+        "5 V",
+        "75 V",
+        "15 V",
+        "0 V"
+      ],
+      "correct_index": 2,
+      "guide": "The resistor is connected across the supply terminals, so its drop is 15 V.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two resistors in series share an 18 V supply. A meter reads 7 V across the first. What voltage should be used to find current through the second from its resistance?",
+      "options": [
+        "11 V",
+        "25 V",
+        "18 V",
+        "7 V"
+      ],
+      "correct_index": 0,
+      "guide": "The drops add to 18 V, so the second drop is 18 − 7 = 11 V.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ohmic resistor carries 0.60 A with 9.0 V across it. What is its resistance?",
+      "options": [
+        "0.067 Ω",
+        "15 Ω",
+        "5.4 Ω",
+        "9.6 Ω"
+      ],
+      "correct_index": 1,
+      "guide": "R = V/I = 9/0.60 = 15 Ω.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "What current flows through a 24 Ω ohmic resistor with 6.0 V across it?",
+      "options": [
+        "18 A",
+        "0.25 A",
+        "144 A",
+        "4.0 A"
+      ],
+      "correct_index": 1,
+      "guide": "I = V/R = 6/24 = 0.25 A.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "The voltage across a fixed ohmic resistor is tripled while temperature remains constant. What happens to current?",
+      "options": [
+        "It is unchanged.",
+        "It falls to one-third.",
+        "It triples.",
+        "It increases ninefold."
+      ],
+      "correct_index": 2,
+      "guide": "At fixed R, I is directly proportional to V.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A resistor’s temperature rises and its resistance changes. Why is predicting twice the current from twice the voltage no longer guaranteed?",
+      "options": [
+        "Doubling voltage must always halve resistance.",
+        "Current cannot flow in warm objects.",
+        "Ohm’s law says units no longer matter.",
+        "That prediction assumed constant resistance."
+      ],
+      "correct_index": 3,
+      "guide": "I = V/R still links the quantities, but changing R alters the ratio of currents.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 15 V ideal supply connects across a single 5 Ω resistor with ideal wires. Which voltage belongs in V = IR for that resistor?",
+      "options": [
+        "0 V",
+        "5 V",
+        "15 V",
+        "75 V"
+      ],
+      "correct_index": 2,
+      "guide": "The resistor is connected across the supply terminals, so its drop is 15 V.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two resistors in series share an 18 V supply. A meter reads 7 V across the first. What voltage should be used to find current through the second from its resistance?",
+      "options": [
+        "25 V",
+        "11 V",
+        "18 V",
+        "7 V"
+      ],
+      "correct_index": 1,
+      "guide": "The drops add to 18 V, so the second drop is 18 − 7 = 11 V.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ohmic resistor carries 0.60 A with 9.0 V across it. What is its resistance?",
+      "options": [
+        "0.067 Ω",
+        "9.6 Ω",
+        "5.4 Ω",
+        "15 Ω"
+      ],
+      "correct_index": 3,
+      "guide": "R = V/I = 9/0.60 = 15 Ω.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "What current flows through a 24 Ω ohmic resistor with 6.0 V across it?",
+      "options": [
+        "0.25 A",
+        "18 A",
+        "144 A",
+        "4.0 A"
+      ],
+      "correct_index": 0,
+      "guide": "I = V/R = 6/24 = 0.25 A.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "The voltage across a fixed ohmic resistor is tripled while temperature remains constant. What happens to current?",
+      "options": [
+        "It falls to one-third.",
+        "It increases ninefold.",
+        "It is unchanged.",
+        "It triples."
+      ],
+      "correct_index": 3,
+      "guide": "At fixed R, I is directly proportional to V.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A resistor’s temperature rises and its resistance changes. Why is predicting twice the current from twice the voltage no longer guaranteed?",
+      "options": [
+        "Ohm’s law says units no longer matter.",
+        "Doubling voltage must always halve resistance.",
+        "That prediction assumed constant resistance.",
+        "Current cannot flow in warm objects."
+      ],
+      "correct_index": 2,
+      "guide": "I = V/R still links the quantities, but changing R alters the ratio of currents.",
+      "target_slug": "u7.k5-ohms-law",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

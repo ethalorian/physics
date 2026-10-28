@@ -1,0 +1,78 @@
+{
+  "collaboration": {
+    "maxGroupSize": 4,
+    "primaryRoles": [
+      "Slideshow lead",
+      "Whiteboard scribe"
+    ],
+    "secondaryDuties": [
+      "Timekeeper",
+      "Checker"
+    ],
+    "individualResponses": true
+  },
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 3 Velocity.dc.html",
+  "sourceSha256": "2d9279544b145e6613e2c72a4902fff12d28f0db116b14513618048fd8e4b11c",
+  "runtimeSha256": {
+    "support": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe",
+    "stage": "f3d3d0a662c08eefb5a8757a6da3139572485f4be32ac33785c5047061926a8a"
+  },
+  "packagedSha256": "1b3f0739963feeb294d06e6b5395e143cff415269a5e415d849c7ee58fdcbb93",
+  "cover": {
+    "file": "art/asteroid-briefing.png",
+    "sha256": "ae90f10457a275a673a1662f651ce0c04ea070027eaa74f289e37b0c8819de62"
+  },
+  "studentSlides": 32,
+  "originalStudentSlides": 29,
+  "teacherSlidesExcluded": 3,
+  "timers": 2,
+  "answerReveals": 5,
+  "transition": {
+    "type": "fade",
+    "durationMs": 260,
+    "respectsReducedMotion": true
+  },
+  "snapshots": [
+    {
+      "after": 11,
+      "page": 9,
+      "file": "page-01.webp",
+      "y": 939,
+      "height": 566,
+      "title": "Same displacement, different velocity",
+      "alt": "Maz and Eli each walk six meters east. Maz takes six seconds and Eli takes twelve. Maz averages one meter per second east; Eli averages half a meter per second east.",
+      "body": "Both walkers reach the same endpoint. Their elapsed times differ.",
+      "question": "Why does the same displacement produce different average velocities?",
+      "work": "Part 1 · Compare your motion predictions",
+      "sha256": "5be33c1a247ada2df77586a6f03e919b45f4a1b8954c90bd80a349efa976ea14"
+    },
+    {
+      "after": 17,
+      "page": 10,
+      "file": "page-02.webp",
+      "y": 735,
+      "height": 301,
+      "title": "A round trip still includes motion",
+      "alt": "The notebook shows six meters east and six west in twelve seconds. Average speed is one meter per second and average velocity is zero.",
+      "body": "The route has 12 m of distance and zero displacement over 12 s.",
+      "question": "Which measurements would reveal the motion that the zero average velocity hides?",
+      "work": "Part 2 · Collect and check your trials",
+      "sha256": "7c1ae7922b2c1783c1e6283869f0975b52e7ebd05407f998205961b948696243"
+    },
+    {
+      "after": 22,
+      "page": 11,
+      "file": "page-03.webp",
+      "y": 350,
+      "height": 356,
+      "title": "Walk the graph, then explain it",
+      "alt": "A position–time graph joins zero seconds and one meter, four seconds and five meters, six seconds and five meters, then ten seconds and one meter.",
+      "body": "The rising, flat and falling segments tell different parts of the trip.",
+      "question": "How can +1, 0 and −1 m/s describe the segments while the whole-trip average is zero?",
+      "work": "Part 3 · Defend the whole motion story",
+      "sha256": "3c1a53a71e7e41b344e63674b10fad726aadc0aab8ee0a6f0f72dcebef6ff12c"
+    }
+  ],
+  "notes": "Original executable logic, timers and reveal controls unchanged. Teacher-only slides/notes removed. Three snapshots use viewport crops of existing immutable artwork with text companions. Original cover PNG and comic assets are separately cacheable; the original cover URL avoids the export’s data-URL CSS parsing bug. Clarified detector-specific setup guidance, student-facing directions and fictional trajectory claims. Original export archived unchanged."
+}

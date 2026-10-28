@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 3,
+  "day": 1,
+  "title": "What makes motion hard to stop?",
+  "target": "Compare momentum changes in a controlled stopping situation.",
+  "criteria": [
+    "Compare mass and velocity while controlling other variables.",
+    "Use momentum change to compare stopping force for equal times.",
+    "Avoid claiming that momentum alone determines damage."
+  ],
+  "source_sha256": "64050e0fae32db1e75d70acf18ed3401808608e8c587c14cef1184be5f9f9695",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.501Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Two carts have equal velocity. One has four times the mass. Compare momentum magnitudes.",
+      "options": [
+        "Both momenta are zero.",
+        "Their momenta are equal.",
+        "The lighter cart has four times the momentum.",
+        "The heavier cart has four times the momentum."
+      ],
+      "correct_index": 3,
+      "guide": "p = mv scales with mass at fixed velocity.",
+      "target_slug": "u3.anchor-two-questions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two identical carts move at 2 m/s and 5 m/s in the same direction. Which has greater momentum?",
+      "options": [
+        "They have equal momentum.",
+        "The 5 m/s cart, by a factor of 2.5.",
+        "The 5 m/s cart, by a factor of 6.25.",
+        "The 2 m/s cart, by a factor of 2.5."
+      ],
+      "correct_index": 1,
+      "guide": "At equal mass, momentum scales linearly with speed.",
+      "target_slug": "u3.anchor-two-questions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg cart moving at +3 m/s stops in 2 s. What is average net stopping force?",
+      "options": [
+        "−6 N",
+        "−24 N",
+        "+24 N",
+        "+6 N"
+      ],
+      "correct_index": 0,
+      "guide": "Δp = −12 kg·m/s; F_avg = −12/2 = −6 N.",
+      "target_slug": "u3.s1-compute-impulse",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two objects lose momentum magnitudes of 18 and 6 kg·m/s in the same stopping time. Compare average force magnitudes.",
+      "options": [
+        "The second experiences three times the force.",
+        "The first experiences three times the force.",
+        "They experience equal forces.",
+        "The first experiences nine times the force."
+      ],
+      "correct_index": 1,
+      "guide": "F_avg magnitude = |Δp|/Δt.",
+      "target_slug": "u3.s1-compute-impulse",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two objects have equal momentum magnitudes. What additional information is needed to compare average stopping forces?",
+      "options": [
+        "Names of the objects.",
+        "Paint colors.",
+        "Stopping times.",
+        "The day of the week."
+      ],
+      "correct_index": 2,
+      "guide": "Equal Δp can occur with different force magnitudes over different times.",
+      "target_slug": "u3.anchor-two-questions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Equal-momentum impacts damage different surfaces differently. Which conclusion is justified?",
+      "options": [
+        "Momentum alone does not determine damage; contact time, area, and materials matter.",
+        "One impact must violate conservation.",
+        "Momentum has no physical relevance.",
+        "Damage must be identical."
+      ],
+      "correct_index": 0,
+      "guide": "A momentum account constrains impulse but not every local effect.",
+      "target_slug": "u3.anchor-two-questions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Two carts have equal velocity. One has four times the mass. Compare momentum magnitudes.",
+      "options": [
+        "Both momenta are zero.",
+        "The heavier cart has four times the momentum.",
+        "The lighter cart has four times the momentum.",
+        "Their momenta are equal."
+      ],
+      "correct_index": 1,
+      "guide": "p = mv scales with mass at fixed velocity.",
+      "target_slug": "u3.anchor-two-questions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two identical carts move at 2 m/s and 5 m/s in the same direction. Which has greater momentum?",
+      "options": [
+        "The 5 m/s cart, by a factor of 6.25.",
+        "The 5 m/s cart, by a factor of 2.5.",
+        "The 2 m/s cart, by a factor of 2.5.",
+        "They have equal momentum."
+      ],
+      "correct_index": 1,
+      "guide": "At equal mass, momentum scales linearly with speed.",
+      "target_slug": "u3.anchor-two-questions",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 4 kg cart moving at +3 m/s stops in 2 s. What is average net stopping force?",
+      "options": [
+        "+24 N",
+        "+6 N",
+        "−6 N",
+        "−24 N"
+      ],
+      "correct_index": 2,
+      "guide": "Δp = −12 kg·m/s; F_avg = −12/2 = −6 N.",
+      "target_slug": "u3.s1-compute-impulse",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two objects lose momentum magnitudes of 18 and 6 kg·m/s in the same stopping time. Compare average force magnitudes.",
+      "options": [
+        "The second experiences three times the force.",
+        "The first experiences nine times the force.",
+        "The first experiences three times the force.",
+        "They experience equal forces."
+      ],
+      "correct_index": 2,
+      "guide": "F_avg magnitude = |Δp|/Δt.",
+      "target_slug": "u3.s1-compute-impulse",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two objects have equal momentum magnitudes. What additional information is needed to compare average stopping forces?",
+      "options": [
+        "Stopping times.",
+        "Paint colors.",
+        "The day of the week.",
+        "Names of the objects."
+      ],
+      "correct_index": 0,
+      "guide": "Equal Δp can occur with different force magnitudes over different times.",
+      "target_slug": "u3.anchor-two-questions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Equal-momentum impacts damage different surfaces differently. Which conclusion is justified?",
+      "options": [
+        "One impact must violate conservation.",
+        "Damage must be identical.",
+        "Momentum has no physical relevance.",
+        "Momentum alone does not determine damage; contact time, area, and materials matter."
+      ],
+      "correct_index": 3,
+      "guide": "A momentum account constrains impulse but not every local effect.",
+      "target_slug": "u3.anchor-two-questions",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

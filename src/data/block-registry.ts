@@ -218,7 +218,11 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
   if (doc.schemaVersion !== 1 || !Array.isArray(doc.blocks)) return [{ message: 'Use a version 1 lesson with a blocks array.' }]
   if (doc.reflection !== undefined) {
     const reflection = obj(doc.reflection)
-    if (publishing && doc.blocks.some(b => obj(b).capture === true && !text(obj(b).targetId))) issues.push({message:'Link the assignment to a physics target before publishing so its evidence reaches mastery review.'})
+    if (publishing && doc.blocks.some(b => {
+      const block = obj(b), targets = block.targetIds
+      const hasReviewTargets = ['manga', 'story'].includes(String(reflection.kind)) && Array.isArray(targets) && targets.length > 0 && targets.every(text)
+      return block.capture === true && !text(block.targetId) && !hasReviewTargets
+    })) issues.push({message:'Link the assignment to a physics target before publishing so its evidence reaches mastery review.'})
     if (reflection.version !== 1 || !['manga', 'story', 'graphic-novel'].includes(String(reflection.kind))) issues.push({ message: 'Choose a manga, short-story, or graphic novel assignment.' })
   }
   if (obj(doc.reflection).kind === 'graphic-novel') {

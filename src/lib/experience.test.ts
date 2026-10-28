@@ -76,3 +76,42 @@ test('blocked database operations never reach fetch, including writes from a GET
     assert.equal(calls, 2)
   } finally { global.fetch = original; registerExperienceDatabaseGuard(async () => false) }
 })
+
+test('student walkthrough reads foundation prerequisites without dropping the assignment lists', async () => {
+  const original = global.fetch
+  const calls: { url: string; body: string }[] = []
+  const missing = [{ id: 'foundation-id', title: 'Foundation', role: 'foundation' }]
+  global.fetch = async (input, init) => {
+    calls.push({ url: String(input), body: String(init?.body) })
+    return Response.json(missing)
+  }
+  registerExperienceDatabaseGuard(async () => true)
+  try {
+    for (const [rpc, key] of [['daily_review_missing', 'p_reviews'], ['daily_lesson_missing', 'p_quizzes']]) {
+      const url = `https://database.example.invalid/rest/v1/rpc/${rpc}`
+      const body = JSON.stringify({ [key]: ['assigned-id'], p_user: 'student-id' })
+      const response = await experienceDatabaseFetch(url, { method: 'POST', body })
+      assert.equal(response.status, 200)
+      assert.deepEqual(await response.json(), missing)
+      assert.deepEqual(calls.at(-1), { url, body })
+      for (const method of ['PATCH', 'PUT', 'DELETE']) assert.equal(experienceAllowsDatabaseRequest(url, method), false)
+    }
+    assert.equal(calls.length, 2)
+  } finally { global.fetch = original; registerExperienceDatabaseGuard(async () => false) }
+})
+
+test('prerequisite reads never enable scheduling, submissions, grading or release in a walkthrough', async () => {
+  const original = global.fetch
+  let calls = 0
+  global.fetch = async () => { calls++; return Response.json({ ok: true }) }
+  registerExperienceDatabaseGuard(async () => true)
+  try {
+    for (const rpc of ['set_interactive_assignment_date', 'save_quiz_assignment', 'claim_automatic_grading', 'release_simulation_lab_grade', 'review_module_decision']) {
+      for (const method of ['GET', 'POST']) {
+        const response = await experienceDatabaseFetch(`https://database.example.invalid/rest/v1/rpc/${rpc}`, { method })
+        assert.equal(response.status, 403)
+      }
+    }
+    assert.equal(calls, 0)
+  } finally { global.fetch = original; registerExperienceDatabaseGuard(async () => false) }
+})

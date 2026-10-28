@@ -1,0 +1,1809 @@
+{
+  "hewitt:2": {
+    "invitation": "A scaffold hangs beside a billboard. Two painters stand on it, and the ropes hold steady. Now one painter walks toward the other. The total weight has not changed, but something has happened to the ropes. Can you explain what?",
+    "sections": {
+      "2.2": {
+        "sourcePages": [
+          15,
+          16
+        ],
+        "restored": "Hewitt's encounter with sign painter Burl Grey; unequal scaffold tensions and a moving load.",
+        "opening": "Hewitt describes discovering physics while painting signs with Burl Grey. Their workplace supplied the question: why did the ropes supporting their scaffold have different tensions, and what changed when one painter walked toward the other? The plank stayed still, but the load on each support changed. Physics began here with someone noticing an ordinary detail and asking another question.",
+        "closing": "Try following a painter across the scaffold in the model. The two upward tensions must still add to the total weight, but that rule alone does not tell you how the load is shared. Position matters too: the scaffold must avoid rotating as well as moving up or down. The nearer support carries more of the added load. We will give that rotational balance its own name when we study torque."
+      },
+      "2.5": {
+        "sourcePages": [
+          19,
+          20,
+          21
+        ],
+        "restored": "Nellie Newton and the progression from one support to two vertical supports to angled ropes.",
+        "opening": "Picture the book's gymnast, Nellie Newton, hanging motionless. One vertical rope carries her whole weight. Two equally loaded vertical ropes each carry half. Now move the supports apart so the ropes slant: would each tension still be half her weight? Make a prediction before looking at the arrows. Each rope now pulls sideways as well as upward, so only part of its pull helps support her."
+      }
+    }
+  },
+  "hewitt:3": {
+    "invitation": "A bird drops from a branch and catches a worm. If Earth is racing around the Sun, why hasn't the worm been carried far away? Follow the question from everyday experience through Aristotle, Copernicus, Galileo, and Newton—and notice where the explanation changes.",
+    "sections": {
+      "3.3": {
+        "sourcePages": [
+          30,
+          31,
+          32
+        ],
+        "restored": "Historical development as a change in how claims are tested, not a list of laws.",
+        "opening": "For centuries, the fact that carts stop seemed to support the idea that motion needs a continuing push. Galileo asked what happens when the conditions change. A smoother track lets a ball go farther. A shallower uphill track makes it travel farther to regain its height. The important step was to let a pattern in the evidence challenge an apparently obvious explanation.",
+        "closing": "Galileo's work belongs to a human story as well as a scientific one. The source describes his move from studying medicine to mathematics, his observations through a telescope, and his choice to write for readers beyond the usual scholarly audience. The lesson is not that a famous person wins an argument. It is that a claim becomes stronger when other people can examine its evidence and follow its reasoning."
+      },
+      "3.6": {
+        "sourcePages": [
+          38,
+          39
+        ],
+        "restored": "The bird-and-worm objection and its roughly 30 km/s shared orbital motion.",
+        "opening": "Return to the bird and the worm. Earth travels roughly 30 kilometers around its orbit each second. It is tempting to imagine the bird letting go of the tree while the worm races away with Earth. But that picture quietly takes away the bird's initial sideways velocity. The bird, tree, worm, and nearby air were already traveling together before the bird began to fall. Letting go does not erase that shared motion."
+      }
+    }
+  },
+  "hewitt:4": {
+    "invitation": "A car can be moving fast yet barely accelerating. A ball can stop for an instant while gravity keeps changing its velocity. And a basketball player's apparently endless jump may last less than a second. This chapter gives you ways to test what your eyes seem to be telling you.",
+    "sections": {
+      "4.2": {
+        "sourcePages": [
+          48,
+          49
+        ],
+        "restored": "Everyday speed units and the difference between a speedometer snapshot and a whole trip.",
+        "opening": "A speedometer gives you a snapshot. A trip's distance and elapsed time tell a different story. Suppose a car covers 60 kilometers in one hour, including a stop: its average speed is 60 km/h, even though the needle did not stay there. The book plays with units ranging from centimeters per day to kilometers per hour. Each is answering the same question: how much distance for each unit of time?"
+      },
+      "4.4": {
+        "sourcePages": [
+          51,
+          52
+        ],
+        "restored": "Acceleration as pickup, including a comparison that cannot be answered from final speed alone.",
+        "opening": "Which car has more pickup: one that goes from rest to 60 km/h in five seconds, or one that reaches 80 km/h in ten seconds? The second reaches the higher speed, but the first changes its speed more quickly. Comparing the changes per second gives 12 versus 8 kilometers per hour gained each second. That awkward-sounding unit is useful: it makes the idea of a rate of change audible before we shorten it to a formula."
+      },
+      "4.9": {
+        "sourcePages": [
+          59,
+          60
+        ],
+        "restored": "Hang time, the source's culminating application, and reassurance about a rate of a rate.",
+        "opening": "Watch a good jumper and estimate how long both feet stay off the floor. Two seconds? The impression can be misleading. In an ideal jump that returns the center of mass to its takeoff height, a rise of 0.45 m takes about 0.30 s using g ≈ 10 m/s². The full up-and-down flight is about 0.60 s. A sideways leap can look much more dramatic without buying extra time in the air.",
+        "closing": "This is why the source ends by asking you to be patient with acceleration. Position changes; velocity describes that change; acceleration describes how velocity changes. If those ideas still blur together, return to the jumper. At the top, upward velocity has reached zero, yet downward acceleration continues. The athlete does not need to be moving downward already for gravity to start changing the motion."
+      }
+    }
+  },
+  "hewitt:5": {
+    "invitation": "An airplane points north but drifts east. A surfer travels along a wave while the wave carries the surfer toward shore. A ball curves downward after leaving your hand. In each case, one complicated-looking motion becomes easier to understand when you separate its directions.",
+    "sections": {
+      "5.2": {
+        "sourcePages": [
+          70,
+          71
+        ],
+        "restored": "The book's airplane and wind comparison, including named relative velocities.",
+        "opening": "Imagine a small plane flying north at 80 km/h relative to the air. A 20 km/h tailwind carries that air north relative to the ground, so the plane makes 100 km/h over the ground. Turn the wind around and the ground speed becomes 60 km/h. Turn it sideways and neither addition nor subtraction of the two speeds is enough. Now you need the arrows: the air can carry the plane sideways while it flies north through the air."
+      },
+      "5.3": {
+        "sourcePages": [
+          72
+        ],
+        "restored": "Surfing as the source's physical interpretation of component and resultant velocities.",
+        "opening": "A surfer riding with a wave can also travel along its face. The shoreward component keeps pace with the advancing wave, while the along-the-wave component changes as the surfer steers. The surfer's total speed can therefore exceed the wave's shoreward speed. The two components are descriptions of one motion; they are not two separate trips taken in succession."
+      },
+      "5.6": {
+        "sourcePages": [
+          75,
+          76
+        ],
+        "restored": "The straight no-gravity reference path and vertical fall beneath it.",
+        "opening": "Before sketching a projectile's curve, draw the straight path it would follow if gravity disappeared just after launch. Now put gravity back. At each elapsed time, the projectile is below that reference line by the distance a dropped object would fall in the same time, ½gt². This construction works for an upward launch as well as a horizontal one. The ball can still be rising while falling farther below its no-gravity path."
+      }
+    }
+  },
+  "hewitt:6": {
+    "invitation": "Push an empty shopping cart, then imagine giving the same push to a loaded one. Why is the response different? Now drop a heavy object beside a lighter one. Why doesn't the heavier object automatically gain speed faster? The same relationship helps make sense of both observations.",
+    "sections": {
+      "6.3": {
+        "sourcePages": [
+          88,
+          89
+        ],
+        "restored": "Equations as guides to proportional reasoning before numerical problem solving.",
+        "opening": "Read a = Fnet/m as a set of questions before treating it as a calculation. What if the force doubles? What if the mass doubles? What if both double together? In that last comparison the acceleration stays the same. Hewitt emphasizes this use of an equation: a compact way to reason about relationships. A number is more useful once you can explain why it should grow, shrink, or remain unchanged."
+      },
+      "6.4": {
+        "sourcePages": [
+          90,
+          91
+        ],
+        "restored": "Automobile streamlining and the connection between resistance and steady driving.",
+        "opening": "A car cruising steadily still needs its tires to push it forward because air and rolling resistance oppose its motion. The book connects this to the shape of a car: smoother surfaces and less exposed frontal area can reduce drag. At the same steady speed, less resistance means less forward driving force is needed. Zero net force does not mean that the engine is doing nothing or that the road and air have stopped interacting with the car."
+      },
+      "6.7": {
+        "sourcePages": [
+          95,
+          96,
+          97
+        ],
+        "restored": "Body shape and area in falling animals and skydivers, with a transition rather than an instant new terminal speed.",
+        "opening": "A skydiver spreads out, then tucks into a narrower shape. The book places that familiar example beside animals that change their shape while moving through air. What matters for our falling model is the interaction with the air, not a change in the object's mass. Increasing the effective area can increase drag at the same speed. If drag briefly exceeds weight, a downward-moving person slows down before approaching a new terminal speed."
+      }
+    }
+  },
+  "hewitt:7": {
+    "invitation": "Push gently against a wall and feel it push on you. That simple encounter raises a surprisingly difficult question: if forces always come in equal and opposite pairs, how does anything ever accelerate? A falling boulder, a rocket, and a horse pulling a cart will help you sort out who pushes whom.",
+    "sections": {
+      "7.1": {
+        "sourcePages": [
+          107
+        ],
+        "restored": "Bird flight as an interaction with air, including the source's V-formation connection.",
+        "opening": "A bird cannot push on empty space to fly. Its wings push air downward, and the air exerts an upward force on the bird. The disturbed air also helps explain why a following bird may benefit from a position off to the side of another bird's wake. The source's V-formation example turns a familiar sight into a force question: identify the air as an interaction partner before explaining the bird's motion."
+      },
+      "7.2": {
+        "sourcePages": [
+          108
+        ],
+        "restored": "The falling-boulder puzzle and the distinction between weight and its reaction partner.",
+        "opening": "A boulder falls toward Earth. Where is the other half of the gravitational interaction? Calling it the boulder's weight just renames the force you already identified. Calling it the ground's push introduces an interaction that has not happened yet. The partner is the boulder's gravitational pull on Earth. Earth responds too, but its enormous mass makes that acceleration imperceptibly small in this situation."
+      },
+      "7.6": {
+        "sourcePages": [
+          114,
+          115
+        ],
+        "restored": "The horse's apparent objection used as a question before resolving system boundaries.",
+        "opening": "Imagine a horse making an argument: 'I pull the cart forward, but it pulls me backward equally hard. So why should I bother?' It sounds like Newton's third law has made pulling a cart impossible. Before reading on, decide whose motion the horse is trying to explain. Does the backward force on the horse belong on a diagram of the cart? What outside object can push the horse-and-cart system forward?"
+      }
+    }
+  },
+  "hewitt:8": {
+    "invitation": "Why does a carpet help a dropped dish survive? Why can bouncing deliver a greater push than simply stopping? Follow what happens to momentum, and the answers connect catching, collisions, and even the curved buckets of a waterwheel.",
+    "sections": {
+      "8.2": {
+        "sourcePages": [
+          125,
+          126,
+          127,
+          128,
+          129
+        ],
+        "restored": "The source's demand for a deeper explanation of cushioning, plus catching and follow-through.",
+        "opening": "'The carpet has more give' describes what you notice, but it has not yet explained why a dish is less likely to break. Compare two otherwise similar drops. If the dish comes to rest without bouncing, its momentum change is approximately the same. The carpet allows that change to happen over a longer time, so the average stopping force can be smaller. The explanation needs both the momentum change and the time interval.",
+        "closing": "Now compare a catcher drawing a glove backward with a hitter following through. In catching, you are often spreading a given stopping impulse over more time. In hitting, maintaining a forward force for longer can increase the impulse and therefore the outgoing momentum. 'More time means less force' is not a universal rule; it depends on what you hold fixed."
+      },
+      "8.3": {
+        "sourcePages": [
+          129,
+          130
+        ],
+        "restored": "Pelton's curved waterwheel buckets and momentum reversal.",
+        "opening": "The source describes Lester Pelton improving a waterwheel by replacing flat paddles with curved buckets. Why should the shape matter? A bucket that turns a water jet back changes the water's momentum more than a surface that merely removes its forward motion. The water exerts the opposite impulse on the wheel. Follow a little parcel of water through the turn: direction is the part of the story a speed-only description would miss."
+      },
+      "8.6": {
+        "sourcePages": [
+          135,
+          136
+        ],
+        "restored": "Particle tracks and why conservation can be useful when collision forces are unknown.",
+        "opening": "A photograph of particle tracks may look far removed from colliding carts, but it presents the same kind of accounting problem. The source uses bubble-chamber tracks to show why conservation laws are so powerful: you may not know the complicated force throughout an encounter, yet the incoming and outgoing momenta still have to fit together. Directions matter. Check the two perpendicular component sums instead of adding the lengths of all the tracks."
+      }
+    }
+  },
+  "hewitt:9": {
+    "invitation": "Stretch a bow, lift a weight, or catch a moving ball: you are changing what can happen next. Energy gives us a way to connect these events. It also explains why a machine can make a lift easier without making it free, and why doubling a car's speed changes stopping distance so dramatically.",
+    "sections": {
+      "9.4": {
+        "sourcePages": [
+          148,
+          149
+        ],
+        "restored": "Pumped storage as reversible energy conversion rather than energy creation.",
+        "opening": "Water held high behind a dam can drive a turbine on the way down. The source then reverses the process: use electrical energy to pump water back to a higher reservoir. Have we found a way to manufacture energy? No. Pumping stores energy supplied from elsewhere, and real losses mean less useful energy comes back out. The value is in choosing when to store energy and when to release it."
+      },
+      "9.6": {
+        "sourcePages": [
+          151,
+          152
+        ],
+        "restored": "Stopping distance as a concrete consequence of the work–energy theorem.",
+        "opening": "Imagine two identical cars braking under the same approximately constant stopping force. One begins at twice the other's speed. It has four times the kinetic energy, so the force must act through four times the distance to remove that energy. This comparison concerns the braking distance after braking begins; the distance traveled during the driver's reaction time is an additional part of a real stop. State the assumptions before applying the squared-speed rule."
+      },
+      "9.8": {
+        "sourcePages": [
+          155,
+          156,
+          157
+        ],
+        "restored": "The source's pulley counting trap and force-distance tradeoff.",
+        "opening": "Look closely at a pulley system before counting ropes. A strand that changes the direction of your pull does not necessarily provide another upward pull on the moving load. Count the strands actually supporting that load. In the ideal case, two supporting strands can halve the required pulling force, but raising the load one meter requires pulling two meters of rope. The easier pull comes with a longer pull."
+      }
+    }
+  },
+  "hewitt:10": {
+    "invitation": "Choose a horse on a merry-go-round. Does a horse near the outside move faster than one near the center? You can give two different, correct answers—depending on what you mean by faster. That distinction will help explain wheels, curves, and the inward force that keeps a path turning.",
+    "sections": {
+      "10.2": {
+        "sourcePages": [
+          171,
+          172,
+          173,
+          174
+        ],
+        "restored": "Merry-go-round speed ambiguity and tapered railroad wheelsets.",
+        "opening": "Two riders on one rigid merry-go-round finish each revolution together. The outside rider nevertheless covers a longer circle in that time. Their rotational speeds match; their speeds along their paths do not. Try saying both answers aloud before using v = rω. The radius is what connects turns per second to meters per second.",
+        "closing": "The source follows this distinction into a railroad curve. The two wheels of a wheelset turn together, yet the outer rail requires more distance. Tapered wheel profiles can provide different rolling radii as the wheelset shifts sideways: a larger effective radius on the outside covers more distance per turn. This is an idealized explanation of one part of wheel guidance; real wheel–rail contact and sharp curves are more complicated."
+      },
+      "10.3": {
+        "sourcePages": [
+          175,
+          176,
+          177
+        ],
+        "restored": "The conical pendulum as a source example linking vertical balance to horizontal acceleration.",
+        "opening": "Imagine a suspended bob circling steadily while its string sweeps out a cone. The bob neither rises nor falls, so the upward component of tension balances its weight. Yet it keeps turning, so the inward component must be nonzero. The string supplies both components through one tension force. This is a useful challenge to the idea that 'balanced vertically' means 'balanced in every direction.'"
+      }
+    }
+  },
+  "hewitt:11": {
+    "invitation": "A tossed bat tumbles, yet one point follows a remarkably simple path. A person leans forward and quietly shifts backward somewhere else. A monkey uses its tail to reach farther. Find the center of mass and the turning effects of forces, and these motions begin to make sense together.",
+    "sections": {
+      "11.3": {
+        "sourcePages": [
+          192,
+          193,
+          194
+        ],
+        "restored": "A tumbling bat and the simple projectile path of its center of mass.",
+        "opening": "Picture a bat tumbling through the air. Its ends weave up and down, so tracking either end makes the flight look complicated. Track the center of mass instead. Neglecting air resistance, that point follows the same smooth parabolic path as a compact projectile. The body's spin and its overall travel can be described separately. A complicated-looking object does not require a complicated description of every part at once."
+      },
+      "11.6": {
+        "sourcePages": [
+          199,
+          200
+        ],
+        "restored": "Tail counterbalance and unconscious changes of posture.",
+        "opening": "A monkey can reach beyond its feet while extending its tail in the other direction. The tail helps keep the combined center of gravity over the support base. You make a related adjustment when you bend forward: other parts of your body shift so that your weight can still be supported. The source's posture examples invite you to notice a balancing act your body usually performs without a calculation."
+      },
+      "11.7": {
+        "sourcePages": [
+          200,
+          201,
+          202,
+          203
+        ],
+        "restored": "Distinguishing a balanced instant from restoring or overturning motion.",
+        "opening": "A pencil balanced on its point and a bowl resting on its base can both have zero net force for an instant. They do not respond to a small disturbance in the same way. Ask what happens after a slight tilt: does gravity help bring the object back, or turn it farther away? That next moment—not merely the fact that it was initially still—is what stability is about."
+      }
+    }
+  },
+  "hewitt:12": {
+    "invitation": "A batter chokes up on a bat. A skater draws in her arms. A cat changes its orientation while falling. None of these examples can be understood from mass alone: where the mass is, and which axis you choose, matter too.",
+    "sections": {
+      "12.1": {
+        "sourcePages": [
+          213,
+          214,
+          215
+        ],
+        "restored": "Choking up on a bat as a change in rotational inertia about the hands.",
+        "opening": "A baseball player can make a bat easier to swing without removing any material. Moving the grip toward the heavier end brings more of the bat's mass closer to the pivot near the hands. Its mass stays the same, but its rotational inertia about that pivot decreases. Before looking at a formula, compare how much of the mass has to sweep through a large circle."
+      },
+      "12.5": {
+        "sourcePages": [
+          221,
+          222
+        ],
+        "restored": "The falling-cat example and zero angular momentum versus changed orientation.",
+        "opening": "The source's falling-cat example asks a better question than 'Does a falling animal spin?' How can a flexible body change its orientation while its total angular momentum remains approximately zero? Its parts can turn relative to one another as their arrangement changes. Zero total angular momentum does not require every part to remain motionless. Nor does a change in orientation necessarily mean the body finishes with a continuing spin."
+      },
+      "12.6": {
+        "sourcePages": [
+          223,
+          224,
+          225
+        ],
+        "restored": "The changing apparent gravity inside a rotating habitat, including the source's imaginative applications.",
+        "opening": "Imagine walking inward from the rim of a large rotating space habitat. If you remain at rest relative to the structure, its angular speed stays the same but your radius decreases. The required inward acceleration, ω²r, becomes smaller. Halfway to the axis it is half the rim value; at the axis it is zero. The book imagines games and acrobatics in these different conditions. The physics question underneath the speculation is what contact force each location requires."
+      }
+    }
+  },
+  "hewitt:13": {
+    "invitation": "An apple falls toward the ground. The Moon keeps going around Earth. Newton's great question was whether these could be two versions of the same event. Follow that connection outward to orbits and inward to an imaginary tunnel through a planet.",
+    "sections": {
+      "13.2": {
+        "sourcePages": [
+          233,
+          234,
+          235
+        ],
+        "restored": "The apple–Moon comparison as quantitative evidence for an inverse-square interaction.",
+        "opening": "The interesting part of the apple story is not the falling fruit. It is the question of how far Earth's pull reaches. The Moon is about 60 Earth radii from Earth's center. If gravity weakens with the square of distance, its acceleration there should be about 1/3,600 of the surface value. Compare that prediction with the acceleration needed to bend the Moon's path. The connection becomes testable rather than merely an appealing story."
+      },
+      "13.7": {
+        "sourcePages": [
+          244
+        ],
+        "restored": "The imaginary tunnel through Earth and overshooting the center.",
+        "opening": "Imagine a tunnel straight through a nonrotating, spherical planet, with no air resistance. As you fall toward the center, you gain speed. At the center the net gravitational pull is zero—but your speed is not. You pass through and begin slowing as gravity points back toward the center. In the ideal model you reach the same height on the other side. Zero force at one location does not erase the motion acquired on the way there."
+      },
+      "13.11": {
+        "sourcePages": [
+          251,
+          252,
+          253,
+          254
+        ],
+        "restored": "The source's broader significance of unifying Earth and sky without equating physical and social laws.",
+        "opening": "The word universal carries the surprise. The same rule that describes an apple's fall can also help explain the motions of moons and planets. The source closes by considering how powerful that unification was for people's confidence in observation and reason. Its enduring scientific lesson is to look for one explanation that survives many different tests, while remembering that a successful physical law does not by itself establish a law of human society."
+      }
+    }
+  },
+  "hewitt:14": {
+    "invitation": "Throw a ball sideways and it lands. Throw it faster and it lands farther away. Newton imagined carrying that question to a remarkable limit: what if the ground curved away as quickly as the ball fell? An orbit is the continuation of the projectile story.",
+    "sections": {
+      "14.1": {
+        "sourcePages": [
+          263,
+          264,
+          265
+        ],
+        "restored": "Newton's cannon thought experiment and why an orbit needs sideways speed rather than absent gravity.",
+        "opening": "Imagine launches from a very high mountain on an airless Earth. A slow cannonball falls nearby; a faster one lands farther around the curved surface. With a suitable launch speed, the ground keeps curving away beneath the falling ball. It has not escaped Earth's pull. Its sideways motion and inward acceleration combine into an orbit. The thought experiment connects a classroom projectile to a satellite without inventing a new kind of force."
+      },
+      "14.2": {
+        "sourcePages": [
+          265,
+          266
+        ],
+        "restored": "The bowling-alley comparison and its limits.",
+        "opening": "The book compares the direction of gravity on a ball rolling along a level bowling lane with its direction on a satellite in a circular orbit. In each case gravity is perpendicular to the instantaneous motion, so it does no work along that motion. The crucial difference is support: the lane balances the ball's downward weight, while nothing balances the satellite's inward gravity. One travels straight; the other continually turns."
+      },
+      "14.6": {
+        "sourcePages": [
+          272,
+          273,
+          274,
+          275
+        ],
+        "restored": "Communications satellites and the conditions for appearing fixed above Earth.",
+        "opening": "A satellite can appear to hang above one place even while traveling rapidly. For a geostationary orbit, it must move in a circular equatorial orbit in the same direction as Earth's rotation, taking one sidereal day per revolution. Matching the period alone makes an orbit geosynchronous, but does not guarantee a fixed point in the sky. This source application is a useful reminder that 'at rest' always needs a reference."
+      }
+    }
+  },
+  "hewitt:15": {
+    "invitation": "Imagine riding away from a village clock while watching the light that carries its reading to you. What you see and what time you assign to a distant event are not quite the same question. Relativity begins when we take those questions seriously and require every inertial observer to measure the same vacuum light speed.",
+    "sections": {
+      "15.4": {
+        "sourcePages": [
+          287,
+          288,
+          289,
+          290,
+          291
+        ],
+        "restored": "The trolley and clock thought experiment, separated carefully from time dilation.",
+        "opening": "The source invites you to imagine watching a town clock from a departing trolley. Light reaching you now left the clock earlier; changing your motion changes the signals you receive. That is a useful puzzle, but delayed images alone do not explain time dilation. To compare clock rates physically, observers must account for light-travel time and specify their frames. The light-clock construction below makes that additional step explicit."
+      },
+      "15.6": {
+        "sourcePages": [
+          294,
+          295
+        ],
+        "restored": "Atmospheric muons as evidence that links time dilation and length contraction.",
+        "opening": "Muons created high in the atmosphere provide a striking check on an idea that can otherwise sound imaginary. Their short mean rest-frame lifetime makes the number that reach the ground surprising if you use ordinary travel-time reasoning. In Earth's frame, moving muon clocks accumulate less time during the trip. In a muon's frame, the atmosphere moves toward it and the thickness to be crossed is shorter. These are two consistent accounts of the same arrival events."
+      }
+    }
+  },
+  "hewitt:16": {
+    "invitation": "How can adding energy make a particle much harder to turn while barely changing its speed? And why should a freely falling cabin feel different from one resting on the ground? This chapter follows relativity from momentum and energy to the meaning of gravity.",
+    "sections": {
+      "16.1": {
+        "sourcePages": [
+          303,
+          304
+        ],
+        "restored": "Magnetically bent particle beams as evidence for relativistic momentum; retain invariant-mass terminology.",
+        "opening": "Send charged particles through the same magnetic field and compare their curved tracks. For motion perpendicular to the field, a larger momentum gives a larger bending radius. Near light speed, a small further increase in speed can accompany a large increase in momentum. The source uses this 'stiffer' trajectory to make relativity observable. Here we describe it with increasing γmv while keeping m as invariant mass, rather than changing the meaning of mass with speed."
+      },
+      "16.4": {
+        "sourcePages": [
+          308,
+          309,
+          310,
+          311
+        ],
+        "restored": "The cabin comparison motivating the equivalence principle.",
+        "opening": "Imagine yourself inside a small cabin with the windows covered. Standing on its floor, you feel a push through your feet. That could happen on Earth, or in a rocket accelerating in deep space. Now imagine the cabin and everything inside it freely falling together: a released object can hover beside you relative to the cabin. These local comparisons motivate the equivalence principle; over a large region, variations in gravity can reveal differences."
+      },
+      "16.6": {
+        "sourcePages": [
+          314,
+          315,
+          316
+        ],
+        "restored": "Why tests focus on small measurable differences between successful theories.",
+        "opening": "A new theory does not earn its place just by telling a more dramatic story. Ask where its prediction differs from the older one and whether that difference can be measured. Mercury's orbit, bent starlight, and clock comparisons are examples in the source. Newton's theory remains an excellent approximation in many situations; the point of these tests is to find the conditions and precision at which that approximation needs refinement."
+      }
+    }
+  },
+  "hewitt:17": {
+    "invitation": "A scent reaches you from across a room. A tiny grain jiggles in water. A tree builds its body from matter that was somewhere else. These ordinary events become evidence for an extraordinary claim: matter is made of moving particles far too small to see with your eyes.",
+    "sections": {
+      "17.4": {
+        "sourcePages": [
+          328,
+          329
+        ],
+        "restored": "Robert Brown's initial interpretation and the comparison with nonliving particles.",
+        "opening": "When Robert Brown watched pollen-related particles suspended in water, their restless motion raised a tempting possibility: were they alive? The important comparison was with nonliving particles, which jiggled too. That weakened a biological explanation and pointed toward the surrounding fluid. You are not watching individual water molecules through the microscope; you are seeing the irregular effects of their many collisions on a larger visible particle."
+      },
+      "17.5": {
+        "sourcePages": [
+          330
+        ],
+        "restored": "Perfume diffusion and the source's rejection of purposeful molecular motion.",
+        "opening": "Perfume molecules do not know where your nose is. They evaporate into the air and move in all directions, colliding with surrounding molecules; air currents can carry them too. Some eventually reach you. The source uses this everyday experience to make random motion tangible. A spreading scent is not evidence that individual molecules are deliberately heading toward a detector."
+      }
+    }
+  },
+  "hewitt:18": {
+    "invitation": "A salt crystal has an orderly interior, a bent beam stretches on one side and compresses on the other, and a giant version of a small animal could not simply keep the same proportions. Look beneath the surface of solid objects to see how structure and scale affect what they can do.",
+    "sections": {
+      "18.1": {
+        "sourcePages": [
+          345
+        ],
+        "restored": "X-ray diffraction as evidence for internal order rather than relying on a crystal's outside shape.",
+        "opening": "A rough piece of salt does not show you its atomic arrangement. The source shows how an X-ray beam provides another kind of view: scattered rays form a pattern whose positions reflect the crystal's repeating structure. The spots are evidence from the interaction of radiation with the material, not a photograph of little atoms lined up in rows. An unseen structure can still make a testable pattern."
+      },
+      "18.5": {
+        "sourcePages": [
+          353,
+          354,
+          355,
+          356
+        ],
+        "restored": "The physical consequence of scaling rather than just its algebra; avoid outdated universal lifespan claims.",
+        "opening": "Suppose a sculptor doubles every length in a model animal while keeping the material and shape the same. Its weight grows eightfold, but each leg's supporting cross-sectional area grows only fourfold. The weight per supporting area therefore doubles. This is why 'make it bigger' is not a neutral design change. The source connects scaling to living things; use the area–volume argument as a model, not a claim that every animal follows one exact biological formula."
+      }
+    }
+  },
+  "hewitt:19": {
+    "invitation": "How could a builder carry a level around a corner with a water-filled hose? How can a steel ship float while a small solid piece of steel sinks? Liquid pressure and displaced water connect practical puzzles that initially seem unrelated.",
+    "sections": {
+      "19.1": {
+        "sourcePages": [
+          363,
+          364,
+          365
+        ],
+        "restored": "The mason's water-hose level and communicating containers.",
+        "opening": "A builder needs a height mark on the far side of a building, out of sight of the first mark. The source suggests a water-filled hose with both ends open. Once the water rests and both surfaces experience the same air pressure, the surfaces settle at the same elevation. Otherwise the pressure difference would drive water through the connecting hose. The shape of the route between the ends does not set the final level."
+      },
+      "19.3": {
+        "sourcePages": [
+          367,
+          368
+        ],
+        "restored": "Displacement measurement of an irregular object and the distinction between volume and weight.",
+        "opening": "How would you find the volume of a strangely shaped stone without measuring all its curves? Submerge it and measure how much the water level rises in a graduated container. The displaced volume equals the submerged volume of the stone. Archimedes' principle then takes one more step: the buoyant force equals the weight of that volume of fluid. Volume displaced and weight displaced are related, but they are not interchangeable quantities."
+      },
+      "19.6": {
+        "sourcePages": [
+          373,
+          374
+        ],
+        "restored": "The source's 1 cm² versus 50 cm² hydraulic comparison and energy accounting.",
+        "opening": "An extra pressure of 1 N per square centimeter acts over every square centimeter of a piston. A piston with 50 cm² of area therefore receives an extra 50 N of force, even if that pressure came from a 1 N push on a 1 cm² input piston. The fluid transmits the pressure increase; it does not transmit the same total force to every piston. The larger output force comes with a smaller output travel distance."
+      }
+    }
+  },
+  "hewitt:20": {
+    "invitation": "Air seems almost weightless until a pressure difference pushes a surface, supports a liquid column, or lifts a balloon. Imagine the atmosphere as a thin layer wrapped around Earth, then ask how the motion and weight of that air become a measurable push.",
+    "sections": {
+      "20.1": {
+        "sourcePages": [
+          383,
+          384
+        ],
+        "restored": "The source's thin-shell scale comparison, without a sharp artificial boundary.",
+        "opening": "Picture Earth's atmosphere drawn to the same scale as the planet. Most of its mass would be crowded into a remarkably thin layer, more like an apple's skin than the thick blue band in many diagrams. There is no abrupt lid where all the air stops. Density gradually decreases with altitude. The picture helps explain how an apparently endless sky can contain a finite amount of air above each square meter."
+      },
+      "20.5": {
+        "sourcePages": [
+          389,
+          390
+        ],
+        "restored": "Molecular impacts in a tire as the bridge from particle motion to pressure.",
+        "opening": "The source asks you to imagine the air inside a tire as countless tiny moving particles striking its walls. Individual impacts are irregular, but together they produce an almost steady force at our scale. Confine the same gas to less volume while keeping its temperature constant, and particles encounter the walls more frequently. That microscopic story explains why compression raises pressure; the wall is not being pushed by empty space."
+      },
+      "20.6": {
+        "sourcePages": [
+          391
+        ],
+        "restored": "The airship–fish analogy and an explicit total-weight comparison.",
+        "opening": "Think of an airship as a fish moving through a different fluid. Both displace the surrounding fluid, and that displaced fluid's weight determines the buoyant force. For an airship, the comparison must include the weight of its gas, envelope, structure, and load. Simply saying 'helium rises' leaves out the system you need to weigh. Changing the gas changes that total weight, not the basic rule for buoyancy."
+      }
+    }
+  },
+  "hewitt:21": {
+    "invitation": "A pie's filling and crust can come from the same oven yet behave very differently as they cool. A coast can change temperature more slowly than inland ground. Begin with those experiences, then separate temperature, energy transfer, and the amount of energy a material can store.",
+    "sections": {
+      "21.5": {
+        "sourcePages": [
+          411,
+          412
+        ],
+        "restored": "Food Calories converted to a familiar average power and a warm crowded room.",
+        "opening": "The source turns a daily energy total into something you can picture. An intake of 2,000 food Calories corresponds to about 8.4 million joules. Spread over 86,400 seconds in a day, that is an average rate of roughly 97 watts. This is an energy-rate comparison, not a recommendation about food intake. It helps explain why people can noticeably warm a crowded room even when no one is lifting weights."
+      },
+      "21.6": {
+        "sourcePages": [
+          413,
+          414
+        ],
+        "restored": "Pie filling versus crust as a motivating observation, with heat-transfer qualifications.",
+        "opening": "Why can the moist filling of a hot pie remain troublesome after its crust seems cooler? The source uses familiar foods to make you ask how much energy a material can release as its temperature falls. Water-rich filling often has a large heat capacity, but the sensation also depends on mass, contact, conductivity, and evaporation. Equal temperature does not guarantee an equal transfer of energy to something it touches."
+      },
+      "21.8": {
+        "sourcePages": [
+          416,
+          417,
+          418,
+          419
+        ],
+        "restored": "Bimetallic-strip thermostat as a consequence of unequal expansion.",
+        "opening": "Bond two strips of different metals together and warm them. If one would expand more than the other when free, the joined pair must bend. A mechanical thermostat can use that bend to open or close a switch. The useful motion comes from a difference in expansion, not from one side getting hot while the other somehow stays cold."
+      }
+    }
+  },
+  "hewitt:22": {
+    "invitation": "How can water near the top of a container be hot while ice persists below? Why does an opening into a dark room look black in daylight? Heat travels by different routes, and looking carefully at the route explains much more than simply saying that something is hot or cold.",
+    "sections": {
+      "22.1": {
+        "sourcePages": [
+          431,
+          432,
+          433
+        ],
+        "restored": "The source's heated-water/ice illustration as evidence distinguishing conduction and convection.",
+        "opening": "Study the source's demonstration with hot water above ice trapped at the bottom of a tube. The upper water can become very hot while the ice below persists. Heating from above does not set up the same rising current that heating from below would. Energy reaching the lower region by conduction travels slowly through the water. The contrast makes the mechanism visible: the presence of water alone does not guarantee rapid heat transfer everywhere."
+      },
+      "22.5": {
+        "sourcePages": [
+          438,
+          439
+        ],
+        "restored": "Dark openings as a physical model for strong absorption.",
+        "opening": "A doorway into an unlit building may look nearly black even when its walls are not painted black. Light that enters can reflect several times inside, losing some energy to the surfaces at each encounter; little returns toward your eyes. The source uses cavities to explain strong absorption. Looking dark tells you about the light reaching you, so always consider illumination and geometry as well as the surface material."
+      }
+    }
+  },
+  "hewitt:23": {
+    "invitation": "A puddle disappears below the boiling point. Water appears on the outside of a cold glass. Under reduced pressure, boiling can even cool the water that remains enough for some of it to freeze. Track the molecules and their energy to make sense of changes that seem contradictory.",
+    "sections": {
+      "23.3": {
+        "sourcePages": [
+          454
+        ],
+        "restored": "Feeling different in a moist shower stall and drier room, explained through net evaporation.",
+        "opening": "The source compares standing in a moist shower stall with stepping into drier air. Water molecules can leave your wet skin in both places, while vapor molecules can also return. What matters for evaporative cooling is the net transfer. In more humid air, returning molecules reduce the net evaporation under otherwise similar conditions. Equal outward and inward rates would mean continuing molecular exchange without a net loss of liquid."
+      },
+      "23.6": {
+        "sourcePages": [
+          456,
+          457
+        ],
+        "restored": "Low-pressure boiling and freeze-drying, including sublimation after freezing.",
+        "opening": "Boiling and freezing sound like opposites, yet the source puts them into one low-pressure sequence. Escaping vapor carries energy away, cooling the liquid that remains when little energy replaces it. Some water can eventually freeze. In freeze-drying, water is then removed from the frozen material by sublimation—solid directly to vapor. The ice does not have to melt first. Follow the sample's pressure, phase, and energy rather than using 'boiling' as another word for 'very hot.'"
+      }
+    }
+  },
+  "hewitt:24": {
+    "invitation": "Stirring can warm water. Expanding air can cool without losing heat to its surroundings. An engine can conserve energy while still wasting some of its usefulness. Thermodynamics connects these observations by asking how energy crosses a boundary and which changes can happen on their own.",
+    "sections": {
+      "24.2": {
+        "sourcePages": [
+          470,
+          471
+        ],
+        "restored": "Joule's mechanical heating evidence and the change from caloric to an energy account.",
+        "opening": "The source describes a time when heat was imagined as a conserved fluid called caloric. Joule's experiments connected mechanical work to warming: work done by a paddle system in water could produce a measurable temperature rise. A warmer sample did not have to receive its energy from a hotter object. That is the bridge to the first law—internal energy can change through work as well as through heat transfer."
+      },
+      "24.3": {
+        "sourcePages": [
+          472,
+          473,
+          474
+        ],
+        "restored": "Mountain-crossing air and the chinook example.",
+        "opening": "Imagine a large parcel of air rising along a mountain slope. The surrounding pressure decreases, so the parcel expands and does work. If little heat enters during the rise, its internal energy decreases and it cools. Descending air can warm as the surroundings compress it. The source connects this to chinook winds. Real mountain weather also involves moisture and mixing, so the dry adiabatic comparison is a starting model, not the whole forecast."
+      },
+      "24.6": {
+        "sourcePages": [
+          479
+        ],
+        "restored": "Useful work versus dispersed energy, without declaring thermal energy universally useless.",
+        "opening": "Electrical energy supplied to a lamp may briefly leave as visible light, then become internal energy when nearby surfaces absorb it. The energy has not vanished. What has changed is how readily it can be used to do a chosen job. Once it is spread through a room near the surroundings' temperature, recovering it all as work is not possible in a cycle. Thermal energy can still be useful for heating; usefulness depends on the task and the surroundings."
+      }
+    }
+  },
+  "hewitt:25": {
+    "invitation": "A ripple moves across a puddle while the water near one point mostly oscillates. The high and low notes of a chord reach you together. A moving source crowds waves ahead of itself. Follow the pattern, the medium, and the source separately to explain what travels and what vibrates.",
+    "sections": {
+      "25.4": {
+        "sourcePages": [
+          495,
+          496
+        ],
+        "restored": "A musical chord as evidence for approximately equal sound speeds at different audible frequencies.",
+        "opening": "When an instrument plays a chord, its high notes do not normally race through the air and arrive before its low notes. In ordinary air, audible sound speeds are nearly the same under the same conditions. A higher frequency therefore comes with a shorter wavelength. The product fλ stays approximately fixed. The source uses a familiar listening experience to give the equation a physical meaning."
+      },
+      "25.9": {
+        "sourcePages": [
+          501,
+          502,
+          503
+        ],
+        "restored": "The bobbing bug and moving centers of successive wavefronts.",
+        "opening": "Imagine a bug bobbing at one spot on a quiet pond. Each ripple expands from the same center. Now let the bug move while it bobs at the same rate. Each new ripple begins at a new position, so the fronts bunch together ahead and spread out behind. The bug did not have to change its bobbing rhythm. A receiver's encounter rate changes because the source moves between emissions."
+      }
+    }
+  },
+  "hewitt:26": {
+    "invitation": "A guitar string alone makes a faint sound, yet its wooden body helps fill a room. Two steady tones can combine into a sound that swells and fades. Sound becomes easier to understand when you follow how vibration transfers energy and how arriving waves add together.",
+    "sections": {
+      "26.7": {
+        "sourcePages": [
+          520
+        ],
+        "restored": "The guitar, music box, and sounding board connection.",
+        "opening": "A plucked string has little surface area with which to push the air. An acoustic guitar couples that motion to a much larger body, which can move more air and radiate sound more effectively. The source also points to a music box mounted on a sounding board. The board does not create energy; it changes how vibration is transferred to the surrounding air. Forced vibration explains why the supporting structure is part of the instrument."
+      },
+      "26.10": {
+        "sourcePages": [
+          524,
+          525
+        ],
+        "restored": "Slow changing phase as a perceptible beat envelope, not a new source turning on and off.",
+        "opening": "Imagine two walkers taking steps at nearly the same rate. Their feet line up, gradually get out of step, and later line up again. Two close sound frequencies behave similarly in phase. Even if each source has steady amplitude, the combined pressure variation can grow and shrink. The slow beat is the changing agreement between the waves, not either musician repeatedly playing louder and softer."
+      }
+    }
+  },
+  "hewitt:27": {
+    "invitation": "Does seeing begin with something leaving your eyes, or with light reaching them? How could the timing of a distant moon reveal that light takes time to travel? The chapter begins with questions about vision and measurement before turning to the fields and materials that carry the explanation.",
+    "sections": {
+      "27.1": {
+        "sourcePages": [
+          533
+        ],
+        "restored": "Historical competing accounts of vision used as a testable question.",
+        "opening": "Some ancient explanations pictured the eyes sending something outward to meet an object. The source presents that idea as a historical model, not our present account of sight. Test it against a dark room: looking hard at an object does not illuminate it. A working explanation must trace light from a source, through any reflections or transmissions, and into the eye. That complete path is more useful than a label alone."
+      },
+      "27.2": {
+        "sourcePages": [
+          534,
+          535
+        ],
+        "restored": "Rømer's timing of Io and changing light-travel distance.",
+        "opening": "Rømer studied the repeating appearances and disappearances of Jupiter's moon Io. Their observed timing shifted systematically as the Earth–Jupiter distance changed. If light takes time to travel, an increasing distance adds delay and a decreasing distance removes some delay. The moon did not have to change its orbital behavior to account for the timing pattern. The source's historical example separates an event from the arrival of its information."
+      }
+    }
+  },
+  "hewitt:28": {
+    "invitation": "A red fabric can look different under different lamps. A screen combines colored light, while a printer lays down colored inks. The sky and sunset show two sides of scattering. Color depends on the light available, what happens along its path, and the observer who receives it.",
+    "sections": {
+      "28.7": {
+        "sourcePages": [
+          564,
+          565
+        ],
+        "restored": "Printed halftone dots and cyan/magenta/yellow/black as a source-based application.",
+        "opening": "Look closely at a printed color image and you may find tiny dots rather than one smoothly mixed paint at every point. Cyan, magenta, yellow, and black inks selectively absorb parts of the illuminating light. Their coverage and overlap change the light returned from the paper. The source invites a magnified look at a page because printing makes the difference between adding light and filtering light visible."
+      },
+      "28.11": {
+        "sourcePages": [
+          571,
+          572,
+          573
+        ],
+        "restored": "The slit in a spectroscope and how separated spectral lines become an atomic fingerprint.",
+        "opening": "A prism alone is not the whole story of a clear spectrum. The source explains why a narrow entrance slit matters: broad images of the opening overlap and blur the colors, while a narrow slit helps separate them. For a glowing gas, the resulting pattern of lines can identify its atoms. The instrument turns 'this light looks colored' into a much more specific observation about which wavelengths are present."
+      }
+    }
+  },
+  "hewitt:29": {
+    "invitation": "A room can make music sound rich or muddled. A toy axle turns when one wheel reaches grass before the other. A hot road can seem to hold a patch of water. Follow changing paths and travel times to connect these examples of reflection and refraction.",
+    "sections": {
+      "29.5": {
+        "sourcePages": [
+          583,
+          584
+        ],
+        "restored": "Concert-hall design and the balance between useful reflection and excessive reverberation.",
+        "opening": "A room that absorbs almost every reflection may make music sound dry; too many strong, lingering reflections can blur successive sounds together. The source uses concert halls to show that reflection is neither automatically helpful nor automatically harmful. Where surfaces send the sound, how much they absorb, and when each reflected arrival reaches the audience all matter. A useful explanation follows paths as well as loudness."
+      },
+      "29.6": {
+        "sourcePages": [
+          584,
+          585
+        ],
+        "restored": "Toy-cart axle entering grass as a model for wavefront turning, with the model boundary stated.",
+        "opening": "Imagine two wheels joined by an axle rolling diagonally from pavement onto grass. One wheel reaches the slower surface first, and the axle turns. The source uses this as a picture of how one part of a wavefront can slow before another, changing the direction of travel. Light is not a little axle scraping through glass; the analogy is about unequal advances across a boundary, which the wave model describes more precisely."
+      },
+      "29.9": {
+        "sourcePages": [
+          588,
+          589,
+          590
+        ],
+        "restored": "The hot-road mirage as a real light path rather than imaginary water.",
+        "opening": "A distant patch of road can look wet on a hot day even when no water is there. Light from the sky can bend through layers of air with different refractive indices and reach your eyes from below your usual line of sight. Your visual system interprets the arriving direction as though the light had traveled straight. The light is real; the inferred pool of water is not."
+      }
+    }
+  },
+  "hewitt:30": {
+    "invitation": "A magnifying glass lets a small detail occupy more of your view. A camera gathers rays onto a sensor. Your eye focuses light but also has a region with no photoreceptors. Lenses make more sense when you connect ray diagrams to what a viewer or detector actually receives.",
+    "sections": {
+      "30.1": {
+        "sourcePages": [
+          603,
+          604
+        ],
+        "restored": "Angular size as the source's motivation for magnification.",
+        "opening": "Hold a small object farther away and it occupies a smaller angle in your view. Bring it closer and the angle grows, until your eye can no longer focus comfortably. A magnifying lens lets you view a nearby object through a larger angle while providing an image your eye can focus on. Magnification is useful because of what reaches the eye, not simply because a drawn image arrow has become longer."
+      },
+      "30.6": {
+        "sourcePages": [
+          612,
+          613
+        ],
+        "restored": "The blind-spot figure as evidence that vision involves a biological detector and processing.",
+        "opening": "The source includes a dot-and-cross figure in which one mark can disappear while you fix your gaze on the other with one eye. At a particular geometry, its image falls where the optic nerve exits the retina, a region without photoreceptors. This is not the lens failing to send light there. It shows that forming an optical image and sensing every part of that image are different steps in seeing."
+      }
+    }
+  },
+  "hewitt:31": {
+    "invitation": "Waves spread through a gap, colored bands appear on a soap film, and a compact disc flashes a spectrum as you tilt it. These patterns carry information about distances much smaller than you could measure with a ruler. Follow how waves overlap to discover where the bright and dark regions come from.",
+    "sections": {
+      "31.1": {
+        "sourcePages": [
+          623,
+          624
+        ],
+        "restored": "Narrowing a ripple-tank opening as direct evidence of spreading.",
+        "opening": "Picture straight water wavefronts approaching a barrier with a gap. A wide gap lets much of the pattern continue almost straight, with spreading near its edges. Narrow the gap toward the wavelength and the outgoing pattern spreads strongly. In the source photographs, the opening begins to act like a small source of expanding ripples. Huygens' construction is a way to organize that observation, not just a rule for drawing circles."
+      },
+      "31.4": {
+        "sourcePages": [
+          629,
+          630
+        ],
+        "restored": "Compact-disc colors as a familiar diffraction-grating application.",
+        "opening": "A compact disc can show bright bands of color without being coated in separate rainbow pigments. Its closely spaced track structure redirects different wavelengths into different viewing directions through interference. Tilting the disc changes which wavelengths reach your eye. The source connects this familiar pattern to gratings: many regularly spaced contributions can make sharply selected directions bright."
+      },
+      "31.5": {
+        "sourcePages": [
+          631,
+          632
+        ],
+        "restored": "Interference as a measurement tool rather than only a color effect.",
+        "opening": "The colors of a film are also evidence that light is sensitive to tiny path differences. An interferometer puts that sensitivity to work: a small displacement changes the relative phase of two contributions and shifts the pattern. You do not have to see the mechanical motion directly if you can count or measure the shifting fringes. The source uses this connection to turn a visual effect into a measuring instrument."
+      }
+    }
+  },
+  "hewitt:32": {
+    "invitation": "A light suspended ball is first attracted to a charged rod, then repelled after touching it. What changed? Electricity becomes less mysterious when you keep track of charge transfer, charge rearrangement, and the two objects involved in each force.",
+    "sections": {
+      "32.1": {
+        "sourcePages": [
+          645,
+          646
+        ],
+        "restored": "Historical pith-ball demonstrations and attraction changing to repulsion.",
+        "opening": "The source describes public demonstrations with light, conducting-coated pith balls. A neutral ball could move toward a charged rod, touch it, and then move away. The first attraction does not prove that the ball began with an opposite net charge: polarization can attract a neutral object. After contact, transferred charge can give the ball the same sign as the rod, producing repulsion. Follow the sequence instead of applying 'opposites attract' to every stage."
+      },
+      "32.4": {
+        "sourcePages": [
+          651,
+          652
+        ],
+        "restored": "Semiconductors as controllable materials rather than a permanent conductor/insulator binary.",
+        "opening": "The conductor–insulator distinction is useful, but the source introduces materials whose behavior can be deliberately changed. In a semiconductor, impurities and other conditions can alter the supply of mobile charge carriers. That makes controlled electrical behavior possible in devices such as transistors and photovoltaic cells. The important question is not whether an object contains electrons—all ordinary matter does—but which carriers can move and under what conditions."
+      }
+    }
+  },
+  "hewitt:33": {
+    "invitation": "An invisible arrangement of charges can bend a particle beam or steer selected ink droplets. A voltage can describe available energy per unit charge without telling you the total energy. Field and potential give you two different maps of the same electrical environment.",
+    "sections": {
+      "33.2": {
+        "sourcePages": [
+          666,
+          667
+        ],
+        "restored": "Electron-beam deflection as a test of field direction and negative charge.",
+        "opening": "The source shows an electron beam passing between charged plates and making a spot on a screen. Reverse the plate charges and ask what should happen to the spot. The electric field reverses, and so does the force on each electron. Because an electron is negative, its force points opposite the field arrow. Tracking the screen spot gives a visible consequence of both the field direction and the sign of the moving charge."
+      },
+      "33.6": {
+        "sourcePages": [
+          672,
+          673
+        ],
+        "restored": "The source's continuous inkjet example, scoped to that design.",
+        "opening": "In the continuous inkjet design described by the source, selected droplets receive charge and are deflected by an electric field, while other droplets follow a different path. This is a practical use of the same idea as a charged-particle beam: change q or E and you change the force qE. Not every printer uses this mechanism. The example shows how controlling charge can turn a microscopic force into a chosen pattern on a page."
+      }
+    }
+  },
+  "hewitt:34": {
+    "invitation": "A charged pair of metal spheres can produce a brief current, but a battery can keep a circuit working much longer. A lamp responds quickly even though individual electrons drift slowly. Separate the carriers from the energy they transfer, and the circuit begins to make sense.",
+    "sections": {
+      "34.3": {
+        "sourcePages": [
+          683
+        ],
+        "restored": "Two charged spheres versus a maintained voltage source.",
+        "opening": "Connect two isolated metal spheres at different potentials and charge redistributes until their potentials approach one another. The initial voltage can be large, yet the useful current is brief. A battery is different because chemical processes can keep separating charge and supplying energy as the circuit operates. A voltage source is therefore not just an object that happens to start charged; it has a mechanism and a finite energy supply that sustain the difference."
+      },
+      "34.10": {
+        "sourcePages": [
+          693
+        ],
+        "restored": "The source's empty-hose contrast and local charge carriers.",
+        "opening": "You can buy a hose with no water inside, but you cannot buy an ordinary metal wire emptied of its electrons. The carriers are already present throughout the wire and lamp. When a circuit is completed, an electromagnetic disturbance establishes the conditions for their motion. In an AC circuit, local charges can move back and forth while energy is delivered to a device. Energy transport does not require one electron to make the whole trip from a distant generator."
+      }
+    }
+  },
+  "hewitt:35": {
+    "invitation": "One lamp goes out and the others stay on. Another arrangement stops working when a single connection breaks. Trace the actual paths before calculating: a circuit's behavior depends on which points are joined, not how neat or tangled its drawing looks.",
+    "sections": {
+      "35.1": {
+        "sourcePages": [
+          703,
+          704
+        ],
+        "restored": "The water-circuit analogy and its explicit limitations.",
+        "opening": "A circulating-water model can help you imagine a source supplying energy while material goes around a loop. But the source also warns where that analogy breaks. An open faucet allows water to flow, whereas an open electrical switch breaks the conducting path. A leaking pipe can spill water out; an ordinary broken wire in this simple circuit does not pour electrons onto the floor. Use the analogy to ask questions, then check the electrical connections themselves."
+      },
+      "35.5": {
+        "sourcePages": [
+          709,
+          710
+        ],
+        "restored": "A float-controlled fuel gauge linking a schematic to a measuring device.",
+        "opening": "The source describes a simple fuel gauge in which a float changes a variable resistance. With a given supply, the changing resistance changes the current, and a calibrated pointer reports the fuel level. The circuit translates one physical change into another that is easier to read. When looking at its schematic, identify the sensor, the source, and the indicator rather than memorizing the shape of the wires."
+      }
+    }
+  },
+  "hewitt:36": {
+    "invitation": "A compass turns near a current, a loudspeaker cone follows an electrical signal, and cooled rock can preserve a magnetic record. Magnetism is a connection among moving charge, material structure, and forces—not just a property of the two ends of a bar magnet.",
+    "sections": {
+      "36.7": {
+        "sourcePages": [
+          729
+        ],
+        "restored": "Loudspeaker conversion from alternating current to cone motion and sound.",
+        "opening": "A loudspeaker makes the force on a current-carrying coil audible. A coil attached to the cone sits in a magnetic field. As the electrical signal changes the current, the magnetic force changes; reversing the current reverses the force in the same field. The cone moves air, producing sound. Follow the whole chain: electrical input, magnetic force, mechanical vibration, then a pressure wave."
+      },
+      "36.9": {
+        "sourcePages": [
+          732,
+          733
+        ],
+        "restored": "Magnetic patterns in ocean-floor rocks as an evidence connection.",
+        "opening": "Some minerals can preserve information about a magnetic field as rock cools. The source connects measurements of ocean-floor magnetism with evidence for seafloor spreading. A compass gives a local field direction now; a pattern of magnetized rock can help investigate the past. Interpreting that record requires the rock's history and arrangement, not simply assuming that every patch of rock points toward today's north."
+      }
+    }
+  },
+  "hewitt:37": {
+    "invitation": "Move a magnet toward a coil and a meter responds. Hold it still and the response disappears. Why should change matter more than presence? That question leads from a simple observation to generators, transformers, and the transfer of electromagnetic energy.",
+    "sections": {
+      "37.2": {
+        "sourcePages": [
+          743
+        ],
+        "restored": "Copper versus rubber loops: induced emf is not the same as current.",
+        "opening": "Imagine the same changing magnetic flux through two equal-shaped loops, one made of copper and one made of rubber. Faraday's law predicts the same induced emf around each path, but not the same current. Copper allows mobile carriers to respond readily; rubber does not. The source uses this comparison to separate the electrical driving effect from the material's response. A changing flux alone does not specify how much current will flow."
+      },
+      "37.4": {
+        "sourcePages": [
+          746,
+          747
+        ],
+        "restored": "The energy cost of generator action and why a load resists the drive.",
+        "opening": "A generator delivering more electrical energy must receive that energy from somewhere. Imagine turning its shaft while the connected load draws current: the magnetic interaction produces a torque opposing the drive. Maintaining the rotation takes mechanical work. This source connection gives Lenz's law a physical purpose. If the induced response helped the motion while also supplying a load, the device would create energy instead of transferring it."
+      }
+    }
+  },
+  "hewitt:38": {
+    "invitation": "An image builds from separate detection events. Electrons form diffraction patterns. Atoms emit only particular spectral lines. The familiar pictures of particles and waves each help, but neither alone describes all the evidence. Let the observations tell you where a model succeeds and where it needs to change.",
+    "sections": {
+      "38.4": {
+        "sourcePages": [
+          770
+        ],
+        "restored": "The source's weak-light image accumulating photon by photon.",
+        "opening": "The source shows a very faint image building up as more light is detected. At first the separate marks look scattered; with many events, a recognizable pattern emerges. Individual detections and a reproducible overall distribution belong to the same experiment. This is a better starting point than imagining light simply deciding to be a classical ball in one place and a water wave in another."
+      },
+      "38.5": {
+        "sourcePages": [
+          771
+        ],
+        "restored": "Electron microscopy and the practical significance of matter wavelength.",
+        "opening": "Why use electrons to investigate details too small for an ordinary light microscope? Their de Broglie wavelength can be much shorter than visible-light wavelengths, allowing finer spatial detail in a suitable instrument. The source's electron-microscope image turns matter waves into an application. Wavelength sets an important scale, but actual resolution also depends on the optics, sample, and detector; a shorter wavelength does not by itself guarantee a perfect picture."
+      }
+    }
+  },
+  "hewitt:39": {
+    "invitation": "A nucleus can change its identity, a detector can register an otherwise unseen emission, and a sample can preserve evidence of elapsed time. Radioactivity becomes more intelligible when you separate what one nucleus might do from the predictable behavior of a large population.",
+    "sections": {
+      "39.5": {
+        "sourcePages": [
+          790,
+          791
+        ],
+        "restored": "Half-life as a population pattern that a detector can reveal, not a deadline for an individual nucleus.",
+        "opening": "Imagine listening to a detector click beside a decaying sample. The exact moment of the next click is unpredictable, but the average rate across many events can follow a reliable pattern. After one half-life, about half the original parent nuclei remain; after another, about half of those remain. The source pairs decay with detection because a law about invisible nuclei needs a measurable consequence. A half-life is not a timer attached to each nucleus."
+      },
+      "39.8": {
+        "sourcePages": [
+          796,
+          797
+        ],
+        "restored": "Radiocarbon as a clock tied to exchange with the environment and to a particular event.",
+        "opening": "An archaeologist does not ask a carbon sample for the age of everything around it. The useful question is when the sampled material stopped exchanging carbon in the way a living organism does. After that change, carbon-14 decay alters the isotope ratio. To turn the ratio into an age, the starting conditions, calibration, and later contamination must be considered. The nuclear clock measures a history of the sample, not the date of any nearby object automatically."
+      }
+    }
+  },
+  "hewitt:40": {
+    "invitation": "A nuclear reaction can release energy, but getting useful electricity requires a whole chain of transfers. Keep three questions separate: what changes inside a nucleus, where the released energy goes, and how much of that energy a complete system can deliver for use.",
+    "sections": {
+      "40.3": {
+        "sourcePages": [
+          812,
+          813,
+          814
+        ],
+        "restored": "The source's reactor-to-steam-to-turbine connection, without dated policy or generation statistics.",
+        "opening": "The source makes a deliberately ordinary comparison: a fission power plant is also a heat engine. Energy released in nuclear reactions becomes thermal energy, which can produce steam, turn a turbine, and drive a generator. The nuclear step changes the source of the heat; it does not remove the thermodynamic limits on converting heat into work. Trace the complete chain before equating reaction energy with electrical output."
+      },
+      "40.8": {
+        "sourcePages": [
+          822,
+          823,
+          824
+        ],
+        "restored": "Confinement and the difference between a reaction, a plasma energy balance, and whole-system useful output.",
+        "opening": "The source ends with the challenge of keeping hot reacting matter together long enough to obtain useful energy. Its historical forecasts should not be read as a current project report. The durable physics question is an energy-accounting one: which boundary is being measured? Energy released in the reacting material, energy supplied to heat it, and energy used by the entire facility are different accounts. A gain in one is not automatically net electrical output from the whole system."
+      }
+    }
+  },
+  "openstax:1": {
+    "invitation": "How would you estimate the height of a huge stack of money, decide whether a measurement deserves another decimal place, or test two competing explanations? Physics begins with questions like these. Its methods connect a concrete observation to a claim someone else can check.",
+    "sections": {
+      "1.1": {
+        "sourcePages": [
+          10,
+          11,
+          12
+        ],
+        "restored": "The source's cross-professional motivation for physics, connected to a measurable question.",
+        "opening": "A pilot accounting for wind, a physical therapist reasoning about a limb, and an electrician tracing a circuit are working on different problems. OpenStax puts these examples together because each uses a physical model to decide what to measure and what to predict. Choose one situation and ask a specific question. 'How does it work?' becomes more useful when you identify a quantity that could change and evidence that could distinguish explanations."
+      },
+      "1.4": {
+        "sourcePages": [
+          33,
+          34,
+          35,
+          36
+        ],
+        "restored": "The trillion-dollar football-field estimation problem and its decomposition.",
+        "opening": "The source asks you to imagine a trillion dollars in hundred-dollar bills spread over a football field. Would the pile be a few inches high or several feet? Start by converting money into a number of bills, then estimate the volume of one bill and divide the total volume by the field's area. The exact thickness of a bill is less important at first than a clear chain of assumptions. Each step gives you something to check."
+      }
+    }
+  },
+  "openstax:2": {
+    "invitation": "A professor paces across a room, a subway train slows, and a ball turns around at the top of its flight. Start with a sketch and a named direction. Then use words, graphs, and equations to describe the same motion without letting a minus sign stand in for an explanation.",
+    "sections": {
+      "2.1": {
+        "sourcePages": [
+          42,
+          43,
+          44,
+          45
+        ],
+        "restored": "The source's classroom position example and choosing a useful reference frame.",
+        "opening": "OpenStax begins with a familiar moving object: a professor changing position near a whiteboard. Choose a point in the room as zero and a direction as positive. The coordinates then say where the professor is; subtracting two coordinates says what changed. A rocket might call for an Earth-centered description instead. The frame is part of the model you choose for the question, not a universal label attached to the object."
+      },
+      "2.4": {
+        "sourcePages": [
+          55,
+          56,
+          57
+        ],
+        "restored": "Subway motion with signed displacement, velocity, and acceleration as distinct quantities.",
+        "opening": "Imagine a subway train moving toward the negative end of your chosen axis while braking. Its displacement during the stop is negative, its velocity is negative until it stops, but its acceleration is positive. OpenStax's train examples make this separation useful: the sign tells you a direction, while speeding up or slowing down depends on comparing velocity with acceleration. Reverse the coordinate axis and the signs reverse, but the physical braking does not."
+      },
+      "2.6": {
+        "sourcePages": [
+          73,
+          74,
+          75
+        ],
+        "restored": "Reasonableness checking as part of the worked-example method, not an optional afterthought.",
+        "opening": "OpenStax's worked problems do not end when a calculator displays a number. Ask whether the result describes the event you sketched. Is a time negative because you found an event before your chosen start, or because you used the wrong sign? Would the predicted distance fit the situation? Correct algebra can still describe the wrong interval or an unsuitable model. A reasonableness check is part of solving the physics problem."
+      }
+    }
+  },
+  "openstax:3": {
+    "invitation": "A traveler follows several legs between islands, while a helicopter could connect the same endpoints more directly. A boat points across a river but reaches the far bank downstream. Coordinates let you keep the parts of a journey separate and then put them back together.",
+    "sections": {
+      "3.2": {
+        "sourcePages": [
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117
+        ],
+        "restored": "The Hawaiian-island map and vector addition as a real multileg journey.",
+        "opening": "The source uses a map of the Hawaiian Islands to represent a journey with several legs. Each arrow runs from one stop to the next. The overall displacement goes directly from the first departure to the final arrival, even though the traveler never followed that straight line. Move the arrows head to tail without changing their lengths or directions, and the construction becomes a record of the endpoints rather than a picture of the road or flight path."
+      },
+      "3.3": {
+        "sourcePages": [
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124
+        ],
+        "restored": "The relationship between graphical and analytical solutions and their different limits.",
+        "opening": "A carefully scaled drawing can show the answer before you calculate it: the quadrant, approximate size, and direction of a resultant. Components then let you compute the same result without relying on ruler accuracy. OpenStax treats the methods as partners. If the calculation points into a different quadrant from the sketch, inspect the signs and angle convention before trusting extra decimal places."
+      }
+    }
+  },
+  "openstax:4": {
+    "invitation": "A ball changes direction when struck, a supporting rope stretches, and a pair of tugboats can pull a barge forward without pulling it sideways. Begin each explanation by naming the object and the interactions acting on it. Then let its change in motion tell you what the net force must accomplish.",
+    "sections": {
+      "4.3": {
+        "sourcePages": [
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167
+        ],
+        "restored": "The source's broken-baseball-bat context as a force, acceleration, and deformation question.",
+        "opening": "OpenStax connects Newton's laws with a baseball striking a bat, even a bat that breaks. The brief contact can change the ball's velocity substantially, while forces within the bat also deform it. Before writing an equation, decide which object and which interval you are studying. An average force inferred from the ball's momentum change does not describe every changing force inside the bat throughout the collision."
+      },
+      "4.6": {
+        "sourcePages": [
+          180,
+          181,
+          182
+        ],
+        "restored": "The source's worked-problem strategy and physical checks of a force diagram.",
+        "opening": "A free-body diagram is a decision about a system, not a sketch of every arrow you can think of. OpenStax's problem-solving method begins by isolating the object and identifying outside agents. Then choose axes that make the force components useful. After solving, return to the situation: if friction opposes a slide down an incline, does your result predict less acceleration than the frictionless case? That comparison can expose a sign error that tidy algebra hides."
+      }
+    }
+  },
+  "openstax:5": {
+    "invitation": "A crate resists the start of sliding, a falling object approaches a terminal speed, and a loaded structure changes shape. Newton's laws still apply, but now you must choose a model for how the surroundings push back. The material and the conditions matter as much as the equation.",
+    "sections": {
+      "5.2": {
+        "sourcePages": [
+          219,
+          220,
+          221,
+          222,
+          223,
+          224
+        ],
+        "restored": "The source's size-and-drag comparison, without presenting historical animal anecdotes as experiments.",
+        "opening": "OpenStax uses an historical discussion of animal size to ask why drag affects small and large bodies differently. Keep the useful scaling question: for similar shapes and densities, area grows with length squared, while mass grows with length cubed. Weight and drag therefore do not grow in the same proportion when you enlarge a model. This can change terminal speed. It is a model comparison, not a prediction that a particular fall is harmless."
+      },
+      "5.3": {
+        "sourcePages": [
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232,
+          233,
+          234,
+          235
+        ],
+        "restored": "Bones, reinforced columns, and the distinction between deformation and failure.",
+        "opening": "The source places bones beside engineered columns because both must carry loads through a particular structure. A force can stretch, compress, or shear a material, and the response depends on the direction, geometry, and material properties. A small elastic deformation is not the same as a fracture. Identify the loading mode and the range of the model before deciding that one stiffness number describes everything the object can withstand."
+      }
+    }
+  },
+  "openstax:6": {
+    "invitation": "A centrifuge turns a small sample rapidly; an astronaut can float while Earth still pulls strongly; a planet sweeps unequal distances in equal times. The common thread is changing velocity. Use an explicitly chosen frame to connect the shape of the path with its acceleration and forces.",
+    "sections": {
+      "6.2": {
+        "sourcePages": [
+          249,
+          250,
+          251,
+          252,
+          253
+        ],
+        "restored": "Centrifuge acceleration and the difference between turns per second and inward acceleration.",
+        "opening": "A laboratory centrifuge can give a sample a large centripetal acceleration even though the sample keeps returning to the same place. Its velocity is changing direction continually. At a fixed radius, doubling the angular speed makes ω²r four times larger. When a centrifuge is described in multiples of g, that compares acceleration magnitudes; it does not mean Earth's gravitational field inside the machine has become stronger."
+      },
+      "6.6": {
+        "sourcePages": [
+          269,
+          270,
+          271,
+          272,
+          273,
+          274,
+          275
+        ],
+        "restored": "Kepler's observed patterns versus Newton's mechanism.",
+        "opening": "Kepler identified patterns in planetary motion: ellipses, equal swept areas in equal times, and a relationship between period and orbital size. Newton supplied a force model that could account for those patterns together. The source uses this progression to distinguish describing what happens from explaining why a model predicts it. Check both levels: can you describe the changing orbital speed, and can you connect it to gravity and conservation?"
+      }
+    }
+  },
+  "openstax:7": {
+    "invitation": "Push a mower steadily or carry a case upstairs: both can require energy, but the energy ends up in different places. An energy account follows those transfers even when the path or the changing forces are complicated. The first step is to decide what belongs inside your system.",
+    "sections": {
+      "7.2": {
+        "sourcePages": [
+          290,
+          291,
+          292,
+          293,
+          294,
+          295
+        ],
+        "restored": "The mower versus lifted briefcase comparison and different destinations for work.",
+        "opening": "OpenStax compares pushing a lawn mower at constant speed with carrying a briefcase upstairs. The mower's kinetic energy need not increase even though the person does positive work: resisting interactions transfer energy elsewhere. Raising the case can instead increase the gravitational potential energy of the case–Earth system. The same word, work, does not guarantee the same final energy store. Follow all the transfers before using Wnet = ΔK."
+      },
+      "7.3": {
+        "sourcePages": [
+          295,
+          296,
+          297,
+          298,
+          299,
+          300,
+          301
+        ],
+        "restored": "The roller-coaster example and the information an energy equation cannot supply alone.",
+        "opening": "For an ideal roller coaster released with a known speed and height, energy conservation can predict the speed at another height without tracking every point along the rails. But a speed is not a full velocity. The track still determines the direction, and forces determine whether the car can follow it. OpenStax's example shows both the power and the limit of an energy method: it can simplify a motion problem without answering every question about the motion."
+      }
+    }
+  },
+  "openstax:8": {
+    "invitation": "A racquet acts on a tennis ball for only a short time, a crumpling structure lengthens a stop, and an animal can propel itself by expelling water. Momentum connects each change in motion to an impulse and helps explain interactions whose forces vary too quickly to follow directly.",
+    "sections": {
+      "8.1": {
+        "sourcePages": [
+          344,
+          345,
+          346,
+          347
+        ],
+        "restored": "The source's tennis-serve example and average force versus individual forces.",
+        "opening": "In the source's tennis example, the racquet changes a ball's momentum during a brief contact. Divide the momentum change by that interval and you obtain an average net force. To identify the average racquet force more precisely, account for other forces such as gravity as well. A very large contact force can make gravity a small correction during the hit, but 'small enough to neglect' is a reasoned approximation, not the disappearance of Earth."
+      },
+      "8.7": {
+        "sourcePages": [
+          365,
+          366,
+          367,
+          368,
+          369
+        ],
+        "restored": "Squids, balloons, and rockets as the same momentum-transfer mechanism.",
+        "opening": "OpenStax groups rockets with deflating balloons, squids, and octopuses. Each can accelerate by expelling material in another direction. Include both the body and what it ejects when making the momentum account over a short interval. A surrounding atmosphere is not required for the rocket–exhaust interaction, even though air or water may produce additional external forces in other examples."
+      }
+    }
+  },
+  "openstax:9": {
+    "invitation": "A drawbridge stays raised, a forearm holds a book, and a balanced object either returns or topples after a nudge. Being still is not the absence of physics. Forces and torques reveal what the supports must do and why the location of each force matters.",
+    "sections": {
+      "9.4": {
+        "sourcePages": [
+          397,
+          398,
+          399,
+          400
+        ],
+        "restored": "Drawbridge statics and choosing a pivot that simplifies unknown support forces.",
+        "opening": "For a raised drawbridge held by a cable, the hinge and cable both exert forces, and the bridge's weight acts at its center of gravity. Choosing the hinge as the torque origin removes the hinge force from that torque equation because its lever arm is zero. It does not remove the force from the physical problem. After finding the cable tension, use force balance to determine the hinge's contribution."
+      },
+      "9.6": {
+        "sourcePages": [
+          404,
+          405,
+          406,
+          407,
+          408,
+          409,
+          410,
+          411
+        ],
+        "restored": "The source's forearm-and-book lever and the mechanical tradeoff of a short muscle lever arm.",
+        "opening": "A book in your hand can require a muscle force much greater than the book's weight. The biceps acts close to the elbow, while the book acts farther away. To balance the book's turning effect, the short muscle lever arm needs a larger force. The source's forearm diagram is useful precisely because it simplifies a complicated body into named forces and distances. It is a model of the mechanics, not a personal assessment of joint loading."
+      }
+    }
+  },
+  "openstax:10": {
+    "invitation": "A fish pulls line from a reel, a grindstone keeps turning after its motor stops, and a spinning object changes speed when its mass moves inward. Rotation has familiar counterparts in straight-line motion, but every comparison needs an axis and a clear account of torque, energy, or angular momentum.",
+    "sections": {
+      "10.2": {
+        "sourcePages": [
+          428,
+          429,
+          430,
+          431,
+          432,
+          433
+        ],
+        "restored": "The fishing-reel worked example connecting angular and linear kinematics.",
+        "opening": "As a fish pulls line from a reel, the reel's turning and the line's motion describe the same contact. If the line unwinds without slipping at a fixed radius r, its speed is rω and its tangential acceleration is rα. OpenStax uses this setting to make angular kinematics concrete. If the effective winding radius changes appreciably, the fixed-radius shortcut needs to be reconsidered."
+      },
+      "10.4": {
+        "sourcePages": [
+          438,
+          439,
+          440,
+          441,
+          442,
+          443,
+          444,
+          445,
+          446
+        ],
+        "restored": "The powered and coasting grindstone as a rotational energy account.",
+        "opening": "A grindstone throws sparks and makes noise while a motor keeps it turning. Switch off the motor and the stone does not stop instantly: its rotational kinetic energy can continue supplying work against resistance for a while. Track the energy entering through the motor and leaving through contact, sound, and heating. A constant angular speed can coexist with continuing energy transfer, just as a steadily moving mower can."
+      }
+    }
+  },
+  "openstax:11": {
+    "invitation": "A narrow liquid column and a broad tank can have the same pressure at the same depth. A crown's appearance may conceal a different density. Begin with pressure forces and displaced volume, then use those ideas to explain measurements rather than just recognize formulas.",
+    "sections": {
+      "11.4": {
+        "sourcePages": [
+          481,
+          482,
+          483,
+          484
+        ],
+        "restored": "Deriving pressure from a supported fluid column and explaining why area cancels.",
+        "opening": "Take an imaginary vertical column of stationary liquid with cross-sectional area A and height h. Its weight is ρAhg. Supporting that weight requires a pressure difference whose force is ΔP times A. Equating the two makes A cancel, leaving ΔP = ρgh. OpenStax's derivation explains the surprise: more area gives more liquid weight, but also more area over which the pressure acts. Depth matters without the container's width appearing in the result."
+      },
+      "11.7": {
+        "sourcePages": [
+          492,
+          493,
+          494,
+          495,
+          496,
+          497,
+          498,
+          499
+        ],
+        "restored": "The traditional Archimedes crown story as a density measurement problem, not established biography.",
+        "opening": "The traditional story in the source gives Archimedes a crown that looks like gold and asks whether appearance is enough. It is not: another material could change the density without producing an obvious color change. Mass and displaced volume provide a more useful test. Treat the story as a motivating measurement problem; the buoyancy and density reasoning does not depend on every historical detail of the legend being verified."
+      }
+    }
+  },
+  "openstax:12": {
+    "invitation": "Blood slows as it enters many tiny parallel vessels, even though each vessel is narrow. Water near a riverbank can move more slowly than water in the middle. Fluid motion depends on the whole flow path, including branching, pressure changes, and resistance between neighboring layers.",
+    "sections": {
+      "12.1": {
+        "sourcePages": [
+          526,
+          527,
+          528,
+          529
+        ],
+        "restored": "The aorta-to-capillaries worked example and total area across parallel branches.",
+        "opening": "The source compares flow in the aorta with flow through many capillaries. Looking at one narrow capillary alone can lead to the wrong prediction. For the combined branching network, add the cross-sectional areas of all the parallel paths carrying the flow. A much larger total area allows a smaller average speed for the same volume per second. Continuity applies to the whole collection you have chosen, not to an imaginary single tube."
+      },
+      "12.4": {
+        "sourcePages": [
+          537,
+          538,
+          539,
+          540,
+          541,
+          542,
+          543,
+          544,
+          545
+        ],
+        "restored": "The riverbank comparison as motivation for velocity gradients and viscosity.",
+        "opening": "Imagine watching floating leaves near a riverbank and nearer the middle. Their speeds may differ because the moving water interacts with the boundaries and with neighboring layers. OpenStax uses this observation to introduce flow resistance. The average speed in Q = Av summarizes the whole cross-section; it does not say that every layer moves at that speed. A velocity profile contains information the average hides."
+      }
+    }
+  },
+  "openstax:13": {
+    "invitation": "A thermometer reports a thermal state, a gas pushes on every wall, and cooling humid air can produce droplets. Connect the macroscopic measurements to particles, but keep track of where an idealized particle model stops describing the actual material.",
+    "sections": {
+      "13.4": {
+        "sourcePages": [
+          589,
+          590,
+          591,
+          592,
+          593,
+          594,
+          595,
+          596
+        ],
+        "restored": "The gas-volume extrapolation toward absolute zero and the failure of an ideal model at phase changes.",
+        "opening": "An ideal-gas volume–temperature graph at fixed pressure suggests a straight line that would reach zero volume at zero kelvin. The source explicitly contrasts that extrapolation with a real gas, which can condense and later solidify. The actual sample does not shrink away to nothing. A straight line within one range of conditions is evidence for a model there, not permission to extend that model through every phase change."
+      },
+      "13.6": {
+        "sourcePages": [
+          601,
+          602,
+          603,
+          604,
+          605,
+          606,
+          607
+        ],
+        "restored": "The familiar humidity observation connected to partial pressure, evaporation, and dew point.",
+        "opening": "Why can the same air temperature feel different on dry and humid days? OpenStax connects the question to evaporation: water leaving a surface carries energy, and the surrounding water-vapor partial pressure affects the net rate. Now cool that air without removing vapor. Its relative humidity can rise until condensation becomes favorable. The two observations connect through temperature-dependent saturation, not through a literal container in which air has become 'full of water.'"
+      }
+    }
+  },
+  "openstax:14": {
+    "invitation": "A vehicle's brakes warm during a descent, a picnic cooler slows energy transfer, and stored solar energy can warm a building after sunlight fades. Follow the energy through the actual materials and processes: a temperature change is one possible result, but not the only one.",
+    "sections": {
+      "14.2": {
+        "sourcePages": [
+          620,
+          621,
+          622,
+          623,
+          624,
+          625,
+          626
+        ],
+        "restored": "The source's brake-heating example and explicit energy partition before Q = mcΔT.",
+        "opening": "A vehicle descending a hill loses gravitational potential energy. In the source's braking example, only a specified fraction ends up retained as internal energy in the brake material. First determine that energy share, then divide by the brake mass and specific heat to estimate the temperature rise. Applying Q = mcΔT before deciding what Q belongs to would quietly assign all the vehicle's lost energy to one component."
+      },
+      "14.7": {
+        "sourcePages": [
+          648
+        ],
+        "restored": "Mária Telkes and Eleanor Raymond's solar-heated house, including thermal storage.",
+        "opening": "OpenStax describes Mária Telkes working with architect Eleanor Raymond on a solar-heated house. Sun-warmed air transferred energy to a storage material so it could be used later. This example joins several ideas: radiation brings in solar energy, moving air transports it, and a material stores it. Designing the system requires more than identifying a sunny surface; the timing of collection and release matters too."
+      }
+    }
+  },
+  "openstax:15": {
+    "invitation": "A toy bird keeps dipping its beak, while a handful of tossed coins usually lands in a mixed arrangement. What supplies the bird's energy, and what makes some large-scale outcomes more likely than others? These questions connect heat engines to the microscopic explanation of entropy.",
+    "sections": {
+      "15.4": {
+        "sourcePages": [
+          685
+        ],
+        "restored": "The drinking-bird example, with an explicit energy supply and correction of the source caption's perpetual-motion implication.",
+        "opening": "The drinking bird pictured in the source seems to keep working for free. Water evaporating from its wet head cools it relative to its surroundings. That temperature difference drives changes in the sealed fluid, shifting the bird's balance so it tips and returns. Follow the energy across the boundary: the surroundings and continuing evaporation sustain the process. This is a real heat-engine demonstration, not a perpetual-motion machine or an exactly reversible Carnot engine."
+      },
+      "15.7": {
+        "sourcePages": [
+          703,
+          704
+        ],
+        "restored": "The five-coin microstate table and its equal-probability assumption.",
+        "opening": "Toss five fair, independent coins. There is only one way to get five heads, but ten distinct arrangements give three heads and two tails. Each particular arrangement has the same probability; the mixed outcome wins because more arrangements count toward it. OpenStax builds the statistical argument from this small, countable example. For a physical system, the next step is to identify the accessible microscopic arrangements and justify the probabilities, rather than treating 'disorder' as a substitute for counting."
+      }
+    }
+  },
+  "openstax:16": {
+    "invitation": "A pendulum can measure gravity, and the shadow of a steadily rotating ball can trace a back-and-forth motion. Use these concrete connections to see what the equations describe before following the same patterns into waves and resonance.",
+    "sections": {
+      "16.4": {
+        "sourcePages": [
+          736,
+          737
+        ],
+        "restored": "The pendulum as an instrument for measuring g, including small-angle and precision limits.",
+        "opening": "Reverse the usual pendulum question. Instead of using gravity to predict a period, measure the length and period to estimate g = 4π²L/T². The source connects such measurements to geological exploration, where small variations in gravity carry information. A longer timing interval containing several swings helps estimate the period, but precision also depends on measuring the pivot-to-bob distance and keeping the swing small enough for the simple-pendulum approximation."
+      },
+      "16.6": {
+        "sourcePages": [
+          741
+        ],
+        "restored": "The rotating turntable and projected shadow used to construct harmonic motion.",
+        "opening": "Imagine a ball fastened near the rim of a vertical turntable. As the turntable rotates steadily, its shadow on a horizontal line moves back and forth. The ball keeps a constant speed around the circle, but the shadow slows near each end and moves fastest through the middle. That projection is the source's bridge to sinusoidal motion: uniform change of angle produces nonuniform change of position along one axis."
+      }
+    }
+  },
+  "openstax:17": {
+    "invitation": "A rustling leaf and a crowded street occupy very different parts of the sound-intensity range. A wind instrument changes pitch as it warms, even if its length stays nearly fixed. Explore what sound carries, how resonant air responds, and what a listener actually detects.",
+    "sections": {
+      "17.3": {
+        "sourcePages": [
+          783,
+          784
+        ],
+        "restored": "The quiet-forest and noisy-street comparison motivating a logarithmic intensity scale.",
+        "opening": "The source places the faint rustle of leaves beside the sound of a busy street. A useful scale must handle an enormous range of intensities without becoming a list of unwieldy numbers. Decibels compress that range by reporting a logarithm of an intensity ratio. Increasing an intensity level by 10 dB means ten times the physical intensity; it does not mean adding ten units of intensity or guaranteeing that every listener judges the sound ten times as loud."
+      },
+      "17.5": {
+        "sourcePages": [
+          797,
+          798
+        ],
+        "restored": "Temperature-dependent instrument tuning and the source's closed-tube calculation setup.",
+        "opening": "Why do wind players let instruments approach room temperature before tuning together? The source connects pitch to the speed of sound in the air column. For an ideal tube closed at one end, the fundamental satisfies f = v/(4L). Before using a target frequency to calculate a tube length, determine the sound speed at the stated temperature. The geometry sets the allowed wavelength; the air's properties help set the frequency."
+      }
+    }
+  },
+  "openstax:18": {
+    "invitation": "A copier turns a pattern of light into a pattern of powder, and a torsion balance makes a tiny electric interaction measurable. Follow how observations and devices reveal electric forces, including the movement of charge within materials.",
+    "sections": {
+      "18.4": {
+        "sourcePages": [
+          846,
+          847
+        ],
+        "restored": "Coulomb's torsion-balance measurement as the experimental basis of the force law.",
+        "opening": "An inverse-square law is a claim about measurements, not just a familiar-looking formula. Coulomb used a torsion balance: an electric force twisted a suspended system, and the twist provided a way to measure the force. Changing separation while controlling the charges tested how that force varied with distance. Think of the equation as a compact account of an experiment whose small forces required a sensitive instrument."
+      },
+      "18.8": {
+        "sourcePages": [
+          856,
+          857
+        ],
+        "restored": "The sequence of xerography, including the photoconductor and the separate fixing stage.",
+        "opening": "A copier must turn an optical image into something that can attract toner. In the source's simplified xerographic process, a charged photoconducting surface becomes conducting where light reaches it, changing the charge pattern. Charged toner then collects selectively and transfers to paper. Heated rollers fix the image afterward. Electrostatic attraction explains the temporary placement of the powder; it does not by itself explain why the finished print stays attached."
+      }
+    }
+  },
+  "openstax:19": {
+    "invitation": "A small particle can gain a large speed by crossing a voltage difference. An insulating sheet can change how much charge a capacitor stores. Use energy and the response of materials to connect voltage measurements with what charges actually do.",
+    "sections": {
+      "19.1": {
+        "sourcePages": [
+          886,
+          887
+        ],
+        "restored": "The accelerating-electron example and why the electron-volt is useful.",
+        "opening": "Imagine accelerating an electron from rest through a potential difference whose magnitude is 50 V. If the electric force supplies the kinetic-energy gain, that gain is 50 eV. A doubly charged ion crossing the same accelerating voltage gains 100 eV. The source uses examples like these to make the electron-volt useful: voltage gives energy per charge, so both the charge and the voltage matter. To calculate speed, bring in the particle's mass as a separate piece of information."
+      },
+      "19.5": {
+        "sourcePages": [
+          902,
+          903
+        ],
+        "restored": "The microscopic polarization explanation behind a dielectric's macroscopic effect.",
+        "opening": "Slide an insulating material between capacitor plates and its charges can respond even though they cannot travel freely across the gap. Bound positive and negative charge shifts slightly, and existing molecular dipoles may reorient. The source's microscopic picture explains how the resulting polarization changes the field. Before predicting a voltage or stored-energy change, ask whether the capacitor remains attached to a battery or has been disconnected: those arrangements hold different quantities fixed."
+      }
+    }
+  },
+  "openstax:20": {
+    "invitation": "A circuit begins responding long before one electron could drift all the way around it. Two lamps can provide similar light while drawing different power. Keep charge transport, energy transfer, and the useful output of a device distinct as you follow a working circuit.",
+    "sections": {
+      "20.1": {
+        "sourcePages": [
+          927,
+          928,
+          929
+        ],
+        "restored": "The filled-straw current analogy and its distinction between carrier motion and response.",
+        "opening": "OpenStax suggests a straw containing a row of small objects as an analogy for current: pushing at one end can make something emerge at the other before the original object travels the straw's length. A metal wire likewise already contains mobile charges throughout it. The analogy helps separate a carrier's slow average drift from a circuit's much faster electromagnetic response. It is not an exact model of how the field and energy propagate through a real circuit."
+      },
+      "20.4": {
+        "sourcePages": [
+          942,
+          943
+        ],
+        "restored": "The lamp energy-cost comparison, retaining the calculation but identifying historical example assumptions.",
+        "opening": "The source compares a 60 W lamp with a 15 W lamp chosen to provide similar light output. Over 1,000 hours, they use 60 kWh and 15 kWh, respectively. That calculation separates useful illumination from electrical input: equal brightness need not mean equal power. If comparing total cost, include purchase price, operating time, and replacement life as well as energy. The book's example prices and technology comparisons are assumptions of that example, not current shopping advice."
+      }
+    }
+  },
+  "openstax:21": {
+    "invitation": "Why can a car's lights dim when its starter draws a large current? How can a flash photograph reveal a motion too quick to see? Real sources and time-dependent circuits add behavior that a simple diagram of ideal wires and resistors leaves out.",
+    "sections": {
+      "21.2": {
+        "sourcePages": [
+          984,
+          985
+        ],
+        "restored": "Dimming car lights as evidence of load-dependent terminal voltage.",
+        "opening": "The source begins with lights connected to a car battery. Adding a heavy load can dim them even when the connecting wires have little resistance. A battery is not a perfectly fixed voltage boundary: current through its internal resistance reduces the voltage available at the terminals. The observation gives the model a job to do. Compare the open-circuit reading with the reading under load, and explain why those two measurements need not agree."
+      },
+      "21.6": {
+        "sourcePages": [
+          1008,
+          1009
+        ],
+        "restored": "Harold Edgerton's flash photography and the distinction between stored energy and pulse duration.",
+        "opening": "Harold 'Doc' Edgerton's photographs made fast events visible, including a splashing drop of milk. The source uses a strobe-light problem to connect that achievement to a capacitor. The stored energy must be sufficient for the flash, while the discharge must be short enough that the subject barely moves during it. Those are two requirements: the capacitor's energy and the circuit's time scale answer different design questions."
+      }
+    }
+  },
+  "openstax:22": {
+    "invitation": "A wire's current direction does not by itself reveal the sign of its moving charges. A magnetic measurement can help. Follow this experimental thread from the Hall effect to instruments that separate particles by their mass-to-charge ratio.",
+    "sections": {
+      "22.6": {
+        "sourcePages": [
+          1044,
+          1045
+        ],
+        "restored": "Hall-voltage polarity as evidence about charge carriers, with the simple-carrier-model qualification.",
+        "opening": "Two strips can carry conventional current in the same direction while having different kinds of mobile charge. In the source's simple model, positive carriers and negative carriers moving in opposite directions are pushed toward the same side by a fixed magnetic field, but they leave opposite signs of charge there. The transverse voltage therefore reverses sign. With current and field directions known, this provides evidence about the carriers; interpreting more complicated materials can require more than this one-carrier model."
+      },
+      "22.11": {
+        "sourcePages": [
+          1058,
+          1059
+        ],
+        "restored": "Mass spectrometry as an identification problem and the need to control velocity and charge state.",
+        "opening": "A laboratory may need to distinguish ions that look identical to the eye. The source's mass spectrometer first selects a speed, then bends the transmitted beam in a magnetic field. A detector records where the ions arrive. Interpreting the separation requires knowing what was controlled: different radii reveal different mass-to-charge ratios at the selected speed, not mass alone when charge states differ. The apparatus turns invisible particle properties into measurable positions."
+      }
+    }
+  },
+  "openstax:23": {
+    "invitation": "A meter responds when a nearby circuit switches on—and again, in the opposite direction, when it switches off. A solid metal plate can be slowed by a magnet without touching it. Start with these observations and track the changing flux and the energy transfer they reveal.",
+    "sections": {
+      "23.1": {
+        "sourcePages": [
+          1081,
+          1082
+        ],
+        "restored": "Faraday's two-circuit switching experiment and the contrast between steady field and changing flux.",
+        "opening": "Place two coils near one another, with a battery and switch connected to one and a sensitive meter connected to the other. The source describes a deflection when the switch closes and an opposite deflection when it opens. Holding the switch closed does not maintain that induced current once conditions settle. This sequence is the clue: the second circuit responds to changing magnetic flux, not simply to the continued presence of a magnetic field."
+      },
+      "23.4": {
+        "sourcePages": [
+          1089,
+          1090,
+          1091,
+          1092,
+          1093
+        ],
+        "restored": "Magnetic damping, cut slots, and the contrasting uses of eddy-current energy transfer.",
+        "opening": "A solid conducting plate swinging into a magnetic-field region can slow sharply, even without a wire wound into a visible coil. Current loops form inside the metal. Cutting slots into the plate interrupts many of those paths and changes the damping. The same energy account connects two applications in the source: magnetic braking removes mechanical energy, while induction heating deliberately transfers electrical energy into the material's internal energy."
+      }
+    }
+  },
+  "openstax:24": {
+    "invitation": "Electricity, magnetism, and light once seemed like separate subjects. Maxwell's theory connected them, and instruments now reveal parts of the electromagnetic spectrum our eyes cannot see. Ask what a different wavelength lets an observer learn, not just what that wavelength is called.",
+    "sections": {
+      "24.1": {
+        "sourcePages": [
+          1142,
+          1143
+        ],
+        "restored": "Maxwell's synthesis and the predictive connection between changing fields and light.",
+        "opening": "Maxwell brought together results from experimenters and theorists including Coulomb, Oersted, Gauss, and Faraday. A crucial addition connected changing electric fields to magnetic fields. The combined theory supported traveling electromagnetic disturbances with a predicted vacuum speed matching the measured speed of light. The achievement was more than collecting formulas: a theory of electric and magnetic phenomena explained something already familiar from a different part of physics."
+      },
+      "24.3": {
+        "sourcePages": [
+          1157
+        ],
+        "restored": "George Carruthers's Apollo 16 ultraviolet instrument and its view of Earth's atmosphere.",
+        "opening": "During Apollo 16, an ultraviolet camera and spectrograph designed by George Carruthers observed from the Moon. One striking subject was Earth itself: ultraviolet images revealed atmospheric emission and structure that a visible-light photograph would not show in the same way. The source uses this instrument to make the spectrum concrete. Choosing a wavelength range changes which physical processes stand out, while the detector translates otherwise invisible radiation into an image we can examine."
+      }
+    }
+  },
+  "openstax:25": {
+    "invitation": "A fish can appear displaced—or even appear in two places when viewed through a tank corner. A rainbow can be investigated using a large water-filled vessel. Trace the light that reaches an observer and connect each change of direction to a particular boundary.",
+    "sections": {
+      "25.3": {
+        "sourcePages": [
+          1180
+        ],
+        "restored": "The fish-tank corner and multiple refracted paths to the observer.",
+        "opening": "Looking through the corner of a fish tank can produce two apparent images of one fish. Light from the fish reaches the observer along different paths through the tank's faces. The eye extends each arriving direction backward as though the path had stayed straight, placing the apparent fish in different locations. The animal has not moved or multiplied; the path of the information reaching the observer has changed."
+      },
+      "25.5": {
+        "sourcePages": [
+          1192
+        ],
+        "restored": "Al-Farisi's large water-drop model and the experimental history of rainbow explanations.",
+        "opening": "How could someone study the path of light inside a tiny raindrop? The source describes Kamal al-Din al-Farisi using a water-filled glass vessel as a large model, with controlled illumination in a darkened chamber. Theodoric of Freiberg pursued related experiments, building on earlier optical work. Enlarging the system made its behavior easier to investigate. Follow both refraction and internal reflection in the model, then ask how their combined effect depends on wavelength."
+      }
+    }
+  },
+  "openstax:26": {
+    "invitation": "A microscope and a telescope both use an image made by one optical element as the object for another. Yet they solve different viewing problems. Follow the image through the instrument, paying attention to angular size, focus, and the limits of the simple lens model.",
+    "sections": {
+      "26.4": {
+        "sourcePages": [
+          1247
+        ],
+        "restored": "Parfocal microscope objectives and image-by-image reasoning through an instrument.",
+        "opening": "Look at a microscope's rotating set of objectives. The source notes that objectives can be arranged to be parfocal, so changing magnification leaves the specimen close to focus. Inside the optical path, the objective's image becomes the eyepiece's object. Analyze those stages in order: the second lens receives light from an already formed image, not directly from the specimen as though the first lens were absent."
+      },
+      "26.5": {
+        "sourcePages": [
+          1254
+        ],
+        "restored": "The source's comparison of Galilean and two-converging-lens telescopes.",
+        "opening": "Galileo's telescope used a converging objective and a diverging eyepiece, producing an upright view. The source contrasts it with a simple telescope using two converging lenses. Both can enlarge the angle a distant object subtends at the eye, but they do not produce the same intermediate ray geometry or image orientation. A sketch of the rays tells you more than the statement that a telescope contains two lenses."
+      }
+    }
+  },
+  "openstax:27": {
+    "invitation": "A soap film changes color as it thins, while a transparent specimen can remain hard to see even when it is magnified. Light's wave behavior explains both the limits of an image and techniques that make hidden detail visible.",
+    "sections": {
+      "27.7": {
+        "sourcePages": [
+          1290,
+          1291
+        ],
+        "restored": "Agnes Pockels's surface-film investigations and the changing color of a film.",
+        "opening": "Watch the bands of color move across a draining soap film. The material need not acquire new pigments as it thins; the changing thickness changes how reflected light interferes. The source connects surface-film investigations to Agnes Pockels, who built a trough from homemade materials and carried out experiments despite barriers to formal scientific participation. A familiar kitchen material can become a carefully controlled physical system."
+      },
+      "27.9": {
+        "sourcePages": [
+          1305,
+          1306
+        ],
+        "restored": "The distinction between resolution and contrast in microscopy.",
+        "opening": "Suppose a microscope has enough resolving power to distinguish a specimen's structure, but almost all the illumination passes through it. The image may still be difficult to interpret because neighboring regions have nearly equal brightness. The source separates this contrast problem from the wavelength limit on resolution. A specimen can alter phase without absorbing much light; suitable interference methods turn that otherwise hard-to-see difference into a brightness difference."
+      }
+    }
+  },
+  "openstax:28": {
+    "invitation": "Two observers can agree about which flashes arrive at one person's eyes first while disagreeing about whether the distant lamps emitted simultaneously. Even charging a battery changes the energy—and therefore the rest mass—of a system. Examine the measurement procedure before deciding what relativity predicts.",
+    "sections": {
+      "28.2": {
+        "sourcePages": [
+          1327,
+          1328
+        ],
+        "restored": "The train-and-lamps thought experiment with arrival events separated from emission times.",
+        "opening": "In the source's train experiment, lamps flash at opposite ends and an observer rides between them. A second observer describes that rider moving toward one arriving flash and away from the other. Both observers agree on the order in which light reaches the rider; those arrivals occur at the rider's location. The disagreement concerns the time coordinates assigned to the separated emission events after accounting for propagation. Keep these two pairs of events distinct as you reason through simultaneity."
+      },
+      "28.6": {
+        "sourcePages": [
+          1349
+        ],
+        "restored": "The charged-battery mass example as an everyday application of system rest energy.",
+        "opening": "The source asks whether charging a battery increases its rest mass. In the idealized energy account, retaining an additional energy ΔE increases the complete battery's rest mass by ΔE/c². The increase is tiny because c² is enormous. Nothing needs to travel near light speed for this relation to matter in principle: stored chemical energy contributes to the mass of the resting system. Use the net energy retained, not energy lost as heat elsewhere during charging."
+      }
+    }
+  },
+  "openstax:29": {
+    "invitation": "A glowing gas produces separated spectral lines rather than every possible color. Electrons can diffract, yet a rolling bowling ball does not display a visible interference pattern. Let these observations set the questions that quantization and matter waves must answer.",
+    "sections": {
+      "29.1": {
+        "sourcePages": [
+          1369,
+          1370
+        ],
+        "restored": "Emission spectra as useful experimental fingerprints before their quantum explanation.",
+        "opening": "Pass an electrical discharge through a gas and examine its light with a spectroscope. The source's oxygen spectrum contains separated lines, a pattern that can identify the substance. Scientists could use such patterns before they understood why only certain energies appeared. Quantization addresses that missing explanation: allowed changes in atomic or molecular energy produce specific photon energies. An empirical fingerprint and a theory explaining it are different achievements."
+      },
+      "29.6": {
+        "sourcePages": [
+          1387
+        ],
+        "restored": "De Broglie's proposal and the numerical bowling-ball wavelength comparison.",
+        "opening": "De Broglie's proposal raises an immediate objection: if matter has a wavelength, why does a bowling ball look so ordinary? Use the source's 3 kg ball moving at 10 m/s. Its momentum is 30 kg·m/s, so λ = h/p is about 2.2 × 10⁻³⁵ m. The wavelength is extraordinarily small compared with the openings and obstacles in the bowling alley. This scale comparison explains why a successful quantum relation need not produce a visible wave pattern in an everyday setting."
+      }
+    }
+  },
+  "openstax:30": {
+    "invitation": "A few alpha particles scattered backward through a thin foil forced a major revision of atomic structure. A scorpion glowing under ultraviolet illumination reveals another kind of atomic and molecular evidence. Connect each observation to what it tells us—and what the model still has to explain.",
+    "sections": {
+      "30.2": {
+        "sourcePages": [
+          1420
+        ],
+        "restored": "The surprising rare large-angle scattering events and their power to discriminate atomic models.",
+        "opening": "Most alpha particles passed through a thin gold foil with little deflection. That was unsurprising. The source emphasizes the small fraction scattered through very large angles, some almost straight back. A diffuse distribution of positive charge could not readily account for those events. The rare observations mattered disproportionately: they pointed toward a compact, massive, positively charged nucleus. A good model must explain the unusual part of a distribution as well as its most common result."
+      },
+      "30.5": {
+        "sourcePages": [
+          1436
+        ],
+        "restored": "The fluorescent scorpion and the distinction between absorbed and emitted photon energy.",
+        "opening": "The source shows a scorpion glowing visibly under ultraviolet illumination. The visible photons are not simply reflected ultraviolet photons; the material absorbs energy and later emits at different energies. Molecular and atomic energy changes, including nonradiative transfers, complete the account. Fluorescence makes an invisible part of the illumination visible while reminding us to track all the energy, not require each outgoing photon to match an incoming photon's energy."
+      }
+    }
+  },
+  "openstax:31": {
+    "invitation": "An invisible interaction can become a flash of light and then an electrical pulse. An alpha particle can escape a nucleus even when a classical energy diagram appears to trap it. Follow the evidence from the detector back to the physical model.",
+    "sections": {
+      "31.2": {
+        "sourcePages": [
+          1483,
+          1484
+        ],
+        "restored": "The scintillator–photomultiplier detection chain and the relation between event and signal.",
+        "opening": "A scintillation detector makes a chain of translations. Incoming radiation transfers energy to a material; the material emits a small light flash; a photosensitive device converts that light into an electrical signal. In the source's photomultiplier example, successive stages amplify the signal into something measurable. A recorded pulse is therefore evidence of an interaction processed by an instrument. Its size and timing depend on both the radiation and the detector's response."
+      },
+      "31.7": {
+        "sourcePages": [
+          1508
+        ],
+        "restored": "The alpha-decay barrier puzzle, without the source's misleading claim that the particle skips the intervening region.",
+        "opening": "Draw the potential-energy barrier surrounding a nucleus, then mark the measured energy of an emitted alpha particle below the barrier's top. Classically, it could not climb out with that energy. The source introduces Gamow's tunneling explanation to resolve the puzzle. The quantum wavefunction extends through the barrier and into the outside region with a small transmitted amplitude. No extra energy has to be borrowed to carry the particle over the top, and the explanation does not require the wavefunction to vanish in the intervening region."
+      }
+    }
+  },
+  "openstax:32": {
+    "invitation": "A detector must learn where radiation came from, not merely that some arrived. A nuclear-energy calculation must distinguish the energy available from the rate at which a device delivers it. Those measurement and accounting questions run through this chapter's imaging and energy applications.",
+    "sections": {
+      "32.1": {
+        "sourcePages": [
+          1525
+        ],
+        "restored": "The gamma camera's collimator, signal chain, and missing depth information.",
+        "opening": "The source's gamma-camera diagram puts a collimator in front of the detectors. Its openings select incoming directions, helping the system associate a detected signal with a location in the projected image. Scintillators and photosensors then turn the radiation interaction into an electrical record. In this simple arrangement, different depths along the same viewing direction can contribute to the same image location. Forming a two-dimensional projection is not the same measurement as reconstructing a three-dimensional distribution."
+      },
+      "32.5": {
+        "sourcePages": [
+          1543,
+          1544
+        ],
+        "restored": "The fusion-fuel worked example's conversion from energy per reaction to total energy and average power.",
+        "opening": "The source works from energy released in one fusion reaction to the energy available from a stated mass of reactants. That requires counting reactions, with the correct mixture of nuclei. It then spreads the total energy over a year to find an average power and considers a separate conversion efficiency for electricity. A large energy per kilogram is only the beginning of an engineering account: it does not specify the reaction rate, operating losses, or net electrical output."
+      }
+    }
+  },
+  "openstax:33": {
+    "invitation": "A theory can suggest a particle before an experiment produces evidence for it. An accelerator can build a large particle energy through many modest steps. Follow how a proposed interaction becomes a testable prediction and how an apparatus creates the conditions needed to test it.",
+    "sections": {
+      "33.1": {
+        "sourcePages": [
+          1570,
+          1571
+        ],
+        "restored": "Yukawa's predicted mass scale followed by cosmic-ray evidence and laboratory production of pions.",
+        "opening": "Yukawa's proposal linked a short interaction range to a massive exchanged particle at a time when no suitable particle had been identified. The source then follows the experimental story: pions were observed in cosmic-ray experiments in 1947 and later produced in accelerators. The narrative distinguishes a virtual exchange in an interaction model from a real particle that can be created and detected when a collision supplies sufficient energy and momentum."
+      },
+      "33.3": {
+        "sourcePages": [
+          1576,
+          1577
+        ],
+        "restored": "Repeated accelerating gaps and synchronized voltage changes instead of one enormous static voltage.",
+        "opening": "An accelerator need not provide the particle's entire energy gain in one gap. In the source's example, a singly charged particle crosses 2,000 accelerating gaps, each providing a 400 kV potential drop in the accelerating direction. The accumulated gain is 800 MeV. The timing matters: fields must accelerate the particle at each encounter instead of undoing the previous gain. Repeated, coordinated transfers produce the large final energy."
+      }
+    }
+  },
+  "openstax:34": {
+    "invitation": "Stars far from a galaxy's center move in ways that challenge an account based only on visible matter. A promising laboratory result may disappear when repeated. At the frontier, knowing what the evidence establishes is as important as imagining an explanation.",
+    "sections": {
+      "34.4": {
+        "sourcePages": [
+          1623,
+          1624
+        ],
+        "restored": "Vera Rubin's galaxy-rotation evidence and the distinction between inferred gravity and particle identification.",
+        "opening": "Vera Rubin's work on spiral-galaxy rotation helped make a missing-mass problem difficult to ignore. Outer material did not slow in the way an account based on the observed luminous matter would suggest. The source connects measured spectra and orbital speeds to an inference about the gravitational mass distribution. That inference is powerful, but it does not by itself identify a new particle. A proposed explanation must also account for evidence beyond one galaxy's rotation curve."
+      },
+      "34.6": {
+        "sourcePages": [
+          1631
+        ],
+        "restored": "The source's inconsistent superconductivity trials as a lesson in reproducibility, rather than a current temperature record.",
+        "opening": "One historical figure in the source shows three trials on a sample: a striking apparent transition in one trial fails to repeat in the others. The teaching point is the inconsistency, not a temperature record to memorize. Before calling an unusual signal superconductivity, researchers must establish what was measured, rule out alternative causes, and obtain reproducible evidence. A result can be interesting enough to investigate without yet supporting the strongest interpretation."
+      }
+    }
+  }
+}

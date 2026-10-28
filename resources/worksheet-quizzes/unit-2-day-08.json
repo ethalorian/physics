@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 8,
+  "title": "Free-fall lab",
+  "target": "Estimate g from measured motion and discuss measurement limits.",
+  "criteria": [
+    "Keep supplied examples separate from measurements.",
+    "Find acceleration from a velocity-time slope.",
+    "Use repeated trials and explain uncertainty."
+  ],
+  "source_sha256": "4d2694b9a67fc4066dfbe29db15dda555b254f7605d708f9bc3a11a09034c6dc",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.493Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A worksheet provides a sample velocity table. How should a student describe calculations made from it?",
+      "options": [
+        "A new observation of the local gravitational field.",
+        "Their own measured trial without doing the experiment.",
+        "Exact proof that sensors have no uncertainty.",
+        "Analysis of supplied example data."
+      ],
+      "correct_index": 3,
+      "guide": "Supplied data can test reasoning but do not establish personal measurement.",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which record distinguishes an actual trial from a worked example?",
+      "options": [
+        "Only the expected value of g.",
+        "A claim that every number is exact.",
+        "Only a copied final answer.",
+        "Recorded sensor readings, units, setup, and trial identification."
+      ],
+      "correct_index": 3,
+      "guide": "Traceable observations identify what was actually measured.",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Take downward positive. Supplied velocity changes from 1 to 7 m/s over 0.6 s. What is acceleration?",
+      "options": [
+        "+10 m/s²",
+        "+6 m/s²",
+        "+3.6 m/s²",
+        "−10 m/s²"
+      ],
+      "correct_index": 0,
+      "guide": "Slope = Δv/Δt = 6/0.6 = 10 m/s².",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "With upward positive, a fitted free-fall v–t line has slope −9.6 m/s². What does this mean?",
+      "options": [
+        "Acceleration magnitude is −9.6 m/s².",
+        "The ball must move upward the entire time.",
+        "Acceleration is 9.6 m/s² downward.",
+        "Gravity has negative mass."
+      ],
+      "correct_index": 2,
+      "guide": "The sign gives direction; magnitude is positive.",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Supplied trials give 9.4, 9.8, and 10.2 m/s². What are the mean and full observed interval?",
+      "options": [
+        "10.2 m/s²; 9.4 to 9.8 m/s².",
+        "9.8 m/s²; 9.4 to 10.2 m/s².",
+        "9.4 m/s²; 0 to 10.2 m/s².",
+        "29.4 m/s²; 9.8 to 10.2 m/s²."
+      ],
+      "correct_index": 1,
+      "guide": "Mean = 29.4/3 = 9.8; interval runs from minimum to maximum.",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Repeated values cluster tightly but all differ from the expected g. Which next check is useful?",
+      "options": [
+        "Replace observations with the expected number.",
+        "Assume repetition proves absolute accuracy.",
+        "Calibration and systematic timing or length-scale errors.",
+        "Delete all readings without documenting why."
+      ],
+      "correct_index": 2,
+      "guide": "Repeatability does not rule out systematic bias.",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A worksheet provides a sample velocity table. How should a student describe calculations made from it?",
+      "options": [
+        "Analysis of supplied example data.",
+        "A new observation of the local gravitational field.",
+        "Their own measured trial without doing the experiment.",
+        "Exact proof that sensors have no uncertainty."
+      ],
+      "correct_index": 0,
+      "guide": "Supplied data can test reasoning but do not establish personal measurement.",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Which record distinguishes an actual trial from a worked example?",
+      "options": [
+        "A claim that every number is exact.",
+        "Only the expected value of g.",
+        "Recorded sensor readings, units, setup, and trial identification.",
+        "Only a copied final answer."
+      ],
+      "correct_index": 2,
+      "guide": "Traceable observations identify what was actually measured.",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Take downward positive. Supplied velocity changes from 1 to 7 m/s over 0.6 s. What is acceleration?",
+      "options": [
+        "−10 m/s²",
+        "+10 m/s²",
+        "+3.6 m/s²",
+        "+6 m/s²"
+      ],
+      "correct_index": 1,
+      "guide": "Slope = Δv/Δt = 6/0.6 = 10 m/s².",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "With upward positive, a fitted free-fall v–t line has slope −9.6 m/s². What does this mean?",
+      "options": [
+        "The ball must move upward the entire time.",
+        "Acceleration magnitude is −9.6 m/s².",
+        "Gravity has negative mass.",
+        "Acceleration is 9.6 m/s² downward."
+      ],
+      "correct_index": 3,
+      "guide": "The sign gives direction; magnitude is positive.",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Supplied trials give 9.4, 9.8, and 10.2 m/s². What are the mean and full observed interval?",
+      "options": [
+        "29.4 m/s²; 9.8 to 10.2 m/s².",
+        "9.4 m/s²; 0 to 10.2 m/s².",
+        "10.2 m/s²; 9.4 to 9.8 m/s².",
+        "9.8 m/s²; 9.4 to 10.2 m/s²."
+      ],
+      "correct_index": 3,
+      "guide": "Mean = 29.4/3 = 9.8; interval runs from minimum to maximum.",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Repeated values cluster tightly but all differ from the expected g. Which next check is useful?",
+      "options": [
+        "Calibration and systematic timing or length-scale errors.",
+        "Delete all readings without documenting why.",
+        "Replace observations with the expected number.",
+        "Assume repetition proves absolute accuracy."
+      ],
+      "correct_index": 0,
+      "guide": "Repeatability does not rule out systematic bias.",
+      "target_slug": "u2.s4-vernier-measure-g",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

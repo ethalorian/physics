@@ -6,7 +6,7 @@ import { withAuth,withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { accessVocabTask,vocabCourses } from '@/lib/vocab-access'
 import { vocabDiagnostics } from '@/lib/vocab-diagnostics'
-import { quizSummary } from '@/lib/vocab-quiz'
+import { quizSummary, publicVocabResults } from '@/lib/vocab-quiz'
 import { duplicateVocabTask } from '@/lib/vocab-assignment-identity'
 import { summarizeVocabActivity } from '@/lib/vocab-activity'
 import { vocabRows } from '@/lib/vocab-pagination'
@@ -42,7 +42,7 @@ export const GET=withAuth(async(req,ctx)=>{
  const enrollments=await vocabRows((a,b)=>supabaseAdmin.from('course_students').select('course_id,student_id').in('course_id',[...new Set(tasks.map(t=>t.course_id))]).eq('enrollment_state','ACTIVE').order('id').range(a,b))
  const enrolled=new Set(enrollments.map(e=>e.course_id+'|'+e.student_id))
  tasks=tasks.map(t=>({...t,student_ids:t.student_ids.filter(id=>enrolled.has(t.course_id+'|'+id))}))
- let cq=supabaseAdmin.from('vocab_checks').select('id,task_id,user_id,created_at,completed_at,result,review_version').in('task_id',tasks.map(t=>t.id)).order('completed_at',{ascending:false}).order('id')
+ let cq=supabaseAdmin.from('vocab_checks').select('id,task_id,user_id,created_at,completed_at,result,review_version,requires_release,reviewed_at').in('task_id',tasks.map(t=>t.id)).order('completed_at',{ascending:false}).order('id')
  if(!staff)cq=cq.eq('user_id',ctx.userId)
  const ids=staff?[...new Set(tasks.flatMap(t=>t.student_ids))]:[ctx.userId]
  const checkpointIds=tasks.filter(t=>t.quiz_format==='checkpoint').map(t=>t.id)
@@ -59,7 +59,8 @@ export const GET=withAuth(async(req,ctx)=>{
  if(studentResult.error)throw studentResult.error
  if(ratingResult.error)throw ratingResult.error
  // Preserve query ordering (latest first) while avoiding repeated whole-class scans.
- const checkIndex=groupRows(checks,c=>c.task_id+'|'+c.user_id)
+ const visibleChecks=staff?checks:checks.map(c=>({...c,result:publicVocabResults(c)}))
+ const checkIndex=groupRows(visibleChecks,c=>c.task_id+'|'+c.user_id)
  const practiceIndex=groupRows(practice,p=>p.user_id)
  const checkpointIndex=firstRows(checkpointAttempts,a=>a.task_id+'|'+a.user_id)
  const reviewIndex=firstRows(reviews,r=>r.task_id+'|'+r.user_id+'|'+r.target_id)

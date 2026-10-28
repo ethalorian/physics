@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 10,
+  "title": "Measure sound speed",
+  "target": "Analyze sound travel measurements and their limitations.",
+  "criteria": [
+    "Define one-way versus round-trip paths.",
+    "Calculate speed from distance and time.",
+    "Use repeated measurements and discuss timing uncertainty."
+  ],
+  "source_sha256": "cad99a3dbc042990488ca9950bd433a859e0e582efebae18628d76499ac8812c",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.551Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A microphone and speaker are together 42 m from a wall. What path length does a reflected pulse travel back to the microphone?",
+      "options": [
+        "42 m",
+        "84 m",
+        "126 m",
+        "21 m"
+      ],
+      "correct_index": 1,
+      "guide": "An echo travels to the wall and back, two equal legs.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two synchronized sensors are 36 m apart along a sound path. A pulse travels directly from the first to the second. Which distance belongs in v = d/t?",
+      "options": [
+        "72 m",
+        "0 m",
+        "36 m",
+        "18 m"
+      ],
+      "correct_index": 2,
+      "guide": "This is one-way timing between different sensors, not an out-and-back echo.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A wall is 68 m away. A pulse returns in 0.40 s. What measured sound speed follows?",
+      "options": [
+        "680 m/s",
+        "170 m/s",
+        "27.2 m/s",
+        "340 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "Round-trip distance is 136 m. v = 136/0.40 = 340 m/s.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A pulse covers 45 m one way in 0.15 s. What is its measured speed?",
+      "options": [
+        "300 m/s",
+        "600 m/s",
+        "0.0033 m/s",
+        "6.75 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "v = 45/0.15 = 300 m/s; do not double a one-way path.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Echo times vary slightly across trials at the same distance. What is a useful response?",
+      "options": [
+        "Repeat consistently and report the spread alongside the estimate.",
+        "Conclude the wall moves without other evidence.",
+        "Invent identical times.",
+        "Keep only the time closest to the expected value."
+      ],
+      "correct_index": 0,
+      "guide": "Repeated data help quantify variation; selecting a preferred reading biases the estimate.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A measured echo time is too large because of a timing delay. The distance is correct. What bias results in v = 2d/t?",
+      "options": [
+        "No bias is possible.",
+        "The calculated speed is too low.",
+        "The calculated speed is too high.",
+        "The distance automatically doubles to compensate."
+      ],
+      "correct_index": 1,
+      "guide": "An overestimated denominator reduces the computed speed.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A microphone and speaker are together 42 m from a wall. What path length does a reflected pulse travel back to the microphone?",
+      "options": [
+        "21 m",
+        "126 m",
+        "84 m",
+        "42 m"
+      ],
+      "correct_index": 2,
+      "guide": "An echo travels to the wall and back, two equal legs.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two synchronized sensors are 36 m apart along a sound path. A pulse travels directly from the first to the second. Which distance belongs in v = d/t?",
+      "options": [
+        "72 m",
+        "0 m",
+        "18 m",
+        "36 m"
+      ],
+      "correct_index": 3,
+      "guide": "This is one-way timing between different sensors, not an out-and-back echo.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A wall is 68 m away. A pulse returns in 0.40 s. What measured sound speed follows?",
+      "options": [
+        "170 m/s",
+        "340 m/s",
+        "680 m/s",
+        "27.2 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "Round-trip distance is 136 m. v = 136/0.40 = 340 m/s.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A pulse covers 45 m one way in 0.15 s. What is its measured speed?",
+      "options": [
+        "6.75 m/s",
+        "300 m/s",
+        "600 m/s",
+        "0.0033 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "v = 45/0.15 = 300 m/s; do not double a one-way path.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Echo times vary slightly across trials at the same distance. What is a useful response?",
+      "options": [
+        "Repeat consistently and report the spread alongside the estimate.",
+        "Keep only the time closest to the expected value.",
+        "Conclude the wall moves without other evidence.",
+        "Invent identical times."
+      ],
+      "correct_index": 0,
+      "guide": "Repeated data help quantify variation; selecting a preferred reading biases the estimate.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A measured echo time is too large because of a timing delay. The distance is correct. What bias results in v = 2d/t?",
+      "options": [
+        "The calculated speed is too high.",
+        "No bias is possible.",
+        "The calculated speed is too low.",
+        "The distance automatically doubles to compensate."
+      ],
+      "correct_index": 2,
+      "guide": "An overestimated denominator reduces the computed speed.",
+      "target_slug": "u6.s1-echo-lab",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

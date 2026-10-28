@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 3,
+  "title": "Velocity and position graphs",
+  "target": "Connect a position-time graph to velocity using slope.",
+  "criteria": [
+    "Read positions and elapsed times from a graph.",
+    "Find velocity from position change divided by time.",
+    "Explain the difference between speed and velocity."
+  ],
+  "source_sha256": "68b9d1f72e3c016b90d05979869eae05373899246d5f5edec1f919b675e60eed",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.469Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A straight position-time segment runs from (2 s, 7 m) to (6 s, 19 m). What are elapsed time and position change?",
+      "options": [
+        "4 s and +12 m.",
+        "8 s and +26 m.",
+        "4 s and +19 m.",
+        "6 s and +19 m."
+      ],
+      "correct_index": 0,
+      "guide": "Use differences: 6 − 2 = 4 s; 19 − 7 = 12 m.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A position-time graph is horizontal at x = 11 m throughout the interval from 1 to 5 s. What does this show?",
+      "options": [
+        "It moves 4 m each second.",
+        "It is necessarily at the origin.",
+        "The object remains at 11 m throughout that interval.",
+        "It moves at 11 m/s."
+      ],
+      "correct_index": 2,
+      "guide": "A continuously horizontal position graph shows no position change.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Take right as positive. A cart moves steadily from 16 m to 4 m in 3 s. What is velocity?",
+      "options": [
+        "−12 m/s",
+        "−4 m/s",
+        "+1.33 m/s",
+        "+4 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "v = Δx/Δt = (4 − 16)/3 = −4 m/s.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A robot is at −2 m at t = 1 s and +13 m at t = 6 s. What is average velocity over that interval?",
+      "options": [
+        "+3 m/s",
+        "+15 m/s",
+        "−3 m/s",
+        "+2.17 m/s"
+      ],
+      "correct_index": 0,
+      "guide": "Average v = [13 − (−2)]/(6 − 1) = 15/5 = 3 m/s.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A runner travels 8 m east then 8 m west in 4 s. What are average speed and average velocity?",
+      "options": [
+        "4 m/s and 4 m/s east.",
+        "4 m/s and 0 m/s.",
+        "2 m/s and 0 m/s.",
+        "0 m/s and 4 m/s."
+      ],
+      "correct_index": 1,
+      "guide": "Distance = 16 m; displacement = 0. Divide each by 4 s.",
+      "target_slug": "u1.kinematics-language",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two carts have equal average velocities over 10 s. Must their average speeds be equal?",
+      "options": [
+        "No; average velocity cannot be measured.",
+        "Yes; equal displacement guarantees equal path length.",
+        "Yes; speed and velocity are identical.",
+        "No; one may travel farther while reversing direction."
+      ],
+      "correct_index": 3,
+      "guide": "Equal displacement/time does not require equal distance/time.",
+      "target_slug": "u1.kinematics-language",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A straight position-time segment runs from (2 s, 7 m) to (6 s, 19 m). What are elapsed time and position change?",
+      "options": [
+        "8 s and +26 m.",
+        "4 s and +12 m.",
+        "4 s and +19 m.",
+        "6 s and +19 m."
+      ],
+      "correct_index": 1,
+      "guide": "Use differences: 6 − 2 = 4 s; 19 − 7 = 12 m.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A position-time graph is horizontal at x = 11 m throughout the interval from 1 to 5 s. What does this show?",
+      "options": [
+        "It moves at 11 m/s.",
+        "It moves 4 m each second.",
+        "The object remains at 11 m throughout that interval.",
+        "It is necessarily at the origin."
+      ],
+      "correct_index": 2,
+      "guide": "A continuously horizontal position graph shows no position change.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Take right as positive. A cart moves steadily from 16 m to 4 m in 3 s. What is velocity?",
+      "options": [
+        "−12 m/s",
+        "+1.33 m/s",
+        "−4 m/s",
+        "+4 m/s"
+      ],
+      "correct_index": 2,
+      "guide": "v = Δx/Δt = (4 − 16)/3 = −4 m/s.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A robot is at −2 m at t = 1 s and +13 m at t = 6 s. What is average velocity over that interval?",
+      "options": [
+        "+15 m/s",
+        "+3 m/s",
+        "−3 m/s",
+        "+2.17 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "Average v = [13 − (−2)]/(6 − 1) = 15/5 = 3 m/s.",
+      "target_slug": "u1.capture-pt-graph",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A runner travels 8 m east then 8 m west in 4 s. What are average speed and average velocity?",
+      "options": [
+        "4 m/s and 0 m/s.",
+        "0 m/s and 4 m/s.",
+        "2 m/s and 0 m/s.",
+        "4 m/s and 4 m/s east."
+      ],
+      "correct_index": 0,
+      "guide": "Distance = 16 m; displacement = 0. Divide each by 4 s.",
+      "target_slug": "u1.kinematics-language",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two carts have equal average velocities over 10 s. Must their average speeds be equal?",
+      "options": [
+        "No; average velocity cannot be measured.",
+        "Yes; speed and velocity are identical.",
+        "Yes; equal displacement guarantees equal path length.",
+        "No; one may travel farther while reversing direction."
+      ],
+      "correct_index": 3,
+      "guide": "Equal displacement/time does not require equal distance/time.",
+      "target_slug": "u1.kinematics-language",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -4,6 +4,8 @@ export const EXPERIENCE_READ_RPCS = new Set([
   'economy_totals', 'economy_earning_events', 'unit_xp_report', 'student_term_xp',
   'lesson_reward_map', 'lesson_xp_earned', 'lesson_video_xp_status',
   'math_daily_xp_status',
+  // STABLE SELECT-only prerequisite lookups used by the student assignment lists.
+  'daily_lesson_missing', 'daily_review_missing',
   'get_leaderboard', 'math_mission_leaders', 'avatar_target_level', 'avatar_gallery_page',
   'avatar_owner_counts', 'get_course_sections', 'get_course_students', 'get_section_students',
   'get_unassigned_students', 'get_student_activity_summary', 'calculate_assignment_stats',

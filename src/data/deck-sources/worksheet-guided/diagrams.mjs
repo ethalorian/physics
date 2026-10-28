@@ -22,12 +22,12 @@ export function diagram(v, answer = '') {
     const X=x=>left+(x-xmin)/(xmax-xmin)*(right-left),Y=y=>bottom-(y-ymin)/(ymax-ymin)*(bottom-top);
     const ticks=(lo,hi)=>{if(vector){const step=Math.max(1,Math.ceil((hi-lo)/14));return Array.from({length:Math.floor((hi-lo)/step)+1},(_,i)=>lo+i*step)}const n=Math.min(8,Math.max(4,Math.ceil(hi-lo)));return Array.from({length:n+1},(_,i)=>lo+(hi-lo)*i/n)};
     out.push('<g class="grid">');
-    for(const val of ticks(xmin,xmax)){const x=X(val);out.push(`<path d="M${x} ${top}V${bottom}"/><text x="${x}" y="${bottom+20}" text-anchor="middle">${+val.toFixed(1)}</text>`)}
-    for(const val of ticks(ymin,ymax)){const y=Y(val);out.push(`<path d="M${left} ${y}H${right}"/><text x="${left-10}" y="${y+5}" text-anchor="end">${+val.toFixed(1)}</text>`)}
+    for(const val of ticks(xmin,xmax)){const x=X(val);out.push(`<path d="M${x} ${top}V${bottom}"/><text data-axis="x" x="${x}" y="${bottom+20}" text-anchor="middle">${Number(val.toPrecision(5))}</text>`)}
+    for(const val of (!vector&&v.step&&((ymax-ymin)/v.step)<=12?Array.from({length:Math.floor((ymax-ymin)/v.step)+1},(_,i)=>ymin+i*v.step):ticks(ymin,ymax))){const y=Y(val);out.push(`<path d="M${left} ${y}H${right}"/><text data-axis="y" x="${left-10}" y="${y+5}" text-anchor="end">${Number(val.toPrecision(5))}</text>`)}
     out.push('</g>');
     line(left,top,left,bottom);line(left,bottom,right,bottom);if(ymin<0&&ymax>0)line(left,Y(0),right,Y(0));if(xmin<0&&xmax>0)line(X(0),top,X(0),bottom);
     text(left,30,v.ylabel||'North (m)');text(255,321,v.xlabel||'East (m)','middle');
-    if(v.points?.length)poly(v.points.map(([x,y])=>[X(x),Y(y)]));
+    if(v.points?.length){if(v.scatter)v.points.forEach(([x,y])=>circle(X(x),Y(y),3));else{poly(v.points.map(([x,y])=>[X(x),Y(y)]));v.points.forEach(([x,y],i)=>{circle(X(x),Y(y),3);if(v.pointLabels?.[i])text(X(x)+(i===v.points.length-1?-8:8),Y(y)-14,v.pointLabels[i],i===v.points.length-1?'end':'start',true)});}}
     for(const [x,y,xx,yy,label] of v.arrows||[]){arrow(X(x),Y(y),X(xx),Y(yy));text(X((x+xx)/2)+8,Y((y+yy)/2)-8,label)}
     // Only plot explicitly stated coordinate pairs from the reviewed answer.
     if(answer && !v.points && k==='graph') {

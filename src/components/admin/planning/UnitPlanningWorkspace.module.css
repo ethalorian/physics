@@ -88,6 +88,9 @@
 .paceCell small { font-size: 10px; white-space: nowrap; color: var(--muted-foreground); }
 .calendarHeading { align-items: center; margin-bottom: 16px; }
 .calendarHeading h3 { font-size: 18px; font-weight: 650; margin-bottom: 6px; }
+.sequenceControls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+.sequenceControls p { min-width: 0; overflow-wrap: anywhere; }
+.sequenceControls span { display: block; margin-top: 4px; font-size: 13px; color: var(--muted-foreground); }
 .month { display: flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 13px; }
 .month strong { min-width: 112px; text-align: center; }
 .month button { padding: 8px; }
@@ -98,24 +101,20 @@
 .unassignDrop small { display: block; font-size: 11px; line-height: 1.4; color: var(--muted-foreground); margin-top: 4px; }
 .calendarTools .unassignDrop[data-over] { border-color: var(--primary); background: var(--secondary); box-shadow: inset 0 0 0 1px var(--primary); }
 @media (max-width: 600px) { .calendarTools { flex-direction: column; }.calendarTools .unassignDrop { flex-basis: auto; min-height: 48px; }.unassignDrop span { display: flex; align-items: center; gap: 12px; }.unassignDrop small { margin: 0; } }
-.shelf button { min-width: 190px; max-width: 230px; text-align: left; justify-content: flex-start; flex: 0 0 auto; font-size: 12px; font-weight: 550; }
+.shelf button { position: relative; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0; width: 280px; min-width: 260px; text-align: left; flex: 0 0 auto; padding: 14px; font-size: 13px; font-weight: 550; }
 .shelf button[aria-pressed="true"] { border: 2px solid var(--primary); background: var(--secondary); }
 .shelf small { display: block; margin-top: 5px; font-size: 10px; color: var(--muted-foreground); }
-.calendarScroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; }
-.calendarGrid { display: grid; grid-template-columns: repeat(7, minmax(120px, 1fr)); min-width: 840px; background: var(--card); }
-.weekday { font-size: 11px; font-weight: 650; text-align: center; padding: 12px; border-bottom: 1px solid var(--border); background: var(--muted); }
 .day { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 145px; padding: 9px; }
 .day:nth-child(7n) { border-right: none; }
 .dayNumber { display: block; font-size: 12px; font-weight: 650; margin-bottom: 7px; }
 .today { box-shadow: inset 0 0 0 2px var(--primary); }
-.otherMonth { background: var(--muted); }
 .day .meeting { border: 1px dashed var(--primary); min-height: 32px; width: 100%; font-size: 10px; padding: 5px; color: var(--primary); margin-bottom: 6px; }
 .day .meeting:disabled { opacity: .8; }
-.day .plannedCard { background: var(--secondary); display: flex; align-items: flex-start; justify-content: flex-start; text-align: left; font-size: 11px; line-height: 1.4; width: 100%; border-color: transparent; margin: 6px 0; padding: 8px; }
+.day .plannedCard { position: relative; display: block; background: var(--secondary); text-align: left; font-size: 13px; line-height: 1.5; width: 100%; border-color: transparent; margin: 10px 0; padding: 14px; }
 .plannedCard small { display: block; font-weight: 400; font-size: 10px; color: var(--muted-foreground); margin-top: 4px; }
 .noMeeting { font-size: 10px; color: var(--muted-foreground); }
 .deadline { font-size: 10px; line-height: 1.5; margin-top: 8px; }
-.deadline span { font-weight: 750; color: var(--primary); }
+
 .assignedWork { margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border); }
 .assignedWork > summary { cursor: pointer; font-size: 15px; font-weight: 650; padding: 10px 0; }
 .assignedWork > p { font-size: 13px; color: var(--muted-foreground); margin: 8px 0 24px; }
@@ -145,3 +144,78 @@
 .day a.deadline { display: block; text-decoration: underline; text-underline-offset: 2px; }
 
 .shelf [data-drag-handle] { touch-action: none; cursor: grab; flex-shrink: 0; width: 22px; height: 30px; }.dragGhost { position: fixed; z-index: 100; pointer-events: none; background: var(--primary); color: var(--primary-foreground); padding: 10px 14px; border-radius: 8px; font-size: 12px; }.day .meeting[data-over] { background: var(--primary); color: var(--primary-foreground); border-style: solid; }
+
+.sequenceNumber { display: block; color: var(--muted-foreground); font-size: 10px; margin-bottom: 5px; }
+.day a.deadline { padding: 14px; border: 1px solid var(--border); border-radius: 8px; text-decoration: none; }
+.day a.deadline:hover { border-color: var(--primary); background: var(--secondary); }
+.deadline > small { display: block; margin-top: 5px; color: var(--muted-foreground); }
+
+/* Keep the drag handle out of the reading column; cards grow with their content. */
+.shelf button > [data-drag-handle], .plannedCard > [data-drag-handle] { position: absolute; top: 10px; right: 6px; width: 18px; height: 24px; color: var(--muted-foreground); }
+.shelf button > span, .plannedCard > span { display: block; min-width: 0; }
+.shelf small, .plannedCard small, .deadline > small { font-size: 12px; line-height: 1.5; margin-top: 12px; padding-top: 9px; border-top: 1px solid var(--border); }
+.sequenceNumber { font-size: 11px; padding-right: 20px; margin-bottom: 8px; }
+/* Keep Monday–Sunday in one row; cards wrap vertically within each column. */
+.calendarTools { position: static; align-items: flex-start; }
+.sequencePicker { flex: 1; min-width: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.sequencePicker > summary { cursor: pointer; padding: 14px; font-size: 13px; font-weight: 650; }
+.shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); max-height: 420px; overflow: auto; padding: 12px; }
+.shelf button { width: 100%; min-width: 0; }
+.calendarTools .unassignDrop { min-height: 50px; }
+.calendarGrid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; min-width: 0; width: 100%; margin-top: 16px; align-items: stretch; }
+.day { display: flex; flex-direction: column; gap: 12px; min-width: 0; min-height: 240px; padding: 6px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.day:nth-child(7n) { border-right: 1px solid var(--border); }
+.dayHeading { min-width: 0; min-height: 150px; padding: 5px 2px 10px; border-bottom: 1px solid var(--border); }
+.dayNumber { font-size: 13px; line-height: 1.5; margin-bottom: 12px; text-align: center; }
+.dayNumber time { display: grid; gap: 2px; }
+.dayNumber time > span { color: var(--muted-foreground); font-weight: 500; }
+.dayNumber time > strong { font-size: 15px; }
+.today .dayNumber time > strong { color: var(--primary); }
+.dayActivities { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.emptyDay { color: var(--muted-foreground); font-size: 12px; line-height: 1.5; padding: 4px; }
+.scheduledCard { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--secondary); overflow-wrap: break-word; }
+.day .plannedCard { margin: 0; padding: 10px 8px; background: transparent; border: 0; border-radius: 10px; }
+.day a.deadline { margin: 0; padding: 10px 8px; }
+.scheduledCard a.deadline { border: 0; }
+.day .removeAction { margin: 0 6px 8px; align-self: flex-start; max-width: calc(100% - 12px); min-height: 32px; padding: 5px 7px; gap: 4px; font-size: 11px; background: var(--card); }
+.removeAction svg { flex-shrink: 0; }
+.day .meeting { font-size: 12px; }
+.noMeeting { display: block; font-size: 11px; line-height: 1.5; text-align: center; }
+.day [data-assignment-type] { gap: 7px; line-height: 1.45; }
+.day [data-assignment-type] > span:first-child { font-size: 11px; padding-right: 12px; }
+.day [data-assignment-type] > strong { font-size: 14px; line-height: 1.4; hyphens: none; }
+.day [data-assignment-type] > span:last-child { font-size: 12px; }
+.day .plannedCard small, .day .deadline > small { font-size: 11px; margin-top: 9px; padding-top: 7px; }
+.day .plannedCard > [data-drag-handle] { right: 2px; width: 14px; }
+@media (max-width: 900px) { .calendarGrid { gap: 3px; }.day { padding: 3px; }.dayNumber { font-size: 11px; }.dayNumber time > strong { font-size: 12px; }.day .meeting { padding-inline: 2px; font-size: 10px; }.calendarTools { flex-direction: column; align-items: stretch; }.calendarTools .unassignDrop { flex-basis: auto; }.month { flex-wrap: wrap; white-space: normal; } }
+
+.root .dayOpen { width: 100%; border: 0; padding: 0; background: transparent; min-height: 44px; text-align: center; }
+.root .dayOpen:disabled, .dayDetail .dayOpen:disabled { opacity: 1; cursor: default; }
+.dayNumber { margin-bottom: 8px; }
+.dayCount, .root .dayCount, .smallCalendarHint { display: none; }
+.dayDialog { max-height: calc(100dvh - 48px); overflow-y: auto; }
+.dayDetail { padding: 12px; min-height: 0; }
+.dayDetail .dayHeading { display: none; }
+.dayDetail [data-assignment-type] > strong { font-size: 16px; }
+.dayDetail [data-assignment-type] > span:last-child { font-size: 14px; }
+@media (max-width: 900px) { .calendarGrid .dayActivities { display: none; }.calendarGrid .day { min-height: 0; gap: 6px; }.calendarGrid .dayHeading { min-height: 0; border-bottom: 0; }.calendarGrid .meeting, .calendarGrid .noMeeting { display: none; }.root .dayCount { display: grid; gap: 0; width: 100%; min-width: 0; padding: 4px 0; font-size: 11px; }.dayCount span { font-size: 9px; font-weight: 400; }.smallCalendarHint { display: block; font-size: 12px; color: var(--muted-foreground); }.dayNumber time > strong { font-size: 11px; }.dayDetail .dayActivities { display: flex; } }
+
+.day [data-assignment-type] > * { min-width: 0; }
+@media (min-width: 901px) and (max-width: 1100px) { .day { padding: 4px; }.day .plannedCard, .day a.deadline { padding-inline: 6px; }.day [data-assignment-type] > strong { font-size: 13px; } }
+
+/* Two aligned week rows keep seven readable day columns. Busy days scroll vertically. */
+.calendarNavigation { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.viewSwitch { display: flex; gap: 4px; }
+.viewSwitch button[aria-pressed="true"] { background: var(--primary); color: var(--primary-foreground); border-color: var(--primary); }
+.calendarWeeks { display: grid; gap: 24px; min-width: 0; }
+.weekLabel { font-size: 14px; font-weight: 650; margin-top: 16px; }
+.calendarWeeks .calendarGrid { margin-top: 10px; }
+.calendarGrid .dayActivities { max-height: 340px; overflow-y: auto; scrollbar-width: thin; scrollbar-gutter: stable; }
+.dayActivities > * { flex-shrink: 0; }
+.cardActions { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 6px 8px; }
+.day .cardActions > button { margin: 0; min-height: 32px; max-width: 100%; padding: 5px 7px; gap: 4px; font-size: 11px; background: var(--card); }
+.cardActions svg { flex-shrink: 0; }
+.day .moveAction[aria-pressed="true"] { border-color: var(--primary); color: var(--primary); }
+.placementNotice { position: sticky; top: 72px; z-index: 10; background: var(--card); box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 10%, transparent); }
+.dayDetail.placing .dayHeading { display: block; min-height: 0; }
+@media (max-width: 1100px) { .calendarNavigation { align-items: flex-start; } }

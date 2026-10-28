@@ -1,6 +1,8 @@
+import { assignmentPresentation } from './assignment-presentation'
 import { deadlineDay, type LearningActivity } from './learning-week'
 import { assignmentCalendarDate, assignmentTimingLabel, prioritizeAssignments, type StudentAssignment } from './student-dashboard'
 import { SCHOOL_TZ } from './school-day'
+import { studentAssignmentPastDue } from './student-gradebook'
 
 export interface StudentHomeTask {
   kind: string
@@ -22,12 +24,13 @@ export function homeDeadlineLabel(due: string | null, today: string): string {
 }
 
 /** Due work takes precedence; optional practice never claims completion after a failed load. */
-export function nextStudentHomeTask({ items, math, today, loading, incomplete }: {
+export function nextStudentHomeTask({ items, math, today, loading, incomplete, now = new Date(today + 'T12:00:00Z') }: {
   items: StudentAssignment[]
   math: LearningActivity | null
   today: string
   loading: boolean
   incomplete: boolean
+  now?: Date
 }): StudentHomeTask | null {
   if (loading) return null
   const scheduled = items.filter(item => deadlineDay(assignmentCalendarDate(item)) !== null)
@@ -35,9 +38,10 @@ export function nextStudentHomeTask({ items, math, today, loading, incomplete }:
   const urgent = pending.find(item => { const due = deadlineDay(assignmentCalendarDate(item)); return due !== null && due <= today })
   const next = urgent ?? (math && !math.complete && math.available !== false ? math : null) ?? pending[0]
   if (next) {
-    const kind = next.kind === 'math' ? 'Math warm-up' : next.quizSchedule === 'vocabulary' ? 'Vocabulary quiz' : next.kind === 'quiz' ? 'Quiz' : next.kind === 'vocabulary' ? 'Vocabulary practice' : 'Assignment'
+    const kind = assignmentPresentation(next).label
+    const homework = next.kind !== 'math' && studentAssignmentPastDue(assignmentCalendarDate(next), now)
     return {
-      kind, title: next.title, href: next.href, label: next.action,
+      kind: homework ? kind === 'Assignment' ? 'Homework' : 'Homework · ' + kind : kind, title: next.title, href: next.href, label: next.action,
       meta: next.kind === 'math' ? 'Ready to start' : next.status === 'Complete reading first' ? 'Complete the required reading first' : next.closesAt&&!next.due?assignmentTimingLabel(next):homeDeadlineLabel(next.due, today),
     }
   }

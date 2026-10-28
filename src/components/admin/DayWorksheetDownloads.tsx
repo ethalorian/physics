@@ -2,7 +2,7 @@ import { Download, FileText, KeyRound } from 'lucide-react'
 import { dailyWorksheet, worksheetLabels, type WorksheetTrack } from '@/lib/daily-worksheets'
 import { coursePlanAssessment } from '@/lib/course-plan-assessment'
 
-export default function DayWorksheetDownloads({ unit, day, track }: { unit: string; day: number; track: string }) {
+export default function DayWorksheetDownloads({ unit, day, track, courseId = '' }: { unit: string; day: number; track: string; courseId?:string }) {
   if (coursePlanAssessment(unit, day)) return (
     <section id="student-worksheets" aria-label="Transfer assessment materials" className="mb-4 scroll-mt-28 rounded-xl border bg-card p-4">
       <h3 className="font-semibold">Transfer assessment</h3>
@@ -15,6 +15,7 @@ export default function DayWorksheetDownloads({ unit, day, track }: { unit: stri
   return (
     <section id="student-worksheets" aria-label={`Day ${day} student worksheets`} className="mb-4 scroll-mt-28 rounded-xl border bg-muted/30 p-4">
       <h3 className="font-semibold">Day {day} student worksheets</h3>
+      <a className="inline-flex min-h-11 items-center font-medium text-primary underline" href={'/admin/worksheets?'+new URLSearchParams({unit,day:String(day),class:courseId})}>Schedule paper worksheet + paired quiz →</a>
       <p className="mt-1 text-sm text-muted-foreground">{worksheet.title}. Learning target, success criteria, visual practice and a 1–3 self-check for every problem.</p>
       <p className="mt-1 text-sm text-muted-foreground">Choose a standard worksheet or a separate SEI edition with English word help, chunked directions and sentence starters.</p>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 18,
+  "title": "Equilibrium and missing forces",
+  "target": "Find a missing force when acceleration is zero.",
+  "criteria": [
+    "Recognize rest and constant velocity as possible equilibrium.",
+    "Find missing forces from a zero net-force condition.",
+    "Explain why turning is not equilibrium."
+  ],
+  "source_sha256": "bae6d9e74f4498afbb2ef07d3aa5150593115439695090d21154eb1ffff4d666",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.483Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "Which motion can have zero net force?",
+      "options": [
+        "Straight motion at constant velocity.",
+        "Speeding up along a line.",
+        "Slowing down along a line.",
+        "Turning at steady speed."
+      ],
+      "correct_index": 0,
+      "guide": "Equilibrium requires zero acceleration, not necessarily rest.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A crate remains stationary throughout an observed interval. In an inertial frame, what is its net force during that interval?",
+      "options": [
+        "Unknown solely because its mass is large.",
+        "Zero.",
+        "Always positive.",
+        "Equal to its weight downward with no other forces."
+      ],
+      "correct_index": 1,
+      "guide": "Constant zero velocity means zero acceleration and net force.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sign weighs 45 N and hangs at rest from one vertical cable. What is tension?",
+      "options": [
+        "45 N downward.",
+        "90 N upward.",
+        "0 N.",
+        "45 N upward."
+      ],
+      "correct_index": 3,
+      "guide": "Vertical equilibrium requires tension to balance weight.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A resting object has 19 N right and 7 N left plus one unknown horizontal force. What must that force be?",
+      "options": [
+        "12 N left.",
+        "26 N left.",
+        "12 N right.",
+        "7 N right."
+      ],
+      "correct_index": 0,
+      "guide": "19 − 7 = 12 N right must be balanced by 12 N left.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why is a car turning at steady speed not in equilibrium?",
+      "options": [
+        "Its speed is zero at every turn.",
+        "Every moving object is out of equilibrium.",
+        "Its mass must change.",
+        "Its changing velocity direction requires nonzero acceleration."
+      ],
+      "correct_index": 3,
+      "guide": "Equilibrium requires constant velocity vector.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rider at the top of a circular ride has balanced vertical forces claimed in a diagram, yet follows a curved path with inward acceleration. What should be checked?",
+      "options": [
+        "Curvature proves acceleration is zero.",
+        "Balanced forces always produce circular motion.",
+        "The claimed force balance is inconsistent with the required inward net force.",
+        "The rider must have zero mass."
+      ],
+      "correct_index": 2,
+      "guide": "If acceleration is inward, the net force cannot be zero.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "Which motion can have zero net force?",
+      "options": [
+        "Slowing down along a line.",
+        "Straight motion at constant velocity.",
+        "Turning at steady speed.",
+        "Speeding up along a line."
+      ],
+      "correct_index": 1,
+      "guide": "Equilibrium requires zero acceleration, not necessarily rest.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A crate remains stationary throughout an observed interval. In an inertial frame, what is its net force during that interval?",
+      "options": [
+        "Equal to its weight downward with no other forces.",
+        "Unknown solely because its mass is large.",
+        "Zero.",
+        "Always positive."
+      ],
+      "correct_index": 2,
+      "guide": "Constant zero velocity means zero acceleration and net force.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A sign weighs 45 N and hangs at rest from one vertical cable. What is tension?",
+      "options": [
+        "45 N upward.",
+        "0 N.",
+        "45 N downward.",
+        "90 N upward."
+      ],
+      "correct_index": 0,
+      "guide": "Vertical equilibrium requires tension to balance weight.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A resting object has 19 N right and 7 N left plus one unknown horizontal force. What must that force be?",
+      "options": [
+        "12 N right.",
+        "7 N right.",
+        "26 N left.",
+        "12 N left."
+      ],
+      "correct_index": 3,
+      "guide": "19 − 7 = 12 N right must be balanced by 12 N left.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Why is a car turning at steady speed not in equilibrium?",
+      "options": [
+        "Its mass must change.",
+        "Its changing velocity direction requires nonzero acceleration.",
+        "Its speed is zero at every turn.",
+        "Every moving object is out of equilibrium."
+      ],
+      "correct_index": 1,
+      "guide": "Equilibrium requires constant velocity vector.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A rider at the top of a circular ride has balanced vertical forces claimed in a diagram, yet follows a curved path with inward acceleration. What should be checked?",
+      "options": [
+        "The claimed force balance is inconsistent with the required inward net force.",
+        "Balanced forces always produce circular motion.",
+        "Curvature proves acceleration is zero.",
+        "The rider must have zero mass."
+      ],
+      "correct_index": 0,
+      "guide": "If acceleration is inward, the net force cannot be zero.",
+      "target_slug": "u1.equilibrium-find-unknown",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

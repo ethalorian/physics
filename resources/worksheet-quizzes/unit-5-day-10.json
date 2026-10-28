@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 10,
+  "title": "Atmospheric entry",
+  "target": "Use energy and geometry to discuss entry heating without claiming a guaranteed outcome.",
+  "criteria": [
+    "Compare kinetic energy with a stated heating requirement.",
+    "Explain the role of surface area relative to mass.",
+    "Name missing factors in a survival prediction."
+  ],
+  "source_sha256": "3a342f984d48c595fc3d7ae2fdab5e1876a1f4c26a7f21988192a56f936e284b",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.538Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "An entry model assigns 150 J of kinetic energy to an object. A specified heating change needs 30 J. What is the energy ratio KE/heating requirement?",
+      "options": [
+        "120",
+        "5",
+        "180",
+        "0.20"
+      ],
+      "correct_index": 1,
+      "guide": "150/30 = 5. The ratio alone does not specify how much energy heats the object.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An object has 240 J of kinetic energy, but a model sends only 10% into its heating. A specified change needs 40 J. Is the assigned heating energy enough?",
+      "options": [
+        "No; kinetic energy cannot transfer into internal energy.",
+        "Yes; 10% means multiply by 10.",
+        "No; 24 J is less than 40 J.",
+        "Yes; all 240 J must heat the object."
+      ],
+      "correct_index": 2,
+      "guide": "Apply the stated fraction before comparing: 0.10 × 240 = 24 J.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Equal-density spheres have radii r and 3r. Area scales as r² and mass as r³. How does area per mass compare for the larger sphere?",
+      "options": [
+        "It is one-third as large.",
+        "It is three times as large.",
+        "It is nine times as large.",
+        "It is unchanged."
+      ],
+      "correct_index": 0,
+      "guide": "Area grows by 9 and mass by 27; their ratio changes by 9/27 = 1/3.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two equal-density rocks have the same shape but different sizes. Why can the smaller one respond differently to surface heating?",
+      "options": [
+        "Its temperature must always be zero.",
+        "It has less area per unit mass.",
+        "All sizes have identical area-to-mass ratio.",
+        "It has more surface area per unit mass."
+      ],
+      "correct_index": 3,
+      "guide": "For similarly shaped equal-density bodies, area/mass scales inversely with size.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A calculation shows enough total kinetic energy to melt a rock. What is still needed before claiming it will melt during entry?",
+      "options": [
+        "Energy-transfer fraction, duration, material behavior, and losses.",
+        "No further information; all kinetic energy always heats the rock.",
+        "Only the rock’s name.",
+        "Only the total kinetic energy again."
+      ],
+      "correct_index": 0,
+      "guide": "Available energy is not identical to absorbed energy or a complete thermal history.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A simplified entry model omits fragmentation and changing shape. Which statement is appropriate?",
+      "options": [
+        "A conditional model cannot be useful for any comparison.",
+        "The omitted processes cannot matter by definition.",
+        "The model proves exact impact damage.",
+        "Its survival estimate is conditional because fragmentation can change area, mass, and heating."
+      ],
+      "correct_index": 3,
+      "guide": "Changing geometry and mass can affect drag and heat transfer; state those limitations.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "An entry model assigns 150 J of kinetic energy to an object. A specified heating change needs 30 J. What is the energy ratio KE/heating requirement?",
+      "options": [
+        "0.20",
+        "5",
+        "180",
+        "120"
+      ],
+      "correct_index": 1,
+      "guide": "150/30 = 5. The ratio alone does not specify how much energy heats the object.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An object has 240 J of kinetic energy, but a model sends only 10% into its heating. A specified change needs 40 J. Is the assigned heating energy enough?",
+      "options": [
+        "Yes; 10% means multiply by 10.",
+        "Yes; all 240 J must heat the object.",
+        "No; kinetic energy cannot transfer into internal energy.",
+        "No; 24 J is less than 40 J."
+      ],
+      "correct_index": 3,
+      "guide": "Apply the stated fraction before comparing: 0.10 × 240 = 24 J.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Equal-density spheres have radii r and 3r. Area scales as r² and mass as r³. How does area per mass compare for the larger sphere?",
+      "options": [
+        "It is one-third as large.",
+        "It is three times as large.",
+        "It is nine times as large.",
+        "It is unchanged."
+      ],
+      "correct_index": 0,
+      "guide": "Area grows by 9 and mass by 27; their ratio changes by 9/27 = 1/3.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two equal-density rocks have the same shape but different sizes. Why can the smaller one respond differently to surface heating?",
+      "options": [
+        "It has less area per unit mass.",
+        "It has more surface area per unit mass.",
+        "All sizes have identical area-to-mass ratio.",
+        "Its temperature must always be zero."
+      ],
+      "correct_index": 1,
+      "guide": "For similarly shaped equal-density bodies, area/mass scales inversely with size.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A calculation shows enough total kinetic energy to melt a rock. What is still needed before claiming it will melt during entry?",
+      "options": [
+        "Only the total kinetic energy again.",
+        "No further information; all kinetic energy always heats the rock.",
+        "Energy-transfer fraction, duration, material behavior, and losses.",
+        "Only the rock’s name."
+      ],
+      "correct_index": 2,
+      "guide": "Available energy is not identical to absorbed energy or a complete thermal history.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A simplified entry model omits fragmentation and changing shape. Which statement is appropriate?",
+      "options": [
+        "Its survival estimate is conditional because fragmentation can change area, mass, and heating.",
+        "The omitted processes cannot matter by definition.",
+        "The model proves exact impact damage.",
+        "A conditional model cannot be useful for any comparison."
+      ],
+      "correct_index": 0,
+      "guide": "Changing geometry and mass can affect drag and heat transfer; state those limitations.",
+      "target_slug": "u5.r3-atmospheric-entry",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -46,7 +46,7 @@
 .weekTable { table-layout: fixed; width: 100%; border-collapse: separate; border-spacing: 4px 0; font-size: .75rem; }
 .weekTable th { font-weight: 600; text-align: left; vertical-align: top; }
 .weekTable thead th { padding: 10px 8px 18px; }
-.weekTable th:first-child { width: 132px; }
+.weekTable th:first-child { width: 145px; }
 .weekTable th span { display: block; white-space: pre-line; line-height: 1.6; margin-top: 5px; font-size: .6875rem; color: var(--muted-foreground); font-weight: 400; }
 .weekTable thead th[data-today=true] { color: var(--primary); border-top: 4px solid var(--primary); border-radius: var(--radius-md) var(--radius-md) 0 0; }
 .weekTable thead th[data-today=true] span { color: var(--primary); }
@@ -54,7 +54,7 @@
 .weekTable td[data-today=true] { background: color-mix(in oklab,var(--primary) 5%,var(--card)); }
 .weekTable tbody th { padding-top: 15px; }
 .weekTable tbody tr + tr > * { border-top: 1px solid var(--border); }
-.activity { width: 100%; user-select: none; display: grid; align-content: start; gap: 6px; padding: 10px 8px; text-align: left; border: 1px solid transparent; border-radius: var(--radius-lg); background: var(--lw-reading); box-shadow: 0 2px 5px var(--lw-shadow); overflow-wrap: anywhere; color: var(--foreground); }
+.activity { width: 100%; user-select: none; display: grid; align-content: start; gap: 8px; padding: 12px 10px; text-align: left; border: 1px solid var(--border); border-inline-start: 3px solid var(--activity-accent,var(--primary)); border-radius: var(--radius-md); background: var(--card); box-shadow: 0 2px 5px var(--lw-shadow); overflow-wrap: anywhere; color: var(--foreground); }
 .activity[data-kind=math] { background: var(--home-math); }
 .activity[data-kind=vocabulary] { background: var(--home-vocab); }
 .activity[data-kind=video] { background: var(--lw-video); }
@@ -62,7 +62,7 @@
 .activity[aria-pressed=true] { box-shadow: 0 5px 13px color-mix(in oklab,var(--primary) 22%,transparent); background: color-mix(in oklab,var(--primary) 12%,var(--card)); }
 .activity[data-kind=math][aria-pressed=true] { background: color-mix(in oklab,var(--home-math-ink) 8%,var(--home-math)); }
 .activity[data-complete=true] { background: var(--secondary); box-shadow: none; }
-.activityKind { display: flex; align-items: center; gap: 5px; font-size: .6875rem; font-weight: 650; }
+.activityKind { display: flex; align-items: flex-start; gap: 5px; font-size: .75rem; font-weight: 700; line-height: 1.4; color: var(--foreground); }
 .activityKind svg { flex-shrink: 0; }
 .activity strong { font-size: .8125rem; font-weight: 600; line-height: 1.4; }
 .activity > span:last-child { font-size: .6875rem; line-height: 1.4; color: var(--muted-foreground); }
@@ -168,7 +168,29 @@
 .paceAlert { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--border); padding: 10px 0; font-size: .75rem; }
 .paceAlert > svg { flex-shrink: 0; color: var(--destructive); }
 .paceAlert button { color: var(--primary); margin-left: auto; text-decoration: underline; }
-@media(min-width: 821px) { .weekTable .activity strong { font-size: .75rem; } .weekTable .activityKind { flex-wrap: wrap; font-size: .625rem; } }
+@media(min-width: 821px) { .weekTable .activity strong { font-size: .8125rem; } .weekTable .activityKind { font-size: .6875rem; } }
 @media(max-width: 1100px) and (min-width: 821px) { .weekTable th:first-child { width: 105px; } .weekTable td { padding-inline: 2px; } .weekTable { border-spacing: 2px 0; } }
 @media(max-width: 820px) { .mobileDays { gap: 3px; } .mobileDays button { min-width: 0; padding: 7px 2px; } .weekTable tbody th { justify-content: space-between; } .weekTable tbody th span { text-align: right; } }
 @media(max-width: 600px) { .dashboard { gap: 16px; } .pace { padding: 0 16px; } .paceDetails > summary { gap: 12px; } .paceDetails > summary h2 { width: calc(100% - 70px); } .paceExpand { order: 0; position: absolute; right: 0; top: 18px; } .paceDetails > summary { position: relative; } .toolbar { flex-wrap: nowrap; gap: 4px; } .tabs { display: flex; width: auto; gap: 0; flex: 1; justify-content: space-between; } .tabs button { padding: 8px 6px; gap: 4px; font-size: .6875rem; } .tabs button svg { display: none; } .refreshLabel { display: none; } .toolbar > button { padding-inline: 9px; } .teacherControls label { min-width: 0; flex-wrap: wrap; } }
+
+/* Purpose, task and status remain readable without relying on color. */
+.calendarGuide { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 10px 0 16px; color: var(--muted-foreground); font-size: .75rem; line-height: 1.5; }
+.calendarGuide .more { flex-shrink: 0; }
+.activity[data-lane=learn] { --activity-accent: var(--primary); background: color-mix(in oklab,var(--primary) 5%,var(--card)); }
+.activity[data-lane=assignments] { --activity-accent: var(--chart-3,var(--primary)); }
+.activity[data-lane=investigate] { --activity-accent: var(--chart-2,var(--primary)); background: color-mix(in oklab,var(--chart-2,var(--primary)) 6%,var(--card)); }
+.activity[data-lane=quizzes] { --activity-accent: var(--reward); background: color-mix(in oklab,var(--reward) 6%,var(--card)); }
+.activity[data-lane=math] { --activity-accent: var(--home-math-ink); background: var(--home-math); }
+.activity[data-complete=true] { background: var(--secondary); }
+.activity[aria-pressed=true] { outline: 2px solid var(--primary); outline-offset: 2px; }
+.activity:focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+.activityDay { color: var(--muted-foreground); font-size: .625rem; line-height: 1.4; }
+.activity .activityThinking { color: var(--foreground); font-size: .6875rem; line-height: 1.5; }
+.activity .activityStatus { display: flex; align-items: flex-start; gap: 5px; margin-top: 3px; padding-top: 8px; border-top: 1px solid var(--border); font-size: .625rem; line-height: 1.5; color: var(--muted-foreground); }
+.activityStatus svg { flex-shrink: 0; margin-top: 2px; }
+.activity .activityStatus[data-locked=true] { color: var(--foreground); }
+.thinkingFocus { display: grid; gap: 4px; }
+.thinkingFocus strong { color: var(--primary); }
+.focusQuestion { font-weight: 600; }
+.prerequisiteNotice { padding: 12px 15px; border-inline-start: 3px solid var(--primary); background: var(--secondary); border-radius: var(--radius-sm); }
+@media(max-width: 820px) { .calendarGuide { align-items: flex-start; } .weekTable tbody th { flex-direction: column; align-items: flex-start; gap: 0; padding-bottom: 7px; } .weekTable tbody th span { text-align: left; margin-top: 2px; } .weekTable .activityKind { font-size: .8125rem; } .weekTable .activity .activityThinking { font-size: .8125rem; } .weekTable .activityDay,.weekTable .activity .activityStatus { font-size: .75rem; } }

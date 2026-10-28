@@ -1,0 +1,91 @@
+{
+  "collaboration": {
+    "maxGroupSize": 4,
+    "primaryRoles": [
+      "Slideshow lead",
+      "Whiteboard scribe"
+    ],
+    "secondaryDuties": [
+      "Timekeeper",
+      "Checker"
+    ],
+    "individualResponses": true
+  },
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 5 Predicting Position.dc.html",
+  "sourceSha256": "ed7f1bc27eb16f78e951aac7b5305ade5914ab2b911a2c349e06573d95a83e65",
+  "runtimeSha256": {
+    "support": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe",
+    "stage": "f3d3d0a662c08eefb5a8757a6da3139572485f4be32ac33785c5047061926a8a"
+  },
+  "packagedSha256": "c0ab7025ed88871105141dc75606ac3ddb7d52a41570cfbff266dd6511417957",
+  "cover": {
+    "file": "art/asteroid-briefing.png",
+    "sha256": "ae90f10457a275a673a1662f651ce0c04ea070027eaa74f289e37b0c8819de62"
+  },
+  "studentSlides": 30,
+  "originalStudentSlides": 26,
+  "teacherSlidesExcluded": 3,
+  "timers": 3,
+  "answerReveals": 6,
+  "transition": {
+    "type": "fade",
+    "durationMs": 260,
+    "respectsReducedMotion": true
+  },
+  "snapshots": [
+    {
+      "after": 9,
+      "page": 17,
+      "file": "page-01.webp",
+      "y": 608,
+      "height": 556,
+      "title": "Choose the axes before calculating",
+      "alt": "The classroom model starts at positive 120 million kilometers on the x axis with Earth at the origin. Toward-Earth motion has negative x velocity. Maz and Nadia explain that changing axes changes signs, not the motion.",
+      "body": "Day 5 uses the novel’s fixed axes: +x points toward the starting location; +y is sideways.",
+      "question": "Why is toward-Earth velocity negative on these axes?",
+      "work": "Part 1 · Check the start, change and axes",
+      "sha256": "21f48605507de4da75b180620b65daacb3243794662d3a0a8d5deccd1fcf12a1"
+    },
+    {
+      "after": 15,
+      "page": 18,
+      "file": "page-02.webp",
+      "y": 308,
+      "height": 752,
+      "title": "A negative coordinate is not a collision",
+      "alt": "Eli asks whether negative x means a collision. Maz points to the positive y coordinate. The straight model path starts at 120 million kilometers on x and ends at negative 11.36 million x and positive 35.20 million y, passing above Earth.",
+      "body": "Use both coordinates to describe the endpoint. The six-month separation is about 37 million km.",
+      "question": "Why is this endpoint distance different from closest approach?",
+      "work": "Part 2 · Check the two-dimensional prediction",
+      "sha256": "cfd8d040ee5a7e10bfdcd9435a85b5418869fd37992ab3c783209dcfb39cd32c"
+    },
+    {
+      "after": 21,
+      "page": 19,
+      "file": "page-03.webp",
+      "y": 631,
+      "height": 472,
+      "title": "The window is part of the answer",
+      "alt": "Eli and Maz discuss measurement limits. A rectangle around the predicted endpoint extends 3.25 million kilometers from the center in each coordinate. It represents bounds on x and y, not an impact probability.",
+      "body": "50,000 + 0.200 × 16,000,000 = 3,250,000 km in each coordinate.",
+      "question": "What is the full width? What does this window leave out?",
+      "work": "Part 3 · Defend the window and its limits",
+      "sha256": "0810bf2eec239280bba0b62069fd2c3fc022a1d3dc69163b6e0b2cef4be73b83"
+    },
+    {
+      "after": 24,
+      "page": 20,
+      "file": "page-04.webp",
+      "y": 0,
+      "height": 537,
+      "title": "Test what the model leaves out",
+      "alt": "Mr. Antocci says the window covers only the measurement limits included. Nadia asks about the Sun’s gravity. Maz circles constant velocity because gravity changes velocity and the straight-line model leaves it out.",
+      "body": "Measurement bounds do not automatically include missing physics.",
+      "question": "What observation would test constant velocity, and what model change would address gravity?",
+      "work": "Part 3 · Defend the window and its limits",
+      "sha256": "8ac7f30323adc1fb5e0ce0862c507a54b2c9dd109571ec71a1002683e511695f"
+    }
+  ],
+  "notes": "Original executable logic, timers and reveal controls unchanged. Teacher-only slides/notes removed. Four snapshots use viewport crops of existing immutable artwork with text companions. Original cover PNG and comic assets are separately cacheable; the original cover URL avoids the export’s data-URL CSS parsing bug. Clarified individual response directions. Reconciled contradictory source coordinate conventions to the approved Day 5 novel: Earth at zero, positive x toward the initial asteroid, negative toward-Earth velocity. Made the supplied position and velocity bounds explicitly componentwise with exact elapsed time. Replaced the unsupported assertion that missing physics must make the window bigger with a question about omitted effects. Fixed truncated navigation titles. Original export archived unchanged."
+}

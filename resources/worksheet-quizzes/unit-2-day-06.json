@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 2,
+  "day": 6,
+  "title": "Gravitational field strength",
+  "target": "Use a gravitational field to predict the force on a test mass.",
+  "criteria": [
+    "Represent field direction with arrows.",
+    "Use g=F/m and F=mg consistently.",
+    "Distinguish source field from the mass placed in it."
+  ],
+  "source_sha256": "e32983580487395ebd0f6d6f753f4edc134aa57f1566a1d3767866e8d6ca19d0",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.491Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "At a point north of a spherical planet, which way does its gravitational field point?",
+      "options": [
+        "South, toward the center.",
+        "East, tangent to the surface.",
+        "North, away from the center.",
+        "No direction because a field is a scalar."
+      ],
+      "correct_index": 0,
+      "guide": "The gravitational field gives the force direction on a positive test mass.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two nearby field arrows point toward a source, but one is longer under a stated strength scale. What does the longer arrow mean?",
+      "options": [
+        "A repulsive gravitational force.",
+        "Greater test mass necessarily.",
+        "Greater field strength there.",
+        "No physical difference."
+      ],
+      "correct_index": 2,
+      "guide": "With that scale, arrow length represents field magnitude.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 3 kg test mass experiences 21 N of gravitational force. What is g?",
+      "options": [
+        "0.143 N/kg",
+        "7 N/kg",
+        "18 N/kg",
+        "63 N/kg"
+      ],
+      "correct_index": 1,
+      "guide": "g = F/m = 21/3 = 7 N/kg.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At a location with g = 6 N/kg, what force acts on a 5 kg test mass?",
+      "options": [
+        "0.833 N",
+        "1.2 N",
+        "11 N",
+        "30 N"
+      ],
+      "correct_index": 3,
+      "guide": "F = mg = 5 × 6 = 30 N.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A test mass is replaced by one three times as large, without changing the source or location. What changes?",
+      "options": [
+        "Field strength triples; force stays the same.",
+        "Force triples; source field strength stays the same.",
+        "Both become one-third.",
+        "Field disappears."
+      ],
+      "correct_index": 1,
+      "guide": "g = GM/r² depends on the source and location; F = mg depends on test mass.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two test masses at the same location give F/m = 4 N/kg in separate trials. What does that support?",
+      "options": [
+        "A common source field independent of the chosen test mass.",
+        "Zero gravitational force on both masses.",
+        "Force and mass are the same physical quantity.",
+        "A field that doubles with every test mass."
+      ],
+      "correct_index": 0,
+      "guide": "The ratio F/m identifies field strength.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "At a point north of a spherical planet, which way does its gravitational field point?",
+      "options": [
+        "North, away from the center.",
+        "East, tangent to the surface.",
+        "South, toward the center.",
+        "No direction because a field is a scalar."
+      ],
+      "correct_index": 2,
+      "guide": "The gravitational field gives the force direction on a positive test mass.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two nearby field arrows point toward a source, but one is longer under a stated strength scale. What does the longer arrow mean?",
+      "options": [
+        "No physical difference.",
+        "A repulsive gravitational force.",
+        "Greater field strength there.",
+        "Greater test mass necessarily."
+      ],
+      "correct_index": 2,
+      "guide": "With that scale, arrow length represents field magnitude.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A 3 kg test mass experiences 21 N of gravitational force. What is g?",
+      "options": [
+        "0.143 N/kg",
+        "7 N/kg",
+        "18 N/kg",
+        "63 N/kg"
+      ],
+      "correct_index": 1,
+      "guide": "g = F/m = 21/3 = 7 N/kg.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "At a location with g = 6 N/kg, what force acts on a 5 kg test mass?",
+      "options": [
+        "30 N",
+        "11 N",
+        "1.2 N",
+        "0.833 N"
+      ],
+      "correct_index": 0,
+      "guide": "F = mg = 5 × 6 = 30 N.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A test mass is replaced by one three times as large, without changing the source or location. What changes?",
+      "options": [
+        "Both become one-third.",
+        "Force triples; source field strength stays the same.",
+        "Field strength triples; force stays the same.",
+        "Field disappears."
+      ],
+      "correct_index": 1,
+      "guide": "g = GM/r² depends on the source and location; F = mg depends on test mass.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Two test masses at the same location give F/m = 4 N/kg in separate trials. What does that support?",
+      "options": [
+        "Zero gravitational force on both masses.",
+        "A field that doubles with every test mass.",
+        "Force and mass are the same physical quantity.",
+        "A common source field independent of the chosen test mass."
+      ],
+      "correct_index": 3,
+      "guide": "The ratio F/m identifies field strength.",
+      "target_slug": "u2.k2-field-strength",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

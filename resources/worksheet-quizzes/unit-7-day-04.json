@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 4,
+  "title": "Voltage: energy per charge",
+  "target": "Interpret potential difference as energy transferred per unit charge.",
+  "criteria": [
+    "Use volts as joules per coulomb.",
+    "Calculate energy transfer with E=qV.",
+    "Distinguish voltage from current."
+  ],
+  "source_sha256": "4ddaa571a026b32de852611090695130f976e39ba92ad318d4e602a25c6dca9e",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.560Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A power supply has a potential difference of 7 V. What does that mean?",
+      "options": [
+        "7 J of energy per coulomb transferred between its terminals.",
+        "7 coulombs pass each second in every circuit.",
+        "7 J is its total stored energy.",
+        "Every connected object has 7 N of force."
+      ],
+      "correct_index": 0,
+      "guide": "A volt is a joule per coulomb; voltage alone does not specify current or total energy.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Supply A transfers 45 J for 5 C; B transfers 28 J for 4 C. Which has the greater potential difference?",
+      "options": [
+        "B: 7 V, because it uses less charge.",
+        "A: 225 V, compared with B: 112 V.",
+        "Both: 5 V.",
+        "A: 9 V, compared with B: 7 V."
+      ],
+      "correct_index": 3,
+      "guide": "V = E/q; 45/5 = 9 and 28/4 = 7.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 12 V source transfers 0.75 C through a load. How much energy is transferred?",
+      "options": [
+        "16 J",
+        "9.0 J",
+        "0.0625 J",
+        "12.75 J"
+      ],
+      "correct_index": 1,
+      "guide": "E = qV = 0.75 × 12 = 9.0 J.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A device receives 33 J while 3.0 C passes through it. What is the voltage across it?",
+      "options": [
+        "30 V",
+        "0.091 V",
+        "11 V",
+        "99 V"
+      ],
+      "correct_index": 2,
+      "guide": "V = E/q = 33/3 = 11 V.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two loads are both connected across an ideal 8 V supply, but their currents differ. Which statement must still be true?",
+      "options": [
+        "The larger-current load has a larger voltage by definition.",
+        "Both loads must pass identical charge each second.",
+        "Neither load receives energy.",
+        "Each coulomb transfers 8 J across either load."
+      ],
+      "correct_index": 3,
+      "guide": "Equal voltage means equal energy per charge, not equal charge per time.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A disconnected battery still measures 9 V across its terminals. Which conclusion is justified?",
+      "options": [
+        "A potential difference can exist without current in an external circuit.",
+        "All its energy has been used up.",
+        "Voltage and current are identical quantities.",
+        "The battery must supply 9 A through the air."
+      ],
+      "correct_index": 0,
+      "guide": "An open external circuit can have voltage while carrying no steady current.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A power supply has a potential difference of 7 V. What does that mean?",
+      "options": [
+        "Every connected object has 7 N of force.",
+        "7 J is its total stored energy.",
+        "7 J of energy per coulomb transferred between its terminals.",
+        "7 coulombs pass each second in every circuit."
+      ],
+      "correct_index": 2,
+      "guide": "A volt is a joule per coulomb; voltage alone does not specify current or total energy.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Supply A transfers 45 J for 5 C; B transfers 28 J for 4 C. Which has the greater potential difference?",
+      "options": [
+        "A: 225 V, compared with B: 112 V.",
+        "A: 9 V, compared with B: 7 V.",
+        "Both: 5 V.",
+        "B: 7 V, because it uses less charge."
+      ],
+      "correct_index": 1,
+      "guide": "V = E/q; 45/5 = 9 and 28/4 = 7.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 12 V source transfers 0.75 C through a load. How much energy is transferred?",
+      "options": [
+        "16 J",
+        "9.0 J",
+        "12.75 J",
+        "0.0625 J"
+      ],
+      "correct_index": 1,
+      "guide": "E = qV = 0.75 × 12 = 9.0 J.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A device receives 33 J while 3.0 C passes through it. What is the voltage across it?",
+      "options": [
+        "11 V",
+        "99 V",
+        "30 V",
+        "0.091 V"
+      ],
+      "correct_index": 0,
+      "guide": "V = E/q = 33/3 = 11 V.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two loads are both connected across an ideal 8 V supply, but their currents differ. Which statement must still be true?",
+      "options": [
+        "Both loads must pass identical charge each second.",
+        "The larger-current load has a larger voltage by definition.",
+        "Neither load receives energy.",
+        "Each coulomb transfers 8 J across either load."
+      ],
+      "correct_index": 3,
+      "guide": "Equal voltage means equal energy per charge, not equal charge per time.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A disconnected battery still measures 9 V across its terminals. Which conclusion is justified?",
+      "options": [
+        "A potential difference can exist without current in an external circuit.",
+        "Voltage and current are identical quantities.",
+        "All its energy has been used up.",
+        "The battery must supply 9 A through the air."
+      ],
+      "correct_index": 0,
+      "guide": "An open external circuit can have voltage while carrying no steady current.",
+      "target_slug": "u7.k3-voltage",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 4,
+  "title": "Kinetic energy and net work",
+  "target": "Connect net work to a change in kinetic energy.",
+  "criteria": [
+    "Calculate kinetic energy with speed squared.",
+    "Use net work rather than one force’s work.",
+    "Connect the sign of work to a speed change."
+  ],
+  "source_sha256": "f6d2567c39514e10883b7fe5e619f055a07e9ed7962ce0223f168e10f6fac488",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.518Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 3 kg object moves at 4 m/s. What is kinetic energy?",
+      "options": [
+        "12 J",
+        "6 J",
+        "48 J",
+        "24 J"
+      ],
+      "correct_index": 3,
+      "guide": "K = ½mv² = ½ × 3 × 16 = 24 J.",
+      "target_slug": "u4.k2-kinetic-energy",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 0.50 kg model puck moves at 8 m/s. What is kinetic energy?",
+      "options": [
+        "32 J",
+        "2 J",
+        "16 J",
+        "64 J"
+      ],
+      "correct_index": 2,
+      "guide": "K = ½ × 0.50 × 8² = 16 J.",
+      "target_slug": "u4.k2-kinetic-energy",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A motor does +45 J on a cart while resistance does −15 J. What changes the cart’s kinetic energy?",
+      "options": [
+        "The total +60 J from adding magnitudes.",
+        "The net +30 J.",
+        "The motor’s +45 J alone.",
+        "The resistance magnitude +15 J alone."
+      ],
+      "correct_index": 1,
+      "guide": "The work-energy theorem uses signed work from all forces.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A cart starts with 22 J of kinetic energy. A pull does +20 J and friction does −8 J. What is final kinetic energy?",
+      "options": [
+        "34 J",
+        "50 J",
+        "42 J",
+        "10 J"
+      ],
+      "correct_index": 0,
+      "guide": "Net work is +12 J; K_final = 22 + 12 = 34 J.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For an object of fixed mass, negative net work occurs during a nonzero motion interval. What happens to its speed?",
+      "options": [
+        "Its final speed is lower.",
+        "Its final speed must be higher.",
+        "Its mass must become negative.",
+        "Its velocity must point opposite the net force throughout."
+      ],
+      "correct_index": 0,
+      "guide": "Negative net work reduces kinetic energy and hence speed for fixed mass.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Kinetic energy changes from 35 J to 50 J. Which net-work statement is correct?",
+      "options": [
+        "+85 J; speed stays fixed.",
+        "+15 J; speed increases for unchanged mass.",
+        "0 J because energy is conserved overall.",
+        "−15 J; speed increases."
+      ],
+      "correct_index": 1,
+      "guide": "ΔK = 50 − 35 = +15 J. Conservation includes transfers into this object.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 3 kg object moves at 4 m/s. What is kinetic energy?",
+      "options": [
+        "24 J",
+        "48 J",
+        "12 J",
+        "6 J"
+      ],
+      "correct_index": 0,
+      "guide": "K = ½mv² = ½ × 3 × 16 = 24 J.",
+      "target_slug": "u4.k2-kinetic-energy",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 0.50 kg model puck moves at 8 m/s. What is kinetic energy?",
+      "options": [
+        "64 J",
+        "32 J",
+        "2 J",
+        "16 J"
+      ],
+      "correct_index": 3,
+      "guide": "K = ½ × 0.50 × 8² = 16 J.",
+      "target_slug": "u4.k2-kinetic-energy",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A motor does +45 J on a cart while resistance does −15 J. What changes the cart’s kinetic energy?",
+      "options": [
+        "The resistance magnitude +15 J alone.",
+        "The net +30 J.",
+        "The motor’s +45 J alone.",
+        "The total +60 J from adding magnitudes."
+      ],
+      "correct_index": 1,
+      "guide": "The work-energy theorem uses signed work from all forces.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A cart starts with 22 J of kinetic energy. A pull does +20 J and friction does −8 J. What is final kinetic energy?",
+      "options": [
+        "10 J",
+        "34 J",
+        "42 J",
+        "50 J"
+      ],
+      "correct_index": 1,
+      "guide": "Net work is +12 J; K_final = 22 + 12 = 34 J.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "For an object of fixed mass, negative net work occurs during a nonzero motion interval. What happens to its speed?",
+      "options": [
+        "Its mass must become negative.",
+        "Its velocity must point opposite the net force throughout.",
+        "Its final speed is lower.",
+        "Its final speed must be higher."
+      ],
+      "correct_index": 2,
+      "guide": "Negative net work reduces kinetic energy and hence speed for fixed mass.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Kinetic energy changes from 35 J to 50 J. Which net-work statement is correct?",
+      "options": [
+        "−15 J; speed increases.",
+        "+85 J; speed stays fixed.",
+        "+15 J; speed increases for unchanged mass.",
+        "0 J because energy is conserved overall."
+      ],
+      "correct_index": 2,
+      "guide": "ΔK = 50 − 35 = +15 J. Conservation includes transfers into this object.",
+      "target_slug": "u4.s1-work-energy-theorem",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

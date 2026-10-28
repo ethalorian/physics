@@ -1,10 +1,11 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Check } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { sourceKey, type ChoiceStep } from '@/lib/choice-calendar'
 import { activityLabels, matchesLibrary, readingTags, type LibraryStep, type LibraryMetadata, type ReadingTemplate } from '@/lib/activity-library'
+import { reflectionLibraryTemplates, type ReflectionKind } from '@/lib/reflection-assignments'
 import type { SavedUnitSequence } from '@/lib/teaching-plans/types'
 import s from './ChoiceSequence.module.css'
 
@@ -15,19 +16,42 @@ export default function ChoiceActivityLibrary({ courseId, unitId, catalog, used,
   const [sequences,setSequences]=useState<SavedUnitSequence[]|null>(null),[sequenceId,setSequenceId]=useState(''),[sequenceQuery,setSequenceQuery]=useState('')
   const [tab,setTab]=useState<'library'|'sequence'>('library'),[query,setQuery]=useState(''),[kind,setKind]=useState(''),[unit,setUnit]=useState(''),[target,setTarget]=useState(''),[status,setStatus]=useState(''),[readingTag,setReadingTag]=useState('')
   const [selected,setSelected]=useState<string[]>([]),[error,setError]=useState(''),[preparing,setPreparing]=useState<ReadingTemplate|null>(null),[busy,setBusy]=useState(false),[prepared,setPrepared]=useState('')
+  const reflectionRequests=useRef<Record<string,{request_id:string;kind:ReflectionKind;unit_id:string;target_id?:string}>>({})
   useEffect(()=>{const controller=new AbortController();fetch(`/api/teaching-plans?view=sequences&class=${encodeURIComponent(courseId)}`,{signal:controller.signal}).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.error??'Could not load saved sequences.');setSequences(d.sequences);setSequenceId(d.sequences.find((p:SavedUnitSequence)=>p.unitId===unitId)?.id??d.sequences[0]?.id??'')}).catch(e=>{if(e.name!=='AbortError')setError(e.message)});return()=>controller.abort()},[courseId,unitId])
-  useEffect(()=>{if(prepared && catalog.steps.some(s=>s.sourceId===prepared)){setSelected(old=>[...new Set([...old,'reading:'+prepared])]);setPrepared('')}},[prepared,catalog])
+  useEffect(()=>{if(prepared && catalog.steps.some(s=>sourceKey(s)===prepared)){setSelected(old=>[...new Set([...old,prepared])]);setPrepared('')}},[prepared,catalog])
   const saved=sequences?.find(p=>p.id===sequenceId), keys=new Set(saved?.steps.map(s=>s.activityKey)??[])
   const linked=new Set(catalog.links.map(l=>l.quiz)), byPlan=new Map(catalog.steps.flatMap(s=>[[s.planKey??sourceKey(s),s],[sourceKey(s),s]] as const))
   const filters={query,kind,unit,target,status,readingTag}, matches=(item:LibraryMetadata&{title:string;kind:string})=>matchesLibrary(item,filters,catalog.targets)
-  const activities=(tab==='sequence'?(saved?.steps.flatMap(item=>{const step=byPlan.get(item.activityKey);return step?[step]:[]})??[]):catalog.steps).filter(s=>!linked.has(sourceKey(s)))
+  const activities=(tab==='sequence'?(saved?.steps.flatMap(item=>{const step=byPlan.get(item.activityKey);return step?[step]:[]})??[]):catalog.steps.filter(s=>!s.reflectionTemplate)).filter(s=>!linked.has(sourceKey(s)))
   const templates=(catalog.readingTemplates??[]).filter(t=>tab==='library'||keys.has('reading-template:'+t.id))
   const setup=(catalog.setupActivities??[]).filter(t=>tab==='library'||keys.has(t.key))
+  const reflectionTemplates=tab==='library'?reflectionLibraryTemplates(catalog.targets):[]
+  const reflections=reflectionTemplates.filter(matches)
   const filtered=activities.filter(matches), readingTemplates=templates.filter(t=>matches({...t,kind:'reading'})), needsSetup=setup.filter(matches)
-  const total=filtered.length+readingTemplates.length+needsSetup.length
+  const total=filtered.length+readingTemplates.length+needsSetup.length+reflections.length
   const unitIds=[...new Set([...catalog.targets.map(t=>t.unit_id),...catalog.steps.flatMap(s=>s.unitIds??[])])].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}))
-  const availableFormats=[...new Set([...catalog.steps.map(s=>s.format??s.kind),...templates.map(t=>t.format??'reading'),...setup.map(s=>s.format??s.kind)])].sort()
+  const availableFormats=[...new Set([...catalog.steps.map(s=>s.format??s.kind),...templates.map(t=>t.format??'reading'),...setup.map(s=>s.format??s.kind),...reflectionTemplates.map(t=>t.format)])].sort()
   const unavailable=(saved?.steps??[]).filter(s=>!byPlan.has(s.activityKey)&&!templates.some(t=>'reading-template:'+t.id===s.activityKey)&&!setup.some(t=>t.key===s.activityKey))
+  const addSelected=async()=>{
+    setBusy(true);setError('')
+    try {
+      const steps:LibraryStep[]=[]
+      for(const key of selected){
+        const request=reflectionRequests.current[key]
+        if(request){
+          const response=await fetch('/api/choice-calendar/reflections',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...request,course_id:courseId})})
+          const data=await response.json()
+          if(!response.ok)throw Error(data.error??'Could not add this reflection. Please retry.')
+          steps.push(data.step)
+        }else{
+          const step=catalog.steps.find(s=>sourceKey(s)===key)
+          if(!step)throw Error('An activity is no longer available. Refresh the library and try again.')
+          steps.push(step)
+        }
+      }
+      onAdd(steps);onClose()
+    }catch(e){setError((e as Error).message)}finally{setBusy(false)}
+  }
   return <Dialog open onOpenChange={open=>{if(!open&&!busy)onClose()}}><DialogContent className={s.library}>
     <DialogTitle>Find activities for your sequence</DialogTitle><DialogDescription>Browse all available work for this class. Each selected activity becomes a choice; group activities afterward.</DialogDescription>
     <div className={s.tabs}><button type="button" aria-pressed={tab==='library'} onClick={()=>setTab('library')}>All assignments</button><button type="button" aria-pressed={tab==='sequence'} onClick={()=>setTab('sequence')}>Saved sequences</button></div>
@@ -37,18 +61,24 @@ export default function ChoiceActivityLibrary({ courseId, unitId, catalog, used,
     {error&&<p role="alert" className={s.error}>{error}</p>}
     <p className={s.hint} role="status">{total} matching activities · {selected.length} selected</p>
     <div className={s.libraryBody}>
-      {preparing&&<PrepareReading key={preparing.id} template={preparing} courseId={courseId} catalog={catalog} busy={busy} setBusy={setBusy} onCancel={()=>setPreparing(null)} onPrepared={id=>{setPrepared(id);setPreparing(null);onRefresh()}}/>}
+      {preparing&&<PrepareReading key={preparing.id} template={preparing} courseId={courseId} catalog={catalog} busy={busy} setBusy={setBusy} onCancel={()=>setPreparing(null)} onPrepared={id=>{setPrepared('reading:'+id);setPreparing(null);onRefresh()}}/>}
       {tab==='sequence'&&!sequences&&!error&&<p>Loading saved sequences…</p>}
       {tab==='sequence'&&sequences?.length===0&&<p>Save a unit sequence in Plan to use its activities here. Your class’s saved choice sequences are available beside “New choice sequence.”</p>}
-      <div className={s.libraryGrid}>{filtered.map(step=>{const key=sourceKey(step),added=used.includes(key),checked=selected.includes(key);return <label key={key} className={s.libraryCard} data-selected={checked||added}><input type="checkbox" disabled={added||busy} checked={checked||added} onChange={()=>setSelected(old=>old.includes(key)?old.filter(k=>k!==key):[...old,key])}/><span><small>{activityLabels[step.format??step.kind]??step.kind}{step.readingTag?' · '+step.readingTag:''}{step.unitIds?.length?' · '+step.unitIds.join(', '):''}</small><strong>{step.title}</strong><span>{added?'Already in your sequence':catalog.links.some(l=>l.reading===key)?'Attached quiz included automatically':step.availability??'Ready'}</span></span>{added&&<Check size={18} aria-hidden="true"/>}</label>})}
+      <div className={s.libraryGrid}>{reflections.map(t=>{
+        const added=catalog.steps.some(step=>step.reflectionTemplate===t.kind&&used.includes(sourceKey(step))),checked=selected.includes(t.key)
+        return <label key={t.key} className={s.libraryCard} data-selected={checked||added}><input type="checkbox" disabled={added||busy} checked={checked||added} onChange={()=>{
+          if(!checked)reflectionRequests.current[t.key]={request_id:crypto.randomUUID(),kind:t.kind,unit_id:catalog.targets.find(t=>t.id===target)?.unit_id||unit||unitId||unitIds.find(id=>/^unit-[1-8]$/.test(id))||'unit-1',...(target?{target_id:target}:{})}
+          setSelected(old=>old.includes(t.key)?old.filter(key=>key!==t.key):[...old,t.key])
+        }}/><span><small>{activityLabels[t.format]}</small><strong>{t.title}</strong><span>{added?'Already in your sequence':'Ready'}</span><span>{t.description}</span></span>{added&&<Check size={18} aria-hidden="true"/>}</label>
+      })}{filtered.map(step=>{const key=sourceKey(step),added=used.includes(key),checked=selected.includes(key);return <label key={key} className={s.libraryCard} data-selected={checked||added}><input type="checkbox" disabled={added||busy} checked={checked||added} onChange={()=>setSelected(old=>old.includes(key)?old.filter(k=>k!==key):[...old,key])}/><span><small>{activityLabels[step.format??step.kind]??step.kind}{step.readingTag?' · '+step.readingTag:''}{step.unitIds?.length?' · '+step.unitIds.join(', '):''}</small><strong>{step.title}</strong><span>{added?'Already in your sequence':catalog.links.some(l=>l.reading===key)?'Attached quiz included automatically':step.availability??'Ready'}</span></span>{added&&<Check size={18} aria-hidden="true"/>}</label>})}
       {readingTemplates.map(t=><article key={t.id} className={s.libraryCard}><span><small>{activityLabels[t.format??'reading']} · {t.readingTag} · Chapter {t.chapter}</small><strong>{t.title}</strong><span>{t.description}</span><button type="button" disabled={busy||!!prepared} onClick={()=>{setPreparing(t);setError('')}}>Set up & add reading</button><Link href={`/readings/preview?course_id=${courseId}&step_id=${t.id}`} target="_blank" rel="noopener noreferrer">Preview reading ↗</Link></span></article>)}
       {needsSetup.map(item=><article key={item.key} className={s.libraryCard}><span><small>{activityLabels[item.format??item.kind]}{item.readingTag?' · '+item.readingTag:''} · {item.availability}</small><strong>{item.title}</strong><Link href={item.setupHref!} target="_blank" rel="noopener noreferrer">Open assignment settings ↗</Link></span></article>)}
       </div>
       {!total&&<p>No activities match. Clear filters or choose another saved sequence.</p>}
       {!!unavailable.length&&<details className={s.unavailable}><summary>{unavailable.length} saved activities need class setup</summary>{unavailable.map(item=><p key={item.id}>{item.title}</p>)}<Link href={`/admin/control-room?view=plan&class=${courseId}&unit=${saved?.unitId}`}>Open the source sequence</Link></details>}
     </div>
-    <div className={s.libraryFooter}><button type="button" disabled={busy} onClick={onRefresh}>Refresh library</button><button type="button" className={s.primary} disabled={busy||!selected.length} onClick={()=>{onAdd(selected.flatMap(key=>{const step=catalog.steps.find(s=>sourceKey(s)===key);return step?[step]:[]}));onClose()}}>Add {selected.length||''} {selected.length===1?'activity':'activities'}</button></div>
-    <details className={s.more}><summary>Create a reflection activity</summary><p>{[['manga','Manga reflection'],['story','Short-story reflection'],['graphic-novel','Graphic novel response']].map(([kind,label])=><Link key={kind} href={`/admin/lessons/new?reflection=${kind}&class=${courseId}`} target="_blank" rel="noopener noreferrer">{label} ↗</Link>)}</p></details>
+    <div className={s.libraryFooter}><button type="button" disabled={busy} onClick={onRefresh}>Refresh library</button><button type="button" className={s.primary} disabled={busy||!selected.length} onClick={addSelected}>{busy?'Adding…':`Add ${selected.length||''} ${selected.length===1?'activity':'activities'}`}</button></div>
+    <details className={s.more}><summary>Create a reflection activity</summary><p>{[['manga','Manga'],['story','Written Reflection'],['graphic-novel','Graphic novel response']].map(([kind,label])=><Link key={kind} href={`/admin/lessons/new?reflection=${kind}&class=${courseId}&unit=${unitId}`} target="_blank" rel="noopener noreferrer">{label} ↗</Link>)}</p></details>
   </DialogContent></Dialog>
 }
 function PrepareReading({template,courseId,catalog,busy,setBusy,onPrepared,onCancel}:{template:ReadingTemplate;courseId:string;catalog:ChoiceCatalog;busy:boolean;setBusy:(v:boolean)=>void;onPrepared:(id:string)=>void;onCancel:()=>void}) {

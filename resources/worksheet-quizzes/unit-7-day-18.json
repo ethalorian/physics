@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 7,
+  "day": 18,
+  "title": "Transfer: circuits and induction",
+  "target": "Apply circuit relationships and explain an induction observation.",
+  "criteria": [
+    "Use current and voltage rules in a new circuit.",
+    "Account for electrical power and energy.",
+    "Explain induction through changing flux."
+  ],
+  "source_sha256": "5138713bbfc9d9e7cbe3518d8eaa8dfceeb1604266e1f038efef0d744d443795",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.571Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A 20 V ideal source feeds 10 Ω and 20 Ω resistors in parallel. What are branch currents and total current?",
+      "options": [
+        "1 A and 1 A; total 2 A.",
+        "20/(10+20) A through each.",
+        "2 A and 1 A; total 3 A.",
+        "2 A and 2 A; total 4 A."
+      ],
+      "correct_index": 2,
+      "guide": "Each branch has 20 V. Currents are V/R, then add at the junction.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 9 V supply powers series resistors 3 Ω and 6 Ω. Which set is consistent?",
+      "options": [
+        "Current 1 A; drops 9 V each.",
+        "Current 3 A; drops 9 V each.",
+        "Current 1 A; drops 3 V and 6 V.",
+        "Currents 3 A and 1.5 A in the same series loop."
+      ],
+      "correct_index": 2,
+      "guide": "R_total = 9 Ω; I = 1 A. Drops sum to the source voltage.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 5 V device draws 0.80 A for 45 s. What input power and energy does it receive?",
+      "options": [
+        "40 W and 18 J.",
+        "4.0 W and 180 J.",
+        "6.25 W and 281.25 J.",
+        "4.0 J and 180 W."
+      ],
+      "correct_index": 1,
+      "guide": "P = 5 × 0.80 = 4 W; E = 4 × 45 = 180 J.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A motor receives 90 J and provides 54 J of useful motion. Which statement is correct?",
+      "options": [
+        "Efficiency is 60%; 36 J goes to other outputs.",
+        "Efficiency is 167%; 36 J is created.",
+        "Efficiency is 40%; all 90 J is useful.",
+        "The remaining energy disappears."
+      ],
+      "correct_index": 0,
+      "guide": "54/90 = 0.60; conservation accounts for the 36 J difference.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A stationary loop lies in a steady field. It is then rotated so the flux changes. Which sequence is predicted?",
+      "options": [
+        "Constant emf initially; none during rotation.",
+        "No sustained induced emf initially; emf can occur during rotation.",
+        "No emf is possible because the loop does not move sideways.",
+        "Flux is unrelated to induction."
+      ],
+      "correct_index": 1,
+      "guide": "Changing orientation changes flux; steady initial flux produces no Faraday emf.",
+      "target_slug": "u7.r1-faraday",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A coil produces a pulse when a magnet approaches. Which change should reverse pulse sign while leaving the magnet’s pole facing the coil unchanged?",
+      "options": [
+        "Hold the magnet still.",
+        "Paint the coil a different color.",
+        "Increase coil wire length without motion.",
+        "Withdraw the magnet along the same path."
+      ],
+      "correct_index": 3,
+      "guide": "Withdrawal reverses the sign of flux change. Holding still instead makes the motion-induced emf zero.",
+      "target_slug": "u7.r1-faraday",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A 20 V ideal source feeds 10 Ω and 20 Ω resistors in parallel. What are branch currents and total current?",
+      "options": [
+        "1 A and 1 A; total 2 A.",
+        "2 A and 2 A; total 4 A.",
+        "20/(10+20) A through each.",
+        "2 A and 1 A; total 3 A."
+      ],
+      "correct_index": 3,
+      "guide": "Each branch has 20 V. Currents are V/R, then add at the junction.",
+      "target_slug": "u7.s2-parallel-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 9 V supply powers series resistors 3 Ω and 6 Ω. Which set is consistent?",
+      "options": [
+        "Current 1 A; drops 3 V and 6 V.",
+        "Current 3 A; drops 9 V each.",
+        "Currents 3 A and 1.5 A in the same series loop.",
+        "Current 1 A; drops 9 V each."
+      ],
+      "correct_index": 0,
+      "guide": "R_total = 9 Ω; I = 1 A. Drops sum to the source voltage.",
+      "target_slug": "u7.s1-series-circuits",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 5 V device draws 0.80 A for 45 s. What input power and energy does it receive?",
+      "options": [
+        "4.0 J and 180 W.",
+        "40 W and 18 J.",
+        "4.0 W and 180 J.",
+        "6.25 W and 281.25 J."
+      ],
+      "correct_index": 2,
+      "guide": "P = 5 × 0.80 = 4 W; E = 4 × 45 = 180 J.",
+      "target_slug": "u7.k6-electric-power",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A motor receives 90 J and provides 54 J of useful motion. Which statement is correct?",
+      "options": [
+        "The remaining energy disappears.",
+        "Efficiency is 60%; 36 J goes to other outputs.",
+        "Efficiency is 167%; 36 J is created.",
+        "Efficiency is 40%; all 90 J is useful."
+      ],
+      "correct_index": 1,
+      "guide": "54/90 = 0.60; conservation accounts for the 36 J difference.",
+      "target_slug": "u7.r2-motors-generators",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A stationary loop lies in a steady field. It is then rotated so the flux changes. Which sequence is predicted?",
+      "options": [
+        "No emf is possible because the loop does not move sideways.",
+        "Flux is unrelated to induction.",
+        "No sustained induced emf initially; emf can occur during rotation.",
+        "Constant emf initially; none during rotation."
+      ],
+      "correct_index": 2,
+      "guide": "Changing orientation changes flux; steady initial flux produces no Faraday emf.",
+      "target_slug": "u7.r1-faraday",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A coil produces a pulse when a magnet approaches. Which change should reverse pulse sign while leaving the magnet’s pole facing the coil unchanged?",
+      "options": [
+        "Paint the coil a different color.",
+        "Hold the magnet still.",
+        "Increase coil wire length without motion.",
+        "Withdraw the magnet along the same path."
+      ],
+      "correct_index": 3,
+      "guide": "Withdrawal reverses the sign of flux change. Holding still instead makes the motion-induced emf zero.",
+      "target_slug": "u7.r1-faraday",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 2,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    }
+  ]
+}

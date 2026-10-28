@@ -272,7 +272,7 @@ export default function CourseGuide({ embedded = false }: { embedded?: boolean }
                   <Link href={classDayToolHref(animation.day, courseId, animation.unit)} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"><MonitorPlay size={16} /> Launch teaching tool</Link>
                 </section>}
 
-                <DayWorksheetDownloads unit={unit} day={current.day} track={presentationTrack} />
+                <DayWorksheetDownloads unit={unit} day={current.day} track={presentationTrack} courseId={courseId} />
 
                 {honorsDays.includes(current.day) && (
                   <div className="flex items-center flex-wrap gap-2 mb-3 rounded-lg border px-3 py-2" style={{ borderColor: 'color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'color-mix(in oklch, var(--primary) 7%, var(--card))' }}>

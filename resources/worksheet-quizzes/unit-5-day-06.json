@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 6,
+  "title": "Temperature and particle motion",
+  "target": "Use a particle model to distinguish average motion from total energy.",
+  "criteria": [
+    "Describe temperature in terms of microscopic motion.",
+    "Use kelvin in proportional temperature comparisons.",
+    "Avoid treating a single particle speed as the temperature."
+  ],
+  "source_sha256": "6b414e48bb607f5caa1cf029e2a887d48efd4b6cd08e98df0f70119c4e79a32f",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.536Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "For an ideal gas, what does absolute temperature track?",
+      "options": [
+        "The color of the container.",
+        "Average translational kinetic energy per particle.",
+        "Total particle count alone.",
+        "The speed of one chosen particle exactly."
+      ],
+      "correct_index": 1,
+      "guide": "In the ideal-gas model, mean translational kinetic energy is proportional to kelvin temperature.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two ideal-gas samples contain different numbers of the same kind of particle at the same temperature. What is equal?",
+      "options": [
+        "Their average translational kinetic energy per particle.",
+        "Their total energy regardless of particle count.",
+        "Their exact particle positions.",
+        "Every particle’s instantaneous speed."
+      ],
+      "correct_index": 0,
+      "guide": "Temperature relates to an average per particle, not necessarily total energy or individual speed.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An ideal gas warms from 250 K to 500 K. What happens to average translational kinetic energy per particle?",
+      "options": [
+        "It halves.",
+        "It quadruples.",
+        "It is unchanged.",
+        "It doubles."
+      ],
+      "correct_index": 3,
+      "guide": "The average energy is directly proportional to absolute temperature.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal gas changes from 27°C to 327°C. Use K = °C + 273. What is the ratio of final to initial average translational kinetic energy?",
+      "options": [
+        "About 12.1",
+        "300",
+        "1",
+        "2"
+      ],
+      "correct_index": 3,
+      "guide": "Temperatures are 300 K and 600 K; the ratio is 2, not the Celsius ratio.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "One molecule in a gas moves faster than another at the same instant. What follows about the sample temperature?",
+      "options": [
+        "All molecules must have identical speed or temperature is undefined.",
+        "The sample has two separate temperatures solely because speeds differ.",
+        "A single speed does not determine the sample’s temperature.",
+        "The slower molecule has zero kinetic energy."
+      ],
+      "correct_index": 2,
+      "guide": "Particles have a distribution of speeds; temperature describes an appropriate average.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A simulation adds more identical gas particles while keeping the same speed distribution. What happens to temperature in the ideal model?",
+      "options": [
+        "It remains the same, although total kinetic energy increases.",
+        "It falls to zero.",
+        "It doubles whenever particle count doubles.",
+        "It becomes equal to the number of particles."
+      ],
+      "correct_index": 0,
+      "guide": "The average energy per particle is unchanged; more particles increase the total.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "For an ideal gas, what does absolute temperature track?",
+      "options": [
+        "The color of the container.",
+        "The speed of one chosen particle exactly.",
+        "Average translational kinetic energy per particle.",
+        "Total particle count alone."
+      ],
+      "correct_index": 2,
+      "guide": "In the ideal-gas model, mean translational kinetic energy is proportional to kelvin temperature.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two ideal-gas samples contain different numbers of the same kind of particle at the same temperature. What is equal?",
+      "options": [
+        "Their total energy regardless of particle count.",
+        "Their exact particle positions.",
+        "Every particle’s instantaneous speed.",
+        "Their average translational kinetic energy per particle."
+      ],
+      "correct_index": 3,
+      "guide": "Temperature relates to an average per particle, not necessarily total energy or individual speed.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "An ideal gas warms from 250 K to 500 K. What happens to average translational kinetic energy per particle?",
+      "options": [
+        "It quadruples.",
+        "It doubles.",
+        "It halves.",
+        "It is unchanged."
+      ],
+      "correct_index": 1,
+      "guide": "The average energy is directly proportional to absolute temperature.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal gas changes from 27°C to 327°C. Use K = °C + 273. What is the ratio of final to initial average translational kinetic energy?",
+      "options": [
+        "2",
+        "About 12.1",
+        "1",
+        "300"
+      ],
+      "correct_index": 0,
+      "guide": "Temperatures are 300 K and 600 K; the ratio is 2, not the Celsius ratio.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "One molecule in a gas moves faster than another at the same instant. What follows about the sample temperature?",
+      "options": [
+        "A single speed does not determine the sample’s temperature.",
+        "The sample has two separate temperatures solely because speeds differ.",
+        "All molecules must have identical speed or temperature is undefined.",
+        "The slower molecule has zero kinetic energy."
+      ],
+      "correct_index": 0,
+      "guide": "Particles have a distribution of speeds; temperature describes an appropriate average.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A simulation adds more identical gas particles while keeping the same speed distribution. What happens to temperature in the ideal model?",
+      "options": [
+        "It doubles whenever particle count doubles.",
+        "It remains the same, although total kinetic energy increases.",
+        "It becomes equal to the number of particles.",
+        "It falls to zero."
+      ],
+      "correct_index": 1,
+      "guide": "The average energy per particle is unchanged; more particles increase the total.",
+      "target_slug": "u5.k4-kinetic-theory",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    }
+  ]
+}

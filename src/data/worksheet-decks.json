@@ -4,7 +4,7 @@
     "day": 1,
     "track": "cpa",
     "title": "Notice, question, predict",
-    "slides": 56,
+    "slides": 51,
     "problems": 10,
     "file": "unit-1-cpa-day-01.html",
     "src": "/api/teacher/worksheets/unit-1/1/presentation?track=cpa"
@@ -14,7 +14,7 @@
     "day": 1,
     "track": "honors",
     "title": "Notice, question, predict",
-    "slides": 62,
+    "slides": 53,
     "problems": 10,
     "file": "unit-1-honors-day-01.html",
     "src": "/api/teacher/worksheets/unit-1/1/presentation?track=honors"
@@ -24,7 +24,7 @@
     "day": 2,
     "track": "cpa",
     "title": "Position, distance, displacement",
-    "slides": 63,
+    "slides": 47,
     "problems": 10,
     "file": "unit-1-cpa-day-02.html",
     "src": "/api/teacher/worksheets/unit-1/2/presentation?track=cpa"
@@ -34,7 +34,7 @@
     "day": 2,
     "track": "honors",
     "title": "Position, distance, displacement",
-    "slides": 73,
+    "slides": 59,
     "problems": 10,
     "file": "unit-1-honors-day-02.html",
     "src": "/api/teacher/worksheets/unit-1/2/presentation?track=honors"
@@ -44,7 +44,7 @@
     "day": 3,
     "track": "cpa",
     "title": "Velocity and position graphs",
-    "slides": 70,
+    "slides": 52,
     "problems": 10,
     "file": "unit-1-cpa-day-03.html",
     "src": "/api/teacher/worksheets/unit-1/3/presentation?track=cpa"
@@ -54,7 +54,7 @@
     "day": 3,
     "track": "honors",
     "title": "Velocity and position graphs",
-    "slides": 79,
+    "slides": 53,
     "problems": 10,
     "file": "unit-1-honors-day-03.html",
     "src": "/api/teacher/worksheets/unit-1/3/presentation?track=honors"
@@ -64,7 +64,7 @@
     "day": 4,
     "track": "cpa",
     "title": "Velocity graphs and components",
-    "slides": 60,
+    "slides": 47,
     "problems": 10,
     "file": "unit-1-cpa-day-04.html",
     "src": "/api/teacher/worksheets/unit-1/4/presentation?track=cpa"
@@ -74,7 +74,7 @@
     "day": 4,
     "track": "honors",
     "title": "Velocity graphs and components",
-    "slides": 75,
+    "slides": 55,
     "problems": 10,
     "file": "unit-1-honors-day-04.html",
     "src": "/api/teacher/worksheets/unit-1/4/presentation?track=honors"
@@ -84,7 +84,7 @@
     "day": 5,
     "track": "cpa",
     "title": "Predict a position and a range",
-    "slides": 65,
+    "slides": 51,
     "problems": 10,
     "file": "unit-1-cpa-day-05.html",
     "src": "/api/teacher/worksheets/unit-1/5/presentation?track=cpa"
@@ -94,7 +94,7 @@
     "day": 5,
     "track": "honors",
     "title": "Predict a position and a range",
-    "slides": 78,
+    "slides": 61,
     "problems": 10,
     "file": "unit-1-honors-day-05.html",
     "src": "/api/teacher/worksheets/unit-1/5/presentation?track=honors"
@@ -104,7 +104,7 @@
     "day": 6,
     "track": "cpa",
     "title": "Vector addition",
-    "slides": 121,
+    "slides": 74,
     "problems": 12,
     "file": "unit-1-cpa-day-06.html",
     "src": "/api/teacher/worksheets/unit-1/6/presentation?track=cpa"
@@ -114,7 +114,7 @@
     "day": 6,
     "track": "honors",
     "title": "Vector addition",
-    "slides": 145,
+    "slides": 67,
     "problems": 12,
     "file": "unit-1-honors-day-06.html",
     "src": "/api/teacher/worksheets/unit-1/6/presentation?track=honors"
@@ -124,7 +124,7 @@
     "day": 7,
     "track": "cpa",
     "title": "Changing velocity",
-    "slides": 56,
+    "slides": 51,
     "problems": 8,
     "file": "unit-1-cpa-day-07.html",
     "src": "/api/teacher/worksheets/unit-1/7/presentation?track=cpa"
@@ -134,7 +134,7 @@
     "day": 7,
     "track": "honors",
     "title": "Changing velocity",
-    "slides": 63,
+    "slides": 61,
     "problems": 8,
     "file": "unit-1-honors-day-07.html",
     "src": "/api/teacher/worksheets/unit-1/7/presentation?track=honors"
@@ -144,7 +144,7 @@
     "day": 8,
     "track": "cpa",
     "title": "Choose a motion method",
-    "slides": 58,
+    "slides": 41,
     "problems": 8,
     "file": "unit-1-cpa-day-08.html",
     "src": "/api/teacher/worksheets/unit-1/8/presentation?track=cpa"
@@ -154,7 +154,7 @@
     "day": 8,
     "track": "honors",
     "title": "Choose a motion method",
-    "slides": 63,
+    "slides": 44,
     "problems": 8,
     "file": "unit-1-honors-day-08.html",
     "src": "/api/teacher/worksheets/unit-1/8/presentation?track=honors"
@@ -164,7 +164,7 @@
     "day": 9,
     "track": "cpa",
     "title": "Inertia and balanced forces",
-    "slides": 50,
+    "slides": 41,
     "problems": 8,
     "file": "unit-1-cpa-day-09.html",
     "src": "/api/teacher/worksheets/unit-1/9/presentation?track=cpa"
@@ -174,7 +174,7 @@
     "day": 9,
     "track": "honors",
     "title": "Inertia and balanced forces",
-    "slides": 53,
+    "slides": 39,
     "problems": 8,
     "file": "unit-1-honors-day-09.html",
     "src": "/api/teacher/worksheets/unit-1/9/presentation?track=honors"
@@ -184,7 +184,7 @@
     "day": 10,
     "track": "cpa",
     "title": "Name the force and its source",
-    "slides": 49,
+    "slides": 41,
     "problems": 8,
     "file": "unit-1-cpa-day-10.html",
     "src": "/api/teacher/worksheets/unit-1/10/presentation?track=cpa"
@@ -194,7 +194,7 @@
     "day": 10,
     "track": "honors",
     "title": "Name the force and its source",
-    "slides": 54,
+    "slides": 42,
     "problems": 8,
     "file": "unit-1-honors-day-10.html",
     "src": "/api/teacher/worksheets/unit-1/10/presentation?track=honors"
@@ -204,7 +204,7 @@
     "day": 11,
     "track": "cpa",
     "title": "Cart lab: change mass",
-    "slides": 53,
+    "slides": 43,
     "problems": 8,
     "file": "unit-1-cpa-day-11.html",
     "src": "/api/teacher/worksheets/unit-1/11/presentation?track=cpa"
@@ -214,7 +214,7 @@
     "day": 11,
     "track": "honors",
     "title": "Cart lab: change mass",
-    "slides": 55,
+    "slides": 43,
     "problems": 8,
     "file": "unit-1-honors-day-11.html",
     "src": "/api/teacher/worksheets/unit-1/11/presentation?track=honors"
@@ -224,7 +224,7 @@
     "day": 12,
     "track": "cpa",
     "title": "Cart lab: change driving force",
-    "slides": 48,
+    "slides": 38,
     "problems": 8,
     "file": "unit-1-cpa-day-12.html",
     "src": "/api/teacher/worksheets/unit-1/12/presentation?track=cpa"
@@ -234,7 +234,7 @@
     "day": 12,
     "track": "honors",
     "title": "Cart lab: change driving force",
-    "slides": 56,
+    "slides": 45,
     "problems": 8,
     "file": "unit-1-honors-day-12.html",
     "src": "/api/teacher/worksheets/unit-1/12/presentation?track=honors"
@@ -244,7 +244,7 @@
     "day": 13,
     "track": "cpa",
     "title": "Net force first",
-    "slides": 59,
+    "slides": 39,
     "problems": 8,
     "file": "unit-1-cpa-day-13.html",
     "src": "/api/teacher/worksheets/unit-1/13/presentation?track=cpa"
@@ -254,7 +254,7 @@
     "day": 13,
     "track": "honors",
     "title": "Net force first",
-    "slides": 62,
+    "slides": 43,
     "problems": 8,
     "file": "unit-1-honors-day-13.html",
     "src": "/api/teacher/worksheets/unit-1/13/presentation?track=honors"
@@ -264,7 +264,7 @@
     "day": 14,
     "track": "cpa",
     "title": "Forces on two objects",
-    "slides": 44,
+    "slides": 42,
     "problems": 8,
     "file": "unit-1-cpa-day-14.html",
     "src": "/api/teacher/worksheets/unit-1/14/presentation?track=cpa"
@@ -274,7 +274,7 @@
     "day": 14,
     "track": "honors",
     "title": "Forces on two objects",
-    "slides": 51,
+    "slides": 44,
     "problems": 8,
     "file": "unit-1-honors-day-14.html",
     "src": "/api/teacher/worksheets/unit-1/14/presentation?track=honors"
@@ -284,7 +284,7 @@
     "day": 15,
     "track": "cpa",
     "title": "Free-body diagrams",
-    "slides": 50,
+    "slides": 39,
     "problems": 8,
     "file": "unit-1-cpa-day-15.html",
     "src": "/api/teacher/worksheets/unit-1/15/presentation?track=cpa"
@@ -294,7 +294,7 @@
     "day": 15,
     "track": "honors",
     "title": "Free-body diagrams",
-    "slides": 56,
+    "slides": 42,
     "problems": 8,
     "file": "unit-1-honors-day-15.html",
     "src": "/api/teacher/worksheets/unit-1/15/presentation?track=honors"
@@ -304,7 +304,7 @@
     "day": 16,
     "track": "cpa",
     "title": "From force diagrams to motion",
-    "slides": 53,
+    "slides": 39,
     "problems": 8,
     "file": "unit-1-cpa-day-16.html",
     "src": "/api/teacher/worksheets/unit-1/16/presentation?track=cpa"
@@ -314,7 +314,7 @@
     "day": 16,
     "track": "honors",
     "title": "From force diagrams to motion",
-    "slides": 64,
+    "slides": 47,
     "problems": 8,
     "file": "unit-1-honors-day-16.html",
     "src": "/api/teacher/worksheets/unit-1/16/presentation?track=honors"
@@ -324,7 +324,7 @@
     "day": 17,
     "track": "cpa",
     "title": "Static and kinetic friction",
-    "slides": 51,
+    "slides": 39,
     "problems": 8,
     "file": "unit-1-cpa-day-17.html",
     "src": "/api/teacher/worksheets/unit-1/17/presentation?track=cpa"
@@ -334,7 +334,7 @@
     "day": 17,
     "track": "honors",
     "title": "Static and kinetic friction",
-    "slides": 70,
+    "slides": 50,
     "problems": 8,
     "file": "unit-1-honors-day-17.html",
     "src": "/api/teacher/worksheets/unit-1/17/presentation?track=honors"
@@ -344,7 +344,7 @@
     "day": 18,
     "track": "cpa",
     "title": "Equilibrium and missing forces",
-    "slides": 48,
+    "slides": 37,
     "problems": 8,
     "file": "unit-1-cpa-day-18.html",
     "src": "/api/teacher/worksheets/unit-1/18/presentation?track=cpa"
@@ -354,7 +354,7 @@
     "day": 18,
     "track": "honors",
     "title": "Equilibrium and missing forces",
-    "slides": 57,
+    "slides": 44,
     "problems": 8,
     "file": "unit-1-honors-day-18.html",
     "src": "/api/teacher/worksheets/unit-1/18/presentation?track=honors"
@@ -364,7 +364,7 @@
     "day": 19,
     "track": "cpa",
     "title": "Diagnose, repair, recheck",
-    "slides": 56,
+    "slides": 41,
     "problems": 8,
     "file": "unit-1-cpa-day-19.html",
     "src": "/api/teacher/worksheets/unit-1/19/presentation?track=cpa"
@@ -374,7 +374,7 @@
     "day": 19,
     "track": "honors",
     "title": "Diagnose, repair, recheck",
-    "slides": 61,
+    "slides": 46,
     "problems": 8,
     "file": "unit-1-honors-day-19.html",
     "src": "/api/teacher/worksheets/unit-1/19/presentation?track=honors"
@@ -384,7 +384,7 @@
     "day": 20,
     "track": "cpa",
     "title": "Build a complete prediction",
-    "slides": 63,
+    "slides": 40,
     "problems": 8,
     "file": "unit-1-cpa-day-20.html",
     "src": "/api/teacher/worksheets/unit-1/20/presentation?track=cpa"
@@ -394,7 +394,7 @@
     "day": 20,
     "track": "honors",
     "title": "Build a complete prediction",
-    "slides": 65,
+    "slides": 41,
     "problems": 8,
     "file": "unit-1-honors-day-20.html",
     "src": "/api/teacher/worksheets/unit-1/20/presentation?track=honors"
@@ -404,7 +404,7 @@
     "day": 21,
     "track": "cpa",
     "title": "Transfer task: plan and begin",
-    "slides": 58,
+    "slides": 39,
     "problems": 8,
     "file": "unit-1-cpa-day-21.html",
     "src": "/api/teacher/worksheets/unit-1/21/presentation?track=cpa"
@@ -414,7 +414,7 @@
     "day": 21,
     "track": "honors",
     "title": "Transfer task: plan and begin",
-    "slides": 68,
+    "slides": 45,
     "problems": 8,
     "file": "unit-1-honors-day-21.html",
     "src": "/api/teacher/worksheets/unit-1/21/presentation?track=honors"
@@ -424,7 +424,7 @@
     "day": 22,
     "track": "cpa",
     "title": "Transfer task: defend and revise",
-    "slides": 55,
+    "slides": 44,
     "problems": 8,
     "file": "unit-1-cpa-day-22.html",
     "src": "/api/teacher/worksheets/unit-1/22/presentation?track=cpa"
@@ -434,7 +434,7 @@
     "day": 22,
     "track": "honors",
     "title": "Transfer task: defend and revise",
-    "slides": 54,
+    "slides": 46,
     "problems": 8,
     "file": "unit-1-honors-day-22.html",
     "src": "/api/teacher/worksheets/unit-1/22/presentation?track=honors"
@@ -444,7 +444,7 @@
     "day": 1,
     "track": "cpa",
     "title": "What changes an asteroid’s path?",
-    "slides": 44,
+    "slides": 38,
     "problems": 8,
     "file": "unit-2-cpa-day-01.html",
     "src": "/api/teacher/worksheets/unit-2/1/presentation?track=cpa"
@@ -454,7 +454,7 @@
     "day": 1,
     "track": "honors",
     "title": "What changes an asteroid’s path?",
-    "slides": 51,
+    "slides": 44,
     "problems": 8,
     "file": "unit-2-honors-day-01.html",
     "src": "/api/teacher/worksheets/unit-2/1/presentation?track=honors"
@@ -464,7 +464,7 @@
     "day": 2,
     "track": "cpa",
     "title": "Free fall",
-    "slides": 44,
+    "slides": 36,
     "problems": 8,
     "file": "unit-2-cpa-day-02.html",
     "src": "/api/teacher/worksheets/unit-2/2/presentation?track=cpa"
@@ -474,7 +474,7 @@
     "day": 2,
     "track": "honors",
     "title": "Free fall",
-    "slides": 51,
+    "slides": 39,
     "problems": 8,
     "file": "unit-2-honors-day-02.html",
     "src": "/api/teacher/worksheets/unit-2/2/presentation?track=honors"
@@ -484,7 +484,7 @@
     "day": 3,
     "track": "cpa",
     "title": "Weight and local gravity",
-    "slides": 50,
+    "slides": 37,
     "problems": 8,
     "file": "unit-2-cpa-day-03.html",
     "src": "/api/teacher/worksheets/unit-2/3/presentation?track=cpa"
@@ -494,7 +494,7 @@
     "day": 3,
     "track": "honors",
     "title": "Weight and local gravity",
-    "slides": 60,
+    "slides": 44,
     "problems": 8,
     "file": "unit-2-honors-day-03.html",
     "src": "/api/teacher/worksheets/unit-2/3/presentation?track=honors"
@@ -514,7 +514,7 @@
     "day": 4,
     "track": "honors",
     "title": "Universal gravitation",
-    "slides": 41,
+    "slides": 39,
     "problems": 8,
     "file": "unit-2-honors-day-04.html",
     "src": "/api/teacher/worksheets/unit-2/4/presentation?track=honors"
@@ -524,7 +524,7 @@
     "day": 5,
     "track": "cpa",
     "title": "Calculate gravitational force",
-    "slides": 43,
+    "slides": 37,
     "problems": 8,
     "file": "unit-2-cpa-day-05.html",
     "src": "/api/teacher/worksheets/unit-2/5/presentation?track=cpa"
@@ -534,7 +534,7 @@
     "day": 5,
     "track": "honors",
     "title": "Calculate gravitational force",
-    "slides": 46,
+    "slides": 37,
     "problems": 8,
     "file": "unit-2-honors-day-05.html",
     "src": "/api/teacher/worksheets/unit-2/5/presentation?track=honors"
@@ -544,7 +544,7 @@
     "day": 6,
     "track": "cpa",
     "title": "Gravitational field strength",
-    "slides": 50,
+    "slides": 39,
     "problems": 8,
     "file": "unit-2-cpa-day-06.html",
     "src": "/api/teacher/worksheets/unit-2/6/presentation?track=cpa"
@@ -554,7 +554,7 @@
     "day": 6,
     "track": "honors",
     "title": "Gravitational field strength",
-    "slides": 49,
+    "slides": 39,
     "problems": 8,
     "file": "unit-2-honors-day-06.html",
     "src": "/api/teacher/worksheets/unit-2/6/presentation?track=honors"
@@ -564,7 +564,7 @@
     "day": 7,
     "track": "cpa",
     "title": "Gravity above the surface",
-    "slides": 42,
+    "slides": 35,
     "problems": 8,
     "file": "unit-2-cpa-day-07.html",
     "src": "/api/teacher/worksheets/unit-2/7/presentation?track=cpa"
@@ -574,7 +574,7 @@
     "day": 7,
     "track": "honors",
     "title": "Gravity above the surface",
-    "slides": 43,
+    "slides": 40,
     "problems": 8,
     "file": "unit-2-honors-day-07.html",
     "src": "/api/teacher/worksheets/unit-2/7/presentation?track=honors"
@@ -584,7 +584,7 @@
     "day": 8,
     "track": "cpa",
     "title": "Free-fall lab",
-    "slides": 48,
+    "slides": 40,
     "problems": 8,
     "file": "unit-2-cpa-day-08.html",
     "src": "/api/teacher/worksheets/unit-2/8/presentation?track=cpa"
@@ -594,7 +594,7 @@
     "day": 8,
     "track": "honors",
     "title": "Free-fall lab",
-    "slides": 50,
+    "slides": 41,
     "problems": 8,
     "file": "unit-2-honors-day-08.html",
     "src": "/api/teacher/worksheets/unit-2/8/presentation?track=honors"
@@ -604,7 +604,7 @@
     "day": 9,
     "track": "cpa",
     "title": "Independent projectile directions",
-    "slides": 48,
+    "slides": 38,
     "problems": 8,
     "file": "unit-2-cpa-day-09.html",
     "src": "/api/teacher/worksheets/unit-2/9/presentation?track=cpa"
@@ -614,7 +614,7 @@
     "day": 9,
     "track": "honors",
     "title": "Independent projectile directions",
-    "slides": 50,
+    "slides": 39,
     "problems": 8,
     "file": "unit-2-honors-day-09.html",
     "src": "/api/teacher/worksheets/unit-2/9/presentation?track=honors"
@@ -624,7 +624,7 @@
     "day": 10,
     "track": "cpa",
     "title": "Horizontal launches",
-    "slides": 49,
+    "slides": 37,
     "problems": 8,
     "file": "unit-2-cpa-day-10.html",
     "src": "/api/teacher/worksheets/unit-2/10/presentation?track=cpa"
@@ -634,7 +634,7 @@
     "day": 10,
     "track": "honors",
     "title": "Horizontal launches",
-    "slides": 54,
+    "slides": 41,
     "problems": 8,
     "file": "unit-2-honors-day-10.html",
     "src": "/api/teacher/worksheets/unit-2/10/presentation?track=honors"
@@ -644,7 +644,7 @@
     "day": 11,
     "track": "cpa",
     "title": "Angled launches",
-    "slides": 55,
+    "slides": 39,
     "problems": 8,
     "file": "unit-2-cpa-day-11.html",
     "src": "/api/teacher/worksheets/unit-2/11/presentation?track=cpa"
@@ -654,7 +654,7 @@
     "day": 11,
     "track": "honors",
     "title": "Angled launches",
-    "slides": 59,
+    "slides": 44,
     "problems": 8,
     "file": "unit-2-honors-day-11.html",
     "src": "/api/teacher/worksheets/unit-2/11/presentation?track=honors"
@@ -664,7 +664,7 @@
     "day": 12,
     "track": "cpa",
     "title": "Circular motion",
-    "slides": 47,
+    "slides": 39,
     "problems": 8,
     "file": "unit-2-cpa-day-12.html",
     "src": "/api/teacher/worksheets/unit-2/12/presentation?track=cpa"
@@ -674,7 +674,7 @@
     "day": 12,
     "track": "honors",
     "title": "Circular motion",
-    "slides": 51,
+    "slides": 41,
     "problems": 8,
     "file": "unit-2-honors-day-12.html",
     "src": "/api/teacher/worksheets/unit-2/12/presentation?track=honors"
@@ -684,7 +684,7 @@
     "day": 13,
     "track": "cpa",
     "title": "An orbit is continuous falling",
-    "slides": 44,
+    "slides": 37,
     "problems": 8,
     "file": "unit-2-cpa-day-13.html",
     "src": "/api/teacher/worksheets/unit-2/13/presentation?track=cpa"
@@ -694,7 +694,7 @@
     "day": 13,
     "track": "honors",
     "title": "An orbit is continuous falling",
-    "slides": 48,
+    "slides": 40,
     "problems": 8,
     "file": "unit-2-honors-day-13.html",
     "src": "/api/teacher/worksheets/unit-2/13/presentation?track=honors"
@@ -704,7 +704,7 @@
     "day": 14,
     "track": "cpa",
     "title": "Kepler’s laws",
-    "slides": 39,
+    "slides": 36,
     "problems": 8,
     "file": "unit-2-cpa-day-14.html",
     "src": "/api/teacher/worksheets/unit-2/14/presentation?track=cpa"
@@ -714,7 +714,7 @@
     "day": 14,
     "track": "honors",
     "title": "Kepler’s laws",
-    "slides": 47,
+    "slides": 41,
     "problems": 8,
     "file": "unit-2-honors-day-14.html",
     "src": "/api/teacher/worksheets/unit-2/14/presentation?track=honors"
@@ -724,7 +724,7 @@
     "day": 15,
     "track": "cpa",
     "title": "Timing a possible encounter",
-    "slides": 46,
+    "slides": 38,
     "problems": 8,
     "file": "unit-2-cpa-day-15.html",
     "src": "/api/teacher/worksheets/unit-2/15/presentation?track=cpa"
@@ -734,7 +734,7 @@
     "day": 15,
     "track": "honors",
     "title": "Timing a possible encounter",
-    "slides": 50,
+    "slides": 38,
     "problems": 8,
     "file": "unit-2-honors-day-15.html",
     "src": "/api/teacher/worksheets/unit-2/15/presentation?track=honors"
@@ -744,7 +744,7 @@
     "day": 16,
     "track": "cpa",
     "title": "Transfer: gravity and motion",
-    "slides": 53,
+    "slides": 38,
     "problems": 8,
     "file": "unit-2-cpa-day-16.html",
     "src": "/api/teacher/worksheets/unit-2/16/presentation?track=cpa"
@@ -754,7 +754,7 @@
     "day": 16,
     "track": "honors",
     "title": "Transfer: gravity and motion",
-    "slides": 56,
+    "slides": 42,
     "problems": 8,
     "file": "unit-2-honors-day-16.html",
     "src": "/api/teacher/worksheets/unit-2/16/presentation?track=honors"
@@ -764,7 +764,7 @@
     "day": 1,
     "track": "cpa",
     "title": "What makes motion hard to stop?",
-    "slides": 45,
+    "slides": 36,
     "problems": 8,
     "file": "unit-3-cpa-day-01.html",
     "src": "/api/teacher/worksheets/unit-3/1/presentation?track=cpa"
@@ -774,7 +774,7 @@
     "day": 1,
     "track": "honors",
     "title": "What makes motion hard to stop?",
-    "slides": 49,
+    "slides": 39,
     "problems": 8,
     "file": "unit-3-honors-day-01.html",
     "src": "/api/teacher/worksheets/unit-3/1/presentation?track=honors"
@@ -784,7 +784,7 @@
     "day": 2,
     "track": "cpa",
     "title": "Momentum",
-    "slides": 44,
+    "slides": 37,
     "problems": 8,
     "file": "unit-3-cpa-day-02.html",
     "src": "/api/teacher/worksheets/unit-3/2/presentation?track=cpa"
@@ -794,7 +794,7 @@
     "day": 2,
     "track": "honors",
     "title": "Momentum",
-    "slides": 46,
+    "slides": 37,
     "problems": 8,
     "file": "unit-3-honors-day-02.html",
     "src": "/api/teacher/worksheets/unit-3/2/presentation?track=honors"
@@ -804,7 +804,7 @@
     "day": 3,
     "track": "cpa",
     "title": "Impulse changes momentum",
-    "slides": 46,
+    "slides": 35,
     "problems": 8,
     "file": "unit-3-cpa-day-03.html",
     "src": "/api/teacher/worksheets/unit-3/3/presentation?track=cpa"
@@ -814,7 +814,7 @@
     "day": 3,
     "track": "honors",
     "title": "Impulse changes momentum",
-    "slides": 49,
+    "slides": 38,
     "problems": 8,
     "file": "unit-3-honors-day-03.html",
     "src": "/api/teacher/worksheets/unit-3/3/presentation?track=honors"
@@ -824,7 +824,7 @@
     "day": 4,
     "track": "cpa",
     "title": "Stopping time and force",
-    "slides": 41,
+    "slides": 36,
     "problems": 8,
     "file": "unit-3-cpa-day-04.html",
     "src": "/api/teacher/worksheets/unit-3/4/presentation?track=cpa"
@@ -834,7 +834,7 @@
     "day": 4,
     "track": "honors",
     "title": "Stopping time and force",
-    "slides": 48,
+    "slides": 40,
     "problems": 8,
     "file": "unit-3-honors-day-04.html",
     "src": "/api/teacher/worksheets/unit-3/4/presentation?track=honors"
@@ -844,7 +844,7 @@
     "day": 5,
     "track": "cpa",
     "title": "Recoil and explosions",
-    "slides": 42,
+    "slides": 35,
     "problems": 8,
     "file": "unit-3-cpa-day-05.html",
     "src": "/api/teacher/worksheets/unit-3/5/presentation?track=cpa"
@@ -854,7 +854,7 @@
     "day": 5,
     "track": "honors",
     "title": "Recoil and explosions",
-    "slides": 47,
+    "slides": 39,
     "problems": 8,
     "file": "unit-3-honors-day-05.html",
     "src": "/api/teacher/worksheets/unit-3/5/presentation?track=honors"
@@ -864,7 +864,7 @@
     "day": 6,
     "track": "cpa",
     "title": "Kinds of collisions",
-    "slides": 43,
+    "slides": 34,
     "problems": 8,
     "file": "unit-3-cpa-day-06.html",
     "src": "/api/teacher/worksheets/unit-3/6/presentation?track=cpa"
@@ -874,7 +874,7 @@
     "day": 6,
     "track": "honors",
     "title": "Kinds of collisions",
-    "slides": 49,
+    "slides": 40,
     "problems": 8,
     "file": "unit-3-honors-day-06.html",
     "src": "/api/teacher/worksheets/unit-3/6/presentation?track=honors"
@@ -884,7 +884,7 @@
     "day": 7,
     "track": "cpa",
     "title": "Collision lab",
-    "slides": 49,
+    "slides": 37,
     "problems": 8,
     "file": "unit-3-cpa-day-07.html",
     "src": "/api/teacher/worksheets/unit-3/7/presentation?track=cpa"
@@ -894,7 +894,7 @@
     "day": 7,
     "track": "honors",
     "title": "Collision lab",
-    "slides": 56,
+    "slides": 43,
     "problems": 8,
     "file": "unit-3-honors-day-07.html",
     "src": "/api/teacher/worksheets/unit-3/7/presentation?track=honors"
@@ -904,7 +904,7 @@
     "day": 8,
     "track": "cpa",
     "title": "Stick-together calculations",
-    "slides": 39,
+    "slides": 34,
     "problems": 8,
     "file": "unit-3-cpa-day-08.html",
     "src": "/api/teacher/worksheets/unit-3/8/presentation?track=cpa"
@@ -914,7 +914,7 @@
     "day": 8,
     "track": "honors",
     "title": "Stick-together calculations",
-    "slides": 45,
+    "slides": 39,
     "problems": 8,
     "file": "unit-3-honors-day-08.html",
     "src": "/api/teacher/worksheets/unit-3/8/presentation?track=honors"
@@ -924,7 +924,7 @@
     "day": 9,
     "track": "cpa",
     "title": "Bounce-apart calculations",
-    "slides": 54,
+    "slides": 42,
     "problems": 8,
     "file": "unit-3-cpa-day-09.html",
     "src": "/api/teacher/worksheets/unit-3/9/presentation?track=cpa"
@@ -934,7 +934,7 @@
     "day": 9,
     "track": "honors",
     "title": "Bounce-apart calculations",
-    "slides": 57,
+    "slides": 44,
     "problems": 8,
     "file": "unit-3-honors-day-09.html",
     "src": "/api/teacher/worksheets/unit-3/9/presentation?track=honors"
@@ -944,7 +944,7 @@
     "day": 10,
     "track": "cpa",
     "title": "Momentum in two dimensions",
-    "slides": 47,
+    "slides": 35,
     "problems": 8,
     "file": "unit-3-cpa-day-10.html",
     "src": "/api/teacher/worksheets/unit-3/10/presentation?track=cpa"
@@ -954,7 +954,7 @@
     "day": 10,
     "track": "honors",
     "title": "Momentum in two dimensions",
-    "slides": 51,
+    "slides": 40,
     "problems": 8,
     "file": "unit-3-honors-day-10.html",
     "src": "/api/teacher/worksheets/unit-3/10/presentation?track=honors"
@@ -964,7 +964,7 @@
     "day": 11,
     "track": "cpa",
     "title": "A kinetic-impact deflection model",
-    "slides": 46,
+    "slides": 38,
     "problems": 8,
     "file": "unit-3-cpa-day-11.html",
     "src": "/api/teacher/worksheets/unit-3/11/presentation?track=cpa"
@@ -974,7 +974,7 @@
     "day": 11,
     "track": "honors",
     "title": "A kinetic-impact deflection model",
-    "slides": 54,
+    "slides": 43,
     "problems": 8,
     "file": "unit-3-honors-day-11.html",
     "src": "/api/teacher/worksheets/unit-3/11/presentation?track=honors"
@@ -984,7 +984,7 @@
     "day": 12,
     "track": "cpa",
     "title": "What momentum says about impact",
-    "slides": 47,
+    "slides": 35,
     "problems": 8,
     "file": "unit-3-cpa-day-12.html",
     "src": "/api/teacher/worksheets/unit-3/12/presentation?track=cpa"
@@ -994,7 +994,7 @@
     "day": 12,
     "track": "honors",
     "title": "What momentum says about impact",
-    "slides": 55,
+    "slides": 42,
     "problems": 8,
     "file": "unit-3-honors-day-12.html",
     "src": "/api/teacher/worksheets/unit-3/12/presentation?track=honors"
@@ -1004,7 +1004,7 @@
     "day": 13,
     "track": "cpa",
     "title": "Momentum analysis: put it together",
-    "slides": 52,
+    "slides": 37,
     "problems": 8,
     "file": "unit-3-cpa-day-13.html",
     "src": "/api/teacher/worksheets/unit-3/13/presentation?track=cpa"
@@ -1014,7 +1014,7 @@
     "day": 13,
     "track": "honors",
     "title": "Momentum analysis: put it together",
-    "slides": 54,
+    "slides": 41,
     "problems": 8,
     "file": "unit-3-honors-day-13.html",
     "src": "/api/teacher/worksheets/unit-3/13/presentation?track=honors"
@@ -1024,7 +1024,7 @@
     "day": 14,
     "track": "cpa",
     "title": "Transfer: momentum and impulse",
-    "slides": 51,
+    "slides": 37,
     "problems": 8,
     "file": "unit-3-cpa-day-14.html",
     "src": "/api/teacher/worksheets/unit-3/14/presentation?track=cpa"
@@ -1034,7 +1034,7 @@
     "day": 14,
     "track": "honors",
     "title": "Transfer: momentum and impulse",
-    "slides": 58,
+    "slides": 43,
     "problems": 8,
     "file": "unit-3-honors-day-14.html",
     "src": "/api/teacher/worksheets/unit-3/14/presentation?track=honors"
@@ -1044,7 +1044,7 @@
     "day": 1,
     "track": "cpa",
     "title": "Why impact also needs energy",
-    "slides": 46,
+    "slides": 36,
     "problems": 8,
     "file": "unit-4-cpa-day-01.html",
     "src": "/api/teacher/worksheets/unit-4/1/presentation?track=cpa"
@@ -1054,7 +1054,7 @@
     "day": 1,
     "track": "honors",
     "title": "Why impact also needs energy",
-    "slides": 46,
+    "slides": 35,
     "problems": 8,
     "file": "unit-4-honors-day-01.html",
     "src": "/api/teacher/worksheets/unit-4/1/presentation?track=honors"
@@ -1064,7 +1064,7 @@
     "day": 2,
     "track": "cpa",
     "title": "Work along a displacement",
-    "slides": 47,
+    "slides": 35,
     "problems": 8,
     "file": "unit-4-cpa-day-02.html",
     "src": "/api/teacher/worksheets/unit-4/2/presentation?track=cpa"
@@ -1074,7 +1074,7 @@
     "day": 2,
     "track": "honors",
     "title": "Work along a displacement",
-    "slides": 51,
+    "slides": 38,
     "problems": 8,
     "file": "unit-4-honors-day-02.html",
     "src": "/api/teacher/worksheets/unit-4/2/presentation?track=honors"
@@ -1084,7 +1084,7 @@
     "day": 3,
     "track": "cpa",
     "title": "Angled and negative work",
-    "slides": 43,
+    "slides": 33,
     "problems": 8,
     "file": "unit-4-cpa-day-03.html",
     "src": "/api/teacher/worksheets/unit-4/3/presentation?track=cpa"
@@ -1094,7 +1094,7 @@
     "day": 3,
     "track": "honors",
     "title": "Angled and negative work",
-    "slides": 49,
+    "slides": 39,
     "problems": 8,
     "file": "unit-4-honors-day-03.html",
     "src": "/api/teacher/worksheets/unit-4/3/presentation?track=honors"
@@ -1104,7 +1104,7 @@
     "day": 4,
     "track": "cpa",
     "title": "Kinetic energy and net work",
-    "slides": 50,
+    "slides": 37,
     "problems": 8,
     "file": "unit-4-cpa-day-04.html",
     "src": "/api/teacher/worksheets/unit-4/4/presentation?track=cpa"
@@ -1114,7 +1114,7 @@
     "day": 4,
     "track": "honors",
     "title": "Kinetic energy and net work",
-    "slides": 52,
+    "slides": 38,
     "problems": 8,
     "file": "unit-4-honors-day-04.html",
     "src": "/api/teacher/worksheets/unit-4/4/presentation?track=honors"
@@ -1124,7 +1124,7 @@
     "day": 5,
     "track": "cpa",
     "title": "Use work-energy to solve motion",
-    "slides": 48,
+    "slides": 36,
     "problems": 8,
     "file": "unit-4-cpa-day-05.html",
     "src": "/api/teacher/worksheets/unit-4/5/presentation?track=cpa"
@@ -1134,7 +1134,7 @@
     "day": 5,
     "track": "honors",
     "title": "Use work-energy to solve motion",
-    "slides": 51,
+    "slides": 40,
     "problems": 8,
     "file": "unit-4-honors-day-05.html",
     "src": "/api/teacher/worksheets/unit-4/5/presentation?track=honors"
@@ -1154,7 +1154,7 @@
     "day": 6,
     "track": "honors",
     "title": "Work-energy lab",
-    "slides": 47,
+    "slides": 39,
     "problems": 8,
     "file": "unit-4-honors-day-06.html",
     "src": "/api/teacher/worksheets/unit-4/6/presentation?track=honors"
@@ -1164,7 +1164,7 @@
     "day": 7,
     "track": "cpa",
     "title": "Gravitational potential energy",
-    "slides": 48,
+    "slides": 38,
     "problems": 8,
     "file": "unit-4-cpa-day-07.html",
     "src": "/api/teacher/worksheets/unit-4/7/presentation?track=cpa"
@@ -1174,7 +1174,7 @@
     "day": 7,
     "track": "honors",
     "title": "Gravitational potential energy",
-    "slides": 50,
+    "slides": 40,
     "problems": 8,
     "file": "unit-4-honors-day-07.html",
     "src": "/api/teacher/worksheets/unit-4/7/presentation?track=honors"
@@ -1184,7 +1184,7 @@
     "day": 8,
     "track": "cpa",
     "title": "When constant g is not enough",
-    "slides": 47,
+    "slides": 36,
     "problems": 8,
     "file": "unit-4-cpa-day-08.html",
     "src": "/api/teacher/worksheets/unit-4/8/presentation?track=cpa"
@@ -1194,7 +1194,7 @@
     "day": 8,
     "track": "honors",
     "title": "When constant g is not enough",
-    "slides": 53,
+    "slides": 41,
     "problems": 8,
     "file": "unit-4-honors-day-08.html",
     "src": "/api/teacher/worksheets/unit-4/8/presentation?track=honors"
@@ -1204,7 +1204,7 @@
     "day": 9,
     "track": "cpa",
     "title": "Universal gravitational energy",
-    "slides": 45,
+    "slides": 37,
     "problems": 8,
     "file": "unit-4-cpa-day-09.html",
     "src": "/api/teacher/worksheets/unit-4/9/presentation?track=cpa"
@@ -1214,7 +1214,7 @@
     "day": 9,
     "track": "honors",
     "title": "Universal gravitational energy",
-    "slides": 47,
+    "slides": 38,
     "problems": 8,
     "file": "unit-4-honors-day-09.html",
     "src": "/api/teacher/worksheets/unit-4/9/presentation?track=honors"
@@ -1224,7 +1224,7 @@
     "day": 10,
     "track": "cpa",
     "title": "Conserve mechanical energy",
-    "slides": 41,
+    "slides": 34,
     "problems": 8,
     "file": "unit-4-cpa-day-10.html",
     "src": "/api/teacher/worksheets/unit-4/10/presentation?track=cpa"
@@ -1234,7 +1234,7 @@
     "day": 10,
     "track": "honors",
     "title": "Conserve mechanical energy",
-    "slides": 44,
+    "slides": 36,
     "problems": 8,
     "file": "unit-4-honors-day-10.html",
     "src": "/api/teacher/worksheets/unit-4/10/presentation?track=honors"
@@ -1244,7 +1244,7 @@
     "day": 11,
     "track": "cpa",
     "title": "Sliding, swinging and rolling",
-    "slides": 41,
+    "slides": 36,
     "problems": 8,
     "file": "unit-4-cpa-day-11.html",
     "src": "/api/teacher/worksheets/unit-4/11/presentation?track=cpa"
@@ -1254,7 +1254,7 @@
     "day": 11,
     "track": "honors",
     "title": "Sliding, swinging and rolling",
-    "slides": 45,
+    "slides": 38,
     "problems": 8,
     "file": "unit-4-honors-day-11.html",
     "src": "/api/teacher/worksheets/unit-4/11/presentation?track=honors"
@@ -1264,7 +1264,7 @@
     "day": 12,
     "track": "cpa",
     "title": "Coasters and pendulums",
-    "slides": 41,
+    "slides": 35,
     "problems": 8,
     "file": "unit-4-cpa-day-12.html",
     "src": "/api/teacher/worksheets/unit-4/12/presentation?track=cpa"
@@ -1274,7 +1274,7 @@
     "day": 12,
     "track": "honors",
     "title": "Coasters and pendulums",
-    "slides": 43,
+    "slides": 40,
     "problems": 8,
     "file": "unit-4-honors-day-12.html",
     "src": "/api/teacher/worksheets/unit-4/12/presentation?track=honors"
@@ -1284,7 +1284,7 @@
     "day": 13,
     "track": "cpa",
     "title": "Ramp energy lab",
-    "slides": 36,
+    "slides": 33,
     "problems": 8,
     "file": "unit-4-cpa-day-13.html",
     "src": "/api/teacher/worksheets/unit-4/13/presentation?track=cpa"
@@ -1294,7 +1294,7 @@
     "day": 13,
     "track": "honors",
     "title": "Ramp energy lab",
-    "slides": 48,
+    "slides": 40,
     "problems": 8,
     "file": "unit-4-honors-day-13.html",
     "src": "/api/teacher/worksheets/unit-4/13/presentation?track=honors"
@@ -1304,7 +1304,7 @@
     "day": 14,
     "track": "cpa",
     "title": "Hooke’s law",
-    "slides": 46,
+    "slides": 35,
     "problems": 8,
     "file": "unit-4-cpa-day-14.html",
     "src": "/api/teacher/worksheets/unit-4/14/presentation?track=cpa"
@@ -1314,7 +1314,7 @@
     "day": 14,
     "track": "honors",
     "title": "Hooke’s law",
-    "slides": 46,
+    "slides": 36,
     "problems": 8,
     "file": "unit-4-honors-day-14.html",
     "src": "/api/teacher/worksheets/unit-4/14/presentation?track=honors"
@@ -1324,7 +1324,7 @@
     "day": 15,
     "track": "cpa",
     "title": "Spring potential energy",
-    "slides": 43,
+    "slides": 34,
     "problems": 8,
     "file": "unit-4-cpa-day-15.html",
     "src": "/api/teacher/worksheets/unit-4/15/presentation?track=cpa"
@@ -1334,7 +1334,7 @@
     "day": 15,
     "track": "honors",
     "title": "Spring potential energy",
-    "slides": 49,
+    "slides": 38,
     "problems": 8,
     "file": "unit-4-honors-day-15.html",
     "src": "/api/teacher/worksheets/unit-4/15/presentation?track=honors"
@@ -1344,7 +1344,7 @@
     "day": 16,
     "track": "cpa",
     "title": "Power",
-    "slides": 50,
+    "slides": 36,
     "problems": 8,
     "file": "unit-4-cpa-day-16.html",
     "src": "/api/teacher/worksheets/unit-4/16/presentation?track=cpa"
@@ -1354,7 +1354,7 @@
     "day": 16,
     "track": "honors",
     "title": "Power",
-    "slides": 53,
+    "slides": 38,
     "problems": 8,
     "file": "unit-4-honors-day-16.html",
     "src": "/api/teacher/worksheets/unit-4/16/presentation?track=honors"
@@ -1364,7 +1364,7 @@
     "day": 17,
     "track": "cpa",
     "title": "Collision energy revisited",
-    "slides": 48,
+    "slides": 37,
     "problems": 8,
     "file": "unit-4-cpa-day-17.html",
     "src": "/api/teacher/worksheets/unit-4/17/presentation?track=cpa"
@@ -1374,7 +1374,7 @@
     "day": 17,
     "track": "honors",
     "title": "Collision energy revisited",
-    "slides": 52,
+    "slides": 41,
     "problems": 8,
     "file": "unit-4-honors-day-17.html",
     "src": "/api/teacher/worksheets/unit-4/17/presentation?track=honors"
@@ -1384,7 +1384,7 @@
     "day": 18,
     "track": "cpa",
     "title": "The energy that becomes thermal",
-    "slides": 50,
+    "slides": 39,
     "problems": 8,
     "file": "unit-4-cpa-day-18.html",
     "src": "/api/teacher/worksheets/unit-4/18/presentation?track=cpa"
@@ -1394,7 +1394,7 @@
     "day": 18,
     "track": "honors",
     "title": "The energy that becomes thermal",
-    "slides": 51,
+    "slides": 40,
     "problems": 8,
     "file": "unit-4-honors-day-18.html",
     "src": "/api/teacher/worksheets/unit-4/18/presentation?track=honors"
@@ -1404,7 +1404,7 @@
     "day": 19,
     "track": "cpa",
     "title": "Impact energy and TNT equivalents",
-    "slides": 36,
+    "slides": 33,
     "problems": 8,
     "file": "unit-4-cpa-day-19.html",
     "src": "/api/teacher/worksheets/unit-4/19/presentation?track=cpa"
@@ -1414,7 +1414,7 @@
     "day": 19,
     "track": "honors",
     "title": "Impact energy and TNT equivalents",
-    "slides": 43,
+    "slides": 35,
     "problems": 8,
     "file": "unit-4-honors-day-19.html",
     "src": "/api/teacher/worksheets/unit-4/19/presentation?track=honors"
@@ -1424,7 +1424,7 @@
     "day": 20,
     "track": "cpa",
     "title": "Escape speed",
-    "slides": 42,
+    "slides": 37,
     "problems": 8,
     "file": "unit-4-cpa-day-20.html",
     "src": "/api/teacher/worksheets/unit-4/20/presentation?track=cpa"
@@ -1434,7 +1434,7 @@
     "day": 20,
     "track": "honors",
     "title": "Escape speed",
-    "slides": 44,
+    "slides": 40,
     "problems": 8,
     "file": "unit-4-honors-day-20.html",
     "src": "/api/teacher/worksheets/unit-4/20/presentation?track=honors"
@@ -1444,7 +1444,7 @@
     "day": 21,
     "track": "cpa",
     "title": "An energy budget",
-    "slides": 53,
+    "slides": 40,
     "problems": 8,
     "file": "unit-4-cpa-day-21.html",
     "src": "/api/teacher/worksheets/unit-4/21/presentation?track=cpa"
@@ -1454,7 +1454,7 @@
     "day": 21,
     "track": "honors",
     "title": "An energy budget",
-    "slides": 55,
+    "slides": 44,
     "problems": 8,
     "file": "unit-4-honors-day-21.html",
     "src": "/api/teacher/worksheets/unit-4/21/presentation?track=honors"
@@ -1464,7 +1464,7 @@
     "day": 22,
     "track": "cpa",
     "title": "Transfer: energy and work",
-    "slides": 47,
+    "slides": 36,
     "problems": 8,
     "file": "unit-4-cpa-day-22.html",
     "src": "/api/teacher/worksheets/unit-4/22/presentation?track=cpa"
@@ -1474,7 +1474,7 @@
     "day": 22,
     "track": "honors",
     "title": "Transfer: energy and work",
-    "slides": 49,
+    "slides": 37,
     "problems": 8,
     "file": "unit-4-honors-day-22.html",
     "src": "/api/teacher/worksheets/unit-4/22/presentation?track=honors"
@@ -1484,7 +1484,7 @@
     "day": 1,
     "track": "cpa",
     "title": "Heat is not temperature",
-    "slides": 38,
+    "slides": 37,
     "problems": 8,
     "file": "unit-5-cpa-day-01.html",
     "src": "/api/teacher/worksheets/unit-5/1/presentation?track=cpa"
@@ -1494,7 +1494,7 @@
     "day": 1,
     "track": "honors",
     "title": "Heat is not temperature",
-    "slides": 36,
+    "slides": 34,
     "problems": 8,
     "file": "unit-5-honors-day-01.html",
     "src": "/api/teacher/worksheets/unit-5/1/presentation?track=honors"
@@ -1504,7 +1504,7 @@
     "day": 2,
     "track": "cpa",
     "title": "Specific heat",
-    "slides": 42,
+    "slides": 34,
     "problems": 8,
     "file": "unit-5-cpa-day-02.html",
     "src": "/api/teacher/worksheets/unit-5/2/presentation?track=cpa"
@@ -1514,7 +1514,7 @@
     "day": 2,
     "track": "honors",
     "title": "Specific heat",
-    "slides": 47,
+    "slides": 38,
     "problems": 8,
     "file": "unit-5-honors-day-02.html",
     "src": "/api/teacher/worksheets/unit-5/2/presentation?track=honors"
@@ -1524,7 +1524,7 @@
     "day": 3,
     "track": "cpa",
     "title": "Conduction, convection, radiation",
-    "slides": 49,
+    "slides": 39,
     "problems": 8,
     "file": "unit-5-cpa-day-03.html",
     "src": "/api/teacher/worksheets/unit-5/3/presentation?track=cpa"
@@ -1534,7 +1534,7 @@
     "day": 3,
     "track": "honors",
     "title": "Conduction, convection, radiation",
-    "slides": 56,
+    "slides": 43,
     "problems": 8,
     "file": "unit-5-honors-day-03.html",
     "src": "/api/teacher/worksheets/unit-5/3/presentation?track=honors"
@@ -1544,7 +1544,7 @@
     "day": 4,
     "track": "cpa",
     "title": "Phase changes",
-    "slides": 44,
+    "slides": 35,
     "problems": 8,
     "file": "unit-5-cpa-day-04.html",
     "src": "/api/teacher/worksheets/unit-5/4/presentation?track=cpa"
@@ -1554,7 +1554,7 @@
     "day": 4,
     "track": "honors",
     "title": "Phase changes",
-    "slides": 46,
+    "slides": 37,
     "problems": 8,
     "file": "unit-5-honors-day-04.html",
     "src": "/api/teacher/worksheets/unit-5/4/presentation?track=honors"
@@ -1564,7 +1564,7 @@
     "day": 5,
     "track": "cpa",
     "title": "Calorimetry lab",
-    "slides": 46,
+    "slides": 37,
     "problems": 8,
     "file": "unit-5-cpa-day-05.html",
     "src": "/api/teacher/worksheets/unit-5/5/presentation?track=cpa"
@@ -1574,7 +1574,7 @@
     "day": 5,
     "track": "honors",
     "title": "Calorimetry lab",
-    "slides": 46,
+    "slides": 37,
     "problems": 8,
     "file": "unit-5-honors-day-05.html",
     "src": "/api/teacher/worksheets/unit-5/5/presentation?track=honors"
@@ -1584,7 +1584,7 @@
     "day": 6,
     "track": "cpa",
     "title": "Temperature and particle motion",
-    "slides": 39,
+    "slides": 35,
     "problems": 8,
     "file": "unit-5-cpa-day-06.html",
     "src": "/api/teacher/worksheets/unit-5/6/presentation?track=cpa"
@@ -1594,7 +1594,7 @@
     "day": 6,
     "track": "honors",
     "title": "Temperature and particle motion",
-    "slides": 39,
+    "slides": 35,
     "problems": 8,
     "file": "unit-5-honors-day-06.html",
     "src": "/api/teacher/worksheets/unit-5/6/presentation?track=honors"
@@ -1604,7 +1604,7 @@
     "day": 7,
     "track": "cpa",
     "title": "The first law",
-    "slides": 41,
+    "slides": 35,
     "problems": 8,
     "file": "unit-5-cpa-day-07.html",
     "src": "/api/teacher/worksheets/unit-5/7/presentation?track=cpa"
@@ -1614,7 +1614,7 @@
     "day": 7,
     "track": "honors",
     "title": "The first law",
-    "slides": 47,
+    "slides": 40,
     "problems": 8,
     "file": "unit-5-honors-day-07.html",
     "src": "/api/teacher/worksheets/unit-5/7/presentation?track=honors"
@@ -1624,7 +1624,7 @@
     "day": 8,
     "track": "cpa",
     "title": "The second law",
-    "slides": 44,
+    "slides": 39,
     "problems": 8,
     "file": "unit-5-cpa-day-08.html",
     "src": "/api/teacher/worksheets/unit-5/8/presentation?track=cpa"
@@ -1634,7 +1634,7 @@
     "day": 8,
     "track": "honors",
     "title": "The second law",
-    "slides": 45,
+    "slides": 39,
     "problems": 8,
     "file": "unit-5-honors-day-08.html",
     "src": "/api/teacher/worksheets/unit-5/8/presentation?track=honors"
@@ -1644,7 +1644,7 @@
     "day": 9,
     "track": "cpa",
     "title": "Heat-engine efficiency",
-    "slides": 49,
+    "slides": 37,
     "problems": 8,
     "file": "unit-5-cpa-day-09.html",
     "src": "/api/teacher/worksheets/unit-5/9/presentation?track=cpa"
@@ -1654,7 +1654,7 @@
     "day": 9,
     "track": "honors",
     "title": "Heat-engine efficiency",
-    "slides": 48,
+    "slides": 37,
     "problems": 8,
     "file": "unit-5-honors-day-09.html",
     "src": "/api/teacher/worksheets/unit-5/9/presentation?track=honors"
@@ -1664,7 +1664,7 @@
     "day": 10,
     "track": "cpa",
     "title": "Atmospheric entry",
-    "slides": 40,
+    "slides": 35,
     "problems": 8,
     "file": "unit-5-cpa-day-10.html",
     "src": "/api/teacher/worksheets/unit-5/10/presentation?track=cpa"
@@ -1674,7 +1674,7 @@
     "day": 10,
     "track": "honors",
     "title": "Atmospheric entry",
-    "slides": 45,
+    "slides": 40,
     "problems": 8,
     "file": "unit-5-honors-day-10.html",
     "src": "/api/teacher/worksheets/unit-5/10/presentation?track=honors"
@@ -1684,7 +1684,7 @@
     "day": 11,
     "track": "cpa",
     "title": "Thermal effects and energy budgets",
-    "slides": 44,
+    "slides": 34,
     "problems": 8,
     "file": "unit-5-cpa-day-11.html",
     "src": "/api/teacher/worksheets/unit-5/11/presentation?track=cpa"
@@ -1694,7 +1694,7 @@
     "day": 11,
     "track": "honors",
     "title": "Thermal effects and energy budgets",
-    "slides": 48,
+    "slides": 37,
     "problems": 8,
     "file": "unit-5-honors-day-11.html",
     "src": "/api/teacher/worksheets/unit-5/11/presentation?track=honors"
@@ -1704,7 +1704,7 @@
     "day": 12,
     "track": "cpa",
     "title": "Transfer: thermal energy",
-    "slides": 46,
+    "slides": 36,
     "problems": 8,
     "file": "unit-5-cpa-day-12.html",
     "src": "/api/teacher/worksheets/unit-5/12/presentation?track=cpa"
@@ -1714,7 +1714,7 @@
     "day": 12,
     "track": "honors",
     "title": "Transfer: thermal energy",
-    "slides": 49,
+    "slides": 38,
     "problems": 8,
     "file": "unit-5-honors-day-12.html",
     "src": "/api/teacher/worksheets/unit-5/12/presentation?track=honors"
@@ -1724,7 +1724,7 @@
     "day": 1,
     "track": "cpa",
     "title": "What can waves tell us?",
-    "slides": 38,
+    "slides": 37,
     "problems": 8,
     "file": "unit-6-cpa-day-01.html",
     "src": "/api/teacher/worksheets/unit-6/1/presentation?track=cpa"
@@ -1734,7 +1734,7 @@
     "day": 1,
     "track": "honors",
     "title": "What can waves tell us?",
-    "slides": 44,
+    "slides": 38,
     "problems": 8,
     "file": "unit-6-honors-day-01.html",
     "src": "/api/teacher/worksheets/unit-6/1/presentation?track=honors"
@@ -1744,7 +1744,7 @@
     "day": 2,
     "track": "cpa",
     "title": "Describe a wave",
-    "slides": 49,
+    "slides": 35,
     "problems": 8,
     "file": "unit-6-cpa-day-02.html",
     "src": "/api/teacher/worksheets/unit-6/2/presentation?track=cpa"
@@ -1754,7 +1754,7 @@
     "day": 2,
     "track": "honors",
     "title": "Describe a wave",
-    "slides": 49,
+    "slides": 37,
     "problems": 8,
     "file": "unit-6-honors-day-02.html",
     "src": "/api/teacher/worksheets/unit-6/2/presentation?track=honors"
@@ -1764,7 +1764,7 @@
     "day": 3,
     "track": "cpa",
     "title": "Wave speed",
-    "slides": 43,
+    "slides": 34,
     "problems": 8,
     "file": "unit-6-cpa-day-03.html",
     "src": "/api/teacher/worksheets/unit-6/3/presentation?track=cpa"
@@ -1774,7 +1774,7 @@
     "day": 3,
     "track": "honors",
     "title": "Wave speed",
-    "slides": 47,
+    "slides": 36,
     "problems": 8,
     "file": "unit-6-honors-day-03.html",
     "src": "/api/teacher/worksheets/unit-6/3/presentation?track=honors"
@@ -1784,7 +1784,7 @@
     "day": 4,
     "track": "cpa",
     "title": "Waves at boundaries",
-    "slides": 42,
+    "slides": 36,
     "problems": 8,
     "file": "unit-6-cpa-day-04.html",
     "src": "/api/teacher/worksheets/unit-6/4/presentation?track=cpa"
@@ -1794,7 +1794,7 @@
     "day": 4,
     "track": "honors",
     "title": "Waves at boundaries",
-    "slides": 46,
+    "slides": 37,
     "problems": 8,
     "file": "unit-6-honors-day-04.html",
     "src": "/api/teacher/worksheets/unit-6/4/presentation?track=honors"
@@ -1804,7 +1804,7 @@
     "day": 5,
     "track": "cpa",
     "title": "Refraction",
-    "slides": 39,
+    "slides": 35,
     "problems": 8,
     "file": "unit-6-cpa-day-05.html",
     "src": "/api/teacher/worksheets/unit-6/5/presentation?track=cpa"
@@ -1814,7 +1814,7 @@
     "day": 5,
     "track": "honors",
     "title": "Refraction",
-    "slides": 41,
+    "slides": 35,
     "problems": 8,
     "file": "unit-6-honors-day-05.html",
     "src": "/api/teacher/worksheets/unit-6/5/presentation?track=honors"
@@ -1824,7 +1824,7 @@
     "day": 6,
     "track": "cpa",
     "title": "Diffraction",
-    "slides": 44,
+    "slides": 33,
     "problems": 8,
     "file": "unit-6-cpa-day-06.html",
     "src": "/api/teacher/worksheets/unit-6/6/presentation?track=cpa"
@@ -1834,7 +1834,7 @@
     "day": 6,
     "track": "honors",
     "title": "Diffraction",
-    "slides": 45,
+    "slides": 36,
     "problems": 8,
     "file": "unit-6-honors-day-06.html",
     "src": "/api/teacher/worksheets/unit-6/6/presentation?track=honors"
@@ -1844,7 +1844,7 @@
     "day": 7,
     "track": "cpa",
     "title": "Superposition and interference",
-    "slides": 39,
+    "slides": 35,
     "problems": 8,
     "file": "unit-6-cpa-day-07.html",
     "src": "/api/teacher/worksheets/unit-6/7/presentation?track=cpa"
@@ -1854,7 +1854,7 @@
     "day": 7,
     "track": "honors",
     "title": "Superposition and interference",
-    "slides": 44,
+    "slides": 37,
     "problems": 8,
     "file": "unit-6-honors-day-07.html",
     "src": "/api/teacher/worksheets/unit-6/7/presentation?track=honors"
@@ -1864,7 +1864,7 @@
     "day": 8,
     "track": "cpa",
     "title": "Sound: pitch and amplitude",
-    "slides": 43,
+    "slides": 36,
     "problems": 8,
     "file": "unit-6-cpa-day-08.html",
     "src": "/api/teacher/worksheets/unit-6/8/presentation?track=cpa"
@@ -1874,7 +1874,7 @@
     "day": 8,
     "track": "honors",
     "title": "Sound: pitch and amplitude",
-    "slides": 46,
+    "slides": 36,
     "problems": 8,
     "file": "unit-6-honors-day-08.html",
     "src": "/api/teacher/worksheets/unit-6/8/presentation?track=honors"
@@ -1884,7 +1884,7 @@
     "day": 9,
     "track": "cpa",
     "title": "Sound speed and resonance",
-    "slides": 45,
+    "slides": 35,
     "problems": 8,
     "file": "unit-6-cpa-day-09.html",
     "src": "/api/teacher/worksheets/unit-6/9/presentation?track=cpa"
@@ -1894,7 +1894,7 @@
     "day": 9,
     "track": "honors",
     "title": "Sound speed and resonance",
-    "slides": 45,
+    "slides": 36,
     "problems": 8,
     "file": "unit-6-honors-day-09.html",
     "src": "/api/teacher/worksheets/unit-6/9/presentation?track=honors"
@@ -1904,7 +1904,7 @@
     "day": 10,
     "track": "cpa",
     "title": "Measure sound speed",
-    "slides": 46,
+    "slides": 36,
     "problems": 8,
     "file": "unit-6-cpa-day-10.html",
     "src": "/api/teacher/worksheets/unit-6/10/presentation?track=cpa"
@@ -1914,7 +1914,7 @@
     "day": 10,
     "track": "honors",
     "title": "Measure sound speed",
-    "slides": 48,
+    "slides": 38,
     "problems": 8,
     "file": "unit-6-honors-day-10.html",
     "src": "/api/teacher/worksheets/unit-6/10/presentation?track=honors"
@@ -1924,7 +1924,7 @@
     "day": 11,
     "track": "cpa",
     "title": "Intensity, decibels and Doppler",
-    "slides": 40,
+    "slides": 33,
     "problems": 8,
     "file": "unit-6-cpa-day-11.html",
     "src": "/api/teacher/worksheets/unit-6/11/presentation?track=cpa"
@@ -1934,7 +1934,7 @@
     "day": 11,
     "track": "honors",
     "title": "Intensity, decibels and Doppler",
-    "slides": 45,
+    "slides": 36,
     "problems": 8,
     "file": "unit-6-honors-day-11.html",
     "src": "/api/teacher/worksheets/unit-6/11/presentation?track=honors"
@@ -1944,7 +1944,7 @@
     "day": 12,
     "track": "cpa",
     "title": "The electromagnetic spectrum",
-    "slides": 49,
+    "slides": 37,
     "problems": 8,
     "file": "unit-6-cpa-day-12.html",
     "src": "/api/teacher/worksheets/unit-6/12/presentation?track=cpa"
@@ -1954,7 +1954,7 @@
     "day": 12,
     "track": "honors",
     "title": "The electromagnetic spectrum",
-    "slides": 51,
+    "slides": 38,
     "problems": 8,
     "file": "unit-6-honors-day-12.html",
     "src": "/api/teacher/worksheets/unit-6/12/presentation?track=honors"
@@ -1964,7 +1964,7 @@
     "day": 13,
     "track": "cpa",
     "title": "Plane mirrors",
-    "slides": 43,
+    "slides": 36,
     "problems": 8,
     "file": "unit-6-cpa-day-13.html",
     "src": "/api/teacher/worksheets/unit-6/13/presentation?track=cpa"
@@ -1974,7 +1974,7 @@
     "day": 13,
     "track": "honors",
     "title": "Plane mirrors",
-    "slides": 45,
+    "slides": 37,
     "problems": 8,
     "file": "unit-6-honors-day-13.html",
     "src": "/api/teacher/worksheets/unit-6/13/presentation?track=honors"
@@ -1984,7 +1984,7 @@
     "day": 14,
     "track": "cpa",
     "title": "Lenses and image formation",
-    "slides": 44,
+    "slides": 33,
     "problems": 8,
     "file": "unit-6-cpa-day-14.html",
     "src": "/api/teacher/worksheets/unit-6/14/presentation?track=cpa"
@@ -1994,7 +1994,7 @@
     "day": 14,
     "track": "honors",
     "title": "Lenses and image formation",
-    "slides": 49,
+    "slides": 37,
     "problems": 8,
     "file": "unit-6-honors-day-14.html",
     "src": "/api/teacher/worksheets/unit-6/14/presentation?track=honors"
@@ -2004,7 +2004,7 @@
     "day": 15,
     "track": "cpa",
     "title": "Radar range and velocity",
-    "slides": 47,
+    "slides": 35,
     "problems": 8,
     "file": "unit-6-cpa-day-15.html",
     "src": "/api/teacher/worksheets/unit-6/15/presentation?track=cpa"
@@ -2014,7 +2014,7 @@
     "day": 15,
     "track": "honors",
     "title": "Radar range and velocity",
-    "slides": 47,
+    "slides": 37,
     "problems": 8,
     "file": "unit-6-honors-day-15.html",
     "src": "/api/teacher/worksheets/unit-6/15/presentation?track=honors"
@@ -2024,7 +2024,7 @@
     "day": 16,
     "track": "cpa",
     "title": "Thermal radiation and color",
-    "slides": 46,
+    "slides": 35,
     "problems": 8,
     "file": "unit-6-cpa-day-16.html",
     "src": "/api/teacher/worksheets/unit-6/16/presentation?track=cpa"
@@ -2034,7 +2034,7 @@
     "day": 16,
     "track": "honors",
     "title": "Thermal radiation and color",
-    "slides": 47,
+    "slides": 37,
     "problems": 8,
     "file": "unit-6-honors-day-16.html",
     "src": "/api/teacher/worksheets/unit-6/16/presentation?track=honors"
@@ -2044,7 +2044,7 @@
     "day": 17,
     "track": "cpa",
     "title": "Mechanical waves and distant effects",
-    "slides": 41,
+    "slides": 32,
     "problems": 8,
     "file": "unit-6-cpa-day-17.html",
     "src": "/api/teacher/worksheets/unit-6/17/presentation?track=cpa"
@@ -2054,7 +2054,7 @@
     "day": 17,
     "track": "honors",
     "title": "Mechanical waves and distant effects",
-    "slides": 50,
+    "slides": 40,
     "problems": 8,
     "file": "unit-6-honors-day-17.html",
     "src": "/api/teacher/worksheets/unit-6/17/presentation?track=honors"
@@ -2064,7 +2064,7 @@
     "day": 18,
     "track": "cpa",
     "title": "Transfer: waves and signals",
-    "slides": 50,
+    "slides": 37,
     "problems": 8,
     "file": "unit-6-cpa-day-18.html",
     "src": "/api/teacher/worksheets/unit-6/18/presentation?track=cpa"
@@ -2074,7 +2074,7 @@
     "day": 18,
     "track": "honors",
     "title": "Transfer: waves and signals",
-    "slides": 51,
+    "slides": 37,
     "problems": 8,
     "file": "unit-6-honors-day-18.html",
     "src": "/api/teacher/worksheets/unit-6/18/presentation?track=honors"
@@ -2084,7 +2084,7 @@
     "day": 1,
     "track": "cpa",
     "title": "Charge and the electric car",
-    "slides": 40,
+    "slides": 37,
     "problems": 8,
     "file": "unit-7-cpa-day-01.html",
     "src": "/api/teacher/worksheets/unit-7/1/presentation?track=cpa"
@@ -2094,7 +2094,7 @@
     "day": 1,
     "track": "honors",
     "title": "Charge and the electric car",
-    "slides": 44,
+    "slides": 39,
     "problems": 8,
     "file": "unit-7-honors-day-01.html",
     "src": "/api/teacher/worksheets/unit-7/1/presentation?track=honors"
@@ -2104,7 +2104,7 @@
     "day": 2,
     "track": "cpa",
     "title": "Coulomb’s law",
-    "slides": 38,
+    "slides": 34,
     "problems": 8,
     "file": "unit-7-cpa-day-02.html",
     "src": "/api/teacher/worksheets/unit-7/2/presentation?track=cpa"
@@ -2114,7 +2114,7 @@
     "day": 2,
     "track": "honors",
     "title": "Coulomb’s law",
-    "slides": 42,
+    "slides": 38,
     "problems": 8,
     "file": "unit-7-honors-day-02.html",
     "src": "/api/teacher/worksheets/unit-7/2/presentation?track=honors"
@@ -2124,7 +2124,7 @@
     "day": 3,
     "track": "cpa",
     "title": "Electric fields",
-    "slides": 41,
+    "slides": 35,
     "problems": 8,
     "file": "unit-7-cpa-day-03.html",
     "src": "/api/teacher/worksheets/unit-7/3/presentation?track=cpa"
@@ -2134,7 +2134,7 @@
     "day": 3,
     "track": "honors",
     "title": "Electric fields",
-    "slides": 43,
+    "slides": 37,
     "problems": 8,
     "file": "unit-7-honors-day-03.html",
     "src": "/api/teacher/worksheets/unit-7/3/presentation?track=honors"
@@ -2144,7 +2144,7 @@
     "day": 4,
     "track": "cpa",
     "title": "Voltage: energy per charge",
-    "slides": 44,
+    "slides": 32,
     "problems": 8,
     "file": "unit-7-cpa-day-04.html",
     "src": "/api/teacher/worksheets/unit-7/4/presentation?track=cpa"
@@ -2154,7 +2154,7 @@
     "day": 4,
     "track": "honors",
     "title": "Voltage: energy per charge",
-    "slides": 48,
+    "slides": 37,
     "problems": 8,
     "file": "unit-7-honors-day-04.html",
     "src": "/api/teacher/worksheets/unit-7/4/presentation?track=honors"
@@ -2164,7 +2164,7 @@
     "day": 5,
     "track": "cpa",
     "title": "Current: charge flow rate",
-    "slides": 47,
+    "slides": 34,
     "problems": 8,
     "file": "unit-7-cpa-day-05.html",
     "src": "/api/teacher/worksheets/unit-7/5/presentation?track=cpa"
@@ -2174,7 +2174,7 @@
     "day": 5,
     "track": "honors",
     "title": "Current: charge flow rate",
-    "slides": 44,
+    "slides": 33,
     "problems": 8,
     "file": "unit-7-honors-day-05.html",
     "src": "/api/teacher/worksheets/unit-7/5/presentation?track=honors"
@@ -2184,7 +2184,7 @@
     "day": 6,
     "track": "cpa",
     "title": "Ohm’s law",
-    "slides": 48,
+    "slides": 36,
     "problems": 8,
     "file": "unit-7-cpa-day-06.html",
     "src": "/api/teacher/worksheets/unit-7/6/presentation?track=cpa"
@@ -2194,7 +2194,7 @@
     "day": 6,
     "track": "honors",
     "title": "Ohm’s law",
-    "slides": 49,
+    "slides": 38,
     "problems": 8,
     "file": "unit-7-honors-day-06.html",
     "src": "/api/teacher/worksheets/unit-7/6/presentation?track=honors"
@@ -2204,7 +2204,7 @@
     "day": 7,
     "track": "cpa",
     "title": "Series circuits",
-    "slides": 43,
+    "slides": 33,
     "problems": 8,
     "file": "unit-7-cpa-day-07.html",
     "src": "/api/teacher/worksheets/unit-7/7/presentation?track=cpa"
@@ -2214,7 +2214,7 @@
     "day": 7,
     "track": "honors",
     "title": "Series circuits",
-    "slides": 46,
+    "slides": 38,
     "problems": 8,
     "file": "unit-7-honors-day-07.html",
     "src": "/api/teacher/worksheets/unit-7/7/presentation?track=honors"
@@ -2224,7 +2224,7 @@
     "day": 8,
     "track": "cpa",
     "title": "Parallel circuits",
-    "slides": 45,
+    "slides": 34,
     "problems": 8,
     "file": "unit-7-cpa-day-08.html",
     "src": "/api/teacher/worksheets/unit-7/8/presentation?track=cpa"
@@ -2234,7 +2234,7 @@
     "day": 8,
     "track": "honors",
     "title": "Parallel circuits",
-    "slides": 50,
+    "slides": 39,
     "problems": 8,
     "file": "unit-7-honors-day-08.html",
     "src": "/api/teacher/worksheets/unit-7/8/presentation?track=honors"
@@ -2244,7 +2244,7 @@
     "day": 9,
     "track": "cpa",
     "title": "Combination circuits",
-    "slides": 49,
+    "slides": 35,
     "problems": 8,
     "file": "unit-7-cpa-day-09.html",
     "src": "/api/teacher/worksheets/unit-7/9/presentation?track=cpa"
@@ -2254,7 +2254,7 @@
     "day": 9,
     "track": "honors",
     "title": "Combination circuits",
-    "slides": 57,
+    "slides": 43,
     "problems": 8,
     "file": "unit-7-honors-day-09.html",
     "src": "/api/teacher/worksheets/unit-7/9/presentation?track=honors"
@@ -2264,7 +2264,7 @@
     "day": 10,
     "track": "cpa",
     "title": "Circuit investigation",
-    "slides": 48,
+    "slides": 37,
     "problems": 8,
     "file": "unit-7-cpa-day-10.html",
     "src": "/api/teacher/worksheets/unit-7/10/presentation?track=cpa"
@@ -2274,7 +2274,7 @@
     "day": 10,
     "track": "honors",
     "title": "Circuit investigation",
-    "slides": 52,
+    "slides": 40,
     "problems": 8,
     "file": "unit-7-honors-day-10.html",
     "src": "/api/teacher/worksheets/unit-7/10/presentation?track=honors"
@@ -2284,7 +2284,7 @@
     "day": 11,
     "track": "cpa",
     "title": "Electrical power and energy",
-    "slides": 45,
+    "slides": 33,
     "problems": 8,
     "file": "unit-7-cpa-day-11.html",
     "src": "/api/teacher/worksheets/unit-7/11/presentation?track=cpa"
@@ -2294,7 +2294,7 @@
     "day": 11,
     "track": "honors",
     "title": "Electrical power and energy",
-    "slides": 55,
+    "slides": 40,
     "problems": 8,
     "file": "unit-7-honors-day-11.html",
     "src": "/api/teacher/worksheets/unit-7/11/presentation?track=honors"
@@ -2304,7 +2304,7 @@
     "day": 12,
     "track": "cpa",
     "title": "Magnetic fields",
-    "slides": 40,
+    "slides": 35,
     "problems": 8,
     "file": "unit-7-cpa-day-12.html",
     "src": "/api/teacher/worksheets/unit-7/12/presentation?track=cpa"
@@ -2314,7 +2314,7 @@
     "day": 12,
     "track": "honors",
     "title": "Magnetic fields",
-    "slides": 44,
+    "slides": 40,
     "problems": 8,
     "file": "unit-7-honors-day-12.html",
     "src": "/api/teacher/worksheets/unit-7/12/presentation?track=honors"
@@ -2324,7 +2324,7 @@
     "day": 13,
     "track": "cpa",
     "title": "Current makes a magnetic field",
-    "slides": 35,
+    "slides": 32,
     "problems": 8,
     "file": "unit-7-cpa-day-13.html",
     "src": "/api/teacher/worksheets/unit-7/13/presentation?track=cpa"
@@ -2334,7 +2334,7 @@
     "day": 13,
     "track": "honors",
     "title": "Current makes a magnetic field",
-    "slides": 41,
+    "slides": 36,
     "problems": 8,
     "file": "unit-7-honors-day-13.html",
     "src": "/api/teacher/worksheets/unit-7/13/presentation?track=honors"
@@ -2344,7 +2344,7 @@
     "day": 14,
     "track": "cpa",
     "title": "Electromagnetic induction",
-    "slides": 41,
+    "slides": 33,
     "problems": 8,
     "file": "unit-7-cpa-day-14.html",
     "src": "/api/teacher/worksheets/unit-7/14/presentation?track=cpa"
@@ -2354,7 +2354,7 @@
     "day": 14,
     "track": "honors",
     "title": "Electromagnetic induction",
-    "slides": 42,
+    "slides": 34,
     "problems": 8,
     "file": "unit-7-honors-day-14.html",
     "src": "/api/teacher/worksheets/unit-7/14/presentation?track=honors"
@@ -2364,7 +2364,7 @@
     "day": 15,
     "track": "cpa",
     "title": "Motors and generators",
-    "slides": 43,
+    "slides": 38,
     "problems": 8,
     "file": "unit-7-cpa-day-15.html",
     "src": "/api/teacher/worksheets/unit-7/15/presentation?track=cpa"
@@ -2374,7 +2374,7 @@
     "day": 15,
     "track": "honors",
     "title": "Motors and generators",
-    "slides": 48,
+    "slides": 39,
     "problems": 8,
     "file": "unit-7-honors-day-15.html",
     "src": "/api/teacher/worksheets/unit-7/15/presentation?track=honors"
@@ -2384,7 +2384,7 @@
     "day": 16,
     "track": "cpa",
     "title": "Magnetosphere and changing fields",
-    "slides": 42,
+    "slides": 34,
     "problems": 8,
     "file": "unit-7-cpa-day-16.html",
     "src": "/api/teacher/worksheets/unit-7/16/presentation?track=cpa"
@@ -2394,7 +2394,7 @@
     "day": 16,
     "track": "honors",
     "title": "Magnetosphere and changing fields",
-    "slides": 46,
+    "slides": 36,
     "problems": 8,
     "file": "unit-7-honors-day-16.html",
     "src": "/api/teacher/worksheets/unit-7/16/presentation?track=honors"
@@ -2404,7 +2404,7 @@
     "day": 17,
     "track": "cpa",
     "title": "Plan the electric car",
-    "slides": 45,
+    "slides": 38,
     "problems": 8,
     "file": "unit-7-cpa-day-17.html",
     "src": "/api/teacher/worksheets/unit-7/17/presentation?track=cpa"
@@ -2414,7 +2414,7 @@
     "day": 17,
     "track": "honors",
     "title": "Plan the electric car",
-    "slides": 51,
+    "slides": 41,
     "problems": 8,
     "file": "unit-7-honors-day-17.html",
     "src": "/api/teacher/worksheets/unit-7/17/presentation?track=honors"
@@ -2424,7 +2424,7 @@
     "day": 18,
     "track": "cpa",
     "title": "Transfer: circuits and induction",
-    "slides": 47,
+    "slides": 38,
     "problems": 8,
     "file": "unit-7-cpa-day-18.html",
     "src": "/api/teacher/worksheets/unit-7/18/presentation?track=cpa"
@@ -2434,7 +2434,7 @@
     "day": 18,
     "track": "honors",
     "title": "Transfer: circuits and induction",
-    "slides": 49,
+    "slides": 39,
     "problems": 8,
     "file": "unit-7-honors-day-18.html",
     "src": "/api/teacher/worksheets/unit-7/18/presentation?track=honors"
@@ -2444,7 +2444,7 @@
     "day": 1,
     "track": "cpa",
     "title": "Electric car: launch the design",
-    "slides": 39,
+    "slides": 37,
     "problems": 8,
     "file": "unit-8-cpa-day-01.html",
     "src": "/api/teacher/worksheets/unit-8/1/presentation?track=cpa"
@@ -2454,7 +2454,7 @@
     "day": 1,
     "track": "honors",
     "title": "Electric car: launch the design",
-    "slides": 42,
+    "slides": 36,
     "problems": 8,
     "file": "unit-8-honors-day-01.html",
     "src": "/api/teacher/worksheets/unit-8/1/presentation?track=honors"
@@ -2464,7 +2464,7 @@
     "day": 2,
     "track": "cpa",
     "title": "Circuit model and solder practice",
-    "slides": 44,
+    "slides": 38,
     "problems": 8,
     "file": "unit-8-cpa-day-02.html",
     "src": "/api/teacher/worksheets/unit-8/2/presentation?track=cpa"
@@ -2474,7 +2474,7 @@
     "day": 2,
     "track": "honors",
     "title": "Circuit model and solder practice",
-    "slides": 50,
+    "slides": 41,
     "problems": 8,
     "file": "unit-8-honors-day-02.html",
     "src": "/api/teacher/worksheets/unit-8/2/presentation?track=honors"
@@ -2484,7 +2484,7 @@
     "day": 3,
     "track": "cpa",
     "title": "Gears and wheels",
-    "slides": 47,
+    "slides": 35,
     "problems": 8,
     "file": "unit-8-cpa-day-03.html",
     "src": "/api/teacher/worksheets/unit-8/3/presentation?track=cpa"
@@ -2494,7 +2494,7 @@
     "day": 3,
     "track": "honors",
     "title": "Gears and wheels",
-    "slides": 52,
+    "slides": 36,
     "problems": 8,
     "file": "unit-8-honors-day-03.html",
     "src": "/api/teacher/worksheets/unit-8/3/presentation?track=honors"
@@ -2504,7 +2504,7 @@
     "day": 4,
     "track": "cpa",
     "title": "Theme and chassis layout",
-    "slides": 41,
+    "slides": 36,
     "problems": 8,
     "file": "unit-8-cpa-day-04.html",
     "src": "/api/teacher/worksheets/unit-8/4/presentation?track=cpa"
@@ -2514,7 +2514,7 @@
     "day": 4,
     "track": "honors",
     "title": "Theme and chassis layout",
-    "slides": 43,
+    "slides": 36,
     "problems": 8,
     "file": "unit-8-honors-day-04.html",
     "src": "/api/teacher/worksheets/unit-8/4/presentation?track=honors"
@@ -2524,7 +2524,7 @@
     "day": 5,
     "track": "cpa",
     "title": "Axles and alignment",
-    "slides": 37,
+    "slides": 36,
     "problems": 8,
     "file": "unit-8-cpa-day-05.html",
     "src": "/api/teacher/worksheets/unit-8/5/presentation?track=cpa"
@@ -2534,7 +2534,7 @@
     "day": 5,
     "track": "honors",
     "title": "Axles and alignment",
-    "slides": 43,
+    "slides": 39,
     "problems": 8,
     "file": "unit-8-honors-day-05.html",
     "src": "/api/teacher/worksheets/unit-8/5/presentation?track=honors"
@@ -2544,7 +2544,7 @@
     "day": 6,
     "track": "cpa",
     "title": "Gears, motor and first power",
-    "slides": 47,
+    "slides": 35,
     "problems": 8,
     "file": "unit-8-cpa-day-06.html",
     "src": "/api/teacher/worksheets/unit-8/6/presentation?track=cpa"
@@ -2554,7 +2554,7 @@
     "day": 6,
     "track": "honors",
     "title": "Gears, motor and first power",
-    "slides": 52,
+    "slides": 39,
     "problems": 8,
     "file": "unit-8-honors-day-06.html",
     "src": "/api/teacher/worksheets/unit-8/6/presentation?track=honors"
@@ -2564,7 +2564,7 @@
     "day": 7,
     "track": "cpa",
     "title": "Secure wiring and finish the design",
-    "slides": 39,
+    "slides": 34,
     "problems": 8,
     "file": "unit-8-cpa-day-07.html",
     "src": "/api/teacher/worksheets/unit-8/7/presentation?track=cpa"
@@ -2574,7 +2574,7 @@
     "day": 7,
     "track": "honors",
     "title": "Secure wiring and finish the design",
-    "slides": 46,
+    "slides": 37,
     "problems": 8,
     "file": "unit-8-honors-day-07.html",
     "src": "/api/teacher/worksheets/unit-8/7/presentation?track=honors"
@@ -2584,7 +2584,7 @@
     "day": 8,
     "track": "cpa",
     "title": "Practice runs and evidence",
-    "slides": 42,
+    "slides": 36,
     "problems": 8,
     "file": "unit-8-cpa-day-08.html",
     "src": "/api/teacher/worksheets/unit-8/8/presentation?track=cpa"
@@ -2594,7 +2594,7 @@
     "day": 8,
     "track": "honors",
     "title": "Practice runs and evidence",
-    "slides": 49,
+    "slides": 42,
     "problems": 8,
     "file": "unit-8-honors-day-08.html",
     "src": "/api/teacher/worksheets/unit-8/8/presentation?track=honors"
@@ -2604,7 +2604,7 @@
     "day": 9,
     "track": "cpa",
     "title": "Race, explain and transfer",
-    "slides": 46,
+    "slides": 36,
     "problems": 8,
     "file": "unit-8-cpa-day-09.html",
     "src": "/api/teacher/worksheets/unit-8/9/presentation?track=cpa"
@@ -2614,7 +2614,7 @@
     "day": 9,
     "track": "honors",
     "title": "Race, explain and transfer",
-    "slides": 49,
+    "slides": 39,
     "problems": 8,
     "file": "unit-8-honors-day-09.html",
     "src": "/api/teacher/worksheets/unit-8/9/presentation?track=honors"

@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 8,
+  "day": 8,
+  "title": "Practice runs and evidence",
+  "target": "Use repeated trials to prepare an evidence-based design explanation.",
+  "criteria": [
+    "Measure the actual course distance and run times.",
+    "Calculate average speed and describe variation.",
+    "Choose a final change supported by repeated evidence."
+  ],
+  "source_sha256": "09e36d0a112793c364e362cbde18dcc9883f6a84840db4d2906c3109286b1616",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.577Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A practice lane is measured as 3.6 m. A car takes 4.5 s from its start line to its finish line. What is average speed?",
+      "options": [
+        "1.25 m/s",
+        "0.80 m/s",
+        "16.2 m/s",
+        "8.0 m/s"
+      ],
+      "correct_index": 1,
+      "guide": "Average speed = measured distance/time = 3.6/4.5 = 0.80 m/s.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A team times motion over 2.5 m but divides the full 5 m course by that time. What must be corrected?",
+      "options": [
+        "Use the distance between the actual timing start and stop points.",
+        "Double the recorded time without evidence.",
+        "Keep 5 m because larger distances give better scores.",
+        "Replace measured time with the prediction."
+      ],
+      "correct_index": 0,
+      "guide": "Distance and elapsed time must describe the same interval.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Example times over the same 4.8 m path are 6.0, 6.4, and 5.6 s. What does the spread show?",
+      "options": [
+        "Performance or measurement varies, so one run is not the whole picture.",
+        "The car’s speed is exactly identical in every run.",
+        "All three readings must be discarded.",
+        "The slowest run is automatically a mistake."
+      ],
+      "correct_index": 0,
+      "guide": "Repeated results reveal variation. Diagnose it rather than selecting a convenient result.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 4.2 m run takes 7.0 s. A second run on the same path takes 6.0 s. Which comparison is correct?",
+      "options": [
+        "Average speed falls from 0.70 to 0.60 m/s.",
+        "Speed doubles because time falls by 1 s.",
+        "Both averages are 4.2 m/s.",
+        "Average speed rises from 0.60 to 0.70 m/s."
+      ],
+      "correct_index": 3,
+      "guide": "4.2/7 = 0.60 and 4.2/6 = 0.70; compare rates, not time differences alone.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "After removing a wheel rub, three example times improve from about 8 s to about 6 s over the same track. Which choice is supported?",
+      "options": [
+        "Undo it because lower time means lower speed.",
+        "Declare a guaranteed win on every surface.",
+        "Keep the adjustment provisionally and confirm it with the same controlled test.",
+        "Credit a different change that was not made."
+      ],
+      "correct_index": 2,
+      "guide": "Repeated faster times support the tested adjustment, within the tested conditions.",
+      "target_slug": "u8.r4-three-physics-choices",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A team changes the battery and wheel size together and gets one faster run. What can it conclude?",
+      "options": [
+        "Wheel size alone caused the improvement.",
+        "The combined setup was faster in that run; it cannot isolate the wheel effect.",
+        "The battery had no effect.",
+        "One run proves all future results."
+      ],
+      "correct_index": 1,
+      "guide": "Multiple simultaneous changes confound causal attribution. Isolate one factor and repeat.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A practice lane is measured as 3.6 m. A car takes 4.5 s from its start line to its finish line. What is average speed?",
+      "options": [
+        "1.25 m/s",
+        "16.2 m/s",
+        "8.0 m/s",
+        "0.80 m/s"
+      ],
+      "correct_index": 3,
+      "guide": "Average speed = measured distance/time = 3.6/4.5 = 0.80 m/s.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A team times motion over 2.5 m but divides the full 5 m course by that time. What must be corrected?",
+      "options": [
+        "Double the recorded time without evidence.",
+        "Replace measured time with the prediction.",
+        "Use the distance between the actual timing start and stop points.",
+        "Keep 5 m because larger distances give better scores."
+      ],
+      "correct_index": 2,
+      "guide": "Distance and elapsed time must describe the same interval.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "Example times over the same 4.8 m path are 6.0, 6.4, and 5.6 s. What does the spread show?",
+      "options": [
+        "The slowest run is automatically a mistake.",
+        "All three readings must be discarded.",
+        "Performance or measurement varies, so one run is not the whole picture.",
+        "The car’s speed is exactly identical in every run."
+      ],
+      "correct_index": 2,
+      "guide": "Repeated results reveal variation. Diagnose it rather than selecting a convenient result.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A 4.2 m run takes 7.0 s. A second run on the same path takes 6.0 s. Which comparison is correct?",
+      "options": [
+        "Speed doubles because time falls by 1 s.",
+        "Average speed rises from 0.60 to 0.70 m/s.",
+        "Average speed falls from 0.70 to 0.60 m/s.",
+        "Both averages are 4.2 m/s."
+      ],
+      "correct_index": 1,
+      "guide": "4.2/7 = 0.60 and 4.2/6 = 0.70; compare rates, not time differences alone.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "After removing a wheel rub, three example times improve from about 8 s to about 6 s over the same track. Which choice is supported?",
+      "options": [
+        "Declare a guaranteed win on every surface.",
+        "Keep the adjustment provisionally and confirm it with the same controlled test.",
+        "Undo it because lower time means lower speed.",
+        "Credit a different change that was not made."
+      ],
+      "correct_index": 1,
+      "guide": "Repeated faster times support the tested adjustment, within the tested conditions.",
+      "target_slug": "u8.r4-three-physics-choices",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A team changes the battery and wheel size together and gets one faster run. What can it conclude?",
+      "options": [
+        "The combined setup was faster in that run; it cannot isolate the wheel effect.",
+        "The battery had no effect.",
+        "One run proves all future results.",
+        "Wheel size alone caused the improvement."
+      ],
+      "correct_index": 0,
+      "guide": "Multiple simultaneous changes confound causal attribution. Isolate one factor and repeat.",
+      "target_slug": "u8.r3-observation-vs-prediction",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

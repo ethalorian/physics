@@ -1,3 +1,5 @@
+import {checkRevisionBeforeSubmit,recordRevisionSubmitted} from '@/lib/review-desk/revision-server'
+import { suggestAfterSubmission } from '@/lib/assessment-results/suggestions-server'
 import { calendarAssigned, CALENDAR_ASSIGNMENT_MESSAGE } from '@/lib/calendar-assignment'
 import { isInteractiveReading, INTERACTIVE_READING_ONLY } from '@/lib/reading-availability'
 import { readingWindow } from '@/lib/reading-planner'
@@ -115,9 +117,14 @@ export const POST = withAuth<{ id: string }>(async (req, ctx) => {
   if (!Number.isInteger(b.version) || b.version < 0 || !READING_UUID.test(b.request_id ?? '')) return readingJson({ error: 'Reload the reading before continuing.' }, 400)
   let answers
   try { answers = validateReadingAnswers(b.answers, access.assignment.questions, b.action === 'submit') } catch (e) { return readingJson({ error: (e as Error).message }, 400) }
+  if(b.action==='submit'){const message=await checkRevisionBeforeSubmit('reading:'+id,ctx.userId);if(message)return readingJson({error:message},422)}
   const { data, error } = await supabaseAdmin.rpc('textbook_student_action', { p_assignment: id, p_user: ctx.userId, p_action: b.action, p_answers: answers, p_version: b.version, p_request: b.request_id })
   if(error)return readingRpcError(error)
   if (b.action !== 'submit') return readingJson({ work: data })
+  await recordRevisionSubmitted('reading:'+id,ctx.userId)
+  if(data?.submission_id) suggestAfterSubmission('reading',data.submission_id)
   const [readingQuiz, xp] = await Promise.all([readingQuizForStudent(id, ctx.userId), readingXpStatus(id, ctx.userId)])
   return readingJson({ work: data, readingQuiz, xp })
 })
+
+export const maxDuration = 180

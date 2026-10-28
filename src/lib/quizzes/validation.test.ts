@@ -13,3 +13,11 @@ test('numeric points are independent of mastery and allow meaningful partial cre
 test('teacher must make explicit target decisions; no automatic rating or missing-work zero',()=>{assert.throws(()=>validateReview({...review,ratings:{}},quiz));assert.equal(quizScore(quiz.questions,{[id(3)]:'1'},{}).percent,null);assert.doesNotThrow(()=>validateReview({...review,scores:{},ratings:{},note:''},quiz,true))})
 test('return-for-revision cannot also award grades or mastery',()=>{assert.doesNotThrow(()=>validateReview({...review,decision:'returned',scores:{},ratings:{}},quiz));assert.throws(()=>validateReview({...review,decision:'returned'},quiz));assert.throws(()=>validateReview({...review,decision:'returned',scores:{},ratings:{},note:''},quiz))})
 test('letter and credit modes require teacher choices without a conversion scale',()=>{assert.throws(()=>validateReview(review,{...quiz,grade_mode:'letter'}));assert.doesNotThrow(()=>validateReview({...review,grade_value:'B+'},{...quiz,grade_mode:'letter'}));assert.doesNotThrow(()=>validateReview({...review,grade_value:'credit'},{...quiz,grade_mode:'credit'}));assert.equal(gradeLabel({decision:'graded',grade_mode:'credit',grade_value:'credit'} as never),'Credit')})
+
+test('released numeric label preserves the decimal at a letter-grade boundary',()=>{assert.equal(gradeLabel({decision:'graded',grade_mode:'numeric',earned:4,possible:6} as never),'4/6 · 66.7%')})
+
+test('a released grade may omit feedback; a revision must explain what to revise',()=>{
+ assert.doesNotThrow(()=>validateReview({...review,note:'',ratings:{[id(8)]:null,[id(9)]:null}},quiz))
+ assert.throws(()=>validateReview({...review,decision:'returned',scores:{},ratings:{},note:'   '},quiz))
+ assert.throws(()=>validateReview({...review,note:'x'.repeat(3001)},quiz))
+})

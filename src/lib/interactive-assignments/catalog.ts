@@ -1,3 +1,14 @@
+import type { TransferBriefScene } from './transfer-brief-scenes'
+import {DAY_NINE_LESSON} from './foundations/day-nine'
+import {DAY_EIGHT_LESSON} from './foundations/day-eight'
+import {DAY_SEVEN_LESSON} from './foundations/day-seven'
+import {DAY_SIX_LESSON} from './foundations/day-six'
+import {DAY_FIVE_LESSON} from './foundations/day-five'
+import {DAY_FOUR_LESSON} from './foundations/day-four'
+import {DAY_THREE_LESSON} from './foundations/day-three'
+import {DAY_TWO_LESSON} from './foundations/day-two'
+import {DAY_ONE_LESSON} from './foundations/day-one'
+import {TRANSFER_BRIEFS} from './transfer-briefs'
 import {TRANSFER_ASSIGNMENTS} from './transfer-task'
 import {rebuildAssignment} from './design-sequence'
 import type {AssessmentDemand} from '@/lib/assessment-demand'
@@ -7,7 +18,7 @@ import {classDayTool,classDaySource} from '@/lib/class-day-tools'
 export type LessonQuestion=Question & {demand?:AssessmentDemand;diagram?:boolean;targets?:string[];reflection?:boolean}
 export type ExplorerKind='walk'|'vectors'|'prediction'|'acceleration'|'forces'|'mass'|'force'|'friction'|'equilibrium'|'sort'
 export type LessonSection={title:string;stop:string;learn:string;explorer?:ExplorerKind;questions:LessonQuestion[]}
-export type LessonAssignment={slug:string;day:number;unit:`unit-${number}`;simulation?:string;investigationGroup?:string;minutes?:number;title:string;targets:string[];targetNote:string;sections:LessonSection[];questions:LessonQuestion[];toolHref:string}
+export type LessonAssignment={transferBrief?:{scene:TransferBriefScene;question:string;science:string;reasoning:string;communication:string;transfer:string};slug:string;day:number;unit:`unit-${number}`;simulation?:string;foundation?:'day-one'|'day-two'|'day-three'|'day-four'|'day-five'|'day-six'|'day-seven'|'day-eight'|'day-nine';lab?:boolean;investigationGroup?:string;minutes?:number;title:string;targets:string[];targetNote:string;sections:LessonSection[];questions:LessonQuestion[];toolHref:string}
 const T={brief:'u1.anchor-know-unknow',vocab:'u1.vocab-position-distance-displacement',graph:'u1.read-vt-graph-components',predict:'u1.predict-position-uncertainty',vectors:'u1.vectors-tip-to-tail',accel:'u1.acceleration-rate-of-change',equations:'u1.pick-equation-of-motion',inertia:'u1.newtons-first-law-inertia',forces:'u1.identify-forces',massLab:'u1.lab-accel-vs-mass',forceLab:'u1.lab-accel-vs-force',fma:'u1.fma-solve-net-force',third:'u1.third-law-pairs',fbd:'u1.draw-fbd',net:'u1.net-force-from-fbd',friction:'u1.friction-static-kinetic',balance:'u1.equilibrium-find-unknown',revise:'u1.workshop-self-diagnose'}
 type DraftQuestion=Omit<LessonQuestion,'id'|'part'>
 const n=(prompt:string,answer:number,unit:string,explanation:string,tolerance=0.01):DraftQuestion=>({prompt,answer,unit,explanation,tolerance,hint:'Use the quantities and relationship in this section. Check the sign and units before trying again.'})
@@ -24,7 +35,7 @@ const velocity:LessonAssignment={...VELOCITY,targets:[VELOCITY.targetSlug],secti
 const ORIGINAL_UNIT1_ASSIGNMENTS:LessonAssignment[]=[
 lesson(1,'day-1-the-briefing',[T.brief],[
  sec('Read the briefing','After stop 1','2026-XJ is a fictional classroom scenario. Use today’s briefing as evidence; separate an observation, a prediction, and something still unknown.',[
- w('Record two things the briefing actually tells us about the classroom asteroid scenario. For each, identify the sentence, diagram, or measurement you used.','Two concrete, source-linked observations; distinguish provided evidence from speculation. Do not require facts not present in the student’s version of the briefing.'),
+ w('Record two things the briefing actually tells us about the classroom real-world scenario. For each, identify the sentence, diagram, or measurement you used.','Two concrete, source-linked observations; distinguish provided evidence from speculation. Do not require facts not present in the student’s version of the briefing.'),
  c('A future position is shown with an uncertainty region. What does that region mean?',['Every point is known exactly','Measurements and the model leave a range of possible positions','The asteroid fills the whole region'],1,'The region represents uncertainty in a prediction, not the asteroid’s physical size.')]),
  sec('Notice and wonder','After stops 2–3','A useful notice describes evidence. A useful wonder asks what else we need to find out. Scientific questions and questions about human choices can both matter.',[
  w('Write three notices and at least three wonders. Label which are observations and which are questions.','Notices refer to provided evidence; wonders identify real unknowns without inventing observations.'),
@@ -114,7 +125,7 @@ lesson(10,'day-10-forces',[T.forces],[
  w('Give one contact force and one non-contact force from the lesson. Name the agent and receiving object for each.','Examples such as desk on book normal force and Earth on book gravity; identify both objects.'),c('Which belongs on a force list?',['Momentum','Speed','Tension from a rope','Inertia'],2,'Tension is a force; speed, momentum, and inertia are not forces.'),w('A force sensor reads a negative number. Does that mean the force is unreal or weak? Explain.','The sign identifies direction according to the sensor convention; magnitude is the absolute value, not the sign.')]),
  sec('Build force diagrams','After stops 3–4','Draw only forces acting on the chosen object. A normal force is perpendicular to a contact surface.',[
  d('Build a force diagram for a 2 kg book resting on a horizontal desk. Use g=9.8 m/s².','Earth’s gravity down 19.6 N and desk normal up 19.6 N; no sideways force or force of the book on the desk.'),w('For a person hanging motionless from one vertical rope, name the forces and compare their sizes.','Gravity down and tension up, equal in magnitude for equilibrium.'),c('A normal force on a tilted ramp points…',['Straight up in every case','Perpendicular to the ramp surface','Parallel to the ramp'],1,'Normal means perpendicular to the local contact surface.')]),
- sec('Forces in the asteroid scenario','After stop 5','The asteroid feels gravity even when there is no contact. A spacecraft interaction can add a brief applied force.',[
+ sec('Forces in the real-world scenario','After stop 5','The asteroid feels gravity even when there is no contact. A spacecraft interaction can add a brief applied force.',[
  c('Which force can act on an asteroid without a surface or rope touching it?',['Normal force','Gravity','Floor friction'],1,'Gravity acts over a distance.'),w('Name a force a mission could add, and distinguish it from a force already acting on the asteroid.','A spacecraft impact can add contact force; solar/Earth gravity already act. Do not claim space has no forces.')]),
  sec('Engine off, rolling downhill','Stop 6 · Exit ticket','Consider a car rolling downhill with its engine off and resistive forces present.',[
  w('List the forces on the car and describe each direction.','Gravity vertically down, normal perpendicular outward from hill, friction/drag uphill under the stated resistive model. No ongoing engine thrust.'),w('Why is a downhill “force of motion” not an additional force?','Motion describes velocity; identify an interacting agent for each real force. Gravity has a downslope component that can accelerate the car.')])]),
@@ -225,9 +236,10 @@ lesson(20,'day-20-synthesis',[T.predict,T.vectors,T.fbd,T.net],[
 // A self-rating is a reflection with no objectively correct choice.
 ORIGINAL_UNIT1_ASSIGNMENTS.find(a=>a.day===19)!.questions.find(q=>q.id==='1b')!.reflection=true
 export const UNIT1_ASSIGNMENTS=[...ORIGINAL_UNIT1_ASSIGNMENTS.map(rebuildAssignment), ...TRANSFER_ASSIGNMENTS]
-export const ALL_ASSIGNMENTS = [...UNIT1_ASSIGNMENTS, ...SIMULATION_ASSIGNMENTS.map(rebuildAssignment)]
+export const ALL_ASSIGNMENTS = [...TRANSFER_BRIEFS, ...UNIT1_ASSIGNMENTS, ...SIMULATION_ASSIGNMENTS.map(rebuildAssignment), DAY_ONE_LESSON, DAY_TWO_LESSON, DAY_THREE_LESSON, DAY_FOUR_LESSON, DAY_FIVE_LESSON, DAY_SIX_LESSON, DAY_SEVEN_LESSON, DAY_EIGHT_LESSON, DAY_NINE_LESSON]
 export const assignmentBySlug=(slug:string)=>ALL_ASSIGNMENTS.find(a=>a.slug===slug)??null
 export const assignmentByDay=(day:number)=>UNIT1_ASSIGNMENTS.find(a=>a.day===day)??null
+export const isLabAssignment=(lesson:LessonAssignment|null|undefined)=>!!(lesson?.simulation||lesson?.lab)
 export const objectiveQuestion=(q:LessonQuestion)=>!q.reflection&&(q.answer!==undefined||q.correct!==undefined)
 /** A previous sequence's submission must not become feedback for fresh questions. */
 export function submissionMatchesAssignment(state:unknown,lesson:LessonAssignment):boolean{

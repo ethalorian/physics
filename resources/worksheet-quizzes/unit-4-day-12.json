@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 4,
+  "day": 12,
+  "title": "Coasters and pendulums",
+  "target": "Use height differences to predict speed in ideal motion.",
+  "criteria": [
+    "Identify the relevant vertical height change.",
+    "Conserve energy under stated assumptions.",
+    "Separate path length from gravitational energy change."
+  ],
+  "source_sha256": "85092fadb7f3965feb60be1f1e13789f4d8ce84eac7aaf1d968c4b2bfe6612a6",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.524Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A coaster descends from elevation 9 m to 4 m along a 12 m track. What height change belongs in mgΔh?",
+      "options": [
+        "−5 m",
+        "−12 m",
+        "+13 m",
+        "+12 m"
+      ],
+      "correct_index": 0,
+      "guide": "Vertical change is 4 − 9 = −5 m, independent of track length.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A pendulum bob is 0.3 m above its lowest position at release. Its string is 1.2 m long. Which value is the initial height relative to the bottom?",
+      "options": [
+        "1.5 m",
+        "0.9 m",
+        "1.2 m",
+        "0.3 m"
+      ],
+      "correct_index": 3,
+      "guide": "Use the vertical height above the chosen reference, not string length.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 3 kg coaster model descends 2 m without resistance. Use g = 10 N/kg. What is its kinetic-energy gain?",
+      "options": [
+        "15 J",
+        "30 J",
+        "60 J",
+        "6 J"
+      ],
+      "correct_index": 2,
+      "guide": "ΔK = mgΔh_drop = 3 × 10 × 2 = 60 J.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A pendulum starts with 18 J of potential energy and no kinetic energy. At one point it has 7 J of potential energy. With no losses, what is K there?",
+      "options": [
+        "11 J",
+        "25 J",
+        "18 J",
+        "7 J"
+      ],
+      "correct_index": 0,
+      "guide": "Conserved total is 18 J; K = 18 − 7 = 11 J.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two frictionless coaster tracks connect identical start and end heights. A cart starts with the same speed on each. Which statement follows?",
+      "options": [
+        "Equal final speed proves equal travel time.",
+        "Final speeds are equal, although travel times can differ.",
+        "The flatter track must end at zero speed.",
+        "Longer track always gives greater final speed."
+      ],
+      "correct_index": 1,
+      "guide": "Energy fixes final speed from the endpoints; the path can affect timing.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A longer real coaster track gives a lower final speed than a shorter one with the same drop. Which explanation is plausible?",
+      "options": [
+        "Gravity must have disappeared.",
+        "More energy may have transferred to internal energy through resistance.",
+        "The longer path necessarily reduced the cart’s mass.",
+        "Height no longer affects gravitational energy."
+      ],
+      "correct_index": 1,
+      "guide": "Real resistive work depends on the path and can reduce final kinetic energy.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A coaster descends from elevation 9 m to 4 m along a 12 m track. What height change belongs in mgΔh?",
+      "options": [
+        "+13 m",
+        "−5 m",
+        "−12 m",
+        "+12 m"
+      ],
+      "correct_index": 1,
+      "guide": "Vertical change is 4 − 9 = −5 m, independent of track length.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A pendulum bob is 0.3 m above its lowest position at release. Its string is 1.2 m long. Which value is the initial height relative to the bottom?",
+      "options": [
+        "1.2 m",
+        "0.9 m",
+        "0.3 m",
+        "1.5 m"
+      ],
+      "correct_index": 2,
+      "guide": "Use the vertical height above the chosen reference, not string length.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A 3 kg coaster model descends 2 m without resistance. Use g = 10 N/kg. What is its kinetic-energy gain?",
+      "options": [
+        "6 J",
+        "60 J",
+        "30 J",
+        "15 J"
+      ],
+      "correct_index": 1,
+      "guide": "ΔK = mgΔh_drop = 3 × 10 × 2 = 60 J.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A pendulum starts with 18 J of potential energy and no kinetic energy. At one point it has 7 J of potential energy. With no losses, what is K there?",
+      "options": [
+        "18 J",
+        "7 J",
+        "25 J",
+        "11 J"
+      ],
+      "correct_index": 3,
+      "guide": "Conserved total is 18 J; K = 18 − 7 = 11 J.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "Two frictionless coaster tracks connect identical start and end heights. A cart starts with the same speed on each. Which statement follows?",
+      "options": [
+        "Equal final speed proves equal travel time.",
+        "The flatter track must end at zero speed.",
+        "Final speeds are equal, although travel times can differ.",
+        "Longer track always gives greater final speed."
+      ],
+      "correct_index": 2,
+      "guide": "Energy fixes final speed from the endpoints; the path can affect timing.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A longer real coaster track gives a lower final speed than a shorter one with the same drop. Which explanation is plausible?",
+      "options": [
+        "More energy may have transferred to internal energy through resistance.",
+        "The longer path necessarily reduced the cart’s mass.",
+        "Height no longer affects gravitational energy.",
+        "Gravity must have disappeared."
+      ],
+      "correct_index": 0,
+      "guide": "Real resistive work depends on the path and can reduce final kinetic energy.",
+      "target_slug": "u4.r3-coaster-pendulum",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

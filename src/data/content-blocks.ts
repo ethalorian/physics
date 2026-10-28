@@ -106,6 +106,8 @@ interface BaseBlock {
   sei?: SeiScaffold;
   /** B-1/B-2 — the learning target (slug) this block's evidence is tagged with. Capture blocks SHOULD carry one. */
   targetId?: string;
+  /** Eligible targets for open-ended evidence; review determines which apply. */
+  targetIds?: string[];
   /** B-4 — XP awarded once per student on first complete save. */
   xp?: number;
   /** B-3 — the section cannot advance until this block is complete (and correct if auto-checkable); honoured only when the class's gate_checkpoints is on. */

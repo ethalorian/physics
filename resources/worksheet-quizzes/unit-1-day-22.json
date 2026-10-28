@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 1,
+  "day": 22,
+  "title": "Transfer task: defend and revise",
+  "target": "Defend the prediction with evidence and make a visible, justified revision.",
+  "criteria": [
+    "Graph the central prediction and coordinate bounds.",
+    "Defend a claim using calculations and model limits.",
+    "Document a specific revision with evidence."
+  ],
+  "source_sha256": "87b350dd0c09a10ae1098f7abdbd89f08d35d720b8ac76f4fe0fd2171be8f1a2",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.485Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A position-time model starts at x = 5 m at t = 0 and predicts x = 17 m at t = 6 s. Which straight-line graph endpoints are correct?",
+      "options": [
+        "(0 s, 5 m) and (6 s, 17 m).",
+        "(5 s, 0 m) and (17 s, 6 m).",
+        "(0 s, 0 m) and (6 s, 12 m).",
+        "(0 s, 17 m) and (6 s, 5 m)."
+      ],
+      "correct_index": 0,
+      "guide": "Plot time horizontally and position vertically, including the nonzero start.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A final coordinate is bounded from 14 to 20 m with central prediction 17 m. Which graph annotation is appropriate?",
+      "options": [
+        "Mark 17 m and the 14–20 m interval at the final time.",
+        "Mark only 14 m and call it the exact answer.",
+        "Label the interval as 95% probability without a statistical model.",
+        "Replace the position axis with force."
+      ],
+      "correct_index": 0,
+      "guide": "Show the center and bounds without inventing probabilistic meaning.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A toy path ends far from the origin under a constant-velocity model. Which claim is defensible?",
+      "options": [
+        "All gravitational effects have been measured.",
+        "A single endpoint proves the entire real trajectory.",
+        "The real object can never approach Earth.",
+        "The predicted endpoint misses the origin within the stated model and bounds."
+      ],
+      "correct_index": 3,
+      "guide": "Conclusions must be limited to the modeled conditions and evidence.",
+      "target_slug": "u1.d22-honors-transfer",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A model predicts 22 m at a stated time, while the observed interval is 18–20 m. What does the comparison support?",
+      "options": [
+        "Proof that gravity is the only possible cause.",
+        "A mismatch requiring checks of assumptions, inputs, or measurement quality.",
+        "Exact agreement.",
+        "Proof that every measurement is false."
+      ],
+      "correct_index": 1,
+      "guide": "The prediction lies outside the interval, but cause is not uniquely identified.",
+      "target_slug": "u1.d22-honors-transfer",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A student corrects 600 m/s to 0.600 km/s in a km-based calculation. Which revision note is useful?",
+      "options": [
+        "I removed the original step and claimed it was always correct.",
+        "I changed the answer because it looked wrong, with no record.",
+        "I corrected the velocity units and recalculated the affected coordinates.",
+        "I kept every affected coordinate without checking."
+      ],
+      "correct_index": 2,
+      "guide": "Document the specific correction and its consequences.",
+      "target_slug": "u1.d22-honors-transfer",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "After fitting a constant-speed model to one observed endpoint, what is a useful next test?",
+      "options": [
+        "Claim the fit proves every future position.",
+        "Remove uncertainty from all measurements.",
+        "Reuse the fitted point as independent validation.",
+        "Predict a later position and compare it with a new timed measurement."
+      ],
+      "correct_index": 3,
+      "guide": "A new observation tests the revised model independently of the point used to fit it.",
+      "target_slug": "u1.d22-honors-transfer",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A position-time model starts at x = 5 m at t = 0 and predicts x = 17 m at t = 6 s. Which straight-line graph endpoints are correct?",
+      "options": [
+        "(0 s, 5 m) and (6 s, 17 m).",
+        "(5 s, 0 m) and (17 s, 6 m).",
+        "(0 s, 17 m) and (6 s, 5 m).",
+        "(0 s, 0 m) and (6 s, 12 m)."
+      ],
+      "correct_index": 0,
+      "guide": "Plot time horizontally and position vertically, including the nonzero start.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A final coordinate is bounded from 14 to 20 m with central prediction 17 m. Which graph annotation is appropriate?",
+      "options": [
+        "Mark only 14 m and call it the exact answer.",
+        "Label the interval as 95% probability without a statistical model.",
+        "Mark 17 m and the 14–20 m interval at the final time.",
+        "Replace the position axis with force."
+      ],
+      "correct_index": 2,
+      "guide": "Show the center and bounds without inventing probabilistic meaning.",
+      "target_slug": "u1.predict-position-uncertainty",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "A toy path ends far from the origin under a constant-velocity model. Which claim is defensible?",
+      "options": [
+        "A single endpoint proves the entire real trajectory.",
+        "The predicted endpoint misses the origin within the stated model and bounds.",
+        "The real object can never approach Earth.",
+        "All gravitational effects have been measured."
+      ],
+      "correct_index": 1,
+      "guide": "Conclusions must be limited to the modeled conditions and evidence.",
+      "target_slug": "u1.d22-honors-transfer",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A model predicts 22 m at a stated time, while the observed interval is 18–20 m. What does the comparison support?",
+      "options": [
+        "Exact agreement.",
+        "Proof that every measurement is false.",
+        "Proof that gravity is the only possible cause.",
+        "A mismatch requiring checks of assumptions, inputs, or measurement quality."
+      ],
+      "correct_index": 3,
+      "guide": "The prediction lies outside the interval, but cause is not uniquely identified.",
+      "target_slug": "u1.d22-honors-transfer",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A student corrects 600 m/s to 0.600 km/s in a km-based calculation. Which revision note is useful?",
+      "options": [
+        "I changed the answer because it looked wrong, with no record.",
+        "I corrected the velocity units and recalculated the affected coordinates.",
+        "I removed the original step and claimed it was always correct.",
+        "I kept every affected coordinate without checking."
+      ],
+      "correct_index": 1,
+      "guide": "Document the specific correction and its consequences.",
+      "target_slug": "u1.d22-honors-transfer",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "After fitting a constant-speed model to one observed endpoint, what is a useful next test?",
+      "options": [
+        "Predict a later position and compare it with a new timed measurement.",
+        "Claim the fit proves every future position.",
+        "Reuse the fitted point as independent validation.",
+        "Remove uncertainty from all measurements."
+      ],
+      "correct_index": 0,
+      "guide": "A new observation tests the revised model independently of the point used to fit it.",
+      "target_slug": "u1.d22-honors-transfer",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

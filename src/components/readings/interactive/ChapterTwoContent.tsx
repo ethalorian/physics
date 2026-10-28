@@ -2,6 +2,7 @@
 import { useState, type ReactNode } from 'react'
 import { ReaderExperiment } from './ReaderStory'
 import { chapterTwoDefinition } from './chapter-two-definition'
+import { SOURCE_REVISIONS } from './source-revisions'
 import { netForce, supportForce, ropeTension } from './chapter-two-model'
 import styles from './chapter-two.module.css'
 import Arrow from './PhysicsArrow'
@@ -105,11 +106,21 @@ function MotionGallery() {
 export function ChapterTwoOpening({ onStart }: { onStart: () => void }) { return (<>
           <div className={styles.heroCopy}><p className={styles.eyebrow}>CHAPTER 02 / FORCES & MOTION</p><h1>Mechanical<br /><em>equilibrium.</em></h1><p className={styles.dek}>Still doesn’t mean force-free.<br />And balance doesn’t mean standing still.</p><div className={styles.heroMeta}><span>5 connected ideas</span><span>Illustrated, interactive reading</span><span>Read · test · explain</span></div></div>
           <figure className={styles.heroArt}><BookScene /><figcaption>A quiet object. An active balance.</figcaption></figure>
-          <div className={styles.openingBottom}><p>A book rests on a table. Nothing seems to be happening. Yet Earth is pulling it downward, and the table is pushing it upward. Once you learn to see that balance, an ordinary classroom starts to look different.</p><button className={styles.primaryButton} onClick={onStart}>Start reading <span>↓</span></button></div>
+          <div className={styles.openingBottom}><p>{SOURCE_REVISIONS['hewitt:2'].invitation}</p><button className={styles.primaryButton} onClick={onStart}>Start reading <span>↓</span></button></div>
           <div className={styles.bigIdea}><span>THE BIG IDEA</span><p>Forces change motion when they <em>don’t</em> balance.</p><p className={styles.bigIdeaDetail}>Zero net force means zero change in velocity. An object can remain at rest—or keep moving steadily in a straight line.</p></div>
           <details className={styles.prediction}><summary>Before you read: a cart is already moving. Must its forward force be larger than its backward force?</summary><p>Keep your first explanation in mind. In Section 2.4, you will return to this question with a way to test it.</p></details>
         </>) }
 export function ChapterTwoSection({ id }: { id: string }) {
+  const section = chapterTwoDefinition.sections.find(section => section.id === id)
+  const revision = section && SOURCE_REVISIONS['hewitt:2'].sections[section.number]
+  return <>
+    {revision ? <div className={styles.prose}><p>{revision.opening}</p></div> : null}
+    <ChapterTwoSectionBody id={id} />
+    {revision?.closing ? <div className={styles.prose}><p>{revision.closing}</p></div> : null}
+  </>
+}
+
+function ChapterTwoSectionBody({ id }: { id: string }) {
   if (id === 'force') return <><div className={styles.prose}><p>Choose one object: a crate, a book, or a person hanging from a rope. Then ask, <em>what other things are pushing or pulling on it?</em> Earth can pull on the object through gravity. A rope can pull through tension. A hand or a surface can exert a contact force.</p><p>A <strong>force</strong> is a push or a pull. We measure its strength in <strong>newtons (N)</strong>. To describe a force completely, we also need its direction: “40 N to the right” tells us more than “40 N.” A quantity with both magnitude and direction is a <strong>vector</strong>. A quantity such as time or volume, with magnitude but no direction, is a <strong>scalar</strong>.</p><p>Usually, more than one force acts on an object. Their combined effect is the <strong>net force</strong>. Forces in the same direction add. Forces in opposite directions subtract. The direction of the larger force determines the direction of their nonzero sum.</p></div>
           <ForceDirectionsFigure /><ChapterExperiment sectionId="force" model="force" focus="What changes when you balance the forces at different strengths?" title="Change the forces. Watch the sum."><ForceLab /></ChapterExperiment>
           <div className={styles.prose}><h3>The arrows are doing two jobs.</h3><p>A force arrow points in the force’s direction. On a scaled force diagram, its length represents the force’s strength. An arrow twice as long means a force twice as large. To combine forces, keep both pieces of information.</p><p>Now picture a small bag hanging from a spring scale. Earth pulls downward on the bag; the string pulls upward. That stretching force in the string is called <strong>tension</strong>. When the bag stays at rest, the scale’s upward pull balances the bag’s downward weight.</p></div><SpringScaleFigure />

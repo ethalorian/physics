@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 5,
+  "day": 9,
+  "title": "Heat-engine efficiency",
+  "target": "Calculate useful output and rejected energy for a heat engine.",
+  "criteria": [
+    "Use efficiency=work output/heat input.",
+    "Account for rejected heat.",
+    "Distinguish an ideal upper bound from actual performance."
+  ],
+  "source_sha256": "711b6b61714a8f2f57578645178d4daad546920faaae6be84e24e6e84d6f1a91",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.537Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A cyclic engine takes 600 J of heat and delivers 180 J of work. What is efficiency?",
+      "options": [
+        "333%",
+        "180%",
+        "70%",
+        "30%"
+      ],
+      "correct_index": 3,
+      "guide": "Efficiency = W/Q_in = 180/600 = 0.30.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A modeled engine has 25% efficiency and receives 800 J per cycle. What work output follows?",
+      "options": [
+        "3,200 J",
+        "200 J",
+        "25 J",
+        "600 J"
+      ],
+      "correct_index": 1,
+      "guide": "W = efficiency × heat input = 0.25 × 800 = 200 J.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cyclic heat engine receives 450 J and does 120 J of work. How much heat is rejected?",
+      "options": [
+        "570 J",
+        "450 J",
+        "330 J",
+        "120 J"
+      ],
+      "correct_index": 2,
+      "guide": "With no net energy storage over a cycle, Q_out = Q_in − W = 330 J.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An engine takes in 900 J and rejects 630 J each cycle. What is useful work?",
+      "options": [
+        "630 J",
+        "0 J",
+        "270 J",
+        "1,530 J"
+      ],
+      "correct_index": 2,
+      "guide": "W = 900 − 630 = 270 J.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal model places an upper efficiency bound of 40% on an engine’s operating temperatures. Which actual performance is consistent with that bound?",
+      "options": [
+        "28%.",
+        "140%.",
+        "48%.",
+        "100%."
+      ],
+      "correct_index": 0,
+      "guide": "A real device may operate below an ideal upper bound; values above it are inconsistent with those assumptions.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A team reports 55% measured efficiency where the stated ideal maximum is 45%. What should be checked?",
+      "options": [
+        "Conservation permits unlimited efficiency.",
+        "The ideal bound guarantees every real engine is exactly 45%.",
+        "The claim should be accepted solely because it is measured.",
+        "Measurements, energy accounting, temperatures, and assumptions."
+      ],
+      "correct_index": 3,
+      "guide": "Exceeding the stated bound calls for checking data and model applicability, not accepting a perpetual gain.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A cyclic engine takes 600 J of heat and delivers 180 J of work. What is efficiency?",
+      "options": [
+        "180%",
+        "30%",
+        "70%",
+        "333%"
+      ],
+      "correct_index": 1,
+      "guide": "Efficiency = W/Q_in = 180/600 = 0.30.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A modeled engine has 25% efficiency and receives 800 J per cycle. What work output follows?",
+      "options": [
+        "200 J",
+        "25 J",
+        "3,200 J",
+        "600 J"
+      ],
+      "correct_index": 0,
+      "guide": "W = efficiency × heat input = 0.25 × 800 = 200 J.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A cyclic heat engine receives 450 J and does 120 J of work. How much heat is rejected?",
+      "options": [
+        "330 J",
+        "570 J",
+        "450 J",
+        "120 J"
+      ],
+      "correct_index": 0,
+      "guide": "With no net energy storage over a cycle, Q_out = Q_in − W = 330 J.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An engine takes in 900 J and rejects 630 J each cycle. What is useful work?",
+      "options": [
+        "1,530 J",
+        "0 J",
+        "630 J",
+        "270 J"
+      ],
+      "correct_index": 3,
+      "guide": "W = 900 − 630 = 270 J.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "An ideal model places an upper efficiency bound of 40% on an engine’s operating temperatures. Which actual performance is consistent with that bound?",
+      "options": [
+        "48%.",
+        "140%.",
+        "28%.",
+        "100%."
+      ],
+      "correct_index": 2,
+      "guide": "A real device may operate below an ideal upper bound; values above it are inconsistent with those assumptions.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    },
+    {
+      "prompt": "A team reports 55% measured efficiency where the stated ideal maximum is 45%. What should be checked?",
+      "options": [
+        "Conservation permits unlimited efficiency.",
+        "The ideal bound guarantees every real engine is exactly 45%.",
+        "The claim should be accepted solely because it is measured.",
+        "Measurements, energy accounting, temperatures, and assumptions."
+      ],
+      "correct_index": 3,
+      "guide": "Exceeding the stated bound calls for checking data and model applicability, not accepting a perpetual gain.",
+      "target_slug": "u5.r2-heat-engines",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

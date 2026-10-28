@@ -35,7 +35,7 @@ export async function quizGradingContent(quiz:Quiz,answers:QuizAnswers):Promise<
    const stage=stageResponse(answer[k])
    return [k,{text:stage.text,has_drawing:stage.strokes.length>0,drawing_labels:stage.strokes.filter(s=>s.tool==='text'&&s.text?.trim()&&s.points.length).map(s=>({text:s.text,at:s.points[0],color:s.color}))}]
   })):answer
-  questions.push({id:q.id,kind:q.kind,prompt:q.prompt,points:q.points,guide:q.guide,options:q.options,correct_index:q.correct_index,locked_choice_score:q.kind==='choice'?(answer===String(q.correct_index)?q.points:0):undefined,original_question:source?.searchText,answer:textAnswer})
+  questions.push({id:q.id,target_id:q.target_id,kind:q.kind,prompt:q.prompt,points:q.points,guide:q.guide,options:q.options,correct_index:q.correct_index,locked_choice_score:q.kind==='choice'?(answer===String(q.correct_index)?q.points:0):undefined,original_question:source?.searchText,answer:textAnswer})
   if(source){
    for(const p of source.imagePaths){
     if(!/^assets\/[a-zA-Z0-9_.-]+\.(png|gif|jpe?g|webp)$/i.test(p))throw Error('The original question image is unavailable. Teacher review is needed.')

@@ -1,3 +1,4 @@
+import { suggestAfterSubmission } from '@/lib/assessment-results/suggestions-server'
 import { NextResponse } from 'next/server'
 import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -27,6 +28,7 @@ export const GET = withAuth(async (req, ctx) => {
 })
 
 export const POST = withAuth(async (req, ctx) => {
+  if(req.headers.get('origin')!==req.nextUrl.origin)return NextResponse.json({error:'Reload before saving.'},{status:403})
   const b = await req.json()
   if (!UUID.test(b.task_id ?? '')) return NextResponse.json({ error: 'Choose a checkpoint.' }, { status: 400 })
   const task = await accessVocabTask(b.task_id, ctx)
@@ -44,7 +46,7 @@ export const POST = withAuth(async (req, ctx) => {
     if (error) throw error
     if (!previous || questions.slice(4).some((q,i) => q.prompt === previous.questions[i+4]?.prompt)) return NextResponse.json({ error: 'Give every interpretation and explanation a fresh situation for this reassessment.' }, { status: 400 })
   }
-  const { data, error } = await supabaseAdmin.rpc('mutate_vocab_checkpoint', {
+  const { data, error } = b.action==='release' ? await supabaseAdmin.rpc('release_vocab_checkpoint_review',{p_task:task.id,p_user:user,p_actor:ctx.scopeEmail,p_attempt:b.attempt_id,p_version:b.version,p_payload:b.review}) : await supabaseAdmin.rpc('mutate_vocab_checkpoint', {
     p_task: task.id, p_user: user, p_actor: staff ? ctx.scopeEmail : ctx.userId, p_staff: staff,
     p_attempt: b.attempt_id ?? null, p_action: b.action, p_version: b.version ?? 0,
     p_payload: b.action === 'retake' ? { questions } : b.action === 'score' ? { question_id: b.question_id, points: b.points, note: b.note } : ['save','submit'].includes(b.action) ? { answers: b.answers } : {},
@@ -53,6 +55,7 @@ export const POST = withAuth(async (req, ctx) => {
     if (error.code === 'P0001') return NextResponse.json({ error: error.message }, { status: 409 })
     throw error
   }
+  if(b.action==='submit' && data?.id) suggestAfterSubmission('checkpoint',data.id)
   return NextResponse.json({ attempt: publicCheckpoint(data as CheckpointRow,staff) })
 })
 
@@ -69,3 +72,5 @@ export const PUT = withRole(['teacher','admin'], async (req) => {
   if(words.some(w=>!sets?.some(s=>s.id===w.vocabulary_set_id)))return NextResponse.json({error:'Choose published vocabulary.'},{status:400})
   return NextResponse.json({questions:draftCheckpoint(words)},{headers:{'Cache-Control':'private, no-store'}})
 })
+
+export const maxDuration = 180

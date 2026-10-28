@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "unit": 6,
+  "day": 15,
+  "title": "Radar range and velocity",
+  "target": "Separate a radar’s range measurement from its line-of-sight velocity measurement.",
+  "criteria": [
+    "Use round-trip time for range.",
+    "Explain the information in a Doppler shift.",
+    "State what radial velocity leaves unknown."
+  ],
+  "source_sha256": "ed40568feec5ca1d09fcccef6341c42b3d3606369fe8f6c71ac1bada13fe3837",
+  "authoring": {
+    "provider": "Codex session",
+    "checked_at": "2026-10-24T00:31:50.554Z",
+    "checks": [
+      "editorial solution and distractor review",
+      "structure",
+      "criterion coverage",
+      "canonical target mapping",
+      "worksheet comparison"
+    ],
+    "limitations": "Reasoning evidence only. Multiple choice does not certify physical performance. Teacher reviews before assigning and rates mastery separately."
+  },
+  "cpa": [
+    {
+      "prompt": "A radar echo returns in 8.0 microseconds. Use c = 3.0 × 10⁸ m/s. What is one-way range to a stationary target?",
+      "options": [
+        "2,400 m",
+        "600 m",
+        "24 m",
+        "1,200 m"
+      ],
+      "correct_index": 3,
+      "guide": "Total path is cΔt = 2,400 m; range is half.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A scaled signal model has speed 32 m/s and echo delay 5.0 s. What is target range?",
+      "options": [
+        "80 m",
+        "160 m",
+        "16 m",
+        "6.4 m"
+      ],
+      "correct_index": 0,
+      "guide": "Range = vΔt/2 = 32 × 5 / 2 = 80 m. This is a scaled model, not real radar speed.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A reflected radar signal has a Doppler shift consistent with approach. What quantity does this primarily constrain?",
+      "options": [
+        "The object’s mass directly.",
+        "The component of relative velocity along the radar line of sight.",
+        "Its exact shape regardless of other data.",
+        "Its full three-dimensional velocity from one shift alone."
+      ],
+      "correct_index": 1,
+      "guide": "Doppler measures radial relative motion, not every component.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two targets at different ranges have the same radial approach speed. Under otherwise identical simple radar conditions, which statement is possible?",
+      "options": [
+        "Echo delay alone gives both masses.",
+        "They have the same Doppler shift but different echo delays.",
+        "The more distant target must have zero Doppler shift.",
+        "Equal Doppler shift requires equal distance."
+      ],
+      "correct_index": 1,
+      "guide": "Delay measures range; Doppler constrains radial velocity.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A target moves sideways at an instant, perpendicular to a radar’s line of sight. Can near-zero radial speed mean the target is motionless?",
+      "options": [
+        "Yes; all motion must be toward the radar.",
+        "Yes; radial and total speed are always identical.",
+        "No; transverse motion can still be substantial.",
+        "No; it proves the target moves at light speed."
+      ],
+      "correct_index": 2,
+      "guide": "A single radial component does not determine transverse components.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A single radar measures range and radial velocity. What additional evidence helps determine a full path?",
+      "options": [
+        "The radar’s paint color.",
+        "Assuming sideways speed is zero without evidence.",
+        "Measurements over time or from other viewing directions.",
+        "Only a stronger claim based on the same instant."
+      ],
+      "correct_index": 2,
+      "guide": "Additional geometry and timing constrain otherwise unknown motion components.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ],
+  "honors": [
+    {
+      "prompt": "A radar echo returns in 8.0 microseconds. Use c = 3.0 × 10⁸ m/s. What is one-way range to a stationary target?",
+      "options": [
+        "24 m",
+        "2,400 m",
+        "600 m",
+        "1,200 m"
+      ],
+      "correct_index": 3,
+      "guide": "Total path is cΔt = 2,400 m; range is half.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A scaled signal model has speed 32 m/s and echo delay 5.0 s. What is target range?",
+      "options": [
+        "16 m",
+        "80 m",
+        "6.4 m",
+        "160 m"
+      ],
+      "correct_index": 1,
+      "guide": "Range = vΔt/2 = 32 × 5 / 2 = 80 m. This is a scaled model, not real radar speed.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        0
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Apply",
+        "dok": 1,
+        "evidence": "Apply the physical relationship to new data."
+      }
+    },
+    {
+      "prompt": "A reflected radar signal has a Doppler shift consistent with approach. What quantity does this primarily constrain?",
+      "options": [
+        "The object’s mass directly.",
+        "Its full three-dimensional velocity from one shift alone.",
+        "The component of relative velocity along the radar line of sight.",
+        "Its exact shape regardless of other data."
+      ],
+      "correct_index": 2,
+      "guide": "Doppler measures radial relative motion, not every component.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Understand",
+        "dok": 1,
+        "evidence": "Interpret the stated physical model."
+      }
+    },
+    {
+      "prompt": "Two targets at different ranges have the same radial approach speed. Under otherwise identical simple radar conditions, which statement is possible?",
+      "options": [
+        "Equal Doppler shift requires equal distance.",
+        "The more distant target must have zero Doppler shift.",
+        "They have the same Doppler shift but different echo delays.",
+        "Echo delay alone gives both masses."
+      ],
+      "correct_index": 2,
+      "guide": "Delay measures range; Doppler constrains radial velocity.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        1
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A target moves sideways at an instant, perpendicular to a radar’s line of sight. Can near-zero radial speed mean the target is motionless?",
+      "options": [
+        "No; transverse motion can still be substantial.",
+        "Yes; all motion must be toward the radar.",
+        "Yes; radial and total speed are always identical.",
+        "No; it proves the target moves at light speed."
+      ],
+      "correct_index": 0,
+      "guide": "A single radial component does not determine transverse components.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": false,
+      "demand": {
+        "blooms": "Analyze",
+        "dok": 2,
+        "evidence": "Compare evidence and identify a physical relationship."
+      }
+    },
+    {
+      "prompt": "A single radar measures range and radial velocity. What additional evidence helps determine a full path?",
+      "options": [
+        "The radar’s paint color.",
+        "Assuming sideways speed is zero without evidence.",
+        "Only a stronger claim based on the same instant.",
+        "Measurements over time or from other viewing directions."
+      ],
+      "correct_index": 3,
+      "guide": "Additional geometry and timing constrain otherwise unknown motion components.",
+      "target_slug": "u6.r5-radar-chain",
+      "criteria": [
+        2
+      ],
+      "freshness": "New scenario and/or model data, independently answerable without worksheet answers.",
+      "transfer": true,
+      "demand": {
+        "blooms": "Evaluate",
+        "dok": 2,
+        "evidence": "Select a claim supported by the stated evidence and assumptions."
+      }
+    }
+  ]
+}

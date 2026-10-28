@@ -1,3 +1,4 @@
+import {missingDailyLessons} from '@/lib/interactive-assignments/foundations/sequence-server'
 import { calendarAssigned } from '@/lib/calendar-assignment'
 import 'server-only'
 import {supabaseAdmin} from '@/lib/supabase'
@@ -12,7 +13,7 @@ export async function accessQuiz(id:string,ctx:AuthContext){
  const staff=ctx.role==='teacher'||ctx.role==='admin'
  if(!staff&&(ctx.realRole!=='student'||!calendarAssigned(data.status,data.due_at)||data.student_ids&&!data.student_ids.includes(ctx.userId)))return null
  const course=(await readingCourses(ctx)).find(c=>c.id===data.course_id)
- if(course&&!staff&&(await lockedReadingQuizIds([id],ctx.userId)).has(id))return null
+ if(course&&!staff&&((await lockedReadingQuizIds([id],ctx.userId)).has(id)||(data.daily_sequence_key&&(await missingDailyLessons([id],ctx.userId)).length>0)))return null
  return course?{quiz:data as Quiz,course}:null
 }
 export async function quizRoster(quiz:Quiz){
