@@ -7,9 +7,9 @@
   "criteria": [
     "Check gear mesh and secure connections before power.",
     "Calculate ideal wheel speed from measured or supplied rpm.",
-    "Document first-test evidence and one revision."
+    "Record the first test results and one change to the design."
   ],
-  "source_sha256": "ceb509b6e6496c8a0733dfe5469efd73b9ae2eb94eede539c242c8b4b4efa230",
+  "source_sha256": "f69a345effc42636e0c16df434e83dcd620fb736ca3f2c9e4ded8f4788f75b43",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.575Z",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "On a first supervised run, the motor turns but the driven gear does not. Which record and next step best use that evidence?",
+      "prompt": "On a first supervised run, the motor turns but the driven gear does not. Which record and next step best use this observation?",
       "options": [
         "Reach into the gears while powered.",
         "Assume the battery is empty despite motor rotation.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "On a first supervised run, the motor turns but the driven gear does not. Which record and next step best use that evidence?",
+      "prompt": "On a first supervised run, the motor turns but the driven gear does not. Which record and next step best use this observation?",
       "options": [
         "Reach into the gears while powered.",
         "Record “perfect run” and continue racing.",

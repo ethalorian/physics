@@ -16,7 +16,7 @@ export function learningPathItems(bundle: SyllabusBundleView, readingState: stri
   } : { id: '', title: 'Reading quiz', status: 'draft' }
   const quizItem = activity('Reading quiz', readingQuiz, `/quizzes/${encodeURIComponent(readingQuiz.id)}`, 'Apply the ideas after submitting your reading. You can return to the quiz later.')
   if (quizItem.href && readingQuiz.status === 'published' && !['submitted', 'graded', 'returned'].includes(readingQuiz.state ?? '')) quizItem.status = 'Needs completion'
-  const reading = { title: 'Read & explain', status: ({in_progress:'In progress', submitted:'Submitted for review', returned:'Revise & resubmit', rated:'Mastery review recorded'} as Record<string,string>)[readingState] ?? 'Ready to begin', description: 'Your assigned explanations give your teacher evidence of your thinking.' }
+  const reading = { title: 'Read & explain', status: ({in_progress:'In progress', submitted:'Submitted for review', returned:'Revise & resubmit', rated:'Mastery review recorded'} as Record<string,string>)[readingState] ?? 'Ready to begin', description: "Your assigned explanations show your teacher how you think." }
   return [reading,
     activity('Vocabulary practice', bundle.practice, `/vocabulary/work?task_id=${encodeURIComponent(bundle.practice.id)}`, 'Practice the words that help you explain this reading.'),
     quizItem,

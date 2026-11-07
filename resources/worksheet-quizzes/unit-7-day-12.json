@@ -7,9 +7,9 @@
   "criteria": [
     "Label north and south poles.",
     "Trace external field direction from north toward south.",
-    "Explain why field-line drawings are models."
+    "Explain how field-line drawings represent a field and what they leave out."
   ],
-  "source_sha256": "7031ffd41e41715f2163e572850820af19515d5524685c70144e1c78b7c3c9f6",
+  "source_sha256": "b00d7acb2eda924f22eba428d079c638ed374c5b9e60bfccb355b3c3041aa46d",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.566Z",

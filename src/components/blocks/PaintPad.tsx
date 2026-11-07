@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode, type PointerEvent } from 'react'
 import type { Stroke } from '@/lib/draw/strokes'
 import { paintStrokes } from '@/lib/draw/strokes'
-import { makeStrokeHandlers, type EditorTool } from '@/lib/draw/input'
+import { makeStrokeHandlers, type EditorTool, type StrokeGesture } from '@/lib/draw/input'
 import WorkshopDrawingToolbar from '@/components/lessons/WorkshopDrawingToolbar'
 import styles from '@/components/lessons/WorkshopResponses.module.css'
 import PaintToolbar from '@/components/draw/PaintToolbar'
@@ -40,6 +40,7 @@ export default function PaintPad({
   const copyStrokes = () => strokesRef.current.map(s => ({ ...s, points: s.points.map(p => ({ ...p })) }))
   const remember = (before: Stroke[]) => { historyRef.current = [...historyRef.current.slice(-49), before]; futureRef.current = [] }
   const drawingRef = useRef(false)
+  const gestureRef = useRef<StrokeGesture | null>(null)
   const [tool, setTool] = useState<EditorTool>('pen')
   const [color, setColor] = useState((palette && palette[0]) || INK_PALETTE[0])
   const [size, setSize] = useState(4)
@@ -82,12 +83,13 @@ export default function PaintPad({
   })))
 
   const handlers = makeStrokeHandlers({
-    canvas: canvasRef.current, W, H, strokesRef, redoRef, drawingRef,
+    canvas: canvasRef.current, W, H, strokesRef, redoRef, drawingRef, gestureRef,
     tool, color, size, fillShapes, objectErase: workshop, snapAngles: workshop && snap, repaint, emit, bump,
   })
 
-  const finishStroke = () => {
-    handlers.onUp()
+  const finishStroke = (e?: PointerEvent<HTMLCanvasElement>) => {
+    if (gestureRef.current && e && e.pointerId !== gestureRef.current.pointerId) return
+    handlers.onUp(e)
     const before = beforeRef.current
     if (workshop && before && JSON.stringify(before) !== JSON.stringify(strokesRef.current)) { remember(before); bump() }
     beforeRef.current = null
@@ -135,11 +137,12 @@ export default function PaintPad({
           ref={canvasRef}
           width={W}
           height={H}
-          onPointerDown={e => { if (workshop && tool==='text') { const r=e.currentTarget.getBoundingClientRect(); placeLabel((e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height); return }; if (workshop) beforeRef.current = copyStrokes(); handlers.onDown(e) }}
-          onPointerMove={handlers.onMove}
+          onPointerDown={e => { if (e.isPrimary === false || e.button !== 0 || drawingRef.current) return; if (workshop && tool==='text') { const r=e.currentTarget.getBoundingClientRect(); placeLabel((e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height); return }; if (workshop) beforeRef.current = copyStrokes(); handlers.onDown(e) }}
+          onPointerMove={e => { handlers.onMove(e); if (!drawingRef.current) finishStroke(e) }}
           onPointerUp={finishStroke}
-          onPointerLeave={finishStroke}
+          onPointerLeave={e => { if (!e.currentTarget.hasPointerCapture(e.pointerId)) finishStroke(e) }}
           onPointerCancel={finishStroke}
+          onLostPointerCapture={finishStroke}
           style={{ position: 'relative', display: 'block', width: '100%', height: 'auto', touchAction: 'none', border: '1px solid var(--primary)', borderRadius: 'var(--radius-sm)', background: (transparent || background || (workshop && grid)) ? 'transparent' : '#fff', cursor: tool === 'eraser' ? 'cell' : tool === 'fill' ? 'copy' : 'crosshair' }}
         />
       </div>

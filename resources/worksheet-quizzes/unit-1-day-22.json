@@ -3,13 +3,13 @@
   "unit": 1,
   "day": 22,
   "title": "Transfer task: defend and revise",
-  "target": "Defend the prediction with evidence and make a visible, justified revision.",
+  "target": "Support your prediction with measurements and calculations. Show a specific change and explain why you made it.",
   "criteria": [
     "Graph the central prediction and coordinate bounds.",
-    "Defend a claim using calculations and model limits.",
-    "Document a specific revision with evidence."
+    "Use calculations to support an answer. Explain when the calculation stops working.",
+    "Show a specific change and use measurements or details to explain why you made it."
   ],
-  "source_sha256": "87b350dd0c09a10ae1098f7abdbd89f08d35d720b8ac76f4fe0fd2171be8f1a2",
+  "source_sha256": "fec67e139f3e9506ee02e5b71ec2c67abc765e610df5d9029b8a17a7aedae71d",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.485Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "A position-time model starts at x = 5 m at t = 0 and predicts x = 17 m at t = 6 s. Which straight-line graph endpoints are correct?",
+      "prompt": "An object starts at x = 5 m at t = 0. It is predicted to reach x = 17 m at t = 6 s. Which endpoints belong on a straight-line position–time graph of this prediction?",
       "options": [
         "(0 s, 5 m) and (6 s, 17 m).",
         "(5 s, 0 m) and (17 s, 6 m).",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "A toy path ends far from the origin under a constant-velocity model. Which claim is defensible?",
+      "prompt": "A simple constant-velocity calculation puts the end of a path far from the origin. Which conclusion can you support?",
       "options": [
         "All gravitational effects have been measured.",
         "A single endpoint proves the entire real trajectory.",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "A model predicts 22 m at a stated time, while the observed interval is 18–20 m. What does the comparison support?",
+      "prompt": "A calculation predicts a position of 22 m at a given time. The observed position is between 18 m and 20 m. What does this comparison support?",
       "options": [
         "Proof that gravity is the only possible cause.",
         "A mismatch requiring checks of assumptions, inputs, or measurement quality.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "After fitting a constant-speed model to one observed endpoint, what is a useful next test?",
+      "prompt": "After fitting a constant-speed calculation to one observed endpoint, what is a useful next test?",
       "options": [
         "Claim the fit proves every future position.",
         "Remove uncertainty from all measurements.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "A position-time model starts at x = 5 m at t = 0 and predicts x = 17 m at t = 6 s. Which straight-line graph endpoints are correct?",
+      "prompt": "An object starts at x = 5 m at t = 0. It is predicted to reach x = 17 m at t = 6 s. Which endpoints belong on a straight-line position–time graph of this prediction?",
       "options": [
         "(0 s, 5 m) and (6 s, 17 m).",
         "(5 s, 0 m) and (17 s, 6 m).",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "A toy path ends far from the origin under a constant-velocity model. Which claim is defensible?",
+      "prompt": "A simple constant-velocity calculation puts the end of a path far from the origin. Which conclusion can you support?",
       "options": [
         "A single endpoint proves the entire real trajectory.",
         "The predicted endpoint misses the origin within the stated model and bounds.",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "A model predicts 22 m at a stated time, while the observed interval is 18–20 m. What does the comparison support?",
+      "prompt": "A calculation predicts a position of 22 m at a given time. The observed position is between 18 m and 20 m. What does this comparison support?",
       "options": [
         "Exact agreement.",
         "Proof that every measurement is false.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "After fitting a constant-speed model to one observed endpoint, what is a useful next test?",
+      "prompt": "After fitting a constant-speed calculation to one observed endpoint, what is a useful next test?",
       "options": [
         "Predict a later position and compare it with a new timed measurement.",
         "Claim the fit proves every future position.",

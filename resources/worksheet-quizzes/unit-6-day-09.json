@@ -3,13 +3,13 @@
   "unit": 6,
   "day": 9,
   "title": "Sound speed and resonance",
-  "target": "Use travel time and resonant conditions to interpret sound.",
+  "target": "Use travel time and explain when resonance occurs to interpret sound.",
   "criteria": [
     "Account for round-trip distance in an echo.",
     "Identify resonance as a response near a natural frequency.",
     "Use an appropriate wavelength relationship."
   ],
-  "source_sha256": "bba1e3dc4f220e1c458f239fe294ab8aac5d3dabfef7fac8e3fc89328ce54c8e",
+  "source_sha256": "8454bf94e2d5e4773ca02f7f81b942fe784b8e4a881a43979d18339a93caf4d3",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.550Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "An echo returns 0.50 s after a pulse. Use sound speed 340 m/s. How far away is the wall?",
+      "prompt": "An echo returns 0.50 s after a pulse.\n\n1. Use sound speed 340 m/s.\n2. How far away is the wall?",
       "options": [
         "85 m",
         "680 m",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "An ideal string fixed at both ends vibrates in its fundamental mode. Its length is 0.90 m. Use L = λ/2. What is wavelength?",
+      "prompt": "An ideal string fixed at both ends vibrates in its fundamental mode. Its length is 0.90 m.\n\n1. Use L = λ/2.\n2. What is wavelength?",
       "options": [
         "0.90 m",
         "3.60 m",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "An echo returns 0.50 s after a pulse. Use sound speed 340 m/s. How far away is the wall?",
+      "prompt": "An echo returns 0.50 s after a pulse.\n\n1. Use sound speed 340 m/s.\n2. How far away is the wall?",
       "options": [
         "170 m",
         "85 m",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "An ideal string fixed at both ends vibrates in its fundamental mode. Its length is 0.90 m. Use L = λ/2. What is wavelength?",
+      "prompt": "An ideal string fixed at both ends vibrates in its fundamental mode. Its length is 0.90 m.\n\n1. Use L = λ/2.\n2. What is wavelength?",
       "options": [
         "0.90 m",
         "1.80 m",

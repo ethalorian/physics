@@ -3,13 +3,13 @@
   "unit": 5,
   "day": 6,
   "title": "Temperature and particle motion",
-  "target": "Use a particle model to distinguish average motion from total energy.",
+  "target": "Use a drawing or explanation of particles to distinguish average motion from total energy.",
   "criteria": [
     "Describe temperature in terms of microscopic motion.",
     "Use kelvin in proportional temperature comparisons.",
     "Avoid treating a single particle speed as the temperature."
   ],
-  "source_sha256": "6b414e48bb607f5caa1cf029e2a887d48efd4b6cd08e98df0f70119c4e79a32f",
+  "source_sha256": "1b6d908d16f1b1dd3d16eb352d1c6eb3b8f09ab9ed82ad2d482cb552554f7c7d",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.536Z",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "An ideal gas changes from 27°C to 327°C. Use K = °C + 273. What is the ratio of final to initial average translational kinetic energy?",
+      "prompt": "An ideal gas changes from 27°C to 327°C.\n\n1. Use K = °C + 273.\n2. What is the ratio of final to initial average translational kinetic energy?",
       "options": [
         "About 12.1",
         "300",
@@ -116,7 +116,7 @@
       "options": [
         "All molecules must have identical speed or temperature is undefined.",
         "The sample has two separate temperatures solely because speeds differ.",
-        "A single speed does not determine the sample’s temperature.",
+        "A single speed does not find the sample’s temperature.",
         "The slower molecule has zero kinetic energy."
       ],
       "correct_index": 2,
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A simulation adds more identical gas particles while keeping the same speed distribution. What happens to temperature in the ideal model?",
+      "prompt": "A simulation adds more identical gas particles. The distribution of their speeds stays the same. What happens to temperature?",
       "options": [
         "It remains the same, although total kinetic energy increases.",
         "It falls to zero.",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "An ideal gas changes from 27°C to 327°C. Use K = °C + 273. What is the ratio of final to initial average translational kinetic energy?",
+      "prompt": "An ideal gas changes from 27°C to 327°C.\n\n1. Use K = °C + 273.\n2. What is the ratio of final to initial average translational kinetic energy?",
       "options": [
         "2",
         "About 12.1",
@@ -248,7 +248,7 @@
     {
       "prompt": "One molecule in a gas moves faster than another at the same instant. What follows about the sample temperature?",
       "options": [
-        "A single speed does not determine the sample’s temperature.",
+        "A single speed does not find the sample’s temperature.",
         "The sample has two separate temperatures solely because speeds differ.",
         "All molecules must have identical speed or temperature is undefined.",
         "The slower molecule has zero kinetic energy."
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A simulation adds more identical gas particles while keeping the same speed distribution. What happens to temperature in the ideal model?",
+      "prompt": "A simulation adds more identical gas particles. The distribution of their speeds stays the same. What happens to temperature?",
       "options": [
         "It doubles whenever particle count doubles.",
         "It remains the same, although total kinetic energy increases.",

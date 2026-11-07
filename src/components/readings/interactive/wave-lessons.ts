@@ -437,7 +437,7 @@ export const waveLessons = {
     ],
     "worked": {
       "title": "Work through the idea",
-      "prompt": "In a constant-speed wave model, a source travels at twice the disturbance speed.",
+      "prompt": "Disturbances travel at a constant speed. A source moves at twice that speed.",
       "reasoning": "sin μ = 1/2, so the half-angle is 30°. This is the nondispersive construction, not a universal boat-wake formula."
     },
     "check": {

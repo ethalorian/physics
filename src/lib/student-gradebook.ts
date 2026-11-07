@@ -1,7 +1,7 @@
 import {sourcePresentation} from './assignment-source-presentation'
 import {TRANSFER_BRIEF_RUBRIC_VERSION} from './interactive-assignments/graded-assignment'
 import type { ResultActivity, ResultCell, ResultKind, ResultsData } from './assessment-results/types'
-import { releasedGrade, type Grade } from './assessment-results/gradebook'
+import { assignmentRelease, releasedGrade, type Grade } from './assessment-results/gradebook'
 import { assignedGradingTerm, assignmentTermDay, type GradingSettings } from './grading-terms'
 import { schoolDayKey } from './school-day'
 import { FOUR_DIMENSION_LAB_VERSION, labDimensionGrade, type ReleasedLabEntry } from './interactive-assignments/lab-rubric'
@@ -10,12 +10,15 @@ export type StudentLabEntry = ReleasedLabEntry & { assignmentKey: string; title:
 
 export type StudentWorkStatus = 'missing' | 'pending' | 'revise' | 'graded' | 'completed' | 'in_progress' | 'upcoming' | 'excused'
 export const STUDENT_STATUS_LABELS: Record<StudentWorkStatus, string> = { missing: 'Missing', pending: 'Awaiting feedback', revise: 'Revise', graded: 'Graded', completed: 'Completed', in_progress: 'In progress', upcoming: 'To do', excused: 'Excused' }
-export type StudentGradebookRow = { key: string; title: string; assignmentLabel?: string; kind: ResultKind; unitIds: string[]; dueAt: string | null; archived: boolean; termId: string | null; manualTerm: boolean; pairedKey?: string; prerequisites?: { id: string; title: string }[]; href: string; status: StudentWorkStatus; statusLabel: string; grade: Omit<Grade, 'version'> | null; feedback: string | null; releasedAt: string | null; submittedAt: string | null }
+export type StudentGradebookRow = { key: string; title: string; assignmentLabel?: string; kind: ResultKind; unitIds: string[]; dueAt: string | null; archived: boolean; termId: string | null; manualTerm: boolean; pairedKey?: string; prerequisites?: { id: string; title: string }[]; href: string; hasReleasedResult?: boolean; status: StudentWorkStatus; statusLabel: string; manualLetter?: string; grade: Omit<Grade, 'version'> | null; feedback: string | null; releasedAt: string | null; submittedAt: string | null }
 export type StudentLearningTarget = { id: string; statement: string; unitId: string; value: number | null; observations: { id: string; level: number; at: string; source: string }[] }
 export type StudentProgressData = {
   staff: boolean; courseId: string | null; student: { id: string; name: string } | null
   courses: { id: string; name: string; section: string | null }[]; roster: { id: string; name: string }[]
   settings: GradingSettings; rows: StudentGradebookRow[]; units: ResultsData['units']; targets: StudentLearningTarget[]
+  masteryXp?: import('./assigned-mastery-xp').MasteryXpReport
+  attendance?: import('./meaningful-attendance').StudentAttendance
+  calendarXp?: Record<string, import('./assigned-mastery-xp').CalendarXpStatus>
   labEntries?: StudentLabEntry[]
   transferEntries?: StudentLabEntry[]
   syllabusCategories?: boolean
@@ -28,7 +31,7 @@ export function studentAssignmentPastDue(dueAt: string | null, now = new Date())
 export function studentWorkStatus(activity: Pick<ResultActivity, 'dueAt' | 'archived'>, cell: ResultCell, now = new Date()): StudentWorkStatus {
   if (cell.state === 'excused') return 'excused'
   if (cell.state === 'returned') return 'revise'
-  if (releasedGrade(cell)) return 'graded'
+  if (releasedGrade(cell) || cell.manualLetter) return 'graded'
   if (cell.state === 'submitted') return 'pending'
   if (cell.state === 'reviewed' || cell.state === 'completed') return 'completed'
   // A reopened submission is a revision, not work that was never handed in.
@@ -40,6 +43,7 @@ export function studentActivityHref(activity: ResultActivity, lessonSlugs: Map<s
   const id = encodeURIComponent(activity.sourceId)
   if (activity.kind === 'quiz') return '/quizzes/' + id
   if (activity.kind === 'worksheet') return '/worksheet-assignments/' + id
+  if (activity.kind === 'student_choice') return '/student-choice/' + id
   if (activity.kind === 'reading') return '/readings/' + id
   if (activity.kind === 'interactive' || activity.kind === 'simulation') return '/interactive-assignments/' + encodeURIComponent(activity.key.replace(/^interactive:/, ''))
   if (activity.kind === 'review') return '/review/' + id
@@ -52,14 +56,24 @@ export function studentGradebookRows(activities: ResultActivity[], studentId: st
   return activities.flatMap(activity => {
     const cell = activity.cells[studentId]
     if (!cell || activity.crossUnit || cell.label === 'Not chosen') return []
-    const hasEvidence = cell.state !== 'not_started' || !!cell.grade || !!cell.submittedAt
+    const release = assignmentRelease(activity, studentId)
+    const hasEvidence = cell.state !== 'not_started' || !!release || !!cell.submittedAt
     if ((!activity.dueAt || activity.archived) && !hasEvidence) return []
     // Unused optional choices do not become assignments on the student's ledger.
     if (activity.kind === 'choice' && cell.state === 'excused') return []
     const status = studentWorkStatus(activity, cell, now), released = releasedGrade(cell)
     const grade = released ? { earned: released.earned, possible: released.possible, percent: released.percent, letter: released.letter } : null
-    return [{ key: activity.key, title: activity.title, assignmentLabel:sourcePresentation(activity).label, kind: activity.kind, unitIds: [...activity.unitIds], dueAt: activity.dueAt, archived: activity.archived, pairedKey: activity.pairedKey, termId: assignedGradingTerm(activity, settings)?.id ?? null, manualTerm: !!settings.placements[activity.key], href: studentActivityHref(activity, lessonSlugs), status, statusLabel: activity.kind === 'worksheet' && status === 'completed' ? 'Handed in' : STUDENT_STATUS_LABELS[status], grade, feedback: cell.feedback?.trim() || null, releasedAt: cell.releasedAt ?? null, submittedAt: cell.submittedAt ?? null }]
+    let statusLabel = STUDENT_STATUS_LABELS[status]
+    if (status === 'completed' && activity.kind === 'worksheet') statusLabel = 'Handed in'
+    else if (status === 'completed' && release) statusLabel = 'Review returned'
+    const releasedAt = cell.state === 'returned' ? cell.releasedAt ?? release?.at : release?.at ?? cell.releasedAt
+    return [{ key: activity.key, title: activity.title, assignmentLabel:sourcePresentation(activity).label, kind: activity.kind, unitIds: [...activity.unitIds], dueAt: activity.dueAt, archived: activity.archived, pairedKey: activity.pairedKey, termId: assignedGradingTerm(activity, settings)?.id ?? null, manualTerm: !!settings.placements[activity.key], href: studentActivityHref(activity, lessonSlugs), status, statusLabel, ...(cell.state !== 'excused' && cell.manualLetter && { manualLetter: cell.manualLetter }), ...(release && { hasReleasedResult: true }), grade, feedback: cell.feedback?.trim() || null, releasedAt: releasedAt ?? null, submittedAt: cell.submittedAt ?? null }]
   })
+}
+export function recentStudentResults(rows: StudentGradebookRow[]) {
+  const date = (row: StudentGradebookRow) => row.releasedAt ?? row.submittedAt ?? ''
+  return rows.filter(row => row.status !== 'excused' && (row.hasReleasedResult || row.grade || row.feedback))
+    .sort((a, b) => date(b).localeCompare(date(a)))
 }
 export function isStudentHomework(row: StudentGradebookRow, now = new Date()): boolean {
   return isAssignedStudentWork(row) && !studentWorkComplete(row) && studentAssignmentPastDue(row.dueAt, now)
@@ -79,6 +93,13 @@ export function studentCompletionTotal(rows: StudentGradebookRow[], termId: stri
   const counted = rows.filter(row => isAssignedStudentWork(row) && studentRowInTerm(row, termId))
   const completed = counted.filter(studentWorkComplete).length
   return { completed, assigned: counted.length, notCompleted: counted.length - completed, percent: counted.length ? completed / counted.length * 100 : null, counted }
+}
+/** Both parts of the Homework ratio use the same set of elapsed deadlines. */
+export function isStudentDueWork(row: StudentGradebookRow, now = new Date()): boolean {
+  return isAssignedStudentWork(row) && studentAssignmentPastDue(row.dueAt, now)
+}
+export function studentHomeworkTotal(rows: StudentGradebookRow[], termId: string, now = new Date()) {
+  return studentCompletionTotal(rows.filter(row => isStudentDueWork(row, now)), termId)
 }
 function studentRowInTerm(row: { termId: string | null }, termId: string) {
   return termId === 'all' || (termId === 'unassigned' ? !row.termId : row.termId === termId)

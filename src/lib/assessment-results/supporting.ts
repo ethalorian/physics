@@ -1,22 +1,21 @@
 import 'server-only'
 import { calendarAssigned } from '@/lib/calendar-assignment'
-import { byIds, read, type Scope } from './queries'
+import { byIds, read, reviewSource, type Scope } from './queries'
 import { notStarted, resultUnitIds } from './model'
 import type { ResultActivity, ResultCell } from './types'
 import type { VocabTask } from '@/lib/vocab-learning'
 import { vocabularyProgress, type VocabEvidenceCheck, type VocabMasteryReview } from '@/lib/vocab-mastery'
 import { checkpointScore, publicCheckpoint, type CheckpointRow } from '@/lib/vocab-checkpoint'
 import { decayingAverage } from '@/data/curriculum-types'
-import type { BlockDocument, InstructionVideoBlock } from '@/data/content-blocks'
-import { isCurrentLesson } from '@/lib/current-lesson-catalog'
-import { isBlockVisible, isLessonVisible } from '@/lib/track-visibility'
+import type { InstructionVideoBlock } from '@/data/content-blocks'
 import { lessonsByTarget } from '@/lib/lesson-targets'
 import { videoViewing, lessonViewing, type RecordedVideo, type VideoSpec } from '@/lib/teacher-video-progress'
 import { getPendingMasteryWork } from '@/lib/pending-lesson-work'
-import { pendingLessonSubmissions, type LessonSubmission } from '@/lib/lesson-review'
+import { lessonInputs } from './lesson-inputs'
+import { pendingLessonSubmissions } from '@/lib/lesson-review'
 
 export async function vocabularyResults(scope: Scope): Promise<ResultActivity[]> {
-  const tasks = (await read<VocabTask>('vocab_tasks', '*', q => q.eq('course_id', scope.course.id), ['id'])).filter(t => !t.syllabus_draft)
+  const tasks = (await read<VocabTask>('vocab_tasks', '*', q => reviewSource(scope, q.eq('course_id', scope.course.id)), ['id'])).filter(t => !t.syllabus_draft)
   const ids = tasks.map(t => t.id), users = scope.students.map(s => s.id)
   const [checks, reviews, attempts] = await Promise.all([
     byIds<VocabEvidenceCheck & { task_id: string; user_id: string }>('vocab_checks', 'id,task_id,user_id,completed_at,result,review_version,requires_release,reviewed_at', 'task_id', ids, ['id'], q => q.in('user_id', users)),
@@ -55,7 +54,7 @@ export async function vocabularyResults(scope: Scope): Promise<ResultActivity[]>
 export async function mathResults(scope: Scope): Promise<ResultActivity[]> {
   const users = scope.students.map(s => s.id)
   const [competencies, records, submissions, revisions, instances, missions] = await Promise.all([
-    read<{ id: string; code: string; statement: string }>('math_competencies', 'id,code,statement', q => q.eq('is_active', true), ['sequence_order', 'order_index', 'id']),
+    read<{ id: string; code: string; statement: string }>('math_competencies', 'id,code,statement', q => reviewSource(scope, q.eq('is_active', true)), ['sequence_order', 'order_index', 'id']),
     byIds<{ user_id: string; competency_id: string; level: number; observed_at: string }>('math_competency_records', 'user_id,competency_id,level,observed_at', 'user_id', users, ['observed_at', 'id']),
     byIds<{ id: string; user_id: string; competency_id: string; tested_competency_ids: string[]; status: string; resulting_level: number | null; submitted_at: string; revision_requested: boolean }>('math_warmup_submissions', 'id,user_id,competency_id,tested_competency_ids,status,resulting_level,submitted_at,revision_requested', 'user_id', users, ['submitted_at', 'id']),
     byIds<{ submission_id: string; user_id: string; status: string }>('math_warmup_revisions', 'submission_id,user_id,status', 'user_id', users, ['submitted_at', 'id']),
@@ -83,23 +82,17 @@ export async function mathResults(scope: Scope): Promise<ResultActivity[]> {
 }
 
 export async function videoResults(scope: Scope): Promise<ResultActivity[]> {
-  const viewer = { role: 'student' as const, track: scope.course.track }, users = scope.students.map(s => s.id)
-  const [allLessons, windows, durations] = await Promise.all([
-    byIds<{ id: string; title: string; unit_id: string; visibility_track: string | null; content_blocks: BlockDocument }>('lessons', 'id,title,unit_id,visibility_track,content_blocks', 'unit_id', [...new Set(scope.targetRows.map(t => t.unit_id))], ['id'], q => q.eq('published', true)),
-    read<{ lesson_id: string; due_at: string | null }>('lesson_class_windows', 'lesson_id,due_at', q => q.eq('course_id', scope.course.id), ['lesson_id']),
-    read<{ youtube_id: string; duration_seconds: number }>('lesson_video_catalog', 'youtube_id,duration_seconds', q => q, ['youtube_id']),
+  const users = scope.students.map(s => s.id), inputs = lessonInputs(scope)
+  const [{ videos: lessons }, windows, durations] = await Promise.all([inputs.catalog(), inputs.windows(), inputs.durations()])
+  const ids = lessons.map(l => l.id), idSet = new Set(ids)
+  const [progress, allSubmissions, reviews] = await Promise.all([
+    byIds<RecordedVideo & { user_id: string; lesson_id: string }>('lesson_video_progress', 'user_id,lesson_id,youtube_id,duration_seconds,start_seconds,watched_seconds,updated_at', 'lesson_id', ids, ['lesson_id', 'user_id', 'youtube_id'], q => q.in('user_id', users)),
+    inputs.submissions(), inputs.reviews(),
   ])
   const durationMap = new Map(durations.map(d => [d.youtube_id, d.duration_seconds]))
-  const lessons = allLessons.filter(l => isCurrentLesson({ ...l, program: scope.course.program }) && isLessonVisible(l.visibility_track, viewer)).map(l => ({ ...l, content_blocks: { ...l.content_blocks, blocks: (l.content_blocks?.blocks ?? []).filter(b => isBlockVisible(b, viewer)) } }))
-    .filter(l => l.content_blocks.blocks.some(b => b.type === 'instruction_video'))
-  const ids = lessons.map(l => l.id)
-  const [progress, submissions] = await Promise.all([
-    byIds<RecordedVideo & { user_id: string; lesson_id: string }>('lesson_video_progress', 'user_id,lesson_id,youtube_id,duration_seconds,start_seconds,watched_seconds,updated_at', 'lesson_id', ids, ['lesson_id', 'user_id', 'youtube_id'], q => q.in('user_id', users)),
-    byIds<LessonSubmission>('lesson_submissions', 'id,user_id,lesson_id,submitted_at', 'lesson_id', ids, ['submitted_at', 'id'], q => q.in('user_id', users)),
-  ])
+  const submissions = allSubmissions.filter(s => idSet.has(s.lesson_id))
   const carriers = lessonsByTarget(lessons, scope.targetRows)
-  const reviews = await byIds<{ submission_id: string }>('lesson_reviews', 'submission_id', 'submission_id', submissions.map(s => s.id), ['id'])
-  const { reviewQueue, assessedSubmissionIds } = await getPendingMasteryWork(users, lessons, scope.targetRows, carriers, submissions, pendingLessonSubmissions(submissions, new Set(reviews.map(r => r.submission_id))))
+  const { reviewQueue, assessedSubmissionIds } = await getPendingMasteryWork(users, lessons, scope.targetRows, carriers, submissions, pendingLessonSubmissions(submissions, new Set(reviews.map(r => r.submission_id))), inputs.mastery(ids))
   const windowMap = new Map(windows.map(w => [w.lesson_id, w]))
   // Include assigned lessons and actual student activity; a published catalog item alone is not an assignment.
   return lessons.filter(l => windowMap.has(l.id) || progress.some(p => p.lesson_id === l.id) || submissions.some(s => s.lesson_id === l.id)).map(l => {
@@ -123,20 +116,18 @@ export async function videoResults(scope: Scope): Promise<ResultActivity[]> {
 
 /** Creative work uses the same submission receipts and target review queue as other lessons. */
 export async function reflectionResults(scope: Scope): Promise<ResultActivity[]> {
-  const users = scope.students.map(s => s.id)
-  const lessons = (await byIds<{id:string; title:string; unit_id:string; visibility_track:string|null; content_blocks:BlockDocument}>('lessons','id,title,unit_id,visibility_track,content_blocks','unit_id',[...new Set(scope.targetRows.map(t=>t.unit_id))],['id'],q=>q.eq('published',true))).filter(l=>(l.content_blocks?.reflection || !(l.content_blocks?.blocks??[]).some(b=>b.type==='instruction_video')) && isLessonVisible(l.visibility_track,{role:'student',track:scope.course.track}))
-  for (const lesson of lessons) lesson.content_blocks={...lesson.content_blocks,blocks:lesson.content_blocks.blocks.filter(b=>isBlockVisible(b,{role:'student',track:scope.course.track}))}
-  const ids=lessons.map(l=>l.id)
-  if(!ids.length || !users.length)return []
-  const [windows,submissions,drafts,responses]=await Promise.all([
-    byIds<{lesson_id:string;due_at:string|null}>('lesson_class_windows','lesson_id,due_at','lesson_id',ids,['lesson_id'],q=>q.eq('course_id',scope.course.id)),
-    byIds<LessonSubmission>('lesson_submissions','id,user_id,lesson_id,submitted_at','lesson_id',ids,['submitted_at','id'],q=>q.in('user_id',users)),
+  const users = scope.students.map(s => s.id), inputs = lessonInputs(scope)
+  const { reflections: lessons } = await inputs.catalog()
+  const ids = lessons.map(l => l.id), idSet = new Set(ids)
+  if (!ids.length || !users.length) return []
+  const [windows, allSubmissions, drafts, allResponses, reviews] = await Promise.all([
+    inputs.windows(), inputs.submissions(),
     byIds<{lesson_id:string;user_id:string}>('block_drafts','lesson_id,user_id','lesson_id',ids,['lesson_id','user_id','block_id'],q=>q.in('user_id',users)),
-    byIds<{lesson_id:string;user_id:string}>('block_responses','lesson_id,user_id','lesson_id',ids,['id'],q=>q.in('user_id',users)),
+    inputs.responses(), inputs.reviews(),
   ])
-  const reviews=await byIds<{submission_id:string}>('lesson_reviews','submission_id','submission_id',submissions.map(s=>s.id),['id'])
+  const submissions = allSubmissions.filter(s => idSet.has(s.lesson_id)), responses = allResponses.filter(r => idSet.has(r.lesson_id))
   const carriers=lessonsByTarget(lessons,scope.targetRows)
-  const {reviewQueue,assessedSubmissionIds}=await getPendingMasteryWork(users,lessons,scope.targetRows,carriers,submissions,pendingLessonSubmissions(submissions,new Set(reviews.map(r=>r.submission_id))))
+  const {reviewQueue,assessedSubmissionIds}=await getPendingMasteryWork(users,lessons,scope.targetRows,carriers,submissions,pendingLessonSubmissions(submissions,new Set(reviews.map(r=>r.submission_id))),inputs.mastery(ids))
   return lessons.filter(l=>windows.some(w=>w.lesson_id===l.id)||submissions.some(s=>s.lesson_id===l.id)).map(l=>({key:(l.content_blocks?.reflection?'reflection:':'lesson:')+l.id,sourceId:l.id,kind:l.content_blocks?.reflection?'reflection':'lesson',title:l.title,unitIds:[l.unit_id],targetIds:scope.targetRows.filter(t=>carriers.get(t.id)?.includes(l.id)).map(t=>t.id),dueAt:windows.find(w=>w.lesson_id===l.id)?.due_at??null,archived:!calendarAssigned(true,windows.find(w=>w.lesson_id===l.id)?.due_at),cells:Object.fromEntries(users.filter(user=>windows.some(w=>w.lesson_id===l.id)||[...submissions,...drafts,...responses].some(r=>r.lesson_id===l.id&&r.user_id===user)).map(user=>{
     const sub=submissions.filter(s=>s.lesson_id===l.id&&s.user_id===user).at(-1),pendingTargets=reviewQueue.filter(r=>r.studentId===user&&r.lessonId===l.id).map(r=>r.targetId),reviewed=!!sub&&(reviews.some(r=>r.submission_id===sub.id)||assessedSubmissionIds.has(sub.id)),working=[...drafts,...responses].some(r=>r.lesson_id===l.id&&r.user_id===user)
     return [user,{state:sub?reviewed?'reviewed':'submitted':working?'draft':'not_started',label:sub?reviewed?'Returned':'Submitted':working?'In progress':'Not started',detail:reviewed?'Teacher review returned':pendingTargets.length?'Target evidence awaits review':sub?'Teacher review records mastery':'No submitted work',needsReview:!!sub&&(!reviewed||pendingTargets.length>0),pendingTargets,submissionId:sub?.id,submittedAt:sub?.submitted_at} satisfies ResultCell]

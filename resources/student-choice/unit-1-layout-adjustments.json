@@ -1,0 +1,1790 @@
+[
+  {
+    "kind": "honors",
+    "day": 3,
+    "diagram": 0,
+    "viewBox": "0 7 616 261",
+    "moves": []
+  },
+  {
+    "kind": "honors",
+    "day": 4,
+    "diagram": 0,
+    "viewBox": "0 0 616 250",
+    "moves": [
+      {
+        "textIndex": 12,
+        "text": "−2 m",
+        "dx": 0,
+        "dy": -12
+      },
+      {
+        "textIndex": 19,
+        "text": "30°",
+        "dx": 14,
+        "dy": 0
+      }
+    ]
+  },
+  {
+    "kind": "honors",
+    "day": 5,
+    "diagram": 0,
+    "viewBox": "0 0 616 262",
+    "moves": []
+  },
+  {
+    "kind": "honors",
+    "day": 6,
+    "diagram": 0,
+    "viewBox": "0 0 616 251",
+    "moves": []
+  },
+  {
+    "kind": "honors",
+    "day": 15,
+    "diagram": 0,
+    "viewBox": "0 0 616 254",
+    "moves": []
+  },
+  {
+    "kind": "honors",
+    "day": 16,
+    "diagram": 0,
+    "viewBox": "0 0 616 250",
+    "moves": [
+      {
+        "textIndex": 3,
+        "text": "f",
+        "dx": 5,
+        "dy": 6
+      },
+      {
+        "textIndex": 6,
+        "text": "mg sin θ",
+        "dx": -28,
+        "dy": 12
+      }
+    ]
+  },
+  {
+    "kind": "honors",
+    "day": 18,
+    "diagram": 0,
+    "viewBox": "0 0 616 250",
+    "moves": [
+      {
+        "textIndex": 5,
+        "text": "30°",
+        "dx": 10,
+        "dy": 0
+      }
+    ]
+  },
+  {
+    "kind": "honors",
+    "day": 21,
+    "diagram": 0,
+    "viewBox": "0 0 616 250",
+    "moves": [
+      {
+        "textIndex": 2,
+        "text": "-20",
+        "dx": 0,
+        "dy": 7
+      },
+      {
+        "textIndex": 3,
+        "text": "-10",
+        "dx": 0,
+        "dy": 7
+      },
+      {
+        "textIndex": 4,
+        "text": "0",
+        "dx": 0,
+        "dy": 8
+      },
+      {
+        "textIndex": 5,
+        "text": "10",
+        "dx": 0,
+        "dy": 7
+      },
+      {
+        "textIndex": 11,
+        "text": "30°",
+        "dx": 14,
+        "dy": -4
+      }
+    ]
+  },
+  {
+    "kind": "cpa",
+    "day": 3,
+    "diagram": 0,
+    "viewBox": "0 7 616 261",
+    "moves": []
+  },
+  {
+    "kind": "cpa",
+    "day": 4,
+    "diagram": 0,
+    "viewBox": "0 13 616 219",
+    "moves": []
+  },
+  {
+    "kind": "cpa",
+    "day": 5,
+    "diagram": 0,
+    "viewBox": "0 63 616 133",
+    "moves": []
+  },
+  {
+    "kind": "cpa",
+    "day": 6,
+    "diagram": 0,
+    "viewBox": "0 17 616 215",
+    "moves": []
+  },
+  {
+    "kind": "cpa",
+    "day": 8,
+    "diagram": 0,
+    "viewBox": "0 13 616 229",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "0",
+        "dx": 0,
+        "dy": 2
+      }
+    ]
+  },
+  {
+    "kind": "cpa",
+    "day": 11,
+    "diagram": 0,
+    "viewBox": "0 17 616 217",
+    "moves": []
+  },
+  {
+    "kind": "cpa",
+    "day": 12,
+    "diagram": 0,
+    "viewBox": "0 13 616 229",
+    "moves": []
+  },
+  {
+    "kind": "cpa",
+    "day": 14,
+    "diagram": 0,
+    "viewBox": "0 17 616 156",
+    "moves": []
+  },
+  {
+    "kind": "cpa",
+    "day": 17,
+    "diagram": 0,
+    "viewBox": "0 13 616 229",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "0",
+        "dx": 0,
+        "dy": 2
+      }
+    ]
+  },
+  {
+    "kind": "cpa",
+    "day": 21,
+    "diagram": 0,
+    "viewBox": "0 13 616 189",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 1,
+    "option": 2,
+    "diagram": 2,
+    "viewBox": "0 0 120 78",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 1,
+    "option": 2,
+    "diagram": 5,
+    "viewBox": "0 0 120 78",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 1,
+    "option": 4,
+    "diagram": 2,
+    "viewBox": "0 0 120 78",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 1,
+    "option": 4,
+    "diagram": 7,
+    "viewBox": "0 0 120 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 2,
+    "option": 2,
+    "diagram": 2,
+    "viewBox": "0 0 120 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 2,
+    "option": 2,
+    "diagram": 5,
+    "viewBox": "0 -8 120 100",
+    "moves": [
+      {
+        "textIndex": 4,
+        "text": "leg 2",
+        "dx": 4,
+        "dy": 17
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 2,
+    "option": 2,
+    "diagram": 7,
+    "viewBox": "0 0 120 76",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 2,
+    "option": 2,
+    "diagram": 9,
+    "viewBox": "0 -8 120 98",
+    "moves": [
+      {
+        "textIndex": 4,
+        "text": "leg 2",
+        "dx": 5,
+        "dy": 17
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 2,
+    "option": 4,
+    "diagram": 0,
+    "viewBox": "0 0 120 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 2,
+    "option": 4,
+    "diagram": 5,
+    "viewBox": "0 -8 120 96",
+    "moves": [
+      {
+        "textIndex": 7,
+        "text": "−3 m",
+        "dx": 11,
+        "dy": -15
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 3,
+    "option": 1,
+    "diagram": 0,
+    "viewBox": "0 -5 560 223",
+    "moves": [
+      {
+        "textIndex": 16,
+        "text": "time (s)",
+        "dx": 0,
+        "dy": 12
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 3,
+    "option": 2,
+    "diagram": 1,
+    "viewBox": "0 0 120 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 3,
+    "option": 2,
+    "diagram": 3,
+    "viewBox": "0 -1 122 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 3,
+    "option": 2,
+    "diagram": 4,
+    "viewBox": "0 -11 120 99",
+    "moves": [
+      {
+        "textIndex": 2,
+        "text": "average",
+        "dx": 1,
+        "dy": 3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 3,
+    "option": 2,
+    "diagram": 5,
+    "viewBox": "0 0 120 74",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 3,
+    "option": 2,
+    "diagram": 9,
+    "viewBox": "0 -8 120 94",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "x",
+        "dx": -3,
+        "dy": 0
+      },
+      {
+        "textIndex": 1,
+        "text": "t",
+        "dx": 0,
+        "dy": 2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 3,
+    "option": 5,
+    "diagram": 0,
+    "viewBox": "0 0 122 76",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 3,
+    "option": 5,
+    "diagram": 1,
+    "viewBox": "0 -3 120 79",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 4,
+    "option": 1,
+    "diagram": 0,
+    "viewBox": "0 -5 560 223",
+    "moves": [
+      {
+        "textIndex": 8,
+        "text": "8",
+        "dx": 0,
+        "dy": 2
+      },
+      {
+        "textIndex": 17,
+        "text": "time (s)",
+        "dx": 0,
+        "dy": 12
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 4,
+    "option": 3,
+    "diagram": 0,
+    "viewBox": "0 0 121 76",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 4,
+    "option": 3,
+    "diagram": 1,
+    "viewBox": "0 0 121 76",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 4,
+    "option": 3,
+    "diagram": 2,
+    "viewBox": "0 0 120 79",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 4,
+    "option": 3,
+    "diagram": 5,
+    "viewBox": "0 -3 120 80",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 4,
+    "option": 4,
+    "diagram": 0,
+    "viewBox": "0 -1 122 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 4,
+    "option": 4,
+    "diagram": 1,
+    "viewBox": "0 -1 122 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 4,
+    "option": 4,
+    "diagram": 3,
+    "viewBox": "0 0 120 80",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 4,
+    "option": 4,
+    "diagram": 5,
+    "viewBox": "0 0 147 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 4,
+    "option": 4,
+    "diagram": 7,
+    "viewBox": "0 0 120 75",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 4,
+    "option": 4,
+    "diagram": 9,
+    "viewBox": "0 -8 120 96",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "x",
+        "dx": 0,
+        "dy": 3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 5,
+    "option": 3,
+    "diagram": 0,
+    "viewBox": "0 0 120 78",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 5,
+    "option": 3,
+    "diagram": 1,
+    "viewBox": "0 0 120 78",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 5,
+    "option": 3,
+    "diagram": 2,
+    "viewBox": "0 0 120 78",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 5,
+    "option": 3,
+    "diagram": 5,
+    "viewBox": "0 0 120 74",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 5,
+    "option": 3,
+    "diagram": 7,
+    "viewBox": "0 0 120 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 5,
+    "option": 3,
+    "diagram": 9,
+    "viewBox": "0 0 120 76",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 5,
+    "option": 5,
+    "diagram": 0,
+    "viewBox": "0 0 120 78",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 5,
+    "option": 5,
+    "diagram": 3,
+    "viewBox": "0 0 120 78",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 5,
+    "option": 5,
+    "diagram": 5,
+    "viewBox": "0 -8 120 98",
+    "moves": [
+      {
+        "textIndex": 5,
+        "text": "+2 m/s × 2 s",
+        "dx": 0,
+        "dy": -16
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 6,
+    "option": 1,
+    "diagram": 1,
+    "viewBox": "0 -8 120 96",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "B",
+        "dx": -6,
+        "dy": -6
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 6,
+    "option": 1,
+    "diagram": 3,
+    "viewBox": "0 0 120 80",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 6,
+    "option": 1,
+    "diagram": 4,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "|R| = length",
+        "dx": 3,
+        "dy": 7
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 6,
+    "option": 1,
+    "diagram": 5,
+    "viewBox": "0 0 120 76",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 6,
+    "option": 1,
+    "diagram": 6,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "A",
+        "dx": 0,
+        "dy": 2
+      },
+      {
+        "textIndex": 1,
+        "text": "B",
+        "dx": -4,
+        "dy": -5
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 6,
+    "option": 1,
+    "diagram": 8,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "|R| = length",
+        "dx": 5,
+        "dy": 6
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 6,
+    "option": 1,
+    "diagram": 9,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "E",
+        "dx": 0,
+        "dy": 3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 6,
+    "option": 2,
+    "diagram": 0,
+    "viewBox": "0 0 120 81",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 7,
+    "option": 2,
+    "diagram": 2,
+    "viewBox": "-1 -8 121 92",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "a = −3",
+        "dx": 0,
+        "dy": -3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 7,
+    "option": 4,
+    "diagram": 1,
+    "viewBox": "0 0 120 75",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 7,
+    "option": 4,
+    "diagram": 2,
+    "viewBox": "0 0 120 75",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 7,
+    "option": 4,
+    "diagram": 3,
+    "viewBox": "0 0 120 79",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 7,
+    "option": 4,
+    "diagram": 5,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "2 m/s",
+        "dx": 0,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 8,
+    "option": 1,
+    "diagram": 3,
+    "viewBox": "0 0 120 75",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 8,
+    "option": 5,
+    "diagram": 2,
+    "viewBox": "0 -11 120 99",
+    "moves": [
+      {
+        "textIndex": 2,
+        "text": "avg",
+        "dx": 0,
+        "dy": 7
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 9,
+    "option": 1,
+    "diagram": 0,
+    "viewBox": "-1 0 122 73",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 9,
+    "option": 1,
+    "diagram": 1,
+    "viewBox": "0 -4 120 76",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 9,
+    "option": 4,
+    "diagram": 0,
+    "viewBox": "-1 0 122 73",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 9,
+    "option": 4,
+    "diagram": 1,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "2",
+        "dx": 0,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 9,
+    "option": 4,
+    "diagram": 2,
+    "viewBox": "0 0 120 73",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 9,
+    "option": 4,
+    "diagram": 5,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "pull",
+        "dx": 0,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 10,
+    "option": 1,
+    "diagram": 0,
+    "viewBox": "0 -8 120 95",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "Earth",
+        "dx": 0,
+        "dy": 5
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 10,
+    "option": 1,
+    "diagram": 5,
+    "viewBox": "0 -17 120 101",
+    "moves": [
+      {
+        "textIndex": 2,
+        "text": "W",
+        "dx": 0,
+        "dy": -3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 10,
+    "option": 3,
+    "diagram": 0,
+    "viewBox": "0 -8 120 95",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "Earth",
+        "dx": 0,
+        "dy": 5
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 10,
+    "option": 3,
+    "diagram": 2,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "pull",
+        "dx": 0,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 10,
+    "option": 3,
+    "diagram": 6,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "Earth",
+        "dx": 0,
+        "dy": 7
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 11,
+    "option": 2,
+    "diagram": 0,
+    "viewBox": "0 -5 560 203",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "0",
+        "dx": 0,
+        "dy": 2
+      },
+      {
+        "textIndex": 14,
+        "text": "time (s)",
+        "dx": 0,
+        "dy": 12
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 11,
+    "option": 2,
+    "diagram": 1,
+    "viewBox": "0 -5 560 203",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "0",
+        "dx": 0,
+        "dy": 2
+      },
+      {
+        "textIndex": 14,
+        "text": "time (s)",
+        "dx": 0,
+        "dy": 12
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 11,
+    "option": 3,
+    "diagram": 0,
+    "viewBox": "0 -9 120 93",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "4",
+        "dx": -2,
+        "dy": 0
+      },
+      {
+        "textIndex": 3,
+        "text": "?",
+        "dx": 2,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 11,
+    "option": 3,
+    "diagram": 1,
+    "viewBox": "0 0 120 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 11,
+    "option": 4,
+    "diagram": 1,
+    "viewBox": "0 0 120 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 11,
+    "option": 4,
+    "diagram": 5,
+    "viewBox": "0 -9 120 93",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "4",
+        "dx": -2,
+        "dy": 0
+      },
+      {
+        "textIndex": 3,
+        "text": "2",
+        "dx": 2,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 12,
+    "option": 2,
+    "diagram": 0,
+    "viewBox": "0 -5 560 233",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "0",
+        "dx": 0,
+        "dy": 2
+      },
+      {
+        "textIndex": 10,
+        "text": "net force (N)",
+        "dx": 0,
+        "dy": 12
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 12,
+    "option": 3,
+    "diagram": 0,
+    "viewBox": "0 0 125 72",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 12,
+    "option": 3,
+    "diagram": 2,
+    "viewBox": "0 -2 120 78",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 12,
+    "option": 3,
+    "diagram": 5,
+    "viewBox": "0 -3 120 80",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 12,
+    "option": 4,
+    "diagram": 0,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "2 N → 4 N",
+        "dx": 0,
+        "dy": 3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 12,
+    "option": 4,
+    "diagram": 1,
+    "viewBox": "0 0 120 77",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 13,
+    "option": 2,
+    "diagram": 0,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 2,
+        "text": "2 N",
+        "dx": 0,
+        "dy": -3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 13,
+    "option": 2,
+    "diagram": 1,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "5 N",
+        "dx": 0,
+        "dy": -3
+      },
+      {
+        "textIndex": 1,
+        "text": "5 N",
+        "dx": 0,
+        "dy": -3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 13,
+    "option": 2,
+    "diagram": 2,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "6 ÷ 2",
+        "dx": -6,
+        "dy": -13
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 13,
+    "option": 5,
+    "diagram": 0,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "2",
+        "dx": 0,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 13,
+    "option": 5,
+    "diagram": 5,
+    "viewBox": "0 0 120 73",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 14,
+    "option": 2,
+    "diagram": 1,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "on wall",
+        "dx": -9,
+        "dy": -3
+      },
+      {
+        "textIndex": 1,
+        "text": "on hand",
+        "dx": -8,
+        "dy": 1
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 14,
+    "option": 2,
+    "diagram": 3,
+    "viewBox": "-4 0 124 72",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 14,
+    "option": 2,
+    "diagram": 5,
+    "viewBox": "0 0 120 73",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 14,
+    "option": 2,
+    "diagram": 7,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "on wall",
+        "dx": -7,
+        "dy": -4
+      },
+      {
+        "textIndex": 1,
+        "text": "on hand",
+        "dx": -6,
+        "dy": 2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 14,
+    "option": 4,
+    "diagram": 0,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "on wall",
+        "dx": -12,
+        "dy": -2
+      },
+      {
+        "textIndex": 1,
+        "text": "on hand",
+        "dx": -9,
+        "dy": 1
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 14,
+    "option": 4,
+    "diagram": 1,
+    "viewBox": "0 -8 120 99",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "foot → ground",
+        "dx": 0,
+        "dy": 4
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 14,
+    "option": 4,
+    "diagram": 2,
+    "viewBox": "0 -8 120 97",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "F",
+        "dx": 0,
+        "dy": 3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 15,
+    "option": 2,
+    "diagram": 0,
+    "viewBox": "0 -9 120 93",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "W",
+        "dx": 0,
+        "dy": 4
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 15,
+    "option": 2,
+    "diagram": 2,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "small",
+        "dx": 0,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 15,
+    "option": 2,
+    "diagram": 3,
+    "viewBox": "0 -8 120 95",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "Earth",
+        "dx": 0,
+        "dy": 5
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 15,
+    "option": 2,
+    "diagram": 7,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "small",
+        "dx": 0,
+        "dy": -4
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 15,
+    "option": 2,
+    "diagram": 8,
+    "viewBox": "0 -8 120 94",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "Earth",
+        "dx": 0,
+        "dy": 7
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 15,
+    "option": 4,
+    "diagram": 0,
+    "viewBox": "0 -9 120 93",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "W",
+        "dx": 0,
+        "dy": 4
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 15,
+    "option": 4,
+    "diagram": 5,
+    "viewBox": "0 -11 120 95",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "T",
+        "dx": 0,
+        "dy": 5
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 3,
+    "diagram": 1,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "⟂",
+        "dx": -3,
+        "dy": 0
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 3,
+    "diagram": 2,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "along",
+        "dx": 0,
+        "dy": 10
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 3,
+    "diagram": 3,
+    "viewBox": "0 0 120 73",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 3,
+    "diagram": 5,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "12 N",
+        "dx": 3,
+        "dy": 1
+      },
+      {
+        "textIndex": 1,
+        "text": "4 N",
+        "dx": 0,
+        "dy": -6
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 5,
+    "diagram": 0,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "θ",
+        "dx": 7,
+        "dy": 0
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 5,
+    "diagram": 1,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "⟂",
+        "dx": -3,
+        "dy": 0
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 5,
+    "diagram": 2,
+    "viewBox": "0 0 120 80",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 5,
+    "diagram": 3,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "mg sin θ",
+        "dx": -1,
+        "dy": -4
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 5,
+    "diagram": 4,
+    "viewBox": "0 -8 123 93",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "mg cos θ",
+        "dx": 0,
+        "dy": 7
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 5,
+    "diagram": 5,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "+y",
+        "dx": -2,
+        "dy": 0
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 5,
+    "diagram": 6,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "⟂",
+        "dx": -4,
+        "dy": 0
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 5,
+    "diagram": 7,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "mg sin θ",
+        "dx": 0,
+        "dy": -5
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 16,
+    "option": 5,
+    "diagram": 9,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "+y",
+        "dx": -3,
+        "dy": 0
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 17,
+    "option": 1,
+    "diagram": 0,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "f = ?",
+        "dx": -3,
+        "dy": -11
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 17,
+    "option": 1,
+    "diagram": 2,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 2,
+        "text": "4 N",
+        "dx": 0,
+        "dy": -3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 17,
+    "option": 4,
+    "diagram": 0,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "pull",
+        "dx": 0,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 17,
+    "option": 4,
+    "diagram": 1,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "pull",
+        "dx": 0,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 17,
+    "option": 4,
+    "diagram": 5,
+    "viewBox": "0 0 120 73",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 17,
+    "option": 4,
+    "diagram": 6,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "v = 0 · stuck",
+        "dx": 0,
+        "dy": 5
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 18,
+    "option": 1,
+    "diagram": 0,
+    "viewBox": "0 0 120 73",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 18,
+    "option": 1,
+    "diagram": 1,
+    "viewBox": "0 0 120 73",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 18,
+    "option": 1,
+    "diagram": 3,
+    "viewBox": "0 -15 120 99",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "W",
+        "dx": 0,
+        "dy": 8
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 18,
+    "option": 5,
+    "diagram": 1,
+    "viewBox": "0 0 120 75",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 18,
+    "option": 5,
+    "diagram": 2,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "W",
+        "dx": 10,
+        "dy": 3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 19,
+    "option": 3,
+    "diagram": 2,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 2,
+        "text": "3 N",
+        "dx": 0,
+        "dy": -3
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 19,
+    "option": 5,
+    "diagram": 5,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 2,
+        "text": "3 N",
+        "dx": 0,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 20,
+    "option": 3,
+    "diagram": 0,
+    "viewBox": "0 -8 120 93",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "2",
+        "dx": 0,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 20,
+    "option": 5,
+    "diagram": 5,
+    "viewBox": "0 -8 120 100",
+    "moves": [
+      {
+        "textIndex": 2,
+        "text": "2 N",
+        "dx": 0,
+        "dy": -2
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 21,
+    "option": 3,
+    "diagram": 3,
+    "viewBox": "-2 -1 126 75",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 21,
+    "option": 3,
+    "diagram": 5,
+    "viewBox": "0 0 120 74",
+    "moves": []
+  },
+  {
+    "kind": "practice",
+    "day": 21,
+    "option": 3,
+    "diagram": 6,
+    "viewBox": "0 -8 120 92",
+    "moves": [
+      {
+        "textIndex": 1,
+        "text": "+y",
+        "dx": 3,
+        "dy": 0
+      }
+    ]
+  },
+  {
+    "kind": "practice",
+    "day": 21,
+    "option": 4,
+    "diagram": 5,
+    "viewBox": "0 -8 122 92",
+    "moves": [
+      {
+        "textIndex": 0,
+        "text": "Earth",
+        "dx": 8,
+        "dy": 8
+      }
+    ]
+  }
+]

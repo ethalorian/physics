@@ -1,9 +1,9 @@
 // These RPCs have been reviewed as reads. Unknown RPCs fail closed, even if
 // called via GET: PostgREST can invoke a function with either HTTP method.
 export const EXPERIENCE_READ_RPCS = new Set([
-  'economy_totals', 'economy_earning_events', 'unit_xp_report', 'student_term_xp',
+  'economy_totals', 'economy_earning_events', 'unit_xp_report', 'student_term_xp', 'student_mastery_xp', 'mastery_xp_preview',
   'lesson_reward_map', 'lesson_xp_earned', 'lesson_video_xp_status',
-  'math_daily_xp_status',
+  'math_daily_xp_status', 'attendance_effective_marks', 'attendance_elapsed_marks',
   // STABLE SELECT-only prerequisite lookups used by the student assignment lists.
   'daily_lesson_missing', 'daily_review_missing',
   'get_leaderboard', 'math_mission_leaders', 'avatar_target_level', 'avatar_gallery_page',

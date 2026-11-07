@@ -21,18 +21,23 @@ export function assessmentResults(input:{quizzes:Quiz[];courses:QuizCourse[];enr
    const choiceAvailable=!attempted&&!!input.choiceAvailable?.[quiz.id]?.includes(enrollment.student_id)
    const submission=input.submissions.find(s=>s.id===work?.submission_id&&s.quiz_id===quiz.id&&s.user_id===enrollment.student_id)
    const review=submission?input.reviews.filter(r=>r.submission_id===submission.id&&r.decision==='graded').sort((a,b)=>b.reviewed_at.localeCompare(a.reviewed_at))[0]:undefined
-   const graded=work?.state==='graded'&&!!review&&!!submission&&assessmentContent(submission.snapshot)===assessmentContent(quiz)
+   const released=work?.state==='graded'?review:undefined
+   const comparableReview=released&&submission&&assessmentContent(submission.snapshot)===assessmentContent(quiz)?released:undefined
+   // The assignment gradebook follows the released attempt even after the quiz is edited.
+   // Question comparisons still require the submitted and current versions to match.
+   const assignmentGrade=input.groupCopies===false && released?.earned!=null && released.possible!=null && released.possible>0
+    ? released : undefined
    const questionScores=quiz.questions.map((q,i)=>{
-    if(!graded)return null
+    if(!comparableReview)return null
     const snapshot=submission!.snapshot.questions[i]
     if(!snapshot)return null
-    const score=snapshot.kind==='choice'?(submission!.answers[snapshot.id]===String(snapshot.correct_index)?snapshot.points:0):review!.scores[snapshot.id]
+    const score=snapshot.kind==='choice'?(submission!.answers[snapshot.id]===String(snapshot.correct_index)?snapshot.points:0):comparableReview.scores[snapshot.id]
     return typeof score==='number'&&Number.isFinite(score)?score:null
    })
-   const possible=quiz.questions.reduce((n,q)=>n+q.points,0)
-   const complete=graded&&questionScores.every(score=>score!==null)
-   const earned=complete?questionScores.reduce<number>((n,score)=>n+(score??0),0):null
-   return [{...enrollment,quiz_id:quiz.id,state:work?.state??'not_started',choiceExempt,choiceAvailable,earned,possible,percent:earned===null?null:100*earned/possible,questionScores,ratings:graded?review!.ratings:{},gradeMode:quiz.grade_mode,gradeValue:graded?review!.grade_value:null,submittedAt:submission?.submitted_at??null}]
+   const possible=assignmentGrade?.possible??quiz.questions.reduce((n,q)=>n+q.points,0)
+   const complete=comparableReview&&questionScores.every(score=>score!==null)
+   const earned=assignmentGrade?.earned??(complete?questionScores.reduce<number>((n,score)=>n+(score??0),0):null)
+   return [{...enrollment,quiz_id:quiz.id,state:work?.state??'not_started',choiceExempt,choiceAvailable,earned,possible,percent:earned===null?null:100*earned/possible,questionScores,ratings:comparableReview?.ratings??{},gradeMode:assignmentGrade?.grade_mode??quiz.grade_mode,gradeValue:(assignmentGrade??comparableReview)?.grade_value??null,submittedAt:submission?.submitted_at??null}]
   })
   const classes=input.courses.filter(c=>quizzes.some(q=>q.course_id===c.id)).map(course=>{
    const rows=students.filter(s=>s.course_id===course.id),scores=rows.flatMap(s=>s.percent===null?[]:[s.percent]).sort((a,b)=>a-b),mid=Math.floor(scores.length/2)

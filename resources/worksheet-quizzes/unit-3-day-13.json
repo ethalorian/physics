@@ -3,13 +3,13 @@
   "unit": 3,
   "day": 13,
   "title": "Momentum analysis: put it together",
-  "target": "Use a model to compare a deflection option and its limits.",
+  "target": "Use a diagram or calculation to compare a deflection option. Explain where your prediction stops working.",
   "criteria": [
     "Compute the required change before evaluating an option.",
     "Keep impulse, velocity change and displacement distinct.",
-    "Communicate assumptions with the numerical result."
+    "Give the numerical result and state what the calculation treats as true."
   ],
-  "source_sha256": "64674f8d5a31968d46e5af0c538296bb3461b3319bd645272012478f0c70d6b2",
+  "source_sha256": "d2f68d23037623900f637870db86bafcf32a276bc7d423abff816421cb707150",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.512Z",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A proposal halves delivered impulse but doubles lead time for the same target. In the constant-drift model, compare offsets.",
+      "prompt": "A proposal delivers half as much impulse to the same target but allows twice as much time before arrival. Treat the added sideways velocity as constant. How do the sideways distances compare?",
       "options": [
         "The new offset halves.",
         "Equal.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A proposal halves delivered impulse but doubles lead time for the same target. In the constant-drift model, compare offsets.",
+      "prompt": "A proposal delivers half as much impulse to the same target but allows twice as much time before arrival. Treat the added sideways velocity as constant. How do the sideways distances compare?",
       "options": [
         "The new offset halves.",
         "Equal.",

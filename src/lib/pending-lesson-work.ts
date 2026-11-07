@@ -8,6 +8,7 @@ type Target = { id: string; slug: string; lesson_id: string | null }
 type Saved = { user_id: string; lesson_id: string; block_id: string; block_type: string | null; target_id: string | null; created_at: string; draft?: string | null }
 type Review = LessonMasteryReview
 type Submission = { user_id: string; lesson_id: string }
+export type PendingMasteryReads = { responses: () => Promise<Saved[]>; reviews: () => Promise<Review[]> }
 const object = (v: unknown): Record<string, unknown> => v && typeof v === 'object' && !Array.isArray(v) ? v as Record<string, unknown> : {}
 
 /** Exact reviewed versions clear only their own lesson and target, never another lesson's work. */
@@ -46,12 +47,13 @@ export async function getPendingSavedTargets(studentIds: string[], lessons: Less
   return (await getPendingMasteryWork(studentIds, lessons, targets, carriers, submissions)).pending
 }
 
-export async function getPendingMasteryWork(studentIds: string[], lessons: Lesson[], targets: Target[], carriers: Map<string, string[]>, submissions: Submission[], pendingSubmissions: (Submission & { id: string })[] = []) {
+export async function getPendingMasteryWork(studentIds: string[], lessons: Lesson[], targets: Target[], carriers: Map<string, string[]>, submissions: Submission[], pendingSubmissions: (Submission & { id: string })[] = [], reads?: PendingMasteryReads) {
   const assessedSubmissionIds = new Set<string>()
   if (!studentIds.length || !lessons.length) return { pending: {}, reviewQueue: [] as MasteryReviewItem[], assessedSubmissionIds }
   const lessonIds = lessons.map(l => l.id), rows: Saved[] = [], reviews: Review[] = []
   // Read metadata only for answers; drawings and written responses are loaded when the desk opens.
-  for (let from = 0; ; from += 500) {
+  if (reads) rows.push(...await reads.responses())
+  else for (let from = 0; ; from += 500) {
     const { data, error } = await supabaseAdmin.from('block_responses')
       .select('id,user_id,lesson_id,block_id,block_type,target_id,created_at,draft:response->>draft')
       .in('user_id', studentIds).in('lesson_id', lessonIds).order('id').range(from, from + 499)
@@ -60,7 +62,8 @@ export async function getPendingMasteryWork(studentIds: string[], lessons: Lesso
     if ((data ?? []).length < 500) break
   }
   if (!rows.length && !pendingSubmissions.length) return { pending: {}, reviewQueue: [] as MasteryReviewItem[], assessedSubmissionIds }
-  for (let from = 0; ; from += 250) {
+  if (reads) reviews.push(...await reads.reviews())
+  else for (let from = 0; ; from += 250) {
     const { data, error } = await supabaseAdmin.from('mastery_evidence_reviews')
       .select('id,user_id,lesson_id,target_id,evidence')
       .in('user_id', studentIds).in('lesson_id', lessonIds).order('id').range(from, from + 249)

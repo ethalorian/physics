@@ -413,7 +413,7 @@ export const waveOpticsLessons:Record<string,LessonContent> = {
     },
     "check": {
       "title": "Predict the wave pattern",
-      "prompt": "Why does the two-source model add intensities?",
+      "prompt": "Why does this two-source calculation add intensities?",
       "options": [
         "Intensity can be negative at dark points",
         "The two sources are mutually incoherent",
@@ -466,7 +466,7 @@ export const waveOpticsLessons:Record<string,LessonContent> = {
     },
     "check": {
       "title": "Predict the wave pattern",
-      "prompt": "At Brewster’s angle, which reflected component vanishes in the ideal dielectric model?",
+      "prompt": "At Brewster’s angle, which reflected component vanishes for an ideal dielectric?",
       "options": [
         "The component polarized in the plane of incidence",
         "Both reflected polarization components at all angles",
@@ -510,7 +510,7 @@ export const waveOpticsLessons:Record<string,LessonContent> = {
     ],
     "worked": {
       "title": "Build the wave explanation",
-      "prompt": "Use Δn = 0.01, t = 10 μm, and λ₀ = 500 nm. Estimate phase delay.",
+      "prompt": "1. Use Δn = 0.01, t = 10 μm, and λ₀ = 500 nm.\n2. Estimate phase delay.",
       "reasoning": "The optical path difference is 0.10 μm, so φ = 2π(0.10/0.50) = 0.4π radians. A reference can convert that delay into intensity contrast."
     },
     "check": {

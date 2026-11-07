@@ -18,7 +18,29 @@ test('completion includes pending submissions and excludes excused, archived, op
 })
 test('class average and released count exclude drafts and retain zero',()=>{
   const stats=assignmentStats(activity({a:cell(10,10),b:cell(0,10),c:{state:'submitted',label:'Pending',needsReview:true}}))
-  assert.deepEqual(stats,{assigned:3,completed:3,released:2,pending:1,average:50})
+  assert.deepEqual(stats,{assigned:3,completed:3,released:2,scored:2,pending:1,average:50})
+})
+test('released counts each assigned student who received a result, even without points', () => {
+  const reviewed: ResultCell = { state: 'reviewed', label: 'Teacher reviewed', needsReview: false }
+  const pending: ResultCell = { state: 'submitted', label: 'Submitted', needsReview: true }
+  const stats = assignmentStats(activity({
+    mastery: reviewed,
+    feedback: { ...reviewed, feedback: 'Well explained' },
+    score: { ...cell(0, 10), reviewReleasedAt: '2026-10-20' },
+    newAttempt: { ...pending, reviewReleasedAt: '2026-10-21' },
+    suggestion: { ...pending, assessment: 'ready' },
+    revision: { state: 'returned', label: 'Revise', needsReview: false, releasedAt: '2026-10-22' },
+    paper: { state: 'completed', label: 'Handed in', needsReview: false },
+    excused: { ...reviewed, state: 'excused' },
+    optional: { ...reviewed, label: 'Not chosen' },
+  }))
+  assert.deepEqual(stats, { assigned: 7, completed: 7, released: 4, scored: 1, pending: 2, average: 0 })
+})
+test('two returned choice activities count once, without creating an Aspen score for the choice', () => {
+  const submitted: ResultCell = { state: 'submitted', label: 'Submitted', needsReview: true }
+  const evidence = activity({ a: cell(10, 10), b: cell(10, 10) })
+  const choice = activity({ a: submitted, b: { ...submitted, label: 'Not chosen' } }, { kind: 'choice', evidenceActivities: [evidence, evidence] })
+  assert.deepEqual(assignmentStats(choice), { assigned: 1, completed: 1, released: 1, scored: 0, pending: 1, average: null })
 })
 test('plus/minus letters match rounded display and numeric copies exclude percent symbols',()=>{
   assert.equal(letterGrade(89.96),'A-');assert.equal(letterGrade(89.94),'B+');assert.equal(letterGrade(0),'F');assert.equal(letterGrade(97),'A+')

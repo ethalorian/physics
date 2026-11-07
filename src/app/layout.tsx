@@ -12,6 +12,8 @@ import AccessGate from '@/components/AccessGate'
 import AppPageFrame from '@/components/AppPageFrame'
 import RoleExperienceBar from '@/components/RoleExperienceBar'
 import ExperienceRequestBoundary from '@/components/ExperienceRequestBoundary'
+import BrowserPerformance, { ViewPerformance } from '@/components/BrowserPerformance'
+import { Suspense } from 'react'
 import { QuickTestAccountSwitcher } from '@/components/QuickTestAccountSwitcher'
 import { ViewModeProvider } from '@/contexts/ViewModeContext'
 import { SimulationProvider } from '@/contexts/SimulationContext'
@@ -59,6 +61,8 @@ export default function RootLayout({
 
         <AuthProvider>
           <ExperienceRequestBoundary />
+          <BrowserPerformance />
+          <Suspense fallback={null}><ViewPerformance /></Suspense>
           <RoleExperienceBar />
           <ToastProvider>
             <ViewModeProvider>

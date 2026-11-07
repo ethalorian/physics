@@ -12,7 +12,7 @@ import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
 import { getStudentLessonWindowStatuses } from '@/lib/lesson-windows'
-import { getStudentProgram } from '@/lib/program'
+import { studentProgram as getStudentProgram } from '@/lib/student-context'
 import { targetValue, MasteryRecord, Domain } from '@/data/curriculum-types'
 
 // GET /api/home

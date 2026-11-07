@@ -27,7 +27,7 @@ const plain= node => {
 };
 const slides = [...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m, i) => ({
   number: i + 1, title: m[1].match(/data-label="([^"]+)"/)[1],
-  text: plain(p5.parseFragment(m[0])).replace(/\s+/g, ' ').trim(),
+  text: require('../foundation-groups/slide-language.cjs').companion(p5.parseFragment(m[0])),
 }));
 const vendor = 'resources/foundations/day-one/vendor';
 const libraries = [

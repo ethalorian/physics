@@ -3,13 +3,13 @@
   "unit": 1,
   "day": 8,
   "title": "Choose a motion method",
-  "target": "Choose a motion relationship and justify its assumptions.",
+  "target": "Choose a motion relationship. Explain what must be true for you to use it.",
   "criteria": [
     "Choose a relationship using the known quantities.",
     "Show linked calculations with units and directions.",
     "State when constant velocity or acceleration applies."
   ],
-  "source_sha256": "42ccdd57a28fe62c694dc53e9e3e7416545c3735952963e5b2c9233f1affb7bb",
+  "source_sha256": "435f50fc0cb4632452d1aa2ef967dfbe2a0a58a6306640f84825b6f3e5538aed",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.476Z",

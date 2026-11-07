@@ -9,7 +9,7 @@
     "Check frequency and wavelength changes at fixed speed.",
     "Distinguish medium speed from oscillation rate."
   ],
-  "source_sha256": "d88c673bd91653f16c31815aa5239de808431e00b885badf0ead3498e17d8281",
+  "source_sha256": "17b8a3b7725bc338b8978f46241dc904cdfceb30ad83190c5431f6e224b7a83d",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.544Z",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A driver is adjusted to oscillate faster while string tension and mass per length remain fixed. In the ideal string model, what changes?",
+      "prompt": "A driver oscillates faster. String tension and mass per length stay fixed. For an ideal string, what changes?",
       "options": [
         "Propagation speed must increase by the same factor.",
         "Frequency stays fixed and only amplitude can change.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A driver is adjusted to oscillate faster while string tension and mass per length remain fixed. In the ideal string model, what changes?",
+      "prompt": "A driver oscillates faster. String tension and mass per length stay fixed. For an ideal string, what changes?",
       "options": [
         "Frequency increases and wavelength decreases; propagation speed stays fixed.",
         "Frequency stays fixed and only amplitude can change.",

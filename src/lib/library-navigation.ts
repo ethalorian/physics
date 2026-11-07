@@ -1,6 +1,6 @@
 export const LIBRARY_SECTIONS = [
   { key: 'lessons', label: 'Lessons & activities', description: 'Browse reusable video lessons, classroom activities, and practice.' },
-  { key: 'interactive', label: 'Simulations & vocabulary', description: 'Explore models, guided investigations, and vocabulary practice.' },
+  { key: 'interactive', label: 'Simulations & vocabulary', description: "Explore simulations, guided investigations, and vocabulary practice." },
   { key: 'materials', label: 'Reading & media', description: 'Find textbook chapters and upload materials for your lessons.' },
   { key: 'curriculum', label: 'Curriculum tools', description: 'Check curriculum coverage and prepare shared review materials.', adminOnly: true },
 ] as const

@@ -83,11 +83,11 @@ test('original timers preserve pause/resume, extension, reset and one completion
 test('navigation bridge ignores foreign senders, channels and out-of-range requests', () => {
   const listeners = {}, messages = [], navigated = [], parent = {postMessage: (...args) => messages.push(args)};
   const stage = {index: 7, length: 29, goTo: index => navigated.push(index)};
-  const window = {parent, addEventListener: (type, listener) => {listeners[type] = listener;}};
+  const window = {parent, addEventListener: (type, listener) => {(listeners[type] ||= []).push(listener);}};
   const document = {referrer: 'https://lesson.example/interactive-assignments/day-1-foundation-briefing', querySelector: () => stage, addEventListener: () => {}};
   const bridge=nodes.filter(n=>n.tagName==='script'&&!attr(n,'type')).map(n=>p5.serialize(n)).find(code=>code.includes("const channel = 'physics-day-two-slides-v1'"));
-  vm.runInNewContext(bridge, {window, document, URL});
-  const send = (source, origin, data) => listeners.message({source, origin, data});
+  vm.runInNewContext(bridge, {window, document, URL, MutationObserver: class {observe(){} disconnect(){}}});
+  const send = (source, origin, data) => listeners.message.forEach(listener => listener({source, origin, data}));
   const valid = {channel: 'physics-day-two-slides-v1', type: 'navigate', index: 8};
   send({}, 'https://lesson.example', valid);
   send(parent, 'https://other.example', valid);

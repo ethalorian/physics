@@ -1,4 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase'
+import { observedLookup, requestRead } from '@/lib/request-runtime'
+import { lookupDatabase } from '@/lib/lookup-database'
 
 // DB-backed role grants. The hardcoded ADMIN_EMAILS in permissions.ts stay the
 // source of truth for ADMINS (so the owner can never be locked out); this table
@@ -10,13 +12,15 @@ export type GrantedRole = 'teacher' | 'admin' | 'observer'
 
 export async function getGrantedRole(email: string): Promise<GrantedRole | null> {
   if (!email) return null
-  const { data } = await supabaseAdmin
-    .from('user_roles')
-    .select('role')
-    .eq('email', email)
-    .maybeSingle()
-  const r = (data as { role?: string } | null)?.role
-  return r === 'teacher' || r === 'admin' || r === 'observer' ? r : null
+  return requestRead(JSON.stringify(['grantedRole', email]), async () => {
+    const { data } = await observedLookup('roles', () => lookupDatabase
+      .from('user_roles')
+      .select('role')
+      .eq('email', email)
+      .maybeSingle())
+    const r = (data as { role?: string } | null)?.role
+    return r === 'teacher' || r === 'admin' || r === 'observer' ? r : null
+  })
 }
 
 // Record a pending teacher-access request (a district staff member tried to sign

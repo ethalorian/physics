@@ -9,7 +9,7 @@
     "Preserve moving-part clearance during decoration.",
     "Relate a design revision to an energy transfer or force."
   ],
-  "source_sha256": "30c1dd2acf805dd1d9fb8f79457856d97a09460493c48e17d3f5163f4edc0705",
+  "source_sha256": "ed40c46f51cbf49dc1e583b230680625ae0d379f8d3379f7e2b1f0e80110e319",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.577Z",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "A model car’s mass changes from 0.30 kg to 0.36 kg. If net forward force remains 0.90 N, what happens to acceleration?",
+      "prompt": "A small classroom car’s mass changes from 0.30 kg to 0.36 kg. The net forward force stays at 0.90 N. What happens to acceleration?",
       "options": [
         "It rises from 3.0 to 3.6 m/s².",
         "It stays 0.90 m/s².",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "After a decoration is moved away from a wheel, the car travels farther in a coast test. Which explanation is consistent with that evidence?",
+      "prompt": "A decoration is moved away from a wheel. The car then travels farther in a coast test. Which explanation fits this observation?",
       "options": [
         "Energy conservation stopped applying.",
         "Less rubbing may transfer less mechanical energy into thermal energy.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "A model car’s mass changes from 0.30 kg to 0.36 kg. If net forward force remains 0.90 N, what happens to acceleration?",
+      "prompt": "A small classroom car’s mass changes from 0.30 kg to 0.36 kg. The net forward force stays at 0.90 N. What happens to acceleration?",
       "options": [
         "It becomes zero because mass increased.",
         "It stays 0.90 m/s².",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "After a decoration is moved away from a wheel, the car travels farther in a coast test. Which explanation is consistent with that evidence?",
+      "prompt": "A decoration is moved away from a wheel. The car then travels farther in a coast test. Which explanation fits this observation?",
       "options": [
         "Less rubbing may transfer less mechanical energy into thermal energy.",
         "Friction vanished everywhere.",

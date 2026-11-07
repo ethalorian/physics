@@ -266,7 +266,7 @@ export const MATH_TEACHING_GUIDES: Record<string, TeachingGuide> = {
     "examples": [
       {
         "title": "Farther from a source",
-        "prompt": "Under an inverse-square model, intensity is 36 units at 2 m. What is it at 6 m?",
+        "prompt": "With an inverse-square relationship, intensity is 36 units at 2 m. What is it at 6 m?",
         "steps": [
           {
             "action": "Find f = 6/2 = 3.",
@@ -285,7 +285,7 @@ export const MATH_TEACHING_GUIDES: Record<string, TeachingGuide> = {
       },
       {
         "title": "Closer to a source",
-        "prompt": "Under the same model, what happens when distance is halved?",
+        "prompt": "With the same relationship, what happens when distance is halved?",
         "steps": [
           {
             "action": "Use f = 1/2.",
@@ -753,7 +753,7 @@ export const MATH_TEACHING_GUIDES: Record<string, TeachingGuide> = {
       },
       {
         "title": "A negative value squared",
-        "prompt": "If v = −3 m/s, evaluate v².",
+        "prompt": "If v = −3 m/s, calculate v².",
         "steps": [
           {
             "action": "Write v² = (−3 m/s)² = 9 m²/s².",

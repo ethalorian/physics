@@ -3,13 +3,13 @@
   "unit": 7,
   "day": 17,
   "title": "Plan the electric car",
-  "target": "Use circuit and mechanical evidence to plan a controlled motor-car test.",
+  "target": "Use circuit and motion measurements to plan a motor-car test where you change one thing at a time.",
   "criteria": [
     "Draw the battery-switch-motor circuit.",
     "Predict effects of an open switch and a changed connection.",
     "Plan one controlled performance comparison."
   ],
-  "source_sha256": "e7472951a452f8ed217d9982014e0e8dc30d7eabb1aa11ff8563c328ca0ce808",
+  "source_sha256": "0a619aa885622cc3b7cbd02bbc92804e1bace6fad1e298f7485b24222f48c223",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.570Z",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "A car’s switch is closed but one return wire is loose and disconnected. Why will the simple model not run?",
+      "prompt": "A classroom car’s switch is closed, but one return wire is loose and disconnected. Why will the car not run?",
       "options": [
         "A closed switch guarantees current regardless of the other wires.",
         "A return wire is never needed.",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "In an ideal simple permanent-magnet DC motor model, the supply polarity is reversed. What change is expected?",
+      "prompt": "In an ideal permanent-magnet DC motor, the supply polarity is reversed. What change is expected?",
       "options": [
         "The current is converted into mass.",
         "The motor torque and rotation direction reverse.",
@@ -136,7 +136,7 @@
     {
       "prompt": "Example runs over 3 m take 5.0, 5.2, and 4.8 s with one wheel set. What should be planned for a fair comparison with a second set?",
       "options": [
-        "Measure repeated times over the same 3 m under the same test conditions.",
+        "Measure repeated times over the same 3 m under the same test setups.",
         "Select a result before testing.",
         "Record just a guessed time.",
         "Use a different downhill course for the second set."
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "A car’s switch is closed but one return wire is loose and disconnected. Why will the simple model not run?",
+      "prompt": "A classroom car’s switch is closed, but one return wire is loose and disconnected. Why will the car not run?",
       "options": [
         "The full circuit is open despite the closed switch.",
         "A closed switch guarantees current regardless of the other wires.",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "In an ideal simple permanent-magnet DC motor model, the supply polarity is reversed. What change is expected?",
+      "prompt": "In an ideal permanent-magnet DC motor, the supply polarity is reversed. What change is expected?",
       "options": [
         "The battery voltage must become zero.",
         "The motor torque and rotation direction reverse.",
@@ -273,7 +273,7 @@
         "Use a different downhill course for the second set.",
         "Select a result before testing.",
         "Record just a guessed time.",
-        "Measure repeated times over the same 3 m under the same test conditions."
+        "Measure repeated times over the same 3 m under the same test setups."
       ],
       "correct_index": 3,
       "guide": "Consistent distance and conditions plus repeated measurements support the comparison.",

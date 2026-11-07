@@ -1,0 +1,22 @@
+// Explicit slide-by-slide teaching topic choices. Re-run and review if a deck changes.
+const fs=require('fs');
+const mappings={
+ one:'evidence evidence evidence evidence evidence evidence pattern evidence evidence evidence pattern pattern evidence evidence pattern evidence evidence evidence evidence evidence pattern evidence evidence position evidence evidence',
+ two:'path path path path path path path path path path path path path position path path path position path path path vector vector vector path position path path path',
+ three:'rate lab lab lab lab pt rate path rate rate rate rate pt rate units rate rate rate rate pt rate pt pt pt pt rate rate pt pt pt pt pt',
+ four:'vt vt vt vector vt vt vt area vt vt vt area vt vector vector vector angle area components components components angle uncertainty angle components components predict area vt vt',
+ five:'predict predict predict predict predict predict units uncertainty predict position predict predict predict predict predict predict uncertainty uncertainty uncertainty position predict predict uncertainty uncertainty evidence predict uncertainty uncertainty predict predict',
+ six:'vector vector vector vector vector vector path vector vector vector vector vector components components components components components components angle angle components components vector angle vector vector angle angle components vector',
+ seven:'acceleration acceleration acceleration acceleration acceleration acceleration vt acceleration acceleration acceleration acceleration acceleration vertical signs acceleration signs vt signs signs equations equations signs acceleration signs signs signs gravity gravity gravity acceleration',
+ eight:'equations equations equations equations acceleration equations acceleration area equations equations equations equations predict equations equations equations equations signs area predict equations equations equations equations equations vertical vertical equations equations equations',
+ nine:'inertia inertia inertia inertia vt inertia inertia inertia inertia inertia inertia inertia inertia inertia inertia inertia inertia inertia inertia inertia inertia inertia inertia interaction gravity inertia inertia interaction data inertia inertia',
+ ten:'interaction lab lab lab lab interaction interaction gravity area interaction interaction interaction fbd interaction interaction interaction interaction interaction fbd fbd weight weight weight ramp gravity interaction gravity fbd interaction interaction interaction interaction interaction interaction',
+ eleven:'masslab masslab lab lab lab masslab gravity vt net masslab masslab masslab vt masslab masslab masslab masslab data data lab lab masslab data masslab masslab gravity data acceleration acceleration data data data net masslab',
+ twelve:'forcelab forcelab lab lab lab forcelab gravity vt forcelab net forcelab forcelab vt forcelab forcelab forcelab forcelab forcelab data data weight lab forcelab data net net net data data slopeMass forcelab net net forcelab',
+ thirteen:'net net net net vertical net net net net net net net net fbd fbd net net net net net net signs net acceleration signs inertia net net signs net net',
+ fourteen:'third third lab lab lab third gravity vt third third third third third third third third third third data third third lab data third third third third data third third third third third third',
+ fifteen:'fbd fbd fbd gravity ramp net fbd fbd fbd fbd fbd fbd fbd fbd fbd vertical interaction vertical fbd components fbd fbd fbd gravity interaction fbd fbd fbd gravity fbd fbd',
+ sixteen:'net net net gravity pt components ramp net ramp components net net ramp ramp net ramp ramp ramp ramp ramp ramp fbd ramp ramp ramp signs signs components components net net',
+};
+const packs=JSON.parse(fs.readFileSync('src/data/foundations/teaching-guide-topics.json'));const out={};for(const [day,list]of Object.entries(mappings)){const slides=JSON.parse(fs.readFileSync(`src/data/foundations/day-${day}-slides.json`));const topics=list.split(' ');if(topics.length!==slides.length)throw Error(`${day}: ${topics.length} topics vs ${slides.length} slides`);out['day-'+day]=slides.map((slide,i)=>{if(!packs[topics[i]])throw Error(topics[i]);return {number:slide.number,title:slide.title,topic:slide.title==='Ask: steady or changing?'?'pattern':topics[i]}})}
+fs.writeFileSync('src/data/foundations/teaching-guide-map.json',JSON.stringify(out,null,2)+'\n');console.log(Object.values(out).reduce((n,s)=>n+s.length,0),'slides mapped');

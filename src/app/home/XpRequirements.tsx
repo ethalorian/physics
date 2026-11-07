@@ -49,9 +49,11 @@ export default function XpRequirements({ full = false }: { full?: boolean }) {
         <p role="status" className="mt-3 font-semibold">{remaining === 0 ? `XP minimum met — eligible for ${term.grade_points} term-average points.` : `Earn ${remaining?.toLocaleString()} more XP to meet the minimum for ${term.grade_points} term-average points.`}</p>
       </> : <p className="mt-4 rounded-xl border border-reward/40 p-4">Your teacher hasn’t published the term minimum yet. Your unit earnings appear below; term-average eligibility will appear once the rule is published.</p>}
       <p className="mt-3 text-sm">XP you spend on rewards still counts toward the minimum. This tracks earned XP, not your wallet balance.</p>
-      <div className="mt-5 border-t border-reward/40 pt-4"><p className="text-sm font-bold">{data.track === 'honors' ? 'Honors' : 'Standard'} unit earning plan · {data.unitTarget} XP</p><p className="mt-1 text-sm">{data.lessonTarget} from lesson evidence + {data.mathTarget} from math activities. Extra practice may earn more.</p>
-      {unit && <div className="mt-3"><strong>{unit.name}</strong><p className="mt-1 text-sm">{unit.lesson_earned + unit.math_earned} XP earned · {Math.max(0,data.unitTarget-unit.lesson_earned-unit.math_earned)} XP to the unit target</p></div>}</div>
+      <details className="mt-5"><summary className="cursor-pointer font-semibold">Wallet earning plan (separate from the graded unit floor)</summary>
+      <div className="mt-5 border-t border-reward/40 pt-4"><p className="text-sm font-bold">{data.track === 'honors' ? 'Honors' : 'Standard'} wallet plan · {data.unitTarget} XP</p><p className="mt-1 text-sm">{data.lessonTarget} from lesson evidence + {data.mathTarget} from math activities. Extra practice may earn more.</p>
+      {unit && <div className="mt-3"><strong>{unit.name}</strong><p className="mt-1 text-sm">{unit.lesson_earned + unit.math_earned} XP earned · {Math.max(0,data.unitTarget-unit.lesson_earned-unit.math_earned)} XP to the wallet plan</p></div>}</div>
       {full && <div className="mt-6 space-y-3">{data.units.map(u => <div key={u.id} className="rounded-xl border border-reward/40 p-4"><h3 className="font-bold">{u.name}</h3><p className="mt-1 text-sm">{u.evidence_count ? `${u.lesson_earned} / ${u.lesson_available} lesson XP · ${u.math_earned} / ${u.math_target} planned math XP` : 'Lesson rewards will appear when this unit is published.'}</p></div>)}</div>}
+      </details>
     </>}
   </section>
 }

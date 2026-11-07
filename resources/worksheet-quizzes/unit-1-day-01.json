@@ -5,11 +5,11 @@
   "title": "Notice, question, predict",
   "target": "Use observations to make a prediction that can be tested.",
   "criteria": [
-    "Separate stated evidence from unsupported claims.",
-    "Extend a position pattern and state an assumption.",
+    "Separate supplied facts from statements that have no support.",
+    "Extend a position pattern and state what your prediction treats as true.",
     "Name an observation that could test the prediction."
   ],
-  "source_sha256": "cc62e524e909a32baae9d70e3adf588cd9f1dbadcb4d63e478d3b561cdfe8f29",
+  "source_sha256": "a3f9e551f58514630fa8173b2d73f5a309e15149b9d5e5ff3a863f97e2331b39",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.447Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "A report states that repeated observations show an object getting closer, but its future path is uncertain. Which claim is supported?",
+      "prompt": "Repeated observations show an object getting closer. Its future path is still uncertain. Which statement do these observations support?",
       "options": [
         "Its speed must be constant forever.",
         "It will certainly collide with Earth.",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "A model predicts 24 m at 4 s. Which new observation most directly tests that prediction?",
+      "prompt": "A calculation predicts that an object will be at 24 m at 4 s. Which new observation most directly checks that prediction?",
       "options": [
         "The rover’s paint color.",
         "A measured position and uncertainty at 4 s.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A constant-velocity model predicts 30 m, but a calibrated measurement is 26 ± 1 m at the same time. What should happen next?",
+      "prompt": "A constant-velocity calculation predicts 30 m, but a calibrated measurement is 26 ± 1 m at the same time. What should happen next?",
       "options": [
         "Conclude that the object must have vanished.",
         "Declare the prediction confirmed exactly.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "A report states that repeated observations show an object getting closer, but its future path is uncertain. Which claim is supported?",
+      "prompt": "Repeated observations show an object getting closer. Its future path is still uncertain. Which statement do these observations support?",
       "options": [
         "It will certainly collide with Earth.",
         "Its speed must be constant forever.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "A model predicts 24 m at 4 s. Which new observation most directly tests that prediction?",
+      "prompt": "A calculation predicts that an object will be at 24 m at 4 s. Which new observation most directly checks that prediction?",
       "options": [
         "A photograph with no scale or time.",
         "A measured position and uncertainty at 4 s.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A constant-velocity model predicts 30 m, but a calibrated measurement is 26 ± 1 m at the same time. What should happen next?",
+      "prompt": "A constant-velocity calculation predicts 30 m, but a calibrated measurement is 26 ± 1 m at the same time. What should happen next?",
       "options": [
         "Declare the prediction confirmed exactly.",
         "Conclude that the object must have vanished.",

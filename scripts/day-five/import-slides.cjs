@@ -10,8 +10,8 @@ const snapshots=[
     "after": 9,
     "page": 17,
     "file": "page-01.webp",
-    "y": 608,
-    "height": 556,
+    "y": 604,
+    "height": 560,
     "title": "Choose the axes before calculating",
     "alt": "The classroom model starts at positive 120 million kilometers on the x axis with Earth at the origin. Toward-Earth motion has negative x velocity. Maz and Nadia explain that changing axes changes signs, not the motion.",
     "body": "Day 5 uses the novel’s fixed axes: +x points toward the starting location; +y is sideways.",
@@ -22,8 +22,8 @@ const snapshots=[
     "after": 15,
     "page": 18,
     "file": "page-02.webp",
-    "y": 308,
-    "height": 752,
+    "y": 305,
+    "height": 757,
     "title": "A negative coordinate is not a collision",
     "alt": "Eli asks whether negative x means a collision. Maz points to the positive y coordinate. The straight model path starts at 120 million kilometers on x and ends at negative 11.36 million x and positive 35.20 million y, passing above Earth.",
     "body": "Use both coordinates to describe the endpoint. The six-month separation is about 37 million km.",
@@ -34,8 +34,8 @@ const snapshots=[
     "after": 21,
     "page": 19,
     "file": "page-03.webp",
-    "y": 631,
-    "height": 472,
+    "y": 305,
+    "height": 798,
     "title": "The window is part of the answer",
     "alt": "Eli and Maz discuss measurement limits. A rectangle around the predicted endpoint extends 3.25 million kilometers from the center in each coordinate. It represents bounds on x and y, not an impact probability.",
     "body": "50,000 + 0.200 × 16,000,000 = 3,250,000 km in each coordinate.",
@@ -47,7 +47,7 @@ const snapshots=[
     "page": 20,
     "file": "page-04.webp",
     "y": 0,
-    "height": 537,
+    "height": 809,
     "title": "Test what the model leaves out",
     "alt": "Mr. Antocci says the window covers only the measurement limits included. Nadia asks about the Sun’s gravity. Maz circles constant velocity because gravity changes velocity and the straight-line model leaves it out.",
     "body": "Measurement bounds do not automatically include missing physics.",
@@ -59,7 +59,7 @@ function comic(s){return `<section data-label="${s.title}" class="foundation-com
  <div style="font:24px 'IBM Plex Mono',monospace;letter-spacing:2px;color:#a9a7ff;">2026-XJ · The Window · Graphic novel, page ${s.page}</div>
  <h2 style="font-size:64px;line-height:1.1;font-weight:500;margin:22px 0 30px;">${s.title}</h2>
  <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:52px;align-items:center;flex:1;min-height:0;">
-  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" style="width:100%;height:auto;max-height:610px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-05-v1/${s.file}" width="1024" height="1536"/></svg>
+  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;justify-self:center;max-width:${Math.floor(610*1024/s.height)}px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-05-v1/${s.file}" width="1024" height="1536"/></svg>
   <div><p style="font-size:32px;line-height:1.4;margin:0 0 28px;">${s.body}</p><p style="font-size:38px;line-height:1.25;margin:0;">${s.question}</p></div>
  </div><div style="font:24px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:28px;">${s.work} · Write your own answer in Work.</div>
  <footer style="font:20px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:22px;">Fictional story · Original artwork · Day 5</footer></section>`;}
@@ -85,7 +85,7 @@ let number=0;
 html=html.replace(/<section\b[^>]*>[\s\S]*?<\/section>/g,section=>{number++;return section.replace(/data-screen-label="[^"]*"/,`data-screen-label="${String(number).padStart(2,'0')}"`).replace(/Antocci Physics · \d{2} \/ 29/g,`Antocci Physics · ${String(number).padStart(2,'0')} / 30`);});
 html = require('../foundation-groups/slide-copy.cjs')(html);
 const plain=n=>n.nodeName==='#text'?n.value.replace(/\{\{[^}]+\}\}/g,''):['button','script','style','image'].includes(n.tagName)?'':n.tagName==='sc-if'&&n.attrs.some(a=>/q\dOpen/.test(a.value))?'':(n.childNodes||[]).map(plain).join(' ');
-const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,title:m[1].match(/data-label="([^"]+)"/)[1],text:plain(p5.parseFragment(m[0])).replace(/\s+/g,' ').trim()}));
+const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,comicPage:m[0].match(/<image\b[^>]*\bhref="(\/comics\/2026-xj\/[^"]+\.webp)"/)?.[1],title:m[1].match(/data-label="([^"]+)"/)[1],text: require('../foundation-groups/slide-language.cjs').companion(p5.parseFragment(m[0]))}));
 const vendor='resources/foundations/day-one/vendor';
 const libraries=[['react.production.min.js','DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z'],['react-dom.production.min.js','gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1']].map(([file,integrity])=>{const bytes=fs.readFileSync(path.join(vendor,file));if(crypto.createHash('sha384').update(bytes).digest('base64')!==integrity)throw Error('Runtime integrity mismatch');return script(bytes.toString());}).join('\n');
 const stage=fs.readFileSync(base+'/deck-stage.js','utf8'),support=fs.readFileSync(base+'/support.js','utf8');

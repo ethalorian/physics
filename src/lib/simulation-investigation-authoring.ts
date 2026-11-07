@@ -58,7 +58,7 @@ export function investigationBlocks(
       capture: true,
       requireAllFields: true,
       instruction:
-        "Keep the simulation and your evidence together. Record the actual readings with units; use the drawing area for a labeled graph or diagram.",
+        "1. Keep the simulation and your recorded results together.\n2. Record the actual readings with units. Use the drawing area for a labeled graph or diagram.",
       fields: activity.evidence,
       grid: true,
       evidenceRole: "main",

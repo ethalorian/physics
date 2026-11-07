@@ -9,7 +9,7 @@
     "Use Q=mcΔT with matching units.",
     "Compare materials through specific heat."
   ],
-  "source_sha256": "2b42f77d2a2983df8f0991401e89271a934e59e3c78c27f71191085e6e74502a",
+  "source_sha256": "6b4466b26b93a503689b36659c6ba68185af3bb0f7b20fe41f8519dd3225f461",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.533Z",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A 0.20 kg model sample needs 360 J to warm by 3°C. What specific heat fits the data?",
+      "prompt": "A 0.20 kg sample needs 360 J to warm by 3°C. What specific heat fits these values?",
       "options": [
         "1,800 J/(kg·°C)",
         "5,400 J/(kg·°C)",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A 0.20 kg model sample needs 360 J to warm by 3°C. What specific heat fits the data?",
+      "prompt": "A 0.20 kg sample needs 360 J to warm by 3°C. What specific heat fits these values?",
       "options": [
         "600 J/(kg·°C)",
         "5,400 J/(kg·°C)",

@@ -6,10 +6,10 @@
   "target": "Apply momentum reasoning to new collisions and deflection cases.",
   "criteria": [
     "Define the system and positive direction.",
-    "Use conservation or impulse only when assumptions apply.",
-    "Explain energy and model limits clearly."
+    "Use conservation or impulse only when the facts needed for the equation are true.",
+    "Explain the energy changes and the limits of your calculation."
   ],
-  "source_sha256": "507439231156fa5277b27d925e99002d9ea47bb335598cd8b99507a1febafa95",
+  "source_sha256": "c6469ac40051a01674754cfa1fa838a0dacd46004e978438cf28941fb72ed6b5",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.513Z",

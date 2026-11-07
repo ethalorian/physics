@@ -3,13 +3,13 @@
   "unit": 1,
   "day": 6,
   "title": "Vector addition",
-  "target": "Add displacement vectors and use a model to explain where an object ends up.",
+  "target": "Add displacement vectors and use a diagram or equation to explain where an object ends up.",
   "criteria": [
     "Place arrows tip to tail without rotating them.",
     "Combine east-west and north-south components separately.",
     "State the resultant with units and a clear direction."
   ],
-  "source_sha256": "cc0b3203733d90e41c4d1a7b79a1139097f1772912d6e096922922fd5d90ac0f",
+  "source_sha256": "2c171a1a8d408aba0051d9273ae2b103b0c8e61d67af4031139a915d09286527",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.473Z",

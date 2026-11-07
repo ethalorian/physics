@@ -5,11 +5,11 @@
   "title": "Transfer: gravity and motion",
   "target": "Apply gravity, projectile and orbital reasoning to a new set of cases.",
   "criteria": [
-    "State a model and assumptions before calculating.",
+    "Choose a diagram or equation. State what it treats as true before calculating.",
     "Connect diagrams to forces and motion.",
     "Check units and explain the limits of conclusions."
   ],
-  "source_sha256": "c706f302caca83bf88e393e1ba1b34d696388a0be03e98e85d0b9194590bcf4d",
+  "source_sha256": "de29099fad2dfe7a1153aabd5e18c5070b9bfa99033df2c8c145779f9e150858",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.499Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "Which statement defines an ideal horizontal-launch model before calculation?",
+      "prompt": "Which statement describes what the simple horizontal-launch calculation treats as true?",
       "options": [
         "Horizontal speed increases because gravity points forward.",
         "Mass must be zero.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "Which statement defines an ideal horizontal-launch model before calculation?",
+      "prompt": "Which statement describes what the simple horizontal-launch calculation treats as true?",
       "options": [
         "Horizontal speed increases because gravity points forward.",
         "The landing height is irrelevant.",

@@ -12,7 +12,8 @@ test('Claude mastery uses exact independent targets and preserves an insufficien
  assert.equal(validQuizAssessment({...result,items:[{...result.items[0],score:0},result.items[1]]},quiz,answers),false)
  const draft=quizAssessmentDraft(result,quiz)
  assert.deepEqual(draft.ratings,{t1:3,t2:null})
- assert.match(draft.note,/Next time:/)
+ assert.equal(draft.note,`${result.summary}\n\n${result.next_step}`)
+ assert.equal(quizAssessmentDraft({...result,next_step:'Next time: '+result.next_step},quiz).note,draft.note)
  assert.deepEqual(draft.scores,{written:2.5})
 })
 

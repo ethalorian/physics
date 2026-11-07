@@ -1,6 +1,7 @@
 'use client'
 
 import ChoiceCalendar from '@/components/choices/ChoiceCalendar'
+import StudentChoiceTeacher from '@/components/student-choice/StudentChoiceTeacher'
 import { useLearningResource } from '@/app/home/useLearningWeek'
 import type { ChoiceSnapshot } from '@/lib/choice-calendar-server'
 import s from './UnitPlanningWorkspace.module.css'
@@ -16,7 +17,8 @@ function ClassChoices({ classId, classLabel, unitId }: { classId: string; classL
   const resource = useLearningResource<ChoiceSnapshot>('/api/choice-calendar?class=' + encodeURIComponent(classId))
   const data = resource.data?.staff && resource.data.courseId === classId ? resource.data : null
   return <div className={s.root}>
-    <div className={s.heading}><div><p className={s.eyebrow}>CLASS CHOICE MENUS</p><h2>{classLabel ?? 'Selected Physics class'}</h2><p>Build a sequence of choices for this class. Students drag its activity cards from their home screen onto their calendar.</p><p>Browse the library or select from the unit sequence. Each activity counts as one choice unless you group it.</p></div></div>
-    <ChoiceCalendar {...resource} data={data} error={resource.error || (!!resource.data && !data)} dates={[]} courseId={classId} unitId={unitId} />
+    <div className={s.heading}><h2>{classLabel ?? 'Selected Physics class'}</h2></div>
+    <StudentChoiceTeacher key={classId + unitId} classId={classId} unitId={unitId} />
+    <details><summary>Earlier linked choice menus</summary><ChoiceCalendar {...resource} data={data} error={resource.error || (!!resource.data && !data)} dates={[]} courseId={classId} unitId={unitId} /></details>
   </div>
 }

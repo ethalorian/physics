@@ -6,10 +6,10 @@
   "target": "Use an energy balance to analyze mixing and heat transfer.",
   "criteria": [
     "Identify hot and cold samples and their masses.",
-    "Balance energy gained and lost in an ideal model.",
+    "Balance energy gained and lost in a simplified calculation.",
     "Discuss heat exchange with the container and surroundings."
   ],
-  "source_sha256": "7c5dea7edf2ec71f4bd5fc5b60307506c27d30dbbec491175b0936a63f4a8515",
+  "source_sha256": "642f115e9cd0d3b82e5aa1b665ddf7d2b69e8bf534a771f11676737bff00f449",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.535Z",

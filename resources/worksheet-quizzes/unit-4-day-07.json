@@ -9,7 +9,7 @@
     "Use ΔU=mgΔh with the stated g.",
     "Distinguish potential energy from force."
   ],
-  "source_sha256": "6d17894ffd43c41d2fe18953a38691759307be47dc8fde4f5ce5af1e49ebbd51",
+  "source_sha256": "9d31d1f46fbf140ed1fdfae3b776681f09be2bf549a65315ce0611c2708d2798",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.520Z",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "A model uses U = 0 at a platform. An object is 0.4 m below it. What sign is U = mgh with upward height positive?",
+      "prompt": "Set U = 0 at a platform. An object is 0.4 m below it. Up is positive. What is the sign of U = mgh?",
       "options": [
         "Positive in every reference.",
         "Zero because height cannot be negative.",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "A 2.5 kg object is raised 1.6 m. Use g = 10 N/kg. What is ΔU?",
+      "prompt": "A 2.5 kg object is raised 1.6 m.\n\n1. Use g = 10 N/kg.\n2. What is ΔU?",
       "options": [
         "25 J",
         "16 J",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "A 4 kg object drops from 2.2 m to 0.7 m above a reference. Use g = 10 N/kg. What is ΔU?",
+      "prompt": "A 4 kg object drops from 2.2 m to 0.7 m above a reference.\n\n1. Use g = 10 N/kg.\n2. What is ΔU?",
       "options": [
         "−60 J",
         "−116 J",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A lift raises an object twice as high in the same near-surface constant-g model. What happens to its weight and potential-energy gain?",
+      "prompt": "A lift raises an object twice as high near Earth’s surface. Treat g as constant. What happens to its weight and its gain in potential energy?",
       "options": [
         "Weight doubles; energy gain is unchanged.",
         "Both become zero at the top.",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "A model uses U = 0 at a platform. An object is 0.4 m below it. What sign is U = mgh with upward height positive?",
+      "prompt": "Set U = 0 at a platform. An object is 0.4 m below it. Up is positive. What is the sign of U = mgh?",
       "options": [
         "Zero because height cannot be negative.",
         "Positive in every reference.",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "A 2.5 kg object is raised 1.6 m. Use g = 10 N/kg. What is ΔU?",
+      "prompt": "A 2.5 kg object is raised 1.6 m.\n\n1. Use g = 10 N/kg.\n2. What is ΔU?",
       "options": [
         "40 J",
         "16 J",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "A 4 kg object drops from 2.2 m to 0.7 m above a reference. Use g = 10 N/kg. What is ΔU?",
+      "prompt": "A 4 kg object drops from 2.2 m to 0.7 m above a reference.\n\n1. Use g = 10 N/kg.\n2. What is ΔU?",
       "options": [
         "−60 J",
         "+28 J",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A lift raises an object twice as high in the same near-surface constant-g model. What happens to its weight and potential-energy gain?",
+      "prompt": "A lift raises an object twice as high near Earth’s surface. Treat g as constant. What happens to its weight and its gain in potential energy?",
       "options": [
         "Both weight and energy gain double.",
         "Both become zero at the top.",

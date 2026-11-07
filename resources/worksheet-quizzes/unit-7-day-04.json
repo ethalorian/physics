@@ -9,7 +9,7 @@
     "Calculate energy transfer with E=qV.",
     "Distinguish voltage from current."
   ],
-  "source_sha256": "4ddaa571a026b32de852611090695130f976e39ba92ad318d4e602a25c6dca9e",
+  "source_sha256": "4a3d003472f34659b6e5a98dcc7965b84fbfa863e096fd3c26162037c79b3592",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.560Z",

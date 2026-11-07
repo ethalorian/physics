@@ -1,5 +1,6 @@
 'use client'
 
+import QuizContent from '@/components/quizzes/QuizContent'
 import { useId, useState } from 'react'
 import { Check, ChevronRight, Lightbulb } from 'lucide-react'
 import { ChoiceResponse, QuestionPrompt } from '@/components/interactive-assignments/QuestionResponse'
@@ -34,12 +35,12 @@ export default function InteractiveQuestion({ task, value, readOnly, onDraft, on
     {task.parts.length > 1 && <nav className={s.parts} aria-label="Question parts">{task.parts.map((part, i) => <button type="button" key={part.id} aria-current={!review && active === i ? 'step' : undefined} onClick={() => { setActive(i); setReview(false) }}><span>{partComplete(part, answer.answers[part.id]) ? <Check size={14} aria-hidden/> : String.fromCharCode(65+i)}</span>{part.label}</button>)}<button type="button" aria-pressed={review} onClick={() => setReview(true)}>Review</button></nav>}
     {task.parts.filter((_, i) => review || i === active).map(part => <section key={part.id} className={s.part}>
       <h3>{part.label}</h3>
-      {part.kind === 'choice' ? <><ChoiceResponse label={part.prompt} options={part.options.map(o => ({ id: o.id, content: o.text }))} value={String(answer.answers[part.id] ?? '')} onChange={id => change(part.id, id)} disabled={readOnly || saving}/></>
+      {part.kind === 'choice' ? <><ChoiceResponse label={part.prompt} options={part.options.map(o => ({ id: o.id, content: <QuizContent content={o.text} inline questionEmphasis/> }))} value={String(answer.answers[part.id] ?? '')} onChange={id => change(part.id, id)} disabled={readOnly || saving}/></>
         : part.kind === 'number' ? <><QuestionPrompt>{part.prompt}</QuestionPrompt><label className={s.number} htmlFor={`${uid}-${part.id}`}><span>{part.label}</span><div><input id={`${uid}-${part.id}`} type="text" inputMode="decimal" autoComplete="off" value={String(answer.answers[part.id] ?? '')} onChange={e => change(part.id, e.target.value)} disabled={readOnly || saving}/><strong>{part.unit}</strong></div></label></>
         : readOnly ? <><QuestionPrompt>{part.prompt}</QuestionPrompt><ProblemStageDisplay label={part.label} value={answer.answers[part.id] as ProblemStageResponse}/></>
         : <ProblemStageInput label={part.label} help={part.prompt} value={answer.answers[part.id] as ProblemStageResponse} onChange={v => change(part.id, v)} disabled={saving}/>}
-      {part.hint && <details className={s.hint}><summary><Lightbulb size={16}/> Get a hint</summary><p>{part.hint}</p></details>}
-      {!dirty && value?.checks?.[part.id] && <p role="status" className={s.feedback}>{value.checks[part.id] === 'match' ? '✓ This answer checks out.' : 'Revisit this part. Check the model, units, and signs.'}</p>}
+      {part.hint && <details className={s.hint}><summary><Lightbulb size={16}/> Get a hint</summary><QuizContent content={part.hint} questionEmphasis/></details>}
+      {!dirty && value?.checks?.[part.id] && <p role="status" className={s.feedback}>{value.checks[part.id] === 'match' ? '✓ This answer checks out.' : 'Revisit this part. Check your diagram or equation, units, and signs.'}</p>}
     </section>)}
     {!readOnly && <footer className={s.footer}>{!review && active < task.parts.length-1 ? <button type="button" onClick={() => setActive(a => a+1)}>Next: {task.parts[active+1].label}<ChevronRight size={16}/></button> : <button type="button" disabled={!complete || saving} onClick={save}>{saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save response'}</button>}<p>{complete ? 'Your teacher reviews the reasoning behind your answer.' : task.parts.length===1?'Choose an answer to save.':`Complete all ${task.parts.length} parts to save. You can return to any part.`}</p>{error && <p role="alert">{error}</p>}</footer>}
   </section>

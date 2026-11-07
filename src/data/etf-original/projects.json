@@ -1,0 +1,82 @@
+[
+  {
+    "number": 1,
+    "name": "Design the Best Organizer in the World",
+    "url": "https://arabiamtnhs.dekalb.k12.ga.us/Downloads/project_12.pdf",
+    "focus": "Design an organizer for a user and improve it after a measured test.",
+    "terms": [
+      [
+        "criterion",
+        "A result the design must achieve."
+      ],
+      [
+        "constraint",
+        "A limit such as cost, space, or material."
+      ],
+      [
+        "clearance",
+        "Space left between an object and its surroundings."
+      ]
+    ]
+  },
+  {
+    "number": 2,
+    "name": "Design a Building of the Future",
+    "url": "https://arabiamtnhs.dekalb.k12.ga.us/Downloads/Engineering%20the%20Future%20-%20project_2.pdf",
+    "focus": "Design and test a multi-use building for residents and a local business or service.",
+    "terms": [
+      [
+        "mixed use",
+        "More than one use, such as housing and shops, within a building or site."
+      ],
+      [
+        "load path",
+        "The connected parts that carry a force to the ground."
+      ],
+      [
+        "scale",
+        "The ratio between a drawing length and the actual length."
+      ]
+    ]
+  },
+  {
+    "number": 3,
+    "name": "Improve a Patented Boat Design",
+    "url": "https://arabiamtnhs.dekalb.k12.ga.us/Downloads/project_3.pdf",
+    "focus": "Test an existing boat, explain its mechanism, and defend a measured improvement.",
+    "terms": [
+      [
+        "baseline",
+        "The first measured result used for comparison."
+      ],
+      [
+        "pressure",
+        "Force per unit area exerted by a fluid or surface."
+      ],
+      [
+        "flow rate",
+        "The volume that passes a point in a given time."
+      ]
+    ]
+  },
+  {
+    "number": 4,
+    "name": "Electricity and Communication Systems",
+    "url": "https://arabiamtnhs.dekalb.k12.ga.us/Downloads/project_42.pdf",
+    "focus": "Build and test systems that detect a change, transmit information, and control a load.",
+    "terms": [
+      [
+        "signal",
+        "A change that carries information."
+      ],
+      [
+        "current",
+        "The rate at which electric charge flows."
+      ],
+      [
+        "voltage",
+        "The electric potential difference between two points."
+      ]
+    ]
+  }
+]

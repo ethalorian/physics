@@ -3,13 +3,13 @@
   "unit": 6,
   "day": 8,
   "title": "Sound: pitch and amplitude",
-  "target": "Use a longitudinal-wave model to distinguish pitch and sound level.",
+  "target": "Use a drawing or explanation of a longitudinal wave to distinguish pitch from sound level.",
   "criteria": [
     "Describe compressions and rarefactions.",
     "Connect pitch primarily with frequency.",
     "Separate particle motion from sound propagation."
   ],
-  "source_sha256": "e551dfab5922a43262df4d15ac427f9f030bd2f585c94c5fcb86c9057bf2b8b2",
+  "source_sha256": "9609456c534dada58463343f85b2b7fac0ca68fced5a11d5c038ea9dcb014dfb",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.548Z",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "Sound travels east through air. In the simple longitudinal model, how do nearby air particles move?",
+      "prompt": "Sound travels east through air as a longitudinal wave. How do nearby air particles move?",
       "options": [
         "Back and forth approximately east-west around their equilibrium positions.",
         "Only north-south.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "Sound travels east through air. In the simple longitudinal model, how do nearby air particles move?",
+      "prompt": "Sound travels east through air as a longitudinal wave. How do nearby air particles move?",
       "options": [
         "Back and forth approximately east-west around their equilibrium positions.",
         "Only north-south.",

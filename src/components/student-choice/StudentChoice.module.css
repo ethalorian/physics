@@ -1,0 +1,54 @@
+.teacher .assignButton, .teacher .assignButton:hover:not(:disabled) { background: var(--primary); color: var(--primary-foreground); }
+.calendar { overflow-x: auto; }
+.week, .days { display: grid; grid-template-columns: repeat(7, minmax(100px, 1fr)); min-width: 700px; }
+.week strong { padding: .6rem; font-size: .8rem; }
+.day { min-height: 112px; border: 1px solid var(--border); padding: .5rem; display: flex; flex-direction: column; align-items: flex-start; gap: .4rem; }
+.day[data-outside=true] { opacity: .55; }
+.date { border-radius: .4rem; padding: .15rem .4rem; }
+.date[aria-pressed=true] { background: var(--primary); color: var(--primary-foreground); }
+.date:focus-visible, .day a:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.day a { font-size: .8rem; text-decoration: underline; overflow-wrap: anywhere; }
+.carousel { display: grid; gap: 1rem; min-width: 0; }
+.carouselNav { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.carouselNav span { text-align: center; font-size: .9rem; }
+.slide { display: grid; grid-template-columns: minmax(0, 370px) minmax(0, 1fr); gap: 1.5rem; align-items: center; padding: 1rem; border: 1px solid var(--border); border-radius: .75rem; background: var(--muted); }
+.paperPreview { width: 100%; aspect-ratio: 816 / 1056; overflow: hidden; background: white; border: 1px solid var(--border); touch-action: pan-y; }
+.paperPreview iframe { display: block; width: 816px; height: 1056px; border: 0; transform-origin: top left; pointer-events: none; }
+.optionNav { display: flex; justify-content: center; flex-wrap: wrap; gap: .5rem; }
+.optionNav button { min-width: 44px; min-height: 44px; border: 1px solid var(--border); border-radius: .5rem; padding: .5rem; }
+.optionNav button[aria-current=true] { background: var(--primary); color: var(--primary-foreground); }
+.carousel button:focus-visible, .selection button:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.selection, .printMaterials { padding: 1rem; border: 1px solid var(--border); border-radius: .75rem; }
+.selectedList { list-style: none; padding: 0; display: grid; gap: .75rem; }
+.selectedList li { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.selectedList button { flex-shrink: 0; }
+.reviewRoster { margin-bottom: 1.5rem; }
+.rosterWrap { overflow-x: auto; border: 1px solid var(--border); border-radius: .75rem; }
+.roster { width: 100%; border-collapse: collapse; text-align: left; font-size: .9rem; }
+.roster th, .roster td { padding: .8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+.roster thead { background: var(--muted); }
+.roster th[scope=row] { width: 23%; min-width: 10rem; font-weight: 400; overflow-wrap: anywhere; }
+.roster td:nth-child(2) { width: 12%; text-align: center; }
+.roster td:nth-child(3) { width: 18%; min-width: 10rem; }
+.roster td:nth-child(4) { width: 27%; min-width: 12rem; }
+.roster td:nth-child(5) { width: 20%; min-width: 8rem; }
+.roster tr[data-dirty=true] { background: color-mix(in srgb, var(--primary) 5%, var(--card)); }
+.roster tr[hidden] { display: none; }
+.rosterDetails { margin-top: .5rem; font-weight: 400; font-size: .8rem; }
+.rosterDetails summary { cursor: pointer; color: var(--primary); }
+.rosterDetails p { margin: .5rem 0; }
+.receiptCheck { display: inline-flex; align-items: center; justify-content: center; gap: .65rem; min-width: 44px; min-height: 44px; cursor: pointer; }
+.receiptCheck input { width: 20px; height: 20px; accent-color: var(--primary); }
+.rowSave { display: grid; gap: .35rem; justify-items: start; }
+.rowSave p { font-size: .85rem; }
+.roster :is(button, summary, input):focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.mobileLabel { display: none; }
+@media (max-width: 760px) {
+  .roster, .roster tbody, .roster tr, .roster td, .roster th[scope=row] { display: block; width: 100%; min-width: 0; }
+  .roster thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .roster tr { border-bottom: 1px solid var(--border); padding: .5rem 0; }
+  .roster td:nth-child(n), .roster th[scope=row] { width: 100%; min-width: 0; border: 0; padding: .4rem .8rem; text-align: left; }
+  .roster tr[hidden] { display: none; }
+  .mobileLabel { display: inline; }
+}
+@media (max-width: 640px) { .slide { grid-template-columns: minmax(0, 1fr); padding: .75rem; } .paperPreview { max-width: 370px; justify-self: center; } .carouselNav button { padding: .55rem; font-size: .8rem; } }

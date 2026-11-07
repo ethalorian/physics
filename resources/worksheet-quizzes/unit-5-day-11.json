@@ -7,9 +7,9 @@
   "criteria": [
     "Apply an explicit absorbed-energy fraction.",
     "Use mass and specific heat in a temperature estimate.",
-    "State the no-phase-change and no-loss assumptions."
+    "State that you are treating phase change and energy loss as zero."
   ],
-  "source_sha256": "e3966974800d34a248be025f8faffcd761ad6bb41d5ebdd91791ea51ad0aa65c",
+  "source_sha256": "a21ea5ee2b78fc05648c50df4e3e658007d799f172af5afff4be4e640f15ebd1",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.538Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "A source releases 2,000 J. A model says a nearby sample absorbs 15%. What absorbed energy should be used in its heating calculation?",
+      "prompt": "A source releases 2,000 J. Treat a nearby sample as absorbing 15%. What absorbed energy belongs in the heating calculation?",
       "options": [
         "2,000 J",
         "300 J",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "A 2.0 kg sample with c = 750 J/(kg·°C) must warm by 4°C. What absorbed energy is needed in the no-loss model?",
+      "prompt": "A 2.0 kg sample has c = 750 J/(kg·°C). It must warm by 4°C. With no energy losses, how much absorbed energy is needed?",
       "options": [
         "1,500 J",
         "6,000 J",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "A source releases 2,000 J. A model says a nearby sample absorbs 15%. What absorbed energy should be used in its heating calculation?",
+      "prompt": "A source releases 2,000 J. Treat a nearby sample as absorbing 15%. What absorbed energy belongs in the heating calculation?",
       "options": [
         "300 J",
         "2,000 J",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "A 2.0 kg sample with c = 750 J/(kg·°C) must warm by 4°C. What absorbed energy is needed in the no-loss model?",
+      "prompt": "A 2.0 kg sample has c = 750 J/(kg·°C). It must warm by 4°C. With no energy losses, how much absorbed energy is needed?",
       "options": [
         "1,500 J",
         "375 J",

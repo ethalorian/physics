@@ -7,9 +7,9 @@
   "criteria": [
     "Write a signed momentum balance.",
     "Check kinetic energy separately.",
-    "Reject an elastic claim when kinetic energy changes."
+    "Explain why a collision cannot be elastic if its total kinetic energy changes."
   ],
-  "source_sha256": "1a8bc56908878a935a12672be7c04a6fb06b063f80888faa2fe6f60fbc67b81c",
+  "source_sha256": "3beea0f053e282cc4b0b45d5dbf7934c31591ee28644f1050f109494e626a162",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.508Z",

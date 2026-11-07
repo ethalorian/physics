@@ -588,7 +588,7 @@ export const matterLessons = {
     ],
     "worked": {
       "title": "Work it through",
-      "prompt": "A same-material model is enlarged threefold in every dimension. Compare mass, support area, and weight per support area.",
+      "prompt": "An object is made three times as large in every dimension, using the same material. Compare its mass, support area, and weight per support area with the original object.",
       "reasoning": "Mass becomes 27 times larger, area 9 times larger, and weight per area 3 times larger."
     },
     "check": {

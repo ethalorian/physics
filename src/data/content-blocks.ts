@@ -68,6 +68,7 @@ export interface WorkshopBlock {
   /** Start a physical-work stage even when it has no digital response. */
   pageBreakBefore?: boolean;
   notebook?: string;
+  studentPacket?: string;
   stage?: string; target?:string; title?: string; lead?: string; minutes?: number;
   tool?: 'measure' | 'mark' | 'inspect';
   taskLabel?: string; purpose?: string; steps?: string[]; catchUp?: string[];

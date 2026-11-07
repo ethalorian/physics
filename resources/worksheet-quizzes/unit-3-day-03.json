@@ -9,7 +9,7 @@
     "Match impulse direction to momentum change.",
     "Use impulse to find a final velocity."
   ],
-  "source_sha256": "02954f066339b801f6d23c768b128b971178bf59210a9a9de29df075d5a238a3",
+  "source_sha256": "46ba9445c992bbb89bbd5b7da182330eda0c8c3489e1f6e5485268d375393404",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.503Z",

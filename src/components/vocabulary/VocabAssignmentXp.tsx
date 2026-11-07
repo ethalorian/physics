@@ -1,9 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { VOCAB_ASSIGNMENT_XP } from '@/lib/xp-policy'
 
 export default function VocabAssignmentXp({ taskId, refreshKey = '' }: { taskId: string; refreshKey?: string }) {
-  const [receipt, setReceipt] = useState<{ earned?: number; preview?: boolean } | null>(null)
+  const [receipt, setReceipt] = useState<{ earned?: number; preview?: boolean; available:number } | null>(null)
   const [error, setError] = useState(false)
   const [retry, setRetry] = useState(0)
   useEffect(() => {
@@ -19,8 +18,8 @@ export default function VocabAssignmentXp({ taskId, refreshKey = '' }: { taskId:
   return <div role="status" className="rounded-xl border border-border bg-muted p-4 text-sm space-y-1">
     {error ? <><p>Your answers are saved separately. The XP receipt could not load.</p><button className="min-h-11 underline" onClick={() => setRetry(n => n + 1)}>Retry XP receipt</button></>
       : !receipt ? <p>Checking assignment XP…</p>
-      : receipt.preview ? <p>Student reward: {VOCAB_ASSIGNMENT_XP} XP for the first submitted check or quiz.</p>
+      : !receipt.available ? <p>This assignment does not earn unit XP.{!!receipt.earned && ' Previously earned wallet XP is kept.'}</p> : receipt.preview ? <p>Student reward: {receipt.available} XP for the first completed assignment check.</p>
       : receipt.earned ? <><strong>{receipt.earned} XP credited for this assignment</strong><p>This award counts toward your XP total and term requirement. Repeat checks and retakes do not award it again.</p></>
-      : <><strong>Earn {VOCAB_ASSIGNMENT_XP} XP for your first submitted check or quiz</strong><p>Once per assignment, separate from the vocabulary game daily limit. Your teacher rates mastery separately.</p></>}
+      : <><strong>Earn {receipt.available} XP for your first completed assignment check</strong><p>Once per assignment, separate from the vocabulary game daily limit. Your teacher rates mastery separately.</p></>}
   </div>
 }

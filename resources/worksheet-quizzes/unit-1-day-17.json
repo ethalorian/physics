@@ -9,7 +9,7 @@
     "Find actual friction for rest or sliding.",
     "Explain friction direction using relative slipping."
   ],
-  "source_sha256": "ec75051b4069c1b0d3f8113f238fe615f29e1ff096646651bebe04d89e29eb99",
+  "source_sha256": "a5ce2b586060fed7a1de5025c8a050c989f73356ec11b9d24cb49eb789bab3fe",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.482Z",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "A resting box has a 24 N static-friction limit. The horizontal push rises to 30 N with no other horizontal forces. What does the model predict?",
+      "prompt": "A resting box has a static-friction limit of 24 N. The horizontal push increases to 30 N. No other horizontal forces act. What should happen?",
       "options": [
         "Static friction automatically becomes 30 N despite its limit.",
         "Static friction cannot hold it at rest.",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "A resting box has a 24 N static-friction limit. The horizontal push rises to 30 N with no other horizontal forces. What does the model predict?",
+      "prompt": "A resting box has a static-friction limit of 24 N. The horizontal push increases to 30 N. No other horizontal forces act. What should happen?",
       "options": [
         "It must remain at rest because friction exists.",
         "Static friction automatically becomes 30 N despite its limit.",

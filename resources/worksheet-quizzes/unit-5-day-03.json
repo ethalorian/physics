@@ -6,10 +6,10 @@
   "target": "Identify mechanisms of heat transfer and support each classification.",
   "criteria": [
     "Describe contact transfer, bulk fluid motion and electromagnetic transfer.",
-    "Use evidence from the situation.",
+    "Use specific details or measurements from the situation.",
     "Recognize that more than one mechanism can act."
   ],
-  "source_sha256": "9a94f98c2576ff80f8effe34deefc9596927873df778ae2d696c9222852212b9",
+  "source_sha256": "f0d03a083fa9da5319d76a33b9d3a318ff8d51131011da0e01a3fd66deb70d19",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.534Z",

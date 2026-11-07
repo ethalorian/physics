@@ -36,7 +36,7 @@ export const heatTransferLessons = {
         "Wood creates heat"
       ],
       "correct": 1,
-      "hint": "Track the energy transfer and state which conditions are held fixed.",
+      "hint": "Track the energy transfer and name the quantities or features that stay the same.",
       "feedback": [
         "Equal temperatures can produce different transfer rates.",
         "Correct: the material response changes the energy-transfer rate.",
@@ -81,7 +81,7 @@ export const heatTransferLessons = {
         "Only gases can convect"
       ],
       "correct": 1,
-      "hint": "Track the energy transfer and state which conditions are held fixed.",
+      "hint": "Track the energy transfer and name the quantities or features that stay the same.",
       "feedback": [
         "Energy also transfers sideways and downward; identify the moving fluid.",
         "Correct under the usual expansion and gravity assumptions.",
@@ -126,7 +126,7 @@ export const heatTransferLessons = {
         "Electromagnetic radiation"
       ],
       "correct": 2,
-      "hint": "Track the energy transfer and state which conditions are held fixed.",
+      "hint": "Track the energy transfer and name the quantities or features that stay the same.",
       "feedback": [
         "Air conduction requires matter, which the vacuum does not provide.",
         "Convection requires bulk-moving matter.",
@@ -171,7 +171,7 @@ export const heatTransferLessons = {
         "Does not move"
       ],
       "correct": 0,
-      "hint": "Track the energy transfer and state which conditions are held fixed.",
+      "hint": "Track the energy transfer and name the quantities or features that stay the same.",
       "feedback": [
         "Correct: λmax is inversely proportional to T.",
         "The peak moves toward shorter, not longer, wavelengths.",
@@ -216,7 +216,7 @@ export const heatTransferLessons = {
         "Necessarily hotter than everything nearby"
       ],
       "correct": 0,
-      "hint": "Track the energy transfer and state which conditions are held fixed.",
+      "hint": "Track the energy transfer and name the quantities or features that stay the same.",
       "feedback": [
         "Correct: absorption and emission properties are linked at matched wavelengths and conditions.",
         "Absorption does not prevent emission.",
@@ -254,14 +254,14 @@ export const heatTransferLessons = {
     },
     "check": {
       "title": "Explain the change",
-      "prompt": "In this model, does the same number of degrees disappear each minute?",
+      "prompt": "In this cooling calculation, does the temperature fall by the same number of degrees each minute?",
       "options": [
         "Yes",
         "No, the rate decreases as the temperature difference shrinks",
         "Only because time stops near equilibrium"
       ],
       "correct": 1,
-      "hint": "Track the energy transfer and state which conditions are held fixed.",
+      "hint": "Track the energy transfer and name the quantities or features that stay the same.",
       "feedback": [
         "The rate is proportional to the remaining temperature difference.",
         "Correct: equal intervals remove equal fractions of the difference.",
@@ -299,14 +299,14 @@ export const heatTransferLessons = {
     },
     "check": {
       "title": "Explain the change",
-      "prompt": "Does the greenhouse model require the atmosphere to block all outgoing radiation?",
+      "prompt": "Does this explanation of the greenhouse effect require the atmosphere to block all outgoing radiation?",
       "options": [
         "Yes",
         "No, selective absorption and emission change the energy balance",
         "No, because energy is created in the atmosphere"
       ],
       "correct": 1,
-      "hint": "Track the energy transfer and state which conditions are held fixed.",
+      "hint": "Track the energy transfer and name the quantities or features that stay the same.",
       "feedback": [
         "Radiation still escapes; the mechanism depends on its exchange and emission conditions.",
         "Correct: outgoing energy is altered at the original temperature structure.",
@@ -357,7 +357,7 @@ export const heatTransferLessons = {
         "Only convection; the metal base cannot transfer energy"
       ],
       "correct": 0,
-      "hint": "Track the energy transfer and state which conditions are held fixed.",
+      "hint": "Track the energy transfer and name the quantities or features that stay the same.",
       "feedback": [
         "Correct: mechanisms can operate along different parts of the same energy path.",
         "Liquids conduct, even if convection is stronger in the bulk.",

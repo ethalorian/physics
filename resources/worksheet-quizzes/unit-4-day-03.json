@@ -9,7 +9,7 @@
     "Use the parallel force component.",
     "Explain positive, negative and zero work."
   ],
-  "source_sha256": "959e167b8aa9c46dbe7d2c2bcad0697af8e6dc6046f71e2cebe2fc1f7c7a4b68",
+  "source_sha256": "97b7ab77b0d38ec27becc1fe92d13b83b0885d2318f3d8a3af3f7ce24d793c0b",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.517Z",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "A 20 N force makes 60° with a 3 m displacement. Use cos 60° = 0.50. What work does it do?",
+      "prompt": "A 20 N force makes 60° with a 3 m displacement.\n\n1. Use cos 60° = 0.50.\n2. What work does it do?",
       "options": [
         "30 J",
         "10 J",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "A 20 N force makes 60° with a 3 m displacement. Use cos 60° = 0.50. What work does it do?",
+      "prompt": "A 20 N force makes 60° with a 3 m displacement.\n\n1. Use cos 60° = 0.50.\n2. What work does it do?",
       "options": [
         "30 J",
         "120 J",

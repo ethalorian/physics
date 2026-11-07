@@ -19,7 +19,7 @@ const sprites = Object.fromEntries(PROFILE_WARDROBE_ATLASES.flatMap(atlas => atl
 }])))
 
 export function profileItemSprite(item: AvatarItem): MangaSprite | undefined {
-  const entry = Object.hasOwn(sprites, item.slug) ? sprites[item.slug] : undefined
+  const entry = Object.prototype.hasOwnProperty.call(sprites, item.slug) ? sprites[item.slug] : undefined
   return entry?.slot === item.slot ? entry.sprite : undefined
 }
 

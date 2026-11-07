@@ -1,4 +1,4 @@
-export type AssignmentKind = 'worksheet' | 'video' | 'lesson' | 'reading' | 'quiz' | 'vocabulary' | 'review'
+export type AssignmentKind = 'student_choice' | 'worksheet' | 'video' | 'lesson' | 'reading' | 'quiz' | 'vocabulary' | 'review'
 export type AssignmentView = 'todo' | 'overdue' | 'upcoming' | 'submitted'
 export interface StudentAssignment {
   id: string
@@ -20,7 +20,7 @@ export interface StudentAssignment {
   focusQuestion?: string
   prerequisiteText?: string
 }
-export const ASSIGNMENT_LABELS: Record<AssignmentKind, string> = { worksheet: 'Worksheet · Paper', review: 'Review', video: 'Video', lesson: 'Assignment', reading: 'Reading', quiz: 'Quiz', vocabulary: 'Vocabulary' }
+export const ASSIGNMENT_LABELS: Record<AssignmentKind, string> = { student_choice: 'Student Choice', worksheet: 'Worksheet · Paper', review: 'Review', video: 'Video', lesson: 'Assignment', reading: 'Reading', quiz: 'Quiz', vocabulary: 'Vocabulary' }
 
 // Vocabulary deadlines are dates, rather than instants: keep the entire local due day available.
 export function assignmentDeadline(due: string | null) {

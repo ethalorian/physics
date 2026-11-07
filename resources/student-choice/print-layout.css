@@ -1,0 +1,43 @@
+/* Letter pages: the lesson, color key, and footer each own a grid row. */
+.page[data-layout] > div {
+  box-sizing:border-box!important;
+  height:11in!important;
+  padding:.30in .30in .30in .90in!important;
+  display:grid!important;
+  grid-template-rows:minmax(0,1fr) auto 24px!important;
+  align-items:stretch!important;
+  gap:12px!important;
+}
+.page[data-layout] > div > div:first-child {
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  zoom:1!important;
+  box-sizing:border-box!important;
+}
+.page[data-layout="notes"] > div > div:first-child {
+  padding:6px 22px!important;
+  gap:4px!important;
+}
+.page[data-layout="notes"] > div > div:first-child > div:first-child { padding-bottom:5px!important; }
+.page[data-layout="notes"] > div > div:first-child > div:nth-child(2) { padding-top:5px!important; padding-bottom:5px!important; }
+.page[data-layout="notes"] > div > div:first-child > div:nth-child(4),
+.page[data-layout="notes"] > div > div:first-child > div:last-child { padding-top:5px!important; padding-bottom:6px!important; }
+.page[data-layout] > div > div:nth-child(2) { box-sizing:border-box!important; margin:0!important; }
+.page[data-layout] > div > div:last-child {
+  box-sizing:border-box!important;
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  font:500 9px/12px 'IBM Plex Mono',monospace!important;
+  letter-spacing:.04em!important;
+  color:#565656!important;
+  margin:0!important;
+}
+@media print {
+  @page { size:letter; margin:0; }
+  .page[data-layout] { break-inside:avoid; break-after:page; }
+  .page[data-layout]:last-child { break-after:auto; }
+}

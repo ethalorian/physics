@@ -3,13 +3,13 @@
   "unit": 1,
   "day": 20,
   "title": "Build a complete prediction",
-  "target": "Connect net force, velocity change, and final position in one model.",
+  "target": "Use one diagram or set of equations to connect net force, change in velocity, and final position.",
   "criteria": [
     "Connect force, acceleration and position consistently.",
     "Show quantities and units at every stage.",
-    "Explain the assumptions and limits of the prediction."
+    "Explain what the prediction treats as true and when it would stop working."
   ],
-  "source_sha256": "b440c4a1317cb265c87c2a1c108613e24e23de584d139dacd1d301cf6484ad0f",
+  "source_sha256": "8d2b810e78c99047fae047fd1741320b2963414d608e4dc5b895d4b44c872cf1",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.484Z",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "Which assumptions support predicting motion from a constant net force using a = F_net/m?",
+      "prompt": "What must be true to predict motion from a constant net force using a = F_net/m?",
       "options": [
         "Fixed mass, constant net force over the interval, and an inertial reference frame.",
         "Any changing mass and force with no adjustment.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "Which assumptions support predicting motion from a constant net force using a = F_net/m?",
+      "prompt": "What must be true to predict motion from a constant net force using a = F_net/m?",
       "options": [
         "No knowledge of initial motion.",
         "Any changing mass and force with no adjustment.",

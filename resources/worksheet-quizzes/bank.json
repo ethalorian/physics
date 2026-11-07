@@ -6,11 +6,11 @@
     "title": "Notice, question, predict",
     "target": "Use observations to make a prediction that can be tested.",
     "criteria": [
-      "Separate stated evidence from unsupported claims.",
-      "Extend a position pattern and state an assumption.",
+      "Separate supplied facts from statements that have no support.",
+      "Extend a position pattern and state what your prediction treats as true.",
       "Name an observation that could test the prediction."
     ],
-    "source_sha256": "cc62e524e909a32baae9d70e3adf588cd9f1dbadcb4d63e478d3b561cdfe8f29",
+    "source_sha256": "a3f9e551f58514630fa8173b2d73f5a309e15149b9d5e5ff3a863f97e2331b39",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.447Z",
@@ -25,7 +25,7 @@
     },
     "cpa": [
       {
-        "prompt": "A report states that repeated observations show an object getting closer, but its future path is uncertain. Which claim is supported?",
+        "prompt": "Repeated observations show an object getting closer. Its future path is still uncertain. Which statement do these observations support?",
         "options": [
           "Its speed must be constant forever.",
           "It will certainly collide with Earth.",
@@ -113,7 +113,7 @@
         }
       },
       {
-        "prompt": "A model predicts 24 m at 4 s. Which new observation most directly tests that prediction?",
+        "prompt": "A calculation predicts that an object will be at 24 m at 4 s. Which new observation most directly checks that prediction?",
         "options": [
           "The rover’s paint color.",
           "A measured position and uncertainty at 4 s.",
@@ -135,7 +135,7 @@
         }
       },
       {
-        "prompt": "A constant-velocity model predicts 30 m, but a calibrated measurement is 26 ± 1 m at the same time. What should happen next?",
+        "prompt": "A constant-velocity calculation predicts 30 m, but a calibrated measurement is 26 ± 1 m at the same time. What should happen next?",
         "options": [
           "Conclude that the object must have vanished.",
           "Declare the prediction confirmed exactly.",
@@ -159,7 +159,7 @@
     ],
     "honors": [
       {
-        "prompt": "A report states that repeated observations show an object getting closer, but its future path is uncertain. Which claim is supported?",
+        "prompt": "Repeated observations show an object getting closer. Its future path is still uncertain. Which statement do these observations support?",
         "options": [
           "It will certainly collide with Earth.",
           "Its speed must be constant forever.",
@@ -247,7 +247,7 @@
         }
       },
       {
-        "prompt": "A model predicts 24 m at 4 s. Which new observation most directly tests that prediction?",
+        "prompt": "A calculation predicts that an object will be at 24 m at 4 s. Which new observation most directly checks that prediction?",
         "options": [
           "A photograph with no scale or time.",
           "A measured position and uncertainty at 4 s.",
@@ -269,7 +269,7 @@
         }
       },
       {
-        "prompt": "A constant-velocity model predicts 30 m, but a calibrated measurement is 26 ± 1 m at the same time. What should happen next?",
+        "prompt": "A constant-velocity calculation predicts 30 m, but a calibrated measurement is 26 ± 1 m at the same time. What should happen next?",
         "options": [
           "Declare the prediction confirmed exactly.",
           "Conclude that the object must have vanished.",
@@ -303,7 +303,7 @@
       "Calculate path distance and signed displacement separately.",
       "Explain why position and displacement can differ."
     ],
-    "source_sha256": "56763570b2c76ea1ae048db14620c81f24c0e38c59de65ebb405a0dd779284a1",
+    "source_sha256": "8aa8093c61c913f8cbf264d9cbd5fd00a48a6a61bda3ee99f4bba332633c8adc",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.467Z",
@@ -596,7 +596,7 @@
       "Find velocity from position change divided by time.",
       "Explain the difference between speed and velocity."
     ],
-    "source_sha256": "68b9d1f72e3c016b90d05979869eae05373899246d5f5edec1f919b675e60eed",
+    "source_sha256": "2e8b67fd56c67e3c33aa2a66e2c9df71f321097d2b6bc926a7e068bfbf30f007",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.469Z",
@@ -889,7 +889,7 @@
       "Represent horizontal and vertical components separately.",
       "Distinguish graph height, slope and vector magnitude."
     ],
-    "source_sha256": "388412291b2740c7c3679580d765f0e485a1128aad19aecd0cb352dad7aef637",
+    "source_sha256": "f58db9e9e86a464d3bd0519b80171556a54d6a16c1ca2f9e0d03e62af8a080f2",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.471Z",
@@ -1180,9 +1180,9 @@
     "criteria": [
       "Use matching units and include the starting position.",
       "Report a central prediction and its bounds.",
-      "Distinguish a measurement range from model limitations."
+      "Explain how an uncertain measurement differs from a limit of the calculation."
     ],
-    "source_sha256": "fcfacfb49877172a3f2564a00e05a489a42986bece43a1dbfe83b1b8e17c0504",
+    "source_sha256": "4157eded735cfc387812af2bb76fa9b591b72c4c7effa56972cbf80f4366e95a",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.471Z",
@@ -1285,7 +1285,7 @@
         }
       },
       {
-        "prompt": "A calculated interval comes from bounded measurements and a constant-velocity assumption. What does it omit unless explicitly modeled?",
+        "prompt": "A calculated range of possible positions uses measurement limits and treats velocity as constant. What does this range leave out unless it is also included in the calculation?",
         "options": [
           "The stated starting position.",
           "All measurement variation already included in the bounds.",
@@ -1419,7 +1419,7 @@
         }
       },
       {
-        "prompt": "A calculated interval comes from bounded measurements and a constant-velocity assumption. What does it omit unless explicitly modeled?",
+        "prompt": "A calculated range of possible positions uses measurement limits and treats velocity as constant. What does this range leave out unless it is also included in the calculation?",
         "options": [
           "The stated elapsed time.",
           "Changes in velocity caused by forces.",
@@ -1469,13 +1469,13 @@
     "unit": 1,
     "day": 6,
     "title": "Vector addition",
-    "target": "Add displacement vectors and use a model to explain where an object ends up.",
+    "target": "Add displacement vectors and use a diagram or equation to explain where an object ends up.",
     "criteria": [
       "Place arrows tip to tail without rotating them.",
       "Combine east-west and north-south components separately.",
       "State the resultant with units and a clear direction."
     ],
-    "source_sha256": "cc0b3203733d90e41c4d1a7b79a1139097f1772912d6e096922922fd5d90ac0f",
+    "source_sha256": "2c171a1a8d408aba0051d9273ae2b103b0c8e61d67af4031139a915d09286527",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.473Z",
@@ -1768,7 +1768,7 @@
       "Compare acceleration direction with velocity direction.",
       "Explain why turning at steady speed is acceleration."
     ],
-    "source_sha256": "0f1c76db474eea7ace02766d9ce95aad4dffe0bd4501543750ceb42d998250e1",
+    "source_sha256": "cb88193270c6d3700c94b61b3928bc2f7470bcc27b066b68f5795a265b7f1dcb",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.474Z",
@@ -2055,13 +2055,13 @@
     "unit": 1,
     "day": 8,
     "title": "Choose a motion method",
-    "target": "Choose a motion relationship and justify its assumptions.",
+    "target": "Choose a motion relationship. Explain what must be true for you to use it.",
     "criteria": [
       "Choose a relationship using the known quantities.",
       "Show linked calculations with units and directions.",
       "State when constant velocity or acceleration applies."
     ],
-    "source_sha256": "42ccdd57a28fe62c694dc53e9e3e7416545c3735952963e5b2c9233f1affb7bb",
+    "source_sha256": "435f50fc0cb4632452d1aa2ef967dfbe2a0a58a6306640f84825b6f3e5538aed",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.476Z",
@@ -2354,7 +2354,7 @@
       "Predict constant velocity when net force is zero.",
       "Explain why changing direction requires net force."
     ],
-    "source_sha256": "d19b82d2ed6e2b382790965fa945d490ad117b0b184bb7510ed680857eb59ce2",
+    "source_sha256": "f6378a7113d75881459969f4d03c8c2edd188abd4fd6af50bf48c68c96379fac",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.476Z",
@@ -2479,7 +2479,7 @@
         }
       },
       {
-        "prompt": "A claim says zero net force means the object is stationary. Which is a counterexample?",
+        "prompt": "Someone says, “Zero net force means the object is still.” Which example shows that this statement is wrong?",
         "options": [
           "A rocket accelerating forward.",
           "A car turning at constant speed.",
@@ -2613,7 +2613,7 @@
         }
       },
       {
-        "prompt": "A claim says zero net force means the object is stationary. Which is a counterexample?",
+        "prompt": "Someone says, “Zero net force means the object is still.” Which example shows that this statement is wrong?",
         "options": [
           "A car turning at constant speed.",
           "A rocket accelerating forward.",
@@ -2647,7 +2647,7 @@
       "Distinguish mass from weight with units.",
       "Include only forces acting on the chosen object."
     ],
-    "source_sha256": "d3ce04240353cafc348cd854f3c5ac6fbdbb7fb0806b1dd16923dd75b33e00e9",
+    "source_sha256": "b5340b0faa3999a823ebd9503a3dd14b3d58678421c16732405096e6ace271ef",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.477Z",
@@ -2938,9 +2938,9 @@
     "criteria": [
       "Identify total moving mass and keep driving force fixed.",
       "Compare acceleration values using a fair test.",
-      "Separate model data from measured evidence."
+      "Separate supplied or simulated values from values you measured."
     ],
-    "source_sha256": "c07ea4fa4b7fc91426fcd2fe3ff3bc03801b2ec106211af2e2e2559e621a9a7c",
+    "source_sha256": "fe11e581dfebbbd637f2205f58fe2f1d3ad143721b0f724cc2ee7884195e7149",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.478Z",
@@ -3233,7 +3233,7 @@
       "Use data or a graph to compare accelerations.",
       "Explain how resistance affects the ideal relationship."
     ],
-    "source_sha256": "01727e03e30132d92e3e17a01ceb34814fdefd770e21777fc5d6dca9b98832a5",
+    "source_sha256": "cd2282441f9b21f1bd56aadd2dbe0e4331376328a46864c7b57b46be6ec12629",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.478Z",
@@ -3526,7 +3526,7 @@
       "State acceleration with units and direction.",
       "Separate acceleration direction from motion direction."
     ],
-    "source_sha256": "33673e8ac561bd0338f82fa8628588a126ff519f139a3ac11036f42bda2f1ae4",
+    "source_sha256": "c50b4194113e8c53eb4b4ea328f06828af6d81f03e908a1845650cf4ec47efdd",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.479Z",
@@ -3819,7 +3819,7 @@
       "Place the two equal-and-opposite forces on different objects.",
       "Explain why equal forces can produce unequal accelerations."
     ],
-    "source_sha256": "72adabae670b28eb27a0a475c6f556e5923cec78f059c73d12f22f1ef2574ac8",
+    "source_sha256": "161ada2ed07406cf9af68bbf441de1d2d3728a771c6fedd2df9fe950dabd5c70",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.480Z",
@@ -4112,7 +4112,7 @@
       "Draw force arrows in physically correct directions.",
       "Remove velocity and net force as extra interaction arrows."
     ],
-    "source_sha256": "c0c841587c3a9b9f9efad0a9babe49ff76a8575dec6bd1365bcd960691f72cb9",
+    "source_sha256": "8384f16fd165ba13f24fe89873402c188ea2fbb3e175716eef5c25a2842bacd8",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.481Z",
@@ -4405,7 +4405,7 @@
       "Connect net force and mass to acceleration.",
       "Use velocity direction to decide the initial speed change."
     ],
-    "source_sha256": "7f3ad6b4801b2cdc8e1bc5ef6eae4d1cab45ecd6ef847ba9c56d62c2f07c08b5",
+    "source_sha256": "8ca2420ad58ef2b44ef2afeab4accc0480336435851dd11146583586f388344e",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.482Z",
@@ -4698,7 +4698,7 @@
       "Find actual friction for rest or sliding.",
       "Explain friction direction using relative slipping."
     ],
-    "source_sha256": "ec75051b4069c1b0d3f8113f238fe615f29e1ff096646651bebe04d89e29eb99",
+    "source_sha256": "a5ce2b586060fed7a1de5025c8a050c989f73356ec11b9d24cb49eb789bab3fe",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.482Z",
@@ -4735,7 +4735,7 @@
         }
       },
       {
-        "prompt": "A resting box has a 24 N static-friction limit. The horizontal push rises to 30 N with no other horizontal forces. What does the model predict?",
+        "prompt": "A resting box has a static-friction limit of 24 N. The horizontal push increases to 30 N. No other horizontal forces act. What should happen?",
         "options": [
           "Static friction automatically becomes 30 N despite its limit.",
           "Static friction cannot hold it at rest.",
@@ -4869,7 +4869,7 @@
         }
       },
       {
-        "prompt": "A resting box has a 24 N static-friction limit. The horizontal push rises to 30 N with no other horizontal forces. What does the model predict?",
+        "prompt": "A resting box has a static-friction limit of 24 N. The horizontal push increases to 30 N. No other horizontal forces act. What should happen?",
         "options": [
           "It must remain at rest because friction exists.",
           "Static friction automatically becomes 30 N despite its limit.",
@@ -4988,10 +4988,10 @@
     "target": "Find a missing force when acceleration is zero.",
     "criteria": [
       "Recognize rest and constant velocity as possible equilibrium.",
-      "Find missing forces from a zero net-force condition.",
+      "Find missing forces when the net force is zero.",
       "Explain why turning is not equilibrium."
     ],
-    "source_sha256": "bae6d9e74f4498afbb2ef07d3aa5150593115439695090d21154eb1ffff4d666",
+    "source_sha256": "b0b5ba79628055f8e4d1bd9ff2ede59b650fc19a92fe83538dc728af806a00af",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.483Z",
@@ -5284,7 +5284,7 @@
       "Show a corrected method with units.",
       "Apply the repair to a different problem."
     ],
-    "source_sha256": "9496acd1823607cb4f81f6c1b92a0c5b24161417714d91f7b7a319ca046d4252",
+    "source_sha256": "b4abd7d2fea870e67fd83b7abc6bb7e101cc37545dace56427bc6453f90db84d",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.483Z",
@@ -5571,13 +5571,13 @@
     "unit": 1,
     "day": 20,
     "title": "Build a complete prediction",
-    "target": "Connect net force, velocity change, and final position in one model.",
+    "target": "Use one diagram or set of equations to connect net force, change in velocity, and final position.",
     "criteria": [
       "Connect force, acceleration and position consistently.",
       "Show quantities and units at every stage.",
-      "Explain the assumptions and limits of the prediction."
+      "Explain what the prediction treats as true and when it would stop working."
     ],
-    "source_sha256": "b440c4a1317cb265c87c2a1c108613e24e23de584d139dacd1d301cf6484ad0f",
+    "source_sha256": "8d2b810e78c99047fae047fd1741320b2963414d608e4dc5b895d4b44c872cf1",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.484Z",
@@ -5680,7 +5680,7 @@
         }
       },
       {
-        "prompt": "Which assumptions support predicting motion from a constant net force using a = F_net/m?",
+        "prompt": "What must be true to predict motion from a constant net force using a = F_net/m?",
         "options": [
           "Fixed mass, constant net force over the interval, and an inertial reference frame.",
           "Any changing mass and force with no adjustment.",
@@ -5814,7 +5814,7 @@
         }
       },
       {
-        "prompt": "Which assumptions support predicting motion from a constant net force using a = F_net/m?",
+        "prompt": "What must be true to predict motion from a constant net force using a = F_net/m?",
         "options": [
           "No knowledge of initial motion.",
           "Any changing mass and force with no adjustment.",
@@ -5864,13 +5864,13 @@
     "unit": 1,
     "day": 21,
     "title": "Transfer task: plan and begin",
-    "target": "Organize the given evidence and begin an independent position prediction.",
+    "target": "Organize the given measurements and details. Begin your own position prediction.",
     "criteria": [
       "Organize the task data with fixed axes and matching units.",
       "Calculate central and bounded final coordinates.",
       "Save an explicit plan for the graph and explanation."
     ],
-    "source_sha256": "af2573f6995589c4a8de3ab12f52cf42541cab35295b1116059c233aaf468cd3",
+    "source_sha256": "41809d61991c2a7408b4f97ab1c047211fc5db0d45f585e9bf5c75c9cd921c41",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.485Z",
@@ -5885,7 +5885,7 @@
     },
     "cpa": [
       {
-        "prompt": "A toy tracking model uses east +x, north +y, distances in km, and time in seconds. Which velocity units fit directly?",
+        "prompt": "A simplified tracking calculation uses east as +x and north as +y. Distance is in km and time is in seconds. Which velocity units can you use directly?",
         "options": [
           "km/s",
           "km/h without conversion",
@@ -5995,7 +5995,7 @@
         }
       },
       {
-        "prompt": "A fixed-Earth straight-line model omits gravity and Earth’s motion. Which next step is appropriate before making a real encounter claim?",
+        "prompt": "A simple prediction uses a straight path and treats Earth as still. It leaves out gravity and Earth’s motion. What should you do next before saying whether a real object will come near Earth?",
         "options": [
           "Ignore the y coordinate.",
           "Treat the toy endpoint as a confirmed collision forecast.",
@@ -6019,7 +6019,7 @@
     ],
     "honors": [
       {
-        "prompt": "A toy tracking model uses east +x, north +y, distances in km, and time in seconds. Which velocity units fit directly?",
+        "prompt": "A simplified tracking calculation uses east as +x and north as +y. Distance is in km and time is in seconds. Which velocity units can you use directly?",
         "options": [
           "km/s",
           "m/s without conversion",
@@ -6129,7 +6129,7 @@
         }
       },
       {
-        "prompt": "A fixed-Earth straight-line model omits gravity and Earth’s motion. Which next step is appropriate before making a real encounter claim?",
+        "prompt": "A simple prediction uses a straight path and treats Earth as still. It leaves out gravity and Earth’s motion. What should you do next before saying whether a real object will come near Earth?",
         "options": [
           "Add the missing dynamics and compare both bodies at matching times with uncertainty.",
           "Treat the toy endpoint as a confirmed collision forecast.",
@@ -6157,13 +6157,13 @@
     "unit": 1,
     "day": 22,
     "title": "Transfer task: defend and revise",
-    "target": "Defend the prediction with evidence and make a visible, justified revision.",
+    "target": "Support your prediction with measurements and calculations. Show a specific change and explain why you made it.",
     "criteria": [
       "Graph the central prediction and coordinate bounds.",
-      "Defend a claim using calculations and model limits.",
-      "Document a specific revision with evidence."
+      "Use calculations to support an answer. Explain when the calculation stops working.",
+      "Show a specific change and use measurements or details to explain why you made it."
     ],
-    "source_sha256": "87b350dd0c09a10ae1098f7abdbd89f08d35d720b8ac76f4fe0fd2171be8f1a2",
+    "source_sha256": "fec67e139f3e9506ee02e5b71ec2c67abc765e610df5d9029b8a17a7aedae71d",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.485Z",
@@ -6178,7 +6178,7 @@
     },
     "cpa": [
       {
-        "prompt": "A position-time model starts at x = 5 m at t = 0 and predicts x = 17 m at t = 6 s. Which straight-line graph endpoints are correct?",
+        "prompt": "An object starts at x = 5 m at t = 0. It is predicted to reach x = 17 m at t = 6 s. Which endpoints belong on a straight-line position–time graph of this prediction?",
         "options": [
           "(0 s, 5 m) and (6 s, 17 m).",
           "(5 s, 0 m) and (17 s, 6 m).",
@@ -6222,7 +6222,7 @@
         }
       },
       {
-        "prompt": "A toy path ends far from the origin under a constant-velocity model. Which claim is defensible?",
+        "prompt": "A simple constant-velocity calculation puts the end of a path far from the origin. Which conclusion can you support?",
         "options": [
           "All gravitational effects have been measured.",
           "A single endpoint proves the entire real trajectory.",
@@ -6244,7 +6244,7 @@
         }
       },
       {
-        "prompt": "A model predicts 22 m at a stated time, while the observed interval is 18–20 m. What does the comparison support?",
+        "prompt": "A calculation predicts a position of 22 m at a given time. The observed position is between 18 m and 20 m. What does this comparison support?",
         "options": [
           "Proof that gravity is the only possible cause.",
           "A mismatch requiring checks of assumptions, inputs, or measurement quality.",
@@ -6288,7 +6288,7 @@
         }
       },
       {
-        "prompt": "After fitting a constant-speed model to one observed endpoint, what is a useful next test?",
+        "prompt": "After fitting a constant-speed calculation to one observed endpoint, what is a useful next test?",
         "options": [
           "Claim the fit proves every future position.",
           "Remove uncertainty from all measurements.",
@@ -6312,7 +6312,7 @@
     ],
     "honors": [
       {
-        "prompt": "A position-time model starts at x = 5 m at t = 0 and predicts x = 17 m at t = 6 s. Which straight-line graph endpoints are correct?",
+        "prompt": "An object starts at x = 5 m at t = 0. It is predicted to reach x = 17 m at t = 6 s. Which endpoints belong on a straight-line position–time graph of this prediction?",
         "options": [
           "(0 s, 5 m) and (6 s, 17 m).",
           "(5 s, 0 m) and (17 s, 6 m).",
@@ -6356,7 +6356,7 @@
         }
       },
       {
-        "prompt": "A toy path ends far from the origin under a constant-velocity model. Which claim is defensible?",
+        "prompt": "A simple constant-velocity calculation puts the end of a path far from the origin. Which conclusion can you support?",
         "options": [
           "A single endpoint proves the entire real trajectory.",
           "The predicted endpoint misses the origin within the stated model and bounds.",
@@ -6378,7 +6378,7 @@
         }
       },
       {
-        "prompt": "A model predicts 22 m at a stated time, while the observed interval is 18–20 m. What does the comparison support?",
+        "prompt": "A calculation predicts a position of 22 m at a given time. The observed position is between 18 m and 20 m. What does this comparison support?",
         "options": [
           "Exact agreement.",
           "Proof that every measurement is false.",
@@ -6422,7 +6422,7 @@
         }
       },
       {
-        "prompt": "After fitting a constant-speed model to one observed endpoint, what is a useful next test?",
+        "prompt": "After fitting a constant-speed calculation to one observed endpoint, what is a useful next test?",
         "options": [
           "Predict a later position and compare it with a new timed measurement.",
           "Claim the fit proves every future position.",
@@ -6454,9 +6454,9 @@
     "criteria": [
       "Draw velocity tangent to a path and force toward the attracting body.",
       "Distinguish motion from a change in motion.",
-      "State what a straight-line model leaves out."
+      "State what a prediction of straight-line motion leaves out."
     ],
-    "source_sha256": "98ba12235e250bece40712cccb50783dc3749b4437d32b387efd9f29ea37c7e6",
+    "source_sha256": "d08df2ba8ffd7297e2821c6af4679f9f9ad4408fc38b49ea6e8d25411390c38c",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.487Z",
@@ -6745,11 +6745,11 @@
     "title": "Free fall",
     "target": "Describe and calculate ideal free fall near Earth.",
     "criteria": [
-      "State the no-air-resistance assumption.",
+      "State that you are ignoring air resistance.",
       "Use equal velocity changes in equal times.",
       "Separate acceleration from mass and current velocity."
     ],
-    "source_sha256": "c10733a57e7ec81b5d478fc75ffe9900f6ab6fc6435c0c0ef338490af5f1c58d",
+    "source_sha256": "ecaca0502c4bd690f02baa1ba3376c9afa6335b4105e6df424c5ae036add79ab",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.489Z",
@@ -6764,7 +6764,7 @@
     },
     "cpa": [
       {
-        "prompt": "Which condition is required for the simple near-surface free-fall model?",
+        "prompt": "What must be true to use the simple free-fall calculation near Earth’s surface?",
         "options": [
           "The object has no mass.",
           "Air resistance is negligible and gravity is approximately uniform.",
@@ -6898,7 +6898,7 @@
     ],
     "honors": [
       {
-        "prompt": "Which condition is required for the simple near-surface free-fall model?",
+        "prompt": "What must be true to use the simple free-fall calculation near Earth’s surface?",
         "options": [
           "Its velocity is always downward.",
           "Air resistance is negligible and gravity is approximately uniform.",
@@ -7042,7 +7042,7 @@
       "Calculate weight using the stated local g.",
       "Explain how weight changes while mass stays the same."
     ],
-    "source_sha256": "5ac945b1ef44d02c4f8a144089556efb2c0f0f201ba6383c57276cc6264c5156",
+    "source_sha256": "e4c0c88e0b0b24b685365abcaac6967857e6b8e7e851fc7ee787ec1ae68538e7",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.489Z",
@@ -7335,7 +7335,7 @@
       "Apply direct mass and inverse-square distance comparisons.",
       "Identify equal forces on the two interacting bodies."
     ],
-    "source_sha256": "b860fd0707312d317dcb77af835b3de1def57655aceb7b3211490f03b46854df",
+    "source_sha256": "5e9fc2067678cacc6b185b329e12a916996ca06fb46e2ea678e06c8ebb32d939",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.490Z",
@@ -7350,7 +7350,7 @@
     },
     "cpa": [
       {
-        "prompt": "Two spherical objects have radii 1 m and 2 m with a 5 m surface gap. Which distance goes into the inverse-square force model?",
+        "prompt": "Two spherical objects have radii of 1 m and 2 m. The gap between their surfaces is 5 m. Which distance belongs in the inverse-square force equation?",
         "options": [
           "5 m",
           "2 m",
@@ -7484,7 +7484,7 @@
     ],
     "honors": [
       {
-        "prompt": "Two spherical objects have radii 1 m and 2 m with a 5 m surface gap. Which distance goes into the inverse-square force model?",
+        "prompt": "Two spherical objects have radii of 1 m and 2 m. The gap between their surfaces is 5 m. Which distance belongs in the inverse-square force equation?",
         "options": [
           "5 m",
           "2 m",
@@ -7628,7 +7628,7 @@
       "Square the distance before dividing.",
       "Check units and the scale of the result."
     ],
-    "source_sha256": "562ac35246c145e33e7a57880f0486ff80787b3b4897933f8e977d04d36a2aae",
+    "source_sha256": "a6327aa4061b03c51302fab89523a7a2ba3b2ea08edfe37298f281eaa64dd0bc",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.491Z",
@@ -7687,7 +7687,7 @@
         }
       },
       {
-        "prompt": "A model supplies Gm₁m₂ = 75 N·m² and r = 5 m. What is F?",
+        "prompt": "Use Gm₁m₂ = 75 N·m² and r = 5 m. What is F?",
         "options": [
           "3 N",
           "15 N",
@@ -7821,7 +7821,7 @@
         }
       },
       {
-        "prompt": "A model supplies Gm₁m₂ = 75 N·m² and r = 5 m. What is F?",
+        "prompt": "Use Gm₁m₂ = 75 N·m² and r = 5 m. What is F?",
         "options": [
           "1,875 N",
           "375 N",
@@ -7921,7 +7921,7 @@
       "Use g=F/m and F=mg consistently.",
       "Distinguish source field from the mass placed in it."
     ],
-    "source_sha256": "e32983580487395ebd0f6d6f753f4edc134aa57f1566a1d3767866e8d6ca19d0",
+    "source_sha256": "1baf79a64e53fe7d2d6ab63a46e345ca37538249e0199f9d440b77eb4eb17614",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.491Z",
@@ -8214,7 +8214,7 @@
       "Compare fields with the inverse-square relation.",
       "Explain why orbit is not a zero-gravity region."
     ],
-    "source_sha256": "5f8d49fd20752f93676ad874cf7a36742fdeac7263dc19b199bd9fe3a871ebb3",
+    "source_sha256": "8a12d7157baaadd92612ea67ec9e44a5d39b104d4d89952f726c34abb2ecbea0",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.493Z",
@@ -8273,7 +8273,7 @@
         }
       },
       {
-        "prompt": "Surface field is 20 N/kg. What is field at center distance 2R in the spherical model?",
+        "prompt": "A spherical planet’s surface field is 20 N/kg. What is the field at a distance of 2R from its center? R is the planet’s radius.",
         "options": [
           "80 N/kg",
           "10 N/kg",
@@ -8339,7 +8339,7 @@
         }
       },
       {
-        "prompt": "An orbiting station is only a small fraction of a planetary radius above the surface. Which claim is most plausible?",
+        "prompt": "An orbiting station is above a planet’s surface. Its height is only a small fraction of the planet’s radius. Which statement is most likely to be true?",
         "options": [
           "Gravity must be negligible solely because the station is in space.",
           "Field strength must exceed the surface value.",
@@ -8407,7 +8407,7 @@
         }
       },
       {
-        "prompt": "Surface field is 20 N/kg. What is field at center distance 2R in the spherical model?",
+        "prompt": "A spherical planet’s surface field is 20 N/kg. What is the field at a distance of 2R from its center? R is the planet’s radius.",
         "options": [
           "40 N/kg",
           "5 N/kg",
@@ -8473,7 +8473,7 @@
         }
       },
       {
-        "prompt": "An orbiting station is only a small fraction of a planetary radius above the surface. Which claim is most plausible?",
+        "prompt": "An orbiting station is above a planet’s surface. Its height is only a small fraction of the planet’s radius. Which statement is most likely to be true?",
         "options": [
           "Field strength must exceed the surface value.",
           "Gravity must be negligible solely because the station is in space.",
@@ -8507,7 +8507,7 @@
       "Find acceleration from a velocity-time slope.",
       "Use repeated trials and explain uncertainty."
     ],
-    "source_sha256": "4d2694b9a67fc4066dfbe29db15dda555b254f7605d708f9bc3a11a09034c6dc",
+    "source_sha256": "2b267024b21781faa3b0e6362a2744fd29f2c566b9d7515d3330465dfaefd012",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.493Z",
@@ -8798,9 +8798,9 @@
     "criteria": [
       "Identify horizontal and vertical velocity components.",
       "Use the same elapsed time for both axes.",
-      "State the negligible-air-resistance assumption."
+      "State that you are treating air resistance as small enough to ignore."
     ],
-    "source_sha256": "bb78525db82206334f8379d95549cd893418e7eb2be7aee90e13c541846f4bfc",
+    "source_sha256": "3d2851a79459dc91a3adf7bab75092ac4e7677c2e182cc64353329edc08f2c92",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.494Z",
@@ -8903,7 +8903,7 @@
         }
       },
       {
-        "prompt": "Which assumption allows horizontal velocity to remain constant after launch?",
+        "prompt": "What must be true for horizontal velocity to stay constant after launch?",
         "options": [
           "Negligible horizontal force, including air resistance.",
           "No gravitational force.",
@@ -8925,7 +8925,7 @@
         }
       },
       {
-        "prompt": "Strong air resistance slows a real projectile horizontally. What must change in the ideal model?",
+        "prompt": "Strong air resistance slows a real projectile horizontally. What must change in a prediction that leaves out air resistance?",
         "options": [
           "Continue using constant vx without qualification.",
           "Allow horizontal velocity to vary with time.",
@@ -9037,7 +9037,7 @@
         }
       },
       {
-        "prompt": "Which assumption allows horizontal velocity to remain constant after launch?",
+        "prompt": "What must be true for horizontal velocity to stay constant after launch?",
         "options": [
           "No gravitational force.",
           "An increasing horizontal acceleration.",
@@ -9059,7 +9059,7 @@
         }
       },
       {
-        "prompt": "Strong air resistance slows a real projectile horizontally. What must change in the ideal model?",
+        "prompt": "Strong air resistance slows a real projectile horizontally. What must change in a prediction that leaves out air resistance?",
         "options": [
           "Allow horizontal velocity to vary with time.",
           "Remove elapsed time from both axes.",
@@ -9093,7 +9093,7 @@
       "Find or use fall time before calculating range.",
       "Check units and interpret the landing point."
     ],
-    "source_sha256": "641201e22a0ef3ca5795aeb9d406d458ec93f591cdf00b2a04a55c61d14ee272",
+    "source_sha256": "f4bde2b0b8e499a6e17a3161fa6bf6499bb08be163b94255f579c7c0a1e7fcf1",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.495Z",
@@ -9130,7 +9130,7 @@
         }
       },
       {
-        "prompt": "A platform is 3.2 m high and launch speed is 6 m/s horizontally. Which values determine fall time in the ideal model?",
+        "prompt": "A platform is 3.2 m high. An object is launched horizontally at 6 m/s. Ignore air resistance. Which values are needed to find its fall time?",
         "options": [
           "Mass and color.",
           "Horizontal speed alone.",
@@ -9152,7 +9152,7 @@
         }
       },
       {
-        "prompt": "A horizontal launch falls 1.25 m. Use g = 10 m/s² and no drag. What is fall time?",
+        "prompt": "A horizontal launch falls 1.25 m.\n\n1. Use g = 10 m/s² and no drag.\n2. What is fall time?",
         "options": [
           "5 s",
           "0.5 s",
@@ -9264,7 +9264,7 @@
         }
       },
       {
-        "prompt": "A platform is 3.2 m high and launch speed is 6 m/s horizontally. Which values determine fall time in the ideal model?",
+        "prompt": "A platform is 3.2 m high. An object is launched horizontally at 6 m/s. Ignore air resistance. Which values are needed to find its fall time?",
         "options": [
           "Height, initial vertical velocity, and g.",
           "Horizontal speed alone.",
@@ -9286,7 +9286,7 @@
         }
       },
       {
-        "prompt": "A horizontal launch falls 1.25 m. Use g = 10 m/s² and no drag. What is fall time?",
+        "prompt": "A horizontal launch falls 1.25 m.\n\n1. Use g = 10 m/s² and no drag.\n2. What is fall time?",
         "options": [
           "5 s",
           "0.125 s",
@@ -9384,9 +9384,9 @@
     "criteria": [
       "Separate the initial velocity into two components.",
       "Use vertical motion to determine flight time.",
-      "Explain the assumptions behind range comparisons."
+      "Explain what must be true for your range comparisons to work."
     ],
-    "source_sha256": "f7e20d8b3b7f889206e659ce479efa6b9c048c6db954f5cf8ea7d6b62218ec90",
+    "source_sha256": "3f689fba6b125d82dfdbeaf13191d2629f45b0b9f96b7ca74179331db2645545",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.496Z",
@@ -9445,7 +9445,7 @@
         }
       },
       {
-        "prompt": "Initial upward velocity is 8 m/s. Use g = 10 m/s² without drag. How long to the highest point?",
+        "prompt": "Initial upward velocity is 8 m/s.\n\n1. Use g = 10 m/s² without drag.\n2. How long to the highest point?",
         "options": [
           "8 s",
           "0.8 s",
@@ -9467,7 +9467,7 @@
         }
       },
       {
-        "prompt": "A projectile launches with vx = 5 m/s and vy = 20 m/s upward, returning to launch height. Use g = 10 m/s² and no drag. What are total flight time and range?",
+        "prompt": "A projectile launches with vx = 5 m/s and vy = 20 m/s upward, returning to launch height.\n\n1. Use g = 10 m/s² and no drag.\n2. What are total flight time and range?",
         "options": [
           "2 s and 10 m.",
           "20 s and 100 m.",
@@ -9489,7 +9489,7 @@
         }
       },
       {
-        "prompt": "Under which conditions does 45° maximize range for fixed launch speed?",
+        "prompt": "What must be true for a 45° launch angle to give the greatest range at a fixed launch speed?",
         "options": [
           "Only when horizontal velocity is zero.",
           "Equal launch/landing heights, uniform g, negligible air resistance.",
@@ -9579,7 +9579,7 @@
         }
       },
       {
-        "prompt": "Initial upward velocity is 8 m/s. Use g = 10 m/s² without drag. How long to the highest point?",
+        "prompt": "Initial upward velocity is 8 m/s.\n\n1. Use g = 10 m/s² without drag.\n2. How long to the highest point?",
         "options": [
           "8 s",
           "0.8 s",
@@ -9601,7 +9601,7 @@
         }
       },
       {
-        "prompt": "A projectile launches with vx = 5 m/s and vy = 20 m/s upward, returning to launch height. Use g = 10 m/s² and no drag. What are total flight time and range?",
+        "prompt": "A projectile launches with vx = 5 m/s and vy = 20 m/s upward, returning to launch height.\n\n1. Use g = 10 m/s² and no drag.\n2. What are total flight time and range?",
         "options": [
           "4 s and 80 m.",
           "20 s and 100 m.",
@@ -9623,7 +9623,7 @@
         }
       },
       {
-        "prompt": "Under which conditions does 45° maximize range for fixed launch speed?",
+        "prompt": "What must be true for a 45° launch angle to give the greatest range at a fixed launch speed?",
         "options": [
           "Only when gravity is absent.",
           "Only when horizontal velocity is zero.",
@@ -9679,7 +9679,7 @@
       "Use v²/r or a supplied acceleration.",
       "Identify the real interaction providing centripetal force."
     ],
-    "source_sha256": "1763cf875f3f0ee789f30e3589336746b8d6ecd93073cae49d8cae175e65358e",
+    "source_sha256": "6ea641f1f9df353eeca27d6770bc1cf7d191558b5b73d5efd46ba278bc022ce9",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.496Z",
@@ -9972,7 +9972,7 @@
       "Distinguish tangent velocity from inward force.",
       "Connect circular speed to orbital radius."
     ],
-    "source_sha256": "a5b2a032e7683a56327e7198c25bb366df9c637792181e123cfbf3ff3c86e5cc",
+    "source_sha256": "27eca9e32c411916c0a26d3615341786464a8115ae164e742272f432a3e0cf5e",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.497Z",
@@ -10097,7 +10097,7 @@
         }
       },
       {
-        "prompt": "A student claims a larger circular orbit requires greater speed because the path is longer. Which correction is supported by gravity?",
+        "prompt": "A student says a larger circular orbit needs a greater speed because the path is longer. Which correction does gravity support?",
         "options": [
           "Every orbit has the same period.",
           "Circular speed decreases with radius; period also depends on path length.",
@@ -10231,7 +10231,7 @@
         }
       },
       {
-        "prompt": "A student claims a larger circular orbit requires greater speed because the path is longer. Which correction is supported by gravity?",
+        "prompt": "A student says a larger circular orbit needs a greater speed because the path is longer. Which correction does gravity support?",
         "options": [
           "Path length alone determines speed.",
           "Every orbit has the same period.",
@@ -10265,7 +10265,7 @@
       "Compare speed near and far from the central body.",
       "Use T²=a³ only with the specified units and central body."
     ],
-    "source_sha256": "8cba85f606e2d98ca6bd32ae6967223e1f447fea93638b867c59c188907adeaa",
+    "source_sha256": "67255a7e88f8a1280406c7ec70b93d33eb742cf6c3de90186f05c78aa24ddbf1",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.498Z",
@@ -10280,7 +10280,7 @@
     },
     "cpa": [
       {
-        "prompt": "Where is the Sun located in the ideal elliptical orbit model?",
+        "prompt": "Where is the Sun in an ideal elliptical orbit?",
         "options": [
           "At one focus.",
           "At both foci simultaneously.",
@@ -10414,7 +10414,7 @@
     ],
     "honors": [
       {
-        "prompt": "Where is the Sun located in the ideal elliptical orbit model?",
+        "prompt": "Where is the Sun in an ideal elliptical orbit?",
         "options": [
           "At every point on the orbit.",
           "At one focus.",
@@ -10558,7 +10558,7 @@
       "Check positions of both bodies at the same time.",
       "Explain why geometry and uncertainty matter."
     ],
-    "source_sha256": "536495349031518483e21dcc8b6ca3857a55491291de6914d0de81f9c71e88f3",
+    "source_sha256": "09bceffb6fab380a21291396e845b1ce9853d25f9436da09576b6e024574ace6",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.498Z",
@@ -10683,7 +10683,7 @@
         }
       },
       {
-        "prompt": "Which evidence is most useful beyond period for assessing a close approach?",
+        "prompt": "Besides the orbital period, which information is most useful for checking whether an object will come close?",
         "options": [
           "Only the year of discovery.",
           "Only a photograph’s color palette.",
@@ -10817,7 +10817,7 @@
         }
       },
       {
-        "prompt": "Which evidence is most useful beyond period for assessing a close approach?",
+        "prompt": "Besides the orbital period, which information is most useful for checking whether an object will come close?",
         "options": [
           "Only a photograph’s color palette.",
           "Only a label saying near-Earth.",
@@ -10847,11 +10847,11 @@
     "title": "Transfer: gravity and motion",
     "target": "Apply gravity, projectile and orbital reasoning to a new set of cases.",
     "criteria": [
-      "State a model and assumptions before calculating.",
+      "Choose a diagram or equation. State what it treats as true before calculating.",
       "Connect diagrams to forces and motion.",
       "Check units and explain the limits of conclusions."
     ],
-    "source_sha256": "c706f302caca83bf88e393e1ba1b34d696388a0be03e98e85d0b9194590bcf4d",
+    "source_sha256": "de29099fad2dfe7a1153aabd5e18c5070b9bfa99033df2c8c145779f9e150858",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.499Z",
@@ -10866,7 +10866,7 @@
     },
     "cpa": [
       {
-        "prompt": "Which statement defines an ideal horizontal-launch model before calculation?",
+        "prompt": "Which statement describes what the simple horizontal-launch calculation treats as true?",
         "options": [
           "Horizontal speed increases because gravity points forward.",
           "Mass must be zero.",
@@ -11000,7 +11000,7 @@
     ],
     "honors": [
       {
-        "prompt": "Which statement defines an ideal horizontal-launch model before calculation?",
+        "prompt": "Which statement describes what the simple horizontal-launch calculation treats as true?",
         "options": [
           "Horizontal speed increases because gravity points forward.",
           "The landing height is irrelevant.",
@@ -11144,7 +11144,7 @@
       "Use momentum change to compare stopping force for equal times.",
       "Avoid claiming that momentum alone determines damage."
     ],
-    "source_sha256": "64050e0fae32db1e75d70acf18ed3401808608e8c587c14cef1184be5f9f9695",
+    "source_sha256": "b19379cdace21ac4a9f073d3d6247e9d46db1c43ac13f7eb5040f6ab36b7198c",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.501Z",
@@ -11271,7 +11271,7 @@
       {
         "prompt": "Equal-momentum impacts damage different surfaces differently. Which conclusion is justified?",
         "options": [
-          "Momentum alone does not determine damage; contact time, area, and materials matter.",
+          "Momentum alone does not find damage; contact time, area, and materials matter.",
           "One impact must violate conservation.",
           "Momentum has no physical relevance.",
           "Damage must be identical."
@@ -11408,7 +11408,7 @@
           "One impact must violate conservation.",
           "Damage must be identical.",
           "Momentum has no physical relevance.",
-          "Momentum alone does not determine damage; contact time, area, and materials matter."
+          "Momentum alone does not find damage; contact time, area, and materials matter."
         ],
         "correct_index": 3,
         "guide": "A momentum account constrains impulse but not every local effect.",
@@ -11437,7 +11437,7 @@
       "Include direction or a sign.",
       "Distinguish zero total momentum from no motion."
     ],
-    "source_sha256": "dcc06d58be64773ba8366ec0896777061b74f6612a17af45984c9572962cca36",
+    "source_sha256": "020ec23c1eb0aeb1d26026017ca4e360e6ea21b61b6bc779fd1ea621dad3e6bf",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.502Z",
@@ -11730,7 +11730,7 @@
       "Match impulse direction to momentum change.",
       "Use impulse to find a final velocity."
     ],
-    "source_sha256": "02954f066339b801f6d23c768b128b971178bf59210a9a9de29df075d5a238a3",
+    "source_sha256": "46ba9445c992bbb89bbd5b7da182330eda0c8c3489e1f6e5485268d375393404",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.503Z",
@@ -12023,7 +12023,7 @@
       "Compare force using impulse divided by time.",
       "State why cushioning does not remove momentum change."
     ],
-    "source_sha256": "b79311145b8ba639fc3a12294b9c609d2151ea9a6f76cfc1d2faed5c935a1cc5",
+    "source_sha256": "6d2704934a5031a67e960ba09ca9e5e22bada1bd876fa039548ece287acaa24b",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.503Z",
@@ -12316,7 +12316,7 @@
       "Add momentum with signs.",
       "Explain equal-and-opposite momentum changes."
     ],
-    "source_sha256": "f562676d9473807663f6c0f9feb26cd2bdbdeadc8151c53ba8bedf9798af1aef",
+    "source_sha256": "9614f632e076ecd2dd28fd2ea9a7e3ebc53ecf354a3c8ecbb8ea9125cc06d4a3",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.504Z",
@@ -12605,11 +12605,11 @@
     "title": "Kinds of collisions",
     "target": "Separate momentum conservation from kinetic-energy conservation.",
     "criteria": [
-      "Identify the system and external-impulse assumption.",
+      "Identify the system. State how you handle impulse from outside the system.",
       "Recognize sticking as perfectly inelastic.",
       "Use kinetic energy to distinguish elastic from inelastic."
     ],
-    "source_sha256": "0dc8168fcad9dd8fda076944d3e987a85ae851066fdc0150106b4e12fe57ac39",
+    "source_sha256": "b79b42c0e7a2daeeebd0eff5005b227ee25d30e4e6af52fb3c4bdfdfd3af8ed4",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.505Z",
@@ -12624,7 +12624,7 @@
     },
     "cpa": [
       {
-        "prompt": "Which condition permits total momentum conservation during a collision?",
+        "prompt": "What must be true for total momentum to stay constant during a collision?",
         "options": [
           "Negligible net external impulse on the chosen system.",
           "Equal object masses.",
@@ -12758,7 +12758,7 @@
     ],
     "honors": [
       {
-        "prompt": "Which condition permits total momentum conservation during a collision?",
+        "prompt": "What must be true for total momentum to stay constant during a collision?",
         "options": [
           "Equal object masses.",
           "Identical initial speeds.",
@@ -12902,7 +12902,7 @@
       "Compare total momentum before and after.",
       "Discuss external impulse and measurement variation."
     ],
-    "source_sha256": "7ccec6f36fa3c3e3cf2d47e9fe7664f0194fcabd76bafb5034e70d0991646041",
+    "source_sha256": "c5e80b1dff39ec2105b050bcd58284a9f1e1dfe75158301a183923c14846086f",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.506Z",
@@ -13195,7 +13195,7 @@
       "Use the combined mass after sticking.",
       "Check the result against the direction of total momentum."
     ],
-    "source_sha256": "4b0c9459f7f7823187d21917ffa5ae3b60d40884497ce30c87d513938caa5858",
+    "source_sha256": "11c2000a55cf85d280fe42007d0b2cffecc536705775f783c1e2e5c02f45108c",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.507Z",
@@ -13486,9 +13486,9 @@
     "criteria": [
       "Write a signed momentum balance.",
       "Check kinetic energy separately.",
-      "Reject an elastic claim when kinetic energy changes."
+      "Explain why a collision cannot be elastic if its total kinetic energy changes."
     ],
-    "source_sha256": "1a8bc56908878a935a12672be7c04a6fb06b063f80888faa2fe6f60fbc67b81c",
+    "source_sha256": "3beea0f053e282cc4b0b45d5dbf7934c31591ee28644f1050f109494e626a162",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.508Z",
@@ -13781,7 +13781,7 @@
       "Add momentum components along matching directions.",
       "Connect component sums to the final motion."
     ],
-    "source_sha256": "795e54feb72c9677397382cd609da35bf506568e1301d66f2a8782198344622c",
+    "source_sha256": "5764f8bde3bdf1685f184def9e776bde3f7bb48323d863e198e86c862faa3e19",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.508Z",
@@ -14067,14 +14067,14 @@
     "version": 1,
     "unit": 3,
     "day": 11,
-    "title": "A kinetic-impact deflection model",
+    "title": "Predicting a deflection from an impact",
     "target": "Estimate a velocity change and explain the value of lead time.",
     "criteria": [
-      "State the simplified collision model.",
+      "State how you simplify the collision.",
       "Connect delivered momentum to target velocity change.",
       "Explain why real deflection includes ejecta and orbital effects."
     ],
-    "source_sha256": "86064919f24289cc5ce8951d1d89196c21e061462bac0c63ac7598a7a592f03d",
+    "source_sha256": "cb7c3aec1e9e1dd59340b86b8df81f468215c126ceeb4e29271ce6108c1b2bdd",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.509Z",
@@ -14089,7 +14089,7 @@
     },
     "cpa": [
       {
-        "prompt": "A simplified kinetic-impact model treats a small probe as sticking to a target with negligible external impulse during impact. Which equation governs their shared final velocity?",
+        "prompt": "A small probe hits a target and sticks to it. Ignore impulse from outside forces during the impact. Which equation gives their shared final velocity?",
         "options": [
           "Momentum is ignored because the target is large.",
           "Final velocity = probe mass alone.",
@@ -14155,7 +14155,7 @@
         }
       },
       {
-        "prompt": "An added sideways velocity of 0.03 m/s persists for 400 s in a drift model. What offset results?",
+        "prompt": "An object gains a sideways velocity of 0.03 m/s. This added velocity stays constant for 400 s. How far sideways does it move?",
         "options": [
           "12 m",
           "120 m",
@@ -14177,7 +14177,7 @@
         }
       },
       {
-        "prompt": "Why can real impact momentum transfer differ from a simple sticking model?",
+        "prompt": "Why might the momentum transferred in a real impact differ from a prediction that treats the objects as sticking together?",
         "options": [
           "Impulse exists only in air.",
           "Momentum has no direction in space.",
@@ -14223,7 +14223,7 @@
     ],
     "honors": [
       {
-        "prompt": "A simplified kinetic-impact model treats a small probe as sticking to a target with negligible external impulse during impact. Which equation governs their shared final velocity?",
+        "prompt": "A small probe hits a target and sticks to it. Ignore impulse from outside forces during the impact. Which equation gives their shared final velocity?",
         "options": [
           "Every impact conserves kinetic energy.",
           "Final velocity = probe mass alone.",
@@ -14289,7 +14289,7 @@
         }
       },
       {
-        "prompt": "An added sideways velocity of 0.03 m/s persists for 400 s in a drift model. What offset results?",
+        "prompt": "An object gains a sideways velocity of 0.03 m/s. This added velocity stays constant for 400 s. How far sideways does it move?",
         "options": [
           "0.000075 m",
           "12 m",
@@ -14311,7 +14311,7 @@
         }
       },
       {
-        "prompt": "Why can real impact momentum transfer differ from a simple sticking model?",
+        "prompt": "Why might the momentum transferred in a real impact differ from a prediction that treats the objects as sticking together?",
         "options": [
           "Momentum has no direction in space.",
           "Target mass never matters.",
@@ -14367,7 +14367,7 @@
       "Compare average force for different stopping times.",
       "Name information beyond momentum needed for damage."
     ],
-    "source_sha256": "ef554b1ee40e02a77a0cc0fc9f1f45de13a4244ffd8cebe6c970b703ace52614",
+    "source_sha256": "154bd17fc23c4710e47522194778addaeb283743f557585c6f54b690e61669ed",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.512Z",
@@ -14382,7 +14382,7 @@
     },
     "cpa": [
       {
-        "prompt": "A 12 kg model object moving at +5 m/s comes to rest. What is its momentum change?",
+        "prompt": "A 12 kg object moves at +5 m/s and then stops. What is its change in momentum?",
         "options": [
           "−60 kg·m/s",
           "−12 kg·m/s",
@@ -14426,7 +14426,7 @@
         }
       },
       {
-        "prompt": "A model impact changes momentum by −84 kg·m/s over 0.7 s. What is average force?",
+        "prompt": "An impact changes momentum by −84 kg·m/s in 0.7 s. What is the average force?",
         "options": [
           "−58.8 N",
           "+120 N",
@@ -14516,7 +14516,7 @@
     ],
     "honors": [
       {
-        "prompt": "A 12 kg model object moving at +5 m/s comes to rest. What is its momentum change?",
+        "prompt": "A 12 kg object moves at +5 m/s and then stops. What is its change in momentum?",
         "options": [
           "−60 kg·m/s",
           "0 kg·m/s",
@@ -14560,7 +14560,7 @@
         }
       },
       {
-        "prompt": "A model impact changes momentum by −84 kg·m/s over 0.7 s. What is average force?",
+        "prompt": "An impact changes momentum by −84 kg·m/s in 0.7 s. What is the average force?",
         "options": [
           "+120 N",
           "−58.8 N",
@@ -14654,13 +14654,13 @@
     "unit": 3,
     "day": 13,
     "title": "Momentum analysis: put it together",
-    "target": "Use a model to compare a deflection option and its limits.",
+    "target": "Use a diagram or calculation to compare a deflection option. Explain where your prediction stops working.",
     "criteria": [
       "Compute the required change before evaluating an option.",
       "Keep impulse, velocity change and displacement distinct.",
-      "Communicate assumptions with the numerical result."
+      "Give the numerical result and state what the calculation treats as true."
     ],
-    "source_sha256": "64674f8d5a31968d46e5af0c538296bb3461b3319bd645272012478f0c70d6b2",
+    "source_sha256": "d2f68d23037623900f637870db86bafcf32a276bc7d423abff816421cb707150",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.512Z",
@@ -14785,7 +14785,7 @@
         }
       },
       {
-        "prompt": "A proposal halves delivered impulse but doubles lead time for the same target. In the constant-drift model, compare offsets.",
+        "prompt": "A proposal delivers half as much impulse to the same target but allows twice as much time before arrival. Treat the added sideways velocity as constant. How do the sideways distances compare?",
         "options": [
           "The new offset halves.",
           "Equal.",
@@ -14919,7 +14919,7 @@
         }
       },
       {
-        "prompt": "A proposal halves delivered impulse but doubles lead time for the same target. In the constant-drift model, compare offsets.",
+        "prompt": "A proposal delivers half as much impulse to the same target but allows twice as much time before arrival. Treat the added sideways velocity as constant. How do the sideways distances compare?",
         "options": [
           "The new offset halves.",
           "Equal.",
@@ -14950,10 +14950,10 @@
     "target": "Apply momentum reasoning to new collisions and deflection cases.",
     "criteria": [
       "Define the system and positive direction.",
-      "Use conservation or impulse only when assumptions apply.",
-      "Explain energy and model limits clearly."
+      "Use conservation or impulse only when the facts needed for the equation are true.",
+      "Explain the energy changes and the limits of your calculation."
     ],
-    "source_sha256": "507439231156fa5277b27d925e99002d9ea47bb335598cd8b99507a1febafa95",
+    "source_sha256": "c6469ac40051a01674754cfa1fa838a0dacd46004e978438cf28941fb72ed6b5",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.513Z",
@@ -15246,7 +15246,7 @@
       "Identify speed as a squared factor in kinetic energy.",
       "Name where energy can go in an impact."
     ],
-    "source_sha256": "fe59537b1715c204b1f116284eb0d308012d49843fc7be437136e73112d424fb",
+    "source_sha256": "fc5ae0b65c4a418db469a4de714a068358cf9481dddf9652b798edd1325d7d27",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.516Z",
@@ -15539,7 +15539,7 @@
       "Use meters and newtons to obtain joules.",
       "Distinguish effort from mechanical work on an object."
     ],
-    "source_sha256": "38cd6980e28956b0c0b5597966cdfddfa6bdfc652673e6eec6fb826dcfa02e21",
+    "source_sha256": "707eb00905b207e5dc1bc273fdcdcc59725f515c4ec959f2c8f6ff5c29a0a47f",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.516Z",
@@ -15832,7 +15832,7 @@
       "Use the parallel force component.",
       "Explain positive, negative and zero work."
     ],
-    "source_sha256": "959e167b8aa9c46dbe7d2c2bcad0697af8e6dc6046f71e2cebe2fc1f7c7a4b68",
+    "source_sha256": "97b7ab77b0d38ec27becc1fe92d13b83b0885d2318f3d8a3af3f7ce24d793c0b",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.517Z",
@@ -15913,7 +15913,7 @@
         }
       },
       {
-        "prompt": "A 20 N force makes 60° with a 3 m displacement. Use cos 60° = 0.50. What work does it do?",
+        "prompt": "A 20 N force makes 60° with a 3 m displacement.\n\n1. Use cos 60° = 0.50.\n2. What work does it do?",
         "options": [
           "30 J",
           "10 J",
@@ -16047,7 +16047,7 @@
         }
       },
       {
-        "prompt": "A 20 N force makes 60° with a 3 m displacement. Use cos 60° = 0.50. What work does it do?",
+        "prompt": "A 20 N force makes 60° with a 3 m displacement.\n\n1. Use cos 60° = 0.50.\n2. What work does it do?",
         "options": [
           "30 J",
           "120 J",
@@ -16125,7 +16125,7 @@
       "Use net work rather than one force’s work.",
       "Connect the sign of work to a speed change."
     ],
-    "source_sha256": "f6d2567c39514e10883b7fe5e619f055a07e9ed7962ce0223f168e10f6fac488",
+    "source_sha256": "0616fec85847a4efd5bb0cdcfade9e39661df9dca1724419f3697faf62ffa521",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.518Z",
@@ -16162,7 +16162,7 @@
         }
       },
       {
-        "prompt": "A 0.50 kg model puck moves at 8 m/s. What is kinetic energy?",
+        "prompt": "A 0.50 kg puck moves at 8 m/s. What is its kinetic energy?",
         "options": [
           "32 J",
           "2 J",
@@ -16296,7 +16296,7 @@
         }
       },
       {
-        "prompt": "A 0.50 kg model puck moves at 8 m/s. What is kinetic energy?",
+        "prompt": "A 0.50 kg puck moves at 8 m/s. What is its kinetic energy?",
         "options": [
           "64 J",
           "32 J",
@@ -16418,7 +16418,7 @@
       "Calculate the kinetic-energy change.",
       "Check whether the result is physically possible."
     ],
-    "source_sha256": "08cf1674f03bab04ac3a7b2c26ddb7cd85610b27d82cb788282bf4bbb92437a8",
+    "source_sha256": "6d7a59f9e93275e7cc5c8ffc0aada282ee7cf67ac1ec2adbd421d44593b470c7",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.518Z",
@@ -16433,7 +16433,7 @@
     },
     "cpa": [
       {
-        "prompt": "A crate slides horizontally. A rope pulls forward, friction acts backward, and gravity and normal forces are vertical. Which forces do nonzero work in this model?",
+        "prompt": "A crate slides horizontally. A rope pulls forward, friction acts backward, and gravity and the normal force act vertically. Which forces do nonzero work?",
         "options": [
           "Only gravity and normal.",
           "Rope and friction.",
@@ -16567,7 +16567,7 @@
     ],
     "honors": [
       {
-        "prompt": "A crate slides horizontally. A rope pulls forward, friction acts backward, and gravity and normal forces are vertical. Which forces do nonzero work in this model?",
+        "prompt": "A crate slides horizontally. A rope pulls forward, friction acts backward, and gravity and the normal force act vertically. Which forces do nonzero work?",
         "options": [
           "No force can do work on a sliding object.",
           "Only gravity and normal.",
@@ -16711,7 +16711,7 @@
       "Calculate kinetic energy from measured mass and speed.",
       "Discuss disagreements without inventing measurements."
     ],
-    "source_sha256": "24e7ff0a2f6ea9da4490f86a69bf190c42200f25fb95e1c980eea016c9e23bf4",
+    "source_sha256": "a23e0b7248d9b186d5a4d1c6e00353b0d9b899388a45e96a8e65f4c6d294305b",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.520Z",
@@ -17004,7 +17004,7 @@
       "Use ΔU=mgΔh with the stated g.",
       "Distinguish potential energy from force."
     ],
-    "source_sha256": "6d17894ffd43c41d2fe18953a38691759307be47dc8fde4f5ce5af1e49ebbd51",
+    "source_sha256": "9d31d1f46fbf140ed1fdfae3b776681f09be2bf549a65315ce0611c2708d2798",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.520Z",
@@ -17041,7 +17041,7 @@
         }
       },
       {
-        "prompt": "A model uses U = 0 at a platform. An object is 0.4 m below it. What sign is U = mgh with upward height positive?",
+        "prompt": "Set U = 0 at a platform. An object is 0.4 m below it. Up is positive. What is the sign of U = mgh?",
         "options": [
           "Positive in every reference.",
           "Zero because height cannot be negative.",
@@ -17063,7 +17063,7 @@
         }
       },
       {
-        "prompt": "A 2.5 kg object is raised 1.6 m. Use g = 10 N/kg. What is ΔU?",
+        "prompt": "A 2.5 kg object is raised 1.6 m.\n\n1. Use g = 10 N/kg.\n2. What is ΔU?",
         "options": [
           "25 J",
           "16 J",
@@ -17085,7 +17085,7 @@
         }
       },
       {
-        "prompt": "A 4 kg object drops from 2.2 m to 0.7 m above a reference. Use g = 10 N/kg. What is ΔU?",
+        "prompt": "A 4 kg object drops from 2.2 m to 0.7 m above a reference.\n\n1. Use g = 10 N/kg.\n2. What is ΔU?",
         "options": [
           "−60 J",
           "−116 J",
@@ -17129,7 +17129,7 @@
         }
       },
       {
-        "prompt": "A lift raises an object twice as high in the same near-surface constant-g model. What happens to its weight and potential-energy gain?",
+        "prompt": "A lift raises an object twice as high near Earth’s surface. Treat g as constant. What happens to its weight and its gain in potential energy?",
         "options": [
           "Weight doubles; energy gain is unchanged.",
           "Both become zero at the top.",
@@ -17175,7 +17175,7 @@
         }
       },
       {
-        "prompt": "A model uses U = 0 at a platform. An object is 0.4 m below it. What sign is U = mgh with upward height positive?",
+        "prompt": "Set U = 0 at a platform. An object is 0.4 m below it. Up is positive. What is the sign of U = mgh?",
         "options": [
           "Zero because height cannot be negative.",
           "Positive in every reference.",
@@ -17197,7 +17197,7 @@
         }
       },
       {
-        "prompt": "A 2.5 kg object is raised 1.6 m. Use g = 10 N/kg. What is ΔU?",
+        "prompt": "A 2.5 kg object is raised 1.6 m.\n\n1. Use g = 10 N/kg.\n2. What is ΔU?",
         "options": [
           "40 J",
           "16 J",
@@ -17219,7 +17219,7 @@
         }
       },
       {
-        "prompt": "A 4 kg object drops from 2.2 m to 0.7 m above a reference. Use g = 10 N/kg. What is ΔU?",
+        "prompt": "A 4 kg object drops from 2.2 m to 0.7 m above a reference.\n\n1. Use g = 10 N/kg.\n2. What is ΔU?",
         "options": [
           "−60 J",
           "+28 J",
@@ -17263,7 +17263,7 @@
         }
       },
       {
-        "prompt": "A lift raises an object twice as high in the same near-surface constant-g model. What happens to its weight and potential-energy gain?",
+        "prompt": "A lift raises an object twice as high near Earth’s surface. Treat g as constant. What happens to its weight and its gain in potential energy?",
         "options": [
           "Both weight and energy gain double.",
           "Both become zero at the top.",
@@ -17291,13 +17291,13 @@
     "unit": 4,
     "day": 8,
     "title": "When constant g is not enough",
-    "target": "Recognize the limits of the near-surface mgh model.",
+    "target": "Recognize when mgh works near a planet’s surface and when it stops working well.",
     "criteria": [
       "Compare altitude with planetary radius.",
       "Explain that gravitational field weakens with center distance.",
-      "Choose a model appropriate to the height interval."
+      "Choose an equation that fits the height change."
     ],
-    "source_sha256": "9069b8755f076557767f1d369d3f58b43470c40d6cc4b06ece0aa8911ace826c",
+    "source_sha256": "db472aad1af22ef657fd553a7d55510e7255dd7aae34771de02dda2caadd0fc8",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.521Z",
@@ -17356,7 +17356,7 @@
         }
       },
       {
-        "prompt": "At the surface a spherical planet has field g₀. At center distance 3R, what is field in the inverse-square model?",
+        "prompt": "A spherical planet has a field of g₀ at its surface. Use the inverse-square relationship. What is its field at a distance of 3R from the center? R is the planet’s radius.",
         "options": [
           "g₀/3",
           "9g₀",
@@ -17400,7 +17400,7 @@
         }
       },
       {
-        "prompt": "Using constant surface g for a large outward lift gives what bias relative to the spherical inverse-square model?",
+        "prompt": "An object is lifted far above a spherical planet. How does using a constant surface value of g affect the result compared with using the inverse-square relationship?",
         "options": [
           "It predicts negative required work in every lift.",
           "It overestimates required lifting energy because actual force weakens with height.",
@@ -17422,9 +17422,9 @@
         }
       },
       {
-        "prompt": "Which model choice is most defensible for lifting a spacecraft through a height comparable to planetary radius?",
+        "prompt": "A spacecraft is lifted by a height about as large as the planet’s radius. Which way of calculating gravity is best supported?",
         "options": [
-          "Use changing gravity or universal potential energy and state the assumptions.",
+          "Use changing gravity or universal potential energy and say what you are treating as true.",
           "Use surface mgh without checking its range.",
           "Use altitude alone as the separation from the planet’s center.",
           "Ignore gravity above the surface."
@@ -17490,7 +17490,7 @@
         }
       },
       {
-        "prompt": "At the surface a spherical planet has field g₀. At center distance 3R, what is field in the inverse-square model?",
+        "prompt": "A spherical planet has a field of g₀ at its surface. Use the inverse-square relationship. What is its field at a distance of 3R from the center? R is the planet’s radius.",
         "options": [
           "3g₀",
           "g₀/3",
@@ -17534,7 +17534,7 @@
         }
       },
       {
-        "prompt": "Using constant surface g for a large outward lift gives what bias relative to the spherical inverse-square model?",
+        "prompt": "An object is lifted far above a spherical planet. How does using a constant surface value of g affect the result compared with using the inverse-square relationship?",
         "options": [
           "It predicts negative required work in every lift.",
           "It underestimates because actual g grows with height.",
@@ -17556,11 +17556,11 @@
         }
       },
       {
-        "prompt": "Which model choice is most defensible for lifting a spacecraft through a height comparable to planetary radius?",
+        "prompt": "A spacecraft is lifted by a height about as large as the planet’s radius. Which way of calculating gravity is best supported?",
         "options": [
           "Use surface mgh without checking its range.",
           "Use altitude alone as the separation from the planet’s center.",
-          "Use changing gravity or universal potential energy and state the assumptions.",
+          "Use changing gravity or universal potential energy and say what you are treating as true.",
           "Ignore gravity above the surface."
         ],
         "correct_index": 2,
@@ -17590,7 +17590,7 @@
       "Explain why negative potential energy does not mean negative kinetic energy.",
       "Compute changes from final minus initial energy."
     ],
-    "source_sha256": "619a0cd7f97d9186a0ea1f2eee13b24b0b74a4fd43e097349b66bc7e62a4b2ed",
+    "source_sha256": "d81804393641ca4a9b4eb2ccc6e1e5a4ea7b5ac7dd269fd7a7ea362ffd896eb4",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.522Z",
@@ -17693,7 +17693,7 @@
         }
       },
       {
-        "prompt": "In a model GMm = 60 J·m. An object moves from r = 5 m to r = 10 m. What is ΔU?",
+        "prompt": "Use GMm = 60 J·m. An object moves from r = 5 m to r = 10 m. What is ΔU?",
         "options": [
           "+6 J",
           "−6 J",
@@ -17827,7 +17827,7 @@
         }
       },
       {
-        "prompt": "In a model GMm = 60 J·m. An object moves from r = 5 m to r = 10 m. What is ΔU?",
+        "prompt": "Use GMm = 60 J·m. An object moves from r = 5 m to r = 10 m. What is ΔU?",
         "options": [
           "+6 J",
           "+18 J",
@@ -17879,11 +17879,11 @@
     "title": "Conserve mechanical energy",
     "target": "Track kinetic and potential energy when nonconservative work is negligible.",
     "criteria": [
-      "Identify the energy system and assumptions.",
+      "Identify the system and what your energy calculation treats as true.",
       "Keep the total energy consistent between positions.",
       "Explain how height and speed trade off."
     ],
-    "source_sha256": "4eb024ad4b9fc7f95c3f4ace425edb82e892de655dc8211f189e88046535a789",
+    "source_sha256": "e8d5cb2b001236bfaba65c6eaf558d9e5ce395bc81ca4ae0b14c10fd0a45f0b7",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.523Z",
@@ -17920,7 +17920,7 @@
         }
       },
       {
-        "prompt": "A cart rolls down a track with substantial friction. Which claim needs correction?",
+        "prompt": "A cart rolls down a track with substantial friction. Which statement needs correction?",
         "options": [
           "K + U is necessarily constant for the cart-Earth system.",
           "Friction can increase internal energy.",
@@ -17986,7 +17986,7 @@
         }
       },
       {
-        "prompt": "A point mass starts from rest and falls vertically 1.8 m without resistance. Use g = 10 m/s². What is its speed?",
+        "prompt": "A point mass starts from rest and falls vertically 1.8 m without resistance.\n\n1. Use g = 10 m/s².\n2. What is its speed?",
         "options": [
           "18 m/s",
           "3 m/s",
@@ -18054,7 +18054,7 @@
         }
       },
       {
-        "prompt": "A cart rolls down a track with substantial friction. Which claim needs correction?",
+        "prompt": "A cart rolls down a track with substantial friction. Which statement needs correction?",
         "options": [
           "A system boundary must be specified.",
           "K + U is necessarily constant for the cart-Earth system.",
@@ -18120,7 +18120,7 @@
         }
       },
       {
-        "prompt": "A point mass starts from rest and falls vertically 1.8 m without resistance. Use g = 10 m/s². What is its speed?",
+        "prompt": "A point mass starts from rest and falls vertically 1.8 m without resistance.\n\n1. Use g = 10 m/s².\n2. What is its speed?",
         "options": [
           "6 m/s",
           "36 m/s",
@@ -18174,9 +18174,9 @@
     "criteria": [
       "Distinguish translational and rotational kinetic energy.",
       "Use equal height changes to compare ideal energy changes.",
-      "State when a simple point-mass model is insufficient."
+      "State when treating an object as a point mass leaves out important physics."
     ],
-    "source_sha256": "649f4a4409bb573bf647ce5bb351d6c1770480a00daab0528fe7032299498bfc",
+    "source_sha256": "ec376e4865ae5efae9e10bcc1ef5bdd8b9b6623167f5eff941d4368bd2782aa7",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.523Z",
@@ -18466,10 +18466,10 @@
     "target": "Use height differences to predict speed in ideal motion.",
     "criteria": [
       "Identify the relevant vertical height change.",
-      "Conserve energy under stated assumptions.",
+      "Conserve energy only when the stated facts allow it.",
       "Separate path length from gravitational energy change."
     ],
-    "source_sha256": "85092fadb7f3965feb60be1f1e13789f4d8ce84eac7aaf1d968c4b2bfe6612a6",
+    "source_sha256": "330284d5209a6a61972ce434fd540c11f8bb20edbc81f10eeda165f788a50ee8",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.524Z",
@@ -18528,7 +18528,7 @@
         }
       },
       {
-        "prompt": "A 3 kg coaster model descends 2 m without resistance. Use g = 10 N/kg. What is its kinetic-energy gain?",
+        "prompt": "A 3 kg coaster descends 2 m without resistance. Use g = 10 N/kg. What is its gain in kinetic energy?",
         "options": [
           "15 J",
           "30 J",
@@ -18594,7 +18594,7 @@
         }
       },
       {
-        "prompt": "A longer real coaster track gives a lower final speed than a shorter one with the same drop. Which explanation is plausible?",
+        "prompt": "Two real coaster tracks have the same drop. The longer track gives a lower final speed. Which explanation could account for this?",
         "options": [
           "Gravity must have disappeared.",
           "More energy may have transferred to internal energy through resistance.",
@@ -18662,7 +18662,7 @@
         }
       },
       {
-        "prompt": "A 3 kg coaster model descends 2 m without resistance. Use g = 10 N/kg. What is its kinetic-energy gain?",
+        "prompt": "A 3 kg coaster descends 2 m without resistance. Use g = 10 N/kg. What is its gain in kinetic energy?",
         "options": [
           "6 J",
           "60 J",
@@ -18728,7 +18728,7 @@
         }
       },
       {
-        "prompt": "A longer real coaster track gives a lower final speed than a shorter one with the same drop. Which explanation is plausible?",
+        "prompt": "Two real coaster tracks have the same drop. The longer track gives a lower final speed. Which explanation could account for this?",
         "options": [
           "More energy may have transferred to internal energy through resistance.",
           "The longer path necessarily reduced the cart’s mass.",
@@ -18762,7 +18762,7 @@
       "Calculate an energy balance.",
       "Discuss rotation, resistance and uncertainty."
     ],
-    "source_sha256": "6bcc03dd1ae1afcb72f0f866d8ef7135b497ddf90ddd6b79ca940fa48bf3d231",
+    "source_sha256": "c76262596585584d86bec2cd3c4fee3bf4a33e1ca4a7da06208b55cc95b9b477",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.524Z",
@@ -19055,7 +19055,7 @@
       "Use spring constant in N/m.",
       "Point the spring force back toward equilibrium."
     ],
-    "source_sha256": "5708f8e0733968fd2a11b14c01ae35ac34668a8ee80e94e69793cfdf75929c6e",
+    "source_sha256": "2a22e96aeb86ac105296bec5452d9ca2fb5b86906cc99f36ece071985487a4c0",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.525Z",
@@ -19348,7 +19348,7 @@
       "Apply the squared relationship for spring energy.",
       "Explain how stored energy can become motion."
     ],
-    "source_sha256": "e9335095a974df9aeb02619386e6d96017983358420e981b656800592370d86d",
+    "source_sha256": "6f403e3704faef38b43b5ee630d0e758c84443183535370cc5245b9fd89c14fd",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.525Z",
@@ -19641,7 +19641,7 @@
       "Use power=energy/time.",
       "Explain equal work done at different rates."
     ],
-    "source_sha256": "3c6c57673431da15bfb62020c098287893440ec8abb6b58045915b1cccbcfb87",
+    "source_sha256": "4183211ffcd3b6ee87db6126e69b7c74ae30d5d94ea35ce22fdc53b76554fc3a",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.526Z",
@@ -19934,7 +19934,7 @@
       "Calculate total kinetic energy independently.",
       "Account for reduced kinetic energy without losing total energy."
     ],
-    "source_sha256": "c773e1165c31d3d9888f3e34c30fed3add42e476baec75b44040c32c7b0b26b2",
+    "source_sha256": "8922cad04a1390bc86b298ab05d627db0c7b6f4f6b1b02bca39870b821e03a21",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.526Z",
@@ -20227,7 +20227,7 @@
       "Distinguish thermal energy from temperature.",
       "Use energy differences to quantify a transfer."
     ],
-    "source_sha256": "010ea14e1b3f0089d61fee82482e5542b9e13a9c178d5ea6908e6500c32aa9d3",
+    "source_sha256": "05a98e5d400dc65380573ce8689b56fe82700dced4be4befb13d6341ffc44eb0",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.527Z",
@@ -20517,10 +20517,10 @@
     "target": "Convert an energy estimate without claiming a complete damage prediction.",
     "criteria": [
       "Convert speed units before squaring.",
-      "Calculate kinetic energy from stated model values.",
+      "Calculate kinetic energy from the supplied mass and velocity.",
       "Distinguish an energy equivalent from an explosion or damage forecast."
     ],
-    "source_sha256": "a0b17746f983779319716dd5cf9c24f1359bff4a1a62fcc683c3876f74fd3b98",
+    "source_sha256": "b33e45fa0d23ab1e2967f1d8b1c9cad8710769111abc7af09b8a49f03c10928b",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.528Z",
@@ -20645,7 +20645,7 @@
         }
       },
       {
-        "prompt": "Two impacts have the same TNT energy equivalent but different impact angles and materials. Which claim is justified?",
+        "prompt": "Two impacts have the same TNT energy equivalent but different angles and materials. Which conclusion can you support?",
         "options": [
           "Equal total energy does not guarantee equal local damage.",
           "The crater diameters must match exactly.",
@@ -20779,7 +20779,7 @@
         }
       },
       {
-        "prompt": "Two impacts have the same TNT energy equivalent but different impact angles and materials. Which claim is justified?",
+        "prompt": "Two impacts have the same TNT energy equivalent but different angles and materials. Which conclusion can you support?",
         "options": [
           "The crater diameters must match exactly.",
           "Equal total energy does not guarantee equal local damage.",
@@ -20807,13 +20807,13 @@
     "unit": 4,
     "day": 20,
     "title": "Escape speed",
-    "target": "Explain escape in an ideal gravitational-energy model.",
+    "target": "Explain escape using a simplified gravitational-energy calculation.",
     "criteria": [
       "State the zero-at-infinity energy convention.",
       "Distinguish escape speed from circular-orbit speed.",
       "Name neglected effects in the ideal calculation."
     ],
-    "source_sha256": "2a3b50bfecafd832ff2d04763085c05184092152f62fd7240b4477fa9a578883",
+    "source_sha256": "62ba26394ec02e63f57654b31353a6032956e1abd8367f06244caf103351c995",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.528Z",
@@ -20828,7 +20828,7 @@
     },
     "cpa": [
       {
-        "prompt": "With U = 0 at infinity, an object starts with U = −72 J. What minimum initial K allows it to reach infinity with zero final speed in the ideal model?",
+        "prompt": "Set U = 0 at infinity. An object starts with U = −72 J. Ignore energy losses. What is the smallest initial K that lets it reach infinity with zero final speed?",
         "options": [
           "36 J",
           "−72 J",
@@ -20894,7 +20894,7 @@
         }
       },
       {
-        "prompt": "A spacecraft is in a stable circular orbit with no thrust. Which claim is correct?",
+        "prompt": "A spacecraft is in a stable circular orbit with no thrust. Which statement is correct?",
         "options": [
           "Any nonzero altitude means escape.",
           "It must be moving at escape speed.",
@@ -20916,7 +20916,7 @@
         }
       },
       {
-        "prompt": "Which assumption belongs to the simple escape-speed model?",
+        "prompt": "What does the simple escape-speed calculation treat as true?",
         "options": [
           "Negligible atmospheric drag and no later propulsion.",
           "The launch speed can be zero for any planet.",
@@ -20962,7 +20962,7 @@
     ],
     "honors": [
       {
-        "prompt": "With U = 0 at infinity, an object starts with U = −72 J. What minimum initial K allows it to reach infinity with zero final speed in the ideal model?",
+        "prompt": "Set U = 0 at infinity. An object starts with U = −72 J. Ignore energy losses. What is the smallest initial K that lets it reach infinity with zero final speed?",
         "options": [
           "−72 J",
           "0 J",
@@ -21028,7 +21028,7 @@
         }
       },
       {
-        "prompt": "A spacecraft is in a stable circular orbit with no thrust. Which claim is correct?",
+        "prompt": "A spacecraft is in a stable circular orbit with no thrust. Which statement is correct?",
         "options": [
           "Circular orbit means gravity is zero.",
           "It must be moving at escape speed.",
@@ -21050,7 +21050,7 @@
         }
       },
       {
-        "prompt": "Which assumption belongs to the simple escape-speed model?",
+        "prompt": "What does the simple escape-speed calculation treat as true?",
         "options": [
           "Gravity becomes zero immediately above the surface.",
           "Mass grows continuously as the craft rises.",
@@ -21100,13 +21100,13 @@
     "unit": 4,
     "day": 21,
     "title": "An energy budget",
-    "target": "Connect work, motion, heating and an honest model conclusion.",
+    "target": "Connect work, motion, and heating. State a conclusion that fits the calculation’s limits.",
     "criteria": [
       "Keep all terms in consistent energy units.",
       "Distinguish mechanical-energy change from total-energy loss.",
-      "Report assumptions with the energy budget."
+      "State what you treat as true when you account for the energy."
     ],
-    "source_sha256": "dcda0b7b49077f15227a0426245e15fa09cb995746b12a5ade5f7bf0c7622ae7",
+    "source_sha256": "74ae61618f81178201a4c0fe342eaba4a0c33621db934545389157c06427c9a5",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.529Z",
@@ -21209,7 +21209,7 @@
         }
       },
       {
-        "prompt": "Which claim is required before treating K + U as constant?",
+        "prompt": "What must be true before you can treat K + U as constant?",
         "options": [
           "Every force must vanish.",
           "The system must have zero mass.",
@@ -21343,7 +21343,7 @@
         }
       },
       {
-        "prompt": "Which claim is required before treating K + U as constant?",
+        "prompt": "What must be true before you can treat K + U as constant?",
         "options": [
           "The system must have zero mass.",
           "The object must always move in a straight line.",
@@ -21397,9 +21397,9 @@
     "criteria": [
       "Choose the correct energy terms and units.",
       "Show a consistent numerical balance.",
-      "Explain model assumptions and limitations."
+      "Explain what your calculation treats as true and when it stops working."
     ],
-    "source_sha256": "8e94a9edd1109f3fc954d0cfe40e32d400cf77177f1e0a6dfd9af5c3f74e9669",
+    "source_sha256": "46bddaafe80e2c797835cf0486b053bb94728bf1ca7fcaab942d128d161a81bb",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.529Z",
@@ -21502,7 +21502,7 @@
         }
       },
       {
-        "prompt": "A model predicts an impact’s energy accurately. What additional information is needed to predict detailed damage?",
+        "prompt": "A calculation accurately predicts an impact’s energy. What else must you know to predict the damage in detail?",
         "options": [
           "Only the object’s name.",
           "No additional information is ever needed.",
@@ -21636,7 +21636,7 @@
         }
       },
       {
-        "prompt": "A model predicts an impact’s energy accurately. What additional information is needed to predict detailed damage?",
+        "prompt": "A calculation accurately predicts an impact’s energy. What else must you know to predict the damage in detail?",
         "options": [
           "Only the object’s name.",
           "No additional information is ever needed.",
@@ -21692,7 +21692,7 @@
       "Identify the direction of spontaneous heat transfer.",
       "Explain why amount and material matter."
     ],
-    "source_sha256": "9d17e773983e1e4f2f26a2c7e17bbb0cf181e089afb8b98f23593ad5e6230f0d",
+    "source_sha256": "1cc30cc192047e89a85f19a4072c43a912e55b558528791994bf385b239c3753",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.531Z",
@@ -21707,7 +21707,7 @@
     },
     "cpa": [
       {
-        "prompt": "Two samples of the same material are at the same temperature, but one has three times the mass. Which claim is best?",
+        "prompt": "Two samples of the same material have the same temperature. One has three times the mass. Which statement is best supported?",
         "options": [
           "Equal temperature does not mean equal total thermal energy.",
           "The smaller sample must contain no particle motion.",
@@ -21841,7 +21841,7 @@
     ],
     "honors": [
       {
-        "prompt": "Two samples of the same material are at the same temperature, but one has three times the mass. Which claim is best?",
+        "prompt": "Two samples of the same material have the same temperature. One has three times the mass. Which statement is best supported?",
         "options": [
           "Equal temperature does not mean equal total thermal energy.",
           "The smaller sample must contain no particle motion.",
@@ -21985,7 +21985,7 @@
       "Use Q=mcΔT with matching units.",
       "Compare materials through specific heat."
     ],
-    "source_sha256": "2b42f77d2a2983df8f0991401e89271a934e59e3c78c27f71191085e6e74502a",
+    "source_sha256": "6b4466b26b93a503689b36659c6ba68185af3bb0f7b20fe41f8519dd3225f461",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.533Z",
@@ -22110,7 +22110,7 @@
         }
       },
       {
-        "prompt": "A 0.20 kg model sample needs 360 J to warm by 3°C. What specific heat fits the data?",
+        "prompt": "A 0.20 kg sample needs 360 J to warm by 3°C. What specific heat fits these values?",
         "options": [
           "1,800 J/(kg·°C)",
           "5,400 J/(kg·°C)",
@@ -22244,7 +22244,7 @@
         }
       },
       {
-        "prompt": "A 0.20 kg model sample needs 360 J to warm by 3°C. What specific heat fits the data?",
+        "prompt": "A 0.20 kg sample needs 360 J to warm by 3°C. What specific heat fits these values?",
         "options": [
           "600 J/(kg·°C)",
           "5,400 J/(kg·°C)",
@@ -22275,10 +22275,10 @@
     "target": "Identify mechanisms of heat transfer and support each classification.",
     "criteria": [
       "Describe contact transfer, bulk fluid motion and electromagnetic transfer.",
-      "Use evidence from the situation.",
+      "Use specific details or measurements from the situation.",
       "Recognize that more than one mechanism can act."
     ],
-    "source_sha256": "9a94f98c2576ff80f8effe34deefc9596927873df778ae2d696c9222852212b9",
+    "source_sha256": "f0d03a083fa9da5319d76a33b9d3a318ff8d51131011da0e01a3fd66deb70d19",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.534Z",
@@ -22571,7 +22571,7 @@
       "Use Q=mL for that interval.",
       "Separate warming energy from phase-change energy."
     ],
-    "source_sha256": "7a724f5f03eb9a70f0efa9baa01f5984a6b278abb7a697523f791ea737899193",
+    "source_sha256": "62729348265d075a380a07c92e85abcb4efa124f0eccd476f7a6460b3694d57b",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.535Z",
@@ -22608,7 +22608,7 @@
         }
       },
       {
-        "prompt": "A sample remains at its boiling temperature while liquid gradually becomes gas. What does continued energy input primarily do in this model?",
+        "prompt": "A sample stays at its boiling temperature while liquid gradually becomes gas. What does the added energy mainly do?",
         "options": [
           "Raises temperature at the same rate as before boiling.",
           "Destroys mass.",
@@ -22652,7 +22652,7 @@
         }
       },
       {
-        "prompt": "A 1.5 kg model substance releases latent energy with magnitude L = 120 J/kg while freezing. What energy magnitude is released?",
+        "prompt": "A 1.5 kg substance freezes. Its latent heat has magnitude L = 120 J/kg. How much energy does it release?",
         "options": [
           "121.5 J",
           "180 J",
@@ -22696,7 +22696,7 @@
         }
       },
       {
-        "prompt": "A model sample needs 900 J to reach its transition temperature and 1,600 J to complete its phase change. What total input is needed with no losses?",
+        "prompt": "A sample needs 900 J to reach its phase-change temperature and 1,600 J to finish changing phase. With no energy losses, what total input is needed?",
         "options": [
           "2,500 J",
           "1,600 J",
@@ -22742,7 +22742,7 @@
         }
       },
       {
-        "prompt": "A sample remains at its boiling temperature while liquid gradually becomes gas. What does continued energy input primarily do in this model?",
+        "prompt": "A sample stays at its boiling temperature while liquid gradually becomes gas. What does the added energy mainly do?",
         "options": [
           "Proves the heater is off.",
           "Destroys mass.",
@@ -22786,7 +22786,7 @@
         }
       },
       {
-        "prompt": "A 1.5 kg model substance releases latent energy with magnitude L = 120 J/kg while freezing. What energy magnitude is released?",
+        "prompt": "A 1.5 kg substance freezes. Its latent heat has magnitude L = 120 J/kg. How much energy does it release?",
         "options": [
           "0 J",
           "121.5 J",
@@ -22830,7 +22830,7 @@
         }
       },
       {
-        "prompt": "A model sample needs 900 J to reach its transition temperature and 1,600 J to complete its phase change. What total input is needed with no losses?",
+        "prompt": "A sample needs 900 J to reach its phase-change temperature and 1,600 J to finish changing phase. With no energy losses, what total input is needed?",
         "options": [
           "1,600 J",
           "2,500 J",
@@ -22861,10 +22861,10 @@
     "target": "Use an energy balance to analyze mixing and heat transfer.",
     "criteria": [
       "Identify hot and cold samples and their masses.",
-      "Balance energy gained and lost in an ideal model.",
+      "Balance energy gained and lost in a simplified calculation.",
       "Discuss heat exchange with the container and surroundings."
     ],
-    "source_sha256": "7c5dea7edf2ec71f4bd5fc5b60307506c27d30dbbec491175b0936a63f4a8515",
+    "source_sha256": "642f115e9cd0d3b82e5aa1b665ddf7d2b69e8bf534a771f11676737bff00f449",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.535Z",
@@ -23151,13 +23151,13 @@
     "unit": 5,
     "day": 6,
     "title": "Temperature and particle motion",
-    "target": "Use a particle model to distinguish average motion from total energy.",
+    "target": "Use a drawing or explanation of particles to distinguish average motion from total energy.",
     "criteria": [
       "Describe temperature in terms of microscopic motion.",
       "Use kelvin in proportional temperature comparisons.",
       "Avoid treating a single particle speed as the temperature."
     ],
-    "source_sha256": "6b414e48bb607f5caa1cf029e2a887d48efd4b6cd08e98df0f70119c4e79a32f",
+    "source_sha256": "1b6d908d16f1b1dd3d16eb352d1c6eb3b8f09ab9ed82ad2d482cb552554f7c7d",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.536Z",
@@ -23238,7 +23238,7 @@
         }
       },
       {
-        "prompt": "An ideal gas changes from 27°C to 327°C. Use K = °C + 273. What is the ratio of final to initial average translational kinetic energy?",
+        "prompt": "An ideal gas changes from 27°C to 327°C.\n\n1. Use K = °C + 273.\n2. What is the ratio of final to initial average translational kinetic energy?",
         "options": [
           "About 12.1",
           "300",
@@ -23264,7 +23264,7 @@
         "options": [
           "All molecules must have identical speed or temperature is undefined.",
           "The sample has two separate temperatures solely because speeds differ.",
-          "A single speed does not determine the sample’s temperature.",
+          "A single speed does not find the sample’s temperature.",
           "The slower molecule has zero kinetic energy."
         ],
         "correct_index": 2,
@@ -23282,7 +23282,7 @@
         }
       },
       {
-        "prompt": "A simulation adds more identical gas particles while keeping the same speed distribution. What happens to temperature in the ideal model?",
+        "prompt": "A simulation adds more identical gas particles. The distribution of their speeds stays the same. What happens to temperature?",
         "options": [
           "It remains the same, although total kinetic energy increases.",
           "It falls to zero.",
@@ -23372,7 +23372,7 @@
         }
       },
       {
-        "prompt": "An ideal gas changes from 27°C to 327°C. Use K = °C + 273. What is the ratio of final to initial average translational kinetic energy?",
+        "prompt": "An ideal gas changes from 27°C to 327°C.\n\n1. Use K = °C + 273.\n2. What is the ratio of final to initial average translational kinetic energy?",
         "options": [
           "2",
           "About 12.1",
@@ -23396,7 +23396,7 @@
       {
         "prompt": "One molecule in a gas moves faster than another at the same instant. What follows about the sample temperature?",
         "options": [
-          "A single speed does not determine the sample’s temperature.",
+          "A single speed does not find the sample’s temperature.",
           "The sample has two separate temperatures solely because speeds differ.",
           "All molecules must have identical speed or temperature is undefined.",
           "The slower molecule has zero kinetic energy."
@@ -23416,7 +23416,7 @@
         }
       },
       {
-        "prompt": "A simulation adds more identical gas particles while keeping the same speed distribution. What happens to temperature in the ideal model?",
+        "prompt": "A simulation adds more identical gas particles. The distribution of their speeds stays the same. What happens to temperature?",
         "options": [
           "It doubles whenever particle count doubles.",
           "It remains the same, although total kinetic energy increases.",
@@ -23450,7 +23450,7 @@
       "Distinguish work done by the system from work done on it.",
       "Apply ΔU=Q-W with the stated signs."
     ],
-    "source_sha256": "4cccb1829c0e94abae6b1040deadc41878d44fe7a3410abb6fce5da957608abe",
+    "source_sha256": "301d0bdb820f466579e984d509fb5463fd91f4bfe94e2e21fc6d854b3d1c4416",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.536Z",
@@ -23743,7 +23743,7 @@
       "Explain why moving heat from cold to hot needs an additional process.",
       "Distinguish energy conservation from process direction."
     ],
-    "source_sha256": "6aa9943c400b0fb089986b0b0f6c8ba7552d46674538400be53f1d503c5996e6",
+    "source_sha256": "b7b65670cdaa44158291c82010bd53681a7da31fa564daeec2ccf6204cd68c43",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.537Z",
@@ -24036,7 +24036,7 @@
       "Account for rejected heat.",
       "Distinguish an ideal upper bound from actual performance."
     ],
-    "source_sha256": "711b6b61714a8f2f57578645178d4daad546920faaae6be84e24e6e84d6f1a91",
+    "source_sha256": "a4493d22f4c5fd1139f723a644f15450154862a67c915444174fe32cf0ecd452",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.537Z",
@@ -24139,7 +24139,7 @@
         }
       },
       {
-        "prompt": "An ideal model places an upper efficiency bound of 40% on an engine’s operating temperatures. Which actual performance is consistent with that bound?",
+        "prompt": "An ideal engine calculation gives a maximum efficiency of 40% at the engine’s operating temperatures. Which actual result is consistent with this limit?",
         "options": [
           "28%.",
           "140%.",
@@ -24273,7 +24273,7 @@
         }
       },
       {
-        "prompt": "An ideal model places an upper efficiency bound of 40% on an engine’s operating temperatures. Which actual performance is consistent with that bound?",
+        "prompt": "An ideal engine calculation gives a maximum efficiency of 40% at the engine’s operating temperatures. Which actual result is consistent with this limit?",
         "options": [
           "48%.",
           "140%.",
@@ -24329,7 +24329,7 @@
       "Explain the role of surface area relative to mass.",
       "Name missing factors in a survival prediction."
     ],
-    "source_sha256": "3a342f984d48c595fc3d7ae2fdab5e1876a1f4c26a7f21988192a56f936e284b",
+    "source_sha256": "e9d8a57b16743cf8dd884a4ad10eccd2fdfc5fa895283518fbfce4aa1dd8a471",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.538Z",
@@ -24344,7 +24344,7 @@
     },
     "cpa": [
       {
-        "prompt": "An entry model assigns 150 J of kinetic energy to an object. A specified heating change needs 30 J. What is the energy ratio KE/heating requirement?",
+        "prompt": "An object entering an atmosphere has 150 J of kinetic energy. A specified heating change needs 30 J. What is the ratio KE/heating requirement?",
         "options": [
           "120",
           "5",
@@ -24366,7 +24366,7 @@
         }
       },
       {
-        "prompt": "An object has 240 J of kinetic energy, but a model sends only 10% into its heating. A specified change needs 40 J. Is the assigned heating energy enough?",
+        "prompt": "An object has 240 J of kinetic energy. A calculation sends only 10% into heating the object. A specified change needs 40 J. Is that heating energy enough?",
         "options": [
           "No; kinetic energy cannot transfer into internal energy.",
           "Yes; 10% means multiply by 10.",
@@ -24454,7 +24454,7 @@
         }
       },
       {
-        "prompt": "A simplified entry model omits fragmentation and changing shape. Which statement is appropriate?",
+        "prompt": "A simple prediction for entering an atmosphere leaves out the object breaking apart or changing shape. Which statement is appropriate?",
         "options": [
           "A conditional model cannot be useful for any comparison.",
           "The omitted processes cannot matter by definition.",
@@ -24478,7 +24478,7 @@
     ],
     "honors": [
       {
-        "prompt": "An entry model assigns 150 J of kinetic energy to an object. A specified heating change needs 30 J. What is the energy ratio KE/heating requirement?",
+        "prompt": "An object entering an atmosphere has 150 J of kinetic energy. A specified heating change needs 30 J. What is the ratio KE/heating requirement?",
         "options": [
           "0.20",
           "5",
@@ -24500,7 +24500,7 @@
         }
       },
       {
-        "prompt": "An object has 240 J of kinetic energy, but a model sends only 10% into its heating. A specified change needs 40 J. Is the assigned heating energy enough?",
+        "prompt": "An object has 240 J of kinetic energy. A calculation sends only 10% into heating the object. A specified change needs 40 J. Is that heating energy enough?",
         "options": [
           "Yes; 10% means multiply by 10.",
           "Yes; all 240 J must heat the object.",
@@ -24588,7 +24588,7 @@
         }
       },
       {
-        "prompt": "A simplified entry model omits fragmentation and changing shape. Which statement is appropriate?",
+        "prompt": "A simple prediction for entering an atmosphere leaves out the object breaking apart or changing shape. Which statement is appropriate?",
         "options": [
           "Its survival estimate is conditional because fragmentation can change area, mass, and heating.",
           "The omitted processes cannot matter by definition.",
@@ -24620,9 +24620,9 @@
     "criteria": [
       "Apply an explicit absorbed-energy fraction.",
       "Use mass and specific heat in a temperature estimate.",
-      "State the no-phase-change and no-loss assumptions."
+      "State that you are treating phase change and energy loss as zero."
     ],
-    "source_sha256": "e3966974800d34a248be025f8faffcd761ad6bb41d5ebdd91791ea51ad0aa65c",
+    "source_sha256": "a21ea5ee2b78fc05648c50df4e3e658007d799f172af5afff4be4e640f15ebd1",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.538Z",
@@ -24637,7 +24637,7 @@
     },
     "cpa": [
       {
-        "prompt": "A source releases 2,000 J. A model says a nearby sample absorbs 15%. What absorbed energy should be used in its heating calculation?",
+        "prompt": "A source releases 2,000 J. Treat a nearby sample as absorbing 15%. What absorbed energy belongs in the heating calculation?",
         "options": [
           "2,000 J",
           "300 J",
@@ -24703,7 +24703,7 @@
         }
       },
       {
-        "prompt": "A 2.0 kg sample with c = 750 J/(kg·°C) must warm by 4°C. What absorbed energy is needed in the no-loss model?",
+        "prompt": "A 2.0 kg sample has c = 750 J/(kg·°C). It must warm by 4°C. With no energy losses, how much absorbed energy is needed?",
         "options": [
           "1,500 J",
           "6,000 J",
@@ -24771,7 +24771,7 @@
     ],
     "honors": [
       {
-        "prompt": "A source releases 2,000 J. A model says a nearby sample absorbs 15%. What absorbed energy should be used in its heating calculation?",
+        "prompt": "A source releases 2,000 J. Treat a nearby sample as absorbing 15%. What absorbed energy belongs in the heating calculation?",
         "options": [
           "300 J",
           "2,000 J",
@@ -24837,7 +24837,7 @@
         }
       },
       {
-        "prompt": "A 2.0 kg sample with c = 750 J/(kg·°C) must warm by 4°C. What absorbed energy is needed in the no-loss model?",
+        "prompt": "A 2.0 kg sample has c = 750 J/(kg·°C). It must warm by 4°C. With no energy losses, how much absorbed energy is needed?",
         "options": [
           "1,500 J",
           "375 J",
@@ -24909,13 +24909,13 @@
     "unit": 5,
     "day": 12,
     "title": "Transfer: thermal energy",
-    "target": "Choose an energy-transfer model and communicate its limits.",
+    "target": "Choose an equation or diagram for energy transfer. Explain when it stops working.",
     "criteria": [
       "Distinguish warming, phase change and work.",
       "Use correct signs and units.",
-      "Explain why a model result depends on its assumptions."
+      "Explain how a predicted result depends on what you treat as true."
     ],
-    "source_sha256": "7148c163fe6d7eee2a63b55286ee58b3fd51d3c41e919f77bfcbed5b421a88e9",
+    "source_sha256": "05035d1e2cdb225e817813080e516b3021a1abeaeb5f8ec17988a687d61c6673",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.539Z",
@@ -24930,7 +24930,7 @@
     },
     "cpa": [
       {
-        "prompt": "Sample A warms without changing phase; B melts at constant temperature. Which pair of energy models fits?",
+        "prompt": "Sample A warms without changing phase. Sample B melts at constant temperature. Which pair of energy equations fits?",
         "options": [
           "Both: final temperature alone.",
           "A: mcΔT; B: mL.",
@@ -25018,7 +25018,7 @@
         }
       },
       {
-        "prompt": "A predicted final temperature assumes no heat loss. Which observation directly calls that assumption into question?",
+        "prompt": "A predicted final temperature treats heat loss as zero. Which observation would directly challenge that choice?",
         "options": [
           "The surrounding container measurably warms during the trial.",
           "The calculation includes units.",
@@ -25040,7 +25040,7 @@
         }
       },
       {
-        "prompt": "A heating model predicts an 8°C rise if all 1,200 J enters a sample. Measurements show only 900 J reaches it, with other assumptions unchanged. What rise should the revised model predict?",
+        "prompt": "A calculation predicts an 8°C rise if all 1,200 J enters a sample. Measurements show that only 900 J reaches it. Keep everything else in the calculation the same. What temperature rise should it now predict?",
         "options": [
           "8°C",
           "10.7°C",
@@ -25064,7 +25064,7 @@
     ],
     "honors": [
       {
-        "prompt": "Sample A warms without changing phase; B melts at constant temperature. Which pair of energy models fits?",
+        "prompt": "Sample A warms without changing phase. Sample B melts at constant temperature. Which pair of energy equations fits?",
         "options": [
           "Both: final temperature alone.",
           "A: mL; B: mcΔT only.",
@@ -25152,7 +25152,7 @@
         }
       },
       {
-        "prompt": "A predicted final temperature assumes no heat loss. Which observation directly calls that assumption into question?",
+        "prompt": "A predicted final temperature treats heat loss as zero. Which observation would directly challenge that choice?",
         "options": [
           "The surrounding container measurably warms during the trial.",
           "The sample has a known mass.",
@@ -25174,7 +25174,7 @@
         }
       },
       {
-        "prompt": "A heating model predicts an 8°C rise if all 1,200 J enters a sample. Measurements show only 900 J reaches it, with other assumptions unchanged. What rise should the revised model predict?",
+        "prompt": "A calculation predicts an 8°C rise if all 1,200 J enters a sample. Measurements show that only 900 J reaches it. Keep everything else in the calculation the same. What temperature rise should it now predict?",
         "options": [
           "8°C",
           "6°C",
@@ -25206,9 +25206,9 @@
     "criteria": [
       "Identify what a wave can carry.",
       "Separate signal travel time from source speed.",
-      "Name evidence needed to interpret an observation."
+      "Name the measurements or details you need to explain an observation."
     ],
-    "source_sha256": "01e25e35700c0a5e7cb08ef5391483bf570fc79ec7d053065174aa94aa4e8b0d",
+    "source_sha256": "c74d21fda5efa4f02606a66c980ae64c9cab28f40fb3fe466faa7d56b5541be8",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.542Z",
@@ -25333,7 +25333,7 @@
         }
       },
       {
-        "prompt": "A receiver detects a later pulse than expected. Which evidence would help distinguish a farther source from a slower propagation path?",
+        "prompt": "A receiver detects a pulse later than expected. Which measurements would help you tell whether the source is farther away or the pulse travels more slowly?",
         "options": [
           "An assumption that later always means faster.",
           "Only the pulse arrival time again.",
@@ -25467,7 +25467,7 @@
         }
       },
       {
-        "prompt": "A receiver detects a later pulse than expected. Which evidence would help distinguish a farther source from a slower propagation path?",
+        "prompt": "A receiver detects a pulse later than expected. Which measurements would help you tell whether the source is farther away or the pulse travels more slowly?",
         "options": [
           "Only the pulse arrival time again.",
           "Independent information about the path’s signal speed or the source distance.",
@@ -25501,7 +25501,7 @@
       "Measure wavelength between matching points.",
       "Connect frequency and period."
     ],
-    "source_sha256": "9887f3ded48e5fb55cd17ad139810feae19d702b68cc7ac249bb0564d77b9951",
+    "source_sha256": "79e1955bd3e24f8d7243419b5e3f117f3336fd08e10bb0e5d756de680ab3a65a",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.543Z",
@@ -25794,7 +25794,7 @@
       "Check frequency and wavelength changes at fixed speed.",
       "Distinguish medium speed from oscillation rate."
     ],
-    "source_sha256": "d88c673bd91653f16c31815aa5239de808431e00b885badf0ead3498e17d8281",
+    "source_sha256": "17b8a3b7725bc338b8978f46241dc904cdfceb30ad83190c5431f6e224b7a83d",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.544Z",
@@ -25919,7 +25919,7 @@
         }
       },
       {
-        "prompt": "A driver is adjusted to oscillate faster while string tension and mass per length remain fixed. In the ideal string model, what changes?",
+        "prompt": "A driver oscillates faster. String tension and mass per length stay fixed. For an ideal string, what changes?",
         "options": [
           "Propagation speed must increase by the same factor.",
           "Frequency stays fixed and only amplitude can change.",
@@ -26053,7 +26053,7 @@
         }
       },
       {
-        "prompt": "A driver is adjusted to oscillate faster while string tension and mass per length remain fixed. In the ideal string model, what changes?",
+        "prompt": "A driver oscillates faster. String tension and mass per length stay fixed. For an ideal string, what changes?",
         "options": [
           "Frequency increases and wavelength decreases; propagation speed stays fixed.",
           "Frequency stays fixed and only amplitude can change.",
@@ -26087,7 +26087,7 @@
       "Distinguish fixed-end from free-end pulse reflection.",
       "Track energy without assuming equal amplitudes."
     ],
-    "source_sha256": "1d2b5ba148816d423e0349b585f9de0a4bc51fa815043bd5d7210867f4acf237",
+    "source_sha256": "9998ae367bcaf1bf84e7d8d169eca5521bf669a4ab5e58126d77f9496a66d5b3",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.545Z",
@@ -26380,7 +26380,7 @@
       "Explain frequency continuity at a stationary boundary.",
       "Predict bending toward or away from the normal."
     ],
-    "source_sha256": "c586cfc185cff740504568f7645e86f90e32abe0bfa04bdc5b258c3cf5bab3dd",
+    "source_sha256": "6cefd0ed80eddefcc13bf4f497f8cf03c5895d1c9b2da80ad600ed1b8f1db356",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.545Z",
@@ -26505,7 +26505,7 @@
         }
       },
       {
-        "prompt": "A ray enters a faster medium at an angle below any critical-angle condition. Which change is expected?",
+        "prompt": "A ray enters a material where it travels faster. Its angle is below any critical angle. Which change is expected?",
         "options": [
           "Its frequency falls to zero.",
           "It bends toward the normal and frequency doubles.",
@@ -26639,7 +26639,7 @@
         }
       },
       {
-        "prompt": "A ray enters a faster medium at an angle below any critical-angle condition. Which change is expected?",
+        "prompt": "A ray enters a material where it travels faster. Its angle is below any critical angle. Which change is expected?",
         "options": [
           "It bends away from the normal while frequency stays the same.",
           "Its frequency falls to zero.",
@@ -26673,7 +26673,7 @@
       "Distinguish diffraction from refraction.",
       "Use a wave picture to justify spreading."
     ],
-    "source_sha256": "148737e974c7217977afc3d0953e97f7b7decf539b2d827ce169fa93812ba304",
+    "source_sha256": "1e45d20155962e6d253c73da67e79f160f1a18567f66e8e4edef1565332bb7e1",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.546Z",
@@ -26966,7 +26966,7 @@
       "Recognize constructive and destructive interference.",
       "Explain that pulses continue after crossing in a linear medium."
     ],
-    "source_sha256": "9f140ad7423733629e7de16fd007f9ac5dd99ef59e5992c41a730a63a5bdf5c0",
+    "source_sha256": "9f15656e28245e7ef743f78508a35563da6f05494deac65a5db5894aa228eeab",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.547Z",
@@ -27253,13 +27253,13 @@
     "unit": 6,
     "day": 8,
     "title": "Sound: pitch and amplitude",
-    "target": "Use a longitudinal-wave model to distinguish pitch and sound level.",
+    "target": "Use a drawing or explanation of a longitudinal wave to distinguish pitch from sound level.",
     "criteria": [
       "Describe compressions and rarefactions.",
       "Connect pitch primarily with frequency.",
       "Separate particle motion from sound propagation."
     ],
-    "source_sha256": "e551dfab5922a43262df4d15ac427f9f030bd2f585c94c5fcb86c9057bf2b8b2",
+    "source_sha256": "9609456c534dada58463343f85b2b7fac0ca68fced5a11d5c038ea9dcb014dfb",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.548Z",
@@ -27362,7 +27362,7 @@
         }
       },
       {
-        "prompt": "Sound travels east through air. In the simple longitudinal model, how do nearby air particles move?",
+        "prompt": "Sound travels east through air as a longitudinal wave. How do nearby air particles move?",
         "options": [
           "Back and forth approximately east-west around their equilibrium positions.",
           "Only north-south.",
@@ -27496,7 +27496,7 @@
         }
       },
       {
-        "prompt": "Sound travels east through air. In the simple longitudinal model, how do nearby air particles move?",
+        "prompt": "Sound travels east through air as a longitudinal wave. How do nearby air particles move?",
         "options": [
           "Back and forth approximately east-west around their equilibrium positions.",
           "Only north-south.",
@@ -27546,13 +27546,13 @@
     "unit": 6,
     "day": 9,
     "title": "Sound speed and resonance",
-    "target": "Use travel time and resonant conditions to interpret sound.",
+    "target": "Use travel time and explain when resonance occurs to interpret sound.",
     "criteria": [
       "Account for round-trip distance in an echo.",
       "Identify resonance as a response near a natural frequency.",
       "Use an appropriate wavelength relationship."
     ],
-    "source_sha256": "bba1e3dc4f220e1c458f239fe294ab8aac5d3dabfef7fac8e3fc89328ce54c8e",
+    "source_sha256": "8454bf94e2d5e4773ca02f7f81b942fe784b8e4a881a43979d18339a93caf4d3",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.550Z",
@@ -27567,7 +27567,7 @@
     },
     "cpa": [
       {
-        "prompt": "An echo returns 0.50 s after a pulse. Use sound speed 340 m/s. How far away is the wall?",
+        "prompt": "An echo returns 0.50 s after a pulse.\n\n1. Use sound speed 340 m/s.\n2. How far away is the wall?",
         "options": [
           "85 m",
           "680 m",
@@ -27655,7 +27655,7 @@
         }
       },
       {
-        "prompt": "An ideal string fixed at both ends vibrates in its fundamental mode. Its length is 0.90 m. Use L = λ/2. What is wavelength?",
+        "prompt": "An ideal string fixed at both ends vibrates in its fundamental mode. Its length is 0.90 m.\n\n1. Use L = λ/2.\n2. What is wavelength?",
         "options": [
           "0.90 m",
           "3.60 m",
@@ -27701,7 +27701,7 @@
     ],
     "honors": [
       {
-        "prompt": "An echo returns 0.50 s after a pulse. Use sound speed 340 m/s. How far away is the wall?",
+        "prompt": "An echo returns 0.50 s after a pulse.\n\n1. Use sound speed 340 m/s.\n2. How far away is the wall?",
         "options": [
           "170 m",
           "85 m",
@@ -27789,7 +27789,7 @@
         }
       },
       {
-        "prompt": "An ideal string fixed at both ends vibrates in its fundamental mode. Its length is 0.90 m. Use L = λ/2. What is wavelength?",
+        "prompt": "An ideal string fixed at both ends vibrates in its fundamental mode. Its length is 0.90 m.\n\n1. Use L = λ/2.\n2. What is wavelength?",
         "options": [
           "0.90 m",
           "1.80 m",
@@ -27845,7 +27845,7 @@
       "Calculate speed from distance and time.",
       "Use repeated measurements and discuss timing uncertainty."
     ],
-    "source_sha256": "cad99a3dbc042990488ca9950bd433a859e0e582efebae18628d76499ac8812c",
+    "source_sha256": "ab7205b4761ba58a24d6e7d09450395a2714ea77faaa2521cae699b9d423871e",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.551Z",
@@ -28138,7 +28138,7 @@
       "Interpret a logarithmic sound-level difference.",
       "Predict approach and recession Doppler trends."
     ],
-    "source_sha256": "0ea21f58399c6f22e999db4c6ac4cc346e3d1cb5fd36d8e86585fea7a30e4013",
+    "source_sha256": "f66a729fd975040d75aa5ab6d5170c9d62cbc0db13742ad584dc8f54a8d5eba0",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.552Z",
@@ -28197,7 +28197,7 @@
         }
       },
       {
-        "prompt": "Use Δβ = 10 log₁₀(I₂/I₁). If intensity increases by 1,000, what is sound-level change?",
+        "prompt": "1. Use Δβ = 10 log₁₀(I₂/I₁).\n2. If intensity increases by 1,000, what is sound-level change?",
         "options": [
           "3 dB",
           "30 dB",
@@ -28331,7 +28331,7 @@
         }
       },
       {
-        "prompt": "Use Δβ = 10 log₁₀(I₂/I₁). If intensity increases by 1,000, what is sound-level change?",
+        "prompt": "1. Use Δβ = 10 log₁₀(I₂/I₁).\n2. If intensity increases by 1,000, what is sound-level change?",
         "options": [
           "30 dB",
           "100 dB",
@@ -28431,7 +28431,7 @@
       "Order spectral regions by wavelength.",
       "Distinguish electromagnetic from mechanical waves."
     ],
-    "source_sha256": "afc9cd37f096de2291818336d323e167e1d5f4b39005f524151663b29e87dd54",
+    "source_sha256": "ce23201b56ce066a4ed4f2bbc2dac8e65fc4947b453a9e2faa8ff264bdc300f2",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.552Z",
@@ -28446,7 +28446,7 @@
     },
     "cpa": [
       {
-        "prompt": "An electromagnetic wave in vacuum has frequency 5.0 × 10⁸ Hz. Use c = 3.0 × 10⁸ m/s. What is wavelength?",
+        "prompt": "An electromagnetic wave in vacuum has frequency 5.0 × 10⁸ Hz.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is wavelength?",
         "options": [
           "1.67 m",
           "60 m",
@@ -28468,7 +28468,7 @@
         }
       },
       {
-        "prompt": "Vacuum light has wavelength 750 nm. Use c = 3.0 × 10⁸ m/s. What is frequency?",
+        "prompt": "Vacuum light has wavelength 750 nm.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is frequency?",
         "options": [
           "4.0 × 10⁵ Hz",
           "2.5 × 10⁻¹⁵ Hz",
@@ -28580,7 +28580,7 @@
     ],
     "honors": [
       {
-        "prompt": "An electromagnetic wave in vacuum has frequency 5.0 × 10⁸ Hz. Use c = 3.0 × 10⁸ m/s. What is wavelength?",
+        "prompt": "An electromagnetic wave in vacuum has frequency 5.0 × 10⁸ Hz.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is wavelength?",
         "options": [
           "0.60 m",
           "1.67 m",
@@ -28602,7 +28602,7 @@
         }
       },
       {
-        "prompt": "Vacuum light has wavelength 750 nm. Use c = 3.0 × 10⁸ m/s. What is frequency?",
+        "prompt": "Vacuum light has wavelength 750 nm.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is frequency?",
         "options": [
           "4.0 × 10⁵ Hz",
           "2.5 × 10⁻¹⁵ Hz",
@@ -28724,7 +28724,7 @@
       "Use equal incidence and reflection angles.",
       "Place the image the same perpendicular distance behind the mirror."
     ],
-    "source_sha256": "2cdbfb4fbe6183511bd97a5bade1480edc53d08ffc0419db042c6ef6f8d01217",
+    "source_sha256": "361649dadaba853455f047f80bc014889e68ed3373418ee6f0c69e0a98effba6",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.553Z",
@@ -29017,7 +29017,7 @@
       "Trace principal rays with a clear optical axis.",
       "State whether an image is real or virtual in the given case."
     ],
-    "source_sha256": "23aa2ec52b50ec5d74ec15dbe9ff56038e18ca52456a97ce5f3526724ff57e7e",
+    "source_sha256": "bb4301e21b196a10f6fd641efef7185ba13e39c75aaaf1b15ff77fcb0ed36594",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.554Z",
@@ -29098,7 +29098,7 @@
         }
       },
       {
-        "prompt": "In the ideal thin-lens model, how is a ray through the optical center usually drawn?",
+        "prompt": "For an ideal thin lens, how do you usually draw a ray that passes through the optical center?",
         "options": [
           "Stopped at the center.",
           "Straight through without significant angular deflection.",
@@ -29142,7 +29142,7 @@
         }
       },
       {
-        "prompt": "A magnifying glass is used with the object closer to the lens than its focal length. Which image is predicted by the ideal converging-lens model?",
+        "prompt": "An object is closer to a magnifying glass than its focal length. What image does an ideal converging lens produce?",
         "options": [
           "Upright and virtual on the object side.",
           "No image can be seen.",
@@ -29232,7 +29232,7 @@
         }
       },
       {
-        "prompt": "In the ideal thin-lens model, how is a ray through the optical center usually drawn?",
+        "prompt": "For an ideal thin lens, how do you usually draw a ray that passes through the optical center?",
         "options": [
           "Always reflected back.",
           "Stopped at the center.",
@@ -29276,7 +29276,7 @@
         }
       },
       {
-        "prompt": "A magnifying glass is used with the object closer to the lens than its focal length. Which image is predicted by the ideal converging-lens model?",
+        "prompt": "An object is closer to a magnifying glass than its focal length. What image does an ideal converging lens produce?",
         "options": [
           "Inverted and real on a screen beyond the lens.",
           "No image can be seen.",
@@ -29310,7 +29310,7 @@
       "Explain the information in a Doppler shift.",
       "State what radial velocity leaves unknown."
     ],
-    "source_sha256": "ed40568feec5ca1d09fcccef6341c42b3d3606369fe8f6c71ac1bada13fe3837",
+    "source_sha256": "62379b57393dc5ea3300683dd3f877c52e54411d53dc076f397f2e42720d1cc9",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.554Z",
@@ -29325,7 +29325,7 @@
     },
     "cpa": [
       {
-        "prompt": "A radar echo returns in 8.0 microseconds. Use c = 3.0 × 10⁸ m/s. What is one-way range to a stationary target?",
+        "prompt": "A radar echo returns in 8.0 microseconds.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is one-way range to a stationary target?",
         "options": [
           "2,400 m",
           "600 m",
@@ -29347,7 +29347,7 @@
         }
       },
       {
-        "prompt": "A scaled signal model has speed 32 m/s and echo delay 5.0 s. What is target range?",
+        "prompt": "In a scaled practice example, a signal travels at 32 m/s. The echo returns after 5.0 s. How far away is the target?",
         "options": [
           "80 m",
           "160 m",
@@ -29391,7 +29391,7 @@
         }
       },
       {
-        "prompt": "Two targets at different ranges have the same radial approach speed. Under otherwise identical simple radar conditions, which statement is possible?",
+        "prompt": "Two targets are at different distances. Both approach a radar at the same radial speed. Keep the other radar settings and surroundings the same. Which statement is possible?",
         "options": [
           "Echo delay alone gives both masses.",
           "They have the same Doppler shift but different echo delays.",
@@ -29435,7 +29435,7 @@
         }
       },
       {
-        "prompt": "A single radar measures range and radial velocity. What additional evidence helps determine a full path?",
+        "prompt": "A single radar measures distance and radial velocity. What extra measurements help you find the full path?",
         "options": [
           "The radar’s paint color.",
           "Assuming sideways speed is zero without evidence.",
@@ -29459,7 +29459,7 @@
     ],
     "honors": [
       {
-        "prompt": "A radar echo returns in 8.0 microseconds. Use c = 3.0 × 10⁸ m/s. What is one-way range to a stationary target?",
+        "prompt": "A radar echo returns in 8.0 microseconds.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is one-way range to a stationary target?",
         "options": [
           "24 m",
           "2,400 m",
@@ -29481,7 +29481,7 @@
         }
       },
       {
-        "prompt": "A scaled signal model has speed 32 m/s and echo delay 5.0 s. What is target range?",
+        "prompt": "In a scaled practice example, a signal travels at 32 m/s. The echo returns after 5.0 s. How far away is the target?",
         "options": [
           "16 m",
           "80 m",
@@ -29525,7 +29525,7 @@
         }
       },
       {
-        "prompt": "Two targets at different ranges have the same radial approach speed. Under otherwise identical simple radar conditions, which statement is possible?",
+        "prompt": "Two targets are at different distances. Both approach a radar at the same radial speed. Keep the other radar settings and surroundings the same. Which statement is possible?",
         "options": [
           "Equal Doppler shift requires equal distance.",
           "The more distant target must have zero Doppler shift.",
@@ -29569,7 +29569,7 @@
         }
       },
       {
-        "prompt": "A single radar measures range and radial velocity. What additional evidence helps determine a full path?",
+        "prompt": "A single radar measures distance and radial velocity. What extra measurements help you find the full path?",
         "options": [
           "The radar’s paint color.",
           "Assuming sideways speed is zero without evidence.",
@@ -29597,13 +29597,13 @@
     "unit": 6,
     "day": 16,
     "title": "Thermal radiation and color",
-    "target": "Use peak wavelength as one piece of evidence about a thermal spectrum.",
+    "target": "Use peak wavelength as one detail that helps explain a thermal spectrum.",
     "criteria": [
       "Relate higher temperature to shorter peak wavelength.",
       "Use kelvin in Wien’s law.",
       "Distinguish spectral peak from perceived color."
     ],
-    "source_sha256": "3087ac9b0322ee006bc91f5f59cbfa7b72d47c74820d193407fa6b194adc2b64",
+    "source_sha256": "66893a260f0361a0bbb2ff1103b2fcea992281a7f523477b47603375aa04d9c0",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.555Z",
@@ -29662,7 +29662,7 @@
         }
       },
       {
-        "prompt": "Use λ_peak T = 2.9 × 10⁻³ m·K. What is peak wavelength at 5,000 K?",
+        "prompt": "1. Use λ_peak T = 2.9 × 10⁻³ m·K.\n2. What is peak wavelength at 5,000 K?",
         "options": [
           "5.8 × 10⁻⁷ m",
           "5.8 × 10⁻⁴ m",
@@ -29796,7 +29796,7 @@
         }
       },
       {
-        "prompt": "Use λ_peak T = 2.9 × 10⁻³ m·K. What is peak wavelength at 5,000 K?",
+        "prompt": "1. Use λ_peak T = 2.9 × 10⁻³ m·K.\n2. What is peak wavelength at 5,000 K?",
         "options": [
           "5.8 × 10⁻⁷ m",
           "1.72 × 10⁶ m",
@@ -29896,7 +29896,7 @@
       "Use speed and distance to estimate travel time.",
       "Explain why a simple travel time does not predict damage."
     ],
-    "source_sha256": "7985d403bdf96a03090d4ed40d88bf16bd9e07a8defdc189f554a032e13da1b5",
+    "source_sha256": "41b3094d29f4c96788e07f3b077c629d5291be8d88b1553a7f05330731a938e0",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.555Z",
@@ -29933,7 +29933,7 @@
         }
       },
       {
-        "prompt": "A long ocean wave passes a floating marker. Which distinction is appropriate in a simple wave model?",
+        "prompt": "A long ocean wave passes a floating marker. Which statement correctly compares the wave’s motion with the marker’s motion?",
         "options": [
           "The disturbance travels across water while a water parcel moves locally.",
           "Every parcel must travel from the source to the shore at wave speed.",
@@ -29955,7 +29955,7 @@
         }
       },
       {
-        "prompt": "A model wave travels 360 km at a constant 180 km/h. What is travel time?",
+        "prompt": "A wave travels 360 km at a constant 180 km/h. How long does it take?",
         "options": [
           "180 h",
           "64,800 h",
@@ -29999,7 +29999,7 @@
         }
       },
       {
-        "prompt": "A simple model predicts when a coastal wave arrives. What else is needed to estimate local damage?",
+        "prompt": "A simple calculation predicts when a coastal wave will arrive. What else is needed to estimate local damage?",
         "options": [
           "Nothing; arrival time uniquely determines damage.",
           "Only the predicted arrival time.",
@@ -30021,7 +30021,7 @@
         }
       },
       {
-        "prompt": "Two coastal sites have the same modeled arrival time but different shoreline shapes. Which claim is justified?",
+        "prompt": "Two coastal sites have the same predicted wave arrival time but different shoreline shapes. Which conclusion can you support?",
         "options": [
           "They need not experience the same wave height or damage.",
           "They must experience identical damage.",
@@ -30067,7 +30067,7 @@
         }
       },
       {
-        "prompt": "A long ocean wave passes a floating marker. Which distinction is appropriate in a simple wave model?",
+        "prompt": "A long ocean wave passes a floating marker. Which statement correctly compares the wave’s motion with the marker’s motion?",
         "options": [
           "Ocean waves require no water.",
           "Every parcel must travel from the source to the shore at wave speed.",
@@ -30089,7 +30089,7 @@
         }
       },
       {
-        "prompt": "A model wave travels 360 km at a constant 180 km/h. What is travel time?",
+        "prompt": "A wave travels 360 km at a constant 180 km/h. How long does it take?",
         "options": [
           "180 h",
           "0.50 h",
@@ -30133,7 +30133,7 @@
         }
       },
       {
-        "prompt": "A simple model predicts when a coastal wave arrives. What else is needed to estimate local damage?",
+        "prompt": "A simple calculation predicts when a coastal wave will arrive. What else is needed to estimate local damage?",
         "options": [
           "Only the predicted arrival time.",
           "Wave size and energy, coastal geometry, and local exposure or vulnerability.",
@@ -30155,7 +30155,7 @@
         }
       },
       {
-        "prompt": "Two coastal sites have the same modeled arrival time but different shoreline shapes. Which claim is justified?",
+        "prompt": "Two coastal sites have the same predicted wave arrival time but different shoreline shapes. Which conclusion can you support?",
         "options": [
           "Equal time proves equal water depth everywhere.",
           "They need not experience the same wave height or damage.",
@@ -30183,13 +30183,13 @@
     "unit": 6,
     "day": 18,
     "title": "Transfer: waves and signals",
-    "target": "Choose appropriate wave models and explain what a signal establishes.",
+    "target": "Choose equations or diagrams that fit the wave. Explain what the signal tells you.",
     "criteria": [
       "Use wave speed and round-trip geometry correctly.",
       "Separate frequency, amplitude and direction effects.",
       "State the limits of an inference from a signal."
     ],
-    "source_sha256": "d948fed992b49b57467393a341a0994d97cdba9451f52cdd73b275915f74f573",
+    "source_sha256": "13685211a22c4de4e03ca32ba4f9baf4dd775dfea04b35fc2c8aaa4851f150e6",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.556Z",
@@ -30204,7 +30204,7 @@
     },
     "cpa": [
       {
-        "prompt": "A simulated wave has frequency 8 Hz and wavelength 1.5 m. An echo takes 7 s. What is range in this scaled model?",
+        "prompt": "In a scaled practice example, a wave has a frequency of 8 Hz and a wavelength of 1.5 m. An echo returns after 7 s. How far away is the reflector?",
         "options": [
           "12 m",
           "56 m",
@@ -30226,7 +30226,7 @@
         }
       },
       {
-        "prompt": "A sensor is 30 m from a reflector. A pulse speed is 15 m/s in a scaled model. What echo delay should be used?",
+        "prompt": "In a scaled practice example, a sensor is 30 m from a reflector. The pulse travels at 15 m/s. What is the time delay before the echo returns?",
         "options": [
           "4 s",
           "450 s",
@@ -30292,7 +30292,7 @@
         }
       },
       {
-        "prompt": "A radar gives one range and one radial velocity measurement. Which conclusion goes beyond this evidence?",
+        "prompt": "A radar gives one distance measurement and one radial-velocity measurement. Which conclusion cannot be supported by these two measurements alone?",
         "options": [
           "The echo delay constrains range.",
           "The exact full three-dimensional future path is known.",
@@ -30314,7 +30314,7 @@
         }
       },
       {
-        "prompt": "Two thermal objects have the same peak wavelength in an ideal blackbody model. What is justified, and what is not determined by that peak alone?",
+        "prompt": "Two ideal blackbodies have the same peak wavelength. What can you conclude? What cannot be found from that peak alone?",
         "options": [
           "Their distances must be equal.",
           "Same model temperature; their total emitted powers need not match.",
@@ -30338,7 +30338,7 @@
     ],
     "honors": [
       {
-        "prompt": "A simulated wave has frequency 8 Hz and wavelength 1.5 m. An echo takes 7 s. What is range in this scaled model?",
+        "prompt": "In a scaled practice example, a wave has a frequency of 8 Hz and a wavelength of 1.5 m. An echo returns after 7 s. How far away is the reflector?",
         "options": [
           "12 m",
           "42 m",
@@ -30360,7 +30360,7 @@
         }
       },
       {
-        "prompt": "A sensor is 30 m from a reflector. A pulse speed is 15 m/s in a scaled model. What echo delay should be used?",
+        "prompt": "In a scaled practice example, a sensor is 30 m from a reflector. The pulse travels at 15 m/s. What is the time delay before the echo returns?",
         "options": [
           "0.5 s",
           "450 s",
@@ -30426,7 +30426,7 @@
         }
       },
       {
-        "prompt": "A radar gives one range and one radial velocity measurement. Which conclusion goes beyond this evidence?",
+        "prompt": "A radar gives one distance measurement and one radial-velocity measurement. Which conclusion cannot be supported by these two measurements alone?",
         "options": [
           "Doppler shift constrains radial relative velocity.",
           "The exact full three-dimensional future path is known.",
@@ -30448,7 +30448,7 @@
         }
       },
       {
-        "prompt": "Two thermal objects have the same peak wavelength in an ideal blackbody model. What is justified, and what is not determined by that peak alone?",
+        "prompt": "Two ideal blackbodies have the same peak wavelength. What can you conclude? What cannot be found from that peak alone?",
         "options": [
           "Their distances must be equal.",
           "One must have zero visible emission.",
@@ -30482,7 +30482,7 @@
       "Distinguish charge from energy.",
       "Trace energy from a battery to moving wheels."
     ],
-    "source_sha256": "2a582b70475ee82e2cadd14039eda37eb98284cf383e2661c578a6d1a9230f83",
+    "source_sha256": "7714090481dce645d147597b60926e24d432446a4503e64f0bdbccae01d772cd",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.559Z",
@@ -30775,7 +30775,7 @@
       "Use inverse-square scaling.",
       "Calculate force with charge in coulombs and distance in meters."
     ],
-    "source_sha256": "8bd294d6afaf8d9ccbccedc83c87a42f161e0c0e977324ff447230c868ed36a8",
+    "source_sha256": "b8b6e0952736a28cfe3d2606867a8016d0cf2166110771f5348388e71496c8a1",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.559Z",
@@ -30790,7 +30790,7 @@
     },
     "cpa": [
       {
-        "prompt": "Charges +q and −2q are held apart. What does the minus sign determine?",
+        "prompt": "Charges +q and −2q are held apart. What does the minus sign find?",
         "options": [
           "The force is always zero.",
           "The force magnitude is a negative distance.",
@@ -30878,7 +30878,7 @@
         }
       },
       {
-        "prompt": "In a model, k = 9.0 × 10⁹ N·m²/C², q₁ = 1.0 × 10⁻⁶ C, q₂ = 3.0 × 10⁻⁶ C, and r = 0.30 m. What is force magnitude?",
+        "prompt": "Use k = 9.0 × 10⁹ N·m²/C², q₁ = 1.0 × 10⁻⁶ C, q₂ = 3.0 × 10⁻⁶ C, and r = 0.30 m. What is the force magnitude?",
         "options": [
           "0.090 N",
           "30 N",
@@ -30924,7 +30924,7 @@
     ],
     "honors": [
       {
-        "prompt": "Charges +q and −2q are held apart. What does the minus sign determine?",
+        "prompt": "Charges +q and −2q are held apart. What does the minus sign find?",
         "options": [
           "The force is always zero.",
           "The interaction is attractive.",
@@ -31012,7 +31012,7 @@
         }
       },
       {
-        "prompt": "In a model, k = 9.0 × 10⁹ N·m²/C², q₁ = 1.0 × 10⁻⁶ C, q₂ = 3.0 × 10⁻⁶ C, and r = 0.30 m. What is force magnitude?",
+        "prompt": "Use k = 9.0 × 10⁹ N·m²/C², q₁ = 1.0 × 10⁻⁶ C, q₂ = 3.0 × 10⁻⁶ C, and r = 0.30 m. What is the force magnitude?",
         "options": [
           "30 N",
           "0.090 N",
@@ -31068,7 +31068,7 @@
       "Use the positive-test-charge convention.",
       "Distinguish the field from a particular test charge’s force."
     ],
-    "source_sha256": "2c8ae1c4ece4dfc6e94d10927100e62cead216a2eada5d17e7cb42c7b5c894c5",
+    "source_sha256": "666131b2dbfde15469278b38c47ecb689f9d6ed98833a96e86ff87ab5dacda44",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.560Z",
@@ -31149,7 +31149,7 @@
         }
       },
       {
-        "prompt": "A positive 0.50 C model test charge experiences 3.0 N north. What is the field?",
+        "prompt": "A positive 0.50 C test charge feels a force of 3.0 N north. What is the electric field?",
         "options": [
           "6.0 N/C north.",
           "6.0 C/N south.",
@@ -31193,7 +31193,7 @@
         }
       },
       {
-        "prompt": "A model field is 12 N/C downward. Which test charge would feel a 6 N upward force?",
+        "prompt": "An electric field is 12 N/C downward. Which test charge would feel a force of 6 N upward?",
         "options": [
           "−2.0 C",
           "+2.0 C",
@@ -31283,7 +31283,7 @@
         }
       },
       {
-        "prompt": "A positive 0.50 C model test charge experiences 3.0 N north. What is the field?",
+        "prompt": "A positive 0.50 C test charge feels a force of 3.0 N north. What is the electric field?",
         "options": [
           "6.0 C/N south.",
           "1.5 N/C north.",
@@ -31327,7 +31327,7 @@
         }
       },
       {
-        "prompt": "A model field is 12 N/C downward. Which test charge would feel a 6 N upward force?",
+        "prompt": "An electric field is 12 N/C downward. Which test charge would feel a force of 6 N upward?",
         "options": [
           "−2.0 C",
           "+2.0 C",
@@ -31361,7 +31361,7 @@
       "Calculate energy transfer with E=qV.",
       "Distinguish voltage from current."
     ],
-    "source_sha256": "4ddaa571a026b32de852611090695130f976e39ba92ad318d4e602a25c6dca9e",
+    "source_sha256": "4a3d003472f34659b6e5a98dcc7965b84fbfa863e096fd3c26162037c79b3592",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.560Z",
@@ -31654,7 +31654,7 @@
       "Describe conventional current direction.",
       "Explain steady charge conservation at a junction."
     ],
-    "source_sha256": "4806a2ceeec413d0f7b7873df70bdc5f9b6e7c49c52bea9f3dba310e720ccd32",
+    "source_sha256": "94dd5148633b67a5a16ebea99540fc263b0bf9b585321b5b8ebcdb757a6f8d3b",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.561Z",
@@ -31947,7 +31947,7 @@
       "Use V=IR with appropriate units.",
       "Predict changes while stating what stays fixed."
     ],
-    "source_sha256": "c8046292e785a24578a398ea1ee9f70765ce719d5b94cc66c629c801840f986e",
+    "source_sha256": "9481be9670b46e4fcf276e0fa5f77099fa8986a6faf3b70ff7028d4edec86aaa",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.562Z",
@@ -32240,7 +32240,7 @@
       "Add series resistances.",
       "Check that voltage drops add to the supply voltage."
     ],
-    "source_sha256": "063979b360bad68edda53d437bcbf8d8f51057331f354ed9f830d8da58853897",
+    "source_sha256": "a81eea11a73ade734b6fd30e027463b5847b5982413efb63dcf56175c425f474",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.563Z",
@@ -32533,7 +32533,7 @@
       "Use equal voltage across parallel branches.",
       "Add branch currents to find supply current."
     ],
-    "source_sha256": "38fb6055a3681c03b53465d90e4ae98d9bf69fcf7580baea1b57045542156930",
+    "source_sha256": "ad136db958bcefc5d77215d736ad886c5ab604d1a79284fa0cdd90f0e0cda9b8",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.564Z",
@@ -32826,7 +32826,7 @@
       "Reduce one group at a time.",
       "Check current and voltage conservation in the original circuit."
     ],
-    "source_sha256": "9548a09fb390ccee869f4225071964e5fd5eeb237acaebc40ed79ca76b52d635",
+    "source_sha256": "418eed02b73307f373e4753810cfd07af69574535a64afb8233f37920fefd7c1",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.564Z",
@@ -33113,13 +33113,13 @@
     "unit": 7,
     "day": 10,
     "title": "Circuit investigation",
-    "target": "Use measurements to test a circuit model safely.",
+    "target": "Use measurements to safely test a predicted circuit result.",
     "criteria": [
       "Draw and predict before powering a circuit.",
       "Place ammeters in series and voltmeters in parallel.",
-      "Compare measured and predicted values using evidence."
+      "Compare measured and predicted values using specific numbers."
     ],
-    "source_sha256": "2747eff6cfdc9f3ce48a028da29788a99ac499f8fefae910083149b15af794a5",
+    "source_sha256": "bb8d9b2945ba84f4a65519f5dfce2684bc71e3ea2855735cd755cb316083975c",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.564Z",
@@ -33134,7 +33134,7 @@
     },
     "cpa": [
       {
-        "prompt": "Before connecting a 10 V supply across a 20 Ω resistor, what current should the ideal model predict?",
+        "prompt": "Before connecting a 10 V supply across a 20 Ω resistor, what current should you predict for an ideal resistor?",
         "options": [
           "2 A",
           "10 A",
@@ -33244,7 +33244,7 @@
         }
       },
       {
-        "prompt": "A team finds a disagreement between model and measurement. Which next step best tests the cause?",
+        "prompt": "A team’s prediction and measurement disagree. Which next step best tests the cause?",
         "options": [
           "Conclude charge is not conserved.",
           "Check wiring, meter setup, component values, and repeat the measurement.",
@@ -33268,7 +33268,7 @@
     ],
     "honors": [
       {
-        "prompt": "Before connecting a 10 V supply across a 20 Ω resistor, what current should the ideal model predict?",
+        "prompt": "Before connecting a 10 V supply across a 20 Ω resistor, what current should you predict for an ideal resistor?",
         "options": [
           "2 A",
           "0.50 A",
@@ -33378,7 +33378,7 @@
         }
       },
       {
-        "prompt": "A team finds a disagreement between model and measurement. Which next step best tests the cause?",
+        "prompt": "A team’s prediction and measurement disagree. Which next step best tests the cause?",
         "options": [
           "Invent a resistance that forces agreement and call it measured.",
           "Delete every trial that differs.",
@@ -33412,7 +33412,7 @@
       "Use E=Pt with seconds for joules.",
       "Distinguish power from total energy."
     ],
-    "source_sha256": "8d88105f8a9212046518447081aec7b5b7a3b1217aed832242ad13cc704748e2",
+    "source_sha256": "d5e3a815cc8f4bc68d5fdb20e7ceefe996bdbc1be81ae936a98a012ef315cc5b",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.565Z",
@@ -33703,9 +33703,9 @@
     "criteria": [
       "Label north and south poles.",
       "Trace external field direction from north toward south.",
-      "Explain why field-line drawings are models."
+      "Explain how field-line drawings represent a field and what they leave out."
     ],
-    "source_sha256": "7031ffd41e41715f2163e572850820af19515d5524685c70144e1c78b7c3c9f6",
+    "source_sha256": "b00d7acb2eda924f22eba428d079c638ed374c5b9e60bfccb355b3c3041aa46d",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.566Z",
@@ -33998,7 +33998,7 @@
       "Use a stated right-hand rule.",
       "Predict the effect of reversing current."
     ],
-    "source_sha256": "0058a53df8bfb09327c6e867383db8aadcac155a2d901fcfcf44b2bc3de8c1dc",
+    "source_sha256": "599bc4ce0a80c8695763976aade97c2115c4d6e91daba0e6956190b9e0e900f9",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.566Z",
@@ -34035,7 +34035,7 @@
         }
       },
       {
-        "prompt": "Two points are equally far from a long straight wire in a uniform surrounding material. What does the ideal model predict about field magnitude?",
+        "prompt": "Two points are equally far from a long straight wire. The surrounding material is uniform. In this ideal case, how do the magnetic-field magnitudes compare?",
         "options": [
           "Zero at one point solely because it is left of the wire.",
           "Equal magnitudes at both points.",
@@ -34057,7 +34057,7 @@
         }
       },
       {
-        "prompt": "Conventional current points into the page. Point your right thumb into the page. Which way do your curled fingers indicate the field?",
+        "prompt": "Conventional current points into the page.\n\n1. Point your right thumb into the page.\n2. Which way do your curled fingers indicate the field?",
         "options": [
           "Clockwise.",
           "Straight into the page everywhere.",
@@ -34123,7 +34123,7 @@
         }
       },
       {
-        "prompt": "At a fixed distance from a straight wire, current changes from 2 A out of the page to 6 A into the page. Use B ∝ |I|. What changes?",
+        "prompt": "At a fixed distance from a straight wire, current changes from 2 A out of the page to 6 A into the page.\n\n1. Use B ∝ |I|.\n2. What changes?",
         "options": [
           "Magnitude triples but direction stays the same.",
           "Magnitude stays fixed and direction reverses.",
@@ -34169,7 +34169,7 @@
         }
       },
       {
-        "prompt": "Two points are equally far from a long straight wire in a uniform surrounding material. What does the ideal model predict about field magnitude?",
+        "prompt": "Two points are equally far from a long straight wire. The surrounding material is uniform. In this ideal case, how do the magnetic-field magnitudes compare?",
         "options": [
           "Magnitude depends only on compass color.",
           "The field points radially outward at both.",
@@ -34191,7 +34191,7 @@
         }
       },
       {
-        "prompt": "Conventional current points into the page. Point your right thumb into the page. Which way do your curled fingers indicate the field?",
+        "prompt": "Conventional current points into the page.\n\n1. Point your right thumb into the page.\n2. Which way do your curled fingers indicate the field?",
         "options": [
           "Radially outward.",
           "Counterclockwise.",
@@ -34257,7 +34257,7 @@
         }
       },
       {
-        "prompt": "At a fixed distance from a straight wire, current changes from 2 A out of the page to 6 A into the page. Use B ∝ |I|. What changes?",
+        "prompt": "At a fixed distance from a straight wire, current changes from 2 A out of the page to 6 A into the page.\n\n1. Use B ∝ |I|.\n2. What changes?",
         "options": [
           "Magnitude falls to one-third and direction reverses.",
           "Field magnitude triples and direction reverses.",
@@ -34291,7 +34291,7 @@
       "Predict whether a stationary arrangement produces sustained induction.",
       "Use Lenz’s law to describe opposition to change."
     ],
-    "source_sha256": "114e49224ba95ec6b7b05d9de6c8fe5520c3cca755cf814b198132e2ab52e95d",
+    "source_sha256": "309c8f8553f475d34739711b18767d86f054a1c35756ff72272c050ed01663cc",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.567Z",
@@ -34584,7 +34584,7 @@
       "Identify magnetic interactions in rotation or induction.",
       "Include less useful energy transfers."
     ],
-    "source_sha256": "1c96e61a93fe2455401636e23fb561ef72c06615ebe62042a57c06270f98b8c4",
+    "source_sha256": "399cd9f1e7afe5aa3a47a1cbc8d097f7e00dc416c9c73ba4c872d9223445f8be",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.568Z",
@@ -34871,13 +34871,13 @@
     "unit": 7,
     "day": 16,
     "title": "Magnetosphere and changing fields",
-    "target": "Use evidence to distinguish a magnetic-field model from an unsupported space-weather claim.",
+    "target": "Use specific measurements or observations to compare a magnetic-field explanation with an unsupported statement about space weather.",
     "criteria": [
       "Connect changing magnetic fields with induced electric effects.",
-      "Distinguish an assumption from an observation.",
-      "Name evidence required for a space-weather prediction."
+      "Distinguish a fact you treat as true from something you observed.",
+      "Name the measurements or observations needed to predict space weather."
     ],
-    "source_sha256": "998bb3d09369bed9bc3a7a4613e6adcb011edcf35e1b3483ca96f92e00ce6db0",
+    "source_sha256": "b2f38c702cff427f37cf873ceb83dfd2a878a4e5ecbf01c53c0c672f6e089266",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.570Z",
@@ -34914,7 +34914,7 @@
         }
       },
       {
-        "prompt": "In a coil model, tripling the flux-change rate triples induced emf when other conditions are fixed. If the original magnitude is 1.5 V, what is the new magnitude?",
+        "prompt": "For a coil, tripling the rate of magnetic-flux change triples the induced emf when everything else stays fixed. The original emf magnitude is 1.5 V. What is the new magnitude?",
         "options": [
           "2.25 V",
           "0.50 V",
@@ -34936,7 +34936,7 @@
         }
       },
       {
-        "prompt": "A model assumes an Earth field is uniform across a loop. Which observation would directly challenge that assumption?",
+        "prompt": "A calculation treats Earth’s magnetic field as uniform across a loop. Which observation would directly challenge that choice?",
         "options": [
           "The model uses the word uniform.",
           "Measurements show substantially different field strengths at opposite sides of the loop.",
@@ -35002,9 +35002,9 @@
         }
       },
       {
-        "prompt": "A simplified model predicts a voltage pulse but omits shielding and circuit response. What claim is justified?",
+        "prompt": "A simple calculation predicts a voltage pulse. It leaves out shielding and the circuit’s response. Which conclusion can you support?",
         "options": [
-          "It suggests a possible induced effect, but cannot by itself determine actual equipment damage.",
+          "It suggests a possible induced effect, but cannot by itself find actual equipment damage.",
           "All equipment will certainly fail.",
           "Model uncertainty proves no field change occurred.",
           "All equipment will certainly be safe."
@@ -35048,7 +35048,7 @@
         }
       },
       {
-        "prompt": "In a coil model, tripling the flux-change rate triples induced emf when other conditions are fixed. If the original magnitude is 1.5 V, what is the new magnitude?",
+        "prompt": "For a coil, tripling the rate of magnetic-flux change triples the induced emf when everything else stays fixed. The original emf magnitude is 1.5 V. What is the new magnitude?",
         "options": [
           "2.25 V",
           "0.50 V",
@@ -35070,7 +35070,7 @@
         }
       },
       {
-        "prompt": "A model assumes an Earth field is uniform across a loop. Which observation would directly challenge that assumption?",
+        "prompt": "A calculation treats Earth’s magnetic field as uniform across a loop. Which observation would directly challenge that choice?",
         "options": [
           "The loop has a familiar shape.",
           "The model uses the word uniform.",
@@ -35136,9 +35136,9 @@
         }
       },
       {
-        "prompt": "A simplified model predicts a voltage pulse but omits shielding and circuit response. What claim is justified?",
+        "prompt": "A simple calculation predicts a voltage pulse. It leaves out shielding and the circuit’s response. Which conclusion can you support?",
         "options": [
-          "It suggests a possible induced effect, but cannot by itself determine actual equipment damage.",
+          "It suggests a possible induced effect, but cannot by itself find actual equipment damage.",
           "All equipment will certainly fail.",
           "Model uncertainty proves no field change occurred.",
           "All equipment will certainly be safe."
@@ -35164,13 +35164,13 @@
     "unit": 7,
     "day": 17,
     "title": "Plan the electric car",
-    "target": "Use circuit and mechanical evidence to plan a controlled motor-car test.",
+    "target": "Use circuit and motion measurements to plan a motor-car test where you change one thing at a time.",
     "criteria": [
       "Draw the battery-switch-motor circuit.",
       "Predict effects of an open switch and a changed connection.",
       "Plan one controlled performance comparison."
     ],
-    "source_sha256": "e7472951a452f8ed217d9982014e0e8dc30d7eabb1aa11ff8563c328ca0ce808",
+    "source_sha256": "0a619aa885622cc3b7cbd02bbc92804e1bace6fad1e298f7485b24222f48c223",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.570Z",
@@ -35229,7 +35229,7 @@
         }
       },
       {
-        "prompt": "A car’s switch is closed but one return wire is loose and disconnected. Why will the simple model not run?",
+        "prompt": "A classroom car’s switch is closed, but one return wire is loose and disconnected. Why will the car not run?",
         "options": [
           "A closed switch guarantees current regardless of the other wires.",
           "A return wire is never needed.",
@@ -35251,7 +35251,7 @@
         }
       },
       {
-        "prompt": "In an ideal simple permanent-magnet DC motor model, the supply polarity is reversed. What change is expected?",
+        "prompt": "In an ideal permanent-magnet DC motor, the supply polarity is reversed. What change is expected?",
         "options": [
           "The current is converted into mass.",
           "The motor torque and rotation direction reverse.",
@@ -35297,7 +35297,7 @@
       {
         "prompt": "Example runs over 3 m take 5.0, 5.2, and 4.8 s with one wheel set. What should be planned for a fair comparison with a second set?",
         "options": [
-          "Measure repeated times over the same 3 m under the same test conditions.",
+          "Measure repeated times over the same 3 m under the same test setups.",
           "Select a result before testing.",
           "Record just a guessed time.",
           "Use a different downhill course for the second set."
@@ -35363,7 +35363,7 @@
         }
       },
       {
-        "prompt": "A car’s switch is closed but one return wire is loose and disconnected. Why will the simple model not run?",
+        "prompt": "A classroom car’s switch is closed, but one return wire is loose and disconnected. Why will the car not run?",
         "options": [
           "The full circuit is open despite the closed switch.",
           "A closed switch guarantees current regardless of the other wires.",
@@ -35385,7 +35385,7 @@
         }
       },
       {
-        "prompt": "In an ideal simple permanent-magnet DC motor model, the supply polarity is reversed. What change is expected?",
+        "prompt": "In an ideal permanent-magnet DC motor, the supply polarity is reversed. What change is expected?",
         "options": [
           "The battery voltage must become zero.",
           "The motor torque and rotation direction reverse.",
@@ -35434,7 +35434,7 @@
           "Use a different downhill course for the second set.",
           "Select a result before testing.",
           "Record just a guessed time.",
-          "Measure repeated times over the same 3 m under the same test conditions."
+          "Measure repeated times over the same 3 m under the same test setups."
         ],
         "correct_index": 3,
         "guide": "Consistent distance and conditions plus repeated measurements support the comparison.",
@@ -35463,7 +35463,7 @@
       "Account for electrical power and energy.",
       "Explain induction through changing flux."
     ],
-    "source_sha256": "5138713bbfc9d9e7cbe3518d8eaa8dfceeb1604266e1f038efef0d744d443795",
+    "source_sha256": "80f46b572895f3252a58fbcb57e52264959b01453ee757fa6129afd2e762c99e",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.571Z",
@@ -35756,7 +35756,7 @@
       "Identify safety checkpoints before tools or power.",
       "Connect a design choice with a measurable outcome."
     ],
-    "source_sha256": "3edf3ea154769ce9994be4f1f5f291ed517375c62e0c3bbaf90c3e25e40b7e63",
+    "source_sha256": "333cbcaa2c700f9231af5358a100aeef7708add3868241934adc5004f1c6e362",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.572Z",
@@ -35771,7 +35771,7 @@
     },
     "cpa": [
       {
-        "prompt": "A model delivery car has a charged battery, wires, a motor, and an open switch. Which part must change state to complete the intended path?",
+        "prompt": "A small classroom delivery car has a charged battery, wires, a motor, and an open switch. Which part must change state to complete the intended path?",
         "options": [
           "The switch must close.",
           "The battery must be shorted.",
@@ -35905,7 +35905,7 @@
     ],
     "honors": [
       {
-        "prompt": "A model delivery car has a charged battery, wires, a motor, and an open switch. Which part must change state to complete the intended path?",
+        "prompt": "A small classroom delivery car has a charged battery, wires, a motor, and an open switch. Which part must change state to complete the intended path?",
         "options": [
           "The motor must become a battery.",
           "The battery must be shorted.",
@@ -36042,14 +36042,14 @@
     "version": 1,
     "unit": 8,
     "day": 2,
-    "title": "Circuit model and solder practice",
+    "title": "Simulate a circuit and practice soldering",
     "target": "Test a circuit representation before making permanent connections.",
     "criteria": [
-      "Build a complete battery-switch-motor circuit model.",
+      "Build a complete battery-switch-motor circuit in the simulation.",
       "Explain an open versus closed path.",
       "Document a supervised solder-practice check."
     ],
-    "source_sha256": "efe8f00b74c93123ed34b80992c8fde05eaa41a020dee02487fa6fbfb4fac010",
+    "source_sha256": "7c9d15ee62f73d99602acfb72988d26886d34c37f1f45907a3a67bc91e641c59",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.573Z",
@@ -36108,7 +36108,7 @@
         }
       },
       {
-        "prompt": "In a simple battery-switch-motor series model, what changes when the switch is opened?",
+        "prompt": "A battery, switch, and motor are connected in series. What changes when the switch is opened?",
         "options": [
           "Steady current through the motor stops because the path is broken.",
           "Current doubles because resistance disappears.",
@@ -36242,7 +36242,7 @@
         }
       },
       {
-        "prompt": "In a simple battery-switch-motor series model, what changes when the switch is opened?",
+        "prompt": "A battery, switch, and motor are connected in series. What changes when the switch is opened?",
         "options": [
           "Current doubles because resistance disappears.",
           "The battery loses all stored energy instantly.",
@@ -36342,7 +36342,7 @@
       "Calculate distance per wheel revolution.",
       "Explain the tradeoff between ideal speed and available torque."
     ],
-    "source_sha256": "87953695371a70323ca75a2c83f7820e61db10f67e94ae9b908551340fdf7f80",
+    "source_sha256": "e7985a1220301dc054ca98942ad62812e8251d94edc839155986c2dbccd4f249",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.574Z",
@@ -36423,7 +36423,7 @@
         }
       },
       {
-        "prompt": "A wheel diameter is 0.10 m. Use π = 3.14. How far does it travel in two complete turns without slipping?",
+        "prompt": "A wheel diameter is 0.10 m.\n\n1. Use π = 3.14.\n2. How far does it travel in two complete turns without slipping?",
         "options": [
           "0.628 m",
           "6.28 m",
@@ -36467,7 +36467,7 @@
         }
       },
       {
-        "prompt": "A team doubles wheel diameter and predicts twice the speed. Which condition is needed for that ideal prediction?",
+        "prompt": "A team doubles wheel diameter and predicts twice the speed. What must be true for this ideal prediction to work?",
         "options": [
           "The axle rate stays the same and the wheels do not slip.",
           "Axle rate must also double.",
@@ -36557,7 +36557,7 @@
         }
       },
       {
-        "prompt": "A wheel diameter is 0.10 m. Use π = 3.14. How far does it travel in two complete turns without slipping?",
+        "prompt": "A wheel diameter is 0.10 m.\n\n1. Use π = 3.14.\n2. How far does it travel in two complete turns without slipping?",
         "options": [
           "0.628 m",
           "0.314 m",
@@ -36601,7 +36601,7 @@
         }
       },
       {
-        "prompt": "A team doubles wheel diameter and predicts twice the speed. Which condition is needed for that ideal prediction?",
+        "prompt": "A team doubles wheel diameter and predicts twice the speed. What must be true for this ideal prediction to work?",
         "options": [
           "Axle rate must also double.",
           "The axle rate stays the same and the wheels do not slip.",
@@ -36633,9 +36633,9 @@
     "criteria": [
       "Label component locations and clearances.",
       "Use dimensions to check that parts fit.",
-      "Explain a structural choice with evidence."
+      "Use measurements or observations to explain a structural choice."
     ],
-    "source_sha256": "fa12ba35a165cc034aa3a380978ee73c492f20d79da8ef28de0868ed32b00d2a",
+    "source_sha256": "f473f2f8ae4faad68fda99f6b930c9f080e3308c9ded00f9ae1dc6d376cca41f",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.574Z",
@@ -36760,7 +36760,7 @@
         }
       },
       {
-        "prompt": "Two layouts fit the theme. Layout A leaves the battery unsecured; B includes a secure holder clear of gears. Which evidence favors B?",
+        "prompt": "Two layouts fit the theme. Layout A leaves the battery unsecured. Layout B has a secure holder clear of the gears. Which feature supports choosing B?",
         "options": [
           "Theme appearance proves mechanical reliability.",
           "A holder can prevent battery motion from pulling wires or contacting moving parts.",
@@ -36894,7 +36894,7 @@
         }
       },
       {
-        "prompt": "Two layouts fit the theme. Layout A leaves the battery unsecured; B includes a secure holder clear of gears. Which evidence favors B?",
+        "prompt": "Two layouts fit the theme. Layout A leaves the battery unsecured. Layout B has a secure holder clear of the gears. Which feature supports choosing B?",
         "options": [
           "A holder can prevent battery motion from pulling wires or contacting moving parts.",
           "A loose battery always improves steering.",
@@ -36926,9 +36926,9 @@
     "criteria": [
       "Check axle parallelism and wheel clearance.",
       "Record a repeatable alignment test.",
-      "Use evidence to choose one adjustment."
+      "Use measurements or observations to choose one adjustment."
     ],
-    "source_sha256": "1e8fa5e238807ff15ed28ca7db76cd618ab89c362a7baddc8db105ca40b1794c",
+    "source_sha256": "0f76be059e6fbc62117434f680736a593c33362c0117bf6560200b5c14991cd0",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.575Z",
@@ -36943,7 +36943,7 @@
     },
     "cpa": [
       {
-        "prompt": "A model car drifts sideways in repeated unpowered roll tests. What should be checked first?",
+        "prompt": "A small classroom car drifts sideways during repeated roll tests with the power off. What should you check first?",
         "options": [
           "Axle parallelism and unequal wheel rubbing.",
           "Whether the paint reflects light.",
@@ -37053,7 +37053,7 @@
         }
       },
       {
-        "prompt": "After an alignment revision, offsets remain 7, 8, and 7 cm; before they were 8, 7, and 8 cm. What is the strongest claim?",
+        "prompt": "Before an alignment change, the sideways offsets were 8, 7, and 8 cm. After the change, they are 7, 8, and 7 cm. What is the strongest conclusion you can support?",
         "options": [
           "The car is perfectly aligned.",
           "The readings prove no physical cause exists.",
@@ -37077,7 +37077,7 @@
     ],
     "honors": [
       {
-        "prompt": "A model car drifts sideways in repeated unpowered roll tests. What should be checked first?",
+        "prompt": "A small classroom car drifts sideways during repeated roll tests with the power off. What should you check first?",
         "options": [
           "Whether the paint reflects light.",
           "Axle parallelism and unequal wheel rubbing.",
@@ -37187,7 +37187,7 @@
         }
       },
       {
-        "prompt": "After an alignment revision, offsets remain 7, 8, and 7 cm; before they were 8, 7, and 8 cm. What is the strongest claim?",
+        "prompt": "Before an alignment change, the sideways offsets were 8, 7, and 8 cm. After the change, they are 7, 8, and 7 cm. What is the strongest conclusion you can support?",
         "options": [
           "The readings prove no physical cause exists.",
           "The revision proved a large improvement.",
@@ -37219,9 +37219,9 @@
     "criteria": [
       "Check gear mesh and secure connections before power.",
       "Calculate ideal wheel speed from measured or supplied rpm.",
-      "Document first-test evidence and one revision."
+      "Record the first test results and one change to the design."
     ],
-    "source_sha256": "ceb509b6e6496c8a0733dfe5469efd73b9ae2eb94eede539c242c8b4b4efa230",
+    "source_sha256": "f69a345effc42636e0c16df434e83dcd620fb736ca3f2c9e4ded8f4788f75b43",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.575Z",
@@ -37324,7 +37324,7 @@
         }
       },
       {
-        "prompt": "On a first supervised run, the motor turns but the driven gear does not. Which record and next step best use that evidence?",
+        "prompt": "On a first supervised run, the motor turns but the driven gear does not. Which record and next step best use this observation?",
         "options": [
           "Reach into the gears while powered.",
           "Assume the battery is empty despite motor rotation.",
@@ -37458,7 +37458,7 @@
         }
       },
       {
-        "prompt": "On a first supervised run, the motor turns but the driven gear does not. Which record and next step best use that evidence?",
+        "prompt": "On a first supervised run, the motor turns but the driven gear does not. Which record and next step best use this observation?",
         "options": [
           "Reach into the gears while powered.",
           "Record “perfect run” and continue racing.",
@@ -37514,7 +37514,7 @@
       "Preserve moving-part clearance during decoration.",
       "Relate a design revision to an energy transfer or force."
     ],
-    "source_sha256": "30c1dd2acf805dd1d9fb8f79457856d97a09460493c48e17d3f5163f4edc0705",
+    "source_sha256": "ed40c46f51cbf49dc1e583b230680625ae0d379f8d3379f7e2b1f0e80110e319",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.577Z",
@@ -37617,7 +37617,7 @@
         }
       },
       {
-        "prompt": "A model car’s mass changes from 0.30 kg to 0.36 kg. If net forward force remains 0.90 N, what happens to acceleration?",
+        "prompt": "A small classroom car’s mass changes from 0.30 kg to 0.36 kg. The net forward force stays at 0.90 N. What happens to acceleration?",
         "options": [
           "It rises from 3.0 to 3.6 m/s².",
           "It stays 0.90 m/s².",
@@ -37639,7 +37639,7 @@
         }
       },
       {
-        "prompt": "After a decoration is moved away from a wheel, the car travels farther in a coast test. Which explanation is consistent with that evidence?",
+        "prompt": "A decoration is moved away from a wheel. The car then travels farther in a coast test. Which explanation fits this observation?",
         "options": [
           "Energy conservation stopped applying.",
           "Less rubbing may transfer less mechanical energy into thermal energy.",
@@ -37751,7 +37751,7 @@
         }
       },
       {
-        "prompt": "A model car’s mass changes from 0.30 kg to 0.36 kg. If net forward force remains 0.90 N, what happens to acceleration?",
+        "prompt": "A small classroom car’s mass changes from 0.30 kg to 0.36 kg. The net forward force stays at 0.90 N. What happens to acceleration?",
         "options": [
           "It becomes zero because mass increased.",
           "It stays 0.90 m/s².",
@@ -37773,7 +37773,7 @@
         }
       },
       {
-        "prompt": "After a decoration is moved away from a wheel, the car travels farther in a coast test. Which explanation is consistent with that evidence?",
+        "prompt": "A decoration is moved away from a wheel. The car then travels farther in a coast test. Which explanation fits this observation?",
         "options": [
           "Less rubbing may transfer less mechanical energy into thermal energy.",
           "Friction vanished everywhere.",
@@ -37800,14 +37800,14 @@
     "version": 1,
     "unit": 8,
     "day": 8,
-    "title": "Practice runs and evidence",
-    "target": "Use repeated trials to prepare an evidence-based design explanation.",
+    "title": "Practice runs and test results",
+    "target": "Use repeated trials to explain and support your design.",
     "criteria": [
       "Measure the actual course distance and run times.",
       "Calculate average speed and describe variation.",
-      "Choose a final change supported by repeated evidence."
+      "Choose a final change supported by results from repeated trials."
     ],
-    "source_sha256": "09e36d0a112793c364e362cbde18dcc9883f6a84840db4d2906c3109286b1616",
+    "source_sha256": "80bc6081d87c8f59f3709923e076336deb79649b7f617483cab1401b52f00a62",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.577Z",
@@ -38094,13 +38094,13 @@
     "unit": 8,
     "day": 9,
     "title": "Race, explain and transfer",
-    "target": "Evaluate a model against measured performance and defend design decisions.",
+    "target": "Compare your predicted result with measured performance. Use the results to explain your design choices.",
     "criteria": [
       "Report measured distance, time and average speed.",
       "Compare actual speed with a stated prediction.",
-      "Use evidence to explain three physical design choices."
+      "Use measurements or observations to explain three physical design choices."
     ],
-    "source_sha256": "bed713d5a718c21dbbe02dad3cb28bcb8d9ab907bb51b6c23d27b9a526b3ec0b",
+    "source_sha256": "e80467df0f7ea3586490b83789fcf35e238c9a78a46749a58f35c1d7ab9f574d",
     "authoring": {
       "provider": "Codex session",
       "checked_at": "2026-10-24T00:31:50.578Z",
@@ -38137,7 +38137,7 @@
         }
       },
       {
-        "prompt": "Which report separates a real observation from a model prediction?",
+        "prompt": "Which report clearly separates an actual observation from a prediction?",
         "options": [
           "“Our car must match the example because it is the same color.”",
           "“Measured 0.60 m/s,” copied from the model without timing.",
@@ -38159,7 +38159,7 @@
         }
       },
       {
-        "prompt": "A model predicts 0.80 m/s. Example measured average speed is 0.60 m/s. Relative to the prediction, how much lower is the measured speed?",
+        "prompt": "A calculation predicts 0.80 m/s. An example measurement gives an average speed of 0.60 m/s. Compared with the prediction, how much lower is the measured speed?",
         "options": [
           "75%",
           "20%",
@@ -38271,7 +38271,7 @@
         }
       },
       {
-        "prompt": "Which report separates a real observation from a model prediction?",
+        "prompt": "Which report clearly separates an actual observation from a prediction?",
         "options": [
           "“Measured 0.60 m/s,” copied from the model without timing.",
           "“Predicted and measured mean the same thing.”",
@@ -38293,7 +38293,7 @@
         }
       },
       {
-        "prompt": "A model predicts 0.80 m/s. Example measured average speed is 0.60 m/s. Relative to the prediction, how much lower is the measured speed?",
+        "prompt": "A calculation predicts 0.80 m/s. An example measurement gives an average speed of 0.60 m/s. Compared with the prediction, how much lower is the measured speed?",
         "options": [
           "20%",
           "75%",

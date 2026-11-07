@@ -9,7 +9,7 @@
     "Use net work rather than one force’s work.",
     "Connect the sign of work to a speed change."
   ],
-  "source_sha256": "f6d2567c39514e10883b7fe5e619f055a07e9ed7962ce0223f168e10f6fac488",
+  "source_sha256": "0616fec85847a4efd5bb0cdcfade9e39661df9dca1724419f3697faf62ffa521",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.518Z",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "A 0.50 kg model puck moves at 8 m/s. What is kinetic energy?",
+      "prompt": "A 0.50 kg puck moves at 8 m/s. What is its kinetic energy?",
       "options": [
         "32 J",
         "2 J",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "A 0.50 kg model puck moves at 8 m/s. What is kinetic energy?",
+      "prompt": "A 0.50 kg puck moves at 8 m/s. What is its kinetic energy?",
       "options": [
         "64 J",
         "32 J",

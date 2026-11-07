@@ -7,9 +7,9 @@
   "criteria": [
     "Separate the initial velocity into two components.",
     "Use vertical motion to determine flight time.",
-    "Explain the assumptions behind range comparisons."
+    "Explain what must be true for your range comparisons to work."
   ],
-  "source_sha256": "f7e20d8b3b7f889206e659ce479efa6b9c048c6db954f5cf8ea7d6b62218ec90",
+  "source_sha256": "3f689fba6b125d82dfdbeaf13191d2629f45b0b9f96b7ca74179331db2645545",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.496Z",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "Initial upward velocity is 8 m/s. Use g = 10 m/s² without drag. How long to the highest point?",
+      "prompt": "Initial upward velocity is 8 m/s.\n\n1. Use g = 10 m/s² without drag.\n2. How long to the highest point?",
       "options": [
         "8 s",
         "0.8 s",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "A projectile launches with vx = 5 m/s and vy = 20 m/s upward, returning to launch height. Use g = 10 m/s² and no drag. What are total flight time and range?",
+      "prompt": "A projectile launches with vx = 5 m/s and vy = 20 m/s upward, returning to launch height.\n\n1. Use g = 10 m/s² and no drag.\n2. What are total flight time and range?",
       "options": [
         "2 s and 10 m.",
         "20 s and 100 m.",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "Under which conditions does 45° maximize range for fixed launch speed?",
+      "prompt": "What must be true for a 45° launch angle to give the greatest range at a fixed launch speed?",
       "options": [
         "Only when horizontal velocity is zero.",
         "Equal launch/landing heights, uniform g, negligible air resistance.",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "Initial upward velocity is 8 m/s. Use g = 10 m/s² without drag. How long to the highest point?",
+      "prompt": "Initial upward velocity is 8 m/s.\n\n1. Use g = 10 m/s² without drag.\n2. How long to the highest point?",
       "options": [
         "8 s",
         "0.8 s",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "A projectile launches with vx = 5 m/s and vy = 20 m/s upward, returning to launch height. Use g = 10 m/s² and no drag. What are total flight time and range?",
+      "prompt": "A projectile launches with vx = 5 m/s and vy = 20 m/s upward, returning to launch height.\n\n1. Use g = 10 m/s² and no drag.\n2. What are total flight time and range?",
       "options": [
         "4 s and 80 m.",
         "20 s and 100 m.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "Under which conditions does 45° maximize range for fixed launch speed?",
+      "prompt": "What must be true for a 45° launch angle to give the greatest range at a fixed launch speed?",
       "options": [
         "Only when gravity is absent.",
         "Only when horizontal velocity is zero.",

@@ -9,7 +9,7 @@
     "Use a stated right-hand rule.",
     "Predict the effect of reversing current."
   ],
-  "source_sha256": "0058a53df8bfb09327c6e867383db8aadcac155a2d901fcfcf44b2bc3de8c1dc",
+  "source_sha256": "599bc4ce0a80c8695763976aade97c2115c4d6e91daba0e6956190b9e0e900f9",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.566Z",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "Two points are equally far from a long straight wire in a uniform surrounding material. What does the ideal model predict about field magnitude?",
+      "prompt": "Two points are equally far from a long straight wire. The surrounding material is uniform. In this ideal case, how do the magnetic-field magnitudes compare?",
       "options": [
         "Zero at one point solely because it is left of the wire.",
         "Equal magnitudes at both points.",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "Conventional current points into the page. Point your right thumb into the page. Which way do your curled fingers indicate the field?",
+      "prompt": "Conventional current points into the page.\n\n1. Point your right thumb into the page.\n2. Which way do your curled fingers indicate the field?",
       "options": [
         "Clockwise.",
         "Straight into the page everywhere.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "At a fixed distance from a straight wire, current changes from 2 A out of the page to 6 A into the page. Use B ∝ |I|. What changes?",
+      "prompt": "At a fixed distance from a straight wire, current changes from 2 A out of the page to 6 A into the page.\n\n1. Use B ∝ |I|.\n2. What changes?",
       "options": [
         "Magnitude triples but direction stays the same.",
         "Magnitude stays fixed and direction reverses.",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "Two points are equally far from a long straight wire in a uniform surrounding material. What does the ideal model predict about field magnitude?",
+      "prompt": "Two points are equally far from a long straight wire. The surrounding material is uniform. In this ideal case, how do the magnetic-field magnitudes compare?",
       "options": [
         "Magnitude depends only on compass color.",
         "The field points radially outward at both.",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "Conventional current points into the page. Point your right thumb into the page. Which way do your curled fingers indicate the field?",
+      "prompt": "Conventional current points into the page.\n\n1. Point your right thumb into the page.\n2. Which way do your curled fingers indicate the field?",
       "options": [
         "Radially outward.",
         "Counterclockwise.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "At a fixed distance from a straight wire, current changes from 2 A out of the page to 6 A into the page. Use B ∝ |I|. What changes?",
+      "prompt": "At a fixed distance from a straight wire, current changes from 2 A out of the page to 6 A into the page.\n\n1. Use B ∝ |I|.\n2. What changes?",
       "options": [
         "Magnitude falls to one-third and direction reverses.",
         "Field magnitude triples and direction reverses.",

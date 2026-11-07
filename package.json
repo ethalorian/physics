@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "prebuild": "npm run verify:textbook && npm run audit:styles && npm run audit:brand && npm run build:game-avatars",
+    "prebuild": "npm run verify:foundation-cpa && npm run verify:foundation-languages && npm run verify:worksheet-quizzes && npm run verify:textbook && npm run audit:styles && npm run audit:brand && npm run build:game-avatars",
     "verify:textbook": "node scripts/verify-textbook.cjs",
     "build:game-avatars": "node scripts/mic-check/build.cjs",
     "build": "next build",
@@ -43,7 +43,13 @@
     "audit:brand": "node scripts/audit-brand.cjs",
     "test:math-arcade": "node scripts/test-math-arcade-logic.cjs && node scripts/test-math-upgrade-logic.cjs && node scripts/test-math-save-routes.cjs && node --import tsx --test src/lib/tether-bridge.test.ts",
     "test:math-arcade-browser": "node scripts/test-math-arcade-browser.cjs",
-    "preview:math-arcade": "node scripts/preview-math-arcade.cjs"
+    "preview:math-arcade": "node scripts/preview-math-arcade.cjs",
+    "worksheets:figures": "node scripts/prepare-readable-worksheet-figures.mjs",
+    "worksheets:pdf": "python3 scripts/build-readable-worksheets.py",
+    "worksheets:decks": "node scripts/build-worksheet-decks.mjs",
+    "verify:worksheet-quizzes": "node scripts/worksheet-quizzes/compile.cjs --check",
+    "verify:foundation-languages": "node scripts/foundation-language/verify.cjs",
+    "verify:foundation-cpa": "node scripts/foundation-cpa/verify-content.cjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.3",

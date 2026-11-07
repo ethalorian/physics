@@ -1,7 +1,10 @@
 'use client'
+import { etfChapter, etfPages, etfPdf } from '@/data/etf-original/source'
 import { interactiveChapterForAssignment } from './interactive/registry'
 import OpenStaxReading from './OpenStaxReading'
 import { useState } from 'react'
+import QuizContent from '@/components/quizzes/QuizContent'
+import { textbookPracticePrompt } from '@/lib/textbook-practice'
 import dynamic from 'next/dynamic'
 import { BookOpen, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -17,11 +20,14 @@ const BookPreview = dynamic(() => import('./ReadingBookPreview'), {
 
 export function ReadingQuestionText({ chapter, question }: { chapter: number; question: ReadingQuestion }) {
   const [language] = useTextbookLanguage()
-  const page = readingQuestionPage(chapter, question)
-  if (question.prompt) return <p className="whitespace-pre-wrap">{question.prompt}</p>
+  const sourceChapter = question.chapter ?? chapter
+  const page = readingQuestionPage(sourceChapter, question)
+  const practice = textbookPracticePrompt(sourceChapter, question.reference)
+  const prompt = question.prompt || practice
+  if (prompt) return <div className={styles.stack}>{practice && prompt === practice && <p className={styles.muted}>Classroom wording · based on {question.reference}</p>}<QuizContent questionEmphasis content={prompt} allowFigures/>{page && <a className="text-primary underline" href={readingBookUrl(sourceChapter,page,language)} target="_blank" rel="noopener noreferrer">View the original textbook question</a>}</div>
   return <div className={styles.stack}>
     <p className={styles.muted}>Read {question.reference} {page ? `on printed page ${page.printedPage}` : `in Chapter ${chapter}`}. Use the textbook link to see the full question and any diagrams.</p>
-    <a className="text-primary underline" href={readingBookUrl(chapter, page, language)} target="_blank" rel="noopener noreferrer">Open question in textbook{page ? ` · p. ${page.printedPage}` : ''}<ExternalLink className="inline ml-2" size={15} /></a>
+    <a className="text-primary underline" href={readingBookUrl(sourceChapter, page, language)} target="_blank" rel="noopener noreferrer">Open question in textbook{page ? ` · p. ${page.printedPage}` : ''}<ExternalLink className="inline ml-2" size={15} /></a>
   </div>
 }
 
@@ -36,8 +42,10 @@ export default function ReadingAssignmentResources({ assignment, showQuestions =
     const source = readingQuestionPage(assignment.chapter, q)
     return source ? [{ question: q, source }] : []
   })
+  const etf=etfChapter(assignment.chapter, assignment.section_ids)
+  if (etf) return <section className={styles.stack}><h2>Engineering the Future · {etf.title}</h2><p>{etf.read}</p><a className="underline" href={etfPdf(etf)} target="_blank" rel="noopener noreferrer">Original case · printed pp. {etfPages(etf)}</a><a className="underline" href={showInteractiveLink && assignment.status==='published' ? '/readings/'+assignment.id+'?reader=interactive' : '/textbook/interactive/etf/'+etf.number}>Open interactive reader</a>{showQuestions&&assignment.questions.map(q=><p key={q.id}>{q.prompt}</p>)}</section>
   if (assignment.honors_reading) return <div className={styles.stack}><OpenStaxReading key={`${assignment.honors_reading.from}:${assignment.honors_reading.to}`} reading={assignment.honors_reading} /><details className={styles.question}><summary className="cursor-pointer font-semibold py-3">Shared foundation · {assignment.passage ? "Course reading" : "Hewitt support"}</summary><ReadingAssignmentResources assignment={{...assignment,honors_reading:null}} showInteractiveLink={false} /></details>{showQuestions && assignment.questions.map((q,i)=><div key={q.id} className={styles.question}><h3 className="font-semibold">{i+1}. {q.reference}</h3><ReadingQuestionText chapter={assignment.chapter} question={q}/></div>)}</div>
-  if (assignment.passage) return <section className={styles.question} aria-label="Assigned course reading"><h2 className="text-title-3">{assignment.title}</h2><p className={styles.muted}>Course reading</p><div className="whitespace-pre-wrap leading-relaxed">{assignment.passage}</div>{showQuestions && assignment.questions.map((q, i) => <div key={q.id} className={styles.question}><h3 className="font-semibold">{i + 1}. {q.reference}</h3><ReadingQuestionText chapter={assignment.chapter} question={q} /></div>)}</section>
+  if (assignment.passage) return <section className={styles.question} aria-label="Assigned course reading"><h2 className="text-title-3">{assignment.title}</h2><p className={styles.muted}>Course reading</p><QuizContent content={assignment.passage} allowFigures/>{showQuestions && assignment.questions.map((q, i) => <div key={q.id} className={styles.question}><h3 className="font-semibold">{i + 1}. {q.reference}</h3><ReadingQuestionText chapter={assignment.chapter} question={q} /></div>)}</section>
   return <section className={styles.question} aria-label="Assigned textbook pages and questions">
     <div className={`${styles.row} ${styles.spread}`}><h2 className="text-title-3"><BookOpen className="inline mr-2" size={20} />Assigned pages & questions</h2><a className="text-primary underline text-sm" href={readingBookUrl(assignment.chapter, { pdfPage: page, printedPage: page + offset }, language)} target="_blank" rel="noopener noreferrer">Open current page in new tab<ExternalLink className="inline ml-2" size={15} /></a></div>
     <p>{assignment.reading}</p>

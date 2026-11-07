@@ -3,13 +3,13 @@
   "unit": 4,
   "day": 8,
   "title": "When constant g is not enough",
-  "target": "Recognize the limits of the near-surface mgh model.",
+  "target": "Recognize when mgh works near a planet’s surface and when it stops working well.",
   "criteria": [
     "Compare altitude with planetary radius.",
     "Explain that gravitational field weakens with center distance.",
-    "Choose a model appropriate to the height interval."
+    "Choose an equation that fits the height change."
   ],
-  "source_sha256": "9069b8755f076557767f1d369d3f58b43470c40d6cc4b06ece0aa8911ace826c",
+  "source_sha256": "db472aad1af22ef657fd553a7d55510e7255dd7aae34771de02dda2caadd0fc8",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.521Z",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "At the surface a spherical planet has field g₀. At center distance 3R, what is field in the inverse-square model?",
+      "prompt": "A spherical planet has a field of g₀ at its surface. Use the inverse-square relationship. What is its field at a distance of 3R from the center? R is the planet’s radius.",
       "options": [
         "g₀/3",
         "9g₀",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "Using constant surface g for a large outward lift gives what bias relative to the spherical inverse-square model?",
+      "prompt": "An object is lifted far above a spherical planet. How does using a constant surface value of g affect the result compared with using the inverse-square relationship?",
       "options": [
         "It predicts negative required work in every lift.",
         "It overestimates required lifting energy because actual force weakens with height.",
@@ -134,9 +134,9 @@
       }
     },
     {
-      "prompt": "Which model choice is most defensible for lifting a spacecraft through a height comparable to planetary radius?",
+      "prompt": "A spacecraft is lifted by a height about as large as the planet’s radius. Which way of calculating gravity is best supported?",
       "options": [
-        "Use changing gravity or universal potential energy and state the assumptions.",
+        "Use changing gravity or universal potential energy and say what you are treating as true.",
         "Use surface mgh without checking its range.",
         "Use altitude alone as the separation from the planet’s center.",
         "Ignore gravity above the surface."
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "At the surface a spherical planet has field g₀. At center distance 3R, what is field in the inverse-square model?",
+      "prompt": "A spherical planet has a field of g₀ at its surface. Use the inverse-square relationship. What is its field at a distance of 3R from the center? R is the planet’s radius.",
       "options": [
         "3g₀",
         "g₀/3",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "Using constant surface g for a large outward lift gives what bias relative to the spherical inverse-square model?",
+      "prompt": "An object is lifted far above a spherical planet. How does using a constant surface value of g affect the result compared with using the inverse-square relationship?",
       "options": [
         "It predicts negative required work in every lift.",
         "It underestimates because actual g grows with height.",
@@ -268,11 +268,11 @@
       }
     },
     {
-      "prompt": "Which model choice is most defensible for lifting a spacecraft through a height comparable to planetary radius?",
+      "prompt": "A spacecraft is lifted by a height about as large as the planet’s radius. Which way of calculating gravity is best supported?",
       "options": [
         "Use surface mgh without checking its range.",
         "Use altitude alone as the separation from the planet’s center.",
-        "Use changing gravity or universal potential energy and state the assumptions.",
+        "Use changing gravity or universal potential energy and say what you are treating as true.",
         "Ignore gravity above the surface."
       ],
       "correct_index": 2,

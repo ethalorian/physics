@@ -7,9 +7,9 @@
   "criteria": [
     "Label component locations and clearances.",
     "Use dimensions to check that parts fit.",
-    "Explain a structural choice with evidence."
+    "Use measurements or observations to explain a structural choice."
   ],
-  "source_sha256": "fa12ba35a165cc034aa3a380978ee73c492f20d79da8ef28de0868ed32b00d2a",
+  "source_sha256": "f473f2f8ae4faad68fda99f6b930c9f080e3308c9ded00f9ae1dc6d376cca41f",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.574Z",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "Two layouts fit the theme. Layout A leaves the battery unsecured; B includes a secure holder clear of gears. Which evidence favors B?",
+      "prompt": "Two layouts fit the theme. Layout A leaves the battery unsecured. Layout B has a secure holder clear of the gears. Which feature supports choosing B?",
       "options": [
         "Theme appearance proves mechanical reliability.",
         "A holder can prevent battery motion from pulling wires or contacting moving parts.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "Two layouts fit the theme. Layout A leaves the battery unsecured; B includes a secure holder clear of gears. Which evidence favors B?",
+      "prompt": "Two layouts fit the theme. Layout A leaves the battery unsecured. Layout B has a secure holder clear of the gears. Which feature supports choosing B?",
       "options": [
         "A holder can prevent battery motion from pulling wires or contacting moving parts.",
         "A loose battery always improves steering.",

@@ -38,7 +38,7 @@ export const GET = withAuth<{ id: string }>(async (_req, ctx) => {
   if(origin){const {data:lesson,error}=await supabaseAdmin.from('lessons').select(`slug,${CURRENT_LESSON_FIELDS}`).eq('id',origin.lessonId).maybeSingle();if(error)throw error;lesson_slug=lesson&&isCurrentLesson(lesson)?lesson.slug:null}
   const [readingQuiz, xp] = await Promise.all([
     staff ? null : readingQuizForStudent(id, ctx.userId),
-    staff ? null : readingXpStatus(id, ctx.userId),
+    staff ? null : readingXpStatus(id, ctx.userId, access.course),
   ])
   const exemptions = staff ? await readingExemptions([id]) : []
   return readingJson({ assignment, students, work, submissions, targets, reviews, staff, lesson_slug, readingQuiz, xp, ...(staff ? { excused_student_ids: exemptions.filter(e => users.includes(e.user_id)).map(e => e.user_id) } : {}) })
@@ -123,7 +123,7 @@ export const POST = withAuth<{ id: string }>(async (req, ctx) => {
   if (b.action !== 'submit') return readingJson({ work: data })
   await recordRevisionSubmitted('reading:'+id,ctx.userId)
   if(data?.submission_id) suggestAfterSubmission('reading',data.submission_id)
-  const [readingQuiz, xp] = await Promise.all([readingQuizForStudent(id, ctx.userId), readingXpStatus(id, ctx.userId)])
+  const [readingQuiz, xp] = await Promise.all([readingQuizForStudent(id, ctx.userId), readingXpStatus(id, ctx.userId, access.course)])
   return readingJson({ work: data, readingQuiz, xp })
 })
 

@@ -152,7 +152,7 @@ export const nuclearLessons:Record<string,LessonContent> = {
         "Correct: both have six protons; their neutron counts differ.",
         "Changing Z changes the element."
       ],
-      "hint": "Use the proton count to identify the element.",
+      "hint": "Use the proton count to name the element.",
       "teacher": "Ask students to distinguish exact integer counts from approximate radius and mass models."
     }
   },
@@ -391,7 +391,7 @@ export const nuclearLessons:Record<string,LessonContent> = {
     ],
     "worked": {
       "title": "Reason from the evidence",
-      "prompt": "Two opposite PET detectors register a coincidence. Does that event alone determine the emission point?",
+      "prompt": "Two opposite PET detectors register a coincidence. Does that event alone find the emission point?",
       "reasoning": "It constrains the event to a line of response. Multiple events, reconstruction, and sometimes timing information are needed to localize the distribution."
     },
     "check": {
@@ -446,7 +446,7 @@ export const nuclearLessons:Record<string,LessonContent> = {
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "A source activity in Bq is insufficient to determine absorbed dose because…",
+      "prompt": "A source activity in Bq is insufficient to find absorbed dose because…",
       "options": [
         "All radiation deposits all its energy in every nearby object",
         "Energy, transport, absorption, time, and mass also matter",
@@ -557,7 +557,7 @@ export const nuclearLessons:Record<string,LessonContent> = {
     ],
     "worked": {
       "title": "Reason from the evidence",
-      "prompt": "A hypothetical organism has D₁₀ = 1 dose unit. What surviving fraction does a simple exponential model predict after 3 units?",
+      "prompt": "A hypothetical organism has D₁₀ = 1 dose unit. Using the simple exponential-decay equation, what fraction survives after 3 dose units?",
       "reasoning": "Three tenfold reductions give 10⁻³ = 0.001, or 0.1%. This is a model expectation for the specified response, not a guarantee about a real food."
     },
     "check": {
@@ -730,7 +730,7 @@ export const nuclearLessons:Record<string,LessonContent> = {
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "Which statement is a physical claim that can be tested?",
+      "prompt": "Which statement about the physical world can be tested?",
       "options": [
         "A particular policy is automatically proved by E = mc²",
         "One energy number completely describes all human consequences",

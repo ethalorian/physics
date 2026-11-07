@@ -2,7 +2,7 @@
 
 Course Plans opens a staff-only guided deck for the selected CPA or Honors day. The SEI editions share the same problems and models; the Model step includes the matching optional language support. Formal assessment days retain their separate directions-only decks.
 
-The revised worksheet content is the authority for every problem, worked example, answer and visual. The canonical curriculum pipeline is `Daily worksheets/visual-rollout-2026-10-22/`. Its installer runs `export_guided.py` and then the app’s `scripts/build-worksheet-decks.mjs`. Do not rebuild these activities from the older compact worksheet content or hard-coded walkthroughs.
+The revised worksheet content is the authority for every problem, worked example, answer and visual. The original visual curriculum came from `Daily worksheets/visual-rollout-2026-10-22/`. The reviewed language now lives in the repository JSON sources; do not overwrite it with an older export. Print with `scripts/build-readable-worksheets.py` to retain the approved compact two-column format, then use `scripts/build-worksheet-decks.mjs` when deck content changes. No text-response lines belong on printed worksheets. Do not rebuild these activities from the older compact worksheet content or hard-coded walkthroughs.
 
 The export writes `resources/worksheet-decks/source.json`, `figures.json`, and `language-supports.json`. The builder creates 262 private HTML decks, the Course Plans manifest, a coverage ledger with the source SHA256, and response presets with current slide numbers. No answer-bearing HTML belongs under `public/`. The existing authenticated presentation route serves teacher/admin/observer accounts with private, no-store caching.
 

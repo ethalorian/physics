@@ -1,3 +1,4 @@
+import { ASSIGNMENT_LANGUAGE_STANDARD } from '@/lib/assignment-language'
 // Shared generator for targeted skill reviews via Claude. A review is a short
 // RICH re-teach (an ordered array of display blocks — prose, callout, code-drawn
 // diagram, read-the-graph, and ONE embedded simulation picked from the unit's
@@ -173,7 +174,7 @@ function extractJsonObject(text: string): string | null {
 export async function generateTargetReview(statement: string, sims: SimOption[] = []): Promise<{ review?: GeneratedReview; error?: string }> {
   if (!process.env.ANTHROPIC_API_KEY) return { error: 'Review generation is not configured (missing ANTHROPIC_API_KEY).' }
   const slugs = new Set(sims.map((s) => s.slug))
-  const system = `You are a high-school physics teacher's aide building a short, visually rich SKILL REVIEW for a CPA (college-prep, conceptual-first) student who is struggling with one learning target. Idealized physics only (round g to 10 m/s^2, no air resistance, no heavy math). Keep language accessible for English learners.
+  const system = `You are a high-school physics teacher's aide building a short, visually rich SKILL REVIEW for a CPA (college-prep, conceptual-first) student who is struggling with one learning target. Idealized physics only (round g to 10 m/s^2, no air resistance, no heavy math). ${ASSIGNMENT_LANGUAGE_STANDARD}
 
 MATH FORMATTING (important): Write every equation, variable, unit, and symbol as KaTeX math wrapped in dollar delimiters — inline math in single dollars like $v = \\frac{\\Delta x}{\\Delta t}$, standalone display math in double dollars like $$a = \\frac{\\Delta v}{\\Delta t}$$. This applies in EVERY text field: prose markdown, callout markdown, AND the question stems, choices, and explanations. Do NOT use \\( \\) or \\[ \\] delimiters, and never leave a raw LaTeX command (like \\frac or \\vec) outside dollar delimiters. A bare count in a sentence ("after 3 seconds") needs no math, but any quantity with a unit or symbol should be math — e.g. $5\\ \\text{m/s}$, not 5 m/s. (Remember this is JSON, so each backslash must be escaped: write \\\\frac, \\\\Delta, etc.)
 

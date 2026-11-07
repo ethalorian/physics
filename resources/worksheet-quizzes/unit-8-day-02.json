@@ -2,14 +2,14 @@
   "version": 1,
   "unit": 8,
   "day": 2,
-  "title": "Circuit model and solder practice",
+  "title": "Simulate a circuit and practice soldering",
   "target": "Test a circuit representation before making permanent connections.",
   "criteria": [
-    "Build a complete battery-switch-motor circuit model.",
+    "Build a complete battery-switch-motor circuit in the simulation.",
     "Explain an open versus closed path.",
     "Document a supervised solder-practice check."
   ],
-  "source_sha256": "efe8f00b74c93123ed34b80992c8fde05eaa41a020dee02487fa6fbfb4fac010",
+  "source_sha256": "7c9d15ee62f73d99602acfb72988d26886d34c37f1f45907a3a67bc91e641c59",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.573Z",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "In a simple battery-switch-motor series model, what changes when the switch is opened?",
+      "prompt": "A battery, switch, and motor are connected in series. What changes when the switch is opened?",
       "options": [
         "Steady current through the motor stops because the path is broken.",
         "Current doubles because resistance disappears.",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "In a simple battery-switch-motor series model, what changes when the switch is opened?",
+      "prompt": "A battery, switch, and motor are connected in series. What changes when the switch is opened?",
       "options": [
         "Current doubles because resistance disappears.",
         "The battery loses all stored energy instantly.",

@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useViewAs } from '@/lib/use-view-as'
-import { ArrowLeft, Smile, Users, Lock, Sparkles } from 'lucide-react'
+import { ArrowLeft, Smile, Users, Sparkles } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
 import { DEFAULT_TRAITS, type ItemSlot } from '@/lib/avatar/types'
 import type { CatalogRow } from '@/app/api/admin/avatar/catalog/route'
 
 // Admin-only catalog browser. Lets Craig see every avatar item with its art
-// preview, slot, price/unlock metadata, and how many students own it. Future
+// preview, slot, availability, and how many students own it. Future
 // surface for add/edit; today it's a viewer + sanity check.
 
 const SLOT_LABEL: Record<ItemSlot, string> = {
@@ -58,7 +58,7 @@ export default function AdminAvatarCatalogPage() {
       </div>
       <h1 className="text-2xl font-semibold tracking-tight">Catalog</h1>
       <p className="text-sm mt-1 mb-6" style={{ color: 'var(--muted-foreground)' }}>
-        Every item that can be earned or purchased, previewed against a default Mii so you can see how it sits on a character. Owner count shows how many students have redeemed each item.
+        Preview each item on an avatar. Owner count shows how many students have added it to their wardrobe.
       </p>
 
       <div className="mb-6 flex items-center gap-3 flex-wrap">
@@ -70,7 +70,7 @@ export default function AdminAvatarCatalogPage() {
           <Sparkles size={14} /> Build my own avatar
         </Link>
         <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-          Items are free for you — you&rsquo;re staff.
+          All wardrobe items are free for everyone.
         </span>
       </div>
 
@@ -106,18 +106,10 @@ function CatalogCard({ item }: { item: CatalogRow }) {
       <div className="font-semibold text-sm">{item.name}</div>
       <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{item.slug}</div>
       <div className="mt-3 flex flex-wrap gap-2 text-xs">
-        {item.cost_xp != null && (
-          <span className="inline-flex items-center gap-1 rounded-md px-2 py-1"
-            style={{ background: 'color-mix(in oklch, var(--reward) 18%, transparent)', color: 'var(--reward-foreground)' }}>
-            {item.cost_xp} XP
-          </span>
-        )}
-        {item.unlock_target_id && (
-          <span className="inline-flex items-center gap-1 rounded-md px-2 py-1"
-            style={{ background: 'color-mix(in oklch, var(--success) 16%, transparent)', color: 'var(--success)' }}>
-            <Lock size={11} /> Mastery {item.unlock_min_level ?? 2.5}+
-          </span>
-        )}
+        <span className="inline-flex items-center gap-1 rounded-md px-2 py-1"
+          style={{ background: 'var(--secondary)', color: 'var(--foreground)' }}>
+          Free
+        </span>
         <span className="inline-flex items-center gap-1 rounded-md px-2 py-1"
           style={{ background: 'var(--secondary)', color: 'var(--foreground)' }}>
           <Users size={11} /> {item.owner_count} owner{item.owner_count === 1 ? '' : 's'}
@@ -133,11 +125,6 @@ function CatalogCard({ item }: { item: CatalogRow }) {
           </span>
         )}
       </div>
-      {item.target_statement && (
-        <div className="mt-3 pt-3 text-xs" style={{ color: 'var(--muted-foreground)', borderTop: '1px solid var(--border)' }}>
-          Unlocks when a student masters: <span className="italic">{item.target_statement}</span>
-        </div>
-      )}
     </div>
   )
 }

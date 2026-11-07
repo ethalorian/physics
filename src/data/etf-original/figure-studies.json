@@ -1,0 +1,1026 @@
+[
+  {
+    "chapter": 1,
+    "author": "Amy Smith",
+    "title": "A mill that can stay in service",
+    "page": 7,
+    "crop": [
+      64,
+      8,
+      30,
+      76
+    ],
+    "stops": [
+      {
+        "x": 45,
+        "y": 17,
+        "label": "Start with the work",
+        "detail": "Grinding grain by hand takes time and effort. The first picture shows who already does the job."
+      },
+      {
+        "x": 49,
+        "y": 67,
+        "label": "Follow the grain",
+        "detail": "In a hammermill, fast-moving hammers break grain into small particles. A conventional mill uses a screen to control what leaves."
+      },
+      {
+        "x": 47,
+        "y": 84,
+        "label": "Change the repair",
+        "detail": "Smith’s screenless design separates particles using air. Removing the screen also removes a part that operators would otherwise have to replace."
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "author": "Shawn Frayne",
+    "title": "From a pellet to a usable fuel",
+    "page": 13,
+    "crop": [
+      65,
+      8,
+      29,
+      80
+    ],
+    "stops": [
+      {
+        "x": 48,
+        "y": 15,
+        "label": "Find a local input",
+        "detail": "The team tried sawdust available in the village. Availability settled only one part of the design problem."
+      },
+      {
+        "x": 49,
+        "y": 66,
+        "label": "Hold the pellet together",
+        "detail": "A binder helped the sawdust hold its shape. A pellet that survives handling still has to perform in a stove."
+      },
+      {
+        "x": 50,
+        "y": 87,
+        "label": "Test the burn",
+        "detail": "The team used the result of burning a sample to guide the next trial. Could a material pass a shape test and still fail the cooking test?"
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "author": "Jamy Drouillard",
+    "title": "Balance a small helicopter",
+    "page": 23,
+    "crop": [
+      65,
+      6,
+      27,
+      23
+    ],
+    "stops": [
+      {
+        "x": 47,
+        "y": 14,
+        "label": "Lift the craft",
+        "detail": "The main rotor must move enough air to lift the craft and its payload."
+      },
+      {
+        "x": 72,
+        "y": 41,
+        "label": "Keep it steady",
+        "detail": "Look at the arrangement of the rotors. One design problem is controlling the body’s tendency to turn."
+      },
+      {
+        "x": 49,
+        "y": 77,
+        "label": "Test a payload",
+        "detail": "Drouillard describes adding weights in prototype tests. Holding the craft steady without a load does not show that it can carry one."
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "author": "Lam Loc",
+    "title": "Unfold the views",
+    "page": 33,
+    "crop": [
+      66,
+      23,
+      26,
+      52
+    ],
+    "stops": [
+      {
+        "x": 49,
+        "y": 10,
+        "label": "Start with the solid",
+        "detail": "Imagine the part inside a transparent box. Each face records the view straight through it."
+      },
+      {
+        "x": 51,
+        "y": 52,
+        "label": "Open the box",
+        "detail": "Swing the faces outward while keeping the features aligned. The views move apart on the paper."
+      },
+      {
+        "x": 53,
+        "y": 85,
+        "label": "Read the flat drawing",
+        "detail": "Use matching edges to connect front, top, and side views. A single outline can hide the depth of a feature."
+      }
+    ]
+  },
+  {
+    "chapter": 5,
+    "author": "Robert Hartmann",
+    "title": "Many decisions inside one instrument",
+    "page": 38,
+    "crop": [
+      17,
+      39,
+      70,
+      49
+    ],
+    "stops": [
+      {
+        "x": 15,
+        "y": 13,
+        "label": "Fit the electronics",
+        "detail": "A smaller circuit assembly can fit a redesigned case. The electrical and mechanical teams need the same space limits."
+      },
+      {
+        "x": 13,
+        "y": 51,
+        "label": "Make the parts",
+        "detail": "The mechanical design must work with an actual manufacturing method."
+      },
+      {
+        "x": 15,
+        "y": 89,
+        "label": "Put it in someone’s hands",
+        "detail": "Observe a person using the buttons and display. A working circuit can still be difficult to operate."
+      }
+    ]
+  },
+  {
+    "chapter": 6,
+    "author": "Araceli Ortiz",
+    "title": "Move the work past the worker",
+    "page": 44,
+    "crop": [
+      19,
+      68,
+      71,
+      22
+    ],
+    "stops": [
+      {
+        "x": 15,
+        "y": 46,
+        "label": "Enter the line",
+        "detail": "A part reaches a station where a particular operation is ready for it."
+      },
+      {
+        "x": 47,
+        "y": 44,
+        "label": "Repeat one operation",
+        "detail": "Each station completes its own portion of the work as successive products pass."
+      },
+      {
+        "x": 80,
+        "y": 47,
+        "label": "Look downstream",
+        "detail": "If one station takes longer than the others, unfinished work can accumulate before it. What would you time?"
+      }
+    ]
+  },
+  {
+    "chapter": 7,
+    "author": "Dudley Green",
+    "title": "A stencil inside a manufacturing system",
+    "page": 53,
+    "crop": [
+      65,
+      55,
+      29,
+      29
+    ],
+    "stops": [
+      {
+        "x": 25,
+        "y": 36,
+        "label": "Identify the input",
+        "detail": "Circuit boards and material for making connections enter the work station."
+      },
+      {
+        "x": 54,
+        "y": 55,
+        "label": "Locate the process",
+        "detail": "Green’s stencil controls where material is deposited. Its openings translate the board layout into a repeatable operation."
+      },
+      {
+        "x": 75,
+        "y": 72,
+        "label": "Close the loop",
+        "detail": "Inspect the output against the intended pattern. Evidence of a misplaced deposit can change the setup for the next board."
+      }
+    ]
+  },
+  {
+    "chapter": 8,
+    "author": "Christine Epplett",
+    "title": "Change the shape of shoe material",
+    "page": 66,
+    "crop": [
+      6,
+      8,
+      28,
+      83
+    ],
+    "stops": [
+      {
+        "x": 54,
+        "y": 18,
+        "label": "Stack the material",
+        "detail": "Webbing brings layers together so that the next operation can act on several layers."
+      },
+      {
+        "x": 48,
+        "y": 53,
+        "label": "Cut a part",
+        "detail": "Separating removes material. The cut outline affects how shoe pieces will fit together."
+      },
+      {
+        "x": 51,
+        "y": 83,
+        "label": "Form a part",
+        "detail": "A forming operation changes shape by applying force. Compare it with cutting a new outline."
+      }
+    ]
+  },
+  {
+    "chapter": 9,
+    "author": "Saul Griffith",
+    "title": "Shape a lens before it hardens",
+    "page": 76,
+    "crop": [
+      30,
+      18,
+      62,
+      30
+    ],
+    "stops": [
+      {
+        "x": 22,
+        "y": 62,
+        "label": "Start with a liquid",
+        "detail": "Liquid acrylic can take the shape of the cavity between two flexible membranes."
+      },
+      {
+        "x": 75,
+        "y": 52,
+        "label": "Set the curvature",
+        "detail": "The syringes control the membrane shape. A changed curvature makes a different optical surface."
+      },
+      {
+        "x": 69,
+        "y": 22,
+        "label": "Fix the shape",
+        "detail": "Ultraviolet light hardens the acrylic. The lens keeps the shape set before curing."
+      }
+    ]
+  },
+  {
+    "chapter": 10,
+    "author": "Peter Park",
+    "title": "Density and the trip to the store",
+    "page": 86,
+    "crop": [
+      6,
+      8,
+      27,
+      34
+    ],
+    "stops": [
+      {
+        "x": 48,
+        "y": 18,
+        "label": "Count residents",
+        "detail": "Population gives a head count. The number alone does not say how close those people live to one another."
+      },
+      {
+        "x": 50,
+        "y": 49,
+        "label": "Include land area",
+        "detail": "Compare people per square mile. The denominator matters when comparing two places of different sizes."
+      },
+      {
+        "x": 50,
+        "y": 78,
+        "label": "Trace a real route",
+        "detail": "Even at the same density, zoning and street connections can change whether residents can walk to a shop. Try the street plan below."
+      }
+    ]
+  },
+  {
+    "chapter": 11,
+    "author": "Kirk Elwell",
+    "title": "Trace the load on the Zakim Bridge",
+    "page": 95,
+    "crop": [
+      7,
+      41,
+      84,
+      49
+    ],
+    "stops": [
+      {
+        "x": 16,
+        "y": 37,
+        "label": "Start at the deck",
+        "detail": "A moving vehicle adds load to a deck that already supports its own weight."
+      },
+      {
+        "x": 26,
+        "y": 22,
+        "label": "Follow the cable",
+        "detail": "The deck pulls on a stay. The cable carries tension along its length."
+      },
+      {
+        "x": 20,
+        "y": 13,
+        "label": "Follow it to ground",
+        "detail": "Stay forces reach the tower. The tower and foundations carry the load into the ground."
+      }
+    ]
+  },
+  {
+    "chapter": 12,
+    "author": "Bill Baker",
+    "title": "Interrupt a repeating wind load",
+    "page": 108,
+    "crop": [
+      6,
+      22,
+      27,
+      26
+    ],
+    "stops": [
+      {
+        "x": 39,
+        "y": 74,
+        "label": "Find the base",
+        "detail": "The tall tower is supported at its foundation. Wind also acts sideways over its height."
+      },
+      {
+        "x": 48,
+        "y": 43,
+        "label": "Follow the changing shape",
+        "detail": "The tower gets narrower and changes shape with height. Different parts encounter the wind differently."
+      },
+      {
+        "x": 63,
+        "y": 19,
+        "label": "Break the rhythm",
+        "detail": "Baker compares repeated wind forces with pushing a swing. Varying the profile makes a single organized pushing rhythm harder to sustain."
+      }
+    ]
+  },
+  {
+    "chapter": 13,
+    "author": "Prity Rungta",
+    "title": "Stand a floor joist on edge",
+    "page": 115,
+    "crop": [
+      6,
+      29,
+      60,
+      41
+    ],
+    "stops": [
+      {
+        "x": 43,
+        "y": 23,
+        "label": "Find the sheathing",
+        "detail": "Floor sheathing spreads a load to the joists below it."
+      },
+      {
+        "x": 25,
+        "y": 79,
+        "label": "Stand it on edge",
+        "detail": "A rectangular joist has more depth in this orientation. It resists bending better under a vertical load."
+      },
+      {
+        "x": 77,
+        "y": 79,
+        "label": "Compare it flat",
+        "detail": "Turn the same piece flat. The material and length stay the same while its resistance to bending changes."
+      }
+    ]
+  },
+  {
+    "chapter": 14,
+    "author": "Cathy Bazán-Arias",
+    "title": "Connect tower and soil",
+    "page": 126,
+    "crop": [
+      49,
+      32,
+      22,
+      16
+    ],
+    "stops": [
+      {
+        "x": 51,
+        "y": 16,
+        "label": "Start above ground",
+        "detail": "Wind pushes a tall tower sideways. Ice can add weight to the supported line."
+      },
+      {
+        "x": 46,
+        "y": 52,
+        "label": "Cross the ground line",
+        "detail": "The load continues through the base into the buried foundation."
+      },
+      {
+        "x": 42,
+        "y": 78,
+        "label": "Ask what lies below",
+        "detail": "Soil and rock conditions help determine the needed foundation dimensions. The surface view cannot supply that information."
+      }
+    ]
+  },
+  {
+    "chapter": 15,
+    "author": "Chris Benedict",
+    "title": "Compare an equal thickness of wall material",
+    "page": 139,
+    "crop": [
+      15,
+      42,
+      42,
+      22
+    ],
+    "stops": [
+      {
+        "x": 34,
+        "y": 18,
+        "label": "Read the columns",
+        "detail": "Compare the materials on the same basis. This table gives resistance to heat flow per inch."
+      },
+      {
+        "x": 62,
+        "y": 48,
+        "label": "Compare resistance",
+        "detail": "A higher R-value at equal thickness means more resistance to heat flow."
+      },
+      {
+        "x": 65,
+        "y": 78,
+        "label": "Build a whole wall",
+        "detail": "The wall includes multiple materials. Look for a continuous path of insulation as well as places where heat can bypass it."
+      }
+    ]
+  },
+  {
+    "chapter": 16,
+    "author": "Lauren Stencel",
+    "title": "Catch low winter sun",
+    "page": 145,
+    "crop": [
+      66,
+      20,
+      27,
+      24
+    ],
+    "stops": [
+      {
+        "x": 18,
+        "y": 22,
+        "label": "Admit the light",
+        "detail": "Sunlight enters through the glazing. A well-placed overhang can admit lower winter sunlight."
+      },
+      {
+        "x": 55,
+        "y": 72,
+        "label": "Store the energy",
+        "detail": "A floor or wall with thermal mass absorbs energy and warms up during the day."
+      },
+      {
+        "x": 72,
+        "y": 54,
+        "label": "Release it later",
+        "detail": "After the room cools, energy can flow from the warmer mass to the room. No fan is required for the storage itself."
+      }
+    ]
+  },
+  {
+    "chapter": 17,
+    "author": "Bob Brown",
+    "title": "Adjust a submersible’s buoyancy",
+    "page": 160,
+    "crop": [
+      5,
+      4,
+      29,
+      62
+    ],
+    "stops": [
+      {
+        "x": 46,
+        "y": 19,
+        "label": "Balance the forces",
+        "detail": "Read the starting arrangement in the variable ballast tank. A hovering vehicle has balanced weight and buoyant force."
+      },
+      {
+        "x": 47,
+        "y": 48,
+        "label": "Take water aboard",
+        "detail": "Adding water increases the vehicle’s mass at nearly fixed external volume. Its weight can exceed buoyant force."
+      },
+      {
+        "x": 47,
+        "y": 75,
+        "label": "Pump water out",
+        "detail": "Removing water reduces the weight. Watch the direction of the resulting motion in the sequence."
+      }
+    ]
+  },
+  {
+    "chapter": 18,
+    "author": "Aprille Ericsson",
+    "title": "Two objects push one another",
+    "page": 171,
+    "crop": [
+      18,
+      26,
+      40,
+      14
+    ],
+    "stops": [
+      {
+        "x": 23,
+        "y": 56,
+        "label": "Identify the pair",
+        "detail": "The two objects push on one another during the same interaction."
+      },
+      {
+        "x": 61,
+        "y": 40,
+        "label": "Compare the arrows",
+        "detail": "The forces on the two different objects point in opposite directions. They do not cancel on either object alone."
+      },
+      {
+        "x": 78,
+        "y": 53,
+        "label": "Transfer it to flight",
+        "detail": "A spacecraft ejects propellant one way and changes its own momentum the other way. The rocket does not need outside air to push on."
+      }
+    ]
+  },
+  {
+    "chapter": 19,
+    "author": "Joshua Tickell",
+    "title": "Follow a four-stroke diesel cycle",
+    "page": 180,
+    "crop": [
+      12,
+      67,
+      82,
+      28
+    ],
+    "stops": [
+      {
+        "x": 25,
+        "y": 45,
+        "label": "Admit and compress air",
+        "detail": "The piston draws in air and then compresses it. Compressing the air raises its temperature."
+      },
+      {
+        "x": 65,
+        "y": 48,
+        "label": "Deliver the power stroke",
+        "detail": "Injected fuel ignites in the hot air. Expanding gas drives the piston and turns the crankshaft."
+      },
+      {
+        "x": 84,
+        "y": 43,
+        "label": "Clear the cylinder",
+        "detail": "The exhaust stroke removes spent gas so the next cycle can begin."
+      }
+    ]
+  },
+  {
+    "chapter": 20,
+    "author": "Chris Langenfeld",
+    "title": "Trace a Stirling engine",
+    "page": 187,
+    "crop": [
+      6,
+      23,
+      61,
+      23
+    ],
+    "stops": [
+      {
+        "x": 19,
+        "y": 65,
+        "label": "Keep the gas inside",
+        "detail": "This machine reuses a sealed working gas. Energy crosses the boundary while the working gas stays inside."
+      },
+      {
+        "x": 33,
+        "y": 48,
+        "label": "Move gas between ends",
+        "detail": "The displacer moves gas toward the hot or cool region. Temperature changes affect the pressure."
+      },
+      {
+        "x": 77,
+        "y": 29,
+        "label": "Drive the piston",
+        "detail": "A changing gas pressure moves the power piston. Repeating the cycle turns the crank."
+      }
+    ]
+  },
+  {
+    "chapter": 21,
+    "author": "Ron DiPippo",
+    "title": "From steam flow to electric power",
+    "page": 193,
+    "crop": [
+      8,
+      18,
+      57,
+      20
+    ],
+    "stops": [
+      {
+        "x": 20,
+        "y": 46,
+        "label": "Direct the steam",
+        "detail": "A nozzle directs high-pressure steam toward the turbine blades."
+      },
+      {
+        "x": 48,
+        "y": 49,
+        "label": "Turn the shaft",
+        "detail": "The steam changes direction at the blades, exerting a force that turns the turbine."
+      },
+      {
+        "x": 79,
+        "y": 49,
+        "label": "Run the generator",
+        "detail": "The rotating shaft couples the turbine to a generator. The energy pathway continues into an electrical circuit."
+      }
+    ]
+  },
+  {
+    "chapter": 22,
+    "author": "Dr. Rebecca Steinmann",
+    "title": "Trace a fission chain",
+    "page": 203,
+    "crop": [
+      70,
+      9,
+      22,
+      39
+    ],
+    "stops": [
+      {
+        "x": 49,
+        "y": 11,
+        "label": "Begin with a neutron",
+        "detail": "A uranium nucleus can absorb a neutron and undergo fission."
+      },
+      {
+        "x": 50,
+        "y": 46,
+        "label": "Follow the split",
+        "detail": "The fission products carry energy away. Additional neutrons may be released."
+      },
+      {
+        "x": 53,
+        "y": 79,
+        "label": "Control the chain",
+        "detail": "Some neutrons can trigger further events. A power reactor must control that rate to deliver heat steadily."
+      }
+    ]
+  },
+  {
+    "chapter": 23,
+    "author": "Lisa Bina",
+    "title": "Height sets the available pressure",
+    "page": 212,
+    "crop": [
+      6,
+      8,
+      27,
+      22
+    ],
+    "stops": [
+      {
+        "x": 22,
+        "y": 24,
+        "label": "Find the higher surface",
+        "detail": "The elevated water surface provides a height reference for the supply."
+      },
+      {
+        "x": 55,
+        "y": 48,
+        "label": "Measure the vertical drop",
+        "detail": "Use the vertical height difference rather than the length of pipe to determine static pressure change."
+      },
+      {
+        "x": 80,
+        "y": 78,
+        "label": "Compare with flow",
+        "detail": "Once water flows, friction in the pipe also matters. Available pressure and actual flow are different measurements."
+      }
+    ]
+  },
+  {
+    "chapter": 24,
+    "author": "David Clark",
+    "title": "Deliver a long message in pieces",
+    "page": 227,
+    "crop": [
+      68,
+      13,
+      22,
+      61
+    ],
+    "stops": [
+      {
+        "x": 49,
+        "y": 20,
+        "label": "Divide the message",
+        "detail": "A packet has a limited size. A larger message must be carried in parts."
+      },
+      {
+        "x": 52,
+        "y": 52,
+        "label": "Keep track of the parts",
+        "detail": "Each piece needs information that lets the receiving system place it correctly."
+      },
+      {
+        "x": 52,
+        "y": 84,
+        "label": "Reassemble in order",
+        "detail": "Packets may arrive out of order. Sequence information makes the original order recoverable."
+      }
+    ]
+  },
+  {
+    "chapter": 25,
+    "author": "Sol Lerner",
+    "title": "Turn a voice into an electrical signal",
+    "page": 233,
+    "crop": [
+      58,
+      9,
+      33,
+      27
+    ],
+    "stops": [
+      {
+        "x": 70,
+        "y": 54,
+        "label": "Reach the microphone",
+        "detail": "Sound-pressure changes arrive at the diaphragm and make it move."
+      },
+      {
+        "x": 79,
+        "y": 67,
+        "label": "Change the circuit",
+        "detail": "In the carbon microphone pictured here, diaphragm motion changes the carbon granules’ contact and electrical resistance."
+      },
+      {
+        "x": 31,
+        "y": 23,
+        "label": "Recreate motion",
+        "detail": "An electrical signal can drive the receiver. Recognizing what was said requires further processing."
+      }
+    ]
+  },
+  {
+    "chapter": 26,
+    "author": "Nanette Halliburton",
+    "title": "Guide light along a fiber",
+    "page": 240,
+    "crop": [
+      5,
+      68,
+      26,
+      19
+    ],
+    "stops": [
+      {
+        "x": 45,
+        "y": 52,
+        "label": "Enter the core",
+        "detail": "Light carrying a signal travels in the fiber’s core."
+      },
+      {
+        "x": 65,
+        "y": 39,
+        "label": "Meet the boundary",
+        "detail": "The core and cladding have different optical properties. Rays at suitable angles reflect internally."
+      },
+      {
+        "x": 76,
+        "y": 68,
+        "label": "Continue down the guide",
+        "detail": "Successive reflections keep guided light in the fiber until a receiver detects the signal."
+      }
+    ]
+  },
+  {
+    "chapter": 27,
+    "author": "Alex Hills",
+    "title": "Relay a call through a satellite",
+    "page": 249,
+    "crop": [
+      6,
+      69,
+      85,
+      22
+    ],
+    "stops": [
+      {
+        "x": 16,
+        "y": 51,
+        "label": "Encode the caller",
+        "detail": "The caller’s equipment converts the message into a signal that the network can transmit."
+      },
+      {
+        "x": 53,
+        "y": 46,
+        "label": "Relay over distance",
+        "detail": "Ground stations and a satellite relay the signal past gaps in the terrestrial network."
+      },
+      {
+        "x": 88,
+        "y": 49,
+        "label": "Deliver the message",
+        "detail": "The receiving network brings the signal to the listener. Trace the return trip for a conversation."
+      }
+    ]
+  },
+  {
+    "chapter": 28,
+    "author": "Joel Rosenberg",
+    "title": "Relate voltage and current",
+    "page": 260,
+    "crop": [
+      6,
+      24,
+      23,
+      31
+    ],
+    "stops": [
+      {
+        "x": 23,
+        "y": 70,
+        "label": "Read the axes",
+        "detail": "The graph compares current with voltage for a resistor. Keep resistance fixed."
+      },
+      {
+        "x": 48,
+        "y": 51,
+        "label": "Double the push",
+        "detail": "At fixed resistance, doubling the voltage doubles the current."
+      },
+      {
+        "x": 75,
+        "y": 30,
+        "label": "Read the slope",
+        "detail": "A steeper current-versus-voltage line means more current for the same voltage, hence less resistance."
+      }
+    ]
+  },
+  {
+    "chapter": 29,
+    "author": "Soung-Sik Kim",
+    "title": "Account for the coal input",
+    "page": 266,
+    "crop": [
+      5,
+      8,
+      28,
+      63
+    ],
+    "stops": [
+      {
+        "x": 48,
+        "y": 19,
+        "label": "Measure power",
+        "detail": "Power tells how fast energy is being transferred. Start by specifying the useful electrical output."
+      },
+      {
+        "x": 48,
+        "y": 49,
+        "label": "Track energy over time",
+        "detail": "Energy delivered over an interval depends on the power and duration. Keep units consistent."
+      },
+      {
+        "x": 48,
+        "y": 79,
+        "label": "Compare with the input",
+        "detail": "Efficiency compares useful output energy with input energy. Some input leaves as heat even in a functioning plant."
+      }
+    ]
+  },
+  {
+    "chapter": 30,
+    "author": "Ken McAuliffe",
+    "title": "Trace two parallel branches",
+    "page": 276,
+    "crop": [
+      39,
+      18,
+      45,
+      13
+    ],
+    "stops": [
+      {
+        "x": 15,
+        "y": 58,
+        "label": "Trace the first loop",
+        "detail": "Follow one complete route from the source through one lamp and back."
+      },
+      {
+        "x": 41,
+        "y": 46,
+        "label": "Trace the other branch",
+        "detail": "Both branches connect across the same two supply points. Each therefore has the same voltage across it."
+      },
+      {
+        "x": 78,
+        "y": 46,
+        "label": "Open one branch",
+        "detail": "Breaking only one branch leaves a complete path through the other. Test that prediction in the circuit model."
+      }
+    ]
+  },
+  {
+    "chapter": 31,
+    "author": "Christine Bordonaro",
+    "title": "Follow energy through a solar cell",
+    "page": 284,
+    "crop": [
+      30,
+      45,
+      49,
+      33
+    ],
+    "stops": [
+      {
+        "x": 26,
+        "y": 24,
+        "label": "Light arrives",
+        "detail": "Incoming light supplies energy to the cell."
+      },
+      {
+        "x": 43,
+        "y": 58,
+        "label": "Separate charges",
+        "detail": "The layered semiconductor structure helps separate charge and establish a voltage between the contacts."
+      },
+      {
+        "x": 79,
+        "y": 61,
+        "label": "Connect a load",
+        "detail": "A closed external circuit gives current a route. The cell can then deliver electrical energy to a load."
+      }
+    ]
+  },
+  {
+    "chapter": 32,
+    "author": "Jim Gordon",
+    "title": "Follow the moving parts offshore",
+    "page": 292,
+    "crop": [
+      6,
+      8,
+      26,
+      38
+    ],
+    "stops": [
+      {
+        "x": 49,
+        "y": 30,
+        "label": "Catch moving air",
+        "detail": "Wind exerts forces on the blades and turns the rotor."
+      },
+      {
+        "x": 52,
+        "y": 35,
+        "label": "Drive a generator",
+        "detail": "Rotation passes through the turbine’s drive system and the generator produces electrical power."
+      },
+      {
+        "x": 49,
+        "y": 80,
+        "label": "Connect to shore",
+        "detail": "The offshore system also needs foundations, cables and a connection to the grid. The rotor alone cannot deliver power to users."
+      }
+    ]
+  }
+]

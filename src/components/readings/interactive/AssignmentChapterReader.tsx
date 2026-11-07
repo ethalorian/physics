@@ -10,11 +10,12 @@ const readers: Record<string, ComponentType<ChapterProps>> = {
   'hewitt:2:en': dynamic(() => import('./ChapterTwoReader'), { loading: () => <p role="status">Opening the interactive reading…</p> }),
 }
 
+const EtfReader = dynamic(() => import('./EtfChapterReader'))
 const ConnectedReader = dynamic(() => import('./ConnectedChapterReader'), { loading: () => <p role="status">Opening the interactive reading…</p> })
 
 /** Register reviewed content in registry.ts and its lazy renderer here. */
 export default function AssignmentChapterReader({ definition, ...props }: ChapterProps & Pick<ReaderProps, 'definition'>) {
   const Reader = readers[`${definition.book}:${definition.chapter}:${definition.language}`]
   const connected = !!connectedChapter(definition.book, definition.chapter)
-  return <div className={styles.embedded}>{connected ? <ConnectedReader {...props} definition={definition} /> : Reader ? <Reader {...props} /> : <p>This chapter’s interactive reader is unavailable. Open the original textbook to continue.</p>}</div>
+  return <div className={styles.embedded}>{definition.book === 'etf' ? <EtfReader {...props} definition={definition}/> : connected ? <ConnectedReader {...props} definition={definition} /> : Reader ? <Reader {...props} /> : <p>This chapter’s interactive reader is unavailable. Open the original textbook to continue.</p>}</div>
 }

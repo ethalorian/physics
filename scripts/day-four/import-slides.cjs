@@ -10,8 +10,8 @@ const snapshots=[
     "after": 10,
     "page": 13,
     "file": "page-01.webp",
-    "y": 369,
-    "height": 495,
+    "y": 365,
+    "height": 500,
     "title": "Read the axis before the line",
     "alt": "The velocity–time graph is horizontal at +1 meter per second from zero to four seconds. Mr. Antocci explains that velocity stays constant while Maz points out that the object is still moving.",
     "body": "A flat line at +1 m/s means steady motion in the positive direction.",
@@ -22,8 +22,8 @@ const snapshots=[
     "after": 14,
     "page": 14,
     "file": "page-02.webp",
-    "y": 578,
-    "height": 530,
+    "y": 573,
+    "height": 538,
     "title": "A common scale makes arrows useful",
     "alt": "At one square per meter per second, one arrow is four squares east and another is two squares north. Turning an arrow changes velocity even if its length stays the same.",
     "body": "Use the same units and scale before comparing arrow lengths.",
@@ -34,8 +34,8 @@ const snapshots=[
     "after": 18,
     "page": 15,
     "file": "page-03.webp",
-    "y": 369,
-    "height": 481,
+    "y": 367,
+    "height": 791,
     "title": "One motion, two components",
     "alt": "The fictional 8,500 meter-per-second vector is fifteen degrees from the toward-Earth axis. Its perpendicular components are about 8,210 meters per second toward Earth and 2,200 meters per second sideways.",
     "body": "The perpendicular components describe one simultaneous velocity.",
@@ -46,8 +46,8 @@ const snapshots=[
     "after": 23,
     "page": 16,
     "file": "page-04.webp",
-    "y": 321,
-    "height": 678,
+    "y": 320,
+    "height": 680,
     "title": "A smaller component still matters",
     "alt": "Over 1.6 times ten to the seventh seconds, the constant-velocity model gives about 131 million kilometers toward Earth and 35 million kilometers sideways. Mr. Antocci calls this a model rather than an orbit forecast.",
     "body": "Over six months, even the smaller sideways rate produces a large displacement.",
@@ -59,7 +59,7 @@ function comic(s){return `<section data-label="${s.title}" class="foundation-com
  <div style="font:24px 'IBM Plex Mono',monospace;letter-spacing:2px;color:#a9a7ff;">2026-XJ · The Other Direction · Graphic novel, page ${s.page}</div>
  <h2 style="font-size:64px;line-height:1.1;font-weight:500;margin:22px 0 30px;">${s.title}</h2>
  <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:52px;align-items:center;flex:1;min-height:0;">
-  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" style="width:100%;height:auto;max-height:610px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-04-v1/${s.file}" width="1024" height="1536"/></svg>
+  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;justify-self:center;max-width:${Math.floor(610*1024/s.height)}px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-04-v1/${s.file}" width="1024" height="1536"/></svg>
   <div><p style="font-size:32px;line-height:1.4;margin:0 0 28px;">${s.body}</p><p style="font-size:38px;line-height:1.25;margin:0;">${s.question}</p></div>
  </div><div style="font:24px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:28px;">${s.work} · Write your own answer in Work.</div>
  <footer style="font:20px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:22px;">Fictional story · Original artwork · Day 4</footer></section>`;}
@@ -80,7 +80,7 @@ let number=0;
 html=html.replace(/<section\b[^>]*>[\s\S]*?<\/section>/g,section=>{number++;return section.replace(/data-screen-label="[^"]*"/,`data-screen-label="${String(number).padStart(2,'0')}"`).replace(/Antocci Physics · \d{2} \/ 29/g,`Antocci Physics · ${String(number).padStart(2,'0')} / 30`);});
 html = require('../foundation-groups/slide-copy.cjs')(html);
 const plain=n=>n.nodeName==='#text'?n.value.replace(/\{\{[^}]+\}\}/g,''):['button','script','style','image'].includes(n.tagName)?'':n.tagName==='sc-if'&&n.attrs.some(a=>/q\dOpen/.test(a.value))?'':(n.childNodes||[]).map(plain).join(' ');
-const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,title:m[1].match(/data-label="([^"]+)"/)[1],text:plain(p5.parseFragment(m[0])).replace(/\s+/g,' ').trim()}));
+const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,comicPage:m[0].match(/<image\b[^>]*\bhref="(\/comics\/2026-xj\/[^"]+\.webp)"/)?.[1],title:m[1].match(/data-label="([^"]+)"/)[1],text: require('../foundation-groups/slide-language.cjs').companion(p5.parseFragment(m[0]))}));
 const vendor='resources/foundations/day-one/vendor';
 const libraries=[['react.production.min.js','DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z'],['react-dom.production.min.js','gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1']].map(([file,integrity])=>{const bytes=fs.readFileSync(path.join(vendor,file));if(crypto.createHash('sha384').update(bytes).digest('base64')!==integrity)throw Error('Runtime integrity mismatch');return script(bytes.toString());}).join('\n');
 const stage=fs.readFileSync(base+'/deck-stage.js','utf8'),support=fs.readFileSync(base+'/support.js','utf8');

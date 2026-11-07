@@ -9,7 +9,7 @@
     "Explain the role of surface area relative to mass.",
     "Name missing factors in a survival prediction."
   ],
-  "source_sha256": "3a342f984d48c595fc3d7ae2fdab5e1876a1f4c26a7f21988192a56f936e284b",
+  "source_sha256": "e9d8a57b16743cf8dd884a4ad10eccd2fdfc5fa895283518fbfce4aa1dd8a471",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.538Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "An entry model assigns 150 J of kinetic energy to an object. A specified heating change needs 30 J. What is the energy ratio KE/heating requirement?",
+      "prompt": "An object entering an atmosphere has 150 J of kinetic energy. A specified heating change needs 30 J. What is the ratio KE/heating requirement?",
       "options": [
         "120",
         "5",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "An object has 240 J of kinetic energy, but a model sends only 10% into its heating. A specified change needs 40 J. Is the assigned heating energy enough?",
+      "prompt": "An object has 240 J of kinetic energy. A calculation sends only 10% into heating the object. A specified change needs 40 J. Is that heating energy enough?",
       "options": [
         "No; kinetic energy cannot transfer into internal energy.",
         "Yes; 10% means multiply by 10.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A simplified entry model omits fragmentation and changing shape. Which statement is appropriate?",
+      "prompt": "A simple prediction for entering an atmosphere leaves out the object breaking apart or changing shape. Which statement is appropriate?",
       "options": [
         "A conditional model cannot be useful for any comparison.",
         "The omitted processes cannot matter by definition.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "An entry model assigns 150 J of kinetic energy to an object. A specified heating change needs 30 J. What is the energy ratio KE/heating requirement?",
+      "prompt": "An object entering an atmosphere has 150 J of kinetic energy. A specified heating change needs 30 J. What is the ratio KE/heating requirement?",
       "options": [
         "0.20",
         "5",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "An object has 240 J of kinetic energy, but a model sends only 10% into its heating. A specified change needs 40 J. Is the assigned heating energy enough?",
+      "prompt": "An object has 240 J of kinetic energy. A calculation sends only 10% into heating the object. A specified change needs 40 J. Is that heating energy enough?",
       "options": [
         "Yes; 10% means multiply by 10.",
         "Yes; all 240 J must heat the object.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A simplified entry model omits fragmentation and changing shape. Which statement is appropriate?",
+      "prompt": "A simple prediction for entering an atmosphere leaves out the object breaking apart or changing shape. Which statement is appropriate?",
       "options": [
         "Its survival estimate is conditional because fragmentation can change area, mass, and heating.",
         "The omitted processes cannot matter by definition.",

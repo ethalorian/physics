@@ -23,7 +23,7 @@ export const QUESTIONS: Question[] = [
   {id:'6b',part:6,prompt:'In one or two sentences: what does the slope of your graph tell you, and how do you know it is constant?',hint:'',explanation:'Look for velocity as change in position per time, and equal changes in position over equal time intervals.',independent:true},
 ]
 export type Attempt = { answer: string; correct: boolean }
-export type VelocityState = { answers: Record<string,string>; attempts: Record<string,Attempt[]>; walker: number[]; matches: Record<string,{start:number;velocity:number}>; graph: {target:number;start:number;velocity:number}; conversion:number; explorers?:Record<string,number[]> }
+export type VelocityState = { foundationQuestionEdition?: import('./foundations/cpa').FoundationQuestionEdition; answers: Record<string,string>; attempts: Record<string,Attempt[]>; walker: number[]; matches: Record<string,{start:number;velocity:number}>; graph: {target:number;start:number;velocity:number}; conversion:number; explorers?:Record<string,number[]> }
 export const emptyVelocityState = ():VelocityState => ({answers:{},attempts:{},walker:[0],matches:{},graph:{target:0,start:0,velocity:0},conversion:36})
 export function correctAnswer(q:Question, answer:string) {
   if (!answer.trim()) return false

@@ -6,10 +6,10 @@
   "target": "Use height differences to predict speed in ideal motion.",
   "criteria": [
     "Identify the relevant vertical height change.",
-    "Conserve energy under stated assumptions.",
+    "Conserve energy only when the stated facts allow it.",
     "Separate path length from gravitational energy change."
   ],
-  "source_sha256": "85092fadb7f3965feb60be1f1e13789f4d8ce84eac7aaf1d968c4b2bfe6612a6",
+  "source_sha256": "330284d5209a6a61972ce434fd540c11f8bb20edbc81f10eeda165f788a50ee8",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.524Z",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "A 3 kg coaster model descends 2 m without resistance. Use g = 10 N/kg. What is its kinetic-energy gain?",
+      "prompt": "A 3 kg coaster descends 2 m without resistance. Use g = 10 N/kg. What is its gain in kinetic energy?",
       "options": [
         "15 J",
         "30 J",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A longer real coaster track gives a lower final speed than a shorter one with the same drop. Which explanation is plausible?",
+      "prompt": "Two real coaster tracks have the same drop. The longer track gives a lower final speed. Which explanation could account for this?",
       "options": [
         "Gravity must have disappeared.",
         "More energy may have transferred to internal energy through resistance.",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "A 3 kg coaster model descends 2 m without resistance. Use g = 10 N/kg. What is its kinetic-energy gain?",
+      "prompt": "A 3 kg coaster descends 2 m without resistance. Use g = 10 N/kg. What is its gain in kinetic energy?",
       "options": [
         "6 J",
         "60 J",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A longer real coaster track gives a lower final speed than a shorter one with the same drop. Which explanation is plausible?",
+      "prompt": "Two real coaster tracks have the same drop. The longer track gives a lower final speed. Which explanation could account for this?",
       "options": [
         "More energy may have transferred to internal energy through resistance.",
         "The longer path necessarily reduced the cart’s mass.",

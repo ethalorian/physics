@@ -72,7 +72,7 @@ export function SeiPrompt({ prompt, l1Text, children }: { prompt: string; l1Text
   const { profile } = useLanguageProfile()
   return (
     <div className="mb-2">
-      <div className="text-sm" style={{ color: C.indigo }}><MathMarkdown content={prompt} />{children}</div>
+      <div className="text-sm" style={{ color: C.indigo }}><MathMarkdown questionEmphasis content={prompt} />{children}</div>
       {l1Text && <p className="text-sm mt-0.5" style={{ color: C.muted }} lang={profile?.homeLang ?? undefined}>{l1Text}</p>}
     </div>
   )

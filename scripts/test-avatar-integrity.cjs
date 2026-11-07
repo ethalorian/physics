@@ -75,5 +75,41 @@ check('vampire migration is repeatable and preserves staff pricing/retirement',(
   assert.equal(run(`select count(*) from avatar_items where slot in ('ears','mouth')`),'2');
   assert.throws(()=>run(`update avatar_items set slot='unknown' where slug='vampire-fangs'`),/avatar_items_slot_check/);
 });
+// Run the free-wardrobe migration against a populated, previously paid catalog.
+const history = () => run("select coalesce(jsonb_agg(to_jsonb(r) order by id),'[]') from reward_redemptions r");
+const existingReceipts = history();
+const existingOwners = run('select count(*) from student_owned_items');
+run('alter table avatar_items alter column unlock_min_level set default 2.5');
+run(fs.readFileSync('supabase/migrations/20261102182833_free_avatar_wardrobe.sql','utf8'));
+check('migration opens previous prices and mastery rewards and preserves existing records',()=>{
+  assert.equal(run('select count(*) from avatar_items where cost_xp is distinct from 0 or unlock_target_id is not null or unlock_min_level is not null'),'0');
+  assert.equal(history(),existingReceipts);
+  assert.equal(run('select count(*) from student_owned_items'),existingOwners);
+  assert.equal(run("select enabled from avatar_items where slug='vampire-fangs'"),'f');
+});
+const newcomer = '00000000-0000-0000-0000-000000000007';
+run(`insert into students(id,name) values('${newcomer}','Zero XP'); insert into avatar_items(slug,slot,name,svg_layer) values('new-scene','background','A new scene','<g/>')`);
+const retries = await Promise.all([concurrent(buy('test-unlock',newcomer)),concurrent(buy('test-unlock',newcomer))]);
+check('concurrent zero-XP claims grant the former mastery reward exactly once',()=>{
+  assert(retries.every(r=>r.code===0));
+  assert.equal(retries.filter(r=>JSON.parse(r.output).already_owned).length,1);
+  assert.equal(run(`select count(*) from student_owned_items where user_id='${newcomer}' and item_slug='test-unlock'`),'1');
+});
+check('zero-XP student can claim all enabled items and save them without spending',()=>{
+  run(`select purchase_avatar_item('${newcomer}','test@example.invalid',slug,false) from avatar_items where enabled`);
+  for(const slug of ['new-scene','test-a','test-unlock']) assert.equal(JSON.parse(run(buy(slug,newcomer))).already_owned,true);
+  const equipped = {background:'new-scene',head:'test-a',pin:'test-unlock'};
+  run(`select save_avatar_state('${newcomer}',0,'${JSON.stringify({equipped})}')`);
+  assert.deepEqual(JSON.parse(run(`select equipped from student_avatars where user_id='${newcomer}'`)),equipped);
+  assert.deepEqual(JSON.parse(run(`select economy_totals('${newcomer}')`)),{lifetimeEarned:0,spent:0,balance:0});
+  assert.equal(history(),existingReceipts);
+  assert.throws(()=>run(buy('vampire-fangs',newcomer)),/UNKNOWN_ITEM/);
+  assert.throws(()=>run(buy('nonexistent',newcomer)),/UNKNOWN_ITEM/);
+});
+check('new items default to free and cannot introduce prices or mastery gates',()=>{
+  assert.equal(run("select cost_xp from avatar_items where slug='new-scene'"),'0');
+  assert.throws(()=>run("update avatar_items set cost_xp=10 where slug='new-scene'"),/avatar_wardrobe_is_free/);
+  assert.throws(()=>run(`update avatar_items set cost_xp=null,unlock_target_id='${target}' where slug='new-scene'`),/avatar_wardrobe_is_free/);
+});
 console.log(`${passed} database checks passed`);
 }finally{run(`DROP DATABASE ${name} WITH (FORCE)`,base)}})().catch(e=>{console.error(e.stderr?.toString()||e);process.exitCode=1});

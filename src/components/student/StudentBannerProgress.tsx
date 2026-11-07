@@ -8,8 +8,8 @@ import { useStudentProgress } from './StudentProgressContext'
 import s from './StudentBannerProgress.module.css'
 
 export default function StudentBannerProgress() {
-  const { data, loading, error, refresh, termId, onTerm } = useStudentProgress()
-  const { average, syllabus, unavailable } = studentGradeSummary(data, termId)
+  const { data, loading, error, refresh, termId, onTerm, now } = useStudentProgress()
+  const { average, syllabus, unavailable } = studentGradeSummary(data, termId, new Date(now))
   const percent = loading || error ? null : average.percent
   const terms = data?.settings.terms ?? []
   const href = '/home/gradebook?' + new URLSearchParams({
@@ -17,7 +17,7 @@ export default function StudentBannerProgress() {
     ...(data?.staff && data.student ? { student: data.student.id } : {}), term: termId,
   }) + '#grade-breakdown'
   const failed = error || (!!data?.student && unavailable)
-  const status = loading ? 'Loading grade…' : failed ? 'Grade unavailable' : !data?.student ? data?.staff ? 'Choose a student below' : 'No assigned grades yet' : percent === null ? syllabus ? 'No grades or assigned work yet' : 'No released grades yet' : syllabus ? null : 'Released quizzes'
+  const status = loading ? 'Loading grade…' : failed ? 'Grade unavailable' : !data?.student ? data?.staff ? 'Choose a student below' : 'No assigned grades yet' : percent === null ? syllabus ? 'No grades or past-due work yet' : 'No released grades yet' : syllabus ? null : 'Released quizzes'
   return <section className={s.summary} aria-label={syllabus ? 'Overall average' : 'Quiz score'} aria-busy={loading}>
     <h2>{syllabus ? 'Overall average' : 'Quiz score'}</h2>
     {data?.staff && data.student && <p className={s.preview}>Preview: {data.student.name}</p>}

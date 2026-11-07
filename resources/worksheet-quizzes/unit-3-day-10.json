@@ -9,7 +9,7 @@
     "Add momentum components along matching directions.",
     "Connect component sums to the final motion."
   ],
-  "source_sha256": "795e54feb72c9677397382cd609da35bf506568e1301d66f2a8782198344622c",
+  "source_sha256": "5764f8bde3bdf1685f184def9e776bde3f7bb48323d863e198e86c862faa3e19",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.508Z",

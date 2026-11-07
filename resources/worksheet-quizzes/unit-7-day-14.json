@@ -9,7 +9,7 @@
     "Predict whether a stationary arrangement produces sustained induction.",
     "Use Lenz’s law to describe opposition to change."
   ],
-  "source_sha256": "114e49224ba95ec6b7b05d9de6c8fe5520c3cca755cf814b198132e2ab52e95d",
+  "source_sha256": "309c8f8553f475d34739711b18767d86f054a1c35756ff72272c050ed01663cc",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.567Z",

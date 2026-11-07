@@ -1,0 +1,700 @@
+[
+  {
+    "project": 1,
+    "task": "1.1",
+    "pages": "6–7",
+    "chapters": [
+      1
+    ],
+    "title": "Find the user behind a design",
+    "kit": "A familiar tool, tape measure, pencil and student packet.",
+    "entry": "Start here with a familiar tool. Work in pairs and switch interviewer after the first observation.",
+    "measure": "Observe one use of the tool. Record who used it, what it acted on, and one dimension or count you can check.",
+    "plan": "Sketch the tool as used. Label its input and the job the user wants done.",
+    "make": "Have your partner perform the job. Record a point where the tool helps and a point where the user has to adjust.",
+    "test": "Give a second user the same job. Compare the two observations and refine your statement of need.",
+    "exit": "Name the user, the job, and one piece of evidence that would justify a design change.",
+    "guide": "Accept a need supported by observation. Ask what another user would do differently.",
+    "strand": "build",
+    "day": 1
+  },
+  {
+    "project": 1,
+    "task": "1.2",
+    "pages": "8–10",
+    "chapters": [
+      2
+    ],
+    "title": "Design and test a phone holder",
+    "kit": "Per pair: one folder, 12 in of tape, scissors, ruler, rigid phone blank, timer.",
+    "entry": "Identify the workbench user and one limit. Use the same rigid blank for both trials.",
+    "measure": "Measure the blank’s width and thickness to the nearest 1/16 in. Mark its display side.",
+    "plan": "Sketch two holders. Label the support, opening, and a critical dimension. Choose the more promising design.",
+    "make": "Fold and tape the first holder. Set it on the bench with the blank’s face visible. Keep enough material for a revision.",
+    "test": "Time an unsupported hold up to 30 s. Remove and replace the blank one-handed three times. Change one feature and repeat both tests.",
+    "exit": "Which change would you keep? Give a dimension with units and compare the two versions’ hold times or successful cycles.",
+    "guide": "Observe each student measuring. A holder can stand for 30 s and still fail retrieval. Ask for both results.",
+    "strand": "measure",
+    "day": 2
+  },
+  {
+    "project": 1,
+    "task": "1.2–1.3",
+    "pages": "11–13 and 18–25",
+    "chapters": [
+      3,
+      4
+    ],
+    "title": "Lay out a pattern another builder can use",
+    "kit": "Holder from Task 1.2, graph paper, folder stock, ruler, scissors.",
+    "entry": "Provide a holder or an unfolded sample if the class enters here.",
+    "measure": "Measure a flat pattern and the usable sheet. Mark cut and fold lines differently.",
+    "plan": "Draw front and side views. Include width, height, and the opening. Mark which view supplies each measurement.",
+    "make": "Fit copies of the pattern on one sheet without overlap. Count whole parts and compare with an area-only estimate.",
+    "test": "Give your views to a partner. Ask them to locate a fold and one hidden dimension. Correct any ambiguity.",
+    "exit": "Show the number of whole parts per sheet. Explain one reason it can differ from the area estimate.",
+    "guide": "Look for whole parts, orientation, and waste. Accept different layouts if every part fits.",
+    "strand": "plans",
+    "day": 3
+  },
+  {
+    "project": 1,
+    "task": "1.4–1.5",
+    "pages": "38–41 and 46–50",
+    "chapters": [
+      5,
+      6
+    ],
+    "title": "Write an organizer brief for a user",
+    "kit": "Real items to store, an existing organizer or photo, ruler and student packet.",
+    "entry": "Provide the contact or role of a user who can test the finished organizer.",
+    "measure": "Measure three items. Ask the user which is hardest to retrieve. Record a quote or observed action.",
+    "plan": "List the job, two measurable criteria, and a material or space limit. Sketch the area available.",
+    "make": "Compare an existing organizer with the brief. Have the user try its arrangement with the actual items.",
+    "test": "Read the brief back to the user. Replace a vague word such as easy with an action you can observe.",
+    "exit": "Give one user requirement, its test, and the observation that led you to choose it.",
+    "guide": "Listen for a user-defined priority and a repeatable test. Have the user resolve conflicting priorities.",
+    "strand": "build",
+    "day": 4
+  },
+  {
+    "project": 1,
+    "task": "1.6–1.7",
+    "pages": "52–55",
+    "chapters": [
+      7
+    ],
+    "title": "Choose an organizer layout",
+    "kit": "Three measured items, user brief, grid paper, ruler, cardboard sample.",
+    "entry": "Use the prior user brief or supply a brief and the objects to store.",
+    "measure": "Measure wall thickness and the outer footprint. Calculate the clear width left for storage.",
+    "plan": "Each partner sketches a different layout. Compare both against the same criteria in the packet decision table.",
+    "make": "Mark the two layouts full size on paper. Place the items inside and trace the hand’s access route.",
+    "test": "Test each layout for fit and retrieval. Use the results to choose a design and update its dimensions.",
+    "exit": "Which design won? Show one clearance calculation and name a trade-off the user accepts.",
+    "guide": "Check for wall thickness in the arithmetic. A winning score needs a physical fit check.",
+    "strand": "math",
+    "day": 5
+  },
+  {
+    "project": 1,
+    "task": "1.8",
+    "pages": "56–57",
+    "chapters": [
+      8
+    ],
+    "title": "Build the organizer prototype",
+    "kit": "Selected layout, cardboard, ruler, tape, scissors and actual stored objects.",
+    "entry": "Supply the approved layout, user criteria, and objects before cutting.",
+    "measure": "Transfer dimensions from one edge. Label parts and measure the actual thickness of one wall.",
+    "plan": "Create a cut list. Decide which part to fit first and which joint to leave accessible for inspection.",
+    "make": "Cut and dry-fit the base and walls. Check the actual objects, then fasten the parts. Record one departure from the plan.",
+    "test": "Have a partner check a bay against its design dimension. Mark any interference or inaccessible item.",
+    "exit": "Record a planned and an actual dimension. Explain whether the difference matters to this user.",
+    "guide": "Inspect the dry fit before fastening. Require an as-built measurement and units.",
+    "strand": "measure",
+    "day": 6
+  },
+  {
+    "project": 1,
+    "task": "1.9",
+    "pages": "58–63",
+    "chapters": [
+      8
+    ],
+    "title": "Run a user test and select a revision",
+    "kit": "Prototype, objects, user criteria, stopwatch and spare stock.",
+    "entry": "Start with a working prototype or use a supplied organizer and a written brief.",
+    "measure": "Choose a score for retrieval, such as successful attempts out of three. Record a timed baseline if time matters to the user.",
+    "plan": "Agree on the starting arrangement and directions. Avoid coaching the tester during the trial.",
+    "make": "Run the test with the actual user. Record what happened on each attempt and one comment about access.",
+    "test": "Repeat a trial to check that the problem recurs. Mark the feature you will change in the next version.",
+    "exit": "Use the trials to defend one revision. Name a second possible cause you checked.",
+    "guide": "Look for actual trial results and consistent starting conditions. Do not require success on the first build.",
+    "strand": "build",
+    "day": 7
+  },
+  {
+    "project": 1,
+    "task": "1.10–1.11",
+    "pages": "66–69 and 72–73",
+    "chapters": [
+      9
+    ],
+    "title": "Hand over the revised organizer",
+    "kit": "Prototype, test record, spare stock, ruler and user.",
+    "entry": "Bring a tested organizer and a written user request. If either is absent, use the preceding lesson first.",
+    "measure": "Calculate material used or cost from a supplied classroom price. Label price assumptions.",
+    "plan": "Choose one revision from the test and mark its new dimension on the drawing.",
+    "make": "Modify the organizer. Have the same user repeat the original test. Record both versions’ results.",
+    "test": "Exchange the final drawing and prototype. Ask a partner to reproduce a critical dimension and explain its purpose.",
+    "exit": "Show one measured improvement or unresolved limit. Include the earlier result and the new one.",
+    "guide": "Check the individual measurement and the team handoff separately. A documented limit is valid.",
+    "strand": "plans",
+    "day": 8
+  },
+  {
+    "project": 2,
+    "task": "2.1",
+    "pages": "6–11",
+    "chapters": [
+      10
+    ],
+    "title": "Define the problem for a mixed-use building",
+    "kit": "Per pair, one measuring tape, pencil and ruler. Give each student the four-page Task 2.1 packet. Choose a safe straight walking path and a teacher-approved room.",
+    "entry": "Start here with the current MVP class. No organizer or previous project is needed. Read Peter Park, Redesigning America, printed pp. 83–87.",
+    "measure": "Walk ten normal steps. Measure that distance in feet. Repeat three times. Average the distances and divide by ten to find feet per step. A partner can measure or use a tape directly for the room survey.",
+    "plan": "Pace the room length and width, convert both to feet, and multiply to estimate floor area. Check one dimension with a tape. Mark any difference and the unit.",
+    "make": "Choose a local site. Sketch a ground floor with housing access and one business or community service. Label entrances and uses. Trace one real trip from a dwelling entrance to that service.",
+    "test": "Exchange sketches. Have a partner trace the trip without help and point out a barrier. Revise an entrance or route. Record a criterion, a constraint and the reason for the change on your packet.",
+    "exit": "What local need does your building meet? Give a room dimension or area with units. Use one idea from Peter Park and one detail from your sketch to justify a design decision.",
+    "guide": "Warm-up example: ten steps covering 24 ft give 2.4 ft/step. An 8-step by 10-step space is about 19.2 ft × 24 ft, or 460.8 ft². Use students’ own measurements for the actual brief. Look for housing plus a service and a route a person can use.",
+    "strand": "math",
+    "day": 1
+  },
+  {
+    "project": 2,
+    "task": "2.2",
+    "pages": "12–19",
+    "chapters": [
+      11
+    ],
+    "title": "Trace the loads a building must carry",
+    "kit": "Mixed-use building sketch or the packet example, stacked books as supports, card strip and identical washers.",
+    "entry": "Bring the mixed-use sketch or use a two-floor example with a shop below apartments.",
+    "measure": "Count a model deck’s self-weight as a permanent load. Mark where you will add equal test masses.",
+    "plan": "Draw arrows from one person or object through floor, beam, support, and foundation.",
+    "make": "Span two low supports with the strip. Add a light load first at the center, then near one support. Keep the span fixed.",
+    "test": "Record the change in bend at both positions. Separate the added live load from the model’s own weight.",
+    "exit": "Trace one load on your building sketch to the ground. Which part carries it next, and why?",
+    "guide": "Keep the load small and the setup low. A load path must continue through connections to a support.",
+    "strand": "plans",
+    "day": 2
+  },
+  {
+    "project": 2,
+    "task": "2.3",
+    "pages": "20–27",
+    "chapters": [
+      12
+    ],
+    "title": "Build a tower and examine its first failure",
+    "kit": "Equal sets of paper or card strips, tape, ruler, low test tray, identical light loads.",
+    "entry": "Agree on a common tower height, stock allowance and test conditions. Write them on the packet before building.",
+    "measure": "Measure the base and tower height. Record the starting lean or displacement.",
+    "plan": "Sketch the bracing. Predict which joint or member will move first and how you will see it.",
+    "make": "Build a freestanding tower to the recorded height using the class material limit. Have a partner check dimensions before loading.",
+    "test": "Load in equal increments under teacher supervision. Stop at the first major lean or joint slip. Photograph or sketch that first failure.",
+    "exit": "Identify the first failure and the load or trial when it appeared. What one change follows from it?",
+    "guide": "Observe from beside the tower. Distinguish the cause from damage that occurred after collapse.",
+    "strand": "build",
+    "day": 3
+  },
+  {
+    "project": 2,
+    "task": "2.4–2.5",
+    "pages": "28–40",
+    "chapters": [
+      13,
+      14
+    ],
+    "title": "Compare construction materials under load",
+    "kit": "Equal-length samples, two low supports, lightweight identical loads, ruler.",
+    "entry": "Use the same span and loading point for every sample. Pilot a safe limit before class.",
+    "measure": "Measure each sample’s span, width, and thickness. Record differences that affect the comparison.",
+    "plan": "Draw the setup with the loading point and a reference line for deflection.",
+    "make": "Load the samples one increment at a time. Measure center deflection at a common load. Unload and inspect.",
+    "test": "Compare which sample bent and recovered, which kept a bend, and which failed. Identify the limits of the comparison.",
+    "exit": "Recommend a member for one part of your model. Cite a common-load measurement and describe the material response.",
+    "guide": "A stiffer specimen bends less at equal load. A single geometry test does not prove intrinsic material strength.",
+    "strand": "measure",
+    "day": 4
+  },
+  {
+    "project": 2,
+    "task": "2.7",
+    "pages": "50–61",
+    "chapters": [
+      15
+    ],
+    "title": "Test insulation for the building envelope",
+    "kit": "Matched containers or test boxes, insulation samples, thermometers, timer, teacher-prepared warm water and tray.",
+    "entry": "Compare a plain enclosure with one insulated enclosure. Use identical containers of teacher-supplied warm water. Match starting amounts and temperatures, then measure at the same intervals.",
+    "measure": "Record starting temperature, volume, and elapsed time. Identify the one insulation feature to change.",
+    "plan": "Draw the boundary of the box. Predict a heat-loss path and mark the thermometer location.",
+    "make": "Prepare a baseline and insulated case. Record temperatures at equal intervals, using the same method.",
+    "test": "Compare temperature drops after the same interval. Seal one suspected gap and repeat if the starting conditions can be matched.",
+    "exit": "Which enclosure lost less thermal energy under your test conditions? Support your inference with two measured temperature changes.",
+    "guide": "Compare like masses and materials. Record a difference in starting conditions rather than silently treating it as equal.",
+    "strand": "math",
+    "day": 5
+  },
+  {
+    "project": 2,
+    "task": "2.8",
+    "pages": "62–65",
+    "chapters": [
+      16
+    ],
+    "title": "Draw the building at a usable scale",
+    "kit": "Site brief, measured dimensions, grid paper, ruler and pencil.",
+    "entry": "Provide a measured sketch from 2.1 or a dimensioned site brief.",
+    "measure": "Choose and label a scale. At 1/2 in = 1 ft, a 12-ft wall occupies 6 in. Convert one real dimension independently.",
+    "plan": "Mark a common corner. Draw exterior walls, doors, and the two uses. Include a legend and units.",
+    "make": "Add an elevation or detail showing a feature the floor plan cannot show. Mark the pedestrian route.",
+    "test": "Give the drawing to another crew. Ask them to recover a real dimension and trace the entrance without asking you.",
+    "exit": "Show one scale conversion in both directions. What did the partner’s check make you change?",
+    "guide": "Look for consistent scale and a dimension another reader can recover. Add a scale bar if useful.",
+    "strand": "plans",
+    "day": 6
+  },
+  {
+    "project": 2,
+    "task": "2.9",
+    "pages": "66–69",
+    "chapters": [
+      11,
+      15
+    ],
+    "title": "Construct the mixed-use building model",
+    "kit": "Scale plan, cardboard, stable base, tape, ruler, scissors and test records.",
+    "entry": "Use a checked scale plan. Bring your structural and insulation findings to the bench.",
+    "measure": "Measure wall and opening sizes from the drawing. Mark the model dimensions on a cut list.",
+    "plan": "Plan a removable roof or open side so reviewers can trace circulation. Identify one evidence-based construction detail.",
+    "make": "Make the shell, entrances, and interior divisions. Label housing access and the business/service. Add the structural or thermal detail you chose.",
+    "test": "Let another team follow the route and compare two model dimensions with the plan. Flag one mismatch for revision.",
+    "exit": "Which feature of the model represents a test result? Give the result and show where it changed the construction.",
+    "guide": "Inspect the model against the team’s client brief. Appearance alone does not show function.",
+    "strand": "build",
+    "day": 7
+  },
+  {
+    "project": 2,
+    "task": "2.9",
+    "pages": "66–69",
+    "chapters": [
+      10
+    ],
+    "title": "Review the building with its users",
+    "kit": "Model, plan, scale rule, user brief, test records and repair stock.",
+    "entry": "Have the building model available. Offer a completed sample for a student entering at review.",
+    "measure": "Measure the feature flagged at handover and compare with the planned value.",
+    "plan": "Ask one reviewer to act as a resident and another as a service user. Write a testable concern from each.",
+    "make": "Revise a feature that addresses one concern. Mark the as-built change on the plan.",
+    "test": "Repeat the route or fit check. Present the final area, one physical test, and one trade-off.",
+    "exit": "Defend one change to the client using a measurement, a drawing detail, and an idea from the reading.",
+    "guide": "Ask for individual scale or load-path checks alongside the team’s presentation. Optional 2.6 concrete testing belongs in a flex block with sufficient curing time.",
+    "strand": "plans",
+    "day": 8
+  },
+  {
+    "project": 3,
+    "task": "3.1",
+    "pages": "6–9",
+    "chapters": [
+      17
+    ],
+    "title": "Decode the original boat patent",
+    "kit": "Piot patent drawing linked in the lesson, pencil, working teacher-tested boat or demonstration, basin and timer.",
+    "entry": "Enter with Piot’s drawing and a demonstration of the baseline boat. Read the patent as historical engineering evidence.",
+    "measure": "Trace the engine tubes and mark the waterline on a copy you draw. Pick a fixed travel distance for later tests.",
+    "plan": "Identify the existing design, the function to preserve, and one measurable improvement. Label each separately.",
+    "make": "Observe a teacher-run demonstration. Sketch the motion and identify which explanations are observations and which are inferences.",
+    "test": "Swap annotated sketches. Have a partner trace water into and out of the mechanism and identify one part needing inspection.",
+    "exit": "What would count as an improvement on this patent? Give a metric and the starting conditions you will keep.",
+    "guide": "Teacher rehearses basin, flame control, leak checks and storage before release of construction. If heat equipment is unavailable, use the original fluid and press tasks as the practical route.",
+    "strand": "plans",
+    "day": 1
+  },
+  {
+    "project": 3,
+    "task": "3.2",
+    "pages": "10–24",
+    "chapters": [
+      17
+    ],
+    "title": "Fabricate and inspect the baseline boat",
+    "kit": "Teacher-prepared pattern or pilot sample for this equipment, prepared sharp parts, hull stock, tubing, adhesive, eye protection and marked storage.",
+    "entry": "Use the original boat only with a locally approved and teacher-piloted setup. Without it, start 3.3–3.4.",
+    "measure": "Take cut, fold and opening dimensions from the teacher-approved station pattern or pilot sample. Record the units and check the paired measurements before forming.",
+    "plan": "Record the demonstrated station sequence. Mark which steps require an adult, inspection or curing time.",
+    "make": "At supervised stations, follow the teacher-piloted sequence for the baseline hull and engine. Label and store parts for the adhesive cure time posted at the station.",
+    "test": "Inspect alignment, sealed seams, tube clearance, and hull symmetry. Have the teacher sign off before a powered basin test.",
+    "exit": "Explain one quality check that must happen before the next assembly step. Locate it on your drawing.",
+    "guide": "Use prepared metal edges and approved equipment. Allow the adhesive’s full cure and require the local preheat inspection.",
+    "strand": "measure",
+    "day": 2
+  },
+  {
+    "project": 3,
+    "task": "3.2–3.3",
+    "pages": "21–30",
+    "chapters": [
+      18
+    ],
+    "title": "Establish the boat baseline and compare fluids",
+    "kit": "Inspected boat, marked basin, timer, teacher-controlled heat station, needle-free syringes, matching tubing and tray.",
+    "entry": "Use a fully cured and inspected boat. A second group can investigate syringes while awaiting its basin turn.",
+    "measure": "Mark start and finish lines. Record distance, time, load and test conditions for three comparable runs.",
+    "plan": "Predict what changes when linked syringes contain air instead of water. Mark the initial piston positions.",
+    "make": "Run the approved baseline boat at the teacher station. At the fluid station move the input piston a fixed distance and measure the output travel.",
+    "test": "Repeat each fluid trial. Look for bubbles, slipping tubing, or a changed load before interpreting differences.",
+    "exit": "Give one baseline boat speed or a syringe travel comparison. Explain what you held constant and why.",
+    "guide": "Record failed starts separately. If using the press route, collect actual fluid trials and keep boat observations distinct.",
+    "strand": "math",
+    "day": 3
+  },
+  {
+    "project": 3,
+    "task": "3.4",
+    "pages": "31–40",
+    "chapters": [
+      19
+    ],
+    "title": "Build and test a manufacturing press",
+    "kit": "Two sizes of needle-free syringes, snug tubing, tray, stand, soft test sample, ruler.",
+    "entry": "Start with working leak-checked pairs. Show how to release pressure and keep fingers out of the press.",
+    "measure": "Measure input and output piston travel with the same reference edge. Record syringe sizes.",
+    "plan": "Draw the input piston, tube, output piston, and load. Predict the effect of swapping the syringe sizes.",
+    "make": "Mount the connected syringes so an input stroke drives the output piston against a soft sample. Keep hands clear. Swap roles to inspect the mechanism.",
+    "test": "Run three equal input strokes in both arrangements. Compare output travel and the change in the sample.",
+    "exit": "Which arrangement met the job better? Include travel measurements and identify the trade-off.",
+    "guide": "Do not infer a force value from travel alone. On the equipment-limited route, retain this press for a measured redesign.",
+    "strand": "build",
+    "day": 4
+  },
+  {
+    "project": 3,
+    "task": "3.5",
+    "pages": "41–48",
+    "chapters": [
+      20,
+      21
+    ],
+    "title": "Explain the heat engine cycle",
+    "kit": "Packet cycle grid, tested teacher boat or approved heat-engine demonstration, colored pencils.",
+    "entry": "Use the teacher demonstration and the cycle prompts in the packet. Distinguish what you saw from what you inferred.",
+    "measure": "Mark heat input, surrounding cooler water, and tube openings. Identify where the team observed water motion.",
+    "plan": "Draw successive states of the working fluid. Predict the direction of flow at two points in the cycle.",
+    "make": "Watch the approved demonstration. Annotate the cycle with changes in temperature, pressure, and movement. Discuss which changes are inferred.",
+    "test": "Have a partner trace the entire cycle back to its starting state. Repair a missing energy transfer or reversed arrow.",
+    "exit": "Use two stages in the cycle to explain how heating can produce repeated motion. Identify evidence and one inference.",
+    "guide": "Use teacher-controlled heat sources only. The press route demonstrates fluid transmission, not heat-engine performance.",
+    "strand": "plans",
+    "day": 5
+  },
+  {
+    "project": 3,
+    "task": "3.6–3.7",
+    "pages": "49–58",
+    "chapters": [
+      22,
+      23
+    ],
+    "title": "Test fluid flow and thrust",
+    "kit": "Different lengths of equal-bore tubing, reservoir or syringe with controlled drive, container, timer, tray.",
+    "entry": "At a contained fluid station, compare two tube routes under the same drive. Choose just one difference and record it on the packet.",
+    "measure": "Mark a common head or driving condition. Measure tube length, collection time, and collected volume.",
+    "plan": "Draw two routes differing in one variable. Predict which will deliver more water in equal time.",
+    "make": "Run both routes from the same starting condition. Keep tube ends and water level consistent. Collect three trials.",
+    "test": "Calculate volume/time with units. Check for kinks or changing head. Compare the direction of an outlet jet with the expected reaction.",
+    "exit": "Which change would you recommend testing on the boat or press? Support your prediction with measured flow rates.",
+    "guide": "Do not use flow alone to claim a faster boat. Recheck the changed machine under the original performance test.",
+    "strand": "math",
+    "day": 6
+  },
+  {
+    "project": 3,
+    "task": "3.8",
+    "pages": "59–61",
+    "chapters": [
+      23
+    ],
+    "title": "Design and build the boat revision",
+    "kit": "Working baseline boat or press, test record, replacement stock, ruler and annotated drawing.",
+    "entry": "Start only with a functioning baseline and an actual test record. If entering here, run the baseline first.",
+    "measure": "Choose one dimension or operating condition you can change. Measure the initial value and set a target.",
+    "plan": "Sketch the revision and predict how it will change the selected metric. Keep the other test conditions fixed.",
+    "make": "Build one change under the same equipment approvals. Inspect and allow cure time before retesting. On the press route change one linkage or syringe arrangement.",
+    "test": "Run an unpowered inspection or leak test first. Have a second person check that the original test can still be repeated.",
+    "exit": "What did you change, what stayed fixed, and what numerical outcome would support your prediction?",
+    "guide": "Separate an intended design change from a repair required only to make the original work.",
+    "strand": "build",
+    "day": 7
+  },
+  {
+    "project": 3,
+    "task": "3.8",
+    "pages": "61–62",
+    "chapters": [
+      20
+    ],
+    "title": "Retest under the baseline conditions",
+    "kit": "Inspected revised boat or press, original setup and test log, timer or ruler.",
+    "entry": "Bring both versions’ dimensions and the original trial method. Allow extra time if curing is incomplete.",
+    "measure": "Use the same course length or input stroke, same load, and same start rule. Collect at least three revised trials.",
+    "plan": "Make a two-column table for baseline and revision. Write the units at the top.",
+    "make": "Run the revised machine, recording every attempt. Calculate the same measure used for the baseline.",
+    "test": "Compare typical values and spread. If a trial fails, describe the cause you observed before excluding it.",
+    "exit": "Does the data support your improvement claim? Include both values, units, and a limit of the comparison.",
+    "guide": "For a speed claim compare distance/time. For a time claim over fixed distance, shorter can be better. Ask students to state the criterion.",
+    "strand": "math",
+    "day": 8
+  },
+  {
+    "project": 3,
+    "task": "3.9",
+    "pages": "63–65",
+    "chapters": [
+      17
+    ],
+    "title": "Present an improvement claim",
+    "kit": "Revised device, labeled drawing, data table and the presentation checks on this packet.",
+    "entry": "Prepare a classroom patent presentation with diagrams, test evidence, and a change from an existing design.",
+    "measure": "Check every labeled dimension and compare the claim with the recorded before-and-after results.",
+    "plan": "Organize the presentation around the original need, change, mechanism, and evidence. Assign a speaking role to each team member.",
+    "make": "Demonstrate the working device using the approved setup. Give a peer the drawing and ask them to locate the modified feature.",
+    "test": "Respond to one challenge about the mechanism or test. Revise an overstrong claim using the actual measurements.",
+    "exit": "Which evidence supports your claim, and which question would need another test?",
+    "guide": "Collect the individual mechanism explanation. A press improvement is reported as a press result. Treat this as a classroom presentation.",
+    "strand": "plans",
+    "day": 9
+  },
+  {
+    "project": 4,
+    "task": "4.1",
+    "pages": "6–15",
+    "chapters": [
+      24
+    ],
+    "title": "Send a scoreboard digit with a shared code",
+    "kit": "Matched low-voltage cell, lamp, switch, leads, scoreboard diagram and paper segment cards.",
+    "entry": "Enter with an inspected low-voltage kit. First show a complete switched loop. Never use wall power.",
+    "measure": "Mark the segment positions A–G in the same order on two cards. Count which segments light for one digit.",
+    "plan": "Make an on/off code for digits 0–9. Agree on the bit order and the meaning of 1 and 0.",
+    "make": "Build a switched lamp circuit. One partner sends three secret digit patterns and the other reconstructs the display.",
+    "test": "Swap roles and decode three new patterns. If a digit is wrong, compare segment order before changing the key.",
+    "exit": "Show the code for one digit and explain how another person can decode it without seeing your drawing.",
+    "guide": "Observe both sender and receiver. An invertible, consistent code is more important than its particular notation.",
+    "strand": "plans",
+    "day": 1
+  },
+  {
+    "project": 4,
+    "task": "4.2",
+    "pages": "16–19",
+    "chapters": [
+      25
+    ],
+    "title": "Design a mouse detector and test false alarms",
+    "kit": "Matched low-voltage kit, switch or sensor, lamp or buzzer, insulated leads, paper trigger and student packet.",
+    "entry": "Use a paper model to simulate movement. Test the output component with the battery before adding a trigger.",
+    "measure": "Set the trigger location and record how many trials you will run with and without movement.",
+    "plan": "Draw the source, trigger, and output. State what should happen in each condition.",
+    "make": "Assemble the detector and move the simulated trigger the same way for each trial. Record the output.",
+    "test": "Run three trigger and three no-trigger trials. Change one unreliable contact. Repeat both sets.",
+    "exit": "Give the detector’s true detections and false alarms. Which change would improve reliability?",
+    "guide": "Separate missed detections from false alarms. Reuse the door-signal board as a troubleshooting station.",
+    "strand": "build",
+    "day": 2
+  },
+  {
+    "project": 4,
+    "task": "4.3",
+    "pages": "20–26",
+    "chapters": [
+      25,
+      26
+    ],
+    "title": "Build a sender and receiver",
+    "kit": "Teacher-tested low-voltage communication kit, transmitter and receiver or paired lamp and switch, screen and message cards.",
+    "entry": "Check a complete working sender and receiver before class. Rotate teams if only one kit is available.",
+    "measure": "Measure or mark a fixed separation. Agree on a small message set and the start/stop signal.",
+    "plan": "Draw the sender, channel, and receiver. Mark the point where the message changes form.",
+    "make": "Send messages chosen out of sight of the receiver. Use the audio or optical stages of the available communication kit. A coded lamp is a classroom substitute.",
+    "test": "Record decoded messages out of total attempts. Compare one changed condition at the same distance.",
+    "exit": "Where did information change form? Use a decoded message or error to support your explanation.",
+    "guide": "A glowing transmitter is not proof of successful reception. Require a blind receiver trial.",
+    "strand": "build",
+    "day": 3
+  },
+  {
+    "project": 4,
+    "task": "4.3",
+    "pages": "26–29",
+    "chapters": [
+      26,
+      27
+    ],
+    "title": "Plan communications for a lunar base",
+    "kit": "Lunar-base brief in the packet, prior communication test and pencil.",
+    "entry": "Use a working link from the previous task or supply its measured performance and state its limits.",
+    "measure": "Mark sender, receiver, and the medium for each required route. Compare indoor, surface, and long-distance links.",
+    "plan": "Choose a channel for each route. Give one reason related to environment, range, or obstruction.",
+    "make": "Create the system diagram and label conversions. Demonstrate an Earth-classroom model of one message path where equipment permits.",
+    "test": "Ask another team to follow a message from origin to destination. Identify an obstruction, failed component, or missing return path.",
+    "exit": "Defend one channel choice and explain a limit of your classroom test for the lunar setting.",
+    "guide": "Sound needs a material medium. Require a plausible link across vacuum and distinguish a design from a working demonstration.",
+    "strand": "plans",
+    "day": 4
+  },
+  {
+    "project": 4,
+    "task": "4.4",
+    "pages": "30–37",
+    "chapters": [
+      28
+    ],
+    "title": "Measure current in a lamp branch",
+    "kit": "Supervised matched battery and lamp kit, correctly configured ammeter, leads and schematic.",
+    "entry": "Teacher checks range, meter port, and meter fuse. Power off before changing a connection.",
+    "measure": "Trace the closed lamp path. Identify where you will break the branch and what unit you expect.",
+    "plan": "Draw the meter in series. Have a partner and teacher check the drawing and connection before energizing.",
+    "make": "Take a current reading. Switch power off, move the meter to a second point in the same unbranched loop, then measure again.",
+    "test": "Compare readings and their precision. Investigate a large difference by checking range, battery and contacts.",
+    "exit": "Where did you insert the meter and why? Report two readings and what the comparison shows.",
+    "guide": "Never connect an ammeter across the battery. Use teacher-supplied data only as analysis if the live meter station is unavailable.",
+    "strand": "measure",
+    "day": 5
+  },
+  {
+    "project": 4,
+    "task": "4.5",
+    "pages": "38–47",
+    "chapters": [
+      29
+    ],
+    "title": "Map voltage differences",
+    "kit": "Matched battery, two lamps, voltmeter or multimeter set for DC voltage, leads and diagram.",
+    "entry": "Review meter roles. Use a teacher-approved low-voltage source and a stable circuit.",
+    "measure": "Record the source voltage across its terminals. Label measurement points on a schematic.",
+    "plan": "Predict the voltage across a lamp and across a closed connection. Mark both meter leads for each prediction.",
+    "make": "Connect the voltmeter in parallel at each pair of points. Record the setting, sign, and units.",
+    "test": "Reverse the leads on one measurement. Explain the sign change and compare the voltage drops round a closed loop.",
+    "exit": "Show one lead placement and explain what the number measures between those two points.",
+    "guide": "A voltage reading belongs to a pair of points. Verify that the leads and dial are in voltage mode.",
+    "strand": "measure",
+    "day": 6
+  },
+  {
+    "project": 4,
+    "task": "4.6",
+    "pages": "48–56",
+    "chapters": [
+      30
+    ],
+    "title": "Design the fan control circuit",
+    "kit": "Matched low-voltage motor and guarded fan, switch/controller and kit-specified components, schematic.",
+    "entry": "Use a tested motor kit, a clear guard, and teacher-approved current limits. Disconnect power for rewiring.",
+    "measure": "List the required speeds and directions in a state table. Mark the intended polarity at the motor for each direction.",
+    "plan": "Draw a circuit for each switch state. Trace the current path and identify the component changing the speed.",
+    "make": "Use the teacher-checked diagram for the available kit. Build one state at a time. Verify direction and two distinct speed settings before combining the controls.",
+    "test": "Ask a partner to predict the motor state from the diagram before operating it. Record differences and disconnect power before correcting a connection.",
+    "exit": "Which control changes direction and which changes speed in your circuit? Support it with an observation.",
+    "guide": "If the motor station is missing, schedule a rotation and record the physical fan check as pending. A two-room light model can rehearse switches.",
+    "strand": "plans",
+    "day": 7
+  },
+  {
+    "project": 4,
+    "task": "4.6",
+    "pages": "55–57",
+    "chapters": [
+      30
+    ],
+    "title": "Commission the fan controller",
+    "kit": "Fan controller, packet operating table, approved spare parts and labels.",
+    "entry": "Bring the checked controller. If entering here, provide an assembled control system and its circuit drawing.",
+    "measure": "Mark a safe stop position and identify how to tell forward from reverse. Use the same method to compare speeds.",
+    "plan": "Write a test for every required control state. Include a safe power-off check.",
+    "make": "One partner operates the controls from the labels while another reads the schematic. Exchange roles. Repair one fault or labeling problem.",
+    "test": "Retest both speeds and reversal. Give the control sheet to a neighboring crew and ask them to reproduce a selected state.",
+    "exit": "Name the failed or unclear state, the correction, and the observed outcome after retesting.",
+    "guide": "Observe the actual device. If a state was not demonstrated, leave that criterion pending.",
+    "strand": "build",
+    "day": 8
+  },
+  {
+    "project": 4,
+    "task": "4.7",
+    "pages": "58–69",
+    "chapters": [
+      31,
+      32
+    ],
+    "title": "Choose a power source for a lighthouse",
+    "kit": "Island lighthouse design brief and source comparison in the student packet, plus a calculator.",
+    "entry": "Design for the 1,000 W lighthouse lamp on an isolated island. State the night length, compare power options, and account for storage and maintenance.",
+    "measure": "Compute daily demand as lamp power × operating hours. Example: 10 W for 12 h uses 120 Wh. Keep W and Wh distinct.",
+    "plan": "Compare two candidate supplies. Include operating hours, storage, site conditions, and an assumption.",
+    "make": "Prepare a proposal with a labeled energy-flow diagram, demand estimate, and a plan for hours when the source is unavailable.",
+    "test": "Have a partner change one condition such as a longer night. Recalculate and revise the recommendation.",
+    "exit": "What source and storage plan would you recommend? Cite one calculated demand and one site constraint.",
+    "guide": "A nameplate power rating alone cannot guarantee daily delivery. Optional Task 4.8 extends this work to a consumer device.",
+    "strand": "math",
+    "day": 9
+  },
+  {
+    "project": 4,
+    "task": "Flexible clinic",
+    "pages": "Return to the selected project task",
+    "chapters": [
+      14,
+      23,
+      30
+    ],
+    "title": "Repair and retest a project",
+    "kit": "Selected team artifact, original data, same test setup, student packet and replacement stock.",
+    "entry": "Move this meeting to the project that needs another trial. Choose a physical test or, with setup time, the optional concrete or consumer-device investigation.",
+    "measure": "Measure the current condition. Record the baseline, its units, and the test method before touching the artifact.",
+    "plan": "Identify one change and predict the direction of its effect. For a concrete extension (2.6), plan batches and full cure before comparing samples.",
+    "make": "Make the chosen repair or conduct a teacher-approved concrete or low-voltage consumer-device investigation. Record the changed variable and the result in this packet.",
+    "test": "Repeat the same test. Record a result that confirms or contradicts the prediction and discuss what to try next.",
+    "exit": "Which piece of evidence changed your decision? Cite the task, measurements, and what you will do next.",
+    "guide": "Schedule at the point of need. Offer fresh individual checks on measuring, drawing, or the relevant calculation.",
+    "strand": "build",
+    "day": 10
+  },
+  {
+    "project": 4,
+    "task": "Exhibition",
+    "pages": "Return to the selected project rubric",
+    "chapters": [
+      9,
+      10,
+      20,
+      30
+    ],
+    "title": "Demonstrate and defend a design",
+    "kit": "Finished product or model, dated packet test data, drawing, ruler and one-page exhibit label.",
+    "entry": "Select any ETF project you completed. Bring a test record and the packet or saved lesson evidence that documents the test.",
+    "measure": "Recheck one dimension or operating value in front of a peer. Write the unit and the acceptance criterion.",
+    "plan": "Plan a short demonstration that shows the need, mechanism, measured result, and revision.",
+    "make": "Demonstrate the device or model. Invite a peer to use the drawing to find a feature or operate one state. Rotate roles.",
+    "test": "Ask the reviewer to challenge one assumption. Demonstrate a repeat trial or explain what additional evidence is needed.",
+    "exit": "Independently defend a change using a reading idea, a drawing feature, and comparable results from your own tests.",
+    "guide": "Use the exhibit checks on the student packet. Rate each student’s actual math, measurement, plan reading and design explanation separately.",
+    "strand": "build",
+    "day": 11
+  }
+]

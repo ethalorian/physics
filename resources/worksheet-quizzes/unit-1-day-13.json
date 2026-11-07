@@ -9,7 +9,7 @@
     "State acceleration with units and direction.",
     "Separate acceleration direction from motion direction."
   ],
-  "source_sha256": "33673e8ac561bd0338f82fa8628588a126ff519f139a3ac11036f42bda2f1ae4",
+  "source_sha256": "c50b4194113e8c53eb4b4ea328f06828af6d81f03e908a1845650cf4ec47efdd",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.479Z",

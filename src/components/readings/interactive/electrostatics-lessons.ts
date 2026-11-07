@@ -45,7 +45,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Neutrality describes the total, not the absence of constituents.",
         "Every electron still carries −e."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. the signed charges sum to zero."
     }
   },
@@ -94,7 +94,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Conservation preserves the initial total, which need not be zero.",
         "Correct: the transferred charge is still inside the combined system."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. the transferred charge is still inside the combined system."
     }
   },
@@ -143,7 +143,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Correct: the charge product gains a factor of four and r² also gains four.",
         "Account for both changes, not only one charge."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. the charge product gains a factor of four and r² also gains four."
     }
   },
@@ -192,7 +192,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Local polarization does not require metallic conduction.",
         "A nearby field alone does not transfer net charge across the boundary."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. redistribution and net charging are different."
     }
   },
@@ -241,7 +241,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Protons in the metal lattice do not transfer in this charging model.",
         "Correct: potential equality is the general equilibrium condition."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. potential equality is the general equilibrium condition."
     }
   },
@@ -274,7 +274,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "Remove the rod before disconnecting ground. What happens in the ideal model?",
+      "prompt": "Remove the rod before disconnecting the ground. What happens in this ideal setup?",
       "options": [
         "The rod must lose all its electrons",
         "Charge can return until the sphere is neutral",
@@ -286,7 +286,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Correct: the remaining ground path permits equilibration without the inducing field.",
         "That retained charge requires disconnecting ground while the rod remains."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. the remaining ground path permits equilibration without the inducing field."
     },
     "references": [
@@ -341,7 +341,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "The field strengths are equal in the stipulated uniform field.",
         "The constituent charges still experience forces."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. equal opposite forces can form a turning couple."
     }
   },
@@ -386,7 +386,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Test charge cancels from the field definition.",
         "Correct: the fixed source determines E; the test charge determines qE."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. the fixed source determines E; the test charge determines qE."
     }
   },
@@ -431,7 +431,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Correct: the two field contributions point the same way there.",
         "Zero total charge does not imply zero field at every location."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. the two field contributions point the same way there."
     }
   },
@@ -480,7 +480,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Field is a gradient; it does not fix the reference value of potential.",
         "A potential difference within the ideal conductor would drive redistribution."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. zero field means no spatial potential change in equilibrium."
     },
     "references": [
@@ -535,7 +535,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Charge conservation does not require potential energy to remain constant.",
         "Correct: q is negative and ΔV positive, so qΔV is negative."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. q is negative and ΔV positive, so qΔV is negative."
     }
   },
@@ -588,7 +588,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Correct: ΔU = qΔV separates the test charge from the fixed source potential.",
         "Changing the probe does not change the stipulated source potentials."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. ΔU = qΔV separates the test charge from the fixed source potential."
     }
   },
@@ -633,7 +633,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "A common potential offset does not add a field, and the proposed units do not follow.",
         "The ordering of the potentials has not reversed."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. the potential gradient is unchanged."
     }
   },
@@ -678,7 +678,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "The fixed sources define the field even without a probe.",
         "Correct: the scalar potentials cancel while the vectors reinforce."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. the scalar potentials cancel while the vectors reinforce."
     }
   },
@@ -723,7 +723,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Correct: field strength depends on voltage change per distance.",
         "Color is a drawing convention, not a physical condition."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. field strength depends on voltage change per distance."
     }
   },
@@ -776,7 +776,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "That is the isolated-charge case.",
         "Q = CV cannot keep both Q and V fixed when C increases."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. the source maintains V and supplies the additional Q = CV."
     }
   },
@@ -826,7 +826,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "The factor comes from accumulating work at a changing voltage.",
         "Correct: the charging curve has triangular area for a linear capacitor."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. the charging curve has triangular area for a linear capacitor."
     },
     "references": [
@@ -881,7 +881,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Correct: V scales as 1/R while E scales as 1/R² for fixed Q.",
         "That mixes the fixed-charge and fixed-field comparisons."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. V scales as 1/R while E scales as 1/R² for fixed Q."
     }
   },
@@ -918,7 +918,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "Does a dielectric pair-force model by itself predict DNA binding energy?",
+      "prompt": "Can a calculation of pair forces in a dielectric, by itself, predict DNA binding energy?",
       "options": [
         "No; molecular geometry and other interactions also matter",
         "Yes; all cellular interactions are two charges in vacuum",
@@ -930,7 +930,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Cells contain structured molecules, solvent, and mobile ions.",
         "Screening reduces interactions; it does not universally remove them."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. the simplified medium model has limited scope."
     }
   },
@@ -979,7 +979,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "The unchanged force acts for a shorter time.",
         "Correct: time halves, and displacement scales as time squared."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. time halves, and displacement scales as time squared."
     }
   },
@@ -1028,7 +1028,7 @@ export const electrostaticsLessons:Record<string,LessonContent> = {
         "Correct: Vi = Q/Ci with a common charge magnitude.",
         "An inverse relationship gives the larger drop to the smaller C."
       ],
-      "hint": "Identify the source, the test charge, the system boundary, and what is held fixed.",
+      "hint": "Name the source, the test charge, the system boundary, and what is held fixed.",
       "teacher": "Ask for a prediction when one condition changes. Vi = Q/Ci with a common charge magnitude."
     }
   }

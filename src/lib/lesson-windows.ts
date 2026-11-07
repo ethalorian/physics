@@ -1,5 +1,6 @@
 import { calendarAssigned } from './calendar-assignment'
 import { supabaseAdmin } from '@/lib/supabase'
+import { activeStudentCourseIds } from '@/lib/student-context'
 
 // Per-class lesson release windows. A published lesson is CLOSED to a class until
 // the teacher OPENS it: a window row GRANTS access for one class (open now, or
@@ -20,8 +21,7 @@ function within(w: { open_at: string | null; close_at: string | null; due_at?:st
 // equals course_students.student_id, so we query enrollments directly.
 async function getStudentCourseIds(studentId: string): Promise<string[]> {
   if (!studentId) return []
-  const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', studentId).eq('enrollment_state', 'ACTIVE')
-  return [...new Set(((cs ?? []) as { course_id: string }[]).map((r) => String(r.course_id)))]
+  return activeStudentCourseIds(studentId).catch(() => [])
 }
 
 // Build a predicate `isOpen(lessonId)` for one student, evaluated at `now`.

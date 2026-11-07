@@ -29,6 +29,7 @@ const mocks = {
   '@/lib/supabase': 'export const supabaseAdmin = global.__cleanupDb',
   '@/lib/api-auth': 'export const withAuth = f => f; export const withEnrolledStudent = f => f',
   '@/lib/student-enrollment': "export const getStudentTrack = async () => 'cpa'",
+  '@/lib/student-context': "export const studentProgram = async () => 'physics'; export const activeStudentCourseIds = async id => {const r=await global.__cleanupDb.from('course_students').select('course_id').eq('student_id',id).eq('enrollment_state','ACTIVE');if(r.error)throw r.error;return r.data.map(row=>row.course_id)}",
   '@/lib/program': "export const getStudentProgram = async () => 'physics'",
   '@/lib/points': 'export const getBalance = async () => ({lifetimeEarned:100,balance:80})',
   '@/lib/lesson-windows': "export const getStudentLessonWindowStatuses = async () => global.__cleanupWindows; export const getStudentLessonGate = async () => id => global.__cleanupWindows[id]?.state === 'open'",

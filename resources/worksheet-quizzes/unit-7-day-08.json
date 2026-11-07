@@ -9,7 +9,7 @@
     "Use equal voltage across parallel branches.",
     "Add branch currents to find supply current."
   ],
-  "source_sha256": "38fb6055a3681c03b53465d90e4ae98d9bf69fcf7580baea1b57045542156930",
+  "source_sha256": "ad136db958bcefc5d77215d736ad886c5ab604d1a79284fa0cdd90f0e0cda9b8",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.564Z",

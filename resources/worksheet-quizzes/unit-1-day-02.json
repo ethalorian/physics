@@ -9,7 +9,7 @@
     "Calculate path distance and signed displacement separately.",
     "Explain why position and displacement can differ."
   ],
-  "source_sha256": "56763570b2c76ea1ae048db14620c81f24c0e38c59de65ebb405a0dd779284a1",
+  "source_sha256": "8aa8093c61c913f8cbf264d9cbd5fd00a48a6a61bda3ee99f4bba332633c8adc",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.467Z",

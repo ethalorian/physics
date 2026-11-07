@@ -7,9 +7,9 @@
   "criteria": [
     "Identify total moving mass and keep driving force fixed.",
     "Compare acceleration values using a fair test.",
-    "Separate model data from measured evidence."
+    "Separate supplied or simulated values from values you measured."
   ],
-  "source_sha256": "c07ea4fa4b7fc91426fcd2fe3ff3bc03801b2ec106211af2e2e2559e621a9a7c",
+  "source_sha256": "fe11e581dfebbbd637f2205f58fe2f1d3ad143721b0f724cc2ee7884195e7149",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.478Z",

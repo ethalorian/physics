@@ -9,7 +9,7 @@
     "Explain frequency continuity at a stationary boundary.",
     "Predict bending toward or away from the normal."
   ],
-  "source_sha256": "c586cfc185cff740504568f7645e86f90e32abe0bfa04bdc5b258c3cf5bab3dd",
+  "source_sha256": "6cefd0ed80eddefcc13bf4f497f8cf03c5895d1c9b2da80ad600ed1b8f1db356",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.545Z",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A ray enters a faster medium at an angle below any critical-angle condition. Which change is expected?",
+      "prompt": "A ray enters a material where it travels faster. Its angle is below any critical angle. Which change is expected?",
       "options": [
         "Its frequency falls to zero.",
         "It bends toward the normal and frequency doubles.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A ray enters a faster medium at an angle below any critical-angle condition. Which change is expected?",
+      "prompt": "A ray enters a material where it travels faster. Its angle is below any critical angle. Which change is expected?",
       "options": [
         "It bends away from the normal while frequency stays the same.",
         "Its frequency falls to zero.",

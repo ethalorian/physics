@@ -37,7 +37,7 @@ export function validateAnswers(v:unknown,questions:QuizQuestion[],complete=fals
   if(q.kind==='problem'){
    if(!object(a)||Object.keys(a).some(k=>!PROBLEM_STAGES.includes(k as typeof PROBLEM_STAGES[number])))throw Error('Invalid problem response.')
    const problem=Object.fromEntries(PROBLEM_STAGES.map(k=>[k,validateProblemStage(a[k])])) as ProblemAnswer
-   if(complete&&PROBLEM_STAGES.some(k=>!stageHasEvidence(problem[k])))throw Error('Add text or a drawing to Model, Plan, Work, and Answer. Reasoning or an explanation of uncertainty is welcome.')
+   if(complete&&PROBLEM_STAGES.some(k=>!stageHasEvidence(problem[k])))throw Error('Complete each step: show the situation, choose an approach, work it out, and answer and check. You can use text or a drawing. Reasoning or an explanation of uncertainty is welcome.')
    out[id]=problem
   }else{
    if(!text(a,10000,complete))throw Error('Add a response to every question.')

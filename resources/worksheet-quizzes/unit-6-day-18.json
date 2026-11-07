@@ -3,13 +3,13 @@
   "unit": 6,
   "day": 18,
   "title": "Transfer: waves and signals",
-  "target": "Choose appropriate wave models and explain what a signal establishes.",
+  "target": "Choose equations or diagrams that fit the wave. Explain what the signal tells you.",
   "criteria": [
     "Use wave speed and round-trip geometry correctly.",
     "Separate frequency, amplitude and direction effects.",
     "State the limits of an inference from a signal."
   ],
-  "source_sha256": "d948fed992b49b57467393a341a0994d97cdba9451f52cdd73b275915f74f573",
+  "source_sha256": "13685211a22c4de4e03ca32ba4f9baf4dd775dfea04b35fc2c8aaa4851f150e6",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.556Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "A simulated wave has frequency 8 Hz and wavelength 1.5 m. An echo takes 7 s. What is range in this scaled model?",
+      "prompt": "In a scaled practice example, a wave has a frequency of 8 Hz and a wavelength of 1.5 m. An echo returns after 7 s. How far away is the reflector?",
       "options": [
         "12 m",
         "56 m",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "A sensor is 30 m from a reflector. A pulse speed is 15 m/s in a scaled model. What echo delay should be used?",
+      "prompt": "In a scaled practice example, a sensor is 30 m from a reflector. The pulse travels at 15 m/s. What is the time delay before the echo returns?",
       "options": [
         "4 s",
         "450 s",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "A radar gives one range and one radial velocity measurement. Which conclusion goes beyond this evidence?",
+      "prompt": "A radar gives one distance measurement and one radial-velocity measurement. Which conclusion cannot be supported by these two measurements alone?",
       "options": [
         "The echo delay constrains range.",
         "The exact full three-dimensional future path is known.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "Two thermal objects have the same peak wavelength in an ideal blackbody model. What is justified, and what is not determined by that peak alone?",
+      "prompt": "Two ideal blackbodies have the same peak wavelength. What can you conclude? What cannot be found from that peak alone?",
       "options": [
         "Their distances must be equal.",
         "Same model temperature; their total emitted powers need not match.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "A simulated wave has frequency 8 Hz and wavelength 1.5 m. An echo takes 7 s. What is range in this scaled model?",
+      "prompt": "In a scaled practice example, a wave has a frequency of 8 Hz and a wavelength of 1.5 m. An echo returns after 7 s. How far away is the reflector?",
       "options": [
         "12 m",
         "42 m",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "A sensor is 30 m from a reflector. A pulse speed is 15 m/s in a scaled model. What echo delay should be used?",
+      "prompt": "In a scaled practice example, a sensor is 30 m from a reflector. The pulse travels at 15 m/s. What is the time delay before the echo returns?",
       "options": [
         "0.5 s",
         "450 s",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "A radar gives one range and one radial velocity measurement. Which conclusion goes beyond this evidence?",
+      "prompt": "A radar gives one distance measurement and one radial-velocity measurement. Which conclusion cannot be supported by these two measurements alone?",
       "options": [
         "Doppler shift constrains radial relative velocity.",
         "The exact full three-dimensional future path is known.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "Two thermal objects have the same peak wavelength in an ideal blackbody model. What is justified, and what is not determined by that peak alone?",
+      "prompt": "Two ideal blackbodies have the same peak wavelength. What can you conclude? What cannot be found from that peak alone?",
       "options": [
         "Their distances must be equal.",
         "One must have zero visible emission.",

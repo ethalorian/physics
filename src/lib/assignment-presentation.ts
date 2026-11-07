@@ -1,9 +1,10 @@
 import type { LearningActivity } from './learning-week'
 
-export type ActivityType = 'transfer-brief' | 'foundation' | 'foundation-lab' | 'simulation-lab' | 'daily-review' | 'unit-review' | 'worksheet' | 'worksheet-quiz' | 'lesson-quiz' | 'reading-check' | 'vocabulary-quiz' | 'quiz' | 'reading' | 'video' | 'chapter-response' | 'lesson' | 'vocabulary' | 'math'
+export type ActivityType = 'student_choice' | 'transfer-brief' | 'foundation' | 'foundation-lab' | 'simulation-lab' | 'daily-review' | 'unit-review' | 'worksheet' | 'worksheet-quiz' | 'lesson-quiz' | 'reading-check' | 'vocabulary-quiz' | 'quiz' | 'reading' | 'video' | 'chapter-response' | 'lesson' | 'vocabulary' | 'math'
 export type LearningLane = 'math' | 'learn' | 'assignments' | 'investigate' | 'quizzes'
 interface ActivityProfile { label: string; lane: LearningLane; thinking: string; directions: string }
 export const ACTIVITY_PROFILES: Record<ActivityType, ActivityProfile> = {
+  student_choice: { label: 'Student Choice', lane: 'assignments', thinking: 'Use the notes. Choose a practice activity.', directions: 'Read the notebook page, choose one of the six practice options, and complete it on paper. Show your work to your teacher for a letter grade.' },
   'transfer-brief': {label:'Transfer Brief',lane:'assignments',thinking:'Apply unit physics. Defend a real-world decision.',directions:'Use the supplied real-world scenario and data. Show the requested calculations or evidence, explain your judgment, and identify a model limit where asked. This short application is graded in the Transfer Task category.'},
   foundation: { label: 'In-class discussion', lane: 'learn', thinking: 'Discuss ideas. Explain in your own words.', directions: 'Read the slides and respond to the questions. At partner stops, compare ideas, then write your own explanation. Follow your teacher’s directions for approved independent work.' },
   'foundation-lab': { label: 'Foundation lab', lane: 'investigate', thinking: 'Measure. Analyze. Explain the evidence.', directions: 'Use the slides to guide the investigation. Record your data, compare results and explain what your evidence supports. Use approved sample data only when your teacher assigns it.' },

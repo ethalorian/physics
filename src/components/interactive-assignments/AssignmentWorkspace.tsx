@@ -1,5 +1,6 @@
 'use client'
 
+import {useFoundationLanguage} from './FoundationLanguage'
 import {useEffect, useLayoutEffect, useRef, useState, type ReactNode} from 'react'
 import type {LessonAssignment} from '@/lib/interactive-assignments/catalog'
 import AssignmentChecklist from './AssignmentChecklist'
@@ -10,19 +11,22 @@ import briefStyle from './TransferBriefWorkspace.module.css'
 
 type View = 'watch' | 'work' | 'side'
 type Place = {id: string; offset: number}
+type WorkspaceLesson = Pick<LessonAssignment, 'foundation' | 'simulation' | 'transferBrief' | 'sections' | 'questions'>
+type WorkspaceSource = { lesson: LessonAssignment; renderTool?: undefined } | { lesson: WorkspaceLesson; renderTool: (visible: boolean) => ReactNode }
 
-export default function AssignmentWorkspace({lesson, answers, submitted, children, renderTool, sampleStudent = false, resourceLabel}: {
-  lesson: LessonAssignment
+export default function AssignmentWorkspace({lesson, answers, submitted, children, renderTool, sampleStudent = false, resourceLabel, progress, initialView}: {
   answers: Record<string, string>
   submitted: boolean
   children: ReactNode
-  renderTool?: (visible: boolean) => ReactNode
   sampleStudent?: boolean
-  resourceLabel?: 'Read' | 'Slides' | 'Brief'
-}) {
+  resourceLabel?: 'Read' | 'Slides' | 'Brief' | 'Explore'
+  progress?: ReactNode
+  initialView?: View
+} & WorkspaceSource) {
+  const {t}=useFoundationLanguage()
   const [choice, setChoice] = useState<View | null>(null)
   const [wide, setWide] = useState(false)
-  const view = choice ?? (lesson.simulation ? 'side' : wide ? 'side' : 'watch')
+  const view = choice ?? initialView ?? (lesson.simulation ? 'side' : wide ? 'side' : 'watch')
   const controls = useRef<HTMLDivElement>(null)
   const content = useRef<HTMLDivElement>(null)
   const workPlace = useRef<Place | null>(null)
@@ -33,20 +37,23 @@ export default function AssignmentWorkspace({lesson, answers, submitted, childre
     const query = window.matchMedia('(min-width: 1441px) and (min-height: 760px)')
     const update = () => setWide(query.matches)
     update()
-    query.addEventListener('change', update)
+    if (query.addEventListener) query.addEventListener('change', update)
+    else query.addListener(update)
     const target = window.location.hash.slice(1)
     if (/^assignment-(part-\d+|submit)$/.test(target)) {
       pending.current = {view: 'work', target}
       setChoice('work')
     }
-    return () => query.removeEventListener('change', update)
+    return () => { if (query.removeEventListener) query.removeEventListener('change', update); else query.removeListener(update) }
   }, [])
 
   function rememberWork() {
     if (view === 'watch' || !content.current) return
-    const top = (controls.current?.getBoundingClientRect().bottom ?? 140) + 16
+    const top = lesson.foundation && controls.current
+      ? parseFloat(getComputedStyle(controls.current).scrollMarginTop) + 16
+      : (controls.current?.getBoundingClientRect().bottom ?? 140) + 16
     const candidates = Array.from(content.current.querySelectorAll<HTMLElement>('section[id], [id^="label-"], [id^="answer-"]'))
-      .filter(element => element.getBoundingClientRect().bottom > top)
+      .filter(element => element.getClientRects().length && element.getBoundingClientRect().bottom > top)
     const closest = candidates.sort((a, b) => Math.abs(a.getBoundingClientRect().top - top) - Math.abs(b.getBoundingClientRect().top - top))[0]
     if (closest) workPlace.current = {id: closest.id, offset: closest.getBoundingClientRect().top - top}
   }
@@ -55,8 +62,12 @@ export default function AssignmentWorkspace({lesson, answers, submitted, childre
     const place = next === 'watch' ? null : workPlace.current
     const element = target ? document.getElementById(target) : place ? document.getElementById(place.id) : document.getElementById(next === 'watch' ? 'assignment-teaching-tool' : 'assignment-work')
     if (!element || !controls.current) return
-    const top = parseFloat(getComputedStyle(controls.current).top) + controls.current.offsetHeight + (next === 'watch' ? 0 : 16)
-    window.scrollTo({top: Math.max(0, window.scrollY + element.getBoundingClientRect().top - top - (target ? 0 : place?.offset ?? 0)), behavior: 'instant'})
+    const panel = target && element.querySelector<HTMLDetailsElement>('details[data-foundation-part]')
+    if (panel) panel.open = true
+    const style = getComputedStyle(controls.current)
+    const toolbarBottom = lesson.foundation ? parseFloat(style.scrollMarginTop) : parseFloat(style.top) + controls.current.offsetHeight
+    const top = toolbarBottom + (next === 'watch' ? 0 : 16)
+    window.scrollTo({top: Math.max(0, window.scrollY + element.getBoundingClientRect().top - top - (target ? 0 : place?.offset ?? 0)), behavior: 'auto'})
     if (target) element.focus({preventScroll: true})
   }
 
@@ -82,14 +93,14 @@ export default function AssignmentWorkspace({lesson, answers, submitted, childre
     <div id="assignment-work" ref={content} tabIndex={-1} className={briefStyle.work}>{children}</div>
   </div></AssignmentAvatarProvider>
 
-  return <AssignmentAvatarProvider sample={sampleStudent} workVisible={view === 'work' || view === 'side'}><div className={s.lessonWorkspace} data-view={view} data-simulation={!!lesson.simulation}>
+  return <AssignmentAvatarProvider sample={sampleStudent} workVisible={view === 'work' || view === 'side'}><div className={s.lessonWorkspace} data-foundation={!!lesson.foundation} data-view={view} data-simulation={!!lesson.simulation}>
     <div ref={controls} className={s.workspaceControls}>
       <div className={s.viewChoices} role="group" aria-label="Lesson view">
-        <button type="button" aria-pressed={view === 'watch'} aria-controls="assignment-watch" onClick={() => changeView('watch')}>{resourceLabel ?? (lesson.simulation ? 'Explore' : 'Watch')}</button>
-        <button type="button" aria-pressed={view === 'work'} aria-controls="assignment-work" onClick={() => changeView('work')}>Work</button>
-        <button type="button" aria-pressed={view === 'side'} aria-controls="assignment-watch assignment-work" onClick={() => changeView('side')}>Side by side</button>
+        <button type="button" aria-pressed={view === 'watch'} aria-controls="assignment-watch" onClick={() => changeView('watch')}>{t(resourceLabel ?? (lesson.simulation ? 'Explore' : 'Watch'))}</button>
+        <button type="button" aria-pressed={view === 'work'} aria-controls="assignment-work" onClick={() => changeView('work')}>{t("Work")}</button>
+        <button type="button" aria-pressed={view === 'side'} aria-controls="assignment-watch assignment-work" onClick={() => changeView('side')}>{t("Side by side")}</button>
       </div>
-      <AssignmentChecklist compact lesson={lesson} answers={answers} submitted={submitted} onVisit={id => changeView(view === 'side' ? 'side' : 'work', id)}/>
+      {progress ?? <AssignmentChecklist compact lesson={lesson} answers={answers} submitted={submitted} onVisit={id => changeView(view === 'side' ? 'side' : 'work', id)}/>}
     </div>
     <div className={s.assignmentWorkspace}>
       <div id="assignment-watch" className={s.watchPane} hidden={view === 'work'}>

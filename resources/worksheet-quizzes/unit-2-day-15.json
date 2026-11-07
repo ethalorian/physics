@@ -9,7 +9,7 @@
     "Check positions of both bodies at the same time.",
     "Explain why geometry and uncertainty matter."
   ],
-  "source_sha256": "536495349031518483e21dcc8b6ca3857a55491291de6914d0de81f9c71e88f3",
+  "source_sha256": "09bceffb6fab380a21291396e845b1ce9853d25f9436da09576b6e024574ace6",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.498Z",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "Which evidence is most useful beyond period for assessing a close approach?",
+      "prompt": "Besides the orbital period, which information is most useful for checking whether an object will come close?",
       "options": [
         "Only the year of discovery.",
         "Only a photograph’s color palette.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "Which evidence is most useful beyond period for assessing a close approach?",
+      "prompt": "Besides the orbital period, which information is most useful for checking whether an object will come close?",
       "options": [
         "Only a photograph’s color palette.",
         "Only a label saying near-Earth.",

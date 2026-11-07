@@ -1,9 +1,10 @@
 import type { ChoiceStep } from './choice-calendar'
 
-export const readingTags = ['CPA', 'OpenStax'] as const
+export const readingTags = ['CPA', 'OpenStax', 'ETF'] as const
 export type ReadingTag = typeof readingTags[number]
 /** Class placement does not change the source of an existing reading. */
-export function readingTagForSource(source: { honors_reading?: unknown }): ReadingTag {
+export function readingTagForSource(source: { honors_reading?: unknown; section_ids?: string[] }): ReadingTag {
+  if (source.section_ids?.some(id=>id.startsWith('etf-'))) return 'ETF'
   return source.honors_reading ? 'OpenStax' : 'CPA'
 }
 export type LibraryMetadata = { unitIds?: string[]; targetIds?: string[]; description?: string; format?: string; availability?: string; setupHref?: string; chapter?: number; book?: string; readingTag?: ReadingTag }

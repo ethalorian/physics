@@ -24,7 +24,7 @@ export const chapterTwoDefinition: InteractiveChapterDefinition = validateChapte
     after: 'Review explanations by target. Return a specific next step, then invite a revised explanation.',
   },
   synthesisIntro: 'A book. A cart. A hanging sign. One rule connects them.',
-  reasoningRoutine: 'Identify the object → draw its forces → add the vectors → explain the motion.',
+  reasoningRoutine: "Name the object → draw its forces → add the vectors → explain the motion.",
   transfer: {
     prompt: 'An elevator rises at constant speed. A passenger stands on a scale. Is the scale’s support force greater than, less than, or equal to the passenger’s weight? Explain using the passenger’s motion and the forces acting on the passenger.',
     starter: 'The passenger’s velocity is… Therefore the net force is… The two forces are…',

@@ -9,7 +9,7 @@
     "Account for rejected heat.",
     "Distinguish an ideal upper bound from actual performance."
   ],
-  "source_sha256": "711b6b61714a8f2f57578645178d4daad546920faaae6be84e24e6e84d6f1a91",
+  "source_sha256": "a4493d22f4c5fd1139f723a644f15450154862a67c915444174fe32cf0ecd452",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.537Z",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "An ideal model places an upper efficiency bound of 40% on an engine’s operating temperatures. Which actual performance is consistent with that bound?",
+      "prompt": "An ideal engine calculation gives a maximum efficiency of 40% at the engine’s operating temperatures. Which actual result is consistent with this limit?",
       "options": [
         "28%.",
         "140%.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "An ideal model places an upper efficiency bound of 40% on an engine’s operating temperatures. Which actual performance is consistent with that bound?",
+      "prompt": "An ideal engine calculation gives a maximum efficiency of 40% at the engine’s operating temperatures. Which actual result is consistent with this limit?",
       "options": [
         "48%.",
         "140%.",

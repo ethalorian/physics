@@ -2,6 +2,7 @@ import 'server-only'
 import { supabaseAdmin } from '@/lib/supabase'
 import { readingRows } from '@/lib/textbook-assignments-server'
 import type { ResultStudent } from './types'
+import type { LessonInputs } from './lesson-inputs'
 
 type Query = ReturnType<ReturnType<typeof supabaseAdmin.from>['select']>
 export function read<T>(table: string, fields: string, filter: (q: Query) => Query, order: string[]) {
@@ -16,5 +17,11 @@ export async function byIds<T>(table: string, fields: string, key: string, ids: 
   for (let start = 0; start < ids.length; start += 100) result.push(...await read<T>(table, fields, q => filter(q.in(key, ids.slice(start, start + 100))), order))
   return result
 }
-export type Scope = { course: { id: string; name: string; section: string | null; program: string; track?: string | null }; students: ResultStudent[]; targets: Map<string, string>; targetIdsBySlug: Map<string, string>; targetRows: { id: string; slug: string; unit_id: string; statement: string; lesson_id: string | null }[]; includes: (unitIds: string[]) => boolean }
+export type Scope = { course: { id: string; name: string; section: string | null; program: string; track?: string | null }; students: ResultStudent[]; targets: Map<string, string>; targetIdsBySlug: Map<string, string>; targetRows: { id: string; slug: string; unit_id: string; statement: string; lesson_id: string | null }[]; includes: (unitIds: string[]) => boolean; reviewSourceId?: string; lessonInputs?: LessonInputs }
+
+/** The provider supplies the column; the requested identifier is only a filter
+ * value. Existing course, publication and visibility filters still apply. */
+export function reviewSource(scope: Scope, query: Query, column = 'id'): Query {
+  return scope.reviewSourceId ? query.eq(column, scope.reviewSourceId) : query
+}
 

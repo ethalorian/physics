@@ -1,0 +1,770 @@
+{
+  "(g, pointing down).": [
+    "(g, hacia abajo).",
+    "(g, para baixo)."
+  ],
+  "15 N right": [
+    "15 N a la derecha",
+    "15 N para a direita"
+  ],
+  "2. 4 − L = −6, so L =": [
+    "2. 4 − I = −6, así que I =",
+    "2. 4 − E = −6, então E ="
+  ],
+  "20 N forward": [
+    "20 N hacia delante",
+    "20 N para a frente"
+  ],
+  "20 − 5 = 15 N forward": [
+    "20 − 5 = 15 N hacia delante",
+    "20 − 5 = 15 N para a frente"
+  ],
+  "3 m/s² right": [
+    "3 m/s² a la derecha",
+    "3 m/s² para a direita"
+  ],
+  "4 m/s² right": [
+    "4 m/s² a la derecha",
+    "4 m/s² para a direita"
+  ],
+  "5 N backward": [
+    "5 N hacia atrás",
+    "5 N para trás"
+  ],
+  "6 N − 2 N = 4 N right": [
+    "6 N − 2 N = 4 N a la derecha",
+    "6 N − 2 N = 4 N para a direita"
+  ],
+  "A 1,500 kg car moves at +30 m/s and stops in 5 s under constant acceleration. Find the net horizontal force.": [
+    "Un auto de 1,500 kg (mil quinientos kilos) va a +30 m/s y se detiene en 5 s con aceleración constante. Halla la fuerza neta horizontal.",
+    "Um carro de 1,500 kg (mil e quinhentos quilos) anda a +30 m/s e para em 5 s com aceleração constante. Ache a força resultante horizontal."
+  ],
+  "A 1500 kg car slows from 30 m/s to 0 in 5 s. What net force acts on it?": [
+    "Un auto de 1500 kg pasa de 30 m/s a 0 en 5 s. ¿Qué fuerza neta actúa sobre él?",
+    "Um carro de 1500 kg vai de 30 m/s a 0 em 5 s. Qual força resultante atua nele?"
+  ],
+  "A 2 kg cart has 8 N right and 2 N left.": [
+    "Un carrito de 2 kg recibe 8 N a la derecha y 2 N a la izquierda.",
+    "Um carrinho de 2 kg recebe 8 N para a direita e 2 N para a esquerda."
+  ],
+  "A 3 kg cart has 5 N right and 5 N left.": [
+    "Un carrito de 3 kg recibe 5 N a la derecha y 5 N a la izquierda.",
+    "Um carrinho de 3 kg recebe 5 N para a direita e 5 N para a esquerda."
+  ],
+  "A 4 kg box accelerates right at 2 m/s² while friction is 6 N left. Find the rightward applied force.": [
+    "Una caja de 4 kg acelera a 2 m/s² hacia la derecha. La fricción es de 6 N hacia la izquierda. Halla la fuerza aplicada hacia la derecha.",
+    "Uma caixa de 4 kg acelera a 2 m/s² para a direita. O atrito é de 6 N para a esquerda. Ache a força aplicada para a direita."
+  ],
+  "A 4 kg cart is pushed with 18 N while friction resists with 6 N. What is its acceleration?": [
+    "Un carrito de 4 kg recibe un empuje de 18 N y la fricción se opone con 6 N. ¿Cuál es su aceleración?",
+    "Um carrinho de 4 kg recebe um empurrão de 18 N e o atrito se opõe com 6 N. Qual é sua aceleração?"
+  ],
+  "A 5 kg box has 30 N pull right, 10 N friction left, and no vertical acceleration.": [
+    "Sobre una caja de 5 kg actúan un tirón de 30 N a la derecha y fricción de 10 N a la izquierda. No hay aceleración vertical.",
+    "Uma caixa de 5 kg é puxada com 30 N para a direita e sofre atrito de 10 N para a esquerda. Não há aceleração vertical."
+  ],
+  "A 5 kg box is pulled with 20 N right while friction acts with 5 N left. Is a = 20/5 the correct acceleration?": [
+    "Tiran de una caja de 5 kg con 20 N a la derecha. La fricción es de 5 N a la izquierda. ¿Es a = 20/5 la aceleración correcta?",
+    "Uma caixa de 5 kg é puxada com 20 N para a direita. O atrito é de 5 N para a esquerda. a = 20/5 é a aceleração correta?"
+  ],
+  "A 6 N pull acts right. A 2 N friction force acts left.": [
+    "Un tirón de 6 N actúa a la derecha. Una fuerza de fricción de 2 N actúa a la izquierda.",
+    "Uma força de 6 N puxa para a direita. O atrito de 2 N atua para a esquerda."
+  ],
+  "A box pulled across the floor": [
+    "Una caja arrastrada por el piso",
+    "Uma caixa puxada pelo chão"
+  ],
+  "A dropped rock's velocity is graphed with up as +.": [
+    "La gráfica muestra la velocidad de una piedra que se deja caer. Hacia arriba es positivo.",
+    "O gráfico mostra a velocidade de uma pedra solta em queda. Para cima é positivo."
+  ],
+  "A signed force sum": [
+    "Suma de fuerzas con signos",
+    "Soma de forças com sinais"
+  ],
+  "A straight line sloping down.": [
+    "Una recta que baja.",
+    "Uma reta que desce."
+  ],
+  "Acceleration points right, with the net force.": [
+    "La aceleración apunta a la derecha, igual que la fuerza neta.",
+    "A aceleração aponta para a direita, como a força resultante."
+  ],
+  "Acceleration: 6 ÷ 2 = 3 m/s² right": [
+    "Aceleración: 6 ÷ 2 = 3 m/s² a la derecha",
+    "Aceleração: 6 ÷ 2 = 3 m/s² para a direita"
+  ],
+  "Acceleration: 8 ÷ 2 = 4 m/s² left": [
+    "Aceleración: 8 ÷ 2 = 4 m/s² a la izquierda",
+    "Aceleração: 8 ÷ 2 = 4 m/s² para a esquerda"
+  ],
+  "Always the NET force first.": [
+    "Primero, siempre la fuerza NETA.",
+    "Primeiro, sempre a força RESULTANTE."
+  ],
+  "Braking force from motion data": [
+    "Fuerza de frenado a partir del movimiento",
+    "Força de frenagem a partir do movimento"
+  ],
+  "Choose one object. Name each interaction.": [
+    "Elige un objeto. Nombra cada interacción.",
+    "Escolha um objeto. Nomeie cada interação."
+  ],
+  "Combine them with direction.": [
+    "Combínalas según la dirección.",
+    "Combine as forças considerando a direção."
+  ],
+  "Compare the force sizes first.": [
+    "Compara primero el tamaño de las fuerzas.",
+    "Compare primeiro os módulos das forças."
+  ],
+  "Day 13 · F = ma in Practice": [
+    "Día 13 · F = ma en la práctica",
+    "Dia 13 · F = ma na prática"
+  ],
+  "Day 13 · Phase 2 — Building the tools": [
+    "Día 13 · Fase 2 — Construimos herramientas",
+    "Dia 13 · Fase 2 — Construindo as ferramentas"
+  ],
+  "Divide by mass.": [
+    "Divide por la masa.",
+    "Divida pela massa."
+  ],
+  "Do this before dividing by mass.": [
+    "Haz esto antes de dividir por la masa.",
+    "Faça isso antes de dividir pela massa."
+  ],
+  "Driving forward vs. stopping — which for": [
+    "Avanzar o frenar: ¿qué fuerza gana?",
+    "Avançar ou frear: qual força vence?"
+  ],
+  "Driving forward vs. stopping — which force wins?": [
+    "Avanzar o frenar: ¿qué fuerza gana?",
+    "Avançar ou frear: qual força vence?"
+  ],
+  "Equal opposite horizontal forces.": [
+    "Fuerzas horizontales iguales y opuestas.",
+    "Forças horizontais iguais e opostas."
+  ],
+  "Example": [
+    "Ejemplo",
+    "Exemplo"
+  ],
+  "F = ma in Practice": [
+    "F = ma en la práctica",
+    "F = ma na prática"
+  ],
+  "F = ma is now our central equation.": [
+    "Ahora F = ma es nuestra ecuación principal.",
+    "Agora F = ma é nossa equação principal."
+  ],
+  "F = ma uses": [
+    "F = ma usa",
+    "F = ma usa"
+  ],
+  "F = ma uses the NET force": [
+    "F = ma usa la fuerza NETA",
+    "F = ma usa a força RESULTANTE"
+  ],
+  "F = ma, derived from our own data.": [
+    "F = ma, a partir de nuestros propios datos.",
+    "F = ma, a partir dos nossos próprios dados."
+  ],
+  "Fapplied = 14 N": [
+    "F aplicada = 14 N",
+    "F aplicada = 14 N"
+  ],
+  "Fapplied − 6 = (4)(2)": [
+    "F aplicada − 6 = (4)(2)",
+    "F aplicada − 6 = (4)(2)"
+  ],
+  "Find acceleration and direction.": [
+    "Halla la aceleración y su dirección.",
+    "Ache a aceleração e sua direção."
+  ],
+  "Find net force. Then acceleration.": [
+    "Halla la fuerza neta. Luego la aceleración.",
+    "Ache a força resultante. Depois a aceleração."
+  ],
+  "Find which forces balance and which do not.": [
+    "Halla qué fuerzas se equilibran y cuáles no.",
+    "Veja quais forças se equilibram e quais não."
+  ],
+  "Forces in a perpendicular direction require a separate equation.": [
+    "Las fuerzas en una dirección perpendicular requieren otra ecuación.",
+    "As forças em uma direção perpendicular precisam de outra equação."
+  ],
+  "Forward: engine > friction. Stopping: friction (brakes) > engine.": [
+    "Avance: fuerza motriz > resistencia. Frenado: fuerza de frenado > fuerza motriz.",
+    "Avanço: força motriz > resistência. Frenagem: força de frenagem > força motriz."
+  ],
+  "From the scene to a diagram": [
+    "De la escena al diagrama",
+    "Da cena ao diagrama"
+  ],
+  "Given F and m, find a.": [
+    "Con F y m, halla a.",
+    "Com F e m, ache a."
+  ],
+  "Given a and m, find F.": [
+    "Con a y m, halla F.",
+    "Com a e m, ache F."
+  ],
+  "Horizontal force sizes": [
+    "Magnitud de las fuerzas horizontales",
+    "Módulo das forças horizontais"
+  ],
+  "Horizontal force sizes. Right: 6; Left: 2; Net right: 4. Net force describes the combined effect. It is not an extra interaction.": [
+    "Fuerzas horizontales. Derecha: 6; izquierda: 2; neta hacia la derecha: 4. La fuerza neta describe el efecto conjunto. No es otra interacción.",
+    "Forças horizontais. Direita: 6; esquerda: 2; resultante para a direita: 4. A resultante descreve o efeito conjunto. Não é outra interação."
+  ],
+  "I do · calculate": [
+    "Te muestro cómo calcular",
+    "Vou mostrar como calcular"
+  ],
+  "I do · combine": [
+    "Te muestro cómo combinar",
+    "Vou mostrar como combinar"
+  ],
+  "I do · identify": [
+    "Te muestro cómo identificar",
+    "Vou mostrar como identificar"
+  ],
+  "Imagine the stated 6 N pull and 2 N friction; the artwork does not measure force.": [
+    "Imagina el tirón de 6 N y la fricción de 2 N. El dibujo no mide la fuerza.",
+    "Imagine a força de 6 N que puxa a caixa e o atrito de 2 N. O desenho não mede força."
+  ],
+  "Independent practice A": [
+    "Práctica individual A",
+    "Prática individual A"
+  ],
+  "It could be still or moving at constant velocity.": [
+    "Podría estar quieto o moverse con velocidad constante.",
+    "Pode estar parado ou se mover com velocidade constante."
+  ],
+  "Keep the direction in the answer": [
+    "Incluye la dirección en la respuesta",
+    "Inclua a direção na resposta"
+  ],
+  "Mass is 2 kg.": [
+    "La masa es de 2 kg.",
+    "A massa é de 2 kg."
+  ],
+  "Mass: 2 kg. Forces: 2 N right, 10 N left.": [
+    "Masa: 2 kg. Fuerzas: 2 N a la derecha, 10 N a la izquierda.",
+    "Massa: 2 kg. Forças: 2 N para a direita, 10 N para a esquerda."
+  ],
+  "More mass gives less acceleration for the same net force.": [
+    "Con la misma fuerza neta, más masa da menos aceleración.",
+    "Com a mesma força resultante, mais massa dá menos aceleração."
+  ],
+  "Name the interactions.": [
+    "Nombra las interacciones.",
+    "Nomeie as interações."
+  ],
+  "Net": [
+    "Neta",
+    "Resultante"
+  ],
+  "Net force": [
+    "Fuerza neta",
+    "Força resultante"
+  ],
+  "Net force describes the combined effect. It is not an extra interaction.": [
+    "La fuerza neta describe el efecto conjunto. No es otra interacción.",
+    "A força resultante descreve o efeito conjunto. Não é outra interação."
+  ],
+  "Net force: 8 − 2 = 6 N right": [
+    "Fuerza neta: 8 − 2 = 6 N a la derecha",
+    "Força resultante: 8 − 2 = 6 N para a direita"
+  ],
+  "Net: 10 − 2 = 8 N left": [
+    "Neta: 10 − 2 = 8 N a la izquierda",
+    "Resultante: 10 − 2 = 8 N para a esquerda"
+  ],
+  "No. The net force is 20 − 5 =": [
+    "No. La fuerza neta es 20 − 5 =",
+    "Não. A força resultante é 20 − 5 ="
+  ],
+  "Only the horizontal forces contribute to horizontal acceleration.": [
+    "Solo las fuerzas horizontales contribuyen a la aceleración horizontal.",
+    "Só as forças horizontais contribuem para a aceleração horizontal."
+  ],
+  "Quick check": [
+    "Comprobación rápida",
+    "Verificação rápida"
+  ],
+  "Recall: free fall on a graph": [
+    "Repaso: la caída libre en una gráfica",
+    "Revisão: a queda livre em um gráfico"
+  ],
+  "Same 4 N net force": [
+    "La misma fuerza neta de 4 N",
+    "A mesma força resultante de 4 N"
+  ],
+  "Same 4 N net force. 1 kg: 4; 2 kg: 2. More mass gives less acceleration for the same net force.": [
+    "La misma fuerza neta de 4 N. 1 kg: 4; 2 kg: 2. Con la misma fuerza neta, más masa da menos aceleración.",
+    "A mesma força resultante de 4 N. 1 kg: 4; 2 kg: 2. Com a mesma resultante, mais massa dá menos aceleração."
+  ],
+  "Self-check: did I find the NET force first?": [
+    "Comprueba: ¿hallé primero la fuerza NETA?",
+    "Confira: achei primeiro a força RESULTANTE?"
+  ],
+  "Several forces: find the": [
+    "Varias fuerzas: halla primero la fuerza",
+    "Várias forças: ache primeiro a força"
+  ],
+  "Skill-building. Every asteroid problem in Units 2–4 uses F = ma.": [
+    "Practica esta destreza. Todos los problemas del asteroide de las unidades 2–4 usan F = ma.",
+    "Pratique esta habilidade. Todos os problemas do asteroide das unidades 2–4 usam F = ma."
+  ],
+  "Solve with F = ma — always the NET force first.": [
+    "Resuelve con F = ma. Primero, siempre la fuerza NETA.",
+    "Resolva com F = ma. Primeiro, sempre a força RESULTANTE."
+  ],
+  "Solving for a missing applied force": [
+    "Hallar una fuerza aplicada desconocida",
+    "Achar uma força aplicada desconhecida"
+  ],
+  "Solving for mass": [
+    "Hallar la masa",
+    "Achar a massa"
+  ],
+  "Step 1: draw the forces": [
+    "Paso 1: dibuja las fuerzas",
+    "Passo 1: desenhe as forças"
+  ],
+  "Step 2: find the net force": [
+    "Paso 2: halla la fuerza neta",
+    "Passo 2: ache a força resultante"
+  ],
+  "Step 3: divide by mass": [
+    "Paso 3: divide por la masa",
+    "Passo 3: divida pela massa"
+  ],
+  "Subtract the opposite horizontal forces.": [
+    "Resta las fuerzas horizontales opuestas.",
+    "Subtraia as forças horizontais opostas."
+  ],
+  "Target R7": [
+    "Meta R7",
+    "Meta R7"
+  ],
+  "The SUM of all forces — accounting for direction.": [
+    "La SUMA de todas las fuerzas, teniendo en cuenta la dirección.",
+    "A SOMA de todas as forças, considerando a direção."
+  ],
+  "The acceleration is ___ because net force ÷ mass = ___.": [
+    "La aceleración es ___ porque fuerza neta ÷ masa = ___.",
+    "A aceleração é ___ porque força resultante ÷ massa = ___."
+  ],
+  "The arrows compete": [
+    "Las flechas compiten",
+    "As setas competem"
+  ],
+  "The leftover force changes velocity": [
+    "La fuerza que queda cambia la velocidad",
+    "A força que sobra muda a velocidade"
+  ],
+  "The net force is 4 N right.": [
+    "La fuerza neta es de 4 N a la derecha.",
+    "A força resultante é de 4 N para a direita."
+  ],
+  "The net force points ___ because ___.": [
+    "La fuerza neta apunta ___ porque ___.",
+    "A força resultante aponta ___ porque ___."
+  ],
+  "Try the steps together": [
+    "Prueben los pasos juntos",
+    "Façam os passos juntos"
+  ],
+  "Two horizontal forces act on an object: 18 N right and 6 N left. Its acceleration is 3 m/s² right. Find its mass.": [
+    "Sobre un objeto actúan 18 N a la derecha y 6 N a la izquierda. Acelera a 3 m/s² a la derecha. Halla la masa.",
+    "Sobre um objeto atuam 18 N para a direita e 6 N para a esquerda. Ele acelera a 3 m/s² para a direita. Ache a massa."
+  ],
+  "Velocity vs. time (up is +)": [
+    "Velocidad y tiempo (arriba es +)",
+    "Velocidade e tempo (para cima é +)"
+  ],
+  "Velocity vs. time (up is +). Velocity (m/s) versus Time (s). A straight line sloping down.": [
+    "Velocidad y tiempo (arriba es +). Velocidad (m/s) frente al tiempo (s). Una recta que baja.",
+    "Velocidade e tempo (para cima é +). Velocidade (m/s) em função do tempo (s). Uma reta que desce."
+  ],
+  "Vertical forces balance.": [
+    "Las fuerzas verticales se equilibran.",
+    "As forças verticais se equilibram."
+  ],
+  "Vertical forces balance. Compare the horizontal forces.": [
+    "Las fuerzas verticales se equilibran. Compara las horizontales.",
+    "As forças verticais se equilibram. Compare as horizontais."
+  ],
+  "Vertically, N − mg = 0, so N = 49 N.": [
+    "En vertical, N − mg = 0, así que N = 49 N.",
+    "Na vertical, N − mg = 0, então N = 49 N."
+  ],
+  "What does F mean?": [
+    "¿Qué significa F?",
+    "O que F significa?"
+  ],
+  "What if the forces balance?": [
+    "¿Y si las fuerzas se equilibran?",
+    "E se as forças se equilibram?"
+  ],
+  "What is its acceleration?": [
+    "¿Cuál es su aceleración?",
+    "Qual é sua aceleração?"
+  ],
+  "What is the slope? Predict the velocity at t = 4 s.": [
+    "¿Cuál es la pendiente? Predice la velocidad cuando t = 4 s.",
+    "Qual é a inclinação? Preveja a velocidade quando t = 4 s."
+  ],
+  "What's the acceleration of a 5 kg object": [
+    "Aceleración de un objeto de 5 kg",
+    "Aceleração de um objeto de 5 kg"
+  ],
+  "What's the acceleration of a 5 kg object pushed with a 10 N force?": [
+    "¿Cuál es la aceleración de un objeto de 5 kg empujado con una fuerza de 10 N?",
+    "Qual é a aceleração de um objeto de 5 kg empurrado com uma força de 10 N?"
+  ],
+  "Which direction wins?": [
+    "¿Qué dirección gana?",
+    "Qual direção vence?"
+  ],
+  "With right positive, a negative result means acceleration left.": [
+    "Si la derecha es positiva, un resultado negativo significa aceleración a la izquierda.",
+    "Se a direita é positiva, um resultado negativo significa aceleração para a esquerda."
+  ],
+  "Worked force inventory": [
+    "Ejemplo de lista de fuerzas",
+    "Exemplo de lista de forças"
+  ],
+  "Your turn: left wins": [
+    "Tu turno: gana la izquierda",
+    "Sua vez: a esquerda vence"
+  ],
+  "force first.": [
+    "fuerza primero.",
+    "força primeiro."
+  ],
+  "force.": [
+    "fuerza.",
+    "força."
+  ],
+  "m = 3 kg, a = −2 m/s², right force = 4 N. Find the leftward force magnitude.": [
+    "m = 3 kg, a = −2 m/s², fuerza a la derecha = 4 N. Halla la magnitud de la fuerza a la izquierda.",
+    "m = 3 kg, a = −2 m/s², força para a direita = 4 N. Ache o módulo da força para a esquerda."
+  ],
+  "m = 8 kg, forces 50 N right and 18 N left. Find a.": [
+    "m = 8 kg, fuerzas de 50 N a la derecha y 18 N a la izquierda. Halla a.",
+    "m = 8 kg, forças de 50 N para a direita e 18 N para a esquerda. Ache a."
+  ],
+  "net": [
+    "neta",
+    "resultante"
+  ],
+  "not just any one force": [
+    "no una sola fuerza cualquiera",
+    "não uma única força qualquer"
+  ],
+  "right": [
+    "derecha",
+    "direita"
+  ],
+  "Read one object’s forces. Pull 2 N; Friction 10 N; Normal 20 N; Weight 20 N. Compare the force sizes first.": [
+    "Lee las fuerzas sobre un objeto. Tirón 2 N; fricción 10 N; normal 20 N; peso 20 N. Compara primero el tamaño de las fuerzas.",
+    "Leia as forças em um objeto. Tração 2 N; atrito 10 N; normal 20 N; peso 20 N. Compare primeiro os módulos das forças."
+  ],
+  "Read one object’s forces. Pull 5 N; Friction 5 N; Normal 30 N; Weight 30 N. Equal opposite horizontal forces.": [
+    "Lee las fuerzas sobre un objeto. Tirón 5 N; fricción 5 N; normal 30 N; peso 30 N. Fuerzas horizontales iguales y opuestas.",
+    "Leia as forças em um objeto. Tração 5 N; atrito 5 N; normal 30 N; peso 30 N. Forças horizontais iguais e opostas."
+  ],
+  "Read one object’s forces. Pull 6 N; Friction 2 N; Normal 20 N; Weight 20 N. Only the horizontal forces contribute to horizontal acceleration.": [
+    "Lee las fuerzas sobre un objeto. Tirón 6 N; fricción 2 N; normal 20 N; peso 20 N. Solo las fuerzas horizontales contribuyen a la aceleración horizontal.",
+    "Leia as forças em um objeto. Tração 6 N; atrito 2 N; normal 20 N; peso 20 N. Só as forças horizontais contribuem para a aceleração horizontal."
+  ],
+  "Read one object’s forces. Pull 6 N; Friction 2 N; Normal 20 N; Weight 20 N. Vertical forces balance. Compare the horizontal forces.": [
+    "Lee las fuerzas sobre un objeto. Tirón 6 N; fricción 2 N; normal 20 N; peso 20 N. Las fuerzas verticales se equilibran. Compara las horizontales.",
+    "Leia as forças em um objeto. Tração 6 N; atrito 2 N; normal 20 N; peso 20 N. As forças verticais se equilibram. Compare as horizontais."
+  ],
+  "Read one object’s forces. Pull 8 N; Friction 2 N; Normal 20 N; Weight 20 N. Vertical forces balance.": [
+    "Lee las fuerzas sobre un objeto. Tirón 8 N; fricción 2 N; normal 20 N; peso 20 N. Las fuerzas verticales se equilibran.",
+    "Leia as forças em um objeto. Tração 8 N; atrito 2 N; normal 20 N; peso 20 N. As forças verticais se equilibram."
+  ],
+  "2026-XJ · 49": [
+    "2026-XJ · 49",
+    "2026-XJ · 49"
+  ],
+  "2026-XJ · 50": [
+    "2026-XJ · 50",
+    "2026-XJ · 50"
+  ],
+  "2026-XJ · 51": [
+    "2026-XJ · 51",
+    "2026-XJ · 51"
+  ],
+  "2026-XJ · 52": [
+    "2026-XJ · 52",
+    "2026-XJ · 52"
+  ],
+  "4 N ÷ 2 kg = 2 m/s²": [
+    "4 N ÷ 2 kg = 2 m/s²",
+    "4 N ÷ 2 kg = 2 m/s²"
+  ],
+  "4 kg": [
+    "4 kg",
+    "4 kg"
+  ],
+  "= maₓ": [
+    "= maₓ",
+    "= maₓ"
+  ],
+  "Antocci Physics · 02 / 30": [
+    "Antocci Physics · 02 / 30",
+    "Antocci Physics · 02 / 30"
+  ],
+  "Antocci Physics · 03 / 30": [
+    "Antocci Physics · 03 / 30",
+    "Antocci Physics · 03 / 30"
+  ],
+  "Antocci Physics · 04 / 30": [
+    "Antocci Physics · 04 / 30",
+    "Antocci Physics · 04 / 30"
+  ],
+  "Antocci Physics · 05 / 30": [
+    "Antocci Physics · 05 / 30",
+    "Antocci Physics · 05 / 30"
+  ],
+  "Antocci Physics · 06 / 30": [
+    "Antocci Physics · 06 / 30",
+    "Antocci Physics · 06 / 30"
+  ],
+  "Antocci Physics · 07 / 30": [
+    "Antocci Physics · 07 / 30",
+    "Antocci Physics · 07 / 30"
+  ],
+  "Antocci Physics · 08 / 30": [
+    "Antocci Physics · 08 / 30",
+    "Antocci Physics · 08 / 30"
+  ],
+  "Antocci Physics · 09 / 30": [
+    "Antocci Physics · 09 / 30",
+    "Antocci Physics · 09 / 30"
+  ],
+  "Antocci Physics · 10 / 30": [
+    "Antocci Physics · 10 / 30",
+    "Antocci Physics · 10 / 30"
+  ],
+  "Antocci Physics · 11 / 30": [
+    "Antocci Physics · 11 / 30",
+    "Antocci Physics · 11 / 30"
+  ],
+  "Antocci Physics · 12 / 30": [
+    "Antocci Physics · 12 / 30",
+    "Antocci Physics · 12 / 30"
+  ],
+  "Antocci Physics · 13 / 30": [
+    "Antocci Physics · 13 / 30",
+    "Antocci Physics · 13 / 30"
+  ],
+  "Antocci Physics · 14 / 30": [
+    "Antocci Physics · 14 / 30",
+    "Antocci Physics · 14 / 30"
+  ],
+  "Antocci Physics · 15 / 30": [
+    "Antocci Physics · 15 / 30",
+    "Antocci Physics · 15 / 30"
+  ],
+  "Antocci Physics · 16 / 30": [
+    "Antocci Physics · 16 / 30",
+    "Antocci Physics · 16 / 30"
+  ],
+  "Antocci Physics · 17 / 30": [
+    "Antocci Physics · 17 / 30",
+    "Antocci Physics · 17 / 30"
+  ],
+  "Antocci Physics · 18 / 30": [
+    "Antocci Physics · 18 / 30",
+    "Antocci Physics · 18 / 30"
+  ],
+  "Antocci Physics · 19 / 30": [
+    "Antocci Physics · 19 / 30",
+    "Antocci Physics · 19 / 30"
+  ],
+  "Antocci Physics · 20 / 30": [
+    "Antocci Physics · 20 / 30",
+    "Antocci Physics · 20 / 30"
+  ],
+  "Antocci Physics · 21 / 30": [
+    "Antocci Physics · 21 / 30",
+    "Antocci Physics · 21 / 30"
+  ],
+  "Antocci Physics · 22 / 30": [
+    "Antocci Physics · 22 / 30",
+    "Antocci Physics · 22 / 30"
+  ],
+  "Antocci Physics · 23 / 30": [
+    "Antocci Physics · 23 / 30",
+    "Antocci Physics · 23 / 30"
+  ],
+  "Antocci Physics · 24 / 30": [
+    "Antocci Physics · 24 / 30",
+    "Antocci Physics · 24 / 30"
+  ],
+  "Antocci Physics · 25 / 30": [
+    "Antocci Physics · 25 / 30",
+    "Antocci Physics · 25 / 30"
+  ],
+  "Antocci Physics · 26 / 30": [
+    "Antocci Physics · 26 / 30",
+    "Antocci Physics · 26 / 30"
+  ],
+  "Antocci Physics · 27 / 30": [
+    "Antocci Physics · 27 / 30",
+    "Antocci Physics · 27 / 30"
+  ],
+  "Antocci Physics · 49": [
+    "Antocci Physics · 49",
+    "Antocci Physics · 49"
+  ],
+  "Antocci Physics · 50": [
+    "Antocci Physics · 50",
+    "Antocci Physics · 50"
+  ],
+  "Antocci Physics · 51": [
+    "Antocci Physics · 51",
+    "Antocci Physics · 51"
+  ],
+  "Antocci Physics · 52": [
+    "Antocci Physics · 52",
+    "Antocci Physics · 52"
+  ],
+  "a = 15 N ÷ 5 kg = 3 m/s²": [
+    "a = 15 N ÷ 5 kg = 3 m/s²",
+    "a = 15 N ÷ 5 kg = 3 m/s²"
+  ],
+  "Antocci Physics · 01 / 31": [
+    "Antocci Physics · 01 / 31",
+    "Antocci Physics · 01 / 31"
+  ],
+  "Antocci Physics · 02 / 31": [
+    "Antocci Physics · 02 / 31",
+    "Antocci Physics · 02 / 31"
+  ],
+  "Antocci Physics · 03 / 31": [
+    "Antocci Physics · 03 / 31",
+    "Antocci Physics · 03 / 31"
+  ],
+  "Antocci Physics · 04 / 31": [
+    "Antocci Physics · 04 / 31",
+    "Antocci Physics · 04 / 31"
+  ],
+  "Antocci Physics · 05 / 31": [
+    "Antocci Physics · 05 / 31",
+    "Antocci Physics · 05 / 31"
+  ],
+  "Antocci Physics · 06 / 31": [
+    "Antocci Physics · 06 / 31",
+    "Antocci Physics · 06 / 31"
+  ],
+  "Antocci Physics · 07 / 31": [
+    "Antocci Physics · 07 / 31",
+    "Antocci Physics · 07 / 31"
+  ],
+  "Antocci Physics · 08 / 31": [
+    "Antocci Physics · 08 / 31",
+    "Antocci Physics · 08 / 31"
+  ],
+  "Antocci Physics · 09 / 31": [
+    "Antocci Physics · 09 / 31",
+    "Antocci Physics · 09 / 31"
+  ],
+  "Antocci Physics · 10 / 31": [
+    "Antocci Physics · 10 / 31",
+    "Antocci Physics · 10 / 31"
+  ],
+  "Antocci Physics · 11 / 31": [
+    "Antocci Physics · 11 / 31",
+    "Antocci Physics · 11 / 31"
+  ],
+  "Antocci Physics · 12 / 31": [
+    "Antocci Physics · 12 / 31",
+    "Antocci Physics · 12 / 31"
+  ],
+  "Antocci Physics · 13 / 31": [
+    "Antocci Physics · 13 / 31",
+    "Antocci Physics · 13 / 31"
+  ],
+  "Antocci Physics · 14 / 31": [
+    "Antocci Physics · 14 / 31",
+    "Antocci Physics · 14 / 31"
+  ],
+  "Antocci Physics · 15 / 31": [
+    "Antocci Physics · 15 / 31",
+    "Antocci Physics · 15 / 31"
+  ],
+  "Antocci Physics · 16 / 31": [
+    "Antocci Physics · 16 / 31",
+    "Antocci Physics · 16 / 31"
+  ],
+  "Antocci Physics · 17 / 31": [
+    "Antocci Physics · 17 / 31",
+    "Antocci Physics · 17 / 31"
+  ],
+  "Antocci Physics · 18 / 31": [
+    "Antocci Physics · 18 / 31",
+    "Antocci Physics · 18 / 31"
+  ],
+  "Antocci Physics · 19 / 31": [
+    "Antocci Physics · 19 / 31",
+    "Antocci Physics · 19 / 31"
+  ],
+  "Antocci Physics · 20 / 31": [
+    "Antocci Physics · 20 / 31",
+    "Antocci Physics · 20 / 31"
+  ],
+  "Antocci Physics · 21 / 31": [
+    "Antocci Physics · 21 / 31",
+    "Antocci Physics · 21 / 31"
+  ],
+  "Antocci Physics · 22 / 31": [
+    "Antocci Physics · 22 / 31",
+    "Antocci Physics · 22 / 31"
+  ],
+  "Antocci Physics · 23 / 31": [
+    "Antocci Physics · 23 / 31",
+    "Antocci Physics · 23 / 31"
+  ],
+  "Antocci Physics · 24 / 31": [
+    "Antocci Physics · 24 / 31",
+    "Antocci Physics · 24 / 31"
+  ],
+  "Antocci Physics · 25 / 31": [
+    "Antocci Physics · 25 / 31",
+    "Antocci Physics · 25 / 31"
+  ],
+  "Antocci Physics · 26 / 31": [
+    "Antocci Physics · 26 / 31",
+    "Antocci Physics · 26 / 31"
+  ],
+  "Antocci Physics · 27 / 31": [
+    "Antocci Physics · 27 / 31",
+    "Antocci Physics · 27 / 31"
+  ],
+  "Antocci Physics · 28 / 31": [
+    "Antocci Physics · 28 / 31",
+    "Antocci Physics · 28 / 31"
+  ],
+  "Antocci Physics · 29 / 31": [
+    "Antocci Physics · 29 / 31",
+    "Antocci Physics · 29 / 31"
+  ],
+  "Antocci Physics · 30 / 31": [
+    "Antocci Physics · 30 / 31",
+    "Antocci Physics · 30 / 31"
+  ],
+  "Antocci Physics · 31 / 31": [
+    "Antocci Physics · 31 / 31",
+    "Antocci Physics · 31 / 31"
+  ]
+}

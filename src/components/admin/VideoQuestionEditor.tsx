@@ -883,7 +883,7 @@ export default function VideoQuestionEditor({
 
                 <div className="flex-1 min-w-0">
                   <div className="font-medium text-foreground truncate">
-                    <MathMarkdown content={q.question.question} />
+                    <MathMarkdown content={q.question.question} questionEmphasis />
                   </div>
                   <p className="text-sm text-muted-foreground">
                     {q.question.points} point{q.question.points !== 1 ? 's' : ''}

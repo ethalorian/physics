@@ -1,6 +1,6 @@
 // Content-only adaptation shared by every foundation import. Never edit scripts,
 // interaction attributes, timers, answer reveals, archived exports or artwork.
-module.exports=html=>{
+module.exports=(html,{preserveSlideCopy=false}={})=>{
  let roles=0;
  const result=html.replace(/<section\b[^>]*>[\s\S]*?<\/section>/g,section=>{
   if(section.includes('>Facilitator<')&&section.includes('>Recorder<')){
@@ -13,5 +13,6 @@ module.exports=html=>{
   return section.replaceAll("Recorder writes the group's answer",'Scribe shows the reasoning at the whiteboard; everyone writes their own answer').replaceAll("Your Recorder lists them all on your group's page.",'Your scribe lists the ideas at the whiteboard; everyone records their own response.');
  });
  if(roles!==1)throw Error('Expected one foundation group-role slide; found '+roles);
- return result;
+ const adapted = preserveSlideCopy ? result : require('./slide-language.cjs')(result);
+ return require('./force-notation.cjs')(adapted);
 };

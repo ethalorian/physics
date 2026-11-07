@@ -3,9 +3,9 @@ import type { StudentAssignment } from './student-dashboard'
 
 export type LearningActivity = Omit<StudentAssignment, 'kind'> & { kind: StudentAssignment['kind'] | 'math'; day?: string; available?: boolean }
 export type LearningPlans = Record<string, string | null>
-export const LEARNING_LABELS = { worksheet: 'Worksheet · Paper', review: 'Review', video: 'Video', lesson: 'Assignment', reading: 'Reading', quiz: 'Quiz', vocabulary: 'Vocabulary', math: 'Math spine' } as const
+export const LEARNING_LABELS = { student_choice: 'Student Choice', worksheet: 'Worksheet · Paper', review: 'Review', video: 'Video', lesson: 'Assignment', reading: 'Reading', quiz: 'Quiz', vocabulary: 'Vocabulary', math: 'Math spine' } as const
 export const ENGAGEMENT_TARGET = 80
-export const LEARNING_XP_SOURCES = ['lesson-block', 'lesson-video', 'legacy-lesson-progress', 'math-spine', 'vocabulary', 'vocab-assignment', 'review-complete']
+export const LEARNING_XP_SOURCES = ['mastery-assignment', 'lesson-block', 'lesson-video', 'legacy-lesson-progress', 'math-spine', 'vocabulary', 'vocab-assignment', 'review-complete']
 export type LearningPace = {
   today: string; dates: string[]; activeDays: number; engagement: number | null; learningXp: number; xpRate: number | null
   ready: boolean; calendarReady: boolean; noSchoolDates: string[]

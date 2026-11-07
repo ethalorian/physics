@@ -16,6 +16,7 @@ export function gradeBand(percent: number | null | undefined) { return percent =
 /** Returned is a teacher-completed review, never just a ready AI suggestion. */
 export function gradebookStatus(cell?: ResultCell) {
   if (!cell) return 'Not assigned'
+  if (cell.manualLetter && cell.state !== 'excused') return 'Reviewed · ' + cell.manualLetter
   if (cell.state === 'reviewed' && !cell.needsReview) return 'Returned'
   if (cell.state === 'returned' && !cell.needsReview) return 'Returned · revision requested'
   return cell.label
@@ -37,9 +38,41 @@ export function quizTotal(activities: ResultActivity[], studentId: string) {
   const earned = grades.reduce((n,g) => n + g.earned, 0), possible = grades.reduce((n,g) => n + g.possible, 0)
   return { earned, possible, percent: possible ? 100 * earned / possible : null, count: grades.length }
 }
+function isAssignedCell(cell?: ResultCell): cell is ResultCell {
+  return !!cell && cell.state !== 'excused' && cell.label !== 'Not chosen'
+}
+
+/** A final result may be mastery-only or an earlier release still visible during a revision. */
+export function assignmentRelease(activity: ResultActivity, studentId: string): { at: string | null } | null {
+  if (!isAssignedCell(activity.cells[studentId])) return null
+  let released = false
+  let latest: string | null = null
+  for (const source of [activity, ...(activity.evidenceActivities ?? [])]) {
+    const cell = source.cells[studentId]
+    if (!isAssignedCell(cell)) continue
+    const final = !!releasedGrade(cell) || (cell.state === 'reviewed' && !cell.needsReview)
+    if (final) released = true
+    const dates = [cell.reviewReleasedAt, final ? cell.releasedAt : null]
+    for (const attempt of cell.labGrades ?? cell.transferGrades ?? []) dates.push(attempt.releasedAt)
+    for (const date of dates) {
+      if (date && (!latest || Date.parse(date) > Date.parse(latest))) latest = date
+    }
+  }
+  return released || latest ? { at: latest } : null
+}
+
 export function assignmentStats(activity: ResultActivity) {
-  const cells = Object.values(activity.cells).filter(c => c.state !== 'excused' && c.label !== 'Not chosen'), grades = cells.flatMap(c => { const g = releasedGrade(c); return g ? [g] : [] })
-  return { assigned: cells.length, completed: cells.filter(isComplete).length, released: grades.length, pending: cells.filter(c => c.needsReview).length, average: grades.length ? grades.reduce((n,g) => n + g.percent, 0) / grades.length : null }
+  const students = Object.keys(activity.cells).filter(id => isAssignedCell(activity.cells[id]))
+  const cells = students.map(id => activity.cells[id])
+  const grades = cells.flatMap(cell => { const grade = releasedGrade(cell); return grade ? [grade] : [] })
+  return {
+    assigned: students.length,
+    completed: cells.filter(isComplete).length,
+    released: students.filter(id => assignmentRelease(activity, id)).length,
+    scored: grades.length,
+    pending: cells.filter(cell => cell.needsReview).length,
+    average: grades.length ? grades.reduce((sum, grade) => sum + grade.percent, 0) / grades.length : null,
+  }
 }
 export function sortRoster(students: ResultStudent[], order: 'last' | 'first') {
   const key = (student: ResultStudent) => order === 'first' ? (student.firstName?.trim() || student.name) + ' ' + (student.lastName ?? '') : (student.lastName?.trim() || student.name.trim().split(/\s+/).slice(-1)[0]) + ' ' + (student.firstName?.trim() || student.name)

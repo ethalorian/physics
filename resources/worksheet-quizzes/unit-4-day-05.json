@@ -9,7 +9,7 @@
     "Calculate the kinetic-energy change.",
     "Check whether the result is physically possible."
   ],
-  "source_sha256": "08cf1674f03bab04ac3a7b2c26ddb7cd85610b27d82cb788282bf4bbb92437a8",
+  "source_sha256": "6d7a59f9e93275e7cc5c8ffc0aada282ee7cf67ac1ec2adbd421d44593b470c7",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.518Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "A crate slides horizontally. A rope pulls forward, friction acts backward, and gravity and normal forces are vertical. Which forces do nonzero work in this model?",
+      "prompt": "A crate slides horizontally. A rope pulls forward, friction acts backward, and gravity and the normal force act vertically. Which forces do nonzero work?",
       "options": [
         "Only gravity and normal.",
         "Rope and friction.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "A crate slides horizontally. A rope pulls forward, friction acts backward, and gravity and normal forces are vertical. Which forces do nonzero work in this model?",
+      "prompt": "A crate slides horizontally. A rope pulls forward, friction acts backward, and gravity and the normal force act vertically. Which forces do nonzero work?",
       "options": [
         "No force can do work on a sliding object.",
         "Only gravity and normal.",

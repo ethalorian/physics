@@ -1,0 +1,44 @@
+{
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 10 Forces.dc.html",
+  "sourceSha256": "9519d1e7fd30496efeda207b7309ffc5fdb21f5c6619ca281b47930a52d43e1f",
+  "packagedSha256": "bf497aa1f3593a0d952f3d2331ea8a80ade767b58cba86517de43d6ba1ee80ec",
+  "sourceStudentSlides": 30,
+  "teacherSlidesExcluded": 3,
+  "studentSlides": 34,
+  "panels": [
+    [
+      5,
+      4,
+      1,
+      351,
+      512
+    ],
+    [
+      18,
+      6,
+      2,
+      430,
+      563
+    ],
+    [
+      21,
+      8,
+      3,
+      394,
+      531
+    ],
+    [
+      23,
+      9,
+      4,
+      383,
+      540
+    ]
+  ],
+  "timers": [
+    "pairs",
+    "exit"
+  ],
+  "lab": true
+}

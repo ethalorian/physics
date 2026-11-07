@@ -1,6 +1,6 @@
 import {checkRevisionBeforeSubmit,recordRevisionSubmitted} from '@/lib/review-desk/revision-server'
 import { suggestAfterSubmission } from '@/lib/assessment-results/suggestions-server'
-import { missingLessonAnswers, type SavedLessonAnswer } from '@/lib/lesson-completion'
+import { missingLessonAnswers, requiresLessonSubmission, type SavedLessonAnswer } from '@/lib/lesson-completion'
 import { readLessonRows } from '@/lib/lesson-completion-server'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
@@ -30,7 +30,7 @@ export const POST = withAuth(async (request, ctx) => {
     if (error) throw error
     if (count) return NextResponse.json({ error: 'Save your changed answers before submitting.' }, { status: 422 })
   }
-  if (access.document?.presentation === 'physics-path' || access.document?.reflection) {
+  if (requiresLessonSubmission(access.document) && access.document) {
     const answers = await readLessonRows<SavedLessonAnswer>((from,to) => supabaseAdmin.from('block_responses').select('block_id,response,created_at').eq('user_id',ctx.userId).eq('lesson_id',lessonId).order('created_at').order('id').range(from,to))
     const missing = missingLessonAnswers(access.document.blocks,answers)
     if (missing.length) return NextResponse.json({ error: `Finish the ${missing.length} remaining required response${missing.length===1?'':'s'} before submitting. Your saved work is kept.`, missingBlockIds: missing.map(b=>b.id) }, {status:422})
@@ -46,7 +46,7 @@ export const POST = withAuth(async (request, ctx) => {
     throw error
   }
   // The submission itself remains authoritative if this display cache cannot update.
-  if (access.document?.presentation === 'physics-path' || access.document?.reflection) {
+  if (requiresLessonSubmission(access.document)) {
     const result = await supabaseAdmin.from('lesson_progress').upsert({user_id:ctx.userId,user_email:ctx.email,lesson_id:lessonId,lesson_slug:access.lesson.slug,status:'completed',progress_percentage:100,completed_at:data.submitted_at,last_accessed_at:data.submitted_at},{onConflict:'user_id,lesson_id'})
     if(result.error) console.error('Could not update submitted lesson progress:',result.error)
   }

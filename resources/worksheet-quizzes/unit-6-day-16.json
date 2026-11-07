@@ -3,13 +3,13 @@
   "unit": 6,
   "day": 16,
   "title": "Thermal radiation and color",
-  "target": "Use peak wavelength as one piece of evidence about a thermal spectrum.",
+  "target": "Use peak wavelength as one detail that helps explain a thermal spectrum.",
   "criteria": [
     "Relate higher temperature to shorter peak wavelength.",
     "Use kelvin in Wien’s law.",
     "Distinguish spectral peak from perceived color."
   ],
-  "source_sha256": "3087ac9b0322ee006bc91f5f59cbfa7b72d47c74820d193407fa6b194adc2b64",
+  "source_sha256": "66893a260f0361a0bbb2ff1103b2fcea992281a7f523477b47603375aa04d9c0",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.555Z",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "Use λ_peak T = 2.9 × 10⁻³ m·K. What is peak wavelength at 5,000 K?",
+      "prompt": "1. Use λ_peak T = 2.9 × 10⁻³ m·K.\n2. What is peak wavelength at 5,000 K?",
       "options": [
         "5.8 × 10⁻⁷ m",
         "5.8 × 10⁻⁴ m",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "Use λ_peak T = 2.9 × 10⁻³ m·K. What is peak wavelength at 5,000 K?",
+      "prompt": "1. Use λ_peak T = 2.9 × 10⁻³ m·K.\n2. What is peak wavelength at 5,000 K?",
       "options": [
         "5.8 × 10⁻⁷ m",
         "1.72 × 10⁶ m",

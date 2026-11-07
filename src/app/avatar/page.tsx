@@ -78,7 +78,7 @@ function AvatarEditor({ initial }: { initial: AvatarBundle }) {
   const tryOn = bundle.catalog.find(item => item.slug === tryOnSlug)
   const selectedItem = tryOn ?? (isWardrobe ? bundle.catalog.find(item => item.slug === draft.equipped[slot]) : undefined)
   const previewEquipped = tryOn ? { ...draft.equipped, [tryOn.slot]: tryOn.slug } : draft.equipped
-  const wardrobeItems = bundle.catalog.filter(item => item.slot === slot && item.name.toLowerCase().includes(query.trim().toLowerCase()) && (collection === 'all' || section !== 'outfit' || collectionOf(item) === collection) && (filter === 'all' || (filter === 'owned' ? item.state === 'owned' : ['affordable', 'unlock_available', 'staff_free'].includes(item.state))))
+  const wardrobeItems = bundle.catalog.filter(item => item.slot === slot && item.name.toLowerCase().includes(query.trim().toLowerCase()) && (collection === 'all' || section !== 'outfit' || collectionOf(item) === collection) && (filter === 'all' || (filter === 'owned' ? item.state === 'owned' : item.state === 'unlock_available')))
   const changeDraft = (update: (draft: Draft) => Draft) => { dispatch({ type: 'change', update }); setMessage('') }
   const edit = (key: keyof AvatarTraits, value: string) => changeDraft(draft => ({ ...draft, traits: { ...draft.traits, [key]: value } }))
   const remove = (slot: ItemSlot) => { changeDraft(draft => { const equipped = { ...draft.equipped }; delete equipped[slot]; return { ...draft, equipped } }); setTryOnSlug(null) }
@@ -111,20 +111,20 @@ function AvatarEditor({ initial }: { initial: AvatarBundle }) {
     } catch (error) { setMessage(''); setError(error instanceof Error ? error.message : 'Could not save. Your draft is still here.') }
     finally { busyRef.current = false; setBusy(false) }
   }
-  const buy = async (item: CatalogEntry) => {
+  const claim = async (item: CatalogEntry) => {
     if (busyRef.current) return
     busyRef.current = true; setBusy(true); setError(''); setMessage('')
     try {
       const response = await fetch('/api/avatar/purchase', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ slug: item.slug }) }), data = await response.json()
       if (!response.ok) throw new Error(data.error ?? 'Could not get this item. Retry safely.')
-      // Ownership is not draft history: Undo must never imply a refund.
+      // Undo restores the look while the item stays in the wardrobe.
       setBundle(bundle => ({ ...bundle, owned: [...new Set([...bundle.owned, item.slug])], balance: data.balance ?? bundle.balance, catalog: bundle.catalog.map(entry => entry.slug === item.slug ? { ...entry, state: 'owned' } : entry) }))
       changeDraft(draft => ({ ...draft, equipped: { ...draft.equipped, [item.slot]: item.slug } }))
       setTryOnSlug(null); setMessage(`${item.name} is yours. Save your look to wear it everywhere.`)
       const fresh = await getBundle()
       if (fresh.user_id !== initial.user_id) throw new Error('Your signed-in account changed. Reload this page to continue.')
       setBundle(bundle => ({ ...bundle, catalog: fresh.catalog, owned: fresh.owned, balance: fresh.balance }))
-    } catch (error) { setError(error instanceof Error ? error.message : 'Could not complete the purchase. Retry safely.') }
+    } catch (error) { setError(error instanceof Error ? error.message : 'Could not add this item. Retry safely.') }
     finally { busyRef.current = false; setBusy(false) }
   }
   const saveLabel = busy ? 'Working…' : tryOn ? 'Finish try-on first' : bundle.setup_completed ? 'Save my look' : 'Finish & save avatar'
@@ -134,7 +134,7 @@ function AvatarEditor({ initial }: { initial: AvatarBundle }) {
     <header className={styles.header}>
       <div><p className={styles.eyebrow}>THE TEACHER’S PHYSICS · AVATAR STUDIO</p><h1>The dressing room<span>.</span></h1><p>A new look for every chapter.</p></div>
       <div className={styles.headerActions}>
-        <details className={styles.wallet}><summary><Sparkles size={16} />{bundle.isStaff ? 'Staff wardrobe' : `${bundle.balance.toLocaleString()} XP`}</summary><p>{bundle.isStaff ? 'Catalog items are free for staff.' : `${bundle.lifetimeEarned.toLocaleString()} lifetime XP earned. Spending XP keeps your rankings and goal progress intact.`}</p></details>
+        <details className={styles.wallet}><summary><Sparkles size={16} />{bundle.isStaff ? 'Staff wardrobe' : `${bundle.balance.toLocaleString()} XP`}</summary><p>{bundle.isStaff ? 'All wardrobe items are free.' : `${bundle.lifetimeEarned.toLocaleString()} lifetime XP earned. All wardrobe items are free.`}</p></details>
         <Link href="/home" onClick={event => { if (dirty) { event.preventDefault(); setError('Save or discard your changes before going home.') } }}><ArrowLeft size={15} />Home</Link>
       </div>
     </header>
@@ -145,14 +145,14 @@ function AvatarEditor({ initial }: { initial: AvatarBundle }) {
           <button type="button" className={styles.undo} disabled={busy || (!history.past.length && !tryOn)} onClick={() => { if (tryOn) setTryOnSlug(null); else dispatch({ type: 'undo' }); setMessage('Last change undone.') }}><Undo2 size={17} />Undo</button>
           <button type="button" className={styles.primary} onClick={save} disabled={saveDisabled}><Save size={16} />{saveLabel}</button>
         </div>
-        <p className={styles.saveStatus} role="status" aria-live="polite">{message || (tryOn ? 'Try it freely. Choose Wear or Buy to keep it.' : dirty ? 'Your new look is a draft.' : 'Your look is saved.')}</p>
-        <div className={styles.previewFoot}><span>Appearance changes are always free.</span>{dirty && <button type="button" disabled={busy} onClick={discard}>Discard draft</button>}</div>
+        <p className={styles.saveStatus} role="status" aria-live="polite">{message || (tryOn ? 'Choose an action for this item or end the try-on.' : dirty ? 'Your new look is a draft.' : 'Your look is saved.')}</p>
+        <div className={styles.previewFoot}><span>All wardrobe items are free.</span>{dirty && <button type="button" disabled={busy} onClick={discard}>Discard draft</button>}</div>
       </aside>
       <div className={styles.editor}>
         <div className={styles.secondaryNav}><span>MAKE YOURSELF AT HOME</span><div><button type="button" disabled={busy} aria-pressed={section === 'looks'} onClick={() => chooseSection('looks')}><BookOpen size={16} />Lookbook <span>{draft.saved_looks.length}/6</span></button><button type="button" disabled={busy} aria-pressed={section === 'gallery'} onClick={() => chooseSection('gallery')}><Users size={16} />Class gallery</button></div></div>
         <nav aria-label="Avatar sections" className={styles.nav}>{SECTIONS.map(({ id, name, icon: Icon }) => <button type="button" key={id} disabled={busy} aria-pressed={section === id} onClick={() => chooseSection(id)}><Icon size={20} /><span>{name}</span></button>)}</nav>
         {error && <div role="alert" className={styles.error}>{error}{conflict && <button type="button" className={styles.textButton} disabled={busy} onClick={reload}>Discard draft & load saved avatar</button>}</div>}
-        <div className={styles.sectionHeading}><div><p className={styles.eyebrow}>{section === 'looks' ? 'THE LOOKBOOK' : section === 'gallery' ? 'YOUR CLASS' : 'YOUR STYLE, YOUR RULES'}</p><h2>{heading}</h2></div>{(section === 'face' || section === 'hair') && <span className={styles.freeBadge}>All free</span>}</div>
+        <div className={styles.sectionHeading}><div><p className={styles.eyebrow}>{section === 'looks' ? 'THE LOOKBOOK' : section === 'gallery' ? 'YOUR CLASS' : 'YOUR STYLE, YOUR RULES'}</p><h2>{heading}</h2></div>{(section === 'face' || section === 'hair' || isWardrobe) && <span className={styles.freeBadge}>All free</span>}</div>
         {section === 'gallery' ? <AvatarGallery /> : <fieldset disabled={busy} className={styles.workspace}>
           {section === 'face' && <>
             <div className={styles.pills} role="group" aria-label="Face groups">{FACE_GROUPS.map((group, index) => <button key={group.name} type="button" aria-pressed={faceGroup === index} onClick={() => setFaceGroup(index)}>{group.name}</button>)}</div>
@@ -173,7 +173,7 @@ function AvatarEditor({ initial }: { initial: AvatarBundle }) {
             <div className={styles.wardrobeTools}><label><span className={styles.srOnly}>Search {SLOT_LABELS[slot].toLowerCase()}</span><input type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder={`Find ${SLOT_LABELS[slot].toLowerCase()}…`} /></label><div className={styles.pills} role="group" aria-label="Wardrobe filter">{([['all', 'All'], ['owned', 'Mine'], ['available', 'Get now']] as const).map(([value, label]) => <button type="button" key={value} aria-pressed={filter === value} onClick={() => setFilter(value)}>{label}</button>)}</div></div>
             {section === 'outfit' && <details className={styles.disclosure}><summary>Free essentials · shirts & colors</summary>{draft.equipped.body && <p className={styles.notice}>Your outfit covers your base shirt. <button type="button" onClick={() => remove('body')}>Wear my base shirt</button></p>}<TraitPicker trait="shirt_style" traits={draft.traits} onChange={value => edit('shirt_style', value)} /><TraitPicker trait="shirt_color" traits={draft.traits} onChange={value => edit('shirt_color', value)} /></details>}
             {slot === 'facial_hair' && <TraitPicker trait="facial_hair_color" traits={draft.traits} onChange={value => edit('facial_hair_color', value)} />}
-            {selectedItem && <ItemDetail item={selectedItem} wearing={draft.equipped[selectedItem.slot] === selectedItem.slug} trying={!!tryOn} balance={bundle.balance} onEquip={() => { changeDraft(draft => ({ ...draft, equipped: { ...draft.equipped, [selectedItem.slot]: selectedItem.slug } })); setTryOnSlug(null) }} onBuy={() => buy(selectedItem)} onClose={() => setTryOnSlug(null)} onRemove={() => remove(selectedItem.slot)} />}
+            {selectedItem && <ItemDetail item={selectedItem} wearing={draft.equipped[selectedItem.slot] === selectedItem.slug} trying={!!tryOn} onEquip={() => { changeDraft(draft => ({ ...draft, equipped: { ...draft.equipped, [selectedItem.slot]: selectedItem.slug } })); setTryOnSlug(null) }} onClaim={() => claim(selectedItem)} onClose={() => setTryOnSlug(null)} onRemove={() => remove(selectedItem.slot)} />}
             <div className={styles.results}><span>{wardrobeItems.length} {wardrobeItems.length === 1 ? 'find' : 'finds'}</span><span>Tap a tile to try it on</span></div>
             {wardrobeItems.length ? <div className={styles.itemGrid} data-scenes={section === 'scene'}>{wardrobeItems.map(item => <ItemTile key={item.slug} item={item} traits={draft.traits} equipped={draft.equipped} items={bundle.catalog} selected={selectedItem?.slug === item.slug} wearing={draft.equipped[slot] === item.slug} onTry={() => { setTryOnSlug(item.slug); setMessage('') }} />)}</div> : <div className={styles.empty}><p>No matches in this part of your wardrobe.</p><button type="button" className={styles.textButton} onClick={() => { setQuery(''); setFilter('all'); setCollection('all') }}>Show all {SLOT_LABELS[slot].toLowerCase()}</button></div>}
             <StyleBrief index={brief} onNext={() => setBrief(index => (index + 1) % STYLE_BRIEFS.length)} onBrowse={() => { chooseSection('outfit'); setCollection(STYLE_BRIEFS[brief].collection) }} />

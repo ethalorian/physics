@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -8,11 +8,10 @@ import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, ClipboardCheck, Layers3,
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
-import type { ReadingList } from '@/lib/textbook-assignments'
-import type { QuizList } from '@/lib/quizzes/types'
-import { nextSyllabusStep, SYLLABUS_UNITS, type SyllabusCatalog } from '@/lib/reading-syllabus'
+import { nextSyllabusStep, SYLLABUS_UNITS } from '@/lib/reading-syllabus'
 import { readingDashboardGroups, readingDashboardHref, readingResourceStatus, type ReadingDashboardGroup, type ReadingDashboardResource, type ReadingDashboardView } from '@/lib/reading-dashboard'
-import { dueLabel, readingFetch } from './ReadingShared'
+import { dueLabel } from './ReadingShared'
+import { useReadingDashboardData, type ReadingDashboardSource as Source } from './useReadingDashboardData'
 import ReadingAssignmentManager from './ReadingAssignmentManager'
 import styles from './ReadingDashboard.module.css'
 
@@ -26,52 +25,28 @@ const views = [
   ['overview', 'Overview', Layers3], ['syllabus', 'Syllabus & sequence', ListTree], ['map', 'Mind map', GitBranch],
   ['assignments', 'Assignments', BookOpen], ['review', 'Review queue', ClipboardCheck], ['textbooks', 'Textbooks', BookOpen],
 ] as const
-type DashboardSyllabus = SyllabusCatalog & { staff?: boolean }
-type Source = 'syllabus' | 'readings' | 'quizzes'
 const resourceDue = (resource: ReadingDashboardResource) => resource.due_at ?? (resource.due_on ? `${resource.due_on}T23:59:59` : null)
 const resourceDueLabel = (resource: ReadingDashboardResource) => resource.due_on ? `Due ${new Date(`${resource.due_on}T12:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}` : dueLabel(resource.due_at ?? null)
-const sourceLabels: Record<Source, string> = { syllabus: 'Syllabus', readings: 'Readings', quizzes: 'Quiz review counts' }
+const sourceLabels: Record<Source, string> = { syllabus: 'Syllabus', readings: 'Readings', quizzes: 'Quiz review counts', readingCounts: 'Reading review counts' }
 
 export default function ReadingDashboard({ initialView = 'assignments' }: { initialView?: ReadingDashboardView }) {
   const params = useSearchParams(), router = useRouter(), query = params.toString()
   const requestedView = params.get('view')
   const view: ReadingDashboardView = views.some(([id]) => id === requestedView) ? requestedView as ReadingDashboardView : initialView
-  const [syllabus, setSyllabus] = useState<DashboardSyllabus | null>(null)
-  const [readings, setReadings] = useState<ReadingList | null>(null)
-  const [quizzes, setQuizzes] = useState<QuizList | null>(null)
-  const [errors, setErrors] = useState<Partial<Record<Source, string>>>({})
-  const [loading, setLoading] = useState(true), [revision, setRevision] = useState(0), [updated, setUpdated] = useState<Date | null>(null)
-  const [assignmentFilter, setAssignmentFilter] = useState<'published' | 'draft' | 'archived' | 'all'>('published')
-  const refresh = useCallback(() => setRevision(value => value + 1), [])
-  useEffect(() => {
-    const controller = new AbortController()
-    setLoading(true)
-    const fetchSource = async <T,>(source: Source, url: string, save: (data: T | null) => void) => {
-      try {
-        const data = await readingFetch<T>(url, { signal: controller.signal })
-        if (!controller.signal.aborted) { save(data); setErrors(current => ({ ...current, [source]: undefined })) }
-      } catch (error) {
-        if (!controller.signal.aborted) { save(null); setErrors(current => ({ ...current, [source]: (error as Error).message })) }
-      }
-    }
-    void Promise.all([
-      fetchSource('syllabus', '/api/reading-syllabus', setSyllabus),
-      fetchSource('readings', '/api/readings', setReadings),
-      fetchSource('quizzes', '/api/quizzes', setQuizzes),
-    ]).then(() => { if (!controller.signal.aborted) { setLoading(false); setUpdated(new Date()) } })
-    return () => controller.abort()
-  }, [query, revision])
-  useEffect(() => {
-    const focus = () => refresh()
-    window.addEventListener('focus', focus)
-    return () => window.removeEventListener('focus', focus)
-  }, [refresh])
-
-  const courses = [...new Map([...(readings?.courses ?? []), ...(syllabus?.courses ?? [])].map(course => [course.id, course])).values()]
-  const groups = readingDashboardGroups(syllabus, readings, quizzes)
   const resourceKind = params.get('resource'), resourceId = params.get('task_id') ?? params.get('id')
   const creating = !resourceId && !params.get('lesson_id') && (params.get('create') === '1' || params.has('ch'))
   const detail = !!resourceId || params.get('create') === '1' || !!params.get('lesson_id') || !!params.get('ch')
+  const calendarView = view === 'syllabus' && !detail && !params.has('step_id') && params.get('details') !== '1'
+  const { syllabus, readings, quizzes, errors, loading: dashboardLoading, calendarLoading, updated: dashboardUpdated, calendarUpdated, refresh, onCalendarReady } = useReadingDashboardData(calendarView, params.get('course_id'))
+  useEffect(() => {
+    if (calendarView) void import('./ReadingPlanner').catch(() => { /* The normal component loader handles a failed load. */ })
+  }, [calendarView])
+  const loading = calendarView ? calendarLoading : dashboardLoading
+  const updated = calendarView ? calendarUpdated : dashboardUpdated
+  const [assignmentFilter, setAssignmentFilter] = useState<'published' | 'draft' | 'archived' | 'all'>('published')
+
+  const courses = [...new Map([...(readings?.courses ?? []), ...(syllabus?.courses ?? [])].map(course => [course.id, course])).values()]
+  const groups = readingDashboardGroups(syllabus, readings, quizzes)
   const currentGroup = groups.find(group => group.resources.some(resource => resource.id === resourceId))
   const courseId = currentGroup?.courseId ?? params.get('course_id') ?? (view === 'syllabus' || creating ? syllabus?.courses[0]?.id ?? '' : '')
   const scoped = groups.filter(group => !courseId || group.courseId === courseId)
@@ -115,9 +90,9 @@ export default function ReadingDashboard({ initialView = 'assignments' }: { init
       <Button asChild variant="ghost" className="self-start"><Link href={backHref}><ArrowLeft size={17} />Back to assignments</Link></Button>
       {currentGroup && <div className={styles.connection}><div className={styles.row}><div><p className="text-overline text-primary">{currentGroup.step ? `Connected sequence · ${className(currentGroup.courseId)}` : className(currentGroup.courseId)}</p><h2 className="text-title-2 mt-1">{currentGroup.title}</h2></div>{currentGroup.step && <div className={styles.actions}>{!currentGroup.step.sourceBook && <Button asChild variant="outline"><Link href={href('map', { courseId: currentGroup.courseId, stepId: currentGroup.step.id })}>View connections</Link></Button>}<Button asChild variant="outline"><Link href={href('syllabus', { courseId: currentGroup.courseId, stepId: currentGroup.step.id })}>View syllabus step</Link></Button></div>}</div>{resourceCards(currentGroup, true)}</div>}
       {creating ? syllabus && <ReadingSyllabus key={courseId} embedded creating courseId={courseId} onChanged={refresh} /> : resourceKind === 'practice' && resourceId ? syllabus?.readOnly ? <p>Return to your own account to manage vocabulary practice.</p> : <VocabularyTask key={resourceId} focusedTaskId={resourceId} /> : (resourceKind === 'readingQuiz' || resourceKind === 'vocabularyQuiz') && resourceId ? <QuizTeacher key={resourceId} classId={courseId} dashboardHref={(id, destination) => id ? readingDashboardHref({ view: 'assignments', courseId: destination || courseId, resource: resourceKind, id }) : backHref} /> : <TeacherReadings onChanged={refresh} key={resourceId ?? query} classId={courseId} dashboardHref={id => id ? href('assignments', { resource: 'reading', id }) : backHref} />}
-    </section> : view === 'map' ? syllabus && <ReadingMindMap key={courseId} syllabus={syllabus} groups={groups} courseId={courseId} /> : view === 'syllabus' ? <section aria-label="Syllabus workspace">{syllabus && (courseId && syllabus.courses.some(c => c.id === courseId) ? params.has('step_id') || params.get('details') === '1' ? <div className={styles.section}><Button asChild variant="outline" className="self-start"><Link href={href('syllabus')}><CalendarDays size={17} />Back to reading calendar</Link></Button><ReadingSyllabus embedded courseId={courseId} onChanged={refresh} /></div> : readings && <ReadingPlanner key={courseId} courseId={courseId} syllabus={syllabus} readings={readings.assignments} readOnly={syllabus.readOnly} onChanged={refresh} /> : <Card className="p-6 gap-3"><h2 className="text-title-2">Choose a Physics class</h2><p className="text-muted-foreground">Each class has its own release schedule, with a shared foundation for CPA and Honors.</p>{syllabus.courses.map(item => <Button key={item.id} asChild variant="outline"><Link href={href('syllabus', { courseId: item.id })}>{className(item.id)}</Link></Button>)}{!syllabus.courses.length && <Link href="/admin/classes" className="underline">Connect a Physics class</Link>}</Card>)}</section> : view === 'assignments' ? <ReadingAssignmentManager key={courseId} courseId={courseId} groups={scoped} readings={readings?.assignments ?? []} className={className} readOnly={!!syllabus?.readOnly || !!quizzes?.readOnly} loading={loading} initialFilter={assignmentFilter} onFilterChange={setAssignmentFilter} onChanged={refresh} /> : view === 'review' ? <section className={styles.section} aria-label="Reading review queue"><div><h2 className="text-title-1">Ready for your review</h2><p className="text-muted-foreground">Submitted reading responses and connected quizzes, grouped by assignment.</p></div>{pending.map(({ group, resource }) => <Card key={resource.id} className={styles.queueItem}><div><p className="text-caption text-muted-foreground">{className(group.courseId)} · {resource.label}</p><h3 className="text-title-3">{group.title}</h3></div><div className={styles.actions}><span className={styles.reviewBadge}>{resource.pending} submitted</span><Button asChild><Link href={resourceHref(group, resource)}>Review {resource.label.toLowerCase()} <ArrowRight size={16} /></Link></Button></div></Card>)}{!pending.length && !errors.readings && !errors.quizzes && !errors.syllabus && <Card className="p-6 gap-2"><h3 className="text-title-3">No submissions waiting for review</h3><p className="text-muted-foreground">New reading and quiz submissions will appear here. Open vocabulary practice from Assignments to inspect word progress.</p></Card>}</section> : view === 'textbooks' ? <section className={styles.section}><div><h2 className="text-title-1">Course textbooks</h2><p className="text-muted-foreground">Both readers connect back to this dashboard and the same teaching sequence.</p></div><div className={styles.twoColumns}>{[
+    </section> : view === 'map' ? syllabus && <ReadingMindMap key={courseId} syllabus={syllabus} groups={groups} courseId={courseId} /> : view === 'syllabus' ? <section aria-label="Syllabus workspace">{syllabus && (courseId && syllabus.courses.some(c => c.id === courseId) ? params.has('step_id') || params.get('details') === '1' ? <div className={styles.section}><Button asChild variant="outline" className="self-start"><Link href={href('syllabus')}><CalendarDays size={17} />Back to reading calendar</Link></Button><ReadingSyllabus embedded courseId={courseId} onChanged={refresh} /></div> : readings && <ReadingPlanner key={courseId} courseId={courseId} syllabus={syllabus} readings={readings.assignments} readOnly={syllabus.readOnly} onChanged={refresh} onReady={onCalendarReady} /> : <Card className="p-6 gap-3"><h2 className="text-title-2">Choose a Physics class</h2><p className="text-muted-foreground">Each class has its own release schedule, with a shared foundation for CPA and Honors.</p>{syllabus.courses.map(item => <Button key={item.id} asChild variant="outline"><Link href={href('syllabus', { courseId: item.id })}>{className(item.id)}</Link></Button>)}{!syllabus.courses.length && <Link href="/admin/classes" className="underline">Connect a Physics class</Link>}</Card>)}</section> : view === 'assignments' ? <ReadingAssignmentManager key={courseId} courseId={courseId} groups={scoped} readings={readings?.assignments ?? []} className={className} readOnly={!!syllabus?.readOnly || !!quizzes?.readOnly} loading={loading} initialFilter={assignmentFilter} onFilterChange={setAssignmentFilter} onChanged={refresh} /> : view === 'review' ? <section className={styles.section} aria-label="Reading review queue"><div><h2 className="text-title-1">Ready for your review</h2><p className="text-muted-foreground">Submitted reading responses and connected quizzes, grouped by assignment.</p></div>{pending.map(({ group, resource }) => <Card key={resource.id} className={styles.queueItem}><div><p className="text-caption text-muted-foreground">{className(group.courseId)} · {resource.label}</p><h3 className="text-title-3">{group.title}</h3></div><div className={styles.actions}><span className={styles.reviewBadge}>{resource.pending} submitted</span><Button asChild><Link href={resourceHref(group, resource)}>Review {resource.label.toLowerCase()} <ArrowRight size={16} /></Link></Button></div></Card>)}{!pending.length && !errors.readings && !errors.quizzes && !errors.syllabus && <Card className="p-6 gap-2"><h3 className="text-title-3">No submissions waiting for review</h3><p className="text-muted-foreground">New reading and quiz submissions will appear here. Open vocabulary practice from Assignments to inspect word progress.</p></Card>}</section> : view === 'textbooks' ? <section className={styles.section}><div><h2 className="text-title-1">Course textbooks</h2><p className="text-muted-foreground">Both readers connect back to this dashboard and the same teaching sequence.</p></div><div className={styles.twoColumns}>{[
       { title: 'Conceptual Physics', author: 'Hewitt', label: 'Shared foundation & CPA', description: 'Concepts, examples, and chapter readings for building physical intuition.', url: '/textbook/interactive/hewitt/2', book: 'hewitt' as const, pdf: '/textbook' },
-      { title: 'College Physics for AP® Courses 2e', author: 'OpenStax', label: 'Honors', description: 'A comprehensive text with mathematical models, worked examples, and AP extensions.', url: '/textbook/interactive/openstax/1', book: 'openstax' as const, pdf: '/textbook/honors' },
+      { title: 'College Physics for AP® Courses 2e', author: 'OpenStax', label: 'Honors', description: "A comprehensive text with mathematical explanations, worked examples, and AP extensions.", url: '/textbook/interactive/openstax/1', book: 'openstax' as const, pdf: '/textbook/honors' },
     ].map(book => <Card key={book.url} className={styles.book}><BookOpen size={32} className="text-primary" aria-hidden="true" /><p className="text-overline text-primary">{book.label}</p><h3 className="text-title-1">{book.title}</h3><p className="font-semibold">{book.author}</p><p className="text-muted-foreground">{book.description}</p><Button asChild><Link href={book.url} target="_blank">Open interactive textbook <ArrowRight size={16} /></Link></Button><Button asChild variant="outline"><Link href={href('assignments', { resource: 'reading', create: true, book: book.book })}>Create connected reading</Link></Button><Link className="text-caption underline" href={book.pdf} target="_blank">Original textbook PDF & translations</Link></Card>)}</div><Button asChild variant="outline" className="self-start"><Link href={href('syllabus')}>See readings mapped to the syllabus</Link></Button></section> : <>
       <div className={styles.metrics}>{[
         { label: 'Readings assigned', value: readings ? assigned : '—', description: 'Currently published', destination: 'assignments' as const },

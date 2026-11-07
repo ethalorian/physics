@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/supabase'
+import { studentCourses, studentMemberships } from '@/lib/student-context'
 
 // Enrollment gate helpers. A student is "enrolled" if at least one row in
 // course_students links the student (by students.id) to a course. Unenrolled
@@ -16,14 +16,11 @@ export interface EnrollmentInfo {
  * care about role — callers must decide whether to apply the gate (staff bypass).
  */
 export async function getEnrollment(userId: string): Promise<EnrollmentInfo> {
-  // The user id is already students.id; course_students.student_id == students.id,
-  // so we can count enrollments directly.
+  // The user id is students.id. Share these rows with track/program/window
+  // lookups, preserving the original count of all linked enrollments.
   if (!userId) return { enrolled: false, courseCount: 0, studentRowId: null }
-  const { count } = await supabaseAdmin
-    .from('course_students')
-    .select('id', { count: 'exact', head: true })
-    .eq('student_id', userId)
-  const courseCount = count ?? 0
+  // Preserve the existing fail-closed enrollment gate on database errors.
+  const courseCount = await studentMemberships(userId).then(rows => rows.length, () => 0)
   return { enrolled: courseCount > 0, courseCount, studentRowId: userId }
 }
 
@@ -35,13 +32,7 @@ export async function getEnrollment(userId: string): Promise<EnrollmentInfo> {
  */
 export async function getStudentTrack(userId: string): Promise<string | null> {
   if (!userId) return null
-  const { data, error } = await supabaseAdmin
-    .from('course_students')
-    .select('courses ( track )')
-    .eq('student_id', userId)
-  if (error) throw error
-  const tracks = ((data ?? []) as Array<{ courses: { track: string | null } | { track: string | null }[] | null }>)
-    .flatMap((r) => (Array.isArray(r.courses) ? r.courses : r.courses ? [r.courses] : []))
+  const tracks = (await studentCourses(userId))
     .map((c) => c.track)
     .filter((t): t is string => !!t)
   if (tracks.includes('honors')) return 'honors'

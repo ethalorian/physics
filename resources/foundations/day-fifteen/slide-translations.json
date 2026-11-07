@@ -1,0 +1,642 @@
+{
+  ". Weight by Earth downward:": [
+    ". Peso por la atracción de la Tierra, hacia abajo:",
+    ". Peso devido à Terra, para baixo:"
+  ],
+  "1. Weight down, normal up, kinetic friction right.": [
+    "1. Peso hacia abajo, normal hacia arriba, fricción cinética a la derecha.",
+    "1. Peso para baixo, normal para cima, atrito cinético para a direita."
+  ],
+  "2. Weight only, down.": [
+    "2. Solo el peso, hacia abajo.",
+    "2. Só o peso, para baixo."
+  ],
+  "3. Weight vertically down, normal perpendicular out, static friction up the incline in this case.": [
+    "3. Peso vertical hacia abajo, normal perpendicular hacia fuera y fricción estática cuesta arriba en este caso.",
+    "3. Peso vertical para baixo, normal perpendicular para fora e atrito estático para cima da rampa neste caso."
+  ],
+  "A 2 kg lamp hangs motionless from one vertical rope. Draw and label its free-body diagram. Add force magnitudes.": [
+    "Una lámpara de 2 kg cuelga inmóvil de una cuerda vertical. Dibuja y rotula su diagrama de cuerpo libre. Añade las magnitudes.",
+    "Uma lâmpada de 2 kg pende imóvel de uma corda vertical. Desenhe e identifique as forças no diagrama de corpo livre. Inclua os módulos."
+  ],
+  "A ball falls downward with air resistance upward. Its speed is increasing. Draw the force directions and compare their lengths.": [
+    "Una pelota cae con resistencia del aire hacia arriba. Su rapidez aumenta. Dibuja los sentidos de las fuerzas y compara sus longitudes.",
+    "Uma bola cai com resistência do ar para cima. Sua rapidez aumenta. Desenhe os sentidos das forças e compare os comprimentos."
+  ],
+  "A ball moves upward after leaving a hand, with air resistance ignored.": [
+    "Una pelota sube después de dejar la mano. Se desprecia la resistencia del aire.",
+    "Uma bola sobe depois de deixar a mão. Despreze a resistência do ar."
+  ],
+  "A ball thrown up — at the very peak": [
+    "Una pelota lanzada hacia arriba, justo en lo alto",
+    "Uma bola lançada para cima, bem no ponto mais alto"
+  ],
+  "A block remains at rest on a rough incline.": [
+    "Un bloque sigue en reposo en una pendiente rugosa.",
+    "Um bloco continua em repouso numa rampa áspera."
+  ],
+  "A book is at rest. Only Earth and the table exert forces.": [
+    "Un libro está en reposo. Solo la Tierra y la mesa ejercen fuerzas sobre él.",
+    "Um livro está em repouso. Só a Terra e a mesa exercem forças nele."
+  ],
+  "A book resting on a table": [
+    "Un libro en reposo sobre una mesa",
+    "Um livro em repouso sobre uma mesa"
+  ],
+  "A box pushed horizontally on a rough floor": [
+    "Una caja empujada horizontalmente sobre un piso rugoso",
+    "Uma caixa empurrada horizontalmente num chão áspero"
+  ],
+  "A box slides left across a rough horizontal floor after release.": [
+    "Una caja se desliza a la izquierda sobre un piso horizontal rugoso después de soltarla.",
+    "Uma caixa desliza para a esquerda num chão horizontal áspero depois de ser solta."
+  ],
+  "A box slides right across a rough level floor while a horizontal rope pulls it.": [
+    "Una caja se desliza a la derecha sobre un piso horizontal rugoso mientras una cuerda horizontal tira de ella.",
+    "Uma caixa desliza para a direita num chão horizontal áspero enquanto uma corda horizontal a puxa."
+  ],
+  "A box slides right after the hand lets go.": [
+    "Una caja se desliza a la derecha después de que la mano la suelta.",
+    "Uma caixa desliza para a direita depois que a mão a solta."
+  ],
+  "A box’s diagram includes weight, normal, friction, a “velocity force,” and an extra net-force arrow. What should change?": [
+    "Un diagrama de una caja incluye peso, normal, fricción, una “fuerza de velocidad” y una flecha extra de fuerza neta. ¿Qué debe cambiar?",
+    "O diagrama de uma caixa inclui peso, normal, atrito, uma “força de velocidade” e uma seta extra para a força resultante. O que deve mudar?"
+  ],
+  "A car going around a curve": [
+    "Un auto que toma una curva",
+    "Um carro fazendo uma curva"
+  ],
+  "A cart is pushed up a ramp, then rolls back down. Up the ramp is +.": [
+    "Empujan un carrito cuesta arriba y luego rueda cuesta abajo. Cuesta arriba es +.",
+    "Um carrinho é empurrado rampa acima e depois rola de volta. Rampa acima é +."
+  ],
+  "A cart rolls right on a level track. Ignore friction and air resistance.": [
+    "Un carrito rueda a la derecha en una vía plana. Ignora la fricción y la resistencia del aire.",
+    "Um carrinho rola para a direita numa pista plana. Ignore o atrito e a resistência do ar."
+  ],
+  "A component diagram may use dashed guides. Do not count the original force and both components in the same sum.": [
+    "Puedes usar líneas discontinuas para las componentes. No sumes la fuerza original y sus dos componentes en la misma cuenta.",
+    "Use linhas tracejadas para indicar as componentes. Não some a força original e suas duas componentes na mesma conta."
+  ],
+  "A diagram is a force inventory": [
+    "Un diagrama enumera las fuerzas",
+    "Um diagrama lista as forças"
+  ],
+  "A free-body diagram simplifies this scene.": [
+    "Un diagrama de cuerpo libre simplifica esta escena.",
+    "Um diagrama de corpo livre simplifica esta cena."
+  ],
+  "A lamp hangs at rest from one vertical rope.": [
+    "Una lámpara cuelga en reposo de una cuerda vertical.",
+    "Uma lâmpada pende em repouso de uma corda vertical."
+  ],
+  "A person walking forward": [
+    "Una persona que camina hacia delante",
+    "Uma pessoa andando para a frente"
+  ],
+  "A repeatable drawing routine": [
+    "Pasos para dibujar el diagrama",
+    "Passos para desenhar o diagrama"
+  ],
+  "Add an applied force in the impact direction.": [
+    "Añade una fuerza aplicada en el sentido del impacto.",
+    "Acrescente uma força aplicada no sentido do impacto."
+  ],
+  "An asteroid’s force inventory": [
+    "Lista de fuerzas sobre un asteroide",
+    "Lista de forças em um asteroide"
+  ],
+  "Arrow length ∝ force magnitude.": [
+    "Longitud de la flecha ∝ magnitud de la fuerza.",
+    "Comprimento da seta ∝ módulo da força."
+  ],
+  "Arrows point in the force's direction.": [
+    "Las flechas apuntan en el sentido de la fuerza.",
+    "As setas apontam no sentido da força."
+  ],
+  "At rest with only these two forces, the arrows have equal length.": [
+    "En reposo con solo estas dos fuerzas, las flechas tienen la misma longitud.",
+    "Em repouso com só essas duas forças, as setas têm o mesmo comprimento."
+  ],
+  "Can you name a source for every arrow?": [
+    "¿Puedes nombrar una fuente para cada flecha?",
+    "Você consegue indicar uma origem para cada seta?"
+  ],
+  "Check that friction has an actual surface source and the direction matches relative slipping or its tendency.": [
+    "Comprueba qué superficie ejerce la fricción y si su sentido se opone al deslizamiento o a su tendencia.",
+    "Confira que superfície exerce o atrito e se seu sentido se opõe ao deslizamento ou à tendência de deslizamento."
+  ],
+  "Check your drawing": [
+    "Revisa tu dibujo",
+    "Confira seu desenho"
+  ],
+  "Choose": [
+    "Elige",
+    "Escolha"
+  ],
+  "Choose the crate.": [
+    "Elige la caja.",
+    "Escolha a caixa."
+  ],
+  "Choose the phone as the object. List the external forces on it while it rests on a horizontal desk.": [
+    "Elige el teléfono. Enumera las fuerzas externas sobre él cuando reposa sobre un escritorio horizontal.",
+    "Escolha o telefone. Liste as forças externas nele enquanto repousa numa mesa horizontal."
+  ],
+  "Components do not create extra interactions": [
+    "Las componentes no crean interacciones nuevas",
+    "As componentes não criam novas interações"
+  ],
+  "Critiquing an incorrect diagram": [
+    "Revisa un diagrama incorrecto",
+    "Avalie um diagrama incorreto"
+  ],
+  "Day 15 · Free Body Diagrams 1": [
+    "Día 15 · Diagramas de cuerpo libre 1",
+    "Dia 15 · Diagramas de corpo livre 1"
+  ],
+  "Day 15 · Phase 2 — Building the tools": [
+    "Día 15 · Fase 2 — Construimos herramientas",
+    "Dia 15 · Fase 2 — Construindo as ferramentas"
+  ],
+  "Did you choose one receiver?": [
+    "¿Elegiste un solo objeto que recibe las fuerzas?",
+    "Você escolheu um só objeto que recebe as forças?"
+  ],
+  "Did you leave velocity off the force diagram?": [
+    "¿Dejaste la velocidad fuera del diagrama de fuerzas?",
+    "Você deixou a velocidade fora do diagrama de forças?"
+  ],
+  "Directions": [
+    "Sentidos",
+    "Sentidos"
+  ],
+  "Draw a complete FBD — every force, arrows sized to strength.": [
+    "Dibuja un diagrama de cuerpo libre completo: cada fuerza con una flecha del tamaño adecuado.",
+    "Desenhe um diagrama de corpo livre completo: cada força com uma seta do tamanho adequado."
+  ],
+  "Draw a hanging object": [
+    "Dibuja un objeto colgante",
+    "Desenhe um objeto suspenso"
+  ],
+  "Draw an FBD for a box being PULLED across a floor by a rope, with friction resisting motion.": [
+    "Dibuja un diagrama de una caja ARRASTRADA por una cuerda sobre el piso, con fricción opuesta al movimiento.",
+    "Desenhe um diagrama de uma caixa PUXADA por uma corda no chão, com atrito contrário ao movimento."
+  ],
+  "Draw and label its forces.": [
+    "Dibuja y nombra sus fuerzas.",
+    "Desenhe e nomeie suas forças."
+  ],
+  "Draw just the object — or a dot.": [
+    "Dibuja solo el objeto o un punto.",
+    "Desenhe só o objeto ou um ponto."
+  ],
+  "Draw one arrow for each actual external force, starting at the object.": [
+    "Dibuja una flecha por cada fuerza externa real, comenzando en el objeto.",
+    "Desenhe uma seta para cada força externa real, começando no objeto."
+  ],
+  "Draw the FBD": [
+    "Dibuja el diagrama de cuerpo libre",
+    "Desenhe o diagrama de corpo livre"
+  ],
+  "Earth on phone: weight down. Desk on phone: normal up. For rest with no other vertical forces, the magnitudes match.": [
+    "Tierra sobre teléfono: peso hacia abajo. Escritorio sobre teléfono: normal hacia arriba. En reposo y sin otras fuerzas verticales, sus magnitudes coinciden.",
+    "Terra sobre telefone: peso para baixo. Mesa sobre telefone: normal para cima. Em repouso e sem outras forças verticais, os módulos são iguais."
+  ],
+  "Earth.": [
+    "Tierra.",
+    "Terra."
+  ],
+  "Every arrow needs a source.": [
+    "Cada flecha necesita una fuente.",
+    "Cada seta precisa de uma origem."
+  ],
+  "FBD for 2026-XJ as it approaches": [
+    "Diagrama de 2026-XJ al acercarse",
+    "Diagrama de 2026-XJ ao se aproximar"
+  ],
+  "FBD rules": [
+    "Reglas del diagrama de cuerpo libre",
+    "Regras do diagrama de corpo livre"
+  ],
+  "Find the rope, table, and Earth as sources of forces.": [
+    "Identifica la cuerda, la mesa y la Tierra como fuentes de fuerzas.",
+    "Identifique a corda, a mesa e a Terra como origens das forças."
+  ],
+  "For a ramp, weight still points vertically downward before decomposition.": [
+    "En una rampa, el peso sigue apuntando verticalmente hacia abajo antes de descomponerlo.",
+    "Numa rampa, o peso continua apontando verticalmente para baixo antes da decomposição."
+  ],
+  "Forces on the lamp": [
+    "Fuerzas sobre la lámpara",
+    "Forças na lâmpada"
+  ],
+  "Forces on the lamp. Tension 20 N; Weight 20 N. Two forces on one lamp.": [
+    "Fuerzas sobre la lámpara. Tensión 20 N; peso 20 N. Dos fuerzas en una lámpara.",
+    "Forças na lâmpada. Tensão 20 N; peso 20 N. Duas forças numa lâmpada."
+  ],
+  "Forward motion is a state, not an interaction. No surface contact means no normal force or ordinary surface friction.": [
+    "Avanzar describe el movimiento. Sin contacto con una superficie no hay normal ni fricción de superficie.",
+    "Avançar descreve o movimento. Sem contato com uma superfície não há normal nem atrito de superfície."
+  ],
+  "Free Body Diagrams, Part 1": [
+    "Diagramas de cuerpo libre, parte 1",
+    "Diagramas de corpo livre, parte 1"
+  ],
+  "Friction is left. The hand is no longer a force source.": [
+    "La fricción va a la izquierda. La mano ya no ejerce fuerza sobre la caja.",
+    "O atrito aponta para a esquerda. A mão já não exerce força na caixa."
+  ],
+  "From forces to acceleration": [
+    "De las fuerzas a la aceleración",
+    "Das forças à aceleração"
+  ],
+  "Gravitational forces from the Sun, Earth, and other bodies may act. Their relevance depends on the chosen approximation.": [
+    "Pueden actuar las fuerzas gravitatorias del Sol, la Tierra y otros cuerpos. Su importancia depende de la aproximación elegida.",
+    "As forças gravitacionais do Sol, da Terra e de outros corpos podem atuar. Sua importância depende da aproximação escolhida."
+  ],
+  "Guided diagram: a falling ball": [
+    "Diagrama guiado: pelota que cae",
+    "Diagrama guiado: bola em queda"
+  ],
+  "Guided diagram: hanging lamp": [
+    "Diagrama guiado: lámpara colgante",
+    "Diagrama guiado: lâmpada suspensa"
+  ],
+  "Horizontal arrow sizes depend on the supplied force values or acceleration.": [
+    "Las longitudes de las flechas horizontales dependen de las fuerzas dadas o de la aceleración.",
+    "Os comprimentos das setas horizontais dependem das forças dadas ou da aceleração."
+  ],
+  "I do · a simple diagram": [
+    "Te muestro un diagrama sencillo",
+    "Vou mostrar um diagrama simples"
+  ],
+  "I do · organize": [
+    "Te muestro cómo organizar",
+    "Vou mostrar como organizar"
+  ],
+  "I do · remove an ended interaction": [
+    "Te muestro cómo quitar una interacción que terminó",
+    "Vou mostrar como retirar uma interação que terminou"
+  ],
+  "If we hit it": [
+    "Si lo golpeamos",
+    "Se o atingirmos"
+  ],
+  "Illustrative sizes for an accelerating box; the four directions are the key.": [
+    "Magnitudes de ejemplo para una caja que acelera. Observa los cuatro sentidos.",
+    "Módulos de exemplo para uma caixa que acelera. Observe os quatro sentidos."
+  ],
+  "Independent diagram set": [
+    "Diagramas para practicar por tu cuenta",
+    "Diagramas para praticar por conta própria"
+  ],
+  "Keep arrows for forces acting on the crate.": [
+    "Conserva las flechas de las fuerzas que actúan sobre la caja.",
+    "Mantenha as setas das forças que atuam na caixa."
+  ],
+  "Keep the interactions, remove the scenery": [
+    "Conserva las interacciones y quita el entorno",
+    "Mantenha as interações e retire o cenário"
+  ],
+  "Label each arrow: F_gravity, F_normal, F_friction…": [
+    "Nombra cada flecha: F_gravedad, F_normal, F_fricción…",
+    "Identifique cada seta: F_gravidade, F_normal, F_atrito…"
+  ],
+  "Label the force type and agent. Choose axes.": [
+    "Nombra el tipo de fuerza y quién la ejerce. Elige los ejes.",
+    "Identifique o tipo de força e quem a exerce. Escolha os eixos."
+  ],
+  "Labeled arrows from the object.": [
+    "Flechas con etiquetas desde el objeto.",
+    "Setas identificadas saindo do objeto."
+  ],
+  "Labels": [
+    "Etiquetas",
+    "Rótulos"
+  ],
+  "Lengths": [
+    "Longitudes",
+    "Comprimentos"
+  ],
+  "List": [
+    "Enumera",
+    "Liste"
+  ],
+  "List the sources first": [
+    "Enumera primero las fuentes",
+    "Liste primeiro as origens"
+  ],
+  "Model an asteroid away from surfaces with no active engine. Name plausible external interactions. Is “forward motion” an interaction?": [
+    "Modela un asteroide lejos de superficies y sin motor activo. Nombra interacciones externas posibles. ¿Es “avanzar” una interacción?",
+    "Modele um asteroide longe de superfícies e sem motor ativo. Nomeie possíveis interações externas. “Avançar” é uma interação?"
+  ],
+  "Motion can point right while the net force points left.": [
+    "El movimiento puede ir a la derecha mientras la fuerza neta apunta a la izquierda.",
+    "O movimento pode ser para a direita enquanto a força resultante aponta para a esquerda."
+  ],
+  "Motion is not an interaction.": [
+    "El movimiento no es una interacción.",
+    "O movimento não é uma interação."
+  ],
+  "Name the object or system boundary.": [
+    "Nombra el objeto o el límite del sistema.",
+    "Nomeie o objeto ou o limite do sistema."
+  ],
+  "Now we draw them. To analyze any deflection scenario, we need free body diagrams.": [
+    "Ahora las dibujamos. Para analizar un desvío necesitamos diagramas de cuerpo libre.",
+    "Agora vamos desenhá-las. Para analisar um desvio precisamos de diagramas de corpo livre."
+  ],
+  "ONLY forces ON the object — not forces it exerts on others.": [
+    "SOLO fuerzas SOBRE el objeto. Deja fuera las que ejerce sobre otros.",
+    "SÓ forças NO objeto. Deixe de fora as que ele exerce em outros objetos."
+  ],
+  "Once you can draw the forces, you can apply F = ma.": [
+    "Cuando sabes dibujar las fuerzas, puedes aplicar F = ma.",
+    "Quando sabe desenhar as forças, você pode aplicar F = ma."
+  ],
+  "One arrow for EACH force on the object.": [
+    "Una flecha por CADA fuerza sobre el objeto.",
+    "Uma seta para CADA força no objeto."
+  ],
+  "One object under study": [
+    "Un objeto en estudio",
+    "Um objeto em estudo"
+  ],
+  "One object.": [
+    "Un objeto.",
+    "Um objeto."
+  ],
+  "Only Earth and track support are included in this model.": [
+    "Este modelo solo incluye la atracción terrestre y el apoyo de la vía.",
+    "Este modelo só inclui a atração da Terra e o apoio da pista."
+  ],
+  "Recall: up the ramp and back": [
+    "Repaso: subir la rampa y volver",
+    "Revisão: subir a rampa e voltar"
+  ],
+  "Remove the velocity force. Net force is the vector sum of the interaction arrows, so show it separately if needed.": [
+    "Quita la fuerza de velocidad. La fuerza neta es la suma vectorial de las flechas de interacción. Muéstrala aparte si hace falta.",
+    "Retire a força de velocidade. A força resultante é a soma vetorial das setas de interação. Mostre-a à parte se necessário."
+  ],
+  "Replace the crate with a dot.": [
+    "Representa la caja con un punto.",
+    "Represente a caixa com um ponto."
+  ],
+  "Represent it with a dot or simple body outline.": [
+    "Representa el objeto con un punto o un contorno sencillo.",
+    "Represente o objeto com um ponto ou um contorno simples."
+  ],
+  "Resting on a level table": [
+    "En reposo sobre una mesa horizontal",
+    "Em repouso sobre uma mesa horizontal"
+  ],
+  "Review before calculating": [
+    "Revisa antes de calcular",
+    "Confira antes de calcular"
+  ],
+  "Rope pull, friction, table support, and weight.": [
+    "Tirón de la cuerda, fricción, apoyo de la mesa y peso.",
+    "Tração da corda, atrito, apoio da mesa e peso."
+  ],
+  "Rope.": [
+    "Cuerda.",
+    "Corda."
+  ],
+  "Say the object’s name before drawing.": [
+    "Nombra el objeto antes de dibujar.",
+    "Nomeie o objeto antes de desenhar."
+  ],
+  "Should you add a rightward “motion force”?": [
+    "¿Debes añadir una “fuerza de movimiento” a la derecha?",
+    "Você deve acrescentar uma “força de movimento” para a direita?"
+  ],
+  "Six rules": [
+    "Seis reglas",
+    "Seis regras"
+  ],
+  "Sketch and label all four forces.": [
+    "Dibuja y nombra las cuatro fuerzas.",
+    "Desenhe e nomeie as quatro forças."
+  ],
+  "Sliding without a continuing push": [
+    "Deslizarse sin que continúe el empuje",
+    "Deslizar sem que o empurrão continue"
+  ],
+  "Source 1": [
+    "Fuente 1",
+    "Origem 1"
+  ],
+  "Source 2": [
+    "Fuente 2",
+    "Origem 2"
+  ],
+  "Start with the scene": [
+    "Empieza con la escena",
+    "Comece pela cena"
+  ],
+  "Still": [
+    "Aún",
+    "Ainda"
+  ],
+  "Sun's gravity": [
+    "Gravedad del Sol",
+    "Gravidade do Sol"
+  ],
+  "Target S5": [
+    "Meta S5",
+    "Meta S5"
+  ],
+  "Tension by rope upward:": [
+    "Tensión de la cuerda hacia arriba:",
+    "Tensão da corda para cima:"
+  ],
+  "The diagram contains two equal-length vertical arrows.": [
+    "El diagrama tiene dos flechas verticales de igual longitud.",
+    "O diagrama tem duas setas verticais de mesmo comprimento."
+  ],
+  "The line crosses zero at the top.": [
+    "La línea cruza cero en el punto más alto.",
+    "A reta cruza zero no ponto mais alto."
+  ],
+  "The phone on the desk": [
+    "El teléfono en el escritorio",
+    "O telefone na mesa"
+  ],
+  "The two arrows balance.": [
+    "Las dos flechas se equilibran.",
+    "As duas setas se equilibram."
+  ],
+  "The visual language of force.": [
+    "El lenguaje visual de la fuerza.",
+    "A linguagem visual da força."
+  ],
+  "Things interacting with it.": [
+    "Cosas que interactúan con él.",
+    "Coisas que interagem com ele."
+  ],
+  "Toward Earth — weaker.": [
+    "Hacia la Tierra, más débil.",
+    "Para a Terra, mais fraca."
+  ],
+  "Toward the Sun — dominant.": [
+    "Hacia el Sol, dominante.",
+    "Para o Sol, dominante."
+  ],
+  "Two forces on one lamp.": [
+    "Dos fuerzas en una lámpara.",
+    "Duas forças numa lâmpada."
+  ],
+  "Use Earth, floor, and rope as sources.": [
+    "Usa la Tierra, el piso y la cuerda como fuentes.",
+    "Use a Terra, o chão e a corda como origens."
+  ],
+  "Use given sizes; do not guess equality.": [
+    "Usa las magnitudes dadas. No supongas que son iguales.",
+    "Use os módulos dados. Não suponha que sejam iguais."
+  ],
+  "Use relative arrow lengths when magnitudes are known or constrained.": [
+    "Usa longitudes relativas cuando conozcas las magnitudes o haya condiciones que las determinen.",
+    "Use comprimentos relativos quando conhecer os módulos ou houver condições que os determinem."
+  ],
+  "Velocity vs. time. Velocity (m/s) versus Time (s). The line crosses zero at the top.": [
+    "Velocidad y tiempo. Velocidad (m/s) frente al tiempo (s). La línea cruza cero en el punto más alto.",
+    "Velocidade e tempo. Velocidade (m/s) em função do tempo (s). A reta cruza zero no ponto mais alto."
+  ],
+  "We've covered all three of Newton's laws.": [
+    "Ya estudiamos las tres leyes de Newton.",
+    "Já estudamos as três leis de Newton."
+  ],
+  "Weight and normal force balance; the cart can keep rolling.": [
+    "El peso y la normal se equilibran. El carrito puede seguir rodando.",
+    "O peso e a normal se equilibram. O carrinho pode continuar rolando."
+  ],
+  "Weight down. Tension up.": [
+    "Peso hacia abajo. Tensión hacia arriba.",
+    "Peso para baixo. Tensão para cima."
+  ],
+  "Weight down; normal up; tension right; friction left.": [
+    "Peso abajo, normal arriba, tensión a la derecha y fricción a la izquierda.",
+    "Peso para baixo, normal para cima, tensão para a direita e atrito para a esquerda."
+  ],
+  "Weight is down. Normal force is perpendicular to the level table: up.": [
+    "El peso va hacia abajo. La normal es perpendicular a la mesa horizontal: hacia arriba.",
+    "O peso aponta para baixo. A normal é perpendicular à mesa horizontal: para cima."
+  ],
+  "Weight points down and is larger than upward drag. The net force and acceleration point down, consistent with increasing downward speed.": [
+    "El peso apunta hacia abajo y supera la resistencia del aire hacia arriba. La fuerza neta y la aceleración apuntan hacia abajo, por lo que aumenta la rapidez al caer.",
+    "O peso aponta para baixo e supera a resistência do ar para cima. A força resultante e a aceleração apontam para baixo, por isso a rapidez aumenta na queda."
+  ],
+  "What belongs on the diagram?": [
+    "¿Qué debe aparecer en el diagrama?",
+    "O que entra no diagrama?"
+  ],
+  "What interaction?": [
+    "¿Qué interacción?",
+    "Qual interação?"
+  ],
+  "When is it at its highest point? What is its acceleration at that moment?": [
+    "¿Cuándo llega al punto más alto? ¿Qué aceleración tiene en ese instante?",
+    "Quando chega ao ponto mais alto? Qual é a aceleração nesse instante?"
+  ],
+  "When resolving a force, replace it with its components in the equations.": [
+    "Al descomponer una fuerza, usa sus componentes en las ecuaciones en lugar de la fuerza completa.",
+    "Ao decompor uma força, use suas componentes nas equações no lugar da força inteira."
+  ],
+  "Where v = 0: t = 3 ÷ 1 =": [
+    "Donde v = 0: t = 3 ÷ 1 =",
+    "Onde v = 0: t = 3 ÷ 1 ="
+  ],
+  "Which way on this object?": [
+    "¿En qué sentido sobre este objeto?",
+    "Em que sentido neste objeto?"
+  ],
+  "Whiteboard practice": [
+    "Práctica en la pizarra",
+    "Prática no quadro"
+  ],
+  "Why FBDs?": [
+    "¿Para qué sirven los diagramas de cuerpo libre?",
+    "Para que servem os diagramas de corpo livre?"
+  ],
+  "Your turn: a box pulled right": [
+    "Tu turno: caja arrastrada a la derecha",
+    "Sua vez: caixa puxada para a direita"
+  ],
+  "— acceleration isn't zero at the top.": [
+    "— la aceleración no es cero en lo alto.",
+    "— a aceleração não é zero no alto."
+  ],
+  "≈ 18 min": [
+    "≈ 18 min",
+    "≈ 18 min"
+  ],
+  "≈ 7 min": [
+    "≈ 7 min",
+    "≈ 7 min"
+  ],
+  "Read one object’s forces. Friction 3 N; Normal 10 N; Weight 10 N. Motion can point right while the net force points left.": [
+    "Lee las fuerzas sobre un objeto. Fricción 3 N; Normal 10 N; Peso 10 N. El movimiento puede ir a la derecha mientras la fuerza neta apunta a la izquierda.",
+    "Leia as forças em um objeto. Atrito 3 N; Normal 10 N; Peso 10 N. O movimento pode ser para a direita enquanto a força resultante aponta para a esquerda."
+  ],
+  "Read one object’s forces. Normal 10 N; Weight 10 N. Only Earth and track support are included in this model.": [
+    "Lee las fuerzas sobre un objeto. Normal 10 N; Peso 10 N. Este modelo solo incluye la atracción terrestre y el apoyo de la vía.",
+    "Leia as forças em um objeto. Normal 10 N; Peso 10 N. Este modelo só inclui a atração da Terra e o apoio da pista."
+  ],
+  "Read one object’s forces. Normal 10 N; Weight 10 N. Weight is down. Normal force is perpendicular to the level table: up.": [
+    "Lee las fuerzas sobre un objeto. Normal 10 N; Peso 10 N. El peso va hacia abajo. La normal es perpendicular a la mesa horizontal: hacia arriba.",
+    "Leia as forças em um objeto. Normal 10 N; Peso 10 N. O peso aponta para baixo. A normal é perpendicular à mesa horizontal: para cima."
+  ],
+  "Read one object’s forces. Pull 6 N; Friction 2 N; Normal 10 N; Weight 10 N. Illustrative sizes for an accelerating box; the four directions are the key.": [
+    "Lee las fuerzas sobre un objeto. Tirón 6 N; Fricción 2 N; Normal 10 N; Peso 10 N. Magnitudes de ejemplo para una caja que acelera. Observa los cuatro sentidos.",
+    "Leia as forças em um objeto. Tração 6 N; Atrito 2 N; Normal 10 N; Peso 10 N. Módulos de exemplo para uma caixa que acelera. Observe os quatro sentidos."
+  ],
+  "Read one object’s forces. Pull 6 N; Friction 2 N; Normal 10 N; Weight 10 N. Rope pull, friction, table support, and weight.": [
+    "Lee las fuerzas sobre un objeto. Tirón 6 N; Fricción 2 N; Normal 10 N; Peso 10 N. Tirón de la cuerda, fricción, apoyo de la mesa y peso.",
+    "Leia as forças em um objeto. Tração 6 N; Atrito 2 N; Normal 10 N; Peso 10 N. Tração da corda, atrito, apoio da mesa e peso."
+  ],
+  "2026-XJ · 57": [
+    "2026-XJ · 57",
+    "2026-XJ · 57"
+  ],
+  "2026-XJ · 58": [
+    "2026-XJ · 58",
+    "2026-XJ · 58"
+  ],
+  "2026-XJ · 59": [
+    "2026-XJ · 59",
+    "2026-XJ · 59"
+  ],
+  "2026-XJ · 60": [
+    "2026-XJ · 60",
+    "2026-XJ · 60"
+  ],
+  "Antocci Physics · 10 / 31": [
+    "Antocci Physics · 10 / 31",
+    "Antocci Physics · 10 / 31"
+  ],
+  "Antocci Physics · 21 / 31": [
+    "Antocci Physics · 21 / 31",
+    "Antocci Physics · 21 / 31"
+  ],
+  "Antocci Physics · 30 / 31": [
+    "Antocci Physics · 30 / 31",
+    "Antocci Physics · 30 / 31"
+  ],
+  "Antocci Physics · 57": [
+    "Antocci Physics · 57",
+    "Antocci Physics · 57"
+  ],
+  "Antocci Physics · 58": [
+    "Antocci Physics · 58",
+    "Antocci Physics · 58"
+  ],
+  "Antocci Physics · 59": [
+    "Antocci Physics · 59",
+    "Antocci Physics · 59"
+  ],
+  "Antocci Physics · 60": [
+    "Antocci Physics · 60",
+    "Antocci Physics · 60"
+  ]
+}

@@ -7,9 +7,9 @@
   "criteria": [
     "Distinguish translational and rotational kinetic energy.",
     "Use equal height changes to compare ideal energy changes.",
-    "State when a simple point-mass model is insufficient."
+    "State when treating an object as a point mass leaves out important physics."
   ],
-  "source_sha256": "649f4a4409bb573bf647ce5bb351d6c1770480a00daab0528fe7032299498bfc",
+  "source_sha256": "ec376e4865ae5efae9e10bcc1ef5bdd8b9b6623167f5eff941d4368bd2782aa7",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.523Z",

@@ -31,7 +31,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Measurement Lab",
     "slug": "measurement-precision",
-    "description": "Can a precise measurement still be wrong? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Can a precise measurement still be wrong? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Measurement",
@@ -107,7 +107,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Out & Back",
     "slug": "distance-displacement",
-    "description": "What changes when you turn around? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "What changes when you turn around? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Motion",
@@ -132,7 +132,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Motion Studio",
     "slug": "constant-velocity",
-    "description": "Does changing the origin change the motion? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Does changing the origin change the motion? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Motion",
@@ -162,7 +162,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Catch-Up Challenge",
     "slug": "car-race",
-    "description": "When does a faster car actually catch up? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "When does a faster car actually catch up? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Motion",
@@ -208,7 +208,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Slope Detective",
     "slug": "slope-calculator",
-    "description": "Is a high point on the graph a high speed? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Is a high point on the graph a high speed? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Motion",
@@ -233,7 +233,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Signed Area Lab",
     "slug": "area-under-curve",
-    "description": "Can you travel far and end where you began? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Can you travel far and end where you began? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Motion",
@@ -258,7 +258,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Acceleration Studio",
     "slug": "uniformly-accelerated-motion",
-    "description": "Can positive velocity go with negative acceleration? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Can positive velocity go with negative acceleration? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Motion",
@@ -288,7 +288,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Cliff Drop",
     "slug": "freefall-cliff",
-    "description": "What can fall time tell you about height? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "What can fall time tell you about height? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Motion",
@@ -318,7 +318,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Vacuum Chamber",
     "slug": "vacuum-chamber",
-    "description": "Why does mass matter in air but not in a vacuum? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Why does mass matter in air but not in a vacuum? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Motion",
@@ -365,7 +365,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Vector Routes",
     "slug": "maze-vectors",
-    "description": "Do different routes lead to the same displacement? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Do different routes lead to the same displacement? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Vectors",
@@ -409,7 +409,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "River Crossing",
     "slug": "riverboat-crossing",
-    "description": "Can pointing upstream make the crossing take longer? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Can pointing upstream make the crossing take longer? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Optional extensions",
@@ -454,7 +454,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Launch Lab",
     "slug": "projectile-motion",
-    "description": "Which part of the motion does gravity change? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Which part of the motion does gravity change? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Optional extensions",
@@ -479,7 +479,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Dropping Target",
     "slug": "monkey-hunter",
-    "description": "Why aim at where a falling target started? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Why aim at where a falling target started? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Optional extensions",
@@ -523,7 +523,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Force Inspector",
     "slug": "free-body-diagram",
-    "description": "Which forces belong on this object’s diagram? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Which forces belong on this object’s diagram? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "forces",
     "unit": "unit-1",
     "topic": "Forces",
@@ -562,7 +562,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Force Tug-of-War",
     "slug": "sumo-forces",
-    "description": "Do balanced forces mean the object must be stopped? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Do balanced forces mean the object must be stopped? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "forces",
     "unit": "unit-1",
     "topic": "Forces",
@@ -604,7 +604,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Spring Carts",
     "slug": "carts-third-law",
-    "description": "Equal forces—so why do the carts move differently? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Equal forces—so why do the carts move differently? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "forces",
     "unit": "unit-1",
     "topic": "Forces",
@@ -648,7 +648,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Thrust & Coast",
     "slug": "astronaut-thrust",
-    "description": "What happens after the engine switches off? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "What happens after the engine switches off? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "forces",
     "unit": "unit-1",
     "topic": "Forces",
@@ -695,7 +695,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Pulley Balance",
     "slug": "atwood-machine",
-    "description": "When does tension equal weight? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "When does tension equal weight? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "forces",
     "unit": "unit-1",
     "topic": "Forces",
@@ -892,7 +892,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Trajectory Reader",
     "slug": "asteroid-trajectory",
-    "description": "Is an asteroid’s distance from Earth the same as its x position? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Is an asteroid’s distance from Earth the same as its x position? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Mission",
@@ -933,7 +933,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Closing Speed",
     "slug": "closing-speed",
-    "description": "Does all of an asteroid’s speed bring it closer? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Does all of an asteroid’s speed bring it closer? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Mission",
@@ -972,7 +972,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "title": "Prediction Envelope",
     "slug": "predicting-2026-xj",
-    "description": "How confident should we be in a distant prediction? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "How confident should we be in a distant prediction? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "kinematics",
     "unit": "unit-1",
     "topic": "Mission",
@@ -1012,7 +1012,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "slug": "incline-lab",
     "title": "Tilted Axes",
-    "description": "Why does the normal force change on a ramp? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Why does the normal force change on a ramp? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "forces",
     "unit": "unit-1",
     "topic": "Forces",
@@ -1039,7 +1039,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "slug": "force-mass",
     "title": "Force & Mass Lab",
-    "description": "What does a fair test of F = ma look like? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "What does a fair test of F = ma look like? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "forces",
     "unit": "unit-1",
     "topic": "Forces",
@@ -1067,7 +1067,7 @@ export const SIMULATION_CATALOG: SimulationCatalogEntry[] = [
   {
     "slug": "friction-lab",
     "title": "Grip & Slip",
-    "description": "Why is it harder to start sliding than to keep sliding? Run controlled trials, compare saved evidence, and complete an assignable investigation.",
+    "description": "Why is it harder to start sliding than to keep sliding? Run trials where you change one thing at a time. Compare your saved results and complete the investigation.",
     "category": "forces",
     "unit": "unit-1",
     "topic": "Forces",

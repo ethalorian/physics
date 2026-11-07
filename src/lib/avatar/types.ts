@@ -68,14 +68,13 @@ export interface AvatarItem {
   slug: string
   slot: ItemSlot
   name: string
-  cost_xp: number | null            // null = not purchasable (unlock-only)
+  cost_xp: number | null
   unlock_target_id: string | null
   unlock_min_level: number | null
   svg_layer: string                  // inner SVG markup (no <svg> wrapper)
   z_order: number // legacy metadata; fixed slot order is authoritative
-  enabled?: boolean // false retires from sale; owned artwork still renders
+  enabled?: boolean // false retires from the catalog; owned artwork still renders
   render_options?: { hair?: 'preserve' | 'tuck' | 'hide'; fit_head?: boolean; covers_ears?: boolean; covers_neck?: boolean; fit_eyes?: boolean; hair_tint?: boolean; skin_tint?: boolean }
-  target_statement?: string | null
 }
 
 export type EquippedItems = Partial<Record<ItemSlot, string>>  // slot → item slug
@@ -168,8 +167,8 @@ export const TRAIT_OPTIONS: Record<keyof AvatarTraits, string[]> = {
 export const ITEM_SLOTS: ItemSlot[] = ['eyewear', 'head', 'body', 'pin', 'background', 'facial_hair', 'ears', 'mouth']
 export const SLOT_LABELS: Record<ItemSlot, string> = { eyewear: 'Eyewear', head: 'Headwear', body: 'Outfits', pin: 'Pins & necklaces', background: 'Backgrounds', facial_hair: 'Facial hair', ears: 'Ears', mouth: 'Fangs & mouths' }
 export interface SavedLook { name: string; traits: AvatarTraits; equipped: EquippedItems }
-export type CatalogState = 'owned' | 'affordable' | 'too_expensive' | 'unlock_available' | 'locked_until_mastery' | 'staff_free'
-export interface CatalogEntry extends AvatarItem { state: CatalogState; unlock_progress?: number }
+export type CatalogState = 'owned' | 'unlock_available'
+export interface CatalogEntry extends AvatarItem { state: CatalogState }
 export interface AvatarBundle {
   user_id: string; traits: AvatarTraits; equipped: EquippedItems; setup_completed: boolean
   revision: number; gallery_visible: boolean; saved_looks: SavedLook[]

@@ -1,6 +1,6 @@
 import { releaseStatus, type ReleaseWindow } from './lesson-release'
 
-export type WorkKind = 'worksheet' | 'homework' | 'lesson' | 'quiz' | 'reading' | 'vocabulary' | 'vocabulary-set' | 'math' | 'simulation' | 'interactive' | 'review'
+export type WorkKind = 'student_choice' | 'worksheet' | 'homework' | 'lesson' | 'quiz' | 'reading' | 'vocabulary' | 'vocabulary-set' | 'math' | 'simulation' | 'interactive' | 'review'
 export type WorkAccess = 'open' | 'scheduled' | 'closed' | 'draft' | 'unassigned'
 export interface ClassWorkItem {
   id: string; sourceId: string; kind: WorkKind; title: string; context: string; audience: string;
@@ -12,7 +12,7 @@ export interface ClassWorkItem {
 }
 export interface ClassWorkData { courseId: string; items: ClassWorkItem[]; warnings: string[]; readOnly: boolean }
 export type WorkFilter = 'assigned' | 'open' | 'due' | 'past' | 'scheduled' | 'closed' | 'unassigned'
-export const workKinds: Record<WorkKind, string> = { worksheet:'Worksheet · Paper', homework: 'Video homework', lesson: 'Class lesson', quiz: 'Quiz', reading: 'Reading', vocabulary: 'Vocabulary', 'vocabulary-set': 'Vocabulary set', math: 'Math mission', simulation: 'Simulation', interactive: 'Interactive assignment / simulation', review: 'Review assignment' }
+export const workKinds: Record<WorkKind, string> = { student_choice: 'Student Choice · Paper', worksheet:'Worksheet · Paper', homework: 'Video homework', lesson: 'Class lesson', quiz: 'Quiz', reading: 'Reading', vocabulary: 'Vocabulary', 'vocabulary-set': 'Vocabulary set', math: 'Math mission', simulation: 'Simulation', interactive: 'Interactive assignment / simulation', review: 'Review assignment' }
 export const workAccessLabels: Record<WorkAccess, string> = { open: 'Open', scheduled: 'Scheduled', closed: 'Closed', draft: 'Draft', unassigned: 'Not assigned' }
 export function workDueTime(item: Pick<ClassWorkItem, 'dueAt' | 'dateOnly'>) {
   return item.dueAt ? Date.parse(item.dateOnly ? item.dueAt + 'T23:59:59.999' : item.dueAt) : Infinity

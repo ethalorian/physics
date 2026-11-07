@@ -1,0 +1,566 @@
+{
+  "(sum in +) − (sum in −)": [
+    "(suma en +) − (suma en −)",
+    "(soma em +) − (soma em −)"
+  ],
+  "1D first": [
+    "Primero en 1D",
+    "Primeiro em 1D"
+  ],
+  "20 N right": [
+    "20 N a la derecha",
+    "20 N para a direita"
+  ],
+  "2D · the incline": [
+    "2D · la rampa",
+    "2D · a rampa"
+  ],
+  "3.35 m/s² down the ramp": [
+    "3.35 m/s² cuesta abajo",
+    "3.35 m/s² rampa abaixo"
+  ],
+  "3.5 m/s² right": [
+    "3.5 m/s² a la derecha",
+    "3.5 m/s² para a direita"
+  ],
+  "30 N applied − 10 N friction = 20 N": [
+    "30 N aplicados − 10 N de fricción = 20 N",
+    "30 N aplicados − 10 N de atrito = 20 N"
+  ],
+  "35 N right": [
+    "35 N a la derecha",
+    "35 N para a direita"
+  ],
+  "4 ÷ 2 = 2 m/s² downhill": [
+    "4 ÷ 2 = 2 m/s² cuesta abajo",
+    "4 ÷ 2 = 2 m/s² rampa abaixo"
+  ],
+  "6 − 2 = 4 N downhill": [
+    "6 − 2 = 4 N cuesta abajo",
+    "6 − 2 = 4 N rampa abaixo"
+  ],
+  "A 10 kg box is pulled 50 N right with friction 15 N left. Find net force and acceleration. Assume no vertical acceleration and a horizontal pull.": [
+    "Tiran de una caja de 10 kg con 50 N a la derecha; hay fricción de 15 N a la izquierda. Halla la fuerza neta y la aceleración. Supón un tirón horizontal y aceleración vertical cero.",
+    "Uma caixa de 10 kg é puxada com 50 N para a direita; há atrito de 15 N para a esquerda. Ache a resultante e a aceleração. Considere uma puxada horizontal e aceleração vertical zero."
+  ],
+  "A 2 kg cart travels down an ideal frictionless 20° ramp. Find its acceleration and normal force.": [
+    "Un carrito de 2 kg baja por una rampa ideal de 20° sin fricción. Halla su aceleración y la fuerza normal.",
+    "Um carrinho de 2 kg desce uma rampa ideal de 20° sem atrito. Ache sua aceleração e a força normal."
+  ],
+  "A 4 kg box slides down a 30° ramp. Kinetic friction is 5 N up the ramp. No other forces act.": [
+    "Una caja de 4 kg se desliza cuesta abajo en una rampa de 30°. La fricción cinética es de 5 N cuesta arriba. No hay otras fuerzas aparte del peso, la normal y la fricción.",
+    "Uma caixa de 4 kg desliza por uma rampa de 30°. O atrito cinético é de 5 N rampa acima. Só atuam peso, normal e atrito."
+  ],
+  "A 5 kg box has 30 N right and 10 N left. Find its net force and horizontal acceleration.": [
+    "Sobre una caja de 5 kg actúan 30 N a la derecha y 10 N a la izquierda. Halla la fuerza neta y la aceleración horizontal.",
+    "Numa caixa de 5 kg atuam 30 N para a direita e 10 N para a esquerda. Ache a resultante e a aceleração horizontal."
+  ],
+  "A 5 kg box stays on a horizontal floor with no vertical acceleration. A rope contributes 12 N upward as part of its pull. Find N.": [
+    "Una caja de 5 kg permanece sobre un piso horizontal, sin aceleración vertical. Una cuerda aporta 12 N hacia arriba como parte de su tirón. Halla N.",
+    "Uma caixa de 5 kg fica num chão horizontal sem aceleração vertical. Uma corda contribui com 12 N para cima como parte da tração. Ache N."
+  ],
+  "A block in contact with a ramp that rises to the right.": [
+    "Un bloque en contacto con una rampa que sube a la derecha.",
+    "Um bloco em contato com uma rampa que sobe para a direita."
+  ],
+  "A block rests on a ramp.": [
+    "Un bloque reposa sobre una rampa.",
+    "Um bloco repousa numa rampa."
+  ],
+  "A block slides up a rough ramp after a push ends. Which way do gravity’s ramp component and kinetic friction point? What happens to speed?": [
+    "Un bloque sube deslizándose por una rampa rugosa después de que termina el empuje. ¿En qué sentido apuntan la componente del peso sobre la rampa y la fricción cinética? ¿Qué pasa con la rapidez?",
+    "Um bloco sobe deslizando numa rampa áspera depois que o empurrão termina. Em que sentido apontam a componente do peso ao longo da rampa e o atrito cinético? O que acontece com a rapidez?"
+  ],
+  "A box moving up can accelerate down": [
+    "Una caja puede subir y acelerar hacia abajo",
+    "Uma caixa pode subir e acelerar para baixo"
+  ],
+  "A cart moves right. Its net force is left.": [
+    "Un carrito se mueve a la derecha. Su fuerza neta va a la izquierda.",
+    "Um carrinho anda para a direita. Sua força resultante aponta para a esquerda."
+  ],
+  "A deflection spacecraft": [
+    "Una nave para desviar el asteroide",
+    "Uma nave para desviar o asteroide"
+  ],
+  "A ramp changes the support direction": [
+    "Una rampa cambia la dirección del apoyo",
+    "Uma rampa muda a direção do apoio"
+  ],
+  "Acceleration opposes the current velocity. If that force continues, it can stop and reverse.": [
+    "La aceleración se opone a la velocidad actual. Si esa fuerza continúa, el objeto puede detenerse y luego ir al otro lado.",
+    "A aceleração é contrária à velocidade atual. Se essa força continuar, o objeto pode parar e depois ir para o outro lado."
+  ],
+  "Acceleration: 6 ÷ 3 = 2 m/s² downhill": [
+    "Aceleración: 6 ÷ 3 = 2 m/s² cuesta abajo",
+    "Aceleração: 6 ÷ 3 = 2 m/s² rampa abaixo"
+  ],
+  "Add forces as vectors": [
+    "Suma las fuerzas como vectores",
+    "Some as forças como vetores"
+  ],
+  "Along-ramp values": [
+    "Valores sobre el eje de la rampa",
+    "Valores ao longo da rampa"
+  ],
+  "Along-ramp values. Downhill: 8; Uphill: 2. Use the provided components.": [
+    "Valores sobre el eje de la rampa. Cuesta abajo: 8; cuesta arriba: 2. Usa las componentes dadas.",
+    "Valores ao longo da rampa. Rampa abaixo: 8; rampa acima: 2. Use as componentes dadas."
+  ],
+  "An FBD shows all the forces.": [
+    "Un diagrama de cuerpo libre muestra todas las fuerzas.",
+    "Um diagrama de corpo livre mostra todas as forças."
+  ],
+  "An upward pull changes the normal force": [
+    "Un tirón hacia arriba cambia la fuerza normal",
+    "Uma puxada para cima muda a força normal"
+  ],
+  "An upward-angled pull changes normal force": [
+    "Un tirón inclinado hacia arriba cambia la normal",
+    "Uma puxada inclinada para cima muda a normal"
+  ],
+  "Axes along and perpendicular to a ramp": [
+    "Ejes paralelo y perpendicular a la rampa",
+    "Eixos paralelo e perpendicular à rampa"
+  ],
+  "Both point down the ramp. The block’s acceleration points down the ramp while its velocity points up, so it slows.": [
+    "Ambas apuntan cuesta abajo. La aceleración del bloque apunta cuesta abajo mientras su velocidad apunta cuesta arriba, así que pierde rapidez.",
+    "As duas apontam rampa abaixo. A aceleração do bloco aponta rampa abaixo enquanto sua velocidade aponta rampa acima, então ele perde rapidez."
+  ],
+  "Can the support equal the full weight?": [
+    "¿Puede el apoyo igualar el peso completo?",
+    "O apoio pode ter o mesmo módulo que o peso inteiro?"
+  ],
+  "Components are parts of one force": [
+    "Las componentes son partes de una fuerza",
+    "As componentes são partes de uma força"
+  ],
+  "Day 16 · FBDs & Net Force": [
+    "Día 16 · Diagramas de cuerpo libre y fuerza neta",
+    "Dia 16 · Diagramas de corpo livre e força resultante"
+  ],
+  "Day 16 · Phase 2 — Building the tools": [
+    "Día 16 · Fase 2 — Construimos herramientas",
+    "Dia 16 · Fase 2 — Construindo as ferramentas"
+  ],
+  "Deep space, no surfaces: just gravity vectors.": [
+    "Espacio profundo, sin superficies: solo vectores de gravedad.",
+    "Espaço profundo, sem superfícies: só vetores da gravidade."
+  ],
+  "Different directions matter": [
+    "Importan las distintas direcciones",
+    "As diferentes direções importam"
+  ],
+  "Different directions matter. The normal arrow is not opposite the full weight arrow.": [
+    "Importan las direcciones. La flecha normal no es opuesta a la del peso completo.",
+    "As direções importam. A seta normal não é oposta à seta do peso inteiro."
+  ],
+  "Direction sketch; arrow slope is illustrative.": [
+    "Esquema de dirección. La inclinación de la flecha es ilustrativa.",
+    "Esboço de direção. A inclinação da seta é ilustrativa."
+  ],
+  "Do not add weight and its components together.": [
+    "No sumes el peso y sus componentes juntos.",
+    "Não some o peso e suas componentes juntos."
+  ],
+  "Do not double count": [
+    "No cuentes dos veces",
+    "Não conte duas vezes"
+  ],
+  "Does “not moving” always mean normal force equals weight?": [
+    "¿“Estar quieto” siempre significa que la normal iguala el peso?",
+    "“Estar parado” sempre significa que a normal tem o mesmo módulo que o peso?"
+  ],
+  "Down the incline": [
+    "Cuesta abajo",
+    "Rampa abaixo"
+  ],
+  "Downhill part of weight: 8 N. Friction uphill: 2 N. Mass: 3 kg.": [
+    "Parte del peso cuesta abajo: 8 N. Fricción cuesta arriba: 2 N. Masa: 3 kg.",
+    "Parte do peso rampa abaixo: 8 N. Atrito rampa acima: 2 N. Massa: 3 kg."
+  ],
+  "Draw the FBD: gravity, normal, friction.": [
+    "Dibuja el diagrama: gravedad, normal, fricción.",
+    "Desenhe o diagrama: gravidade, normal, atrito."
+  ],
+  "Draw weight vertically down.": [
+    "Dibuja el peso verticalmente hacia abajo.",
+    "Desenhe o peso verticalmente para baixo."
+  ],
+  "Each axis gets its own equation": [
+    "Cada eje tiene su propia ecuación",
+    "Cada eixo tem sua própria equação"
+  ],
+  "FBDs plan its trajectory": [
+    "Los diagramas ayudan a planear su trayectoria",
+    "Os diagramas ajudam a planejar sua trajetória"
+  ],
+  "F_net is the VECTOR SUM of those forces.": [
+    "F_net es la SUMA VECTORIAL de esas fuerzas.",
+    "F_net é a SOMA VETORIAL dessas forças."
+  ],
+  "Find net force and acceleration.": [
+    "Halla la fuerza neta y la aceleración.",
+    "Ache a força resultante e a aceleração."
+  ],
+  "Find the net force along the incline.": [
+    "Halla la fuerza neta sobre el eje de la rampa.",
+    "Ache a força resultante ao longo da rampa."
+  ],
+  "Find the net force on a 10 kg box on a horizontal floor, pushed with 50 N forward, with friction = 15 N.": [
+    "Halla la fuerza neta sobre una caja de 10 kg en un piso horizontal si el empuje es de 50 N hacia delante y la fricción = 15 N.",
+    "Ache a força resultante numa caixa de 10 kg sobre um chão horizontal se o empurrão é de 50 N para a frente e o atrito = 15 N."
+  ],
+  "Find what is left over": [
+    "Halla lo que queda",
+    "Ache o que sobra"
+  ],
+  "First combine forces along the ramp. Then divide by mass.": [
+    "Primero combina las fuerzas sobre el eje de la rampa. Luego divide por la masa.",
+    "Primeiro combine as forças ao longo da rampa. Depois divida pela massa."
+  ],
+  "For a block resting on the ramp, static friction can point uphill.": [
+    "Para un bloque en reposo sobre la rampa, la fricción estática puede apuntar cuesta arriba.",
+    "Para um bloco em repouso na rampa, o atrito estático pode apontar rampa acima."
+  ],
+  "For a box constrained to a horizontal surface with no vertical acceleration, ΣFᵧ = 0.": [
+    "Para una caja sobre una superficie horizontal sin aceleración vertical, ΣFᵧ = 0.",
+    "Para uma caixa numa superfície horizontal sem aceleração vertical, ΣFᵧ = 0."
+  ],
+  "For a ramp at angle θ above horizontal, choose +x down the ramp and +y outward from its surface.": [
+    "Para una rampa con ángulo θ sobre la horizontal, elige +x cuesta abajo y +y hacia fuera de la superficie.",
+    "Para uma rampa com ângulo θ acima da horizontal, escolha +x rampa abaixo e +y para fora da superfície."
+  ],
+  "For calculation": [
+    "Para el cálculo",
+    "Para o cálculo"
+  ],
+  "Forces along one axis": [
+    "Fuerzas sobre un eje",
+    "Forças num eixo"
+  ],
+  "Forces on a resting block": [
+    "Fuerzas sobre un bloque en reposo",
+    "Forças num bloco em repouso"
+  ],
+  "Forces on a resting block. Weight points vertically down. Friction and normal force together balance it.": [
+    "Fuerzas sobre un bloque en reposo. El peso apunta verticalmente hacia abajo. La fricción y la normal juntas lo equilibran.",
+    "Forças num bloco em repouso. O peso aponta verticalmente para baixo. O atrito e a normal juntos o equilibram."
+  ],
+  "Free Body Diagrams, Part 2: Net Force": [
+    "Diagramas de cuerpo libre, parte 2: fuerza neta",
+    "Diagramas de corpo livre, parte 2: força resultante"
+  ],
+  "Friction acts uphill: 2 N.": [
+    "La fricción actúa cuesta arriba: 2 N.",
+    "O atrito atua rampa acima: 2 N."
+  ],
+  "From arrows to a result": [
+    "De las flechas al resultado",
+    "Das setas ao resultado"
+  ],
+  "From picture to prediction.": [
+    "Del dibujo a la predicción.",
+    "Do desenho à previsão."
+  ],
+  "Full force": [
+    "Fuerza completa",
+    "Força inteira"
+  ],
+  "Given forces along the ramp": [
+    "Fuerzas dadas sobre el eje de la rampa",
+    "Forças dadas ao longo da rampa"
+  ],
+  "Given forces along the ramp. Downhill: 6; Uphill: 2. The 6 N is a component of weight, not an additional force.": [
+    "Fuerzas sobre el eje de la rampa. Cuesta abajo: 6; cuesta arriba: 2. Los 6 N son una componente del peso, no una fuerza adicional.",
+    "Forças ao longo da rampa. Rampa abaixo: 6; rampa acima: 2. Os 6 N são uma componente do peso, não uma força adicional."
+  ],
+  "Gravity plus engine thrust.": [
+    "Gravedad más empuje del motor.",
+    "Gravidade mais empuxo do motor."
+  ],
+  "Guided frictionless ramp": [
+    "Práctica guiada: rampa sin fricción",
+    "Prática guiada: rampa sem atrito"
+  ],
+  "I do · choose a direction": [
+    "Te muestro cómo elegir un sentido",
+    "Vou mostrar como escolher um sentido"
+  ],
+  "I do · combine and divide": [
+    "Te muestro cómo combinar y dividir",
+    "Vou mostrar como combinar e dividir"
+  ],
+  "Identify gravity, normal, friction. Then find the net force along the incline.": [
+    "Identifica gravedad, normal y fricción. Luego halla la fuerza neta sobre el eje de la rampa.",
+    "Identifique gravidade, normal e atrito. Depois ache a resultante ao longo da rampa."
+  ],
+  "Independent flat-surface case": [
+    "Caso individual en una superficie plana",
+    "Caso individual numa superfície plana"
+  ],
+  "Into the incline": [
+    "Hacia el interior de la rampa",
+    "Para dentro da rampa"
+  ],
+  "Its components are a way to calculate that same force’s effect.": [
+    "Sus componentes sirven para calcular el efecto de esa misma fuerza.",
+    "Suas componentes servem para calcular o efeito dessa mesma força."
+  ],
+  "Keep a component from becoming an extra force": [
+    "Una componente no es una fuerza adicional",
+    "Uma componente não é uma força extra"
+  ],
+  "Look at the contact surface": [
+    "Observa la superficie de contacto",
+    "Observe a superfície de contato"
+  ],
+  "Mass: 2 kg. No angle calculation is needed.": [
+    "Masa: 2 kg. No necesitas calcular el ángulo.",
+    "Massa: 2 kg. Não é preciso calcular o ângulo."
+  ],
+  "Net force (then acceleration) straight from the FBD — inclines included.": [
+    "Halla la fuerza neta y luego la aceleración a partir del diagrama, incluso en rampas.",
+    "Ache a força resultante e depois a aceleração a partir do diagrama, inclusive em rampas."
+  ],
+  "Net force direction": [
+    "Sentido de la fuerza neta",
+    "Sentido da força resultante"
+  ],
+  "Net force direction. Direction sketch; arrow slope is illustrative.": [
+    "Sentido de la fuerza neta. La inclinación de la flecha en el dibujo es ilustrativa.",
+    "Sentido da força resultante. A inclinação da seta no desenho é ilustrativa."
+  ],
+  "Net: 8 − 2 = 6 N downhill": [
+    "Neta: 8 − 2 = 6 N cuesta abajo",
+    "Resultante: 8 − 2 = 6 N rampa abaixo"
+  ],
+  "Normal force balances the perpendicular component; static friction can balance the downhill component.": [
+    "La normal equilibra la componente perpendicular. La fricción estática puede equilibrar la componente cuesta abajo.",
+    "A normal equilibra a componente perpendicular. O atrito estático pode equilibrar a componente rampa abaixo."
+  ],
+  "Normal force equals weight only if those are the only vertical forces.": [
+    "La normal iguala al peso solo si son las únicas fuerzas verticales en este caso.",
+    "A normal tem o mesmo módulo que o peso apenas se forem as únicas forças verticais neste caso."
+  ],
+  "Normal force points perpendicular to the ramp.": [
+    "La normal apunta perpendicularmente a la rampa.",
+    "A normal aponta perpendicularmente à rampa."
+  ],
+  "On a ramp they point in different directions.": [
+    "En una rampa apuntan en direcciones distintas.",
+    "Numa rampa apontam em direções diferentes."
+  ],
+  "Once we have an FBD, F_net = ma gives the acceleration. This is the bridge from picture to prediction.": [
+    "Con un diagrama de cuerpo libre, F_net = ma da la aceleración. Así pasamos del dibujo a la predicción.",
+    "Com um diagrama de corpo livre, F_net = ma dá a aceleração. Assim passamos do desenho à previsão."
+  ],
+  "Position vs. time. Position (m) versus Time (s). Steepening curve: speeding up.": [
+    "Posición y tiempo. Posición (m) frente al tiempo (s). La curva se inclina más: gana rapidez.",
+    "Posição e tempo. Posição (m) em função do tempo (s). A curva fica mais inclinada: a rapidez aumenta."
+  ],
+  "Read one object’s forces. Pull 2 N; Friction 6 N; Normal 10 N; Weight 10 N. The cart is moving right at this moment.": [
+    "Lee las fuerzas sobre un objeto. Tirón 2 N; fricción 6 N; normal 10 N; peso 10 N. El carrito se mueve a la derecha en este instante.",
+    "Leia as forças em um objeto. Tração 2 N; atrito 6 N; normal 10 N; peso 10 N. O carrinho anda para a direita nesse instante."
+  ],
+  "Recall: a curving position graph": [
+    "Repaso: una gráfica de posición curva",
+    "Revisão: um gráfico de posição curvo"
+  ],
+  "Solve the incline": [
+    "Resuelve el problema de la rampa",
+    "Resolva o problema da rampa"
+  ],
+  "Split gravity into along- and into-incline parts.": [
+    "Separa la gravedad en una parte sobre la rampa y otra hacia dentro.",
+    "Separe a gravidade numa parte ao longo da rampa e outra para dentro dela."
+  ],
+  "Split gravity on a tilted surface": [
+    "Descompón la gravedad en una superficie inclinada",
+    "Decomponha a gravidade numa superfície inclinada"
+  ],
+  "Steepening curve: speeding up.": [
+    "La curva se inclina más: aumenta la rapidez.",
+    "A curva fica mais inclinada: a rapidez aumenta."
+  ],
+  "Target R9": [
+    "Meta R9",
+    "Meta R9"
+  ],
+  "The 6 N is a component of weight, not an additional force.": [
+    "Los 6 N son una componente del peso, no otra fuerza.",
+    "Os 6 N são uma componente do peso, não outra força."
+  ],
+  "The block touches a tilted surface.": [
+    "El bloque toca una superficie inclinada.",
+    "O bloco toca uma superfície inclinada."
+  ],
+  "The cart is moving right at this moment.": [
+    "El carrito se mueve a la derecha en este instante.",
+    "O carrinho anda para a direita neste instante."
+  ],
+  "The illustration is conceptual; do not measure its angle.": [
+    "El dibujo representa la idea. No midas el ángulo en él.",
+    "O desenho representa a ideia. Não meça o ângulo nele."
+  ],
+  "The normal arrow is not opposite the full weight arrow.": [
+    "La flecha normal no es opuesta a la del peso completo.",
+    "A seta normal não é oposta à seta do peso inteiro."
+  ],
+  "This object starts from rest. Is its velocity constant?": [
+    "Este objeto parte del reposo. ¿Su velocidad es constante?",
+    "Este objeto parte do repouso. Sua velocidade é constante?"
+  ],
+  "Try a supplied ramp component": [
+    "Usa una componente dada sobre la rampa",
+    "Use uma componente dada ao longo da rampa"
+  ],
+  "Two very different FBDs": [
+    "Dos diagramas de cuerpo libre muy distintos",
+    "Dois diagramas de corpo livre bem diferentes"
+  ],
+  "Use its supplied along-ramp component.": [
+    "Usa la componente dada sobre el eje de la rampa.",
+    "Use a componente dada ao longo da rampa."
+  ],
+  "Use the point at t = 2 s to find its acceleration. Predict x at t = 6 s.": [
+    "Usa el punto en t = 2 s para hallar la aceleración. Predice x en t = 6 s.",
+    "Use o ponto em t = 2 s para achar a aceleração. Preveja x em t = 6 s."
+  ],
+  "Use the provided components.": [
+    "Usa las componentes dadas.",
+    "Use as componentes dadas."
+  ],
+  "Use the supplied downhill part of weight: 6 N.": [
+    "Usa la parte dada del peso cuesta abajo: 6 N.",
+    "Use a parte dada do peso rampa abaixo: 6 N."
+  ],
+  "Weight component down ramp = mg sin θ": [
+    "Componente del peso cuesta abajo = mg sin θ",
+    "Componente do peso rampa abaixo = mg sin θ"
+  ],
+  "Weight component into ramp = mg cos θ": [
+    "Componente del peso hacia dentro de la rampa = mg cos θ",
+    "Componente do peso para dentro da rampa = mg cos θ"
+  ],
+  "Weight is one interaction with Earth.": [
+    "El peso es una interacción con la Tierra.",
+    "O peso é uma interação com a Terra."
+  ],
+  "Weight itself still points vertically downward.": [
+    "El peso sigue apuntando verticalmente hacia abajo.",
+    "O peso continua apontando verticalmente para baixo."
+  ],
+  "Weight points vertically down. Friction and normal force together balance it.": [
+    "El peso apunta verticalmente hacia abajo. La fricción y la normal juntas lo equilibran.",
+    "O peso aponta verticalmente para baixo. O atrito e a normal juntos o equilibram."
+  ],
+  "Weight still points down": [
+    "El peso sigue apuntando hacia abajo",
+    "O peso continua apontando para baixo"
+  ],
+  "What happens to its rightward speed at first?": [
+    "¿Qué pasa al principio con su rapidez hacia la derecha?",
+    "O que acontece no início com sua rapidez para a direita?"
+  ],
+  "Which way is straight away from the surface?": [
+    "¿Qué sentido es perpendicular hacia fuera de la superficie?",
+    "Qual sentido é perpendicular para fora da superfície?"
+  ],
+  "Work along the ramp": [
+    "Calcula sobre el eje de la rampa",
+    "Calcule ao longo da rampa"
+  ],
+  "Worked ramp with given friction": [
+    "Ejemplo de rampa con fricción dada",
+    "Exemplo de rampa com atrito dado"
+  ],
+  "Yesterday we drew FBDs.": [
+    "Ayer dibujamos diagramas de cuerpo libre.",
+    "Ontem desenhamos diagramas de corpo livre."
+  ],
+  "Your turn: force and motion": [
+    "Tu turno: fuerza y movimiento",
+    "Sua vez: força e movimento"
+  ],
+  "slows down at first": [
+    "pierde rapidez al principio",
+    "perde rapidez no início"
+  ],
+  "— the curve gets steeper, so velocity increases.": [
+    "— la curva se inclina más, así que la velocidad aumenta.",
+    "— a curva fica mais inclinada, então a velocidade aumenta."
+  ],
+  "2026-XJ": [
+    "2026-XJ",
+    "2026-XJ"
+  ],
+  "2026-XJ · 61": [
+    "2026-XJ · 61",
+    "2026-XJ · 61"
+  ],
+  "2026-XJ · 62": [
+    "2026-XJ · 62",
+    "2026-XJ · 62"
+  ],
+  "2026-XJ · 63": [
+    "2026-XJ · 63",
+    "2026-XJ · 63"
+  ],
+  "2026-XJ · 64": [
+    "2026-XJ · 64",
+    "2026-XJ · 64"
+  ],
+  "Antocci Physics · 61": [
+    "Antocci Physics · 61",
+    "Antocci Physics · 61"
+  ],
+  "Antocci Physics · 62": [
+    "Antocci Physics · 62",
+    "Antocci Physics · 62"
+  ],
+  "Antocci Physics · 63": [
+    "Antocci Physics · 63",
+    "Antocci Physics · 63"
+  ],
+  "Antocci Physics · 64": [
+    "Antocci Physics · 64",
+    "Antocci Physics · 64"
+  ],
+  "N = mg cos20° ≈": [
+    "N = mg cos20° ≈",
+    "N = mg cos20° ≈"
+  ],
+  "a = F_net ÷ m = 20 ÷ 5 = 4 m/s²": [
+    "a = F_net ÷ m = 20 ÷ 5 = 4 m/s²",
+    "a = F_net ÷ m = 20 ÷ 5 = 4 m/s²"
+  ],
+  "a = F_net ÷ m.": [
+    "a = F_net ÷ m.",
+    "a = F_net ÷ m."
+  ],
+  "a = g sin20° ≈": [
+    "a = g sin20° ≈",
+    "a = g sin20° ≈"
+  ],
+  "mg sin 30° = 19.6 N": [
+    "mg sin 30° = 19.6 N",
+    "mg sin 30° = 19.6 N"
+  ],
+  "mg · cos θ": [
+    "mg · cos θ",
+    "mg · cos θ"
+  ],
+  "mg · sin θ": [
+    "mg · sin θ",
+    "mg · sin θ"
+  ],
+  "ΣFᵧ = maᵧ": [
+    "ΣFᵧ = maᵧ",
+    "ΣFᵧ = maᵧ"
+  ],
+  "ΣFₓ = maₓ": [
+    "ΣFₓ = maₓ",
+    "ΣFₓ = maₓ"
+  ]
+}

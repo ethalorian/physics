@@ -73,7 +73,7 @@ export const soundLessons = {
     ],
     "worked": {
       "title": "Work through the idea",
-      "prompt": "Two model fluids have the same density, but B doubles in the second.",
+      "prompt": "In a simplified example, two fluids have the same density. The second fluid has twice the value of B.",
       "reasoning": "Its sound speed increases by √2 because v = √(B/ρ). Both material properties must be considered."
     },
     "check": {

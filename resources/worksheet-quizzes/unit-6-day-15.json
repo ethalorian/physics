@@ -9,7 +9,7 @@
     "Explain the information in a Doppler shift.",
     "State what radial velocity leaves unknown."
   ],
-  "source_sha256": "ed40568feec5ca1d09fcccef6341c42b3d3606369fe8f6c71ac1bada13fe3837",
+  "source_sha256": "62379b57393dc5ea3300683dd3f877c52e54411d53dc076f397f2e42720d1cc9",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.554Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "A radar echo returns in 8.0 microseconds. Use c = 3.0 × 10⁸ m/s. What is one-way range to a stationary target?",
+      "prompt": "A radar echo returns in 8.0 microseconds.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is one-way range to a stationary target?",
       "options": [
         "2,400 m",
         "600 m",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "A scaled signal model has speed 32 m/s and echo delay 5.0 s. What is target range?",
+      "prompt": "In a scaled practice example, a signal travels at 32 m/s. The echo returns after 5.0 s. How far away is the target?",
       "options": [
         "80 m",
         "160 m",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "Two targets at different ranges have the same radial approach speed. Under otherwise identical simple radar conditions, which statement is possible?",
+      "prompt": "Two targets are at different distances. Both approach a radar at the same radial speed. Keep the other radar settings and surroundings the same. Which statement is possible?",
       "options": [
         "Echo delay alone gives both masses.",
         "They have the same Doppler shift but different echo delays.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A single radar measures range and radial velocity. What additional evidence helps determine a full path?",
+      "prompt": "A single radar measures distance and radial velocity. What extra measurements help you find the full path?",
       "options": [
         "The radar’s paint color.",
         "Assuming sideways speed is zero without evidence.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "A radar echo returns in 8.0 microseconds. Use c = 3.0 × 10⁸ m/s. What is one-way range to a stationary target?",
+      "prompt": "A radar echo returns in 8.0 microseconds.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is one-way range to a stationary target?",
       "options": [
         "24 m",
         "2,400 m",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "A scaled signal model has speed 32 m/s and echo delay 5.0 s. What is target range?",
+      "prompt": "In a scaled practice example, a signal travels at 32 m/s. The echo returns after 5.0 s. How far away is the target?",
       "options": [
         "16 m",
         "80 m",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "Two targets at different ranges have the same radial approach speed. Under otherwise identical simple radar conditions, which statement is possible?",
+      "prompt": "Two targets are at different distances. Both approach a radar at the same radial speed. Keep the other radar settings and surroundings the same. Which statement is possible?",
       "options": [
         "Equal Doppler shift requires equal distance.",
         "The more distant target must have zero Doppler shift.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A single radar measures range and radial velocity. What additional evidence helps determine a full path?",
+      "prompt": "A single radar measures distance and radial velocity. What extra measurements help you find the full path?",
       "options": [
         "The radar’s paint color.",
         "Assuming sideways speed is zero without evidence.",

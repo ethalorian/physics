@@ -27,6 +27,7 @@ import { schoolDayKey } from '@/lib/school-day'
 import { nextStudentHomeTask } from '@/lib/student-home-banner'
 import homeStyles from './home.module.css'
 import s from './LearningWeek.module.css'
+import AssignmentXpBadge from '@/components/student/AssignmentXpBadge'
 import StudentProgress from '@/components/student/StudentProgress'
 import StudentHomework from '@/components/student/StudentHomework'
 import StudentBannerProgress from '@/components/student/StudentBannerProgress'
@@ -39,12 +40,17 @@ const TABS = [{ id: 'week', label: 'My week', icon: CalendarDays }, { id: 'today
 
 type DashboardProps = { children?: ReactNode; classId?: string; studentId?: string; initialTerm?: string }
 export default function StudentDashboard(props: DashboardProps) {
-  return <StudentProgressProvider classId={props.classId} studentId={props.studentId} initialTerm={props.initialTerm ?? (props.children ? 'all' : undefined)}><DashboardContent {...props}/></StudentProgressProvider>
+  const { data: session } = useSession()
+  const identity = JSON.stringify([session?.user?.email ?? '', session?.experience ?? null])
+  return <StudentProgressProvider key={identity} calendarXp={!props.children} classId={props.classId} studentId={props.studentId} initialTerm={props.initialTerm ?? (props.children ? 'all' : undefined)}><DashboardContent {...props}/></StudentProgressProvider>
 }
 
 function DashboardContent({ children }: DashboardProps) {
   const progress = useStudentProgress()
-  const data = useLearningWeek(), { data: session } = useSession()
+  const { data: session } = useSession()
+  const [view, setView] = useState<View>('week')
+  const resourceScope = JSON.stringify([session?.user?.email ?? '', session?.experience ?? null, progress.classId, progress.studentId])
+  const data = useLearningWeek({ scope: resourceScope, calendar: !children && (view === 'week' || view === 'growth') })
   const router = useRouter()
   const staff = !!data.readings.data?.staff
   const courses = staff ? data.readings.data?.courses ?? [] : []
@@ -53,10 +59,10 @@ function DashboardContent({ children }: DashboardProps) {
   const classId = courses.some(c => c.id === chosenClass) ? chosenClass : courses[0]?.id ?? null
   const classWork = useClassWork(staff ? classId : null)
   const choiceClassId = staff ? courses.find(c => c.id === classId && (c.program ?? 'physics') === 'physics')?.id ?? null : null
-  const choices = useLearningResource<ChoiceSnapshot>('/api/choice-calendar' + (choiceClassId ? '?class=' + choiceClassId : ''))
-  const warmupCalendar = useLearningResource<{courseId?:string;days:string[]}>(`/api/calendar/warmups${staff && classId ? '?class='+encodeURIComponent(classId) : ''}`)
+  const choices = useLearningResource<ChoiceSnapshot>('/api/choice-calendar' + (choiceClassId ? '?class=' + choiceClassId : ''), { scope: resourceScope })
+  const warmupCalendar = useLearningResource<{courseId?:string;days:string[]}>(`/api/calendar/warmups${staff && classId ? '?class='+encodeURIComponent(classId) : ''}`, { scope: resourceScope })
   const editable = staff && !!classWork.data && !classWork.data.readOnly && !session?.experience
-  const [today, setToday] = useState(() => schoolDayKey()), [view, setView] = useState<View>('week'), [weekOffset, setWeekOffset] = useState(0), [day, setDay] = useState(today)
+  const [today, setToday] = useState(() => schoolDayKey()), [weekOffset, setWeekOffset] = useState(0), [day, setDay] = useState(today)
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [filter, setFilter] = useState<Filter>('todo'), [kind, setKind] = useState('all'), [search, setSearch] = useState(''), [page, setPage] = useState(0)
   const [scope, setScope] = useState<{ date: string; lane: CalendarLane } | null>(null)
@@ -95,7 +101,15 @@ function DashboardContent({ children }: DashboardProps) {
     return option.steps.map(step => [sourceKey(step), { chosen: !!progress?.selected, followUp: step.followUp }] as const)
   })))
   const workKey = (id: string) => id.replace(/^video:/, 'lesson:').replace(/^vocab:/, 'vocabulary:')
-  const ordered = prioritizeAssignments<CalendarAssignment>((staff ? teacherItems : data.items).filter(item => staff || !choiceSourceStates.has(workKey(item.id)) || choiceSourceStates.get(workKey(item.id))?.chosen).map(item => !staff && !item.complete && studentAssignmentPastDue(assignmentCalendarDate(item), new Date(now)) ? { ...item, status: item.prerequisiteText || item.status === 'Complete reading first' ? item.status : 'Homework · Not completed' } : item), now)
+  const xpBadges = !staff && !progress.error && !progress.data?.staff ? progress.data?.calendarXp : undefined
+  const ordered = prioritizeAssignments<CalendarAssignment>((staff ? teacherItems : data.items)
+    .filter(item => staff || !choiceSourceStates.has(workKey(item.id)) || choiceSourceStates.get(workKey(item.id))?.chosen)
+    .map(item => {
+      const xpStatus = xpBadges?.[workKey(item.id)]
+      const late = !staff && !item.complete && studentAssignmentPastDue(assignmentCalendarDate(item), new Date(now))
+      const status = late && !item.prerequisiteText && item.status !== 'Complete reading first' ? 'Homework · Not completed' : item.status
+      return { ...item, status, xpStatus }
+    }), now)
   const requiredCalendarItems = ordered.filter(item => !choiceSourceStates.has(workKey(item.id)) || choiceSourceStates.get(workKey(item.id))?.followUp)
   const allItems: CalendarActivity[] = [...(mathToday ? [mathToday] : []), ...ordered]
   const selected: CalendarActivity | null = allItems.find(item => item.id === selectedId) ?? dates.map(mathForDay).find(item => item?.id === selectedId) ?? null
@@ -151,12 +165,12 @@ function DashboardContent({ children }: DashboardProps) {
     } catch(error) {setSaveError(true);setSaveMessage((error as Error).message)}
     finally {savingRef.current=false;setSaving(false)}
   }
-  const bannerTask = nextStudentHomeTask({ items: ordered, math: mathToday, today, now: new Date(now), loading: checking || data.math.loading || warmupCalendar.loading || ((!staff || !!choiceClassId) && choices.loading), incomplete: ((!staff || !!choiceClassId) && choices.error) || warmupCalendar.error || failed.length > 0 || data.math.error || !!classWork.error || !!classWork.data?.warnings.length })
+  const bannerTask = nextStudentHomeTask({ items: ordered, math: mathToday, today, now: new Date(now), loading: (staff ? classWork.loading && !classWork.data : data.sources.some(source => source.loading && !source.data)) || (data.math.loading && !data.math.data) || (warmupCalendar.loading && !warmupCalendar.data) || ((!staff || !!choiceClassId) && choices.loading && !choices.data), incomplete: ((!staff || !!choiceClassId) && choices.error) || warmupCalendar.error || failed.length > 0 || data.math.error || !!classWork.error || !!classWork.data?.warnings.length })
 
   const calendar = (choicePlanning?: ChoiceCalendarContent) => <LearningCalendar dates={dates} today={today} day={mobileDay} offset={weekOffset} items={requiredCalendarItems} selectedId={selectedId} mathForDay={mathForDay} scheduledWarmups={scheduledWarmups} onWarmup={(date,assigned)=>void setWarmupDate(date,assigned)} noSchoolDates={data.pace.data?.noSchoolDates ?? []} mathLoading={data.math.loading} mathError={data.math.error} editable={editable} saving={saving} onSelect={select} onDay={setDay} onWeek={moveWeek} onToday={showWeek} onMore={(date, lane) => manage('all', { date, lane })} onUnscheduled={() => manage('unscheduled')} onScheduleIssues={() => manage('schedule-issues')} onMove={(item, date) => void schedule(item, date)} choices={choicePlanning} />
 
   const progressHref = '/home?' + new URLSearchParams({ view: 'progress', ...(progress.data?.courseId ? { class: progress.data.courseId } : {}), ...(progress.data?.staff && progress.studentId ? { student: progress.studentId } : {}), term: progress.termId })
-  const banner = <StudentCheckIn name={home?.student.name} streak={!data.home.error ? home?.streak.current : undefined} points={!data.home.loading && !data.home.error ? home?.points : undefined} loading={data.home.loading} today={today} task={bannerTask} onGrowth={children ? undefined : () => openView('progress')} onFeedback={children ? undefined : () => openView('progress', 'feedback')} growthActive={!children && view === 'progress'} progressHref={children ? progressHref : undefined} feedbackHref={children ? progressHref + '#teacher-feedback' : undefined} progressSummary={<StudentBannerProgress/>}/>
+  const banner = <StudentCheckIn name={home?.student.name} streak={!data.home.error ? home?.streak.current : undefined} points={!data.home.error ? home?.points : undefined} loading={data.home.loading && !home} today={today} task={bannerTask} onGrowth={children ? undefined : () => openView('progress')} onFeedback={children ? undefined : () => openView('progress', 'feedback')} growthActive={!children && view === 'progress'} progressHref={children ? progressHref : undefined} feedbackHref={children ? progressHref + '#teacher-feedback' : undefined} progressSummary={<StudentBannerProgress/>}/>
 
   if (children) return <EnrollmentGate><div className={`${homeStyles.home} ${s.dashboard}`}>{banner}{children}</div></EnrollmentGate>
 
@@ -184,7 +198,7 @@ function DashboardContent({ children }: DashboardProps) {
         </section>}
         {selected && selectedPresentation && <section ref={detail} className={s.detail} aria-labelledby="activity-detail-heading">
           <Button variant="ghost" size="icon" className={s.closeDetail} aria-label="Close activity details" onClick={() => setSelectedId(null)}><X size={18} /></Button>
-          <div><p className={s.eyebrow}>{selectedPresentation.label}{selectedPresentation.day ? ' · Course day '+selectedPresentation.day : ''} · {assignmentStatus(selected)}</p><h3 id="activity-detail-heading">{selectedPresentation.title}</h3><p className={s.thinkingFocus}><strong>Thinking focus</strong>{selectedPresentation.thinking}</p>{selectedPresentation.question && <p className={s.focusQuestion}>{selectedPresentation.question}</p>}<p><strong>What you’ll do: </strong>{selectedPresentation.directions}</p>{selected.prerequisiteText && <p className={s.prerequisiteNotice}><strong>Before you start: </strong>{selected.prerequisiteText}</p>}{selected.context && !selected.prerequisiteText && !selected.context.startsWith('Unit 1 · Course day') && <p className={s.muted}>{selected.context}</p>}<p>{selected.kind === 'math' ? `Math warm-up${selected.day ? ' · ' + dateLabel(selected.day) : ''}` : assignmentTimingLabel(selected)}</p>{selected.quizSchedule && <p className={s.muted}>{QUIZ_SCHEDULE_LABELS[selected.quizSchedule]}</p>}{selected.returned && <p className={s.attentionText}>Your teacher has asked for a revision.</p>}{selected.available === false ? <p className={s.tag}>This activity opens on its day.</p> : <Button asChild><Link href={selected.href}>{selected.action}<ArrowRight size={16} /></Link></Button>}{selected.kind === 'math' && <button type="button" className={s.more} onClick={() => openView('growth')}>See my math growth →</button>}</div>
+          <div><p className={s.eyebrow}>{selectedPresentation.label}{selectedPresentation.day ? ' · Course day '+selectedPresentation.day : ''} · {assignmentStatus(selected)}</p><h3 id="activity-detail-heading">{selectedPresentation.title}</h3>{selected.xpStatus && <AssignmentXpBadge status={selected.xpStatus} explain/>}<p className={s.thinkingFocus}><strong>Thinking focus</strong>{selectedPresentation.thinking}</p>{selectedPresentation.question && <p className={s.focusQuestion}>{selectedPresentation.question}</p>}<p><strong>What you’ll do: </strong>{selectedPresentation.directions}</p>{selected.prerequisiteText && <p className={s.prerequisiteNotice}><strong>Before you start: </strong>{selected.prerequisiteText}</p>}{selected.context && !selected.prerequisiteText && !selected.context.startsWith('Unit 1 · Course day') && <p className={s.muted}>{selected.context}</p>}<p>{selected.kind === 'math' ? `Math warm-up${selected.day ? ' · ' + dateLabel(selected.day) : ''}` : assignmentTimingLabel(selected)}</p>{selected.quizSchedule && <p className={s.muted}>{QUIZ_SCHEDULE_LABELS[selected.quizSchedule]}</p>}{selected.returned && <p className={s.attentionText}>Your teacher has asked for a revision.</p>}{selected.available === false ? <p className={s.tag}>This activity opens on its day.</p> : <Button asChild><Link href={selected.href}>{selected.action}<ArrowRight size={16} /></Link></Button>}{selected.kind === 'math' && <button type="button" className={s.more} onClick={() => openView('growth')}>See my math growth →</button>}</div>
           {editable && selected.classWork?.canEditDue && <form className={s.dueEditor} onSubmit={e => { e.preventDefault(); void schedule(selected, dueDate) }}><h4>Assignment due date</h4><p className={s.muted}>Choose the date for this class. Clearing the date unassigns the work and preserves saved answers. Dates use Eastern time.</p>{selected.classWork.kind === 'reading' && <p className={s.muted}>For a linked reading sequence, practice follows the reading date. Its quizzes move to their next permitted weekdays.</p>}<label>Due date<input type="date" value={dueDate} disabled={saving} onChange={e => setDueDate(e.target.value)} /></label><div className={s.dueActions}><Button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save due date'}</Button><Button type="button" variant="ghost" disabled={saving} onClick={() => setDueDate('')}>Clear date</Button></div></form>}
         </section>}
       </>}

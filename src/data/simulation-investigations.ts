@@ -31,7 +31,7 @@ export const SIMULATION_INVESTIGATIONS: SimulationInvestigation[] = [
     question:
       "Can two journeys have the same displacement but different distances?",
     predict:
-      "A rover goes 4 m east, then 4 m west. Predict its total distance and displacement. Explain what each number describes.",
+      "A rover goes 4 m east, then 4 m west.\n\n1. Predict its total distance and displacement.\n2. Explain what each number describes.",
     trials: [
       "Use the controls to travel 4 m east, then return to the origin. Record both readouts.",
       "Reset. Go 3 m east and 4 m north. Record distance, displacement magnitude, Δx, and Δy.",
@@ -43,9 +43,9 @@ export const SIMULATION_INVESTIGATIONS: SimulationInvestigation[] = [
       "Trial 3: distance and displacement; compare with Trial 2",
     ],
     explain:
-      "Use your two routes to (3, 4) to defend this claim: displacement depends on the endpoints; distance depends on the route. Include the 3–4–5 calculation and name which quantity is a vector.",
+      "Use your two routes to (3, 4) to explain why **displacement depends on the endpoints** while **distance depends on the route**. Include the 3–4–5 calculation. State which quantity is a vector.",
     transfer:
-      "A rescue robot must return to base after travelling at least 12 m. Design a route and state its distance, Δx and Δy. Can a zero displacement prove that it never moved? Explain.",
+      "A rescue robot must return to base after travelling at least 12 m.\n\n1. Design a route and state its distance, Δx and Δy.\n2. Can a zero displacement prove that it never moved?\n3. Explain.",
     teacherLookFors:
       "Out-and-back: 8 m distance, 0 m displacement. Two-leg: 7 m distance, 5 m displacement magnitude, components (3,4) m. Direct: 5 m for both magnitudes. A vector includes direction; zero displacement does not imply no motion.",
   },
@@ -63,7 +63,7 @@ export const SIMULATION_INVESTIGATIONS: SimulationInvestigation[] = [
     videoId: "hj8usnvYrRo",
     question: "What changes in the graph when the motion reverses?",
     predict:
-      "Sketch the position–time graph for forward motion, a stop, and backward motion at the same speed. Label the slopes before running.",
+      "1. Sketch the position–time graph for forward motion, a stop, and backward motion at the same speed.\n2. Label the slopes before running.",
     trials: [
       "Set speed to 1 m/s and direction to Forward. Run, pause near 4 s, and record the exact time and position.",
       "Resume with Stopped selected for about 2 s. Record a second point and the velocity.",
@@ -75,7 +75,7 @@ export const SIMULATION_INVESTIGATIONS: SimulationInvestigation[] = [
       "Two points from backward motion and the slope Δx/Δt",
     ],
     explain:
-      "Calculate a slope for each segment using your recorded points. Explain why a downward-sloping graph means negative velocity rather than negative speed. What does the height of the graph represent?",
+      "1. Calculate a slope for each segment using your recorded points.\n2. Explain why a downward-sloping graph means negative velocity rather than negative speed.\n3. What does the height of the graph represent?",
     transfer:
       "An object starts at x = −6 m and moves at +2 m/s for 4 s. Sketch its position–time graph, calculate its final position, and explain why starting on the negative side does not mean moving backward.",
     teacherLookFors:

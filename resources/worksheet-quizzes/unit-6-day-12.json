@@ -9,7 +9,7 @@
     "Order spectral regions by wavelength.",
     "Distinguish electromagnetic from mechanical waves."
   ],
-  "source_sha256": "afc9cd37f096de2291818336d323e167e1d5f4b39005f524151663b29e87dd54",
+  "source_sha256": "ce23201b56ce066a4ed4f2bbc2dac8e65fc4947b453a9e2faa8ff264bdc300f2",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.552Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "An electromagnetic wave in vacuum has frequency 5.0 × 10⁸ Hz. Use c = 3.0 × 10⁸ m/s. What is wavelength?",
+      "prompt": "An electromagnetic wave in vacuum has frequency 5.0 × 10⁸ Hz.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is wavelength?",
       "options": [
         "1.67 m",
         "60 m",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "Vacuum light has wavelength 750 nm. Use c = 3.0 × 10⁸ m/s. What is frequency?",
+      "prompt": "Vacuum light has wavelength 750 nm.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is frequency?",
       "options": [
         "4.0 × 10⁵ Hz",
         "2.5 × 10⁻¹⁵ Hz",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "An electromagnetic wave in vacuum has frequency 5.0 × 10⁸ Hz. Use c = 3.0 × 10⁸ m/s. What is wavelength?",
+      "prompt": "An electromagnetic wave in vacuum has frequency 5.0 × 10⁸ Hz.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is wavelength?",
       "options": [
         "0.60 m",
         "1.67 m",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "Vacuum light has wavelength 750 nm. Use c = 3.0 × 10⁸ m/s. What is frequency?",
+      "prompt": "Vacuum light has wavelength 750 nm.\n\n1. Use c = 3.0 × 10⁸ m/s.\n2. What is frequency?",
       "options": [
         "4.0 × 10⁵ Hz",
         "2.5 × 10⁻¹⁵ Hz",

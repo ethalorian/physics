@@ -7,9 +7,9 @@
   "criteria": [
     "Check axle parallelism and wheel clearance.",
     "Record a repeatable alignment test.",
-    "Use evidence to choose one adjustment."
+    "Use measurements or observations to choose one adjustment."
   ],
-  "source_sha256": "1e8fa5e238807ff15ed28ca7db76cd618ab89c362a7baddc8db105ca40b1794c",
+  "source_sha256": "0f76be059e6fbc62117434f680736a593c33362c0117bf6560200b5c14991cd0",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.575Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "A model car drifts sideways in repeated unpowered roll tests. What should be checked first?",
+      "prompt": "A small classroom car drifts sideways during repeated roll tests with the power off. What should you check first?",
       "options": [
         "Axle parallelism and unequal wheel rubbing.",
         "Whether the paint reflects light.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "After an alignment revision, offsets remain 7, 8, and 7 cm; before they were 8, 7, and 8 cm. What is the strongest claim?",
+      "prompt": "Before an alignment change, the sideways offsets were 8, 7, and 8 cm. After the change, they are 7, 8, and 7 cm. What is the strongest conclusion you can support?",
       "options": [
         "The car is perfectly aligned.",
         "The readings prove no physical cause exists.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "A model car drifts sideways in repeated unpowered roll tests. What should be checked first?",
+      "prompt": "A small classroom car drifts sideways during repeated roll tests with the power off. What should you check first?",
       "options": [
         "Whether the paint reflects light.",
         "Axle parallelism and unequal wheel rubbing.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "After an alignment revision, offsets remain 7, 8, and 7 cm; before they were 8, 7, and 8 cm. What is the strongest claim?",
+      "prompt": "Before an alignment change, the sideways offsets were 8, 7, and 8 cm. After the change, they are 7, 8, and 7 cm. What is the strongest conclusion you can support?",
       "options": [
         "The readings prove no physical cause exists.",
         "The revision proved a large improvement.",

@@ -5,12 +5,15 @@ import { labDimensionGrade, type ReleasedLabEntry } from '@/lib/interactive-assi
 import { letterGrade } from './gradebook'
 import 'server-only'
 import { worksheetResults } from './worksheets'
+import { studentChoiceResults } from './student-choice'
 import { presentationResults } from './classroom'
 import { calendarAssigned } from '@/lib/calendar-assignment'
+import { revisionSourceKeys } from '@/lib/review-desk/revision-server'
 import { composeChoiceResults } from './choice-composition'
 import { choiceResults } from './choices'
 import { vocabularyResults, mathResults, videoResults, reflectionResults } from './supporting'
-import { read, byIds, type Scope } from './queries'
+import { read, byIds, reviewSource, type Scope } from './queries'
+import { requestTiming } from '@/lib/request-runtime'
 import type { AuthContext } from '@/lib/api-auth'
 import { assignmentBySlug } from '@/lib/interactive-assignments/catalog'
 import type { Assignment, Review, Work, Submission } from '@/lib/interactive-assignments/server'
@@ -25,7 +28,7 @@ import type { ResultActivity, ResultCell, ResultsData } from './types'
 
 async function interactive(scope: Scope): Promise<ResultActivity[]> {
   if (scope.course.program !== 'physics') return []
-  const assignments = (await read<Assignment>('interactive_assignments', 'id,course_id,slug,target_id,created_at,due_on', q => q.eq('course_id', scope.course.id), ['id']))
+  const assignments = (await read<Assignment>('interactive_assignments', 'id,course_id,slug,target_id,created_at,due_on', q => reviewSource(scope, q.eq('course_id', scope.course.id)), ['id']))
     .filter(a => { const lesson = assignmentBySlug(a.slug); return lesson && scope.includes([lesson.unit]) })
   const ids = assignments.map(a => a.id), users = scope.students.map(s => s.id)
   if (!ids.length) return []
@@ -76,10 +79,14 @@ async function interactive(scope: Scope): Promise<ResultActivity[]> {
 }
 
 async function quizzes(scope: Scope): Promise<ResultActivity[]> {
-  const quizzes = (await read<Quiz>('quiz_assignments', '*', q => q.eq('course_id', scope.course.id).is('deleted_at', null).neq('status', 'draft'), ['id']))
+  const quizzes = (await read<Quiz>('quiz_assignments', '*', q => reviewSource(scope, q.eq('course_id', scope.course.id).is('deleted_at', null).neq('status', 'draft')), ['id']))
     .filter(a => scope.includes(resultUnitIds(a.questions.map(q => q.target_id), scope.targets)))
   const ids = quizzes.map(q => q.id), users = scope.students.map(s => s.id)
-  const work = users.length ? await byIds<QuizWork>('quiz_work', '*', 'quiz_id', ids, ['quiz_id', 'user_id'], q => q.in('user_id', users)) : []
+  const workRows = users.length ? await byIds<Omit<QuizWork, 'answers'>>('quiz_work', 'quiz_id,user_id,state,version,submission_id,updated_at', 'quiz_id', ids, ['quiz_id', 'user_id'], q => q.in('user_id', users)) : []
+  // This comparison has no choice-exemption inputs, so draft answers cannot
+  // affect its output. Grades still use the immutable submission below. Keep
+  // large draft answers out of overview reads, without changing the shared model.
+  const work: QuizWork[] = workRows.map(w => ({ ...w, answers: {} }))
   const subIds = work.flatMap(w => w.submission_id ? [w.submission_id] : [])
   const [submissions, reviews, ai] = await Promise.all([
     byIds<QuizSubmission>('quiz_submissions', '*', 'id', subIds, ['id']),
@@ -92,7 +99,7 @@ async function quizzes(scope: Scope): Promise<ResultActivity[]> {
 }
 
 async function readings(scope: Scope): Promise<ResultActivity[]> {
-  const assignments = (await read<ReadingAssignment>('textbook_assignments', '*', q => q.eq('course_id', scope.course.id).neq('status', 'draft'), ['id']))
+  const assignments = (await read<ReadingAssignment>('textbook_assignments', '*', q => reviewSource(scope, q.eq('course_id', scope.course.id).neq('status', 'draft')), ['id']))
     .filter(a => scope.includes(resultUnitIds(a.questions.map(q => q.target_id), scope.targets)))
   const ids = assignments.map(a => a.id), users = scope.students.map(s => s.id)
   const [work, exemptions] = users.length ? await Promise.all([
@@ -116,7 +123,7 @@ async function readings(scope: Scope): Promise<ResultActivity[]> {
 
 async function reviews(scope: Scope, ctx: AuthContext): Promise<ResultActivity[]> {
   if (scope.course.program !== 'physics') return []
-  const available = await read<ReviewAssignment>('review_module_assignments', '*', q => q.contains('course_ids', [scope.course.id]), ['slug'])
+  const available = await read<ReviewAssignment>('review_module_assignments', '*', q => reviewSource(scope, q.contains('course_ids', [scope.course.id]), 'slug'), ['slug'])
   const allowed: ReviewAssignment[] = []
   for (const a of available) if ((REVIEW_SLUGS as readonly string[]).includes(a.slug) && scope.includes(['unit-1']) && await canAccessReview(ctx, a)) allowed.push(a)
   const slugs = allowed.map(a => a.slug), users = scope.students.map(s => s.id)
@@ -130,6 +137,18 @@ async function reviews(scope: Scope, ctx: AuthContext): Promise<ResultActivity[]
 
 /** Read-only composition. Grading and mastery writes stay in their original providers. */
 export async function loadAssessmentResults(ctx: AuthContext, course: Scope['course'], unitId: string, options: { studentId?: string } = {}): Promise<ResultsData> {
+  return composeResults(ctx, course, unitId, options)
+}
+
+/** Individual reviews use the same models and active-roster checks as Results,
+ * but only load the requested provider and student. Choice menus retain their
+ * cross-provider composition. Math is included explicitly here; student progress
+ * still intentionally skips it. */
+export async function loadReviewResults(ctx: AuthContext, course: Scope['course'], key: string, studentId: string): Promise<ResultsData> {
+  return requestTiming('review_source', () => composeResults(ctx, course, 'all', { studentId, reviewKey: key }))
+}
+
+async function composeResults(ctx: AuthContext, course: Scope['course'], unitId: string, options: { studentId?: string; reviewKey?: string }): Promise<ResultsData> {
   const [roster, targets, units] = await Promise.all([
     read<{ student_id: string; students: { name: string; first_name?:string|null; last_name?:string|null; is_active?: boolean } | { name: string; first_name?:string|null; last_name?:string|null; is_active?: boolean }[] | null }>('course_students', 'student_id,students(name,first_name,last_name,is_active)', q => { const scoped = q.eq('course_id', course.id).eq('enrollment_state', 'ACTIVE'); return options.studentId ? scoped.eq('student_id', options.studentId) : scoped }, ['student_id']),
     read<{ id: string; slug: string; unit_id: string; statement: string; lesson_id: string | null }>('learning_targets', 'id,slug,unit_id,statement,lesson_id', q => q.eq('program', course.program), ['id']),
@@ -137,14 +156,50 @@ export async function loadAssessmentResults(ctx: AuthContext, course: Scope['cou
   ])
   const students = [...new Map(roster.flatMap(r => { const student = Array.isArray(r.students) ? r.students[0] : r.students; return student && student.is_active !== false ? [[r.student_id, { id: r.student_id, name: student.name, firstName:student.first_name, lastName:student.last_name }] as const] : [] })).values()].sort((a, b) => a.name.localeCompare(b.name))
   // Filter only after composition so missing unit mappings can be reported, not silently omitted.
-  const scope: Scope = { course, students, targetRows: targets, targets: new Map(targets.map(t => [t.id, t.unit_id])), targetIdsBySlug: new Map(targets.map(t => [t.slug, t.id])), includes: () => true }
-  const sources = [{name:'Worksheets',load:()=>worksheetResults(scope)}, { name: 'Interactive lessons and simulations', load: () => interactive(scope) }, { name: 'Quizzes', load: () => quizzes(scope) }, { name: 'Readings', load: () => readings(scope) }, { name: 'Reviews', load: () => reviews(scope, ctx) }, { name: 'Vocabulary', load: () => vocabularyResults(scope) }, { name: 'Math', load: () => mathResults(scope) }, { name: 'Videos', load: () => videoResults(scope) }, { name: 'Lessons, reflections and chapter responses', load: () => reflectionResults(scope) }, { name: 'Student choices', load: () => choiceResults(scope) }, {name:'Live classroom responses',load:()=>presentationResults(scope)}]
-  const results = await Promise.allSettled(sources.map(source => options.studentId && source.name === 'Math' ? Promise.resolve([] as ResultActivity[]) : source.load()))
+  const kind = options.reviewKey?.split(':')[0]
+  const scope: Scope = { course, students, targetRows: targets, targets: new Map(targets.map(t => [t.id, t.unit_id])), targetIdsBySlug: new Map(targets.map(t => [t.slug, t.id])), includes: () => true,
+    reviewSourceId: kind && kind !== 'choice' ? options.reviewKey!.slice(kind.length + 1) : undefined }
+  const sources = [
+    { kinds: ['student_choice'], name: 'Student Choice · Paper', load: () => studentChoiceResults(scope) },
+    { kinds: ['worksheet'], name: 'Worksheets', load: () => worksheetResults(scope) },
+    { kinds: ['interactive'], name: 'Interactive lessons and simulations', load: () => interactive(scope) },
+    { kinds: ['quiz'], name: 'Quizzes', load: () => quizzes(scope) },
+    { kinds: ['reading'], name: 'Readings', load: () => readings(scope) },
+    { kinds: ['review'], name: 'Reviews', load: () => reviews(scope, ctx) },
+    { kinds: ['vocabulary'], name: 'Vocabulary', load: () => vocabularyResults(scope) },
+    { kinds: ['math'], name: 'Math', load: () => mathResults(scope) },
+    { kinds: ['video'], name: 'Videos', load: () => videoResults(scope) },
+    { kinds: ['lesson', 'reflection'], name: 'Lessons, reflections and chapter responses', load: () => reflectionResults(scope) },
+    { kinds: ['choice'], name: 'Student choices', load: () => choiceResults(scope) },
+    { kinds: ['presentation'], name: 'Live classroom responses', load: () => presentationResults(scope) },
+  ].filter(source => !kind || kind === 'choice' || source.kinds.includes(kind))
+  // An inactive/non-rostered student must never cause evidence reads.
+  // The student-facing assignment keeps its last final review visible during revision.
+  // Read only release metadata for the authorized roster, never draft decisions or suggestions.
+  const receipts = !options.reviewKey
+    ? byIds<{ source_key: string; user_id: string; updated_at: string }>(
+      'review_desk_drafts', 'source_key,user_id,updated_at', 'user_id', students.map(s => s.id),
+      ['updated_at', 'id'], q => q.eq('course_id', course.id).eq('state', 'released'),
+    ).then(rows => ({ rows }), () => null)
+    : null
+  const results = await Promise.allSettled(sources.map(source => options.studentId && (options.reviewKey && !students.length || source.name === 'Math' && kind !== 'math') ? Promise.resolve([] as ResultActivity[]) : requestTiming('results_' + source.kinds[0], source.load)))
   const activities: ResultActivity[] = [], warnings: ResultsData['warnings'] = []
   results.forEach((result, i) => {
     if (result.status === 'fulfilled') activities.push(...result.value)
     else { console.error('[assessment-results]', sources[i].name, result.reason); warnings.push({ source: sources[i].name, message: 'Could not load this source. Review counts are incomplete until it refreshes.' }) }
   })
+  if (receipts) {
+    const releases = await receipts
+    if (releases) {
+      const byKey = new Map(activities.map(activity => [activity.key, activity]))
+      for (const { source_key, user_id, updated_at } of releases.rows) {
+        for (const key of revisionSourceKeys(source_key)) {
+          const cell = byKey.get(key)?.cells[user_id]
+          if (cell) cell.reviewReleasedAt = updated_at
+        }
+      }
+    } else warnings.push({ source: 'Released reviews', message: 'Some release records could not load. Refresh to see the full release count.' })
+  }
   if (!options.studentId) try {
     const suggestions=await byIds<{source:string;source_id:string;version:string;status:ResultCell['assessment']}>('assessment_suggestions','source,source_id,version,status','user_id',students.map(s=>s.id),['updated_at'])
     applySuggestionStatuses(activities,suggestions)

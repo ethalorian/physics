@@ -1,0 +1,16 @@
+{
+  "version": "readings-f35334d84aee",
+  "sourcePdfs": {
+    "cpa": {
+      "sha256": "b717be20a8603a479d9f79382aaf8e6bc3a28e889a87d51314ca3c94d71a8f5e"
+    },
+    "honors": {
+      "sha256": "ff179dd722730a4f77299aa407f746a6732db1ebf620835794fa27385b0b2bba"
+    }
+  },
+  "days": 22,
+  "practiceCombinations": 440,
+  "practiceSections": "verbatim source sections",
+  "fontsAndIllustrations": "original local assets",
+  "print": "Letter, 100%; notes/readings duplex long edge; practice one-sided"
+}

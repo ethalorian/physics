@@ -29,7 +29,7 @@ export const frontierLessons = {
     ],
     "worked": {
       "title": "Reason from the evidence",
-      "prompt": "Compare exchange mass scales of 100 and 200 MeV/c² in the same Yukawa model.",
+      "prompt": "Compare exchange mass scales of 100 and 200 MeV/c² using the same Yukawa equation.",
       "reasoning": "Because λ = ℏc/(mc²), doubling the mass halves the range scale. This is a model relationship, not evidence that either hypothetical particle exists."
     },
     "check": {
@@ -296,7 +296,7 @@ export const frontierLessons = {
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "Which claim is supported by established observations?",
+      "prompt": "Which statement is supported by established observations?",
       "options": [
         "Every grand unified model has been confirmed",
         "W, Z, and Higgs particles have been observed",
@@ -352,7 +352,7 @@ export const frontierLessons = {
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "The hot Big Bang model describes…",
+      "prompt": "The hot Big Bang theory describes…",
       "options": [
         "Expansion from an earlier hotter, denser state",
         "An explosion with Earth at its unique center",
@@ -420,7 +420,7 @@ export const frontierLessons = {
         "The observation makes no such engineering claim.",
         "Correct: it tests a prediction of general relativity."
       ],
-      "hint": "Match the observation to the claim it actually tests.",
+      "hint": "Match the observation to the statement it actually tests.",
       "teacher": "Ask students which assumptions the lens equation makes about the lens and source."
     },
     "references": [
@@ -509,7 +509,7 @@ export const frontierLessons = {
     ],
     "worked": {
       "title": "Reason from the evidence",
-      "prompt": "If circular speed stays approximately constant while orbital radius doubles in a spherical model, how does enclosed mass change?",
+      "prompt": "Treat the mass distribution as spherical. Circular speed stays about the same while orbital radius doubles. How does the mass inside the orbit change?",
       "reasoning": "M = v²r/G, so enclosed mass doubles. This is a mass-distribution inference, not a particle-identification measurement."
     },
     "check": {
@@ -574,7 +574,7 @@ export const frontierLessons = {
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "A credible superconductivity claim needs…",
+      "prompt": "What is needed to support a report that a material is superconducting?",
       "options": [
         "Only one unusually small resistance reading",
         "No information about temperature or pressure",
@@ -625,7 +625,7 @@ export const frontierLessons = {
     ],
     "worked": {
       "title": "Reason from the evidence",
-      "prompt": "A detector sees no signal predicted by one model. What information is needed to interpret that result?",
+      "prompt": "A detector sees no signal where a scientific explanation predicts one. What information is needed to interpret this result?",
       "reasoning": "Specify the predicted signal size, detection efficiency, background, observation time, and uncertainty. The absence constrains the model only where the experiment could have detected the relevant signal."
     },
     "check": {

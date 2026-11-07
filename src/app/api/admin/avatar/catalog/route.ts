@@ -11,7 +11,6 @@ import type { AvatarItem } from '@/lib/avatar/types'
 export interface CatalogRow extends AvatarItem {
   enabled: boolean
   owner_count: number
-  target_statement: string | null
 }
 
 export const GET = withRole('admin', async () => {
@@ -31,22 +30,9 @@ export const GET = withRole('admin', async () => {
       counts.set(r.item_slug, Number(r.owner_count))
     }
 
-    // Resolve target statements for unlock-gated items.
-    const targetIds = [...new Set(items.map((i) => i.unlock_target_id).filter(Boolean) as string[])]
-    const stmtById = new Map<string, string>()
-    if (targetIds.length > 0) {
-      const { data: ts, error: tsError } = await supabaseAdmin
-        .from('learning_targets')
-        .select('id, statement')
-        .in('id', targetIds)
-      if (tsError) throw tsError
-      for (const t of (ts ?? []) as { id: string; statement: string }[]) stmtById.set(t.id, t.statement)
-    }
-
     const catalog: CatalogRow[] = items.map((i) => ({
       ...i,
       owner_count: counts.get(i.slug) ?? 0,
-      target_statement: i.unlock_target_id ? stmtById.get(i.unlock_target_id) ?? null : null,
     }))
 
     return NextResponse.json({ catalog })

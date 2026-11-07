@@ -20,7 +20,7 @@ export default function VideoLessonPreparation({ document, unit, minutes, previe
       <div className={s.stats}><span>{videos.length} video{videos.length===1?'':'s'}</span><span>{pages.length} steps</span><span>{responses.length} required responses</span></div>
       <CognitiveProfile demands={document.blocks.map(b=>b.demand)}/>
       <ol>{pages.map((page,index) => <li key={page.blocks[0]?.id ?? index}><span>{index+1}</span><div><strong>{deriveSectionTitle(page,index,pages.length)}</strong><small>{page.captureBlocks.some(isRequiredCaptureBlock) ? 'Student response · saved with the lesson' : 'Watch, read, or explore'}</small></div></li>)}</ol>
-      {transfers.length>0 && <details className={s.transfer}><summary>Preview the transfer question{transfers.length===1?'':'s'} & scaffolding</summary>{transfers.map(block => <article key={block.id}><MathMarkdown content={block.task.prompt}/>{block.task.parts.map(part=><p key={part.id}><strong>{part.label}: </strong>{part.prompt}</p>)}</article>)}</details>}
+      {transfers.length>0 && <details className={s.transfer}><summary>Preview the transfer question{transfers.length===1?'':'s'} & scaffolding</summary>{transfers.map(block => <article key={block.id}><MathMarkdown content={block.task.prompt} questionEmphasis/>{block.task.parts.map(part=><p key={part.id}><strong>{part.label}: </strong>{part.prompt}</p>)}</article>)}</details>}
       <div className={s.prepareActions}><Link className={s.primary} href={previewHref}><Eye size={16}/>Try student view</Link><Link className={s.secondary} href={teachHref}>Teach this lesson<ArrowRight size={16}/></Link></div>
     </section>
   </div>

@@ -266,7 +266,8 @@ function ControlRoom() {
   const params = useSearchParams(), router = useRouter()
   const view = assessmentView(params.get('view'))
   const planning = ['plan', 'choices', 'calendar', 'guide', 'live', 'access', 'tasks', 'pacing'].includes(view)
-  const [planningScope, setPlanningScope] = useState<{ classId: string; units: GridData['units'] } | null>(null)
+  const lightweightScope = planning || view === 'results'
+  const [planningScope, setPlanningScope] = useState<{ classId: string; units: GridData['units']; unitId?: string | null } | null>(null)
   const [planningScopeError, setPlanningScopeError] = useState('')
   const [reviewVersion, setReviewVersion] = useState(0)
   const gridRequestVersion = useRef(0)
@@ -310,15 +311,16 @@ function ControlRoom() {
   const [targetFilter, setTargetFilter] = useState(params.get('target') ?? '')
   const teacherFilter = params.get('teacher') ?? ''
   const [classError, setClassError] = useState('')
+  const requestedUnit = params.get('unit') || 'unit-1', requestedLesson = params.get('lesson') ?? '', requestedTarget = params.get('target') ?? ''
+  const requestedClass = params.get('class'), requestedLabel = params.get('label'), appWide = params.get('view') === 'app-wide'
+  useEffect(() => { setUnitId(requestedUnit) }, [requestedUnit])
+  useEffect(() => { setLessonFilter(requestedLesson) }, [requestedLesson])
+  useEffect(() => { setTargetFilter(requestedTarget) }, [requestedTarget])
   useEffect(() => {
-    const sp = new URLSearchParams(window.location.search)
-    setUnitId(sp.get('unit') || 'unit-1')
-    setLessonFilter(sp.get('lesson') ?? '')
-    setTargetFilter(sp.get('target') ?? '')
-    if (sp.get('view') === 'app-wide') setClassScope(null, null)
-
-    if (sp.has('class')) setClassScope(sp.get('class') || null, sp.get('label'))
-  }, [setClassScope, params])
+    const nextClass = requestedClass !== null ? requestedClass || null : appWide ? null : storedClassId
+    const nextLabel = requestedClass !== null ? requestedLabel : appWide ? null : classLabel
+    if (ready && (nextClass !== storedClassId || nextLabel !== classLabel)) setClassScope(nextClass, nextLabel)
+  }, [requestedClass, requestedLabel, appWide, ready, storedClassId, classLabel, setClassScope])
   useEffect(() => {
     fetch('/api/teaching-plans?view=classes')
       .then(async r => { if (!r.ok) throw new Error('Classes could not be loaded. Refresh to try again.'); return r.json() })
@@ -380,9 +382,9 @@ function ControlRoom() {
   // Embedded quiz/reading reviews write mastery too; revisiting this tab must
   // pick up those ratings rather than retaining the grid from before grading.
   const invalidateGrid = useCallback(() => { gridRequestVersion.current++ }, [])
-  useEffect(() => { if (ready && view !== 'assignments' && !planning) loadGrid(unitId); return invalidateGrid }, [unitId, loadGrid, view, ready, invalidateGrid, planning])
+  useEffect(() => { if (ready && view !== 'assignments' && !lightweightScope) loadGrid(unitId); return invalidateGrid }, [unitId, loadGrid, view, ready, invalidateGrid, lightweightScope])
   useEffect(() => {
-    if (!ready || !planning || !classId) return
+    if (!ready || !lightweightScope || !classId) return
     const controller = new AbortController()
     setPlanningScopeError('')
     fetch(`/api/teaching-plans?view=scope&class=${encodeURIComponent(classId)}`, { signal: controller.signal }).then(async response => {
@@ -390,23 +392,26 @@ function ControlRoom() {
       if (!response.ok) throw Error(data.error || 'Course units could not load.')
       if (controller.signal.aborted) return
       setPlanningScope(data)
-      if (!data.units.some((u: { id: string }) => u.id === unitId) && data.unitId) {
-        setUnitId(data.unitId)
-        const next = new URLSearchParams(window.location.search); next.set('unit', data.unitId)
-        router.replace('?' + next.toString(), { scroll: false })
-      }
     }).catch(error => { if (!controller.signal.aborted) setPlanningScopeError(error.message) })
     return () => controller.abort()
-  }, [classId, ready, planning, unitId, router])
+  }, [classId, ready, lightweightScope])
+  useEffect(() => {
+    if (!lightweightScope || !classId || planningScope?.classId !== classId || !planningScope.unitId) return
+    if (view === 'results' && (unitId === 'all' || unitId === 'unmapped')) return
+    if (planningScope.units.some(unit => unit.id === unitId)) return
+    setUnitId(planningScope.unitId)
+    const next = new URL(window.location.href); next.searchParams.set('unit', planningScope.unitId)
+    window.history.replaceState(null, '', next.pathname + next.search + next.hash)
+  }, [classId, lightweightScope, planningScope, unitId, view])
   // Picking a class moves the unit to the one THAT class is working in — a Trades
   // or Project Physics class never sits on physics unit-1 (its program's units only).
   const classProgram = classId ? (classes.find((c) => c.id === classId)?.program ?? null) : null
   useEffect(() => {
-    if (!classId || planning) return
+    if (!classId || lightweightScope) return
     const unitProgram = grid?.units.find((u) => u.id === unitId)?.program
     if (classProgram && unitProgram && unitProgram !== classProgram) setUnitId('auto')
     else if (classProgram && grid && !unitProgram && unitId !== 'auto') setUnitId('auto')
-  }, [classId, classProgram, planning]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [classId, classProgram, lightweightScope]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadQueue = useCallback((unit: string) => {
     fetch(`/api/mastery/queue?unit_id=${encodeURIComponent(unit)}${classQuery}`)
@@ -514,7 +519,7 @@ function ControlRoom() {
       <StudentWorkHeader view={view} search={params.toString()} classId={classId}
         classLabel={classes.find(c => c.id === classId)?.label ?? classLabel}
         classes={classes} teachers={teachers} teacher={teacherFilter} onTeacherChange={pickTeacher}
-        unitId={unitId} units={(planning && planningScope?.classId === classId ? planningScope.units : grid?.units) ?? [{ id: unitId, name: unitLabel }]} program={classProgram}
+        unitId={unitId} units={(lightweightScope && planningScope?.classId === classId ? planningScope.units : grid?.units) ?? [{ id: unitId, name: unitLabel }]} program={classProgram}
         onClassChange={pickClass} onUnitChange={pickUnit} onNavigate={closeDrawer} />
       {classError && <p role="alert" className="my-3 text-sm text-destructive">{classError}</p>}
       {planning && planningScopeError && <p role="alert" className="my-3 text-sm text-destructive">{planningScopeError} Refresh to retry loading course units.</p>}
@@ -556,7 +561,7 @@ function ControlRoom() {
       {view === 'pacing' && (classId ? <PacingManager key={classId} classId={classId} /> : <p className="py-10 text-muted-foreground">Choose a class to set its meeting pattern and pacing.</p>)}
       {view === 'live' && <LiveClassroom classId={classId} unitId={unitId} />}
       {view === 'guide' && (classId && !['auto', 'all', 'unmapped'].includes(unitId) ? <CourseGuide embedded /> : <p className="py-10 text-muted-foreground">Choose a class and course unit above to read its teaching guide.</p>)}
-      {view === 'results' && (unitId === 'auto' && gridError ? <p role="alert">The class’s current unit could not load. <button className={styles.clear} onClick={() => pickUnit('all')}>Show results from all units</button></p> : <ResultsGradebook key={reviewVersion} classId={classId} unitId={unitId} targets={grid?.targets ?? []} onReviewLesson={openCell} onSaved={() => loadGrid(unitId, true)} />)}
+      {view === 'results' && (unitId === 'auto' && planningScopeError ? <p role="alert">The class’s current unit could not load. <button className={styles.clear} onClick={() => pickUnit('all')}>Show results from all units</button></p> : <ResultsGradebook key={reviewVersion} physics={classes.find(c=>c.id===classId)?.program==='physics'} classId={classId} unitId={unitId} targets={grid?.targets ?? []} onReviewLesson={openCell} onSaved={invalidateGrid} />)}
       {view === 'interactive' && (classId ? <AssignmentTeacher key={classId + ':' + params.get('id')} courseId={classId} initialSlug={params.get('id') ?? undefined} initialStudent={params.get('student') ?? ''} resultsContext /> : <p>Choose a class to review interactive assignments.</p>)}
       {view === 'reviews' && (classId ? <ReviewTeacher key={classId + ':' + params.get('id') + ':' + params.get('student')} embedded classId={classId} initialSlug={params.get('id') ?? ''} initialStudent={params.get('student') ?? ''} /> : <p>Choose a class to review responses.</p>)}
       {view === 'assignments' && <ClassAssignedWork key={classId ?? 'none'} classId={classId} />}

@@ -9,7 +9,7 @@
     "Use Q=mL for that interval.",
     "Separate warming energy from phase-change energy."
   ],
-  "source_sha256": "7a724f5f03eb9a70f0efa9baa01f5984a6b278abb7a697523f791ea737899193",
+  "source_sha256": "62729348265d075a380a07c92e85abcb4efa124f0eccd476f7a6460b3694d57b",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.535Z",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "A sample remains at its boiling temperature while liquid gradually becomes gas. What does continued energy input primarily do in this model?",
+      "prompt": "A sample stays at its boiling temperature while liquid gradually becomes gas. What does the added energy mainly do?",
       "options": [
         "Raises temperature at the same rate as before boiling.",
         "Destroys mass.",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "A 1.5 kg model substance releases latent energy with magnitude L = 120 J/kg while freezing. What energy magnitude is released?",
+      "prompt": "A 1.5 kg substance freezes. Its latent heat has magnitude L = 120 J/kg. How much energy does it release?",
       "options": [
         "121.5 J",
         "180 J",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A model sample needs 900 J to reach its transition temperature and 1,600 J to complete its phase change. What total input is needed with no losses?",
+      "prompt": "A sample needs 900 J to reach its phase-change temperature and 1,600 J to finish changing phase. With no energy losses, what total input is needed?",
       "options": [
         "2,500 J",
         "1,600 J",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "A sample remains at its boiling temperature while liquid gradually becomes gas. What does continued energy input primarily do in this model?",
+      "prompt": "A sample stays at its boiling temperature while liquid gradually becomes gas. What does the added energy mainly do?",
       "options": [
         "Proves the heater is off.",
         "Destroys mass.",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "A 1.5 kg model substance releases latent energy with magnitude L = 120 J/kg while freezing. What energy magnitude is released?",
+      "prompt": "A 1.5 kg substance freezes. Its latent heat has magnitude L = 120 J/kg. How much energy does it release?",
       "options": [
         "0 J",
         "121.5 J",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A model sample needs 900 J to reach its transition temperature and 1,600 J to complete its phase change. What total input is needed with no losses?",
+      "prompt": "A sample needs 900 J to reach its phase-change temperature and 1,600 J to finish changing phase. With no energy losses, what total input is needed?",
       "options": [
         "1,600 J",
         "2,500 J",

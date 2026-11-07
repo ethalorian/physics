@@ -1,4 +1,5 @@
 'use client'
+import QuizContent from '@/components/quizzes/QuizContent'
 
 import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, Clock3 } from 'lucide-react'
@@ -26,7 +27,7 @@ export function CheckpointStudent({ state, attempt, onAnswer, onSubmit, onTeache
   const [index, setIndex] = useState(0)
   const [rehearsal, setRehearsal] = useState('')
   const [checked, setChecked] = useState(false)
-  const prompt = useRef<HTMLHeadingElement>(null)
+  const prompt = useRef<HTMLDivElement>(null)
   const question = questions[index]
   const answered = questions.filter(q => attempt.answers[q.id]?.trim()).length
   const startQuiz = () => { setIndex(Math.max(0,questions.findIndex(q=>!attempt.answers[q.id]?.trim()))); setStage('quiz') }
@@ -69,12 +70,12 @@ export function CheckpointStudent({ state, attempt, onAnswer, onSubmit, onTeache
     <div className={s.questionNav} aria-label="Question navigation">{questions.map((q,i)=><Button key={q.id} variant="outline" aria-label={`Question ${i+1}${attempt.answers[q.id]?.trim()?', answered':''}`} aria-current={index===i?'step':undefined} onClick={()=>setIndex(i)}>{i+1}{attempt.answers[q.id]?.trim()&&<span className={s.answerDot}/>}</Button>)}</div>
     <Card className={s.questionCard}>
       <div className={s.between}><p className={s.eyebrow}>{question.part==='recognize'?'01 · RECOGNIZE':question.part==='interpret'?'02 · INTERPRET':'03 · EXPLAIN'}</p><span className={s.badge}>{question.points} {question.points===1?'point':'points'}</span></div>
-      <h1 ref={prompt} tabIndex={-1} className="text-title-1">{question.prompt}</h1>
+      <div ref={prompt} tabIndex={-1}><h1 className="text-title-2">Question {index+1}</h1><QuizContent questionEmphasis content={question.prompt} allowFigures/></div>
       {question.scene&&<CheckpointScene kind={question.scene}/>}
       {question.options?<ChoiceResponse value={attempt.answers[question.id]} disabled={busy} onChange={v=>onAnswer(question.id,v)} options={question.options.map((o,i)=>({id:String(i),content:o}))}/>:<>
         <div className={s.chips}>{question.words.map(w=><span key={w}>{w}</span>)}</div>
         <WrittenResponse label="Your explanation" maxLength={2000} disabled={busy} value={attempt.answers[question.id]??''} onChange={v=>onAnswer(question.id,v)} help="Explain your choices with evidence from the situation."/>
-        <details className={s.support}><summary>Need a sentence starter?</summary><p>{question.frame}</p></details>
+        <details className={s.support}><summary>Need a sentence starter?</summary><QuizContent questionEmphasis content={question.frame}/></details>
         <div className={s.rubricMini}><strong>How this earns 4 points</strong><span>Use accurate meanings, apply them to the situation, and justify your reasoning.</span></div>
       </>}
     </Card>
@@ -90,7 +91,7 @@ export function CheckpointResult({ state, attempt, questions, gradeLabel='Quiz g
     {attempt.notes._overall&&<Card density="compact"><strong>From your teacher</strong><p>{attempt.notes._overall}</p></Card>}<h2 className="text-title-2">Your feedback</h2><p className={s.muted}>Review the explanation behind each answer, then use the words again.</p>
     <div className={s.stack}>{questions.map((q,i)=>{
       const points=q.part==='explain'?attempt.scores[q.id]:attempt.answers[q.id]===String(q.answer)?q.points:0
-      return <Card density="compact" key={q.id}><div className={s.between}><strong>{i+1}. {q.words.join(' · ')}</strong><span className={`${s.badge} ${points===q.points?s.positive:s.attention}`}>{points} / {q.points}</span></div><p>{q.prompt}</p><div className={s.response}><span>Your answer</span><p>{q.options?q.options[Number(attempt.answers[q.id])]:attempt.answers[q.id]}</p></div><p>{q.explanation}</p>{attempt.notes[q.id]&&<div className={s.guidance}><strong>From your teacher</strong><p>{attempt.notes[q.id]}</p></div>}</Card>
+      return <Card density="compact" key={q.id}><div className={s.between}><strong>{i+1}. {q.words.join(' · ')}</strong><span className={`${s.badge} ${points===q.points?s.positive:s.attention}`}>{points} / {q.points}</span></div><QuizContent questionEmphasis content={q.prompt} allowFigures/><div className={s.response}><span>Your answer</span><p>{q.options?q.options[Number(attempt.answers[q.id])]:attempt.answers[q.id]}</p></div><p>{q.explanation}</p>{attempt.notes[q.id]&&<div className={s.guidance}><strong>From your teacher</strong><p>{attempt.notes[q.id]}</p></div>}</Card>
     })}</div>
   </div>
 }

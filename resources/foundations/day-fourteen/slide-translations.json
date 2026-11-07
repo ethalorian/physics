@@ -1,0 +1,686 @@
+{
+  ", at x =": [
+    ", en x =",
+    ", em x ="
+  ],
+  ". The wall’s diagram includes hand on wall.": [
+    ". El diagrama de la pared incluye la fuerza de la mano sobre la pared.",
+    ". O diagrama da parede inclui a força da mão sobre a parede."
+  ],
+  "3rd-Law force pairs, and why they never cancel.": [
+    "Pares de fuerzas de la 3.ª ley y por qué no se anulan en un solo objeto.",
+    "Pares de forças da 3ª lei e por que não se anulam em um só objeto."
+  ],
+  "A DART-style impact": [
+    "Un impacto como el de DART",
+    "Um impacto como o da DART"
+  ],
+  "A and B.": [
+    "A y B.",
+    "A e B."
+  ],
+  "A foot pushes the ground backward": [
+    "Un pie empuja el suelo hacia atrás",
+    "Um pé empurra o chão para trás"
+  ],
+  "A free-body diagram contains only forces on its chosen object.": [
+    "Un diagrama de cuerpo libre incluye solo las fuerzas sobre el objeto elegido.",
+    "Um diagrama de corpo livre inclui só as forças sobre o objeto escolhido."
+  ],
+  "A hand and a wall": [
+    "Una mano y una pared",
+    "Uma mão e uma parede"
+  ],
+  "A horse pulls a cart. The cart pulls back on the horse with equal force.": [
+    "Un caballo tira de un carro. El carro tira del caballo con igual fuerza en sentido opuesto.",
+    "Um cavalo puxa uma carroça. A carroça puxa o cavalo com força igual no sentido oposto."
+  ],
+  "A large object and a small object intera": [
+    "Interacción entre un objeto grande y uno pequeño",
+    "Interação entre um objeto grande e um pequeno"
+  ],
+  "A large object and a small object interact": [
+    "Interactúan un objeto grande y uno pequeño",
+    "Um objeto grande e um pequeno interagem"
+  ],
+  "A on B": [
+    "A sobre B",
+    "A sobre B"
+  ],
+  "A on B (N)": [
+    "A sobre B (N)",
+    "A sobre B (N)"
+  ],
+  "A pushes B right.": [
+    "A empuja B hacia la derecha.",
+    "A empurra B para a direita."
+  ],
+  "A small cart pushes a large cart with 6 N.": [
+    "Un carrito pequeño empuja a uno grande con 6 N.",
+    "Um carrinho pequeno empurra um grande com 6 N."
+  ],
+  "A starts ahead; B starts at the origin.": [
+    "A empieza más adelante; B empieza en el origen.",
+    "A começa mais à frente; B começa na origem."
+  ],
+  "Are these two forces an interaction pair?": [
+    "¿Estas dos fuerzas forman un par de interacción?",
+    "Essas duas forças formam um par de interação?"
+  ],
+  "Are weight and support a third-law pair?": [
+    "¿Son el peso y el apoyo un par de la tercera ley?",
+    "Peso e apoio formam um par da terceira lei?"
+  ],
+  "Argue": [
+    "Debate",
+    "Debate"
+  ],
+  "At the same time, B pushes A left.": [
+    "Al mismo tiempo, B empuja A hacia la izquierda.",
+    "Ao mesmo tempo, B empurra A para a esquerda."
+  ],
+  "B on A": [
+    "B sobre A",
+    "B sobre A"
+  ],
+  "B on A (N)": [
+    "B sobre A (N)",
+    "B sobre A (N)"
+  ],
+  "Both forces act on the same book.": [
+    "Ambas fuerzas actúan sobre el mismo libro.",
+    "As duas forças atuam no mesmo livro."
+  ],
+  "Both forces exist simultaneously. They have the same type and equal magnitudes, and act on different objects.": [
+    "Las dos fuerzas existen al mismo tiempo. Son del mismo tipo, tienen igual magnitud y actúan sobre objetos distintos.",
+    "As duas forças existem ao mesmo tempo. São do mesmo tipo, têm o mesmo módulo e atuam em objetos diferentes."
+  ],
+  "Both read ≈ 0 N.": [
+    "Ambos marcan ≈ 0 N.",
+    "Ambos indicam ≈ 0 N."
+  ],
+  "Both slack": [
+    "Ambos sin tensión",
+    "Ambos sem tensão"
+  ],
+  "Cart A and cart B": [
+    "Carrito A y carrito B",
+    "Carrinho A e carrinho B"
+  ],
+  "Cart A and cart B. Identify force size separately from acceleration.": [
+    "Carrito A y carrito B. Distingue la magnitud de la fuerza de la aceleración.",
+    "Carrinho A e carrinho B. Distinga o módulo da força da aceleração."
+  ],
+  "Choose a common positive axis for both force descriptions.": [
+    "Elige el mismo eje positivo para describir las dos fuerzas.",
+    "Escolha o mesmo eixo positivo para descrever as duas forças."
+  ],
+  "Combining diagrams of different objects hides which object accelerates.": [
+    "Combinar diagramas de objetos distintos oculta cuál objeto acelera.",
+    "Juntar diagramas de objetos diferentes esconde qual objeto acelera."
+  ],
+  "Connect both force sensors to one laptop; show both readings on one graph.": [
+    "Conecta ambos sensores de fuerza a una computadora y muestra las dos lecturas en una gráfica.",
+    "Conecte os dois sensores de força a um computador e mostre as duas leituras no mesmo gráfico."
+  ],
+  "Day 14 · Phase 2 — Building the tools": [
+    "Día 14 · Fase 2 — Construimos herramientas",
+    "Dia 14 · Fase 2 — Construindo as ferramentas"
+  ],
+  "Different objects": [
+    "Objetos distintos",
+    "Objetos diferentes"
+  ],
+  "During a collision between a heavy cart and a light cart, which cart exerts the larger force on the other at the same instant? Predict before discussing.": [
+    "En un choque entre un carrito pesado y uno ligero, ¿cuál ejerce más fuerza sobre el otro en el mismo instante? Haz tu predicción antes de hablar.",
+    "Numa colisão entre um carrinho pesado e um leve, qual exerce maior força no outro no mesmo instante? Faça sua previsão antes da conversa."
+  ],
+  "During an ideal interaction, cart A has mass 1 kg and cart B has mass 4 kg. Each experiences a 12 N interaction force, in opposite directions. Ignore other horizontal forces. Find their acceleration magnitudes.": [
+    "En una interacción ideal, el carrito A tiene 1 kg y el B tiene 4 kg. Cada uno recibe una fuerza de 12 N, en sentidos opuestos. Ignora otras fuerzas horizontales. Halla las magnitudes de sus aceleraciones.",
+    "Numa interação ideal, o carrinho A tem 1 kg e o B tem 4 kg. Cada um recebe uma força de 12 N, em sentidos opostos. Ignore outras forças horizontais. Ache os módulos das acelerações."
+  ],
+  "Earth pulls a book down. The table pushes the book up.": [
+    "La Tierra tira de un libro hacia abajo. La mesa empuja el libro hacia arriba.",
+    "A Terra puxa um livro para baixo. A mesa empurra o livro para cima."
+  ],
+  "Equal force magnitudes do not imply equal acceleration magnitudes.": [
+    "Fuerzas de igual magnitud no siempre producen aceleraciones de igual magnitud.",
+    "Forças de mesmo módulo nem sempre produzem acelerações de mesmo módulo."
+  ],
+  "Equal force, small mass → huge velocity change.": [
+    "Fuerza igual, masa pequeña → gran cambio de velocidad.",
+    "Força igual, massa pequena → grande mudança de velocidade."
+  ],
+  "Equal forces can have different effects": [
+    "Fuerzas iguales pueden tener efectos distintos",
+    "Forças iguais podem ter efeitos diferentes"
+  ],
+  "Equal forces do not imply equal accelerations.": [
+    "Fuerzas iguales no siempre producen aceleraciones iguales.",
+    "Forças iguais nem sempre produzem acelerações iguais."
+  ],
+  "Equal forces, unequal accelerations": [
+    "Fuerzas iguales, aceleraciones distintas",
+    "Forças iguais, acelerações diferentes"
+  ],
+  "Equal size; opposite direction.": [
+    "Igual magnitud; sentidos opuestos.",
+    "Mesmo módulo; sentidos opostos."
+  ],
+  "Equal sizes, opposite signs.": [
+    "Igual magnitud, signos opuestos.",
+    "Mesmo módulo, sinais opostos."
+  ],
+  "Example paired measurements": [
+    "Ejemplo de mediciones emparejadas",
+    "Exemplo de medições em pares"
+  ],
+  "Explain any mismatch using zeroing, calibration, timing, or apparatus effects.": [
+    "Explica una diferencia pensando en el ajuste a cero, la calibración, el instante de lectura o el equipo.",
+    "Explique uma diferença pensando no ajuste do zero, na calibração, no instante da leitura ou no equipamento."
+  ],
+  "External forces decide: the ground pushing on the horse's feet.": [
+    "Deciden las fuerzas externas: el suelo empuja las patas del caballo.",
+    "As forças externas importam: o chão empurra as patas do cavalo."
+  ],
+  "Finish the sentence precisely": [
+    "Completa la oración con precisión",
+    "Complete a frase com precisão"
+  ],
+  "First force": [
+    "Primera fuerza",
+    "Primeira força"
+  ],
+  "Foot pushes ground backward.": [
+    "El pie empuja el suelo hacia atrás.",
+    "O pé empurra o chão para trás."
+  ],
+  "Gentle pull": [
+    "Tirón suave",
+    "Puxada leve"
+  ],
+  "Ground pushes foot ___.": [
+    "El suelo empuja el pie ___.",
+    "O chão empurra o pé ___."
+  ],
+  "Hand on wall and wall on hand are the pair.": [
+    "La mano sobre la pared y la pared sobre la mano forman el par.",
+    "A mão na parede e a parede na mão formam o par."
+  ],
+  "Hand → wall.": [
+    "Mano → pared.",
+    "Mão → parede."
+  ],
+  "Hook the sensors together, hook to hook (or with a short rope).": [
+    "Une los sensores por sus ganchos o con una cuerda corta.",
+    "Una os sensores pelos ganchos ou com uma corda curta."
+  ],
+  "How much force does the large cart exert on the small cart?": [
+    "¿Qué fuerza ejerce el carrito grande sobre el pequeño?",
+    "Qual força o carrinho grande exerce no pequeno?"
+  ],
+  "Huge mass → tiny velocity change.": [
+    "Masa enorme → cambio de velocidad diminuto.",
+    "Massa enorme → mudança de velocidade muito pequena."
+  ],
+  "I do · name the pair": [
+    "Te muestro cómo nombrar el par",
+    "Vou mostrar como nomear o par"
+  ],
+  "I do · separate the objects": [
+    "Te muestro cómo separar los objetos",
+    "Vou mostrar como separar os objetos"
+  ],
+  "Identify force size separately from acceleration.": [
+    "Distingue la magnitud de la fuerza de la aceleración.",
+    "Distinga o módulo da força da aceleração."
+  ],
+  "If A pushes B with force F, then B pushe": [
+    "Si A empuja B, B empuja A",
+    "Se A empurra B, B empurra A"
+  ],
+  "If A pushes B with force F, then B pushes A with force F — in the opposite direction.": [
+    "Si A empuja B con fuerza F, B empuja A con fuerza F en el sentido opuesto.",
+    "Se A empurra B com força F, B empurra A com força F no sentido oposto."
+  ],
+  "Illustrative readings with small measurement differences. Compare simultaneous values, not different moments.": [
+    "Lecturas de ejemplo con pequeñas diferencias de medición. Compara valores del mismo instante.",
+    "Leituras de exemplo com pequenas diferenças de medição. Compare valores do mesmo instante."
+  ],
+  "Investigate": [
+    "Investiga",
+    "Investigue"
+  ],
+  "Investigation 1.4": [
+    "Investigación 1.4",
+    "Investigação 1.4"
+  ],
+  "Investigation 1.4 · tug-of-war": [
+    "Investigación 1.4 · tira y afloja",
+    "Investigação 1.4 · cabo de guerra"
+  ],
+  "Investigation 1.4 · tug-of-war with force sensors": [
+    "Investigación 1.4 · tira y afloja con sensores de fuerza",
+    "Investigação 1.4 · cabo de guerra com sensores de força"
+  ],
+  "Its partner is ___ exerting a force on ___.": [
+    "Su pareja es ___ que ejerce una fuerza sobre ___.",
+    "Seu par é ___ exercendo uma força em ___."
+  ],
+  "Keep the receivers separate": [
+    "Separa los objetos que reciben las fuerzas",
+    "Separe os objetos que recebem as forças"
+  ],
+  "Keep the receivers separate. Combining diagrams of different objects hides which object accelerates.": [
+    "Separa los receptores. Combinar diagramas de objetos distintos oculta cuál objeto acelera.",
+    "Separe os receptores. Juntar diagramas de objetos diferentes esconde qual objeto acelera."
+  ],
+  "Lab · Day 14 · Action & Reaction": [
+    "Laboratorio · Día 14 · Acción y reacción",
+    "Laboratório · Dia 14 · Ação e reação"
+  ],
+  "Laptop showing both readings": [
+    "Computadora que muestra ambas lecturas",
+    "Computador que mostra as duas leituras"
+  ],
+  "Lines cross where positions match.": [
+    "Las líneas se cruzan donde las posiciones coinciden.",
+    "As retas se cruzam onde as posições coincidem."
+  ],
+  "Name the interaction partner.": [
+    "Nombra la otra fuerza del par.",
+    "Nomeie a outra força do par."
+  ],
+  "Naming the agent and receiver is the most reliable test for a pair.": [
+    "Para comprobar el par, di quién ejerce cada fuerza y quién la recibe.",
+    "Para conferir o par, diga quem exerce cada força e quem a recebe."
+  ],
+  "Newton's 3rd Law": [
+    "3.ª ley de Newton",
+    "3ª lei de Newton"
+  ],
+  "Newton's 3rd Law: Action and Reaction": [
+    "3.ª ley de Newton: acción y reacción",
+    "3ª lei de Newton: ação e reação"
+  ],
+  "Not who pulls hardest — friction with the floor decides.": [
+    "Gana quien aprovecha mejor la fricción con el suelo, no quien tira más fuerte del otro.",
+    "Quem aproveita melhor o atrito com o chão pode vencer, mesmo que as forças entre os dois sejam iguais."
+  ],
+  "On the asteroid": [
+    "Sobre el asteroide",
+    "No asteroide"
+  ],
+  "On the spacecraft": [
+    "Sobre la nave",
+    "Na nave"
+  ],
+  "One force acts on A. The other acts on B.": [
+    "Una fuerza actúa sobre A. La otra actúa sobre B.",
+    "Uma força atua em A. A outra atua em B."
+  ],
+  "One interaction, two force statements": [
+    "Una interacción, dos descripciones de fuerza",
+    "Uma interação, duas descrições de força"
+  ],
+  "One interaction, two forces": [
+    "Una interacción, dos fuerzas",
+    "Uma interação, duas forças"
+  ],
+  "One interaction, two forces. The arrows have equal size and opposite directions.": [
+    "Una interacción, dos fuerzas. Las flechas tienen igual tamaño y sentidos opuestos.",
+    "Uma interação, duas forças. As setas têm o mesmo tamanho e sentidos opostos."
+  ],
+  "Online alternative": [
+    "Alternativa en línea",
+    "Alternativa on-line"
+  ],
+  "Paired-sensor investigation": [
+    "Investigación con dos sensores",
+    "Investigação com dois sensores"
+  ],
+  "Partner force": [
+    "La otra fuerza del par",
+    "A outra força do par"
+  ],
+  "Partner: wall pushes hand.": [
+    "Pareja: la pared empuja la mano.",
+    "Par: a parede empurra a mão."
+  ],
+  "Position vs. time. Position (m) versus Time (s). Lines cross where positions match.": [
+    "Posición y tiempo. Posición (m) frente al tiempo (s). Las líneas se cruzan donde coinciden las posiciones.",
+    "Posição e tempo. Posição (m) em função do tempo (s). As retas se cruzam onde as posições coincidem."
+  ],
+  "Predict the two readings for gentle steady and changing pulls.": [
+    "Predice ambas lecturas para tirones suaves y constantes y para tirones variables.",
+    "Preveja as duas leituras para puxadas leves e constantes e para puxadas variáveis."
+  ],
+  "Pull gently first. Never let go suddenly — ease off together.": [
+    "Tiren suavemente al principio. No suelten de golpe. Aflojen juntos.",
+    "Puxem de leve no início. Não soltem de repente. Aliviem juntos."
+  ],
+  "Pull hard. Pull soft. Pull jerkily.": [
+    "Prueba tirones más fuertes, suaves y variables, siempre dentro del rango.",
+    "Teste puxadas mais fortes, leves e variáveis, sempre dentro da faixa."
+  ],
+  "Re-zero both; check both are on the same range.": [
+    "Ajusta ambos a cero de nuevo y comprueba que tienen el mismo rango.",
+    "Zere os dois outra vez e confira se estão na mesma faixa."
+  ],
+  "Read one object’s forces. Normal 10 N; Weight 10 N. Both forces act on the same book.": [
+    "Lee las fuerzas sobre un objeto. Normal: 10 N; peso: 10 N. Ambas fuerzas actúan sobre el mismo libro.",
+    "Leia as forças em um objeto. Normal: 10 N; peso: 10 N. As duas forças atuam no mesmo livro."
+  ],
+  "Readings differ?": [
+    "¿Difieren las lecturas?",
+    "As leituras diferem?"
+  ],
+  "Recall: two objects, one graph": [
+    "Repaso: dos objetos, una gráfica",
+    "Revisão: dois objetos, um gráfico"
+  ],
+  "Record both readings at the same times. Compare magnitudes and signs.": [
+    "Anota ambas lecturas en los mismos instantes. Compara magnitudes y signos.",
+    "Registre as duas leituras nos mesmos instantes. Compare módulos e sinais."
+  ],
+  "Riddle · argue it out": [
+    "Acertijo · debate en grupo",
+    "Enigma · debate em grupo"
+  ],
+  "Same 6 N force size": [
+    "Fuerzas de igual magnitud: 6 N",
+    "Forças de mesmo módulo: 6 N"
+  ],
+  "Same 6 N force size. 2 kg object: 3; 6 kg object: 1. Equal forces do not imply equal accelerations.": [
+    "Igual magnitud: 6 N. Objeto de 2 kg: 3; objeto de 6 kg: 1. Fuerzas iguales no siempre producen aceleraciones iguales.",
+    "Mesmo módulo: 6 N. Objeto de 2 kg: 3; objeto de 6 kg: 1. Forças iguais nem sempre produzem acelerações iguais."
+  ],
+  "Same interaction": [
+    "La misma interacción",
+    "A mesma interação"
+  ],
+  "Same time": [
+    "El mismo instante",
+    "O mesmo instante"
+  ],
+  "Same type of force.": [
+    "El mismo tipo de fuerza.",
+    "O mesmo tipo de força."
+  ],
+  "Set both to the same range (±50 N).": [
+    "Pon ambos en el mismo rango (±50 N).",
+    "Ajuste os dois para a mesma faixa (±50 N)."
+  ],
+  "Set up the tug-of-war sensors": [
+    "Prepara los sensores para el tira y afloja",
+    "Prepare os sensores para o cabo de guerra"
+  ],
+  "Short rope or hook to connect them": [
+    "Cuerda corta o gancho para unirlos",
+    "Corda curta ou gancho para uni-los"
+  ],
+  "So how does the cart ever move?": [
+    "Entonces, ¿cómo llega a moverse el carro?",
+    "Então, como a carroça consegue se mover?"
+  ],
+  "So who wins a tug-of-war?": [
+    "Entonces, ¿quién gana el tira y afloja?",
+    "Então, quem vence o cabo de guerra?"
+  ],
+  "Start: hand pushes wall.": [
+    "Inicio: la mano empuja la pared.",
+    "Início: a mão empurra a parede."
+  ],
+  "Surviving the collision is optional. Transferring momentum isn't.": [
+    "La nave puede romperse en el choque y aun así transferir cantidad de movimiento.",
+    "A nave pode se desfazer na colisão e ainda assim transferir quantidade de movimento."
+  ],
+  "Swap names": [
+    "Intercambia los nombres",
+    "Troque os nomes"
+  ],
+  "Swap the two object names": [
+    "Intercambia los nombres de los dos objetos",
+    "Troque os nomes dos dois objetos"
+  ],
+  "Target R8": [
+    "Meta R8",
+    "Meta R8"
+  ],
+  "The arrows have equal size and opposite directions.": [
+    "Las flechas tienen igual tamaño y sentidos opuestos.",
+    "As setas têm o mesmo tamanho e sentidos opostos."
+  ],
+  "The foot receives that force; the ground receives the backward force.": [
+    "El pie recibe esa fuerza; el suelo recibe la fuerza hacia atrás.",
+    "O pé recebe essa força; o chão recebe a força para trás."
+  ],
+  "The forces occur together.": [
+    "Las fuerzas ocurren al mismo tiempo.",
+    "As forças ocorrem ao mesmo tempo."
+  ],
+  "The ground pushes the foot": [
+    "El suelo empuja el pie",
+    "O chão empurra o pé"
+  ],
+  "The hand’s diagram includes": [
+    "El diagrama de la mano incluye",
+    "O diagrama da mão inclui"
+  ],
+  "The interaction forces have equal magnitude and opposite directions at the same instant. Different masses can have different accelerations.": [
+    "En el mismo instante, las fuerzas tienen igual magnitud y sentidos opuestos. Masas distintas pueden tener aceleraciones distintas.",
+    "No mesmo instante, as forças têm o mesmo módulo e sentidos opostos. Massas diferentes podem ter acelerações diferentes."
+  ],
+  "The key": [
+    "La idea principal",
+    "A ideia principal"
+  ],
+  "The lighter object has greater acceleration.": [
+    "El objeto más ligero tiene mayor aceleración.",
+    "O objeto mais leve tem maior aceleração."
+  ],
+  "The partner of Earth pulling the book is the book pulling Earth.": [
+    "La pareja de la Tierra que tira del libro es el libro que tira de la Tierra.",
+    "O par da Terra puxando o livro é o livro puxando a Terra."
+  ],
+  "The riddle": [
+    "El acertijo",
+    "O enigma"
+  ],
+  "The smaller mass can have greater acceleration even though force sizes match.": [
+    "La masa menor puede tener mayor aceleración aunque las fuerzas tengan igual magnitud.",
+    "A massa menor pode ter maior aceleração mesmo que as forças tenham o mesmo módulo."
+  ],
+  "The two forces act on DIFFERENT objects — so they can't cancel.": [
+    "Las fuerzas actúan sobre objetos DISTINTOS, así que no se anulan sobre un solo objeto.",
+    "As forças atuam em objetos DIFERENTES, então não se anulam em um só objeto."
+  ],
+  "They both act on the book.": [
+    "Ambas actúan sobre el libro.",
+    "As duas atuam no livro."
+  ],
+  "Time (s)": [
+    "Tiempo (s)",
+    "Tempo (s)"
+  ],
+  "Try one student MUCH stronger than the other.": [
+    "Prueben con una persona MUCHO más fuerte que la otra.",
+    "Testem com uma pessoa MUITO mais forte que a outra."
+  ],
+  "Two force sensors, hooked together, on one screen.": [
+    "Dos sensores unidos, en una sola pantalla.",
+    "Dois sensores unidos, em uma só tela."
+  ],
+  "Two objects interact at once": [
+    "Dos objetos interactúan al mismo tiempo",
+    "Dois objetos interagem ao mesmo tempo"
+  ],
+  "Two receivers": [
+    "Dos receptores",
+    "Dois receptores"
+  ],
+  "Use the same force size on a light object and a heavy object.": [
+    "Aplica una fuerza de igual magnitud a un objeto ligero y a uno pesado.",
+    "Use uma força de mesmo módulo num objeto leve e num pesado."
+  ],
+  "Use the same two objects, with their roles swapped.": [
+    "Usa los mismos objetos e intercambia sus papeles.",
+    "Use os mesmos objetos e troque seus papéis."
+  ],
+  "Vernier dual-range force sensors (2)": [
+    "Sensores Vernier de fuerza de doble rango (2)",
+    "Sensores de força Vernier de duas faixas (2)"
+  ],
+  "Wall → hand.": [
+    "Pared → mano.",
+    "Parede → mão."
+  ],
+  "Watch both readings": [
+    "Observa ambas lecturas",
+    "Observe as duas leituras"
+  ],
+  "We've covered force and acceleration.": [
+    "Ya estudiamos la fuerza y la aceleración.",
+    "Já estudamos a força e a aceleração."
+  ],
+  "What do you notice about the two readings?": [
+    "¿Qué notas en las dos lecturas?",
+    "O que você percebe nas duas leituras?"
+  ],
+  "What happens when two objects interact? When a spacecraft hits 2026-XJ, the asteroid pushes back just as hard. The 3rd Law is built into impactor design.": [
+    "¿Qué pasa cuando dos objetos interactúan? Si una nave choca con 2026-XJ, el asteroide la empuja con la misma fuerza. El diseño del impactador usa la 3.ª ley.",
+    "O que acontece quando dois objetos interagem? Se uma nave colide com 2026-XJ, o asteroide a empurra com força igual. O projeto do impactador usa a 3ª lei."
+  ],
+  "When you push against a wall, what pushes back on you with equal force?": [
+    "Cuando empujas una pared, ¿qué te empuja con igual fuerza?",
+    "Quando você empurra uma parede, o que empurra você com força igual?"
+  ],
+  "Which is faster? When and where do they meet?": [
+    "¿Cuál es más rápido? ¿Cuándo y dónde se encuentran?",
+    "Qual é mais rápido? Quando e onde eles se encontram?"
+  ],
+  "Which object receives the forward force?": [
+    "¿Qué objeto recibe la fuerza hacia delante?",
+    "Qual objeto recebe a força para a frente?"
+  ],
+  "Whiteboard for force-pair diagrams": [
+    "Pizarra para diagramas de pares de fuerzas",
+    "Quadro para diagramas de pares de forças"
+  ],
+  "Why the pair does not cancel on one obje": [
+    "Por qué el par no se anula en un objeto",
+    "Por que o par não se anula em um objeto"
+  ],
+  "Why the pair does not cancel on one object": [
+    "Por qué el par no se anula en un objeto",
+    "Por que o par não se anula em um objeto"
+  ],
+  "Why the pair never cancels": [
+    "Por qué las dos fuerzas no se anulan en un objeto",
+    "Por que as duas forças não se anulam em um objeto"
+  ],
+  "With both slack, press": [
+    "Con ambos sin tensión, pulsa",
+    "Com os dois sem tensão, pressione"
+  ],
+  "You can deflect a massive object with a ": [
+    "Un objeto pequeño puede desviar uno grande",
+    "Um objeto pequeno pode desviar um grande"
+  ],
+  "You can deflect a massive object with a much smaller one.": [
+    "Un objeto mucho menor puede desviar un objeto de gran masa.",
+    "Um objeto muito menor pode desviar um objeto de grande massa."
+  ],
+  "Your hand pushes on a wall. Write both force statements. Which belongs on a free-body diagram of your hand?": [
+    "Tu mano empuja una pared. Describe las dos fuerzas. ¿Cuál va en un diagrama de cuerpo libre de tu mano?",
+    "Sua mão empurra uma parede. Descreva as duas forças. Qual entra no diagrama de corpo livre da sua mão?"
+  ],
+  "Your turn: unequal masses": [
+    "Tu turno: masas distintas",
+    "Sua vez: massas diferentes"
+  ],
+  "Zero both sensors and connect them along one line. Stay within their load limits.": [
+    "Pon ambos sensores a cero y conéctalos en línea. Respeta sus límites de carga.",
+    "Zere os dois sensores e conecte-os em linha. Respeite os limites de carga."
+  ],
+  "___ exerts a force on ___.": [
+    "___ ejerce una fuerza sobre ___.",
+    "___ exerce uma força em ___."
+  ],
+  "forward": [
+    "hacia delante",
+    "para a frente"
+  ],
+  "in the opposite direction.": [
+    "en el sentido opuesto.",
+    "no sentido oposto."
+  ],
+  "it stops — or disintegrates": [
+    "se detiene o se desintegra",
+    "para ou se desintegra"
+  ],
+  "on each.": [
+    "en cada uno.",
+    "em cada um."
+  ],
+  "wall on hand": [
+    "la pared sobre la mano",
+    "a parede na mão"
+  ],
+  "— steeper line.": [
+    "— línea más inclinada.",
+    "— reta mais inclinada."
+  ],
+  "≈ 13 min": [
+    "≈ 13 min",
+    "≈ 13 min"
+  ],
+  ". aB = 12/4 =": [
+    ". aB = 12/4 =",
+    ". aB = 12/4 ="
+  ],
+  "2026-XJ · 53": [
+    "2026-XJ · 53",
+    "2026-XJ · 53"
+  ],
+  "2026-XJ · 54": [
+    "2026-XJ · 54",
+    "2026-XJ · 54"
+  ],
+  "2026-XJ · 55": [
+    "2026-XJ · 55",
+    "2026-XJ · 55"
+  ],
+  "2026-XJ · 56": [
+    "2026-XJ · 56",
+    "2026-XJ · 56"
+  ],
+  "Antocci Physics · 53": [
+    "Antocci Physics · 53",
+    "Antocci Physics · 53"
+  ],
+  "Antocci Physics · 54": [
+    "Antocci Physics · 54",
+    "Antocci Physics · 54"
+  ],
+  "Antocci Physics · 55": [
+    "Antocci Physics · 55",
+    "Antocci Physics · 55"
+  ],
+  "Antocci Physics · 56": [
+    "Antocci Physics · 56",
+    "Antocci Physics · 56"
+  ],
+  "aA = 12/1 =": [
+    "aA = 12/1 =",
+    "aA = 12/1 ="
+  ],
+  "If A pushes B, B pushes A": [
+    "Si A empuja B, B empuja A",
+    "Se A empurra B, B empurra A"
+  ],
+  "A smaller object can deflect a larger one": [
+    "Un objeto pequeño puede desviar uno grande",
+    "Um objeto pequeno pode desviar um grande"
+  ]
+}

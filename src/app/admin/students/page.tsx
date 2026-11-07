@@ -17,6 +17,7 @@ const RosterManager = dynamic(() => import('@/components/admin/students/RosterMa
 const StudentActivity = dynamic(() => import('@/components/admin/students/StudentActivity'), { loading })
 const TeacherActivity = dynamic(() => import('@/components/admin/students/TeacherActivity'), { loading })
 const ChallengesManager = dynamic(() => import('@/components/admin/students/ChallengesManager'), { loading })
+const MasteryXpFloors = dynamic(() => import('@/components/admin/MasteryXpFloors'), { loading })
 const RewardsManager = dynamic(() => import('@/components/admin/students/RewardsManager'), { loading })
 const views = [
   { id: 'roster', label: 'Roster', icon: Users, description: 'Know your students and manage the supports they use.' },
@@ -34,7 +35,7 @@ function StudentsWorkspace() {
   const classId = params.has('class') ? params.get('class') ?? '' : storedClass ?? ''
   const view = studentsView(params.get('view'))
   const current = views.find(item => item.id === view)!
-  const section = params.get('section') === 'store' ? 'store' : 'challenges'
+  const section = params.get('section') === 'floors' ? 'floors' : params.get('section') === 'store' ? 'store' : 'challenges'
   const [courses, setCourses] = useState<Course[]>([])
   const [loadingClasses, setLoadingClasses] = useState(true)
   const [error, setError] = useState('')
@@ -64,7 +65,7 @@ function StudentsWorkspace() {
     <header className={styles.header}>
       <div className={styles.top}>
         <div><p className={styles.eyebrow}>Students</p><h1>{current.label}</h1></div>
-        <label className={styles.classPicker}>{view === 'rewards' ? 'Class for new challenges' : 'Class'}<select aria-label="Students class" value={classId} disabled={loadingClasses} onChange={event => selectClass(event.target.value)}>
+        <label className={styles.classPicker}>{view === 'rewards' && section === 'challenges' ? 'Class for new challenges' : 'Class'}<select aria-label="Students class" value={classId} disabled={loadingClasses} onChange={event => selectClass(event.target.value)}>
           <option value="">{loadingClasses ? 'Loading classes…' : 'Choose a class'}</option>
           {classId && !courses.some(course => course.id === classId) && <option value={classId}>Selected class</option>}
           {courses.map(course => <option key={course.id} value={course.id}>{label(course)}</option>)}
@@ -73,7 +74,7 @@ function StudentsWorkspace() {
       </div>
       <p className={styles.description}>{current.description}</p>
       <nav className={styles.mobileNav} aria-label="Students navigation">{views.map(item => <Link key={item.id} href={studentsHref(item.id, classId)} aria-current={view === item.id ? 'page' : undefined}><item.icon size={17} />{item.label}</Link>)}</nav>
-      {view === 'rewards' && <nav className={styles.subnav} aria-label="XP and rewards tools"><Link href={studentsHref('rewards', classId, 'challenges')} aria-current={section === 'challenges' ? 'page' : undefined}>XP challenges</Link><Link href={studentsHref('rewards', classId, 'store')} aria-current={section === 'store' ? 'page' : undefined}>Rewards &amp; requests</Link></nav>}
+      {view === 'rewards' && <nav className={styles.subnav} aria-label="XP and rewards tools"><Link href={studentsHref('rewards', classId, 'challenges')} aria-current={section === 'challenges' ? 'page' : undefined}>XP challenges</Link><Link href={studentsHref('rewards', classId, 'store')} aria-current={section === 'store' ? 'page' : undefined}>Rewards &amp; requests</Link><Link href={studentsHref('rewards', classId, 'floors')} aria-current={section === 'floors' ? 'page' : undefined}>Unit XP floors</Link></nav>}
     </header>
     {error && <p role="alert">{error} <button className="underline" onClick={() => setRevision(n => n + 1)}>Retry</button></p>}
     {unavailableClass && <p role="alert">This class is unavailable to your account. Choose another class above.</p>}
@@ -82,7 +83,8 @@ function StudentsWorkspace() {
         {view === 'roster' && <RosterManager key={classId + view} classId={classId} mode="roster" />}
         {view === 'activity' && (role === 'admin' ? <StudentActivity key={classId + params.get('student')} classId={classId} initialStudentId={params.get('student') ?? ''} /> : <TeacherActivity key={classId + params.get('student')} classId={classId} initialStudentId={params.get('student') ?? ''} />)}
       </>}
-      {view === 'rewards' && <><p className={styles.scopeNote}>{section === 'challenges' ? 'The challenge board includes your classes. New challenges start with the class selected above; you can choose additional classes or individual students.' : 'Manage rewards across your classes. Each reward shows which classes can use it; redemption requests keep their existing account-wide scope.'}</p>{section === 'challenges' ? <ChallengesManager key={classId} classId={classId} /> : <RewardsManager />}</>}
+      {view === 'rewards' && section === 'floors' && <MasteryXpFloors key={classId} course={classId}/>}
+      {view === 'rewards' && section !== 'floors' && <><p className={styles.scopeNote}>{section === 'challenges' ? 'The challenge board includes your classes. New challenges start with the class selected above; you can choose additional classes or individual students.' : 'Manage rewards across your classes. Each reward shows which classes can use it; redemption requests keep their existing account-wide scope.'}</p>{section === 'challenges' ? <ChallengesManager key={classId} classId={classId} /> : <RewardsManager />}</>}
       {view === 'settings' && (params.get('section') === 'grading-terms' ? <GradingTermSettings classId={classId || null}/> : <><div className={styles.settingsLinks}><Link href={studentsHref('settings', classId, 'grading-terms')}>Grading terms &amp; assignment placement <ArrowUpRight size={16}/></Link><Link href={teachingHref('pacing', classId)}>Pacing &amp; meeting pattern <ArrowUpRight size={16} /></Link><Link href="/admin/teacher">Teacher setup &amp; XP goals <ArrowUpRight size={16} /></Link></div><p className={styles.scopeNote}>Google Classroom connections and synced classes are managed across your account.</p><RosterManager key={classId + view} classId={classId} mode="settings" /></>)}
     </>}
   </div>

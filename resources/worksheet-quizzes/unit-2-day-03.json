@@ -9,7 +9,7 @@
     "Calculate weight using the stated local g.",
     "Explain how weight changes while mass stays the same."
   ],
-  "source_sha256": "5ac945b1ef44d02c4f8a144089556efb2c0f0f201ba6383c57276cc6264c5156",
+  "source_sha256": "e4c0c88e0b0b24b685365abcaac6967857e6b8e7e851fc7ee787ec1ae68538e7",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.489Z",

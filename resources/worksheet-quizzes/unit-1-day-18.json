@@ -6,10 +6,10 @@
   "target": "Find a missing force when acceleration is zero.",
   "criteria": [
     "Recognize rest and constant velocity as possible equilibrium.",
-    "Find missing forces from a zero net-force condition.",
+    "Find missing forces when the net force is zero.",
     "Explain why turning is not equilibrium."
   ],
-  "source_sha256": "bae6d9e74f4498afbb2ef07d3aa5150593115439695090d21154eb1ffff4d666",
+  "source_sha256": "b0b5ba79628055f8e4d1bd9ff2ede59b650fc19a92fe83538dc728af806a00af",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.483Z",

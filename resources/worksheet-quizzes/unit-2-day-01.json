@@ -7,9 +7,9 @@
   "criteria": [
     "Draw velocity tangent to a path and force toward the attracting body.",
     "Distinguish motion from a change in motion.",
-    "State what a straight-line model leaves out."
+    "State what a prediction of straight-line motion leaves out."
   ],
-  "source_sha256": "98ba12235e250bece40712cccb50783dc3749b4437d32b387efd9f29ea37c7e6",
+  "source_sha256": "d08df2ba8ffd7297e2821c6af4679f9f9ad4408fc38b49ea6e8d25411390c38c",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.487Z",

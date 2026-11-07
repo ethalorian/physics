@@ -1,0 +1,1532 @@
+{
+  "1.1": {
+    "topic": "Try a tool with two people",
+    "ref": "Pick a repeatable job. Draw the tool touching the material and label where the hand applies an input.",
+    "tables": [
+      [
+        [
+          "User / job",
+          "Dimension or count",
+          "Where it helps",
+          "Where the user adjusts"
+        ],
+        [
+          [
+            "User A"
+          ],
+          [
+            "User B"
+          ]
+        ]
+      ],
+      [
+        [
+          "User",
+          "Observed action",
+          "Need before / after revision"
+        ],
+        [
+          [
+            "A"
+          ],
+          [
+            "B"
+          ]
+        ]
+      ]
+    ]
+  },
+  "1.2": {
+    "topic": "Hold a phone blank upright",
+    "ref": "Use a folder and up to 12 in of tape. Sketch two support shapes. Label the opening, contact points and measured thickness of the blank.",
+    "tables": [
+      [
+        [
+          "Feature",
+          "Blank (in)",
+          "Holder A (in)",
+          "Holder B (in)"
+        ],
+        [
+          [
+            "Width"
+          ],
+          [
+            "Thickness / clearance"
+          ]
+        ]
+      ],
+      [
+        [
+          "Version",
+          "Hold (0-30 s)",
+          "One-hand cycles 1 / 2 / 3",
+          "Total successes"
+        ],
+        [
+          [
+            "First"
+          ],
+          [
+            "Revised"
+          ]
+        ]
+      ]
+    ]
+  },
+  "1.3": {
+    "topic": "Turn a holder into a reproducible pattern",
+    "ref": "Use solid outlines for cuts and dashed lines for folds. Pair a front view and side view with a flat pattern. Label all critical dimensions and units.",
+    "tables": [
+      [
+        [
+          "Stock length × width",
+          "Pattern area",
+          "Area-only estimate",
+          "Whole patterns fitted"
+        ],
+        [
+          [
+            "Sheet 1"
+          ],
+          [
+            "Revised layout"
+          ]
+        ]
+      ],
+      [
+        [
+          "Feature",
+          "Partner's reading",
+          "Correction to view or dimension"
+        ],
+        [
+          [
+            "Fold position"
+          ],
+          [
+            "Hidden dimension"
+          ]
+        ]
+      ]
+    ]
+  },
+  "1.4": {
+    "topic": "Write an organizer brief",
+    "ref": "Arrange three objects on the available surface. Show the reach path. Agree on two signs of success and one limit with the actual user.",
+    "tables": [
+      [
+        [
+          "Item",
+          "Dimensions and units",
+          "User comment or observed action"
+        ],
+        [
+          [
+            "Item 1"
+          ],
+          [
+            "Item 2"
+          ],
+          [
+            "Item 3"
+          ]
+        ]
+      ],
+      [
+        [
+          "Requirement",
+          "Observable test",
+          "User confirmation or change"
+        ],
+        [
+          [
+            "Criterion 1"
+          ],
+          [
+            "Criterion 2"
+          ],
+          [
+            "Space / stock limit"
+          ]
+        ]
+      ]
+    ]
+  },
+  "1.5": {
+    "topic": "Compare two organizer layouts",
+    "ref": "Draw layouts A and B at the same scale. Clear width equals outside width minus the thicknesses of the walls occupying that width. Test with the actual items.",
+    "tables": [
+      [
+        [
+          "Layout",
+          "Outside width",
+          "Wall thicknesses",
+          "Clear width and units"
+        ],
+        [
+          [
+            "A"
+          ],
+          [
+            "B"
+          ]
+        ]
+      ],
+      [
+        [
+          "Criterion",
+          "A result",
+          "B result",
+          "Which does the user prefer?"
+        ],
+        [
+          [
+            "Fit"
+          ],
+          [
+            "Reach / retrieval"
+          ],
+          [
+            "Trade-off"
+          ]
+        ]
+      ]
+    ]
+  },
+  "1.6": {
+    "topic": "Make a cut list and inspect the fit",
+    "ref": "Draw the joint and show a common reference edge for all cuts. Note the assembly order, the joint left accessible and any departure from the plan.",
+    "tables": [
+      [
+        [
+          "Part / count",
+          "Planned L × W",
+          "Actual L × W",
+          "Units or adjustment"
+        ],
+        [
+          [
+            "Base"
+          ],
+          [
+            "Wall 1"
+          ],
+          [
+            "Wall 2"
+          ],
+          [
+            "Divider / other"
+          ]
+        ]
+      ],
+      [
+        [
+          "Bay or part",
+          "Design size",
+          "Measured size",
+          "Fit with actual object"
+        ],
+        [
+          [
+            "Bay 1"
+          ],
+          [
+            "Bay 2"
+          ]
+        ]
+      ]
+    ]
+  },
+  "1.7": {
+    "topic": "Watch a user retrieve an item",
+    "ref": "Agree on a starting setup and success rule. Sketch the obstacle you suspect. Let the user try the task without coaching.",
+    "tables": [
+      [
+        [
+          "Attempt",
+          "Retrieved?",
+          "Time (s)",
+          "Observation / user words"
+        ],
+        [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ],
+          [
+            "Repeat"
+          ]
+        ]
+      ],
+      [
+        [
+          "Possible cause",
+          "How checked",
+          "What the result suggests"
+        ],
+        [
+          [
+            "Feature to change"
+          ],
+          [
+            "Alternative cause"
+          ]
+        ]
+      ]
+    ]
+  },
+  "1.8": {
+    "topic": "Hand over a revised organizer",
+    "ref": "Mark the revision on a dimensioned drawing. List the units for material and price. Cost = amount used × price per unit.",
+    "tables": [
+      [
+        [
+          "Material",
+          "Amount and units",
+          "Price per unit",
+          "Extended cost"
+        ],
+        [
+          [
+            "Stock"
+          ],
+          [
+            "Other"
+          ],
+          [
+            "Total"
+          ]
+        ]
+      ],
+      [
+        [
+          "Version",
+          "Retrieval test",
+          "Critical dimension",
+          "User or builder check"
+        ],
+        [
+          [
+            "Original"
+          ],
+          [
+            "Revised"
+          ]
+        ]
+      ]
+    ]
+  },
+  "2.2": {
+    "topic": "Follow a load to the ground",
+    "ref": "Example building: apartments over a shop. Start at a person upstairs. Show how a floor, beam, column or wall, and foundation transfer the load to the ground.",
+    "tables": [
+      [
+        [
+          "Strip span",
+          "Strip self-weight or description",
+          "Added mass",
+          "Support layout"
+        ],
+        [
+          [
+            "Fixed setup"
+          ]
+        ]
+      ],
+      [
+        [
+          "Load position",
+          "Reference height",
+          "Loaded height",
+          "Bend and units"
+        ],
+        [
+          [
+            "No added load"
+          ],
+          [
+            "Center"
+          ],
+          [
+            "Near support"
+          ]
+        ]
+      ]
+    ]
+  },
+  "2.3": {
+    "topic": "Find the first movement in a tower",
+    "ref": "Agree on height, allowed stock, and a stop rule with your teacher. Draw the tower’s base and bracing. Mark the joint you predict will move first.",
+    "tables": [
+      [
+        [
+          "Build target",
+          "Limit and unit",
+          "As built",
+          "Partner check"
+        ],
+        [
+          [
+            "Height"
+          ],
+          [
+            "Footprint"
+          ],
+          [
+            "Stock / tape"
+          ]
+        ]
+      ],
+      [
+        [
+          "Increment",
+          "Total load and unit",
+          "Lean / displacement",
+          "First change or failure"
+        ],
+        [
+          [
+            "0"
+          ],
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ],
+          [
+            "4"
+          ]
+        ]
+      ]
+    ]
+  },
+  "2.4": {
+    "topic": "Compare beams under the same load",
+    "ref": "Sketch both supports, the span and a fixed ruler reference at the center. Deflection is the change between unloaded and loaded position.",
+    "tables": [
+      [
+        [
+          "Sample",
+          "Span",
+          "Width × thickness",
+          "Units / material"
+        ],
+        [
+          [
+            "A"
+          ],
+          [
+            "B"
+          ],
+          [
+            "C"
+          ]
+        ]
+      ],
+      [
+        [
+          "Sample",
+          "Common load and unit",
+          "Center deflection",
+          "Recovery after unloading"
+        ],
+        [
+          [
+            "A"
+          ],
+          [
+            "B"
+          ],
+          [
+            "C"
+          ]
+        ]
+      ]
+    ]
+  },
+  "2.5": {
+    "topic": "Compare two enclosures",
+    "ref": "Sketch your insulation and thermometer position. Use identical warm-water containers and equal volumes. Mark the changed feature and keep sampling times equal.",
+    "tables": [
+      [
+        [
+          "Condition",
+          "Water volume",
+          "Start temp (°C)",
+          "Gap or wrap detail"
+        ],
+        [
+          [
+            "Plain"
+          ],
+          [
+            "Insulated"
+          ],
+          [
+            "Resealed if used"
+          ]
+        ]
+      ],
+      [
+        [
+          "Elapsed time",
+          "Plain (°C)",
+          "Insulated (°C)",
+          "Resealed (°C)"
+        ],
+        [
+          [
+            "Start"
+          ],
+          [
+            "Interval 1"
+          ],
+          [
+            "Interval 2"
+          ],
+          [
+            "Interval 3"
+          ],
+          [
+            "Final drop"
+          ]
+        ]
+      ]
+    ]
+  },
+  "2.6": {
+    "topic": "Draw a floor plan and elevation",
+    "ref": "Set a drawing scale and show a common corner. Draw walls, doors and the resident's trip in plan view. Beside it, add the elevation of one entrance.",
+    "tables": [
+      [
+        [
+          "Feature",
+          "Real length and unit",
+          "Drawing length and unit",
+          "Scale"
+        ],
+        [
+          [
+            "Wall"
+          ],
+          [
+            "Door"
+          ],
+          [
+            "Check in reverse"
+          ]
+        ]
+      ],
+      [
+        [
+          "Partner task",
+          "Recovered value or route",
+          "Clarification added"
+        ],
+        [
+          [
+            "Find dimension"
+          ],
+          [
+            "Trace entry"
+          ]
+        ]
+      ]
+    ]
+  },
+  "2.7": {
+    "topic": "Turn the drawing into a building model",
+    "ref": "Mark an open side or removable roof and label both uses. Trace the route. Locate a construction detail supported by a load or insulation test.",
+    "tables": [
+      [
+        [
+          "Cut-list item",
+          "Drawing dimension",
+          "Model target",
+          "Actual cut and units"
+        ],
+        [
+          [
+            "Wall 1"
+          ],
+          [
+            "Wall 2"
+          ],
+          [
+            "Opening"
+          ],
+          [
+            "Divider"
+          ]
+        ]
+      ],
+      [
+        [
+          "Peer check",
+          "Target",
+          "Model result",
+          "Mismatch or fix"
+        ],
+        [
+          [
+            "Dimension 1"
+          ],
+          [
+            "Dimension 2"
+          ],
+          [
+            "Trace the route"
+          ]
+        ]
+      ]
+    ]
+  },
+  "2.8": {
+    "topic": "Review a building as two users",
+    "ref": "Mark the altered feature on the as-built plan. Distinguish the resident’s route from the service user's route.",
+    "tables": [
+      [
+        [
+          "Reviewer role",
+          "Concern observed",
+          "Test or acceptance rule"
+        ],
+        [
+          [
+            "Resident"
+          ],
+          [
+            "Service user"
+          ]
+        ]
+      ],
+      [
+        [
+          "Feature",
+          "Planned value",
+          "Before change",
+          "After retest and units"
+        ],
+        [
+          [
+            "Dimension"
+          ],
+          [
+            "Route / access"
+          ],
+          [
+            "Physical test"
+          ]
+        ]
+      ]
+    ]
+  },
+  "3.1": {
+    "topic": "Read the Piot engine as an invention",
+    "ref": "Use Fig. 1 of Thomas Piot's 1891 UK patent 20,081 and the teacher demonstration. Identify the heat source, vessel, tubes and surrounding water. Trace the route with arrows.",
+    "tables": [
+      [
+        [
+          "Feature",
+          "Purpose inferred",
+          "Evidence in figure or demonstration"
+        ],
+        [
+          [
+            "Vessel"
+          ],
+          [
+            "Tube opening"
+          ],
+          [
+            "Heat source"
+          ]
+        ]
+      ],
+      [
+        [
+          "What you saw",
+          "What you infer",
+          "How to check it"
+        ],
+        [
+          [
+            "Motion"
+          ],
+          [
+            "Water path"
+          ],
+          [
+            "Possible change"
+          ]
+        ]
+      ]
+    ]
+  },
+  "3.2": {
+    "topic": "Inspect a baseline boat at each station",
+    "ref": "Copy the dimensions from the approved physical pattern. Mark cut and fold references on your sketch. The teacher handles designated sharp or heated operations. Record cure time from the actual product label.",
+    "tables": [
+      [
+        [
+          "Part or check",
+          "Pattern size / units",
+          "Measured size",
+          "Inspection result"
+        ],
+        [
+          [
+            "Hull"
+          ],
+          [
+            "Chamber edges"
+          ],
+          [
+            "Tube position"
+          ],
+          [
+            "Symmetry"
+          ]
+        ]
+      ],
+      [
+        [
+          "Station",
+          "Operation or check",
+          "Time / cure / initials"
+        ],
+        [
+          [
+            "Dry fit"
+          ],
+          [
+            "Seal / cure"
+          ],
+          [
+            "Leak inspection"
+          ],
+          [
+            "Teacher release"
+          ]
+        ]
+      ]
+    ]
+  },
+  "3.3": {
+    "topic": "Establish a boat and fluid baseline",
+    "ref": "Record the start rule and load. Speed = distance ÷ elapsed time. At the syringe station, mark initial piston positions; compare equal input strokes with air and water.",
+    "tables": [
+      [
+        [
+          "Boat run",
+          "Distance and units",
+          "Time (s)",
+          "Speed / load"
+        ],
+        [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ]
+        ]
+      ],
+      [
+        [
+          "Fluid and test",
+          "Input travel",
+          "Output travel",
+          "Units / leaks or bubbles"
+        ],
+        [
+          [
+            "Air 1"
+          ],
+          [
+            "Air 2"
+          ],
+          [
+            "Water 1"
+          ],
+          [
+            "Water 2"
+          ]
+        ]
+      ]
+    ]
+  },
+  "3.4": {
+    "topic": "Use two pistons to move a load",
+    "ref": "Sketch the two syringes, their sizes, the connected tube and the load. Predict travel when the sizes swap. Keep sample and input travel constant.",
+    "tables": [
+      [
+        [
+          "Arrangement",
+          "Input size",
+          "Output size",
+          "Load / sample"
+        ],
+        [
+          [
+            "A"
+          ],
+          [
+            "B swapped"
+          ]
+        ]
+      ],
+      [
+        [
+          "Trial",
+          "A input / output travel",
+          "B input / output travel",
+          "Sample change"
+        ],
+        [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ]
+        ]
+      ]
+    ]
+  },
+  "3.5": {
+    "topic": "Explain one cycle of the boat engine",
+    "ref": "Draw a four-frame loop. Label the chamber, heat, water and tube mouths. Distinguish inferred pressure change from visible motion. Show how cooler fluid can enter again.",
+    "tables": [
+      [
+        [
+          "State",
+          "Heat transfer",
+          "Pressure change inferred",
+          "Flow direction"
+        ],
+        [
+          [
+            "Warm-up"
+          ],
+          [
+            "Expansion"
+          ],
+          [
+            "Cooling"
+          ],
+          [
+            "Return"
+          ]
+        ]
+      ],
+      [
+        [
+          "Claim",
+          "Observation",
+          "Inference or open question"
+        ],
+        [
+          [
+            "Water motion"
+          ],
+          [
+            "Repeating cycle"
+          ]
+        ]
+      ]
+    ]
+  },
+  "3.6": {
+    "topic": "Compare the flow through two routes",
+    "ref": "Sketch routes A and B. Change one variable, such as tube length. Use the same water level or drive. Flow rate = collected volume ÷ collection time.",
+    "tables": [
+      [
+        [
+          "Route",
+          "Tube length / bore",
+          "Drive condition",
+          "Fixed outlet position"
+        ],
+        [
+          [
+            "A"
+          ],
+          [
+            "B"
+          ]
+        ]
+      ],
+      [
+        [
+          "Trial",
+          "A volume / time",
+          "B volume / time",
+          "A and B flow rates with units"
+        ],
+        [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ]
+        ]
+      ]
+    ]
+  },
+  "3.7": {
+    "topic": "Change one feature of a boat or press",
+    "ref": "Draw the baseline and the revision side by side. Label the changed dimension, the target and everything the next test must hold constant.",
+    "tables": [
+      [
+        [
+          "Feature",
+          "Original and units",
+          "Revised target",
+          "Predicted effect"
+        ],
+        [
+          [
+            "Change"
+          ],
+          [
+            "Fixed load"
+          ],
+          [
+            "Fixed start rule"
+          ]
+        ]
+      ],
+      [
+        [
+          "Inspection",
+          "Result",
+          "Who checked / next action"
+        ],
+        [
+          [
+            "Unpowered fit"
+          ],
+          [
+            "Leak or motion"
+          ],
+          [
+            "Cure if needed"
+          ]
+        ]
+      ]
+    ]
+  },
+  "3.8": {
+    "topic": "Retest the revised machine",
+    "ref": "Match the earlier distance or piston stroke, load and start rule. Keep failed trials in the record. Use the same measure and units for both versions.",
+    "tables": [
+      [
+        [
+          "Run",
+          "Baseline result",
+          "Revised result",
+          "Conditions or failed trial"
+        ],
+        [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ]
+        ]
+      ],
+      [
+        [
+          "Comparison",
+          "Baseline",
+          "Revision",
+          "Interpretation"
+        ],
+        [
+          [
+            "Typical value"
+          ],
+          [
+            "Range"
+          ],
+          [
+            "Limitation"
+          ]
+        ]
+      ]
+    ]
+  },
+  "3.9": {
+    "topic": "Defend a measured improvement",
+    "ref": "Draw the modified feature large enough to label. Use the same metric for both versions. Check that each teammate can locate the change and describe its purpose.",
+    "tables": [
+      [
+        [
+          "Claim component",
+          "Evidence, unit or labeled detail"
+        ],
+        [
+          [
+            "Original need"
+          ],
+          [
+            "Modified feature"
+          ],
+          [
+            "Before / after"
+          ]
+        ]
+      ],
+      [
+        [
+          "Review check",
+          "What reviewer found",
+          "What you clarified"
+        ],
+        [
+          [
+            "Find the change"
+          ],
+          [
+            "Challenge a claim"
+          ],
+          [
+            "Next test"
+          ]
+        ]
+      ]
+    ]
+  },
+  "4.1": {
+    "topic": "Design a seven-segment code",
+    "ref": "Lay out a figure 8 with A across the top, B upper right, C lower right, D along the bottom, E lower left, F upper left and G across the middle. Agree on 1 = lit and 0 = dark. Draw the switched lamp loop.",
+    "tables": [
+      [
+        [
+          "Digit",
+          "A B C D E F G",
+          "Digit",
+          "A B C D E F G"
+        ],
+        [
+          [
+            "0",
+            "",
+            "5"
+          ],
+          [
+            "1",
+            "",
+            "6"
+          ],
+          [
+            "2",
+            "",
+            "7"
+          ],
+          [
+            "3",
+            "",
+            "8"
+          ],
+          [
+            "4",
+            "",
+            "9"
+          ]
+        ]
+      ],
+      [
+        [
+          "Round",
+          "Sent digit / bits",
+          "Decoded digit",
+          "Match or correction"
+        ],
+        [
+          [
+            "A1"
+          ],
+          [
+            "A2"
+          ],
+          [
+            "A3"
+          ],
+          [
+            "B1"
+          ],
+          [
+            "B2"
+          ],
+          [
+            "B3"
+          ]
+        ]
+      ]
+    ]
+  },
+  "4.2": {
+    "topic": "Test a detector for both missed and false signals",
+    "ref": "Place a paper target where the switch should trigger. Draw the source, trigger and output. Define what counts as a detection before testing.",
+    "tables": [
+      [
+        [
+          "Condition",
+          "Before trials 1 / 2 / 3",
+          "After trials 1 / 2 / 3"
+        ],
+        [
+          [
+            "Movement"
+          ],
+          [
+            "No movement"
+          ]
+        ]
+      ],
+      [
+        [
+          "Version",
+          "True detections / 3",
+          "False alarms / 3",
+          "Contact change or note"
+        ],
+        [
+          [
+            "Before"
+          ],
+          [
+            "After"
+          ]
+        ]
+      ]
+    ]
+  },
+  "4.3": {
+    "topic": "Send a message across a hidden channel",
+    "ref": "Draw transmitter, channel and receiver. Mark a conversion, the separation, the message key and start/stop rule. Keep the secret message out of sight.",
+    "tables": [
+      [
+        [
+          "Signal or pattern",
+          "Meaning",
+          "Start / stop or timing rule"
+        ],
+        [
+          [
+            "Message 1"
+          ],
+          [
+            "Message 2"
+          ],
+          [
+            "Message 3"
+          ]
+        ]
+      ],
+      [
+        [
+          "Run",
+          "Sent",
+          "Decoded",
+          "Condition / result"
+        ],
+        [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ],
+          [
+            "Changed 1"
+          ],
+          [
+            "Changed 2"
+          ],
+          [
+            "Changed 3"
+          ]
+        ]
+      ]
+    ]
+  },
+  "4.4": {
+    "topic": "Connect a lunar base to three destinations",
+    "ref": "Plan two-way links inside a habitat, from habitat to surface crew and from base to Earth. Sound in air needs a material medium. An electromagnetic signal can cross a vacuum. Draw conversions and a return path.",
+    "tables": [
+      [
+        [
+          "Route",
+          "Medium / channel",
+          "Reason or limitation"
+        ],
+        [
+          [
+            "Inside base"
+          ],
+          [
+            "Outside crew"
+          ],
+          [
+            "Earth link"
+          ]
+        ]
+      ],
+      [
+        [
+          "Review",
+          "Message path or fault",
+          "Test result or revision"
+        ],
+        [
+          [
+            "Trace outward"
+          ],
+          [
+            "Trace return"
+          ],
+          [
+            "One obstruction"
+          ]
+        ]
+      ]
+    ]
+  },
+  "4.5": {
+    "topic": "Measure current in one branch",
+    "ref": "Disconnect power before opening a low-voltage loop. Put the configured ammeter in series at the break. Have the teacher check the range, port and wiring before power is applied.",
+    "tables": [
+      [
+        [
+          "Meter location",
+          "Range / units",
+          "Expected reading",
+          "Teacher check"
+        ],
+        [
+          [
+            "Point A"
+          ],
+          [
+            "Point B"
+          ]
+        ]
+      ],
+      [
+        [
+          "Location",
+          "Reading and unit",
+          "Precision",
+          "Comparison or contact check"
+        ],
+        [
+          [
+            "A"
+          ],
+          [
+            "B"
+          ],
+          [
+            "Repeat"
+          ]
+        ]
+      ]
+    ]
+  },
+  "4.6": {
+    "topic": "Measure voltage between two points",
+    "ref": "Label node pairs and lead colors. Place the DC voltmeter across each selected pair. Record source voltage, lamp drop and the sign when leads are reversed.",
+    "tables": [
+      [
+        [
+          "Pair of nodes",
+          "Red lead at",
+          "Black lead at",
+          "Prediction and unit"
+        ],
+        [
+          [
+            "Source"
+          ],
+          [
+            "Lamp"
+          ],
+          [
+            "Closed connection"
+          ]
+        ]
+      ],
+      [
+        [
+          "Pair / condition",
+          "DC range",
+          "Signed reading (V)",
+          "Explanation"
+        ],
+        [
+          [
+            "Source"
+          ],
+          [
+            "Lamp"
+          ],
+          [
+            "Connection"
+          ],
+          [
+            "Reversed pair"
+          ]
+        ]
+      ]
+    ]
+  },
+  "4.7": {
+    "topic": "Build the fan controls one state at a time",
+    "ref": "Label motor terminals and sketch the teacher-checked switch paths. Show where polarity reverses and what changes speed. Disconnect power before rewiring.",
+    "tables": [
+      [
+        [
+          "State",
+          "Switch settings",
+          "Expected polarity",
+          "Predicted motion"
+        ],
+        [
+          [
+            "Off"
+          ],
+          [
+            "Forward low"
+          ],
+          [
+            "Forward high"
+          ],
+          [
+            "Reverse low"
+          ],
+          [
+            "Reverse high"
+          ]
+        ]
+      ],
+      [
+        [
+          "State tested",
+          "Actual direction / speed",
+          "Mismatch or fix"
+        ],
+        [
+          [
+            "Forward settings"
+          ],
+          [
+            "Reverse settings"
+          ],
+          [
+            "Off"
+          ]
+        ]
+      ]
+    ]
+  },
+  "4.8": {
+    "topic": "Commission a fan another crew can operate",
+    "ref": "Write the stop rule and define how you will distinguish direction and speed. Use the same observation method in every trial. Mark the revised control label on the sketch.",
+    "tables": [
+      [
+        [
+          "Control label",
+          "Expected state",
+          "Actual state",
+          "Retest result"
+        ],
+        [
+          [
+            "Off"
+          ],
+          [
+            "Forward low"
+          ],
+          [
+            "Forward high"
+          ],
+          [
+            "Reverse low"
+          ],
+          [
+            "Reverse high"
+          ]
+        ]
+      ],
+      [
+        [
+          "Verification",
+          "Operator instruction",
+          "Independent crew result"
+        ],
+        [
+          [
+            "Safe stop"
+          ],
+          [
+            "Selected state"
+          ],
+          [
+            "Repaired fault"
+          ]
+        ]
+      ]
+    ]
+  },
+  "4.9": {
+    "topic": "Supply an island lighthouse for a full night",
+    "ref": "The island lamp draws 1,000 W. Assume 12 h of darkness first. Compare two of these options: delivered batteries, solar with storage, wind with storage or a fuel generator. Consider service visits and a longer night.",
+    "tables": [
+      [
+        [
+          "Case",
+          "Lamp power (W)",
+          "Hours",
+          "Demand (Wh and kWh)"
+        ],
+        [
+          [
+            "12-hour night"
+          ],
+          [
+            "Longer night"
+          ]
+        ]
+      ],
+      [
+        [
+          "Candidate",
+          "Supply and storage",
+          "Service or site limit",
+          "How it covers darkness"
+        ],
+        [
+          [
+            "Option A"
+          ],
+          [
+            "Option B"
+          ]
+        ]
+      ]
+    ]
+  },
+  "4.10": {
+    "topic": "Repair and repeat a fair test",
+    "ref": "Choose an earlier artifact, a cured concrete sample comparison or an approved low-voltage device. Record the task, one changed factor and a fixed comparison method. For concrete, match age and dimensions. For a device, trace the low-voltage path.",
+    "tables": [
+      [
+        [
+          "Test feature",
+          "Baseline and units",
+          "One change",
+          "Revised prediction"
+        ],
+        [
+          [
+            "Primary measure"
+          ],
+          [
+            "Fixed condition"
+          ]
+        ]
+      ],
+      [
+        [
+          "Trial",
+          "Before",
+          "After",
+          "Conditions or anomaly"
+        ],
+        [
+          [
+            "1"
+          ],
+          [
+            "2"
+          ],
+          [
+            "3"
+          ]
+        ]
+      ]
+    ]
+  },
+  "4.11": {
+    "topic": "Demonstrate and defend a design",
+    "ref": "Sketch the exhibit label with a named need, labeled mechanism, result and revision. Plan speaking roles. Choose a feature a visitor can locate or operate.",
+    "tables": [
+      [
+        [
+          "Claim",
+          "Evidence and units",
+          "Who demonstrates it?"
+        ],
+        [
+          [
+            "Need / criterion"
+          ],
+          [
+            "Mechanism"
+          ],
+          [
+            "Measured change"
+          ]
+        ]
+      ],
+      [
+        [
+          "Visitor check",
+          "What happened",
+          "Response or next test"
+        ],
+        [
+          [
+            "Find a feature"
+          ],
+          [
+            "Repeat trial"
+          ],
+          [
+            "Challenge assumption"
+          ]
+        ]
+      ]
+    ]
+  }
+}

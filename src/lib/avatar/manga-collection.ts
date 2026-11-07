@@ -57,7 +57,7 @@ export const MANGA_HAND_OFFSETS: Record<string, readonly [inward: number, down: 
 
 const atlasSlot = (atlas: string): ItemSlot | undefined => atlas.startsWith('outfits-') ? 'body' : atlas.startsWith('headwear-') ? 'head' : atlas.startsWith('accessories-') ? 'pin' : (atlas === 'backgrounds' || atlas === 'scenes') ? 'background' : atlas === 'eyewear' ? 'eyewear' : undefined
 export function mangaItemSprite(item: AvatarItem): MangaSprite | undefined {
-  const sprite = Object.hasOwn(MANGA_SPRITES, item.slug) ? MANGA_SPRITES[item.slug] : undefined
+  const sprite = Object.prototype.hasOwnProperty.call(MANGA_SPRITES, item.slug) ? MANGA_SPRITES[item.slug] : undefined
   if (!sprite) return
   const slot = atlasSlot(sprite.atlas) ?? ({ mustache: 'facial_hair', 'full-beard': 'facial_hair', 'vampire-ears': 'ears', 'vampire-fangs': 'mouth' } as Record<string, ItemSlot>)[item.slug]
   return slot === item.slot ? sprite : undefined

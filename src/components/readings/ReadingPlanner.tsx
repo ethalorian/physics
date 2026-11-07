@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef, useState, type PointerEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type PointerEvent } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, ArrowRight, BookOpen, CalendarDays, GripVertical, Search, Undo2, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -10,19 +10,20 @@ import type { ReadingAssignment } from '@/lib/textbook-assignments'
 import { SYLLABUS_UNITS, type SyllabusCatalog } from '@/lib/reading-syllabus'
 import { calendarDays, plannerDateLabel, plannerDay, plannerReadings, readingWindow, shiftDay, type PlannerReading } from '@/lib/reading-planner'
 import { readingFetch } from './ReadingShared'
+import { useCalendarDragPreview, type CalendarPointer } from '@/lib/use-calendar-drag-preview'
 import styles from './ReadingPlanner.module.css'
 
 type Undo = { saved: ReadingAssignment; before: ReadingAssignment; assigned: boolean }
-type Props = { syllabus: SyllabusCatalog; readings: ReadingAssignment[]; courseId: string; onChanged: () => void; readOnly?: boolean }
+type Props = { syllabus: SyllabusCatalog; readings: ReadingAssignment[]; courseId: string; onChanged: () => void; readOnly?: boolean; onReady?: () => void }
 const dateLabel = (day: string) => new Date(day + 'T12:00:00Z').toLocaleDateString('en-US', { timeZone: 'UTC', weekday: 'long', month: 'long', day: 'numeric' })
 
-export default function ReadingPlanner({ syllabus, readings, courseId, onChanged, readOnly = false }: Props) {
+export default function ReadingPlanner({ syllabus, readings, courseId, onChanged, readOnly = false, onReady }: Props) {
+  useEffect(() => { onReady?.() }, [onReady])
   const today = plannerDay(new Date())
   const [month, setMonth] = useState(today.slice(0, 7) + '-01')
   const [search, setSearch] = useState(''), [unit, setUnit] = useState('')
   const [source, setSource] = useState('sequence')
   const [selected, setSelected] = useState<string | null>(null), [date, setDate] = useState('')
-  const [dragPoint, setDragPoint] = useState({ x: 0, y: 0 })
   const [over, setOver] = useState<string | null>(null), [dragging, setDragging] = useState(false)
   const [overrides, setOverrides] = useState<Record<string, ReadingAssignment>>({})
   const [busy, setBusy] = useState(false), [error, setError] = useState(''), [notice, setNotice] = useState('')
@@ -30,7 +31,7 @@ export default function ReadingPlanner({ syllabus, readings, courseId, onChanged
   const busyRef = useRef(false), dragRef = useRef<string | null>(null)
   const plannerRef = useRef<HTMLElement | null>(null)
   const pointerRef = useRef<{ key: string; x: number; y: number; moved: boolean } | null>(null)
-  const suppressClick = useRef(false)
+  const suppressClick = useRef(false), hover = useRef<string | null>(null)
   const items = useMemo(() => {
     const seen = new Set<string>()
     return plannerReadings(syllabus, readings, courseId).map(item => {
@@ -38,24 +39,29 @@ export default function ReadingPlanner({ syllabus, readings, courseId, onChanged
       return saved && (!item.assignment || saved.version > item.assignment.version) ? { ...item, assignment: saved } : item
     }).filter(item => { if (!item.assignment) return true; if (seen.has(item.assignment.id)) return false; seen.add(item.assignment.id); return true })
   }, [syllabus, readings, courseId, overrides])
-  const current = items.find(item => item.key === selected)
-  const assigned = items.filter(item => item.assignment?.status === 'published')
+  const itemByKey = useMemo(() => new Map(items.map(item => [item.key, item])), [items])
+  const current = itemByKey.get(selected ?? '')
+  const assigned = useMemo(() => items.filter(item => item.assignment?.status === 'published'), [items])
   const unscheduled = assigned.filter(item => !item.assignment?.due_at)
   const library = items.filter(item => (item.assignment ? isInteractiveReading(item.assignment) : !!item.step && isInteractiveSyllabusStep(item.step, syllabus.courses.find(c => c.id === courseId)?.track)) && item.assignment?.status !== 'published' && (!unit || item.unit === unit) && (source === 'all' || !!item.step && !item.step.sourceBook) && (!search || `${item.title} ${item.assignment?.reading ?? ''}`.toLowerCase().includes(search.toLowerCase())))
-  const days = calendarDays(month)
+  const days = useMemo(() => calendarDays(month), [month])
+  const dayLabels = useMemo(() => new Map(days.map(day => [day, dateLabel(day)])), [days])
+  const { byDay, openings } = useMemo(() => {
   const byDay = new Map<string, PlannerReading[]>(), openings = new Map<string, PlannerReading[]>()
   for (const item of assigned) {
     const a = item.assignment!
     if (a.due_at) { const day = plannerDay(a.due_at); byDay.set(day, [...(byDay.get(day) ?? []), item]) }
     if (a.opens_at) { const day = plannerDay(a.opens_at); openings.set(day, [...(openings.get(day) ?? []), item]) }
   }
+  return { byDay, openings }
+  }, [assigned])
   const disabled = readOnly || busy
   const stepHref = (item?: PlannerReading) => '/admin/readings?' + new URLSearchParams({ view: 'syllabus', course_id: courseId, ...(item?.step ? { step_id: item.step.id } : { details: '1' }) })
   const select = (item: PlannerReading) => { setSelected(item.key); setDate(item.assignment?.due_at ? plannerDay(item.assignment.due_at) : ''); setError('') }
   const saveLocal = (key: string, assignment: ReadingAssignment) => setOverrides(value => ({ ...value, [key]: assignment }))
   async function change(key: string, day: string | null, restoring?: Undo) {
     if (disabled || busyRef.current) return
-    const item = items.find(i => i.key === key)
+    const item = itemByKey.get(key)
     if (!item || !day && !restoring && item.assignment?.status !== 'published') return
     busyRef.current = true; setBusy(true); setError(''); setNotice('')
     let prepared = false
@@ -87,8 +93,18 @@ export default function ReadingPlanner({ syllabus, readings, courseId, onChanged
     } catch (e) { setError((e as Error).message); if (prepared) onChanged() }
     finally { busyRef.current = false; setBusy(false) }
   }
-  const dragEnd = () => { dragRef.current = null; pointerRef.current = null; setDragging(false); setOver(null) }
-  const targetAt = (event: PointerEvent<HTMLButtonElement>) => document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-planner-drop]')?.dataset.plannerDrop ?? null
+  const dragEnd = () => { preview.cancel(); hover.current = null; dragRef.current = null; pointerRef.current = null; setDragging(false); setOver(null) }
+  const targetAt = (event: CalendarPointer) => {
+    const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-planner-drop]')
+    return target && plannerRef.current?.contains(target) ? target.dataset.plannerDrop ?? null : null
+  }
+  const preview = useCalendarDragPreview(point => {
+    const pointer = pointerRef.current
+    if (!pointer?.moved || disabled) return
+    const target = targetAt(point)
+    const next = target === 'unassigned' && itemByKey.get(pointer.key)?.assignment?.status !== 'published' ? null : target
+    if (next !== hover.current) { hover.current = next; setOver(next) }
+  }, plannerRef)
   const pointerStart = (event: PointerEvent<HTMLButtonElement>, item: PlannerReading) => {
     if (disabled || event.button !== 0 || event.pointerType === 'touch' && !(event.target as Element).closest('[data-drag-handle]')) return
     suppressClick.current = false
@@ -101,10 +117,7 @@ export default function ReadingPlanner({ syllabus, readings, courseId, onChanged
     if (!pointer.moved && Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y) < 7) return
     event.preventDefault()
     if (!pointer.moved) { pointer.moved = true; dragRef.current = pointer.key; setDragging(true); setSelected(pointer.key) }
-    const rect = plannerRef.current?.getBoundingClientRect()
-    setDragPoint({ x: event.clientX - (rect?.left ?? 0), y: event.clientY - (rect?.top ?? 0) })
-    const target = targetAt(event)
-    setOver(target === 'unassigned' && items.find(i => i.key === pointer.key)?.assignment?.status !== 'published' ? null : target)
+    preview.move(event)
   }
   const pointerEnd = (event: PointerEvent<HTMLButtonElement>) => {
     const pointer = pointerRef.current, target = targetAt(event)
@@ -117,7 +130,7 @@ export default function ReadingPlanner({ syllabus, readings, courseId, onChanged
   </button>
 
   return <section ref={plannerRef} className={styles.planner} aria-label="Visual reading planner" aria-busy={busy} onKeyDown={event => { if (event.key === 'Escape') { setSelected(null); dragEnd() } }}>
-    {dragging && current && <div className={styles.dragPreview} style={{ left: dragPoint.x + 14, top: dragPoint.y + 14 }} aria-hidden="true"><GripVertical size={15} />{current.title}</div>}
+    {dragging && current && <div ref={preview.ref} className={styles.dragPreview} aria-hidden="true"><GripVertical size={15} />{current.title}</div>}
     <div className={styles.heading}><div><p className="text-overline text-primary">Plan your course</p><h2 className="text-title-1">Reading calendar</h2><p className="text-muted-foreground">Drag a reading onto its due date to assign it, both quizzes, and vocabulary practice together.</p></div><Button asChild variant="outline"><Link href={stepHref()}><BookOpen size={16} />Reading details</Link></Button><Button asChild variant="outline"><Link href={'/admin/interactive-assignments?class=' + courseId}><CalendarDays size={16} />Interactive assignments</Link></Button></div>
     <div className={styles.rules}><CalendarDays size={19} aria-hidden="true" /><span><strong>Due at 11:59 PM · opens 24 hours earlier</strong><small>Saturday deadlines move to Sunday, keeping Friday’s opening. All times Eastern.</small><small>Reading Quiz: next Mon/Wed/Fri, after reading completion · Vocabulary Quiz: next Tue/Thu after practice.</small></span><span className={styles.saveLabel}>{busy ? <><Spinner size="sm" />Saving…</> : 'Changes save automatically'}</span></div>
     {error && <div className={styles.error} role="alert">{error}<Button variant="ghost" onClick={onChanged}>Refresh readings</Button></div>}
@@ -143,7 +156,7 @@ export default function ReadingPlanner({ syllabus, readings, courseId, onChanged
         <div className={styles.calendarScroll} tabIndex={0} aria-label="Reading month calendar"><div className={styles.calendar}>
           {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => <div key={day} className={styles.weekday}>{day}</div>)}
           {days.map(day => <div key={day} className={styles.day} data-outside={!day.startsWith(month.slice(0, 7))} data-over={over === day} data-today={day === today} data-selecting={!!current && !disabled} data-planner-drop={day}>
-            <button className={styles.dayNumber} type="button" disabled={!current || disabled} onClick={() => current && void change(current.key, day)} aria-label={`${current ? 'Set due date to' : 'Calendar day'} ${dateLabel(day)}`}><span>{Number(day.slice(8))}</span>{day === today && <small>Today</small>}</button>
+            <button className={styles.dayNumber} type="button" disabled={!current || disabled} onClick={() => current && void change(current.key, day)} aria-label={`${current ? 'Set due date to' : 'Calendar day'} ${dayLabels.get(day)}`}><span>{Number(day.slice(8))}</span>{day === today && <small>Today</small>}</button>
             {byDay.get(day)?.map(item => card(item, true))}
             {openings.get(day)?.map(item => <button key={item.key} type="button" className={styles.opening} onClick={() => select(item)} disabled={disabled} title={`Opens ${plannerDateLabel(item.assignment!.opens_at!, true)}`}><span>Opens</span>{item.title}</button>)}
             {over === day && <span className={styles.dropHint}>{new Date(day + 'T12:00:00Z').getUTCDay() === 6 ? 'Due Sunday · opens Friday' : 'Drop to set due date'}</span>}

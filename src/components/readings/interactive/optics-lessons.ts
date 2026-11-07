@@ -829,12 +829,12 @@ export const opticsLessons:Record<string,LessonContent> = {
     ],
     "worked": {
       "title": "Trace it, then calculate",
-      "prompt": "In the 20 mm thin-eye model, bring an object from far away to 50 cm.",
+      "prompt": "Use the simplified eye with a 20 mm lens-to-retina distance. Move an object from far away to 50 cm from the eye.",
       "reasoning": "The required power rises from 50 D to 52 D. The added 2 D offsets the increased divergence from the nearer object while the image plane stays fixed."
     },
     "check": {
       "title": "Predict the optical change",
-      "prompt": "To focus a nearer object on the same retina, the model eye needs…",
+      "prompt": "To focus a nearer object on the same retina, the simplified eye in this example needs…",
       "options": [
         "A pupil that changes the object’s distance",
         "Greater converging power",
@@ -888,12 +888,12 @@ export const opticsLessons:Record<string,LessonContent> = {
     ],
     "worked": {
       "title": "Trace it, then calculate",
-      "prompt": "An ideal diverging correction makes a distant scene appear at a model eye’s far point of 0.50 m, neglecting lens–eye separation.",
+      "prompt": "An ideal diverging correction makes a distant scene appear at the eye’s far point of 0.50 m. Ignore the gap between the correcting lens and the eye.",
       "reasoning": "For a distant object, dᵢ = f = −0.50 m. The correction has power −2 D. This is an ideal sign-convention exercise, not a personal prescription."
     },
     "check": {
       "title": "Predict the optical change",
-      "prompt": "Why is a diverging lens useful in the elementary myopia model?",
+      "prompt": "Why is a diverging lens useful in this simple explanation of myopia (nearsightedness)?",
       "options": [
         "It reduces the convergence entering the eye",
         "It makes the retina move forward",

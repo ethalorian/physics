@@ -6,6 +6,7 @@ import { getEffectiveContext } from '@/lib/effective-context'
 import { requireEnrolledStudent } from '@/lib/student-enrollment'
 import type { UserRole } from '@/lib/permissions'
 import { canEditArea, type ContentArea } from '@/lib/content-access'
+import { runApiRequest, requestTiming } from '@/lib/request-runtime'
 
 /**
  * API route authorization wrappers.
@@ -87,32 +88,35 @@ export function withAuth<P extends Record<string, string> = Record<string, strin
     request: NextRequest,
     routeCtx: NextRouteContext,
   ): Promise<Response> {
-    try {
-      const session = await auth()
-      if (!session?.user?.email || !session?.user?.id) {
-        return unauthorized()
-      }
+    return runApiRequest(request, async () => {
+      try {
+        const session = await requestTiming('auth', () => auth())
+        if (!session?.user?.email || !session?.user?.id) {
+          return unauthorized()
+        }
 
-      if (session.experience && !['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
-        return NextResponse.json({ error: EXPERIENCE_READ_ONLY, code: 'EXPERIENCE_READ_ONLY' }, { status: 403 })
-      }
-      const ec = await getEffectiveContext(session.user.email)
-      const ctx: AuthContext<P> = {
-        session,
-        userId: session.user.id,
-        email: session.user.email,
-        role: ec.role,
-        realRole: ec.realRole,
-        scopeEmail: ec.scopeEmail,
-        viewingAsTeacher: ec.viewingAsTeacher,
-        params: ((routeCtx?.params ?? EMPTY_PARAMS) as unknown) as Promise<P>,
-      }
+        if (session.experience && !['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+          return NextResponse.json({ error: EXPERIENCE_READ_ONLY, code: 'EXPERIENCE_READ_ONLY' }, { status: 403 })
+        }
+        const email = session.user.email
+        const ec = await requestTiming('context', () => getEffectiveContext(email))
+        const ctx: AuthContext<P> = {
+          session,
+          userId: session.user.id,
+          email: session.user.email,
+          role: ec.role,
+          realRole: ec.realRole,
+          scopeEmail: ec.scopeEmail,
+          viewingAsTeacher: ec.viewingAsTeacher,
+          params: ((routeCtx?.params ?? EMPTY_PARAMS) as unknown) as Promise<P>,
+        }
 
-      return await handler(request, ctx)
-    } catch (err) {
-      console.error(`[api] ${request.method} ${request.nextUrl?.pathname ?? ''} failed:`, err)
-      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-    }
+        return await requestTiming('handler', () => handler(request, ctx))
+      } catch (err) {
+        console.error(`[api] ${request.method} ${request.nextUrl?.pathname ?? ''} failed:`, err)
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+      }
+    })
   }
 }
 

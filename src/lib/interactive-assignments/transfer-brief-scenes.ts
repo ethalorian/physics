@@ -9,7 +9,7 @@ export const TRANSFER_BRIEF_SCENES: Record<TransferBriefScene, Scene> = {
     context: 'A campus team is planning an acceleration lane for its electric shuttle.', role: 'Use a motion model to check the lane proposal and defend your recommendation.', title: 'From the stop to the campus loop',
     model: 'Start from rest. Straight, level lane. Constant forward acceleration of 0.80 m/s² from the moment the shuttle starts. Target speed at the merge point: 6.0 m/s.',
     conditions: [
-      { label: 'Proposed 18 m lane', image: '/transfer-briefs/shuttle-acceleration.svg', description: 'Overhead model of an electric shuttle at the start of a proposed 18 m acceleration lane. The shuttle starts at 0 m/s and accelerates toward the merge point at a constant 0.80 m/s². The target speed there is 6.0 m/s. The time and distance needed to reach that speed are for you to determine.', facts: [
+      { label: 'Proposed 18 m lane', image: '/transfer-briefs/shuttle-acceleration.svg', description: "Overhead view of an electric shuttle at the start of a proposed 18 m acceleration lane. The shuttle starts at 0 m/s and accelerates toward the merge point at a constant 0.80 m/s². The target speed there is 6.0 m/s. The time and distance needed to reach that speed are for you to determine.", facts: [
         { label: 'Starting speed', value: '0 m/s', note: 'Starts from rest' }, { label: 'Target speed', value: '6.0 m/s', note: 'At the merge point' },
         { label: 'Acceleration', value: '0.80 m/s²', note: 'Constant, forward' }, { label: 'Proposed lane', value: '18 m', note: 'Start to merge point' },
       ] },

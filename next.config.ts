@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     webpackBuildWorker: true,
   },
   outputFileTracingIncludes: {
+    '/api/etf-reader/*': ['./resources/etf-readers/**/*'],
     '/api/teaching-plans': ['./resources/worksheet-quizzes/bank.json','./resources/worksheet-decks/source.json'],
     '/api/worksheet-assignments': ['./resources/worksheet-quizzes/bank.json','./resources/worksheet-decks/source.json'],
     '/api/worksheet-assignments/**/*': ['./resources/worksheet-quizzes/bank.json','./resources/worksheet-decks/source.json'],

@@ -9,7 +9,7 @@
     "Reduce one group at a time.",
     "Check current and voltage conservation in the original circuit."
   ],
-  "source_sha256": "9548a09fb390ccee869f4225071964e5fd5eeb237acaebc40ed79ca76b52d635",
+  "source_sha256": "418eed02b73307f373e4753810cfd07af69574535a64afb8233f37920fefd7c1",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.564Z",

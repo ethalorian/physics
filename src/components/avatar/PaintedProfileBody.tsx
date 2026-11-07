@@ -15,7 +15,7 @@ const SKIN_PATHS = {
   striped: 'M550 1170L589 1151L621 1220H548Z',
   varsity: 'M550 1471L589 1452L624 1535H547Z',
 } as const
-export const hasPaintedProfileCostume = (slug: string) => Object.hasOwn(costumes, slug)
+export const hasPaintedProfileCostume = (slug: string) => Object.prototype.hasOwnProperty.call(costumes, slug)
 const NECK_CAPS = {
   tee: 'M260 8H322V61L255 31Z',
   polo: 'M261 306H320V351L255 326Z',

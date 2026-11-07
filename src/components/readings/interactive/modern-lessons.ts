@@ -29,7 +29,7 @@ export const modernLessons = {
     ],
     "worked": {
       "title": "Reason from the evidence",
-      "prompt": "An atom emits several sharply defined colors. What must a successful model account for?",
+      "prompt": "An atom emits several sharply defined colors. What must a successful explanation account for?",
       "reasoning": "It must predict particular photon energies, connected to differences between allowed atomic energies. A drawing of an orbit alone is not enough."
     },
     "check": {
@@ -84,7 +84,7 @@ export const modernLessons = {
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "The ring model explains atomic states most directly by illustrating…",
+      "prompt": "The ring picture helps explain atomic states mainly by showing…",
       "options": [
         "That electrons follow visible circular tracks",
         "That all confined systems have identical energy levels",
@@ -173,7 +173,7 @@ export const modernLessons = {
         "Dynamics with sensitive dependence on initial conditions in an appropriate deterministic system."
       ],
       [
-        "initial condition",
+        "starting value",
         "State specified at the start of a model calculation."
       ]
     ],
@@ -184,7 +184,7 @@ export const modernLessons = {
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "A chaotic system necessarily makes which claim false?",
+      "prompt": "Which statement must be false for a chaotic system?",
       "options": [
         "Exact long-term prediction follows from finite-precision starting data",
         "The same exact state follows the same deterministic rule",
@@ -452,7 +452,7 @@ export const modernLessons = {
         "Correct: the clock needs the daughter produced during the modeled interval.",
         "The final daughter may be stable."
       ],
-      "hint": "Identify what the initial-condition assumption actually excludes.",
+      "hint": "Identify what the stated starting values rule out.",
       "teacher": "Ask students to state the geological event and closed-system evidence behind an age."
     },
     "references": [
@@ -496,7 +496,7 @@ export const modernLessons = {
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "In the ideal two-compartment model, transfer alone changes…",
+      "prompt": "In the ideal two-compartment example, moving tracers between compartments alone changes…",
       "options": [
         "Distribution but not the total number of surviving labels",
         "The nuclear decay constant",
@@ -697,7 +697,7 @@ export const modernLessons = {
     ],
     "worked": {
       "title": "Reason from the evidence",
-      "prompt": "A claim says a reactor can make more usable fissile material while producing heat. Does that violate conservation?",
+      "prompt": "Someone says a reactor can make more usable fissile material while producing heat. Does that violate conservation?",
       "reasoning": "No. Existing fertile nuclei are transformed into different nuclides while fission releases binding-energy differences. A full matter and energy account must still balance."
     },
     "check": {

@@ -7,9 +7,9 @@
   "criteria": [
     "Use matching units and include the starting position.",
     "Report a central prediction and its bounds.",
-    "Distinguish a measurement range from model limitations."
+    "Explain how an uncertain measurement differs from a limit of the calculation."
   ],
-  "source_sha256": "fcfacfb49877172a3f2564a00e05a489a42986bece43a1dbfe83b1b8e17c0504",
+  "source_sha256": "4157eded735cfc387812af2bb76fa9b591b72c4c7effa56972cbf80f4366e95a",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.471Z",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "A calculated interval comes from bounded measurements and a constant-velocity assumption. What does it omit unless explicitly modeled?",
+      "prompt": "A calculated range of possible positions uses measurement limits and treats velocity as constant. What does this range leave out unless it is also included in the calculation?",
       "options": [
         "The stated starting position.",
         "All measurement variation already included in the bounds.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "A calculated interval comes from bounded measurements and a constant-velocity assumption. What does it omit unless explicitly modeled?",
+      "prompt": "A calculated range of possible positions uses measurement limits and treats velocity as constant. What does this range leave out unless it is also included in the calculation?",
       "options": [
         "The stated elapsed time.",
         "Changes in velocity caused by forces.",

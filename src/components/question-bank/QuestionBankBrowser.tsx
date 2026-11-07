@@ -375,7 +375,7 @@ export default function QuestionBankBrowser({
                           setExpandedQuestion(isExpanded ? null : item.id)
                         }}
                       >
-                        <MathMarkdown content={item.question.question} />
+                        <MathMarkdown content={item.question.question} questionEmphasis />
                       </CardTitle>
                       <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
                         <BookOpen className="h-3 w-3" />
@@ -461,7 +461,7 @@ export default function QuestionBankBrowser({
                                   : 'bg-muted'
                               }`}
                             >
-                              <span className="font-medium">{idx + 1}.</span> <MathMarkdown content={option} />
+                              <span className="font-medium">{idx + 1}.</span> <MathMarkdown content={option} questionEmphasis />
                               {idx === mcQuestion.correctAnswer && (
                                 <Badge className="ml-2 bg-success/10 text-success">Correct</Badge>
                               )}

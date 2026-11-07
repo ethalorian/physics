@@ -2,10 +2,11 @@ import {validateDemand,type AssessmentDemand} from '@/lib/assessment-demand'
 import type { ReadingXpStatus } from './xp-policy'
 import { validateHonorsReading, type HonorsReading } from './openstax-physics'
 import { textbookChapter } from '@/data/textbook'
+import { etfChapter } from '@/data/etf-original/source'
 import { TEXTBOOK_SECTIONS } from '@/data/textbook-sections'
 
 export const READING_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-export type ReadingQuestion = { demand?:AssessmentDemand; id: string; reference: string; prompt: string; target_id: string }
+export type ReadingQuestion = { chapter?: number; demand?:AssessmentDemand; id: string; reference: string; prompt: string; target_id: string }
 export type ReadingTarget = { id: string; slug?: string; statement: string; unit_id: string; domain: string; program: string }
 export type ReadingAssignment = {
   origin_key?: string | null; passage?: string | null; honors_reading?: HonorsReading | null;
@@ -52,10 +53,12 @@ export function validateReading(value: unknown) {
   const origin = b.origin_key == null ? null : bounded(b.origin_key, 204, 'the lesson link', true)
   if (origin && !/^lesson:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[^\s]{1,160}$/i.test(origin)) throw new Error('Check the lesson link.')
   if (!READING_UUID.test(String(b.id)) || !READING_UUID.test(String(b.course_id))) throw new Error('Choose a class.')
-  if (!Number.isInteger(b.chapter) || !textbookChapter(Number(b.chapter))) throw new Error('Choose a textbook chapter.')
+  const etf = Array.isArray(b.section_ids) && etfChapter(Number(b.chapter), b.section_ids)
+  if (!Number.isInteger(b.chapter) || !(etf || textbookChapter(Number(b.chapter)))) throw new Error('Choose a textbook chapter.')
   if (!['draft', 'published'].includes(String(b.status))) throw new Error('Choose save draft or publish.')
   if (!Number.isInteger(b.version) || Number(b.version) < 0) throw new Error('Reload the assignment.')
-  const sections = TEXTBOOK_SECTIONS[Number(b.chapter)]?.sections ?? []
+  if (etf && (b.passage || b.honors_reading)) throw new Error('Choose one reading source.')
+  const sections = etf ? [{id: 'etf-'+etf.number+'.1'}] : TEXTBOOK_SECTIONS[Number(b.chapter)]?.sections ?? []
   if (!Array.isArray(b.section_ids) || b.section_ids.length > sections.length || b.section_ids.some(id => !sections.some(s => s.id === id))) throw new Error('Choose sections from this chapter.')
   if (!Array.isArray(b.questions) || b.questions.length < 1 || b.questions.length > 30) throw new Error('Add 1–30 questions.')
   const seen = new Set<string>()

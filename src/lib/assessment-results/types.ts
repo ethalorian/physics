@@ -1,13 +1,17 @@
-export type ResultKind = 'worksheet' | 'simulation' | 'interactive' | 'quiz' | 'reading' | 'review' | 'vocabulary' | 'math' | 'video' | 'reflection' | 'choice' | 'lesson' | 'presentation'
+export type ResultKind = 'student_choice' | 'worksheet' | 'simulation' | 'interactive' | 'quiz' | 'reading' | 'review' | 'vocabulary' | 'math' | 'video' | 'reflection' | 'choice' | 'lesson' | 'presentation'
 export type ResultState = 'not_started' | 'draft' | 'submitted' | 'returned' | 'reviewed' | 'excused' | 'completed'
 export type ResultStudent = { id: string; name: string; firstName?: string | null; lastName?: string | null }
 export type ResultCell = {
+  /** A teacher-selected paper grade; never converted to invented points. */
+  manualLetter?: string
   /** Released lab submissions, including originals retained after a revision. */
   transferGrades?: import('../interactive-assignments/lab-rubric').ReleasedLabEntry[]
   labGrades?: import('../interactive-assignments/lab-rubric').ReleasedLabEntry[]
   /** Teacher-released feedback only; private drafts are never copied here. */
   feedback?: string
   releasedAt?: string | null
+  /** Latest final review the student can still open, including an earlier attempt. */
+  reviewReleasedAt?: string
   /** Only a source-confirmed, teacher-released grade belongs here. Never an AI draft. */
   grade?: { earned: number; possible: number; version: string; letter?: string }
   state: ResultState
@@ -62,6 +66,7 @@ export type ResultsData = {
   warnings: { source: string; message: string }[]
 }
 export const RESULT_KINDS: Record<ResultKind, string> = {
+  student_choice: 'Student Choice · Paper',
   worksheet: 'Worksheets',
   lesson: 'Class lessons', presentation: 'Live classroom responses', simulation: 'Simulations', interactive: 'Interactive lessons', quiz: 'Quizzes', reading: 'Readings', review: 'Reviews', vocabulary: 'Vocabulary', math: 'Math', video: 'Videos', reflection: 'Reflections & chapter responses', choice: 'Student choices',
 }

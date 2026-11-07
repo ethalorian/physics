@@ -9,7 +9,7 @@
     "Compare average force for different stopping times.",
     "Name information beyond momentum needed for damage."
   ],
-  "source_sha256": "ef554b1ee40e02a77a0cc0fc9f1f45de13a4244ffd8cebe6c970b703ace52614",
+  "source_sha256": "154bd17fc23c4710e47522194778addaeb283743f557585c6f54b690e61669ed",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.512Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "A 12 kg model object moving at +5 m/s comes to rest. What is its momentum change?",
+      "prompt": "A 12 kg object moves at +5 m/s and then stops. What is its change in momentum?",
       "options": [
         "−60 kg·m/s",
         "−12 kg·m/s",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "A model impact changes momentum by −84 kg·m/s over 0.7 s. What is average force?",
+      "prompt": "An impact changes momentum by −84 kg·m/s in 0.7 s. What is the average force?",
       "options": [
         "−58.8 N",
         "+120 N",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "A 12 kg model object moving at +5 m/s comes to rest. What is its momentum change?",
+      "prompt": "A 12 kg object moves at +5 m/s and then stops. What is its change in momentum?",
       "options": [
         "−60 kg·m/s",
         "0 kg·m/s",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "A model impact changes momentum by −84 kg·m/s over 0.7 s. What is average force?",
+      "prompt": "An impact changes momentum by −84 kg·m/s in 0.7 s. What is the average force?",
       "options": [
         "+120 N",
         "−58.8 N",

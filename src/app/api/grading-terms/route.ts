@@ -31,6 +31,7 @@ export const PUT = withRole(['teacher', 'admin'], async (request, ctx) => {
   }
   const { data, error } = await supabaseAdmin.rpc('save_course_grading_settings', { p_course: course.id, p_terms: settings.terms.map(t => ({ id: t.id, name: t.name.trim(), start: t.start, end: t.end })), p_placements: settings.placements, p_revision: settings.revision, p_owner: course.teacher_email, p_actor: ctx.email })
   if (error) {
+    if (error.code === '23503' && error.message === 'A term with posted attendance grades cannot be removed.') return readingJson({ error: error.message }, 409)
     if (error.code === '40001') return readingJson({ error: 'Grading settings changed in another window. Your edits are still here. Reload the saved settings before trying again.' }, 409)
     console.error('[grading-terms] save failed', error)
     return readingJson({ error: 'Could not save grading terms. Your edits are still here; try again.' }, 500)

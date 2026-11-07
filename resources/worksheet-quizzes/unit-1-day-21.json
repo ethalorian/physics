@@ -3,13 +3,13 @@
   "unit": 1,
   "day": 21,
   "title": "Transfer task: plan and begin",
-  "target": "Organize the given evidence and begin an independent position prediction.",
+  "target": "Organize the given measurements and details. Begin your own position prediction.",
   "criteria": [
     "Organize the task data with fixed axes and matching units.",
     "Calculate central and bounded final coordinates.",
     "Save an explicit plan for the graph and explanation."
   ],
-  "source_sha256": "af2573f6995589c4a8de3ab12f52cf42541cab35295b1116059c233aaf468cd3",
+  "source_sha256": "41809d61991c2a7408b4f97ab1c047211fc5db0d45f585e9bf5c75c9cd921c41",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.485Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "A toy tracking model uses east +x, north +y, distances in km, and time in seconds. Which velocity units fit directly?",
+      "prompt": "A simplified tracking calculation uses east as +x and north as +y. Distance is in km and time is in seconds. Which velocity units can you use directly?",
       "options": [
         "km/s",
         "km/h without conversion",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A fixed-Earth straight-line model omits gravity and Earth’s motion. Which next step is appropriate before making a real encounter claim?",
+      "prompt": "A simple prediction uses a straight path and treats Earth as still. It leaves out gravity and Earth’s motion. What should you do next before saying whether a real object will come near Earth?",
       "options": [
         "Ignore the y coordinate.",
         "Treat the toy endpoint as a confirmed collision forecast.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "A toy tracking model uses east +x, north +y, distances in km, and time in seconds. Which velocity units fit directly?",
+      "prompt": "A simplified tracking calculation uses east as +x and north as +y. Distance is in km and time is in seconds. Which velocity units can you use directly?",
       "options": [
         "km/s",
         "m/s without conversion",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A fixed-Earth straight-line model omits gravity and Earth’s motion. Which next step is appropriate before making a real encounter claim?",
+      "prompt": "A simple prediction uses a straight path and treats Earth as still. It leaves out gravity and Earth’s motion. What should you do next before saying whether a real object will come near Earth?",
       "options": [
         "Add the missing dynamics and compare both bodies at matching times with uncertainty.",
         "Treat the toy endpoint as a confirmed collision forecast.",

@@ -10,10 +10,13 @@ import { isMathWarmupDate } from '@/lib/math-warmup-schedule'
 import { type ClassWorkItem } from '@/lib/class-work'
 import type { ChoiceCalendarContent } from '@/components/choices/ChoiceStudentPlanner'
 import { assignmentPresentation, assignmentStatus, type ActivityType, type LearningLane } from '@/lib/assignment-presentation'
+import AssignmentXpBadge from '@/components/student/AssignmentXpBadge'
+import type { CalendarXpStatus } from '@/lib/assigned-mastery-xp'
 import s from './LearningWeek.module.css'
 
-export type CalendarAssignment = StudentAssignment & { classWork?: ClassWorkItem }
-export type CalendarActivity = LearningActivity & { classWork?: ClassWorkItem }
+type CalendarMeta = { classWork?: ClassWorkItem; xpStatus?: CalendarXpStatus }
+export type CalendarAssignment = StudentAssignment & CalendarMeta
+export type CalendarActivity = LearningActivity & CalendarMeta
 export type CalendarLane = LearningLane
 const ICONS = { math: Sigma, learn: BookOpen, assignments: PenLine, investigate: FlaskConical, quizzes: ClipboardCheck }
 const TYPE_ICONS: Partial<Record<ActivityType, typeof BookOpen>> = { foundation: Lightbulb, worksheet: FileText, video: Play, vocabulary: SpellCheck, 'vocabulary-quiz': SpellCheck }
@@ -35,6 +38,7 @@ export function ActivityCard({ item, selected, onSelect, onPointerDown, editable
     {presentation.day && <span className={s.activityDay}>Course day {presentation.day}</span>}
     <strong>{presentation.title}</strong>
     <span className={s.activityThinking}>{presentation.thinking}</span>
+    {item.xpStatus && <AssignmentXpBadge status={item.xpStatus}/>}
     <span className={s.activityStatus} data-locked={locked}>{locked ? <LockKeyhole size={13} aria-hidden="true" /> : item.complete ? <Check size={13} aria-hidden="true" /> : null}{assignmentStatus(item)}</span>
   </button>
 }

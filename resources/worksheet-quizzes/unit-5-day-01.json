@@ -9,7 +9,7 @@
     "Identify the direction of spontaneous heat transfer.",
     "Explain why amount and material matter."
   ],
-  "source_sha256": "9d17e773983e1e4f2f26a2c7e17bbb0cf181e089afb8b98f23593ad5e6230f0d",
+  "source_sha256": "1cc30cc192047e89a85f19a4072c43a912e55b558528791994bf385b239c3753",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.531Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "Two samples of the same material are at the same temperature, but one has three times the mass. Which claim is best?",
+      "prompt": "Two samples of the same material have the same temperature. One has three times the mass. Which statement is best supported?",
       "options": [
         "Equal temperature does not mean equal total thermal energy.",
         "The smaller sample must contain no particle motion.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "Two samples of the same material are at the same temperature, but one has three times the mass. Which claim is best?",
+      "prompt": "Two samples of the same material have the same temperature. One has three times the mass. Which statement is best supported?",
       "options": [
         "Equal temperature does not mean equal total thermal energy.",
         "The smaller sample must contain no particle motion.",

@@ -1,8 +1,11 @@
+import { supabaseAdmin } from '@/lib/supabase'
+import { calendarXpBadges, type MasteryXpReport } from '@/lib/assigned-mastery-xp'
 import { withAuth } from '@/lib/api-auth'
 import { readingCourses, readingJson, readingStaff } from '@/lib/textbook-assignments-server'
 import { loadAssessmentResults } from '@/lib/assessment-results/server'
 import { byIds, read } from '@/lib/assessment-results/queries'
 import { loadGradingSettings } from '@/lib/grading-terms-server'
+import { loadStudentAttendance } from '@/lib/meaningful-attendance-server'
 import { emptyGradingSettings } from '@/lib/grading-terms'
 import { studentGradebookRows, studentLabEntries, studentTransferEntries, type StudentProgressData } from '@/lib/student-gradebook'
 import { decayingAverage } from '@/data/curriculum-types'
@@ -25,16 +28,54 @@ export const GET = withAuth(async (request, ctx) => {
   const userId = staff ? params.get('student') : ctx.userId
   if (!userId) return readingJson(result)
   if (staff && !result.roster.some(student => student.id === userId)) return readingJson({ error: 'Student unavailable in this class.' }, 403)
-  const [results, settings] = await Promise.all([
-    loadAssessmentResults(ctx, course, 'all', { studentId: userId }),
-    loadGradingSettings(course.id).catch(() => { result.warnings.push({ source: 'Grading terms', message: 'Term settings could not load. Your scores remain available; refresh to try again.' }); return emptyGradingSettings() }),
+  const includeCalendar = !staff && params.get('calendarXp') === '1'
+  // Week shows this student's assignments across enrollments. Grade totals stay
+  // scoped to the selected class; its report is read only once for both views.
+  const xpCourses = (includeCalendar ? courses : [course]).filter(c => c.program === 'physics')
+  const settingsRead = loadGradingSettings(course.id).catch(() => {
+    result.warnings.push({ source: 'Grading terms', message: 'Term settings could not load. Your scores remain available; refresh to try again.' })
+    return emptyGradingSettings()
+  })
+  const attendanceRead = result.syllabusCategories
+    ? settingsRead.then(settings => loadStudentAttendance(course.id, userId, settings.terms)).catch(() => {
+      result.warnings.push({ source: 'Meaningful attendance', message: 'Posted attendance could not load. Refresh to try again.' })
+    }) : null
+  const [results, settings, xpReads, attendance] = await Promise.all([
+    loadAssessmentResults(ctx, course, 'all', { studentId: userId }), settingsRead,
+    Promise.all(xpCourses.map(async c => {
+      const { data, error } = await supabaseAdmin.rpc('student_mastery_xp', { p_course: c.id, p_user: userId })
+      return { courseId: c.id, report: error ? null : data as MasteryXpReport | null }
+    })), attendanceRead,
   ])
+  const xp = xpReads.find(read => read.courseId === course.id)
+  if (xp && !xp.report) result.warnings.push({ source: 'Unit XP floor', message: 'Assigned mastery XP could not load. Refresh to try again.' })
+  else if (xp?.report) result.masteryXp = xp.report
+  if (includeCalendar) result.calendarXp = calendarXpBadges(xpReads.map(read => read.report))
   const student = results.students.find(s => s.id === userId)
   result.student = student ? { id: student.id, name: student.name } : null
   if (!result.student) return readingJson({ error: 'Active enrollment is required to view this gradebook.' }, 403)
   result.units = results.units; result.settings = settings
+  if (attendance) result.attendance = attendance
   result.warnings.push(...results.warnings.map(w => ({ source: w.source, message: 'This source could not load. Scores and missing-work counts may be incomplete.' })))
-  const lessonIds = results.activities.filter(a => ['lesson', 'video', 'reflection'].includes(a.kind)).map(a => a.sourceId)
+  // History is independent of link resolution and prerequisite checks. Catch
+  // locally so a failed early read cannot become an unhandled rejection, and
+  // append its warning in the same order as the sequential response.
+  const learningHistory = (async () => {
+    const targetIds = (results.targets ?? []).map(t => t.id)
+    try {
+      const [records, feedback] = await Promise.all([
+        byIds<{ id: string; target_id: string; level: number; observed_at: string; evidence_source: string | null }>('mastery_records', 'id,target_id,level,observed_at,evidence_source', 'target_id', targetIds, ['observed_at', 'id'], q => q.eq('user_id', userId)),
+        byIds<{ id: string; target_id: string; message: string; created_at: string }>('teacher_feedback', 'id,target_id,message,created_at', 'target_id', targetIds, ['created_at', 'id'], q => q.eq('user_id', userId)),
+      ])
+      result.targets = (results.targets ?? []).map(target => {
+        const observations = records.filter(r => r.target_id === target.id).sort((a, b) => a.observed_at.localeCompare(b.observed_at))
+        return { ...target, value: observations.length ? decayingAverage(observations.map(r => r.level)) : null, observations: observations.map(r => ({ id: r.id, level: r.level, at: r.observed_at, source: 'Teacher observation' })) }
+      })
+      result.feedback = feedback.sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 20).map(r => ({ id: r.id, message: r.message, at: r.created_at, targetId: r.target_id }))
+    } catch { return false }
+    return true
+  })()
+  const lessonIds = [...new Set(results.activities.filter(a => ['lesson', 'video', 'reflection'].includes(a.kind)).map(a => a.sourceId))]
   let slugs = new Map<string, string>()
   try { slugs = new Map((await byIds<{ id: string; slug: string }>('lessons', 'id,slug', 'id', lessonIds, ['id'])).map(l => [l.id, l.slug])) }
   catch { result.warnings.push({ source: 'Assignment links', message: 'Some lesson links could not load. Use your class calendar to open those lessons.' }) }
@@ -56,17 +97,6 @@ export const GET = withAuth(async (request, ctx) => {
   result.transferEntries = studentTransferEntries(results.activities, userId, settings)
   // Only disclose overrides for work on this student's ledger.
   result.settings = { ...settings, placements: Object.fromEntries(result.rows.filter(row => row.manualTerm).map(row => [row.key, row.termId!])) }
-  const targetIds = (results.targets ?? []).map(t => t.id)
-  try {
-    const [records, feedback] = await Promise.all([
-      byIds<{ id: string; target_id: string; level: number; observed_at: string; evidence_source: string | null }>('mastery_records', 'id,target_id,level,observed_at,evidence_source', 'target_id', targetIds, ['observed_at', 'id'], q => q.eq('user_id', userId)),
-      byIds<{ id: string; target_id: string; message: string; created_at: string }>('teacher_feedback', 'id,target_id,message,created_at', 'target_id', targetIds, ['created_at', 'id'], q => q.eq('user_id', userId)),
-    ])
-    result.targets = (results.targets ?? []).map(target => {
-      const observations = records.filter(r => r.target_id === target.id).sort((a, b) => a.observed_at.localeCompare(b.observed_at))
-      return { ...target, value: observations.length ? decayingAverage(observations.map(r => r.level)) : null, observations: observations.map(r => ({ id: r.id, level: r.level, at: r.observed_at, source: 'Teacher observation' })) }
-    })
-    result.feedback = feedback.sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 20).map(r => ({ id: r.id, message: r.message, at: r.created_at, targetId: r.target_id }))
-  } catch { result.warnings.push({ source: 'Learning history', message: 'Your learning history and target feedback could not load. Refresh to try again.' }) }
+  if (!await learningHistory) result.warnings.push({ source: 'Learning history', message: 'Your learning history and target feedback could not load. Refresh to try again.' })
   return readingJson(result)
 })

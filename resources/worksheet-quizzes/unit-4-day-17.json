@@ -9,7 +9,7 @@
     "Calculate total kinetic energy independently.",
     "Account for reduced kinetic energy without losing total energy."
   ],
-  "source_sha256": "c773e1165c31d3d9888f3e34c30fed3add42e476baec75b44040c32c7b0b26b2",
+  "source_sha256": "8922cad04a1390bc86b298ab05d627db0c7b6f4f6b1b02bca39870b821e03a21",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.526Z",

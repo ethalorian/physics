@@ -1,8 +1,11 @@
 'use client'
+import { textbookPracticePrompt } from '@/lib/textbook-practice'
 import { useAssignmentLeaveGuard } from '@/hooks/useAssignmentLeaveGuard'
 import AssignmentDueInput from '@/components/ui/assignment-due-input'
 import { dueDateDraft, dueDateValue, dueDatePreview } from '@/lib/assignment-due-input'
 import { isInteractiveReading, INTERACTIVE_READING_ONLY } from '@/lib/reading-availability'
+import EtfReadingComposer from './EtfReadingComposer'
+import { etfChapter } from '@/data/etf-original/source'
 import ReadingSourceEditor from './ReadingSourceEditor'
 import { useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
@@ -23,7 +26,11 @@ const pageMap = pageMapData as Record<string, { offset: number; pages: number; q
 export type ReadingCatalog = { courses: ReadingCourse[]; targets: ReadingTarget[]; units: { id: string; name: string; program: string }[]; readOnly: boolean }
 const steps = ['Choose reading', 'Pick questions', 'Preview & assign']
 
-export default function ReadingComposer({ initial, catalog, onSaved, onCancel }: { initial: ReadingAssignment; catalog: ReadingCatalog; onSaved: (assignment: ReadingAssignment) => void; onCancel: () => void }) {
+export type ReadingComposerProps = { initial: ReadingAssignment; catalog: ReadingCatalog; onSaved: (assignment: ReadingAssignment) => void; onCancel: () => void }
+export default function ReadingComposer(props: ReadingComposerProps) {
+  return etfChapter(props.initial.chapter,props.initial.section_ids) ? <EtfReadingComposer {...props}/> : <TextbookComposer {...props}/>
+}
+function TextbookComposer({ initial, catalog, onSaved, onCancel }: ReadingComposerProps) {
   const [draft, setDraft] = useState(() => ({ ...initial, title: initial.title || textbookChapter(initial.chapter)?.title || 'Textbook reading' }))
   const [step, setStep] = useState(initial.passage || initial.honors_reading ? 2 : 0), [busy, setBusy] = useState(false), [error, setError] = useState('')
   const [chapterPicker, setChapterPicker] = useState(false), [search, setSearch] = useState('')
@@ -71,7 +78,7 @@ export default function ReadingComposer({ initial, catalog, onSaved, onCancel }:
     if (!fresh.length) { setMappingStatus('Those questions are already selected.'); return }
     if (draft.questions.length + fresh.length > 30) { setError('Keep each reading to 30 questions or fewer.'); return }
     if (batch && mappingMode === 'manual' && !linkedTarget(target)) { setError('Choose a target for this batch, or switch to automatic mapping.'); return }
-    const added = fresh.map(q => ({ ...q, id: crypto.randomUUID(), target_id: batch && mappingMode === 'manual' ? target : matchReadingTarget(draft.chapter, q.reference, catalog.targets, program, q.prompt).target?.id ?? '' }))
+    const added = fresh.map(q => ({ ...q, prompt: q.prompt || textbookPracticePrompt(draft.chapter,q.reference), id: crypto.randomUUID(), target_id: batch && mappingMode === 'manual' ? target : matchReadingTarget(draft.chapter, q.reference, catalog.targets, program, q.prompt).target?.id ?? '' }))
     patch({ questions: [...draft.questions, ...added] }); setError('')
     setOpenQuestions(ids => [...ids, ...added.filter(q => !q.reference).map(q => q.id)])
     const linked = added.filter(q => q.target_id).length

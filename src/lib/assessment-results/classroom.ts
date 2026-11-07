@@ -1,11 +1,11 @@
 import 'server-only'
-import { byIds, read, type Scope } from './queries'
+import { byIds, read, reviewSource, type Scope } from './queries'
 import { notStarted } from './model'
 import type { ResultActivity, ResultCell } from './types'
 
 export async function presentationResults(scope:Scope):Promise<ResultActivity[]> {
   const sessions = await read<{id:string;plan_unit_id:string|null;plan_day:number|null}>('present_sessions','id,plan_unit_id,plan_day',q=>q.eq('course_id',scope.course.id),['id'])
-  const pulses = await byIds<{id:string;session_id:string;kind:string;target_id:string|null;prompt:string;required:boolean;created_at:string}>('present_pulses','id,session_id,kind,target_id,prompt,required,created_at','session_id',sessions.map(s=>s.id),['id'],q=>q.in('kind',['warmup','solo','exit_ticket']))
+  const pulses = await byIds<{id:string;session_id:string;kind:string;target_id:string|null;prompt:string;required:boolean;created_at:string}>('present_pulses','id,session_id,kind,target_id,prompt,required,created_at','session_id',sessions.map(s=>s.id),['id'],q=>reviewSource(scope,q.in('kind',['warmup','solo','exit_ticket'])))
   const [responses,reviews] = await Promise.all([
     byIds<{id:string;pulse_id:string;user_id:string;created_at:string}>('present_ticket_responses','id,pulse_id,user_id,created_at','pulse_id',pulses.map(p=>p.id),['id'],q=>q.in('user_id',scope.students.map(s=>s.id))),
     byIds<{present_pulse_id:string;user_id:string}>('mastery_evidence_reviews','present_pulse_id,user_id','present_pulse_id',pulses.map(p=>p.id),['id'],q=>q.in('user_id',scope.students.map(s=>s.id))),

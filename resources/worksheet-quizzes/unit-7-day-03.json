@@ -9,7 +9,7 @@
     "Use the positive-test-charge convention.",
     "Distinguish the field from a particular test charge’s force."
   ],
-  "source_sha256": "2c8ae1c4ece4dfc6e94d10927100e62cead216a2eada5d17e7cb42c7b5c894c5",
+  "source_sha256": "666131b2dbfde15469278b38c47ecb689f9d6ed98833a96e86ff87ab5dacda44",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.560Z",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "A positive 0.50 C model test charge experiences 3.0 N north. What is the field?",
+      "prompt": "A positive 0.50 C test charge feels a force of 3.0 N north. What is the electric field?",
       "options": [
         "6.0 N/C north.",
         "6.0 C/N south.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A model field is 12 N/C downward. Which test charge would feel a 6 N upward force?",
+      "prompt": "An electric field is 12 N/C downward. Which test charge would feel a force of 6 N upward?",
       "options": [
         "−2.0 C",
         "+2.0 C",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "A positive 0.50 C model test charge experiences 3.0 N north. What is the field?",
+      "prompt": "A positive 0.50 C test charge feels a force of 3.0 N north. What is the electric field?",
       "options": [
         "6.0 C/N south.",
         "1.5 N/C north.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A model field is 12 N/C downward. Which test charge would feel a 6 N upward force?",
+      "prompt": "An electric field is 12 N/C downward. Which test charge would feel a force of 6 N upward?",
       "options": [
         "−2.0 C",
         "+2.0 C",

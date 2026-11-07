@@ -5,11 +5,11 @@
   "title": "Conserve mechanical energy",
   "target": "Track kinetic and potential energy when nonconservative work is negligible.",
   "criteria": [
-    "Identify the energy system and assumptions.",
+    "Identify the system and what your energy calculation treats as true.",
     "Keep the total energy consistent between positions.",
     "Explain how height and speed trade off."
   ],
-  "source_sha256": "4eb024ad4b9fc7f95c3f4ace425edb82e892de655dc8211f189e88046535a789",
+  "source_sha256": "e8d5cb2b001236bfaba65c6eaf558d9e5ce395bc81ca4ae0b14c10fd0a45f0b7",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.523Z",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "A cart rolls down a track with substantial friction. Which claim needs correction?",
+      "prompt": "A cart rolls down a track with substantial friction. Which statement needs correction?",
       "options": [
         "K + U is necessarily constant for the cart-Earth system.",
         "Friction can increase internal energy.",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "A point mass starts from rest and falls vertically 1.8 m without resistance. Use g = 10 m/s². What is its speed?",
+      "prompt": "A point mass starts from rest and falls vertically 1.8 m without resistance.\n\n1. Use g = 10 m/s².\n2. What is its speed?",
       "options": [
         "18 m/s",
         "3 m/s",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "A cart rolls down a track with substantial friction. Which claim needs correction?",
+      "prompt": "A cart rolls down a track with substantial friction. Which statement needs correction?",
       "options": [
         "A system boundary must be specified.",
         "K + U is necessarily constant for the cart-Earth system.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "A point mass starts from rest and falls vertically 1.8 m without resistance. Use g = 10 m/s². What is its speed?",
+      "prompt": "A point mass starts from rest and falls vertically 1.8 m without resistance.\n\n1. Use g = 10 m/s².\n2. What is its speed?",
       "options": [
         "6 m/s",
         "36 m/s",

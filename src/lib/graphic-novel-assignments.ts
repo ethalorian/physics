@@ -8,7 +8,7 @@ export const NOVEL_BOOK = COMIC_BOOKS.find(book => book.slug === 'book-one')!
 // Prompts follow the published chapter summaries and text companions.
 const prompts: Record<number, [string, string]> = {
   "1": [
-    "Maz says the asteroid will miss Earth. How is her promise different from a claim backed by evidence? Use a detail from the chapter.",
+    "Maz promises that the asteroid will miss Earth. How is a promise different from a statement supported by measurements or observations? **Use a detail from the chapter to explain.**",
     "What should Maz tell her brother now? Use what she knows and what she still needs to learn about 2026-XJ."
   ],
   "2": [
@@ -17,22 +17,22 @@ const prompts: Record<number, [string, string]> = {
   ],
   "3": [
     "A person walks out and back. Their average velocity is zero. Why does that not mean they stood still? Use the graph to explain.",
-    "You know how fast 2026-XJ moves, but not its direction. Can you predict where it will be? Defend your answer."
+    "You know how fast 2026-XJ moves, but not its direction. **Can you predict where it will be? Explain why or why not.**"
   ],
   "4": [
     "A line on a velocity–time graph is flat. Why might the object still be moving? Use a scene from the chapter.",
-    "Maz leaves out the sideways part of 2026-XJ’s motion. How could this change her prediction? Explain your reasoning."
+    "Maz leaves out the sideways part of 2026-XJ’s motion. How could this change her prediction? Explain how you reached your answer."
   ],
   "5": [
     "Why does Maz give a range of possible positions for the asteroid instead of one exact spot? Use the chapter to explain.",
-    "How much should Maz trust her first prediction for 2026-XJ? Use evidence from the chapter. Explain one thing her model leaves out."
+    "Look at **Maz’s first position prediction** for 2026-XJ.\n\n1. How much should she trust it? **Explain your answer using a detail from the chapter.**\n2. Name **one thing the prediction leaves out**. Explain why that matters."
   ],
   "6": [
     "Maz breaks a motion arrow into parts, then puts them back together. Why should the final arrow mean the same thing?",
     "Two teams draw axes in different directions for 2026-XJ. How could you check whether their arrows still show the same motion?"
   ],
   "7": [
-    "How does the cart’s changing motion help Maz see a problem with her first model? Use a detail from the chapter.",
+    "How does the cart’s changing motion help Maz see a problem with her first prediction? **Use a detail from the chapter to explain.**",
     "A team says a tiny change in 2026-XJ’s velocity will not matter. Do you agree? Use the chapter’s physics and explain how time could change your judgment."
   ],
   "8": [
@@ -40,15 +40,15 @@ const prompts: Record<number, [string, string]> = {
     "Maz’s equation assumes steady acceleration. What would you need to check before using it for 2026-XJ? Explain why that check matters."
   ],
   "9": [
-    "Choose the coin or the toy passenger. How does it show what makes motion change? Use the chapter to explain.",
-    "Would 2026-XJ slow down just because time passes? Defend your answer. Explain what would have to act on it."
+    "1. Choose the coin or the toy passenger.\n2. How does it show what makes motion change?\n3. Use the chapter to explain.",
+    "Would 2026-XJ slow down just because time passes? **Explain why or why not.** What would have to act on it?"
   ],
   "10": [
     "Why does each force arrow need a source and a direction? Explain using one object from the chapter.",
     "Someone draws a force arrow on 2026-XJ just because it is moving. Do you agree? Explain what would have to push or pull it."
   ],
   "11": [
-    "What happens to the cart’s acceleration when its mass grows? Use the test as evidence. Name one thing the test does not prove.",
+    "What happens to the cart’s acceleration when its mass grows? **Use a result from the test to explain.** Name one thing the test does not show.",
     "We do not know 2026-XJ’s exact mass. How could that affect a plan to push it off course? Use the cart test to explain."
   ],
   "12": [
@@ -57,7 +57,7 @@ const prompts: Record<number, [string, string]> = {
   ],
   "13": [
     "Maz leaves friction out of her math. Why does that change her answer? Explain using all the forces on the object.",
-    "Before trusting a force model for 2026-XJ, what would you check? Use Maz’s missing-force mistake to explain why your checks matter."
+    "Before trusting a calculation of the forces on 2026-XJ, **what would you check**? Use Maz’s missing-force mistake to explain why your checks matter."
   ],
   "14": [
     "Two objects push on each other with equal forces. Why do those forces not cancel on one object? Use a chapter example.",
@@ -79,11 +79,11 @@ const prompts: Record<number, [string, string]> = {
 export function novelQuestionBank(day: number): ExitTicketBlock[] {
   const chapter = NOVEL_BOOK.chapters.find(c => c.day === day)
   if (!chapter || !prompts[day]) throw Error('Choose an available graphic novel chapter.')
-  return [...prompts[day], 'Choose a claim about 2026-XJ from this chapter. What new evidence would test it? Describe one result that would support it and one that would not.'].map((prompt, i) => ({
+  return [...prompts[day], "Choose a statement about 2026-XJ from this chapter.\n\n1. What **new measurement or observation** would help you check it?\n2. Describe **one result that would support the statement** and **one that would not**."].map((prompt, i) => ({
     id: `novel-${day}-q${i + 1}`, type: 'exit_ticket', capture: true, evidenceRole: 'main', prompt,
     demand: i === 0 ? demand('Analyze', 2, 'Explains a relationship using a specific event, model, or diagram from the chapter.') : i === 1 ? demand('Evaluate', 3, 'Defends a claim about the asteroid using chapter evidence, physics reasoning, and a relevant assumption or limit.') : demand('Analyze', 3, 'Proposes evidence that could test a claim and reasons through contrasting results.'),
     sei: { visual: { src: NOVEL_BOOK.pages[chapter.end].src, alt: NOVEL_BOOK.pages[chapter.end].description }, frames: [
-      { level: 1, text: 'In the chapter, ___. This supports / does not support the claim because ___.' },
+      { level: 1, text: "In the chapter, ___. This supports / does not support the statement because ___." },
       { level: 2, text: 'My evidence is ___. The physics explains this because ___.' },
     ] },
   }))
@@ -100,7 +100,7 @@ export function graphicNovelWorkspace(document: BlockDocument, title: string, id
   return { slug: id, title, day: chapter.day, unit: 'unit-1', minutes: 10,
     targets: [...new Set(questions.flatMap(q => q.targets ?? []))], targetNote: 'Your teacher reviews your reasoning.',
     toolHref: `/comics/2026-xj/${NOVEL_BOOK.slug}?page=${chapter.start}`,
-    questions, sections: [{ title: 'Explain your thinking', stop: 'Chapter response', learn: 'Use a scene or panel as evidence.', questions }],
+    questions, sections: [{ title: 'Explain your thinking', stop: 'Chapter response', learn: "Use a specific detail from a scene or panel to support your answer.", questions }],
   }
 }
 

@@ -34,12 +34,12 @@ export const foundationLessons = {
     ],
     "worked": {
       "title": "Reason from the evidence",
-      "prompt": "Two models predict the same starting position. At 4 s they predict 8 m and 12 m. A measured position is 12.1 ± 0.2 m; the stated interval summarizes this example’s measurement bounds.",
+      "prompt": "Two calculations predict the same starting position. At 4 s, they predict positions of 8 m and 12 m. The measured position is 12.1 ± 0.2 m. For this example, the stated interval gives the measurement limits.",
       "reasoning": "The later measurement distinguishes these predictions under the stated bounds: 12 m is compatible and 8 m is not. Next examine whether the acceleration model predicts additional independent observations."
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "What most strongly supports choosing between the two models?",
+      "prompt": "What best helps you choose between the two explanations and their predictions?",
       "options": [
         "A measurement where their predictions differ by more than the relevant uncertainty",
         "The model with the longest equation",
@@ -271,7 +271,7 @@ export const foundationLessons = {
         "The onboard backward launch must be included.",
         "Correct: the numerator is zero, and the denominator is 1 − 0.36 = 0.64."
       ],
-      "hint": "Use signed velocities and identify the frame of each one.",
+      "hint": "Use signed velocities and name the frame of each one.",
       "teacher": "Ask students to explain why a frequency shift is compatible with invariant light speed."
     }
   },

@@ -1,0 +1,1213 @@
+[
+  {
+    "day": 4,
+    "title": "Velocity graphs and components",
+    "vocab": [
+      [
+        "Signed area",
+        "Above zero adds displacement; below zero subtracts it."
+      ],
+      [
+        "Distance",
+        "Add area sizes, including the return trip."
+      ],
+      [
+        "Component",
+        "A vector’s signed part along one axis."
+      ],
+      [
+        "Angle θ",
+        "Name the starting axis and turn direction."
+      ]
+    ],
+    "eq": [
+      "Δx = signed area",
+      "Split v along fixed axes"
+    ],
+    "units": [
+      [
+        "vₓ",
+        "v cos θ"
+      ],
+      [
+        "vᵧ",
+        "v sin θ; θ from +x"
+      ]
+    ],
+    "figure": "velocity_components",
+    "ctitle": "AREA AND COMPONENTS",
+    "csubtitle": "Two views of motion.",
+    "legend": [
+      [
+        "PURPLE",
+        "Velocity and its parts"
+      ],
+      [
+        "BLUE",
+        "Signed area: displacement"
+      ],
+      [
+        "PENCIL",
+        "Axes and angle"
+      ]
+    ],
+    "example": {
+      "prompt": "A cart moves at +3 m/s for 2 s, then −1 m/s for 2 s. <b>Find its displacement and total distance.</b>",
+      "given": "v₁ = +3 m/s<br>v₂ = −1 m/s<br>2 s per interval",
+      "equation": "Use areas because each interval has steady v.",
+      "work": "Δx = 3(2) − 1(2)<br>distance = 6 + 2",
+      "answer": "+4 m; 8 m",
+      "remark": "Return travel reduces Δx, not distance."
+    },
+    "tool": "SIGNED AREA",
+    "thread": "For fictional XJ, the area of a velocity–time graph gives a change in position. Components separate motion toward Earth from motion across its line of sight.",
+    "target": "I can read v–t areas and resolve velocity into components."
+  },
+  {
+    "day": 5,
+    "title": "Position predictions and their limits",
+    "vocab": [
+      [
+        "Start x₀",
+        "Position when the chosen interval begins."
+      ],
+      [
+        "Bound",
+        "An allowed range, not a standard deviation."
+      ],
+      [
+        "Half-width",
+        "The ± value; full width is twice as large."
+      ],
+      [
+        "Assumption",
+        "A condition treated as true, such as steady v."
+      ]
+    ],
+    "eq": [
+      "x𝒻 = x₀ + vt",
+      "δx𝒻 = δx₀ + tδv"
+    ],
+    "units": [
+      [
+        "t",
+        "exact time, s"
+      ],
+      [
+        "δx",
+        "bound, m"
+      ]
+    ],
+    "figure": "prediction_range",
+    "ctitle": "A BOUNDED FORECAST",
+    "csubtitle": "Center plus range.",
+    "legend": [
+      [
+        "BLUE",
+        "Start and end positions"
+      ],
+      [
+        "BLUE",
+        "Displacement"
+      ],
+      [
+        "BLUE",
+        "Prediction interval"
+      ]
+    ],
+    "example": {
+      "prompt": "A cart starts at 8 ± 0.5 m and moves at −2.0 ± 0.1 m/s for an exact 3 s. <b>Find its predicted position interval.</b>",
+      "given": "x₀ = 8 ± 0.5 m<br>v = −2.0 ± 0.1 m/s<br>t = 3 s; steady v",
+      "equation": "Steady v: x𝒻 = x₀ + vt.<br>Add input bounds.",
+      "work": "x𝒻 = 8 − 2(3)<br>δx = .5 + 3(.1)<br>= 0.8 m",
+      "answer": "1.2 to 2.8 m",
+      "remark": "2.0 ± 0.8 m; full width 1.6 m."
+    },
+    "tool": "BOUNDED FORECAST",
+    "thread": "XJ's position and velocity readings have limits. A forecast should show both the central result and the interval allowed by those limits; the interval does not give an impact probability.",
+    "target": "I can predict a position and state its uncertainty."
+  },
+  {
+    "day": 6,
+    "title": "Add vectors by their components",
+    "vocab": [
+      [
+        "Component",
+        "Signed part along an axis; keep axes fixed."
+      ],
+      [
+        "Resultant",
+        "Sum: first tail to final tip."
+      ],
+      [
+        "Magnitude",
+        "Nonnegative size from perpendicular parts."
+      ],
+      [
+        "Quadrant",
+        "Both component signs locate the direction."
+      ]
+    ],
+    "eq": [
+      "Rₓ = Aₓ + Bₓ",
+      "Rᵧ = Aᵧ + Bᵧ"
+    ],
+    "units": [
+      [
+        "|R|",
+        "√(Rₓ² + Rᵧ²)"
+      ],
+      [
+        "angle",
+        "ratio plus signs"
+      ]
+    ],
+    "figure": "vector_sum",
+    "ctitle": "ADD SIGNED PARTS",
+    "csubtitle": "Grid steps: 2 m.",
+    "legend": [
+      [
+        "BLUE",
+        "Displacement A"
+      ],
+      [
+        "BLUE",
+        "Displacement B"
+      ],
+      [
+        "BLUE",
+        "Resultant R: dashed"
+      ]
+    ],
+    "example": {
+      "prompt": "Two displacements are A = (6, −4) m and B = (−4, 8) m. <b>Find their sum's magnitude and direction.</b>",
+      "given": "+x is east<br>+y is north<br>A and B use these axes.",
+      "equation": "Add x and y.<br>Use the right triangle.",
+      "work": "R = (2, 4) m<br>|R| = √20 m<br>θ = tan⁻¹(4/2)",
+      "answer": "4.47 m",
+      "remark": "63.4° north of east."
+    },
+    "tool": "VECTOR SUMS",
+    "thread": "XJ's motion must be tracked in more than one direction. Adding signed components keeps sideways motion in the forecast instead of treating every displacement as motion toward Earth.",
+    "target": "I can add vectors and resolve their signed components."
+  },
+  {
+    "day": 7,
+    "title": "Acceleration, signs and turning around",
+    "vocab": [
+      [
+        "Average a",
+        "Change in velocity divided by elapsed time."
+      ],
+      [
+        "Speeding up",
+        "v and a have the same direction in 1D."
+      ],
+      [
+        "Slowing down",
+        "v and a oppose each other before the turn."
+      ],
+      [
+        "Turn",
+        "v = 0 for an instant; a can be nonzero."
+      ]
+    ],
+    "eq": [
+      "ā = Δv ÷ Δt",
+      "v𝒻 = vᵢ + at"
+    ],
+    "units": [
+      [
+        "a",
+        "m/s²"
+      ],
+      [
+        "v rule",
+        "constant a only"
+      ]
+    ],
+    "figure": "velocity_reversal",
+    "ctitle": "SLOW, THEN SPEED UP",
+    "csubtitle": "Right is +; constant a.",
+    "legend": [
+      [
+        "PURPLE",
+        "Signed velocity"
+      ],
+      [
+        "RED",
+        "Before turn: slowing"
+      ],
+      [
+        "GREEN",
+        "After turn: speeding up"
+      ]
+    ],
+    "example": {
+      "prompt": "A cart's velocity changes uniformly from +6 m/s to −2 m/s in 4 s. <b>Find its acceleration and the time it reverses.</b>",
+      "given": "vᵢ = +6 m/s<br>v𝒻 = −2 m/s<br>Δt = 4 s",
+      "equation": "a = Δv/Δt.<br>Turn: 0 = vᵢ + at.",
+      "work": "a = (−2 − 6)/4<br>0 = 6 − 2t<br>t = 3 s",
+      "answer": "a = −2 m/s²",
+      "remark": "Slows for 3 s, then speeds up to the left."
+    },
+    "tool": "SIGNED CHANGE",
+    "thread": "A change in XJ's velocity requires an acceleration term in the forecast. Its sign alone does not show whether the asteroid is speeding up; compare the directions of velocity and acceleration.",
+    "target": "I can find acceleration from changes in velocity."
+  },
+  {
+    "day": 8,
+    "title": "Choose an equation for steady acceleration",
+    "vocab": [
+      [
+        "Steady a",
+        "Equal velocity changes in equal times."
+      ],
+      [
+        "Knowns",
+        "List supplied values before choosing."
+      ],
+      [
+        "Displacement",
+        "Signed change in position, not distance."
+      ],
+      [
+        "Cross-check",
+        "Test with units, a graph or another equation."
+      ]
+    ],
+    "eq": [
+      "v𝒻² = vᵢ² + 2aΔx",
+      "v𝒻 = vᵢ + at"
+    ],
+    "units": [
+      [
+        "Δx",
+        "½(vᵢ + v𝒻)t"
+      ],
+      [
+        "a",
+        "constant for all three"
+      ]
+    ],
+    "figure": "braking_graph",
+    "ctitle": "CHECK WITH AREA",
+    "csubtitle": "Straight line: steady a.",
+    "legend": [
+      [
+        "PURPLE",
+        "Velocity line"
+      ],
+      [
+        "BLUE",
+        "Displacement area"
+      ],
+      [
+        "RED",
+        "Decreasing speed"
+      ]
+    ],
+    "example": {
+      "prompt": "A car moving at +20 m/s brakes at −4 m/s² until it stops. <b>Find its stopping distance, then check the result.</b>",
+      "given": "vᵢ = +20 m/s<br>v𝒻 = 0 m/s<br>a = −4 m/s²",
+      "equation": "No time given:<br>v𝒻² = vᵢ² + 2aΔx.",
+      "work": "0 = 400 − 8Δx<br>t = (0 − 20)/(−4)<br>area = ½(20)(5)",
+      "answer": "Δx = +50 m",
+      "remark": "5 s to stop; area also gives 50 m."
+    },
+    "tool": "EQUATION CHOICE",
+    "thread": "For XJ, choose a relationship that fits both the known values and the motion being assumed. A graph provides a second check before a forecast is reported.",
+    "target": "I can choose an equation for constant acceleration."
+  },
+  {
+    "day": 9,
+    "title": "Balanced forces can mean steady motion",
+    "vocab": [
+      [
+        "Inertial frame",
+        "An unforced object keeps its velocity."
+      ],
+      [
+        "Net force",
+        "Vector sum of external forces on a system."
+      ],
+      [
+        "Inertia",
+        "More mass resists velocity change more."
+      ],
+      [
+        "Equilibrium",
+        "Net force zero; v constant, not always zero."
+      ]
+    ],
+    "eq": [
+      "ΣF = 0 ⇒ a = 0",
+      "x𝒻 = x₀ + vΔt"
+    ],
+    "units": [
+      [
+        "Σ",
+        "sum on one object"
+      ],
+      [
+        "v",
+        "stays constant"
+      ]
+    ],
+    "figure": "balanced_cart",
+    "ctitle": "BALANCED AND MOVING",
+    "csubtitle": "Right is +.",
+    "legend": [
+      [
+        "ORANGE",
+        "Opposing forces"
+      ],
+      [
+        "PURPLE",
+        "Rightward velocity"
+      ],
+      [
+        "YELLOW",
+        "Net force zero"
+      ]
+    ],
+    "example": {
+      "prompt": "A cart is at −2 m, moving at +3 m/s. Its external forces balance for the next 4 s. <b>Find its final position.</b>",
+      "given": "x₀ = −2 m<br>vᵢ = +3 m/s<br>ΣF = 0; t = 4 s",
+      "equation": "First law: constant v.<br>x𝒻 = x₀ + vt.",
+      "work": "a = 0 m/s²<br>x𝒻 = −2 + 3(4)",
+      "answer": "+10 m",
+      "remark": "Net force zero; motion continues."
+    },
+    "tool": "INERTIA",
+    "thread": "XJ needs no forward force simply to keep moving. Gravity can still change its velocity, so treating a short interval as steady motion is an approximation to be tested.",
+    "target": "I can explain steady motion with Newton’s first law."
+  },
+  {
+    "day": 10,
+    "title": "Name each force and its source",
+    "vocab": [
+      [
+        "Weight W",
+        "Earth’s downward pull: mg."
+      ],
+      [
+        "Normal N",
+        "Surface push, perpendicular to contact."
+      ],
+      [
+        "Tension T",
+        "Rope’s pull along itself, away from the object."
+      ],
+      [
+        "Receiver",
+        "The object a force acts on; also name its source."
+      ]
+    ],
+    "eq": [
+      "W = mg",
+      "N + T − W = 0"
+    ],
+    "units": [
+      [
+        "g",
+        "9.8 N/kg"
+      ],
+      [
+        "balance",
+        "vertical a = 0"
+      ]
+    ],
+    "figure": "supported_crate",
+    "ctitle": "ONE CRATE, THREE FORCES",
+    "csubtitle": "A rope helps a table.",
+    "legend": [
+      [
+        "ORANGE",
+        "Rope’s tension T"
+      ],
+      [
+        "ORANGE",
+        "Table’s normal N"
+      ],
+      [
+        "ORANGE",
+        "Earth’s weight W"
+      ]
+    ],
+    "example": {
+      "prompt": "A 3 kg crate rests on a table. A vertical rope pulls up with 10 N. <b>Find the table's normal force.</b> Use g = 9.8 N/kg.",
+      "given": "m = 3 kg<br>T = 10 N up<br>aᵧ = 0",
+      "equation": "W = mg.<br>N + T − W = 0.",
+      "work": "W = 3(9.8) = 29.4 N<br>N = 29.4 − 10",
+      "answer": "N = 19.4 N",
+      "remark": "The rope shares the support."
+    },
+    "tool": "FORCE SOURCES",
+    "thread": "A forecast of XJ's changing motion needs real interactions, not a made-up motion force. Name the attracting body for each gravitational force before adding the forces.",
+    "target": "I can name each force, its source and its receiver."
+  },
+  {
+    "day": 11,
+    "title": "Change mass while net force stays fixed",
+    "vocab": [
+      [
+        "Mass M",
+        "All moving mass, including any hanger."
+      ],
+      [
+        "Control",
+        "A value held fixed for a fair comparison."
+      ],
+      [
+        "Inverse",
+        "Double M halves a at fixed net force."
+      ],
+      [
+        "Slope",
+        "Plot a against 1/M to get an ideal line."
+      ]
+    ],
+    "eq": [
+      "a = Fnet ÷ M",
+      "M × a = Fnet"
+    ],
+    "units": [
+      [
+        "1/M",
+        "inverse mass, kg⁻¹"
+      ],
+      [
+        "slope",
+        "units: N"
+      ]
+    ],
+    "figure": "inverse_mass",
+    "ctitle": "CHANGE ONLY MASS",
+    "csubtitle": "Ideal data; net force 4 N.",
+    "legend": [
+      [
+        "PENCIL",
+        "Mass and data points"
+      ],
+      [
+        "GREEN",
+        "Speeding up: moving +"
+      ],
+      [
+        "ORANGE",
+        "Fixed net force"
+      ]
+    ],
+    "example": {
+      "prompt": "Under the same net force, a 1 kg system accelerates at 4 m/s² and a 2 kg system at 2 m/s². <b>Predict a for a 3 kg system.</b>",
+      "given": "M₁ = 1 kg; a₁ = 4 m/s²<br>M₂ = 2 kg; a₂ = 2 m/s²<br>same net force",
+      "equation": "Check M × a.<br>Then a = Fnet/M.",
+      "work": "1(4) = 2(2) = 4 N<br>a₃ = 4 N ÷ 3 kg",
+      "answer": "1.33 m/s²",
+      "remark": "Assumes net force stays 4 N."
+    },
+    "tool": "MASS COMPARISON",
+    "thread": "For the same force, a more massive XJ changes velocity less quickly. The comparison needs the same net force; a larger gravitational force can change that result.",
+    "target": "I can test how mass affects acceleration at fixed force."
+  },
+  {
+    "day": 12,
+    "title": "Change force while total mass stays fixed",
+    "vocab": [
+      [
+        "Driving force",
+        "The pull before resistance is subtracted."
+      ],
+      [
+        "Net force",
+        "Driving force minus opposing resistance."
+      ],
+      [
+        "Slope",
+        "On an a-versus-net-force graph: 1/M."
+      ],
+      [
+        "Offset",
+        "Fixed friction shifts the driving-force line down."
+      ]
+    ],
+    "eq": [
+      "a = Fnet/M",
+      "Fnet = Fdrive − f"
+    ],
+    "units": [
+      [
+        "M",
+        "total mass, kg"
+      ],
+      [
+        "N/kg",
+        "equals m/s²"
+      ]
+    ],
+    "figure": "force_graph",
+    "ctitle": "DRIVING VS. NET FORCE",
+    "csubtitle": "Moving +; M = 2 kg.",
+    "legend": [
+      [
+        "PENCIL",
+        "Axes and data"
+      ],
+      [
+        "GREEN",
+        "Speeding up here"
+      ],
+      [
+        "ORANGE",
+        "Force labels"
+      ]
+    ],
+    "example": {
+      "prompt": "A 2 kg system slides with 0.4 N of opposing friction. <b>Compare acceleration with driving forces of 2 N and 4 N.</b>",
+      "given": "M = 2 kg<br>f = 0.4 N<br>Fdrive = 2 N, then 4 N",
+      "equation": "Subtract friction.<br>Then a = Fnet/M.",
+      "work": "a₁ = (2 − 0.4)/2 = 0.8<br>a₂ = (4 − 0.4)/2 = 1.8",
+      "answer": "0.8; 1.8 m/s²",
+      "remark": "Driving force doubles; a does not."
+    },
+    "tool": "NET-FORCE TEST",
+    "thread": "A proposed push on XJ must be added to every other external force. Only the net force belongs in the calculation of acceleration.",
+    "target": "I can test F = ma while keeping total mass fixed."
+  },
+  {
+    "day": 13,
+    "title": "Net force first, then interpret the motion",
+    "vocab": [
+      [
+        "Force sum",
+        "Add signed forces along the same axis."
+      ],
+      [
+        "Acceleration",
+        "Velocity change from net force per mass."
+      ],
+      [
+        "Velocity",
+        "Current motion; it can oppose a."
+      ],
+      [
+        "Speed trend",
+        "Opposite v and a: slows before reversal."
+      ]
+    ],
+    "eq": [
+      "ΣFₓ = maₓ",
+      "v𝒻 = vᵢ + aₓt"
+    ],
+    "units": [
+      [
+        "ΣFₓ",
+        "Fright − Fleft"
+      ],
+      [
+        "+",
+        "right"
+      ]
+    ],
+    "figure": "opposed_motion",
+    "ctitle": "FORCE OPPOSES MOTION",
+    "csubtitle": "The cart moves left.",
+    "legend": [
+      [
+        "ORANGE",
+        "Forces and separate net"
+      ],
+      [
+        "PURPLE",
+        "Leftward velocity"
+      ],
+      [
+        "RED",
+        "Slows for the first 1 s"
+      ]
+    ],
+    "example": {
+      "prompt": "A 4 kg cart has forces of 12 N right and 4 N left. Its initial velocity is −3 m/s. <b>Find a and v after 1 s.</b>",
+      "given": "m = 4 kg<br>Fright = 12 N; Fleft = 4 N<br>vᵢ = −3 m/s",
+      "equation": "Sum forces first.<br>ΣFₓ = maₓ.<br>v = vᵢ + aₓt.",
+      "work": "ΣFₓ = 12 − 4 = +8 N<br>aₓ = 8/4 = +2 m/s²<br>v = −3 + 2(1)",
+      "answer": "v = −1 m/s",
+      "remark": "Still leftward; speed is now 1 m/s."
+    },
+    "tool": "FORCE TO MOTION",
+    "thread": "The direction of XJ's net force tells us its acceleration direction. Its existing velocity must also be known to say whether it speeds up, slows down or turns."
+  },
+  {
+    "day": 14,
+    "title": "Equal forces, different accelerations",
+    "target": "I can identify force pairs acting on different objects.",
+    "vocab": [
+      [
+        "Force pair",
+        "A-on-B and B-on-A: equal and opposite."
+      ],
+      [
+        "Receivers",
+        "Two objects; use separate force diagrams."
+      ],
+      [
+        "Mass effect",
+        "Same force size: smaller mass, larger a."
+      ],
+      [
+        "System",
+        "Pair forces cancel internally for combined A+B."
+      ]
+    ],
+    "eq": [
+      "F<sub>A→B</sub> = −F<sub>B→A</sub>",
+      "equal and opposite"
+    ],
+    "units": [
+      [
+        "aₐ",
+        "Fₐ/mₐ"
+      ],
+      [
+        "aᵦ",
+        "Fᵦ/mᵦ"
+      ]
+    ],
+    "figure": "interaction_pair",
+    "ctitle": "TWO RECEIVERS",
+    "csubtitle": "Same 6 N force size.",
+    "legend": [
+      [
+        "ORANGE",
+        "Force on A: left"
+      ],
+      [
+        "ORANGE",
+        "Force on B: right"
+      ],
+      [
+        "PENCIL",
+        "Objects and masses"
+      ]
+    ],
+    "example": {
+      "prompt": "Cart A has mass 1 kg; cart B has mass 3 kg. Their interaction pushes A left and B right with 6 N each. <b>Find both accelerations.</b>",
+      "given": "mₐ = 1 kg<br>mᵦ = 3 kg<br>right is +",
+      "equation": "F = ma on each cart.<br>No other horizontal forces.",
+      "work": "aₐ = −6/1 = −6 m/s²<br>aᵦ = +6/3 = +2 m/s²",
+      "answer": "−6; +2 m/s²",
+      "remark": "A has 3 times B’s acceleration size."
+    },
+    "tool": "INTERACTION PAIRS",
+    "thread": "Earth and fictional XJ pull on each other equally at the same instant. Their very different masses give different accelerations; the pair does not cancel in XJ's own force diagram."
+  },
+  {
+    "day": 15,
+    "title": "Draw forces on one chosen object",
+    "vocab": [
+      [
+        "Object",
+        "The receiver of every force in the diagram."
+      ],
+      [
+        "External",
+        "A force from outside the chosen boundary."
+      ],
+      [
+        "Length",
+        "Use one scale to show each force’s size."
+      ],
+      [
+        "Net force",
+        "Sum of forces, not another interaction."
+      ]
+    ],
+    "eq": [
+      "T − mg = maᵧ",
+      "T = m(g + aᵧ)"
+    ],
+    "units": [
+      [
+        "+",
+        "up"
+      ],
+      [
+        "W",
+        "Earth on lamp"
+      ]
+    ],
+    "figure": "lamp_fbd",
+    "ctitle": "LAMP ACCELERATES UP",
+    "csubtitle": "Forces on the lamp only.",
+    "legend": [
+      [
+        "ORANGE",
+        "Tension: longer arrow"
+      ],
+      [
+        "ORANGE",
+        "Weight: shorter arrow"
+      ],
+      [
+        "PENCIL",
+        "Lamp and boundary"
+      ]
+    ],
+    "example": {
+      "prompt": "A rope lifts a 2 kg lamp with upward acceleration 1.5 m/s². <b>Find the tension.</b> Use g = 9.8 m/s².",
+      "given": "m = 2 kg<br>aᵧ = +1.5 m/s²<br>g = 9.8 m/s²",
+      "equation": "Up is +.<br>T − mg = maᵧ.",
+      "work": "W = 2(9.8) = 19.6 N<br>T = 19.6 + 2(1.5)",
+      "answer": "T = 22.6 N",
+      "remark": "T and W are not a third-law pair."
+    },
+    "tool": "OBJECT BOUNDARY",
+    "thread": "An XJ force diagram contains forces on XJ, not the forces XJ exerts on other bodies. Defining that boundary keeps the acceleration calculation consistent.",
+    "target": "I can draw every force on one object, with arrows to scale."
+  },
+  {
+    "day": 16,
+    "title": "Choose useful axes on an incline",
+    "vocab": [
+      [
+        "Parallel ∥",
+        "Along the ramp; choose downhill as +."
+      ],
+      [
+        "Normal axis ⊥",
+        "Straight out of the ramp, usually not vertical."
+      ],
+      [
+        "Weight parts",
+        "mg sin θ along; mg cos θ into the ramp."
+      ],
+      [
+        "Constraint",
+        "No motion through the surface: a⊥ = 0."
+      ]
+    ],
+    "eq": [
+      "ma∥ = mg sin θ − f",
+      "N = mg cos θ"
+    ],
+    "units": [
+      [
+        "θ",
+        "ramp angle"
+      ],
+      [
+        "N rule",
+        "no other ⊥ forces"
+      ]
+    ],
+    "figure": "incline",
+    "ctitle": "FORCES AND COMPONENTS",
+    "csubtitle": "Keep the two views separate.",
+    "legend": [
+      [
+        "ORANGE",
+        "Actual forces"
+      ],
+      [
+        "ORANGE",
+        "Weight’s components"
+      ],
+      [
+        "PENCIL",
+        "Ramp and angle"
+      ]
+    ],
+    "example": {
+      "prompt": "A 2 kg block slides down a 30° ramp with 2 N friction uphill. <b>Find its acceleration and normal force.</b> Use g = 9.8 m/s².",
+      "given": "m = 2 kg; θ = 30°<br>f = 2 N uphill<br>a⊥ = 0",
+      "equation": "mg sin θ − f = ma∥<br>N = mg cos θ",
+      "work": "a∥ = [19.6(0.5) − 2]/2<br>N = 19.6 cos 30°",
+      "answer": "3.9 m/s²",
+      "remark": "Downhill; N ≈ 17.0 N."
+    },
+    "tool": "CHOSEN AXES",
+    "thread": "A suitable set of axes can simplify the forces changing XJ's path. Components are calculation tools; they must not be counted again as extra forces.",
+    "target": "I can use a force diagram to find acceleration on a ramp."
+  },
+  {
+    "day": 17,
+    "title": "Static and kinetic friction",
+    "vocab": [
+      [
+        "Static fₛ",
+        "Adjusts to prevent slip, up to a limit."
+      ],
+      [
+        "Limit",
+        "fₛ,max = μₛN; fₛ can be smaller."
+      ],
+      [
+        "Kinetic fₖ",
+        "Opposes sliding; model size μₖN."
+      ],
+      [
+        "Normal N",
+        "Find the perpendicular force balance first."
+      ]
+    ],
+    "eq": [
+      "0 ≤ fₛ ≤ μₛN",
+      "fₖ = μₖN"
+    ],
+    "units": [
+      [
+        "μ",
+        "no units"
+      ],
+      [
+        "N",
+        "mg here: level floor"
+      ]
+    ],
+    "figure": "friction",
+    "ctitle": "BEFORE AND AFTER SLIP",
+    "csubtitle": "2 kg; μₛ = .40; μₖ = .25.",
+    "legend": [
+      [
+        "ORANGE",
+        "Static friction"
+      ],
+      [
+        "ORANGE",
+        "Static limit: 7.84 N"
+      ],
+      [
+        "ORANGE",
+        "Sliding level: 4.90 N"
+      ]
+    ],
+    "example": {
+      "prompt": "For this box, compare a 6 N pull while at rest with a 10 N pull after sliding starts. Use g = 9.8 m/s²; pulls are horizontal.",
+      "given": "N = 2(9.8) = 19.6 N<br>μₛ = 0.40<br>μₖ = 0.25",
+      "equation": "Check μₛN.<br>Sliding: use μₖN, then net force.",
+      "work": "fₛ,max = 7.84 N<br>at rest: fₛ = 6 N<br>a = (10 − 4.9)/2",
+      "answer": "0; 2.55 m/s²",
+      "remark": "At rest, then sliding."
+    },
+    "tool": "FRICTION STATES",
+    "thread": "Surface friction is not a force that continually brakes XJ in empty space. Gravitational forces can still change its velocity, and atmospheric drag would matter in an atmosphere."
+  },
+  {
+    "day": 18,
+    "title": "Equilibrium balances components",
+    "vocab": [
+      [
+        "Equilibrium",
+        "Zero a: forces sum to zero on each axis."
+      ],
+      [
+        "Balance",
+        "Vertical parts support the weight."
+      ],
+      [
+        "Symmetry",
+        "Equal angles and loading: equal tensions."
+      ],
+      [
+        "Rest",
+        "v = 0 alone does not prove balance."
+      ]
+    ],
+    "eq": [
+      "ΣFₓ = ΣFᵧ = 0",
+      "2T sin θ = W"
+    ],
+    "units": [
+      [
+        "T",
+        "force per rope, N"
+      ],
+      [
+        "θ",
+        "above horizontal"
+      ]
+    ],
+    "figure": "two_ropes",
+    "ctitle": "VERTICAL PARTS ADD",
+    "csubtitle": "40 N sign; equal 30° ropes.",
+    "legend": [
+      [
+        "ORANGE",
+        "Rope tensions"
+      ],
+      [
+        "ORANGE",
+        "Vertical parts: 20 N"
+      ],
+      [
+        "ORANGE",
+        "Weight: 40 N"
+      ]
+    ],
+    "example": {
+      "prompt": "A 40 N sign hangs at rest from two equal ropes, each 30° above horizontal. <b>Find the tension in each rope.</b>",
+      "given": "W = 40 N; θ = 30°<br>equal tensions<br>a = 0",
+      "equation": "x parts cancel.<br>2T sin 30° = 40 N.",
+      "work": "2T(0.5) = 40 N<br>T = 40 N",
+      "answer": "40 N per rope",
+      "remark": "Each rope gives 20 N upward."
+    },
+    "tool": "COMPONENT BALANCE",
+    "thread": "Zero net force would give XJ a constant velocity, not a guaranteed stop. Analysts must check each coordinate direction before treating its motion as steady."
+  },
+  {
+    "day": 19,
+    "title": "Find the first wrong step and repair it",
+    "vocab": [
+      [
+        "Quantity",
+        "Name what is found: position, speed, etc."
+      ],
+      [
+        "Sign",
+        "Direction uses signs; speed is a size."
+      ],
+      [
+        "Force",
+        "Sum all forces on the same object."
+      ],
+      [
+        "Check",
+        "Use a graph or another equation."
+      ]
+    ],
+    "eq": [
+      "ΣF = ma",
+      "Δv = v𝒻 − vᵢ"
+    ],
+    "units": [
+      [
+        "units",
+        "N/kg = m/s²"
+      ],
+      [
+        "repair",
+        "first wrong step"
+      ]
+    ],
+    "figure": "repair_graph",
+    "ctitle": "CHECK THE CHANGE IN v",
+    "csubtitle": "−2 to −6 m/s in 2 s.",
+    "legend": [
+      [
+        "PURPLE",
+        "Velocity line"
+      ],
+      [
+        "GREEN",
+        "Increasing speed"
+      ],
+      [
+        "PENCIL",
+        "Incorrect Δv"
+      ]
+    ],
+    "example": {
+      "prompt": "A 3 kg cart has 9 N right and 3 N left. Someone writes a = 9/3 = 3 m/s². <b>Explain and repair the first wrong step.</b>",
+      "given": "m = 3 kg<br>right is +<br>forces: +9 N and −3 N",
+      "equation": "Use net force, not the largest force.",
+      "work": "ΣFₓ = 9 − 3 = +6 N<br>aₓ = 6/3 = +2 m/s²",
+      "answer": "+2 m/s²",
+      "remark": "Check: ma = 6 N."
+    },
+    "tool": "REASONING CHECKS",
+    "thread": "Before the fictional XJ forecast is shared, check its signs, units, starting coordinates and force sums. Repairing the first wrong step can change every later result."
+  },
+  {
+    "day": 20,
+    "title": "Connect forces to velocity and position",
+    "vocab": [
+      [
+        "Chain",
+        "Net force → a → velocity and position."
+      ],
+      [
+        "Interval",
+        "Keep one start and end time throughout."
+      ],
+      [
+        "Reversal",
+        "v can cross zero while a keeps its sign."
+      ],
+      [
+        "Area",
+        "Add positive and negative pieces of Δx."
+      ]
+    ],
+    "eq": [
+      "a = ΣF ÷ m",
+      "v𝒻 = vᵢ + at"
+    ],
+    "units": [
+      [
+        "x𝒻",
+        "x₀ + vᵢt + ½at²"
+      ],
+      [
+        "model",
+        "constant a"
+      ]
+    ],
+    "figure": "full_chain",
+    "ctitle": "FORCE TO POSITION",
+    "csubtitle": "Velocity crosses zero at 1 s.",
+    "legend": [
+      [
+        "PURPLE",
+        "Velocity line"
+      ],
+      [
+        "BLUE",
+        "Signed areas"
+      ],
+      [
+        "ORANGE",
+        "Net force: +4 N"
+      ]
+    ],
+    "example": {
+      "prompt": "A 2 kg cart starts at 1 m with velocity −2 m/s. A constant +4 N net force acts for 3 s. <b>Find final velocity and position.</b>",
+      "given": "m = 2 kg; ΣF = +4 N<br>x₀ = 1 m; vᵢ = −2 m/s<br>t = 3 s",
+      "equation": "Find a from force.<br>Then steady-a equations.",
+      "work": "a = 4/2 = +2 m/s²<br>v𝒻 = −2 + 2(3)<br>x𝒻 = 1 − 6 + 9",
+      "answer": "+4 m/s; +4 m",
+      "remark": "Δx = +3 m; distance = 5 m."
+    },
+    "tool": "THE FULL CHAIN",
+    "thread": "XJ’s forecast needs its present motion and the forces changing it. Use one reference frame through the entire calculation."
+  },
+  {
+    "day": 21,
+    "title": "Plan a prediction in two dimensions",
+    "vocab": [
+      [
+        "Frame",
+        "Keep the origin and axes fixed."
+      ],
+      [
+        "Components",
+        "Signed x and y parts; calculate separately."
+      ],
+      [
+        "Units",
+        "Make all units match before substituting."
+      ],
+      [
+        "Limit",
+        "State assumptions, such as steady velocity."
+      ]
+    ],
+    "eq": [
+      "x𝒻 = x₀ + vₓt",
+      "y𝒻 = y₀ + vᵧt"
+    ],
+    "units": [
+      [
+        "vₓ",
+        "v cos θ"
+      ],
+      [
+        "vᵧ",
+        "v sin θ; θ from +x"
+      ]
+    ],
+    "figure": "two_dimensional",
+    "ctitle": "START + CHANGE",
+    "csubtitle": "Probe example; fixed axes.",
+    "legend": [
+      [
+        "PENCIL",
+        "Origin and axes"
+      ],
+      [
+        "BLUE",
+        "Start and end positions"
+      ],
+      [
+        "BLUE",
+        "Displacement direction"
+      ]
+    ],
+    "example": {
+      "prompt": "A probe starts at (−20, 5) m and moves at 10 m/s, 30° from +x toward +y, for 2 s. <b>Find its new coordinates.</b>",
+      "given": "x₀ = −20 m; y₀ = 5 m<br>v = 10 m/s; θ = 30°<br>t = 2 s; steady v",
+      "equation": "Resolve v:<br>vₓ = 8.66 m/s<br>vᵧ = 5 m/s",
+      "work": "x𝒻 = −20 + 8.66(2)<br>y𝒻 = 5 + 5(2)",
+      "answer": "(−2.68, 15) m",
+      "remark": "Final x is still negative."
+    },
+    "tool": "A TWO-AXIS PLAN",
+    "thread": "For fictional XJ, name the frame, units and motion assumptions. Fixed Earth and steady velocity are classroom simplifications.",
+    "target": "I can plan a prediction using evidence and fixed axes."
+  },
+  {
+    "day": 22,
+    "title": "Defend and revise a forecast",
+    "vocab": [
+      [
+        "Prediction",
+        "Result, units, time, direction and range."
+      ],
+      [
+        "Evidence",
+        "A measurement or calculation supporting a step."
+      ],
+      [
+        "Limit",
+        "An uncertain input or missing effect."
+      ],
+      [
+        "Revision",
+        "Name the change and show its effect."
+      ]
+    ],
+    "eq": [
+      "x𝒻 = x₀ + vt",
+      "δx𝒻 = δx₀ + tδv"
+    ],
+    "units": [
+      [
+        "t",
+        "exact time"
+      ],
+      [
+        "bounds",
+        "not probabilities"
+      ]
+    ],
+    "figure": "revised_range",
+    "ctitle": "COMPARE THE RANGES",
+    "csubtitle": "Illustrative data; same axis.",
+    "legend": [
+      [
+        "BLUE",
+        "Earlier forecast"
+      ],
+      [
+        "BLUE",
+        "Observed range"
+      ],
+      [
+        "BLUE",
+        "Revised forecast"
+      ]
+    ],
+    "example": {
+      "prompt": "Keep x₀ = 8 ± 0.5 m and exact t = 3 s. A new measurement changes v from −2.0 to −1.5 ± 0.1 m/s. <b>Update the forecast.</b>",
+      "given": "x₀ = 8 ± 0.5 m<br>v = −1.5 ± 0.1 m/s<br>exact t = 3 s",
+      "equation": "Update center and conservative bound.",
+      "work": "x𝒻 = 8 − 1.5(3)<br>δx = .5 + 3(.1)<br>= 0.8 m",
+      "answer": "2.7 to 4.3 m",
+      "remark": "Center shifts +1.5 m."
+    },
+    "tool": "A REVISED FORECAST",
+    "thread": "Show the evidence behind XJ’s forecast and what changed after review. Separate the physics from cost and feasibility decisions.",
+    "target": "I can defend a prediction, state limits and revise it."
+  }
+]

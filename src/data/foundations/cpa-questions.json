@@ -1,0 +1,512 @@
+{
+  "f1-source": {
+    "prompt": "An object is moving toward Earth. **Do we have enough facts to know if it will hit?** Choose the best answer.",
+    "explanation": "More measurements are needed. Moving toward Earth alone does not establish collision.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f1-evidence": {
+    "prompt": "**Write one fact from a slide.** Give the slide number. Say whether it describes the classroom cart or the fictional asteroid.\n\nStart: “On slide __, I noticed __.”",
+    "explanation": "One accurate observation linked to a slide, with the source identified.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f1-predict": {
+    "prompt": "A cart is at **0 m, 2 m, and 4 m** after **0 s, 1 s, and 2 s**.\n1. It adds the same distance each second. Find that distance: **2 − 0 = __ m**.\n2. Add it to **4 m**. **Where will the cart be at 3 s?** Enter the position.",
+    "explanation": "The cart adds 2 m each second; 4 + 2 = 6 m.",
+    "blooms": "Apply",
+    "dok": 1
+  },
+  "f1-wonders": {
+    "prompt": "**Write one question** you have about the asteroid. Does it ask about its position, speed, size, or something else? Name the topic.",
+    "explanation": "One relevant question and a reasonable topic.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f1-question": {
+    "prompt": "On your own, **name one measurement** that would help predict where the asteroid goes. **Explain how it helps.**\n\nStart: “I would measure __. It helps because __.”",
+    "explanation": "A relevant measurement, such as position or velocity, with a clear use in predicting motion.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f2-position": {
+    "prompt": "The door is **0 m**. **East is positive**, so west is negative. A notebook is at **−2 m**. **Where is it?**",
+    "explanation": "2 m west of the door; position does not state motion.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f2-distance": {
+    "prompt": "Eli walks **6 m east**, then **6 m west**. Distance counts the whole path.\n**Add both legs: 6 + 6 = __ m.** Enter the total distance.",
+    "explanation": "12 m of path.",
+    "blooms": "Apply",
+    "dok": 1
+  },
+  "f2-walk": {
+    "prompt": "Walk **5 equal steps north**, **3 east**, then **5 south**.\nDistance counts every step. **Add 5 + 3 + 5.** Enter the distance in step-lengths.",
+    "explanation": "13 step-lengths.",
+    "blooms": "Apply",
+    "dok": 1
+  },
+  "f2-track": {
+    "prompt": "A runner makes **one full lap** and returns to the start. The track is **400 m** long.\n1. **State the distance traveled.**\n2. Displacement compares the finish with the start. **Is the displacement zero? Explain.**",
+    "explanation": "Distance 400 m; displacement zero because the endpoints match.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f2-transfer": {
+    "prompt": "On your own: a cart starts at **0 m**, goes to **+4 m**, then returns to **+1 m**.\n1. Distance = outward path + return path. **Complete 4 + (4 − 1) = __ m.**\n2. Displacement = final position − start position. **Complete 1 − 0 = __ m.**",
+    "explanation": "Distance 7 m; displacement +1 m.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f3-predict": {
+    "prompt": "Moving away from the detector is positive. **Predict the position–time graph** for walking away steadily and for standing still.\nFor each, choose “rising line” or “flat line.” **Explain one choice.**",
+    "explanation": "Steady walking away gives a rising straight line; standing still gives a flat line because position stays fixed.",
+    "blooms": "Understand",
+    "dok": 2
+  },
+  "f3-trials": {
+    "prompt": "**Keep notes for each of the six trials.** Use this pattern:\n- Motion and your role: __.\n- Time in **s** / position in **m**: __ / __, __ / __, __ / __.\n- Source: real detector, teacher-approved simulation, or approved sample.\n- Zero point and positive direction: __.\nMark any bad reading. **Do not invent measurements.**",
+    "explanation": "All six trials with three time/position readings, units, source, axes and any problems. Shared measurements are permitted; each learner records their own account.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f3-slopes": {
+    "prompt": "**Choose one clean trial and its repeat. Find velocity for each.** Use two points from each graph.\n1. Position change = end position − start position: __ − __ = __ m.\n2. Time change = end time − start time: __ − __ = __ s.\n3. Velocity = position change ÷ time change: __ ÷ __ = __ **m/s**.\n4. **Are the two velocities close?** Use your numbers.",
+    "explanation": "Two correctly sourced slopes with signed differences and units; comparison supported by measurements.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f3-revise": {
+    "prompt": "**Name one result that surprised you.** What might have caused it? What could you change or check in a repeat?\nIf the results matched your prediction, name one way to check that the readings are reliable.",
+    "explanation": "One plausible measurement/setup issue with a concrete repeat or check; no fabricated observation.",
+    "blooms": "Analyze",
+    "dok": 2
+  },
+  "f3-transfer": {
+    "prompt": "Read the graph. From **0 s to 4 s**, position rises from **1 m to 5 m**.\n1. **Find velocity:** (5 − 1) ÷ (4 − 0) = __ **m/s**.\n2. From **4 s to 6 s**, the line is flat. **Is the object moving then? Explain.**\n\n![Position–time graph.](/assignment-figures/novel-target-position.svg)",
+    "explanation": "+1 m/s in the first interval; no motion in the flat interval because position stays at 5 m.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f3-exit": {
+    "prompt": "On your own: position changes from **1 m at 0 s** to **5 m at 2 s**.\n1. **Find average velocity:** (5 − 1) ÷ (2 − 0) = __ **m/s**.\n2. **Does the positive sign mean toward or away from the detector?** Away is positive.",
+    "explanation": "+2 m/s, away from the detector.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f4-axis": {
+    "prompt": "A velocity–time graph is flat at **+1 m/s**. The height gives velocity. **What motion does it show?**",
+    "explanation": "Steady positive velocity, not rest.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f4-area": {
+    "prompt": "A cart moves at **+2 m/s for 3 s**, then **−1 m/s for 2 s**.\n1. First displacement: **2 × 3**.\n2. Second displacement: **−1 × 2**.\n3. **Add the two results.** Enter total displacement in **m**.",
+    "explanation": "6 + (−2) = +4 m.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f4-diagonal": {
+    "prompt": "A cart has velocity parts **4 m/s east** and **3 m/s north**.\n**Find speed** using the right-angle rule:\n1. Square each part: **4² = __; 3² = __**.\n2. Add the squares: __ + __ = __.\n3. Take the square root: speed = √__ = __ **m/s**.",
+    "explanation": "16 + 9 = 25; square root gives 5 m/s. Perpendicular components combine by squares, not plain addition.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f4-model": {
+    "prompt": "Use a smaller practice example: an object moves at **4 m/s toward Earth** and **3 m/s sideways** for **2 s**, at steady velocity.\n1. Displacement = velocity × time. **Find each part:** 4 × 2 = __ m; 3 × 2 = __ m.\n2. **Why can we not ignore the sideways part?**",
+    "explanation": "8 m toward Earth and 6 m sideways. Sideways displacement changes the location and possible path past Earth.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f4-exit-vector": {
+    "prompt": "On your own: a drone moves at **6 m/s east** and **8 m/s north** for **2 s**.\n1. **Find each displacement:** 6 × 2 and 8 × 2. Give units.\n2. **Do these changes alone tell us its final position?** What else do we need?",
+    "explanation": "12 m east and 16 m north. Need the starting position to locate the endpoint.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f5-start": {
+    "prompt": "A cart starts at **10 m** and moves at **−3 m/s for 2 s**.\n1. Displacement = velocity × time: **−3 × 2 = __ m**.\n2. Final position = start + displacement: **10 + (__) = __ m**. **Show both results.**",
+    "explanation": "Displacement −6 m; position +4 m.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f5-endpoint": {
+    "prompt": "Practice with small numbers. Start at **x = 10 m, y = 0 m**. Velocity stays at **−3 m/s in x** and **+2 m/s in y** for **2 s**.\n1. **Find final x:** 10 + (−3 × 2) = __ m.\n2. **Find final y:** 0 + (2 × 2) = __ m.",
+    "explanation": "Final position (4 m, 4 m).",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f5-claim": {
+    "prompt": "Earth is at **(0, 0)**. A prediction ends at **(−4 km, +3 km)**.\n**Does a negative x alone prove a hit?** Use the y value to explain your answer.",
+    "explanation": "No. The endpoint is 3 km sideways, and a sign alone does not describe whether the whole path meets Earth.",
+    "blooms": "Analyze",
+    "dok": 2
+  },
+  "f5-bound": {
+    "prompt": "The start may be off by **50,000 km**. Velocity may be off by **0.200 km/s**. Time is **16,000,000 s**.\n1. Multiply velocity error by time: **0.200 × 16,000,000**.\n2. Add **50,000**. **Enter the largest final-position error in km**, from center to one edge. A calculator is welcome.",
+    "explanation": "3,200,000 + 50,000 = 3,250,000 km.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f5-exit-window": {
+    "prompt": "On your own: start-position error is **0.10 m**, velocity error is **0.05 m/s**, and time is **10 s**. Velocity stays steady.\n1. **Find the largest error:** 0.10 + (0.05 × 10) = __ **m**.\n2. **Would waiting longer make the error range larger? Explain.**",
+    "explanation": "0.60 m; more time lets velocity error produce more position error.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f6-translate": {
+    "prompt": "You slide an arrow across the page. **Which move keeps its length and direction the same?**",
+    "explanation": "Slide without turning or stretching.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f6-add": {
+    "prompt": "East and north are positive. Two moves are **A = (+6, +2) m** and **B = (−4, +3) m**.\n1. **Add x parts:** 6 + (−4) = __ m.\n2. **Add y parts:** 2 + 3 = __ m.\n3. **Name the direction of each total part:** east or west; north or south.",
+    "explanation": "Total (+2,+5) m; east and north.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f6-components": {
+    "prompt": "A **20 N** pull points **30° east of north**. The x part points east.\nUse **x part = 20 × sin(30°)** and **sin(30°) = 0.5**.\n**Multiply 20 × 0.5.** Enter the x part in **N**.",
+    "explanation": "10 N east.",
+    "blooms": "Apply",
+    "dok": 1
+  },
+  "f6-quadrant": {
+    "prompt": "An arrow has parts **−4 m in x** and **+3 m in y**. East and north are positive.\n1. A negative x points west. **Which way does the positive y point?**\n2. **Is the arrow northwest or southeast?** Explain using both signs.",
+    "explanation": "Positive y is north; vector lies northwest.",
+    "blooms": "Understand",
+    "dok": 2
+  },
+  "f6-exit-sum": {
+    "prompt": "On your own: a robot moves **8 m west**, then **6 m south**.\n1. **Find displacement size:** √(8² + 6²) = √(__ + __) = __ **m**.\n2. **Find path distance:** 8 + 6 = __ **m**.\n3. **Which is the straight shortcut?**",
+    "explanation": "Displacement 10 m southwest; path 14 m. Displacement magnitude is the shortcut.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f7-definition": {
+    "prompt": "Acceleration tells how velocity changes each second. A cart has **+2 m/s²** acceleration. **What does that mean?**",
+    "explanation": "Velocity changes by +2 m/s each second.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f7-rate": {
+    "prompt": "Velocity goes from **+3 m/s to +15 m/s in 4 s**.\nUse **a = (end velocity − start velocity) ÷ time**.\n1. Subtract: **15 − 3**.\n2. Divide that result by **4**. **Enter acceleration in m/s².**",
+    "explanation": "(15−3)/4 = +3 m/s².",
+    "blooms": "Apply",
+    "dok": 1
+  },
+  "f7-graph": {
+    "prompt": "Graph A rises from **0 m/s at 0 s** to **+12 m/s at 4 s**. Graph B stays at **+5 m/s**.\n1. **Find A’s acceleration:** (12 − 0) ÷ 4 = __ **m/s²**.\n2. B’s velocity does not change. **What is B’s acceleration? Is B moving?**",
+    "explanation": "A +3 m/s²; B zero acceleration but moving at +5 m/s.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f7-signs": {
+    "prompt": "Right is positive. A cart goes from **+6 to +2 m/s in 2 s**.\n1. **Find acceleration:** (2 − 6) ÷ 2 = __ **m/s²**.\n2. Speed goes from **6 to 2 m/s**. **Is it speeding up or slowing down?**",
+    "explanation": "−2 m/s², slowing while still moving right.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f7-exit-transfer": {
+    "prompt": "On your own: velocity starts at **+2 m/s**. Acceleration is **+3 m/s² for 2 s**.\n1. **Find final velocity** with v = start velocity + acceleration × time: **2 + (3 × 2) = __ m/s**.\n2. **Did the speed increase or decrease?**",
+    "explanation": "Final velocity +8 m/s, speed increased.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f8-equation": {
+    "prompt": "You need displacement, **Δx**. You know start velocity **v₀**, end velocity **v**, and acceleration **a**.\n**Choose the equation with these four symbols and no time t.**",
+    "explanation": "v² = v₀² + 2aΔx.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f8-select": {
+    "prompt": "A cart starts at **3 m/s**. Steady acceleration is **2 m/s² for 4 s**.\n**Find final velocity:**\n1. Use v = v₀ + at. Here v₀ is start velocity.\n2. Substitute: **v = 3 + (2 × 4)**.\n3. Multiply first, then add. **Give the result in m/s.**",
+    "explanation": "Final velocity 11 m/s.",
+    "blooms": "Apply",
+    "dok": 1
+  },
+  "f8-braking": {
+    "prompt": "A cart slows from **+8 m/s to 0 m/s** with steady acceleration **−2 m/s²**.\n**Find stopping displacement:**\n1. Use **Δx = (v² − v₀²) ÷ (2a)**.\n2. Substitute: **(0² − 8²) ÷ (2 × −2)**.\n3. Square first. Then subtract and divide. **Give the result in m.**",
+    "explanation": "(0−64)/(−4) = +16 m.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f8-reversal": {
+    "prompt": "A cart travels **1 m right**, stops, then travels **1 m left** to its start.\n1. **Find distance:** 1 + 1 = __ m.\n2. **Find displacement:** final position − start position = __ m.\n3. **Does zero displacement mean it never moved? Explain.**",
+    "explanation": "Distance 2 m; displacement 0 m; it moved but returned to the start.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f8-exit-stop": {
+    "prompt": "On your own: a cart stops from **+12 m/s** with steady acceleration **−3 m/s²**.\n1. **Find stopping displacement:** Δx = (v² − v₀²) ÷ (2a).\n2. Substitute: **(0² − 12²) ÷ (2 × −3)**. Show your result in **m**.\n3. **Which must stay steady: velocity or acceleration?**",
+    "explanation": "24 m; acceleration must remain constant.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f9-law": {
+    "prompt": "A cart moves on a track with no resistance. A hand stops pushing it.\n**Does it keep moving or stop?** Finish: “With no net force, its velocity __.”",
+    "explanation": "Keeps moving at constant velocity; zero net force means no change in velocity.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f9-demo": {
+    "prompt": "Use the coin-and-card demonstration in class or the novel.\n1. **Say what happened** when the card was pulled away. Name your source.\n2. **What pulled the coin down** after the card was gone?",
+    "explanation": "A sourced observation; Earth’s gravity pulls coin down after support is removed.",
+    "blooms": "Understand",
+    "dok": 2
+  },
+  "f9-balance": {
+    "prompt": "A box slides right. A rope pulls **8 N right** and friction pulls **8 N left**.\n1. **Find net force:** 8 − 8 = __ **N**.\n2. **Does zero net force mean it must stop? Explain.**",
+    "explanation": "Zero N; it can keep moving at steady velocity.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f9-passenger": {
+    "prompt": "A toy car stops suddenly. Its passenger keeps moving forward.\n1. **What does the seatbelt do to the passenger?**\n2. **Why does the passenger need a force to stop?**",
+    "explanation": "Seatbelt applies a force that reduces forward velocity; inertia means motion continues unless a net force changes it.",
+    "blooms": "Understand",
+    "dok": 2
+  },
+  "f9-exit-transfer": {
+    "prompt": "On your own: a space probe moves straight at steady velocity. Its engine turns off. Ignore all outside forces.\n**What happens to its velocity? Explain using Newton’s first law.**",
+    "explanation": "Velocity stays constant with zero net force.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f10-source": {
+    "prompt": "A hand lets go of a bag. **Which object still pulls it down?**",
+    "explanation": "Earth supplies gravity.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f10-bag": {
+    "prompt": "**Record three force-sensor readings:**\n1. Nothing attached: __ **N**.\n2. Gentle pull: __ **N**.\n3. Gentle push: __ **N**.\nKeep each + or − sign. **Say what the signs tell you.** Label your source as your trial or teacher-approved sample.",
+    "explanation": "Three sourced readings with signs and newton units; sign indicates direction along sensor axis.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f10-ramp": {
+    "prompt": "A book rests on a ramp.\n1. **Which way does Earth pull:** straight down or along the ramp?\n2. The ramp pushes at a right angle to its surface. **Describe that direction.**",
+    "explanation": "Gravity is vertically down; normal points perpendicular away from ramp.",
+    "blooms": "Understand",
+    "dok": 2
+  },
+  "f10-weight": {
+    "prompt": "A **2 kg** mass hangs still from one string. Use **g = 10 N/kg**.\n1. **Find weight:** weight = mass × g = **2 × 10 = __ N**.\n2. **What pulls upward to balance the weight?**",
+    "explanation": "20 N downward; string tension 20 N upward.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f10-contact": {
+    "prompt": "A craft taps an asteroid and moves away.\n**Does the craft’s contact push keep acting after they separate? Explain.**",
+    "explanation": "No; a contact push requires touching. Gravity can remain without contact.",
+    "blooms": "Understand",
+    "dok": 2
+  },
+  "f10-sign": {
+    "prompt": "On your own: a car rolls downhill with its engine off. Ignore air resistance and friction for this example.\n**Name two forces on the car and what causes each.** Use the words Earth and road.",
+    "explanation": "Earth pulls vertically down; road pushes normal to its surface. No engine force.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f11-control": {
+    "prompt": "To test mass, keep the pulling setup the same. **Which change should you make?**",
+    "explanation": "Add mass to cart and leave hanger fixed.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f11-predict": {
+    "prompt": "Keep net force the same. **Predict what happens to acceleration when the total moving mass doubles.**\nUse **a = F_net ÷ mass**. A larger divisor makes the answer smaller.",
+    "explanation": "Acceleration halves when total moving mass doubles at fixed net force.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f11-record": {
+    "prompt": "**Record each mass setting and its trial accelerations.**\nUse: total moving mass = __ **kg**; accelerations = __, __ **m/s²**. Mark failed trials.\nCount the cart, added weights, and hanger. Name your source. If approved to use samples, copy two rows and label them as samples.",
+    "explanation": "Sourced mass settings with acceleration trials and units; total system mass includes hanger and additions.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f11-slope": {
+    "prompt": "**Choose two points from one clean velocity–time trial. Name the source.**\n1. Velocity change = final − start: __ − __ = __ **m/s**.\n2. Time change = final − start: __ − __ = __ **s**.\n3. **Find acceleration:** velocity change ÷ time change = __ **m/s²**.",
+    "explanation": "Correct sourced signed slope with units.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f11-evidence": {
+    "prompt": "**Choose two rows from your data.**\n1. For each, multiply **mass × acceleration**. Show units: **kg × m/s² = N**.\n2. **Are the results close?** Use one number. Name one trial problem that could cause a difference.",
+    "explanation": "Sourced products and comparison; friction, release or measurement error can account for differences.",
+    "blooms": "Analyze",
+    "dok": 2
+  },
+  "f11-exit": {
+    "prompt": "On your own: the same net force acts on two systems. One has **twice the total mass**.\n**Does it have half, equal, or twice the acceleration?** Explain using **a = F_net ÷ mass**.",
+    "explanation": "Half the acceleration; doubling denominator halves quotient at fixed force.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f12-control": {
+    "prompt": "You need more driving weight but the **same total moving mass**. **Which move does this?**",
+    "explanation": "Transfer a weight from cart to hanger.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f12-predict": {
+    "prompt": "Total mass stays the same. **Predict acceleration if net force doubles.**\nUse **a = F_net ÷ mass**. The divisor stays the same.",
+    "explanation": "Acceleration doubles.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f12-record": {
+    "prompt": "**Record your total moving mass in kg.** For each trial, record:\n- Hanger mass in **kg**.\n- Driving weight = hanger mass × **9.8 N/kg**, in **N**.\n- Acceleration in **m/s²**.\nMark failed releases and name your source. If using approved samples, copy two rows and label them as samples.",
+    "explanation": "Sourced total mass, hanger masses, computed weights and trial accelerations with units.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f12-drive": {
+    "prompt": "Use one hanger mass from your data.\n1. **Find driving weight:** mass in **kg × 9.8 N/kg = __ N**.\n2. **Name your data source.**\n3. Friction opposes the motion. **Could net force be smaller than driving weight?**",
+    "explanation": "Correct sourced mg calculation in newtons; resistance can reduce system net force below hanger weight.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f12-evidence": {
+    "prompt": "**Compare two rows from the same source.**\n1. Force ratio = larger driving weight ÷ smaller driving weight: __ ÷ __ = __.\n2. Acceleration ratio = matching larger acceleration ÷ smaller acceleration: __ ÷ __ = __.\n3. **Are the ratios close?** Name one measurement limit.",
+    "explanation": "Correct paired ratios with evidence-based comparison; limitations identified. Driving weight is not automatically net force.",
+    "blooms": "Analyze",
+    "dok": 2
+  },
+  "f12-exit": {
+    "prompt": "On your own: two systems have the **same mass**. One feels **twice the net force**.\n**Compare accelerations.** Explain using **a = F_net ÷ mass**.",
+    "explanation": "Twice the acceleration at fixed mass.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f13-sum": {
+    "prompt": "A box feels **10 N right** and **4 N left**.\n**Find net force:** subtract opposite forces, **10 − 4 = __ N**. **Give its direction.**",
+    "explanation": "6 N right.",
+    "blooms": "Apply",
+    "dok": 1
+  },
+  "f13-pull": {
+    "prompt": "A **4 kg** box accelerates right at **2 m/s²**. Friction is **6 N left**.\n1. Net force = mass × acceleration: **4 × 2 = __ N**.\n2. Pull must overcome friction too. **Find the pull:** net force + 6 = __ **N right**.",
+    "explanation": "Net force 8 N right; pull 14 N right.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f13-mass": {
+    "prompt": "A cart has net force **12 N** and acceleration **3 m/s²**.\n**Find mass:** mass = net force ÷ acceleration = **12 ÷ 3 = __ kg**.",
+    "explanation": "4 kg.",
+    "blooms": "Apply",
+    "dok": 1
+  },
+  "f13-brake": {
+    "prompt": "A **2 kg** cart slows from **+6 to +2 m/s in 2 s**. Right is positive.\n1. **Find acceleration:** (2 − 6) ÷ 2 = __ **m/s²**.\n2. **Find net force:** 2 × acceleration = __ **N**.\n3. **Which way does the force point?**",
+    "explanation": "Acceleration −2 m/s²; net force −4 N, left.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f13-exit": {
+    "prompt": "On your own: a **4 kg** cart feels **18 N right** and **6 N left**.\n1. **Net force:** 18 − 6 = __ **N**.\n2. **Acceleration:** net force ÷ 4 = __ **m/s²**.\n3. **Give the direction of both.**",
+    "explanation": "12 N right; 3 m/s² right.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f14-predict": {
+    "prompt": "Before pulling, **predict how the two force readings compare**. Will their sizes be equal or different? Will their directions match or oppose?\n**Say what you expect for a stronger pull.**",
+    "explanation": "Equal sizes and opposite directions; both magnitudes grow with stronger interaction.",
+    "blooms": "Understand",
+    "dok": 2
+  },
+  "f14-pair": {
+    "prompt": "A hand pulls a cart. **Complete the force pair:**\n- The hand pulls on __.\n- The cart pulls on __.\n**Do both forces act on the same object?**",
+    "explanation": "Hand on cart; cart on hand. Different receivers, so pair does not cancel on one object.",
+    "blooms": "Understand",
+    "dok": 1
+  },
+  "f14-readings": {
+    "prompt": "**Record two paired readings** from trials or the approved slide table. Name the source.\nFor each pair write: time = __ **s**; force A = __ **N**; force B = __ **N**.\nTo compare sizes, ignore +/− signs and subtract smaller size from larger size: __ − __ = __ **N**.",
+    "explanation": "Two sourced simultaneous pairs with signed readings and magnitude differences in N.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f14-revise": {
+    "prompt": "**Compare one measured pair with your prediction.** Use the readings.\nIf their sizes differ slightly, name one thing to check, such as zeroing the sensors or matching the times.",
+    "explanation": "Uses one sourced pair and a meaningful measurement check.",
+    "blooms": "Analyze",
+    "dok": 2
+  },
+  "f14-impact": {
+    "prompt": "A small craft bumps a much heavier asteroid.\n1. **Are the contact-force sizes equal or different?**\n2. Use **a = F_net ÷ mass**. For the same force size, **which object has the larger acceleration from this contact?**",
+    "explanation": "Equal opposite contact forces; smaller craft has larger contact-caused acceleration.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f14-exit": {
+    "prompt": "On your own: your hand pushes a wall right.\n**Complete:** The wall pushes __ toward the __.\n**Which force belongs on a diagram of your hand?**",
+    "explanation": "Wall pushes hand left; wall-on-hand force belongs on hand diagram.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f15-book": {
+    "prompt": "A book rests on a level table. Its weight is **10 N**.\n**Draw two forces on the book:**\n1. Earth pulls down: **10 N, 270°**.\n2. Table pushes up: **10 N, 90°**.\n**Label the source of each arrow.**",
+    "explanation": "Two equal opposite arrows: Earth weight downward and table normal upward; no motion force.",
+    "blooms": "Apply",
+    "dok": 1
+  },
+  "f15-release": {
+    "prompt": "A box slides right on a rough, level floor after a hand lets go.\n**Name the source of each force:** downward, upward, and leftward.\n**Should the hand still have an arrow? Why?**",
+    "explanation": "Earth down, floor normal up, floor friction left. Hand contact ended.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f15-ball": {
+    "prompt": "A tossed ball reaches its highest point. Ignore air resistance.\n**Does Earth still pull on it? Which force arrow should remain, and in what direction?**",
+    "explanation": "Gravity from Earth remains downward even when vertical velocity is zero.",
+    "blooms": "Understand",
+    "dok": 2
+  },
+  "f15-turn": {
+    "prompt": "Friction points inward as a car turns at steady speed.\nA student draws a second inward arrow called “centripetal force.”\n**Should there be one inward force arrow or two?** Friction is what causes the turn. Explain.",
+    "explanation": "One; centripetal describes the inward net force role, not an extra interaction.",
+    "blooms": "Understand",
+    "dok": 2
+  },
+  "f15-exit": {
+    "prompt": "On your own: a box slides right on a level floor. Weight and support are **20 N each**. A hand pulls **8 N right**; friction is **3 N left**.\n**Draw and label all four forces.** Angle key: right **0°**, up **90°**, left **180°**, down **270°**.",
+    "explanation": "Weight 20 down, normal 20 up, applied 8 right, friction 3 left, sources named.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f16-floor": {
+    "prompt": "A **4 kg** box feels **14 N right** and **6 N left**.\n1. **Find net force:** 14 − 6 = __ **N**.\n2. **Find acceleration:** net force ÷ 4 = __ **m/s²**.\n3. **Give the direction.**",
+    "explanation": "8 N right; 2 m/s² right.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f16-arrows": {
+    "prompt": "A **2 kg** block is on a frictionless **30° ramp** that rises right.\n**Draw two arrows using these supplied sizes:**\n- Earth’s weight: **19.6 N straight down, 270°**.\n- Ramp’s normal push: **17 N away from the ramp, 120°**.\n**Label each source.**",
+    "explanation": "Weight and normal only; normal perpendicular to ramp. 17 N is rounded from 19.6 cos30°.",
+    "blooms": "Apply",
+    "dok": 1
+  },
+  "f16-slope": {
+    "prompt": "A **2 kg** block feels **9.8 N downhill** from gravity’s along-ramp part and **4.0 N uphill** from friction.\n1. **Net force downhill:** 9.8 − 4.0 = __ **N**.\n2. **Acceleration downhill:** net force ÷ 2 = __ **m/s²**.\nUse only the given along-ramp forces.",
+    "explanation": "5.8 N downhill and 2.9 m/s² downhill; full weight not added a second time.",
+    "blooms": "Apply",
+    "dok": 2
+  },
+  "f16-thrust": {
+    "prompt": "A craft feels a thrust right and gravity down. The forces are at right angles.\n**Would the total force point right and up, or right and down? Explain.** Do not subtract the two sizes as if they were opposite.",
+    "explanation": "Right and down; perpendicular components combine diagonally.",
+    "blooms": "Understand",
+    "dok": 2
+  },
+  "f16-exit": {
+    "prompt": "On your own: a **10 kg** box is pushed forward with **50 N**. Friction is **15 N backward**.\n1. **Net force:** 50 − 15 = __ **N**.\n2. **Acceleration:** net force ÷ 10 = __ **m/s²**.\n3. **State the acceleration direction.**",
+    "explanation": "35 N forward; 3.5 m/s² forward.",
+    "blooms": "Apply",
+    "dok": 2
+  }
+}

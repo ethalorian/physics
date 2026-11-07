@@ -3,13 +3,13 @@
   "unit": 5,
   "day": 12,
   "title": "Transfer: thermal energy",
-  "target": "Choose an energy-transfer model and communicate its limits.",
+  "target": "Choose an equation or diagram for energy transfer. Explain when it stops working.",
   "criteria": [
     "Distinguish warming, phase change and work.",
     "Use correct signs and units.",
-    "Explain why a model result depends on its assumptions."
+    "Explain how a predicted result depends on what you treat as true."
   ],
-  "source_sha256": "7148c163fe6d7eee2a63b55286ee58b3fd51d3c41e919f77bfcbed5b421a88e9",
+  "source_sha256": "05035d1e2cdb225e817813080e516b3021a1abeaeb5f8ec17988a687d61c6673",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.539Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "Sample A warms without changing phase; B melts at constant temperature. Which pair of energy models fits?",
+      "prompt": "Sample A warms without changing phase. Sample B melts at constant temperature. Which pair of energy equations fits?",
       "options": [
         "Both: final temperature alone.",
         "A: mcΔT; B: mL.",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "A predicted final temperature assumes no heat loss. Which observation directly calls that assumption into question?",
+      "prompt": "A predicted final temperature treats heat loss as zero. Which observation would directly challenge that choice?",
       "options": [
         "The surrounding container measurably warms during the trial.",
         "The calculation includes units.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A heating model predicts an 8°C rise if all 1,200 J enters a sample. Measurements show only 900 J reaches it, with other assumptions unchanged. What rise should the revised model predict?",
+      "prompt": "A calculation predicts an 8°C rise if all 1,200 J enters a sample. Measurements show that only 900 J reaches it. Keep everything else in the calculation the same. What temperature rise should it now predict?",
       "options": [
         "8°C",
         "10.7°C",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "Sample A warms without changing phase; B melts at constant temperature. Which pair of energy models fits?",
+      "prompt": "Sample A warms without changing phase. Sample B melts at constant temperature. Which pair of energy equations fits?",
       "options": [
         "Both: final temperature alone.",
         "A: mL; B: mcΔT only.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "A predicted final temperature assumes no heat loss. Which observation directly calls that assumption into question?",
+      "prompt": "A predicted final temperature treats heat loss as zero. Which observation would directly challenge that choice?",
       "options": [
         "The surrounding container measurably warms during the trial.",
         "The sample has a known mass.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A heating model predicts an 8°C rise if all 1,200 J enters a sample. Measurements show only 900 J reaches it, with other assumptions unchanged. What rise should the revised model predict?",
+      "prompt": "A calculation predicts an 8°C rise if all 1,200 J enters a sample. Measurements show that only 900 J reaches it. Keep everything else in the calculation the same. What temperature rise should it now predict?",
       "options": [
         "8°C",
         "6°C",

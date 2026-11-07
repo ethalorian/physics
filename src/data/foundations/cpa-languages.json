@@ -1,0 +1,342 @@
+{
+  "f1-source": {
+    "es": "Un objeto se mueve hacia la Tierra. **¿Hay suficientes datos para saber si chocará?** Elige la mejor respuesta.",
+    "pt-BR": "Um objeto se move em direção à Terra. **Há dados suficientes para saber se vai atingir a Terra?** Escolha a melhor resposta."
+  },
+  "f1-evidence": {
+    "es": "**Escribe un hecho de una diapositiva.** Da su número. Di si trata del carrito del aula o del asteroide ficticio.\nEmpieza: “En la diapositiva __, noté __.”",
+    "pt-BR": "**Escreva um fato de um slide.** Dê o número. Diga se é sobre o carrinho da sala ou o asteroide fictício.\nComece: “No slide __, notei __.”"
+  },
+  "f1-predict": {
+    "es": "Un carrito está en **0 m, 2 m y 4 m** a los **0 s, 1 s y 2 s**.\n1. Halla cuánto avanza cada segundo: **2 − 0 = __ m**.\n2. Súmalo a **4 m**. **¿Dónde estará a los 3 s?** Ingresa la posición.",
+    "pt-BR": "Um carrinho está em **0 m, 2 m e 4 m** aos **0 s, 1 s e 2 s**.\n1. Ache quanto avança por segundo: **2 − 0 = __ m**.\n2. Some isso a **4 m**. **Onde estará aos 3 s?** Digite a posição."
+  },
+  "f1-wonders": {
+    "es": "**Escribe una pregunta** sobre el asteroide. ¿Trata de su posición, rapidez, tamaño u otra cosa? Nombra el tema.",
+    "pt-BR": "**Escreva uma pergunta** sobre o asteroide. É sobre posição, rapidez, tamanho ou outra coisa? Nomeie o tema."
+  },
+  "f1-question": {
+    "es": "Por tu cuenta, **nombra una medición** que ayude a predecir adónde irá el asteroide. **Explica cómo ayuda.**\nEmpieza: “Mediría __. Ayuda porque __.”",
+    "pt-BR": "Sozinho, **nomeie uma medida** que ajude a prever para onde o asteroide vai. **Explique como ajuda.**\nComece: “Eu mediria __. Isso ajuda porque __.”"
+  },
+  "f2-position": {
+    "es": "La puerta está en **0 m**. **El este es positivo** y el oeste es negativo. Un cuaderno está en **−2 m**. **¿Dónde está?**",
+    "pt-BR": "A porta está em **0 m**. **Leste é positivo** e oeste é negativo. Um caderno está em **−2 m**. **Onde está?**"
+  },
+  "f2-distance": {
+    "es": "Eli camina **6 m al este** y **6 m al oeste**. La distancia cuenta todo el camino.\n**Suma 6 + 6 = __ m.** Ingresa la distancia total.",
+    "pt-BR": "Eli anda **6 m para leste** e **6 m para oeste**. A distância conta todo o caminho.\n**Some 6 + 6 = __ m.** Digite a distância total."
+  },
+  "f2-walk": {
+    "es": "Camina **5 pasos iguales al norte**, **3 al este** y **5 al sur**.\nLa distancia cuenta cada paso. **Suma 5 + 3 + 5.** Ingresa la distancia en pasos.",
+    "pt-BR": "Ande **5 passos iguais para norte**, **3 para leste** e **5 para sul**.\nA distância conta cada passo. **Some 5 + 3 + 5.** Digite a distância em passos."
+  },
+  "f2-track": {
+    "es": "Un corredor da **una vuelta completa** y regresa al inicio. La pista mide **400 m**.\n1. **Da la distancia recorrida.**\n2. El desplazamiento compara el final con el inicio. **¿Es cero? Explica.**",
+    "pt-BR": "Um corredor dá **uma volta completa** e volta ao início. A pista tem **400 m**.\n1. **Dê a distância percorrida.**\n2. O deslocamento compara o fim com o início. **É zero? Explique.**"
+  },
+  "f2-transfer": {
+    "es": "Por tu cuenta: un carrito sale de **0 m**, llega a **+4 m** y vuelve a **+1 m**.\n1. **Distancia:** 4 + (4 − 1) = __ m.\n2. **Desplazamiento = posición final − inicial:** 1 − 0 = __ m.",
+    "pt-BR": "Sozinho: um carrinho sai de **0 m**, vai até **+4 m** e volta a **+1 m**.\n1. **Distância:** 4 + (4 − 1) = __ m.\n2. **Deslocamento = posição final − inicial:** 1 − 0 = __ m."
+  },
+  "f3-predict": {
+    "es": "Alejarse del detector es positivo. **Predice el gráfico posición–tiempo** al caminar alejándote a paso constante y al estar quieto.\nPara cada caso, elige “recta ascendente” o “recta horizontal”. **Explica una elección.**",
+    "pt-BR": "Afastar-se do detector é positivo. **Preveja o gráfico posição–tempo** ao se afastar em ritmo constante e ao ficar parado.\nPara cada caso, escolha “reta crescente” ou “reta horizontal”. **Explique uma escolha.**"
+  },
+  "f3-trials": {
+    "es": "**Anota los seis ensayos.** Para cada uno:\n- Movimiento y tu tarea: __.\n- Tiempo en **s** / posición en **m**: __ / __, __ / __, __ / __.\n- Fuente: detector real, simulación aprobada o datos de ejemplo aprobados.\n- Punto cero y dirección positiva: __.\nMarca lecturas malas. **No inventes mediciones.**",
+    "pt-BR": "**Anote os seis ensaios.** Para cada um:\n- Movimento e sua tarefa: __.\n- Tempo em **s** / posição em **m**: __ / __, __ / __, __ / __.\n- Fonte: detector real, simulação aprovada ou dados de exemplo aprovados.\n- Ponto zero e direção positiva: __.\nMarque leituras ruins. **Não invente medidas.**"
+  },
+  "f3-slopes": {
+    "es": "**Elige un ensayo claro y su repetición. Halla la velocidad de cada uno** con dos puntos de cada gráfico.\n1. Cambio de posición = final − inicial: __ − __ = __ m.\n2. Cambio de tiempo = final − inicial: __ − __ = __ s.\n3. Velocidad = cambio de posición ÷ cambio de tiempo: __ ÷ __ = __ **m/s**.\n4. **¿Son cercanas las velocidades?** Usa tus números.",
+    "pt-BR": "**Escolha um ensaio claro e sua repetição. Ache a velocidade de cada um** com dois pontos de cada gráfico.\n1. Mudança de posição = final − inicial: __ − __ = __ m.\n2. Intervalo de tempo = final − inicial: __ − __ = __ s.\n3. Velocidade = mudança de posição ÷ intervalo de tempo: __ ÷ __ = __ **m/s**.\n4. **As velocidades são próximas?** Use seus números."
+  },
+  "f3-revise": {
+    "es": "**Nombra un resultado que te sorprendió.** ¿Qué pudo causarlo? ¿Qué cambiarías o revisarías al repetir?\nSi los resultados coincidieron con tu predicción, di cómo comprobarías que las lecturas son confiables.",
+    "pt-BR": "**Nomeie um resultado que surpreendeu você.** O que pode ter causado isso? O que mudaria ou verificaria ao repetir?\nSe os resultados combinaram com sua previsão, diga como verificaria se as leituras são confiáveis."
+  },
+  "f3-transfer": {
+    "es": "Lee el gráfico. Entre **0 s y 4 s**, la posición sube de **1 m a 5 m**.\n1. **Halla la velocidad:** (5 − 1) ÷ (4 − 0) = __ **m/s**.\n2. Entre **4 s y 6 s**, la línea es horizontal. **¿Se mueve el objeto? Explica.**\n\n![Gráfico posición–tiempo.](/assignment-figures/novel-target-position.svg)",
+    "pt-BR": "Leia o gráfico. Entre **0 s e 4 s**, a posição sobe de **1 m para 5 m**.\n1. **Ache a velocidade:** (5 − 1) ÷ (4 − 0) = __ **m/s**.\n2. Entre **4 s e 6 s**, a linha é horizontal. **O objeto se move? Explique.**\n\n![Gráfico posição–tempo.](/assignment-figures/novel-target-position.svg)"
+  },
+  "f3-exit": {
+    "es": "Por tu cuenta: la posición cambia de **1 m a los 0 s** a **5 m a los 2 s**.\n1. **Velocidad media:** (5 − 1) ÷ (2 − 0) = __ **m/s**.\n2. Alejarse del detector es positivo. **¿El signo positivo indica acercarse o alejarse?**",
+    "pt-BR": "Sozinho: a posição muda de **1 m aos 0 s** para **5 m aos 2 s**.\n1. **Velocidade média:** (5 − 1) ÷ (2 − 0) = __ **m/s**.\n2. Afastar-se do detector é positivo. **O sinal positivo indica aproximar-se ou afastar-se?**"
+  },
+  "f4-axis": {
+    "es": "Un gráfico velocidad–tiempo es horizontal en **+1 m/s**. La altura da la velocidad. **¿Qué movimiento muestra?**",
+    "pt-BR": "Um gráfico velocidade–tempo é horizontal em **+1 m/s**. A altura dá a velocidade. **Que movimento mostra?**"
+  },
+  "f4-area": {
+    "es": "Un carrito va a **+2 m/s durante 3 s** y luego a **−1 m/s durante 2 s**.\n1. Primer desplazamiento: **2 × 3**.\n2. Segundo desplazamiento: **−1 × 2**.\n3. **Suma los resultados.** Ingresa el desplazamiento total en **m**.",
+    "pt-BR": "Um carrinho vai a **+2 m/s por 3 s** e depois a **−1 m/s por 2 s**.\n1. Primeiro deslocamento: **2 × 3**.\n2. Segundo deslocamento: **−1 × 2**.\n3. **Some os resultados.** Digite o deslocamento total em **m**."
+  },
+  "f4-diagonal": {
+    "es": "Un carrito tiene partes de velocidad de **4 m/s al este** y **3 m/s al norte**. **Halla la rapidez:**\n1. Eleva al cuadrado: **4² = __; 3² = __**.\n2. Suma: __ + __ = __.\n3. Saca la raíz: rapidez = √__ = __ **m/s**.",
+    "pt-BR": "Um carrinho tem partes da velocidade de **4 m/s para leste** e **3 m/s para norte**. **Ache a rapidez:**\n1. Eleve ao quadrado: **4² = __; 3² = __**.\n2. Some: __ + __ = __.\n3. Tire a raiz: rapidez = √__ = __ **m/s**."
+  },
+  "f4-model": {
+    "es": "Ejemplo con números pequeños: un objeto va a **4 m/s hacia la Tierra** y **3 m/s de lado** durante **2 s**, con velocidad constante.\n1. Desplazamiento = velocidad × tiempo. **Halla cada parte:** 4 × 2 = __ m; 3 × 2 = __ m.\n2. **¿Por qué importa la parte lateral?**",
+    "pt-BR": "Exemplo com números pequenos: um objeto vai a **4 m/s em direção à Terra** e **3 m/s de lado** por **2 s**, com velocidade constante.\n1. Deslocamento = velocidade × tempo. **Ache cada parte:** 4 × 2 = __ m; 3 × 2 = __ m.\n2. **Por que a parte lateral importa?**"
+  },
+  "f4-exit-vector": {
+    "es": "Por tu cuenta: un dron va a **6 m/s al este** y **8 m/s al norte** durante **2 s**.\n1. **Halla cada desplazamiento:** 6 × 2 y 8 × 2. Da las unidades.\n2. **¿Estos cambios bastan para saber la posición final?** ¿Qué más falta?",
+    "pt-BR": "Sozinho: um drone vai a **6 m/s para leste** e **8 m/s para norte** por **2 s**.\n1. **Ache cada deslocamento:** 6 × 2 e 8 × 2. Dê as unidades.\n2. **Essas mudanças bastam para saber a posição final?** O que mais falta?"
+  },
+  "f5-start": {
+    "es": "Un carrito parte de **10 m** y va a **−3 m/s durante 2 s**.\n1. Desplazamiento = velocidad × tiempo: **−3 × 2 = __ m**.\n2. Posición final = inicio + desplazamiento: **10 + (__) = __ m**. **Muestra ambos resultados.**",
+    "pt-BR": "Um carrinho parte de **10 m** e vai a **−3 m/s por 2 s**.\n1. Deslocamento = velocidade × tempo: **−3 × 2 = __ m**.\n2. Posição final = início + deslocamento: **10 + (__) = __ m**. **Mostre os dois resultados.**"
+  },
+  "f5-endpoint": {
+    "es": "Practica con números pequeños. Empieza en **x = 10 m, y = 0 m**. La velocidad se mantiene en **−3 m/s en x** y **+2 m/s en y** durante **2 s**.\n1. **x final:** 10 + (−3 × 2) = __ m.\n2. **y final:** 0 + (2 × 2) = __ m.",
+    "pt-BR": "Pratique com números pequenos. Comece em **x = 10 m, y = 0 m**. A velocidade fica em **−3 m/s em x** e **+2 m/s em y** por **2 s**.\n1. **x final:** 10 + (−3 × 2) = __ m.\n2. **y final:** 0 + (2 × 2) = __ m."
+  },
+  "f5-claim": {
+    "es": "La Tierra está en **(0, 0)**. La predicción termina en **(−4 km, +3 km)**.\n**¿Una x negativa basta para probar un choque?** Usa y para explicar.",
+    "pt-BR": "A Terra está em **(0, 0)**. A previsão termina em **(−4 km, +3 km)**.\n**Um x negativo basta para provar uma colisão?** Use y para explicar."
+  },
+  "f5-bound": {
+    "es": "El inicio puede tener un error de **50,000 km**. La velocidad, de **0.200 km/s**. El tiempo es **16,000,000 s**.\n1. Multiplica **0.200 × 16,000,000**.\n2. Suma **50,000**. **Ingresa el mayor error de posición final en km**, del centro a un borde. Puedes usar calculadora.",
+    "pt-BR": "O início pode ter erro de **50,000 km**. A velocidade, de **0.200 km/s**. O tempo é **16,000,000 s**.\n1. Multiplique **0.200 × 16,000,000**.\n2. Some **50,000**. **Digite o maior erro da posição final em km**, do centro a uma borda. Pode usar calculadora."
+  },
+  "f5-exit-window": {
+    "es": "Por tu cuenta: el error inicial es **0.10 m**, el de velocidad es **0.05 m/s**, y el tiempo es **10 s**. La velocidad es constante.\n1. **Mayor error:** 0.10 + (0.05 × 10) = __ **m**.\n2. **¿Esperar más tiempo aumenta el intervalo de error? Explica.**",
+    "pt-BR": "Sozinho: o erro inicial é **0.10 m**, o da velocidade é **0.05 m/s**, e o tempo é **10 s**. A velocidade é constante.\n1. **Maior erro:** 0.10 + (0.05 × 10) = __ **m**.\n2. **Esperar mais aumenta a faixa de erro? Explique.**"
+  },
+  "f6-translate": {
+    "es": "Deslizas una flecha por la página. **¿Qué movimiento mantiene su longitud y dirección?**",
+    "pt-BR": "Você desliza uma seta pela página. **Qual movimento mantém seu comprimento e direção?**"
+  },
+  "f6-add": {
+    "es": "Este y norte son positivos. **A = (+6, +2) m** y **B = (−4, +3) m**.\n1. **Suma x:** 6 + (−4) = __ m.\n2. **Suma y:** 2 + 3 = __ m.\n3. **Nombra la dirección de cada total:** este u oeste; norte o sur.",
+    "pt-BR": "Leste e norte são positivos. **A = (+6, +2) m** e **B = (−4, +3) m**.\n1. **Some x:** 6 + (−4) = __ m.\n2. **Some y:** 2 + 3 = __ m.\n3. **Nomeie a direção de cada total:** leste ou oeste; norte ou sul."
+  },
+  "f6-components": {
+    "es": "Una fuerza de **20 N** apunta **30° al este del norte**. Su parte x apunta al este.\nUsa **parte x = 20 × sin(30°)** y **sin(30°) = 0.5**.\n**Multiplica 20 × 0.5.** Ingresa la parte x en **N**.",
+    "pt-BR": "Uma força de **20 N** aponta **30° a leste do norte**. Sua parte x aponta para leste.\nUse **parte x = 20 × sin(30°)** e **sin(30°) = 0.5**.\n**Multiplique 20 × 0.5.** Digite a parte x em **N**."
+  },
+  "f6-quadrant": {
+    "es": "Una flecha tiene partes **−4 m en x** y **+3 m en y**. Este y norte son positivos.\n1. Una x negativa apunta al oeste. **¿Adónde apunta una y positiva?**\n2. **¿La flecha apunta al noroeste o al sureste?** Explica con ambos signos.",
+    "pt-BR": "Uma seta tem partes **−4 m em x** e **+3 m em y**. Leste e norte são positivos.\n1. Um x negativo aponta para oeste. **Para onde aponta um y positivo?**\n2. **A seta aponta para noroeste ou sudeste?** Explique com os dois sinais."
+  },
+  "f6-exit-sum": {
+    "es": "Por tu cuenta: un robot avanza **8 m al oeste** y **6 m al sur**.\n1. **Tamaño del desplazamiento:** √(8² + 6²) = √(__ + __) = __ **m**.\n2. **Distancia del camino:** 8 + 6 = __ **m**.\n3. **¿Cuál es el atajo recto?**",
+    "pt-BR": "Sozinho: um robô anda **8 m para oeste** e **6 m para sul**.\n1. **Tamanho do deslocamento:** √(8² + 6²) = √(__ + __) = __ **m**.\n2. **Distância do caminho:** 8 + 6 = __ **m**.\n3. **Qual é o atalho reto?**"
+  },
+  "f7-definition": {
+    "es": "La aceleración dice cómo cambia la velocidad cada segundo. Un carrito tiene aceleración de **+2 m/s²**. **¿Qué significa?**",
+    "pt-BR": "A aceleração diz como a velocidade muda por segundo. Um carrinho tem aceleração de **+2 m/s²**. **O que isso significa?**"
+  },
+  "f7-rate": {
+    "es": "La velocidad va de **+3 m/s a +15 m/s en 4 s**.\nUsa **a = (velocidad final − inicial) ÷ tiempo**.\n1. Resta: **15 − 3**.\n2. Divide ese resultado entre **4**. **Ingresa la aceleración en m/s².**",
+    "pt-BR": "A velocidade vai de **+3 m/s a +15 m/s em 4 s**.\nUse **a = (velocidade final − inicial) ÷ tempo**.\n1. Subtraia: **15 − 3**.\n2. Divida o resultado por **4**. **Digite a aceleração em m/s².**"
+  },
+  "f7-graph": {
+    "es": "El gráfico A sube de **0 m/s a los 0 s** a **+12 m/s a los 4 s**. B se mantiene en **+5 m/s**.\n1. **Aceleración de A:** (12 − 0) ÷ 4 = __ **m/s²**.\n2. La velocidad de B no cambia. **¿Cuál es su aceleración? ¿Se mueve B?**",
+    "pt-BR": "O gráfico A sobe de **0 m/s aos 0 s** para **+12 m/s aos 4 s**. B fica em **+5 m/s**.\n1. **Aceleração de A:** (12 − 0) ÷ 4 = __ **m/s²**.\n2. A velocidade de B não muda. **Qual é sua aceleração? B se move?**"
+  },
+  "f7-signs": {
+    "es": "La derecha es positiva. Un carrito pasa de **+6 a +2 m/s en 2 s**.\n1. **Aceleración:** (2 − 6) ÷ 2 = __ **m/s²**.\n2. La rapidez pasa de **6 a 2 m/s**. **¿Aumenta o disminuye?**",
+    "pt-BR": "Direita é positiva. Um carrinho passa de **+6 a +2 m/s em 2 s**.\n1. **Aceleração:** (2 − 6) ÷ 2 = __ **m/s²**.\n2. A rapidez passa de **6 a 2 m/s**. **Aumenta ou diminui?**"
+  },
+  "f7-exit-transfer": {
+    "es": "Por tu cuenta: la velocidad inicial es **+2 m/s**. La aceleración es **+3 m/s² durante 2 s**.\n1. **Velocidad final = inicial + aceleración × tiempo:** **2 + (3 × 2) = __ m/s**.\n2. **¿Aumentó o disminuyó la rapidez?**",
+    "pt-BR": "Sozinho: a velocidade inicial é **+2 m/s**. A aceleração é **+3 m/s² por 2 s**.\n1. **Velocidade final = inicial + aceleração × tempo:** **2 + (3 × 2) = __ m/s**.\n2. **A rapidez aumentou ou diminuiu?**"
+  },
+  "f8-equation": {
+    "es": "Buscas desplazamiento, **Δx**. Conoces velocidad inicial **v₀**, final **v**, y aceleración **a**.\n**Elige la ecuación con esos cuatro símbolos y sin tiempo t.**",
+    "pt-BR": "Você busca deslocamento, **Δx**. Sabe a velocidade inicial **v₀**, final **v**, e aceleração **a**.\n**Escolha a equação com esses quatro símbolos e sem tempo t.**"
+  },
+  "f8-select": {
+    "es": "Un carrito empieza a **3 m/s**. Su aceleración constante es **2 m/s² durante 4 s**. **Halla la velocidad final:**\n1. Usa v = v₀ + at. v₀ es la velocidad inicial.\n2. Sustituye: **v = 3 + (2 × 4)**.\n3. Multiplica y luego suma. **Da el resultado en m/s.**",
+    "pt-BR": "Um carrinho começa a **3 m/s**. Sua aceleração constante é **2 m/s² por 4 s**. **Ache a velocidade final:**\n1. Use v = v₀ + at. v₀ é a velocidade inicial.\n2. Substitua: **v = 3 + (2 × 4)**.\n3. Multiplique e depois some. **Dê o resultado em m/s.**"
+  },
+  "f8-braking": {
+    "es": "Un carrito frena de **+8 m/s a 0 m/s**, con aceleración constante de **−2 m/s²**. **Halla el desplazamiento hasta parar:**\n1. Usa **Δx = (v² − v₀²) ÷ (2a)**.\n2. Sustituye: **(0² − 8²) ÷ (2 × −2)**.\n3. Eleva al cuadrado, resta y divide. **Da el resultado en m.**",
+    "pt-BR": "Um carrinho freia de **+8 m/s a 0 m/s**, com aceleração constante de **−2 m/s²**. **Ache o deslocamento até parar:**\n1. Use **Δx = (v² − v₀²) ÷ (2a)**.\n2. Substitua: **(0² − 8²) ÷ (2 × −2)**.\n3. Eleve ao quadrado, subtraia e divida. **Dê o resultado em m.**"
+  },
+  "f8-reversal": {
+    "es": "Un carrito recorre **1 m a la derecha**, para y recorre **1 m a la izquierda** hasta el inicio.\n1. **Distancia:** 1 + 1 = __ m.\n2. **Desplazamiento:** posición final − inicial = __ m.\n3. **¿Desplazamiento cero significa que no se movió? Explica.**",
+    "pt-BR": "Um carrinho percorre **1 m à direita**, para e percorre **1 m à esquerda** até o início.\n1. **Distância:** 1 + 1 = __ m.\n2. **Deslocamento:** posição final − inicial = __ m.\n3. **Deslocamento zero significa que não se moveu? Explique.**"
+  },
+  "f8-exit-stop": {
+    "es": "Por tu cuenta: un carrito para desde **+12 m/s**, con aceleración constante de **−3 m/s²**.\n1. **Halla el desplazamiento:** Δx = (v² − v₀²) ÷ (2a).\n2. Sustituye: **(0² − 12²) ÷ (2 × −3)**. Da el resultado en **m**.\n3. **¿Qué debe ser constante: velocidad o aceleración?**",
+    "pt-BR": "Sozinho: um carrinho para a partir de **+12 m/s**, com aceleração constante de **−3 m/s²**.\n1. **Ache o deslocamento:** Δx = (v² − v₀²) ÷ (2a).\n2. Substitua: **(0² − 12²) ÷ (2 × −3)**. Dê o resultado em **m**.\n3. **O que deve ser constante: velocidade ou aceleração?**"
+  },
+  "f9-law": {
+    "es": "Un carrito va por una pista sin resistencia. Una mano deja de empujarlo.\n**¿Sigue moviéndose o para?** Completa: “Sin fuerza neta, su velocidad __.”",
+    "pt-BR": "Um carrinho vai por uma pista sem resistência. Uma mão para de empurrá-lo.\n**Ele continua ou para?** Complete: “Sem força resultante, sua velocidade __.”"
+  },
+  "f9-demo": {
+    "es": "Usa la demostración de la moneda y la tarjeta en clase o en la novela.\n1. **Di qué pasó** al sacar la tarjeta. Nombra tu fuente.\n2. **¿Qué tiró de la moneda hacia abajo** al quitar la tarjeta?",
+    "pt-BR": "Use a demonstração da moeda e do cartão na aula ou na história.\n1. **Diga o que aconteceu** ao tirar o cartão. Nomeie a fonte.\n2. **O que puxou a moeda para baixo** sem o cartão?"
+  },
+  "f9-balance": {
+    "es": "Una caja se desliza a la derecha. Una cuerda tira **8 N a la derecha** y la fricción **8 N a la izquierda**.\n1. **Fuerza neta:** 8 − 8 = __ **N**.\n2. **¿Fuerza neta cero exige que pare? Explica.**",
+    "pt-BR": "Uma caixa desliza à direita. Uma corda puxa **8 N à direita** e o atrito **8 N à esquerda**.\n1. **Força resultante:** 8 − 8 = __ **N**.\n2. **Força resultante zero exige que pare? Explique.**"
+  },
+  "f9-passenger": {
+    "es": "Un carrito para de golpe. Su pasajero sigue adelante.\n1. **¿Qué le hace el cinturón al pasajero?**\n2. **¿Por qué el pasajero necesita una fuerza para parar?**",
+    "pt-BR": "Um carrinho para de repente. Seu passageiro continua para a frente.\n1. **O que o cinto faz com o passageiro?**\n2. **Por que o passageiro precisa de uma força para parar?**"
+  },
+  "f9-exit-transfer": {
+    "es": "Por tu cuenta: una sonda va en línea recta a velocidad constante. Se apaga el motor. Ignora todas las fuerzas externas.\n**¿Qué pasa con su velocidad? Explica con la primera ley de Newton.**",
+    "pt-BR": "Sozinho: uma sonda vai em linha reta com velocidade constante. O motor desliga. Ignore todas as forças externas.\n**O que acontece com sua velocidade? Explique com a primeira lei de Newton.**"
+  },
+  "f10-source": {
+    "es": "Una mano suelta una bolsa. **¿Qué objeto aún tira de ella hacia abajo?**",
+    "pt-BR": "Uma mão solta uma bolsa. **Que objeto ainda a puxa para baixo?**"
+  },
+  "f10-bag": {
+    "es": "**Anota tres lecturas del sensor:**\n1. Sin nada conectado: __ **N**.\n2. Tirón suave: __ **N**.\n3. Empujón suave: __ **N**.\nConserva los signos + y −. **Di qué indican.** Nombra tu fuente: ensayo propio o ejemplo aprobado.",
+    "pt-BR": "**Anote três leituras do sensor:**\n1. Sem nada preso: __ **N**.\n2. Puxão suave: __ **N**.\n3. Empurrão suave: __ **N**.\nMantenha os sinais + e −. **Diga o que indicam.** Nomeie a fonte: seu ensaio ou exemplo aprovado."
+  },
+  "f10-ramp": {
+    "es": "Un libro está sobre una rampa.\n1. **¿La Tierra tira verticalmente hacia abajo o a lo largo de la rampa?**\n2. La rampa empuja en ángulo recto a su superficie. **Describe esa dirección.**",
+    "pt-BR": "Um livro está sobre uma rampa.\n1. **A Terra puxa na vertical para baixo ou ao longo da rampa?**\n2. A rampa empurra em ângulo reto à superfície. **Descreva essa direção.**"
+  },
+  "f10-weight": {
+    "es": "Una masa de **2 kg** cuelga quieta de una cuerda. Usa **g = 10 N/kg**.\n1. **Peso = masa × g:** **2 × 10 = __ N**.\n2. **¿Qué tira hacia arriba para equilibrar el peso?**",
+    "pt-BR": "Uma massa de **2 kg** fica pendurada, parada, em uma corda. Use **g = 10 N/kg**.\n1. **Peso = massa × g:** **2 × 10 = __ N**.\n2. **O que puxa para cima para equilibrar o peso?**"
+  },
+  "f10-contact": {
+    "es": "Una nave toca un asteroide y se aleja.\n**¿Su empuje de contacto sigue actuando después de separarse? Explica.**",
+    "pt-BR": "Uma nave toca um asteroide e se afasta.\n**Seu empurrão de contato continua depois da separação? Explique.**"
+  },
+  "f10-sign": {
+    "es": "Por tu cuenta: un auto baja por una pendiente con el motor apagado. Ignora la resistencia del aire y la fricción.\n**Nombra dos fuerzas sobre el auto y qué causa cada una.** Usa Tierra y camino.",
+    "pt-BR": "Sozinho: um carro desce uma ladeira com o motor desligado. Ignore a resistência do ar e o atrito.\n**Nomeie duas forças no carro e o que causa cada uma.** Use Terra e estrada."
+  },
+  "f11-control": {
+    "es": "Para probar la masa, mantén igual el sistema de tracción. **¿Qué debes cambiar?**",
+    "pt-BR": "Para testar a massa, mantenha igual o sistema que puxa. **O que deve mudar?**"
+  },
+  "f11-predict": {
+    "es": "Mantén igual la fuerza neta. **Predice la aceleración si se duplica la masa total en movimiento.**\nUsa **a = F_net ÷ masa**. Un divisor mayor da un resultado menor.",
+    "pt-BR": "Mantenha igual a força resultante. **Preveja a aceleração se a massa total em movimento dobrar.**\nUse **a = F_net ÷ massa**. Um divisor maior dá um resultado menor."
+  },
+  "f11-record": {
+    "es": "**Anota cada masa y sus aceleraciones.**\nMasa total móvil = __ **kg**; aceleraciones = __, __ **m/s²**. Marca ensayos fallidos.\nCuenta carrito, pesas y portapesas. Nombra la fuente. Si tienes permiso para usar ejemplos, copia dos filas y márcalas como ejemplos.",
+    "pt-BR": "**Anote cada massa e suas acelerações.**\nMassa total móvel = __ **kg**; acelerações = __, __ **m/s²**. Marque ensaios que falharam.\nConte carrinho, pesos e suporte pendurado. Nomeie a fonte. Se tiver permissão para usar exemplos, copie duas linhas e marque como exemplos."
+  },
+  "f11-slope": {
+    "es": "**Elige dos puntos de un ensayo velocidad–tiempo claro. Nombra la fuente.**\n1. Cambio de velocidad = final − inicial: __ − __ = __ **m/s**.\n2. Cambio de tiempo = final − inicial: __ − __ = __ **s**.\n3. **Aceleración:** cambio de velocidad ÷ cambio de tiempo = __ **m/s²**.",
+    "pt-BR": "**Escolha dois pontos de um ensaio velocidade–tempo claro. Nomeie a fonte.**\n1. Mudança de velocidade = final − inicial: __ − __ = __ **m/s**.\n2. Intervalo de tempo = final − inicial: __ − __ = __ **s**.\n3. **Aceleração:** mudança de velocidade ÷ intervalo de tempo = __ **m/s²**."
+  },
+  "f11-evidence": {
+    "es": "**Elige dos filas de tus datos.**\n1. Multiplica **masa × aceleración** en cada una. Unidades: **kg × m/s² = N**.\n2. **¿Son cercanos los resultados?** Usa un número. Nombra un problema del ensayo que pudiera causar una diferencia.",
+    "pt-BR": "**Escolha duas linhas dos seus dados.**\n1. Multiplique **massa × aceleração** em cada uma. Unidades: **kg × m/s² = N**.\n2. **Os resultados são próximos?** Use um número. Nomeie um problema do ensaio que poderia causar diferença."
+  },
+  "f11-exit": {
+    "es": "Por tu cuenta: la misma fuerza neta actúa en dos sistemas. Uno tiene **el doble de masa total**.\n**¿Su aceleración es la mitad, igual o el doble?** Explica con **a = F_net ÷ masa**.",
+    "pt-BR": "Sozinho: a mesma força resultante atua em dois sistemas. Um tem **o dobro da massa total**.\n**Sua aceleração é metade, igual ou o dobro?** Explique com **a = F_net ÷ massa**."
+  },
+  "f12-control": {
+    "es": "Necesitas más peso que tire pero **la misma masa total móvil**. **¿Qué cambio lo logra?**",
+    "pt-BR": "Você precisa de mais peso puxando, mas **a mesma massa total móvel**. **Qual mudança faz isso?**"
+  },
+  "f12-predict": {
+    "es": "La masa total no cambia. **Predice la aceleración si se duplica la fuerza neta.**\nUsa **a = F_net ÷ masa**. El divisor no cambia.",
+    "pt-BR": "A massa total não muda. **Preveja a aceleração se a força resultante dobrar.**\nUse **a = F_net ÷ massa**. O divisor não muda."
+  },
+  "f12-record": {
+    "es": "**Anota la masa total móvil en kg.** Para cada ensayo:\n- Masa colgante en **kg**.\n- Peso que tira = masa colgante × **9.8 N/kg**, en **N**.\n- Aceleración en **m/s²**.\nMarca sueltas fallidas y nombra la fuente. Si usas ejemplos aprobados, copia dos filas y márcalas como ejemplos.",
+    "pt-BR": "**Anote a massa total móvel em kg.** Para cada ensaio:\n- Massa pendurada em **kg**.\n- Peso que puxa = massa pendurada × **9.8 N/kg**, em **N**.\n- Aceleração em **m/s²**.\nMarque solturas que falharam e nomeie a fonte. Se usar exemplos aprovados, copie duas linhas e marque como exemplos."
+  },
+  "f12-drive": {
+    "es": "Usa una masa colgante de tus datos.\n1. **Peso que tira:** masa en **kg × 9.8 N/kg = __ N**.\n2. **Nombra la fuente.**\n3. La fricción se opone al movimiento. **¿Puede la fuerza neta ser menor que el peso que tira?**",
+    "pt-BR": "Use uma massa pendurada dos seus dados.\n1. **Peso que puxa:** massa em **kg × 9.8 N/kg = __ N**.\n2. **Nomeie a fonte.**\n3. O atrito se opõe ao movimento. **A força resultante pode ser menor que o peso que puxa?**"
+  },
+  "f12-evidence": {
+    "es": "**Compara dos filas de la misma fuente.**\n1. Razón de fuerzas = mayor peso que tira ÷ menor: __ ÷ __ = __.\n2. Razón de aceleraciones correspondientes = mayor ÷ menor: __ ÷ __ = __.\n3. **¿Las razones son cercanas?** Nombra un límite de medición.",
+    "pt-BR": "**Compare duas linhas da mesma fonte.**\n1. Razão de forças = maior peso que puxa ÷ menor: __ ÷ __ = __.\n2. Razão das acelerações correspondentes = maior ÷ menor: __ ÷ __ = __.\n3. **As razões são próximas?** Nomeie um limite de medição."
+  },
+  "f12-exit": {
+    "es": "Por tu cuenta: dos sistemas tienen **la misma masa**. Uno siente **el doble de fuerza neta**.\n**Compara sus aceleraciones.** Explica con **a = F_net ÷ masa**.",
+    "pt-BR": "Sozinho: dois sistemas têm **a mesma massa**. Um sente **o dobro da força resultante**.\n**Compare as acelerações.** Explique com **a = F_net ÷ massa**"
+  },
+  "f13-sum": {
+    "es": "Una caja siente **10 N a la derecha** y **4 N a la izquierda**.\n**Fuerza neta:** resta fuerzas opuestas, **10 − 4 = __ N**. **Da la dirección.**",
+    "pt-BR": "Uma caixa sente **10 N à direita** e **4 N à esquerda**.\n**Força resultante:** subtraia forças opostas, **10 − 4 = __ N**. **Dê a direção.**"
+  },
+  "f13-pull": {
+    "es": "Una caja de **4 kg** acelera a la derecha a **2 m/s²**. La fricción es **6 N a la izquierda**.\n1. Fuerza neta = masa × aceleración: **4 × 2 = __ N**.\n2. El tirón también supera la fricción. **Tirón:** fuerza neta + 6 = __ **N a la derecha**.",
+    "pt-BR": "Uma caixa de **4 kg** acelera à direita a **2 m/s²**. O atrito é **6 N à esquerda**.\n1. Força resultante = massa × aceleração: **4 × 2 = __ N**.\n2. O puxão também vence o atrito. **Puxão:** força resultante + 6 = __ **N à direita**."
+  },
+  "f13-mass": {
+    "es": "Un carrito tiene fuerza neta de **12 N** y aceleración de **3 m/s²**.\n**Masa = fuerza neta ÷ aceleración:** **12 ÷ 3 = __ kg**.",
+    "pt-BR": "Um carrinho tem força resultante de **12 N** e aceleração de **3 m/s²**.\n**Massa = força resultante ÷ aceleração:** **12 ÷ 3 = __ kg**."
+  },
+  "f13-brake": {
+    "es": "Un carrito de **2 kg** frena de **+6 a +2 m/s en 2 s**. La derecha es positiva.\n1. **Aceleración:** (2 − 6) ÷ 2 = __ **m/s²**.\n2. **Fuerza neta:** 2 × aceleración = __ **N**.\n3. **¿Adónde apunta la fuerza?**",
+    "pt-BR": "Um carrinho de **2 kg** freia de **+6 a +2 m/s em 2 s**. Direita é positiva.\n1. **Aceleração:** (2 − 6) ÷ 2 = __ **m/s²**.\n2. **Força resultante:** 2 × aceleração = __ **N**.\n3. **Para onde aponta a força?**"
+  },
+  "f13-exit": {
+    "es": "Por tu cuenta: un carrito de **4 kg** siente **18 N a la derecha** y **6 N a la izquierda**.\n1. **Fuerza neta:** 18 − 6 = __ **N**.\n2. **Aceleración:** fuerza neta ÷ 4 = __ **m/s²**.\n3. **Da la dirección de ambas.**",
+    "pt-BR": "Sozinho: um carrinho de **4 kg** sente **18 N à direita** e **6 N à esquerda**.\n1. **Força resultante:** 18 − 6 = __ **N**.\n2. **Aceleração:** força resultante ÷ 4 = __ **m/s²**.\n3. **Dê a direção de ambas.**"
+  },
+  "f14-predict": {
+    "es": "Antes de tirar, **predice cómo se comparan las dos lecturas**. ¿Tendrán tamaños iguales o diferentes? ¿Direcciones iguales u opuestas?\n**Di qué esperas con un tirón más fuerte.**",
+    "pt-BR": "Antes de puxar, **preveja como as duas leituras se comparam**. Terão tamanhos iguais ou diferentes? Direções iguais ou opostas?\n**Diga o que espera com um puxão mais forte.**"
+  },
+  "f14-pair": {
+    "es": "Una mano tira de un carrito. **Completa el par:**\n- La mano tira de __.\n- El carrito tira de __.\n**¿Actúan las dos fuerzas sobre el mismo objeto?**",
+    "pt-BR": "Uma mão puxa um carrinho. **Complete o par:**\n- A mão puxa __.\n- O carrinho puxa __.\n**As duas forças atuam no mesmo objeto?**"
+  },
+  "f14-readings": {
+    "es": "**Anota dos pares de lecturas** de ensayos o de la tabla aprobada. Nombra la fuente.\nPara cada par: tiempo = __ **s**; fuerza A = __ **N**; fuerza B = __ **N**.\nPara comparar tamaños, ignora los signos +/− y resta: tamaño mayor − menor = __ **N**.",
+    "pt-BR": "**Anote dois pares de leituras** de ensaios ou da tabela aprovada. Nomeie a fonte.\nPara cada par: tempo = __ **s**; força A = __ **N**; força B = __ **N**.\nPara comparar tamanhos, ignore os sinais +/− e subtraia: tamanho maior − menor = __ **N**."
+  },
+  "f14-revise": {
+    "es": "**Compara un par medido con tu predicción.** Usa las lecturas.\nSi los tamaños difieren un poco, di qué revisarías, como poner los sensores a cero o comparar el mismo instante.",
+    "pt-BR": "**Compare um par medido com sua previsão.** Use as leituras.\nSe os tamanhos diferem um pouco, diga o que verificaria, como zerar sensores ou comparar o mesmo instante."
+  },
+  "f14-impact": {
+    "es": "Una nave pequeña choca con un asteroide mucho más pesado.\n1. **¿Las fuerzas de contacto tienen tamaños iguales o diferentes?**\n2. Usa **a = F_net ÷ masa**. Con la misma fuerza, **¿qué objeto tiene mayor aceleración por el contacto?**",
+    "pt-BR": "Uma nave pequena bate em um asteroide muito mais pesado.\n1. **As forças de contato têm tamanhos iguais ou diferentes?**\n2. Use **a = F_net ÷ massa**. Com a mesma força, **qual objeto tem maior aceleração pelo contato?**"
+  },
+  "f14-exit": {
+    "es": "Por tu cuenta: tu mano empuja una pared a la derecha.\n**Completa:** La pared empuja __ hacia __.\n**¿Qué fuerza va en el diagrama de tu mano?**",
+    "pt-BR": "Sozinho: sua mão empurra uma parede à direita.\n**Complete:** A parede empurra __ para __.\n**Qual força vai no diagrama da sua mão?**"
+  },
+  "f15-book": {
+    "es": "Un libro está quieto en una mesa horizontal. Su peso es **10 N**. **Dibuja dos fuerzas en el libro:**\n1. La Tierra tira abajo: **10 N, 270°**.\n2. La mesa empuja arriba: **10 N, 90°**.\n**Nombra la fuente de cada flecha.**",
+    "pt-BR": "Um livro está parado em uma mesa horizontal. Seu peso é **10 N**. **Desenhe duas forças no livro:**\n1. A Terra puxa para baixo: **10 N, 270°**.\n2. A mesa empurra para cima: **10 N, 90°**.\n**Nomeie a fonte de cada seta.**"
+  },
+  "f15-release": {
+    "es": "Una caja se desliza a la derecha en un piso horizontal rugoso después de soltarla.\n**Nombra la fuente de cada fuerza:** abajo, arriba e izquierda.\n**¿La mano aún necesita una flecha? ¿Por qué?**",
+    "pt-BR": "Uma caixa desliza à direita em um piso horizontal áspero depois que a mão a solta.\n**Nomeie a fonte de cada força:** baixo, cima e esquerda.\n**A mão ainda precisa de uma seta? Por quê?**"
+  },
+  "f15-ball": {
+    "es": "Una pelota lanzada llega a su punto más alto. Ignora la resistencia del aire.\n**¿La Tierra aún tira de ella? ¿Qué flecha de fuerza debe quedar y en qué dirección?**",
+    "pt-BR": "Uma bola lançada chega ao ponto mais alto. Ignore a resistência do ar.\n**A Terra ainda a puxa? Qual seta de força deve ficar e em que direção?**"
+  },
+  "f15-turn": {
+    "es": "La fricción apunta hacia el centro cuando un auto gira con rapidez constante. Un alumno añade otra flecha hacia el centro llamada “fuerza centrípeta”.\n**¿Debe haber una flecha hacia el centro o dos?** La fricción causa el giro. Explica.",
+    "pt-BR": "O atrito aponta para o centro quando um carro faz uma curva com rapidez constante. Um aluno acrescenta outra seta para o centro chamada “força centrípeta”.\n**Deve haver uma seta para o centro ou duas?** O atrito causa a curva. Explique."
+  },
+  "f15-exit": {
+    "es": "Por tu cuenta: una caja se desliza a la derecha en un piso horizontal. Peso y apoyo son **20 N cada uno**. Una mano tira **8 N a la derecha**; la fricción es **3 N a la izquierda**.\n**Dibuja y nombra las cuatro fuerzas.** Ángulos: derecha **0°**, arriba **90°**, izquierda **180°**, abajo **270°**.",
+    "pt-BR": "Sozinho: uma caixa desliza à direita em um piso horizontal. Peso e apoio são **20 N cada**. Uma mão puxa **8 N à direita**; o atrito é **3 N à esquerda**.\n**Desenhe e nomeie as quatro forças.** Ângulos: direita **0°**, cima **90°**, esquerda **180°**, baixo **270°**."
+  },
+  "f16-floor": {
+    "es": "Una caja de **4 kg** siente **14 N a la derecha** y **6 N a la izquierda**.\n1. **Fuerza neta:** 14 − 6 = __ **N**.\n2. **Aceleración:** fuerza neta ÷ 4 = __ **m/s²**.\n3. **Da la dirección.**",
+    "pt-BR": "Uma caixa de **4 kg** sente **14 N à direita** e **6 N à esquerda**.\n1. **Força resultante:** 14 − 6 = __ **N**.\n2. **Aceleração:** força resultante ÷ 4 = __ **m/s²**.\n3. **Dê a direção.**"
+  },
+  "f16-arrows": {
+    "es": "Un bloque de **2 kg** está apoyado en una **rampa de 30° sin fricción** que sube a la derecha. **Dibuja dos flechas con estos tamaños dados:**\n- Peso de la Tierra: **19.6 N hacia abajo, 270°**.\n- Empuje normal de la rampa: **17 N alejándose de la rampa, 120°**.\n**Nombra cada fuente.**",
+    "pt-BR": "Um bloco de **2 kg** está apoiado em uma **rampa de 30° sem atrito** que sobe à direita. **Desenhe duas setas com estes tamanhos dados:**\n- Peso da Terra: **19.6 N para baixo, 270°**.\n- Normal da rampa: **17 N para fora da rampa, 120°**.\n**Nomeie cada fonte.**"
+  },
+  "f16-slope": {
+    "es": "Un bloque de **2 kg** siente **9.8 N cuesta abajo** por la parte del peso paralela a la rampa y **4.0 N cuesta arriba** por fricción.\n1. **Fuerza neta cuesta abajo:** 9.8 − 4.0 = __ **N**.\n2. **Aceleración cuesta abajo:** fuerza neta ÷ 2 = __ **m/s²**.\nUsa solo las fuerzas paralelas dadas.",
+    "pt-BR": "Um bloco de **2 kg** sente **9.8 N rampa abaixo** pela parte do peso paralela à rampa e **4.0 N rampa acima** pelo atrito.\n1. **Força resultante para baixo da rampa:** 9.8 − 4.0 = __ **N**.\n2. **Aceleração para baixo da rampa:** força resultante ÷ 2 = __ **m/s²**.\nUse apenas as forças paralelas dadas."
+  },
+  "f16-thrust": {
+    "es": "Una nave siente empuje a la derecha y gravedad abajo. Las fuerzas forman un ángulo recto.\n**¿La fuerza total apunta a la derecha y arriba o a la derecha y abajo? Explica.** No restes sus tamaños como si fueran opuestas.",
+    "pt-BR": "Uma nave sente empuxo à direita e gravidade para baixo. As forças formam um ângulo reto.\n**A força total aponta à direita e para cima ou à direita e para baixo? Explique.** Não subtraia seus tamanhos como se fossem opostas."
+  },
+  "f16-exit": {
+    "es": "Por tu cuenta: una caja de **10 kg** recibe un empuje de **50 N hacia delante**. La fricción es **15 N hacia atrás**.\n1. **Fuerza neta:** 50 − 15 = __ **N**.\n2. **Aceleración:** fuerza neta ÷ 10 = __ **m/s²**.\n3. **Da la dirección de la aceleración.**",
+    "pt-BR": "Sozinho: uma caixa de **10 kg** recebe um empurrão de **50 N para a frente**. O atrito é **15 N para trás**.\n1. **Força resultante:** 50 − 15 = __ **N**.\n2. **Aceleração:** força resultante ÷ 10 = __ **m/s²**.\n3. **Dê a direção da aceleração.**"
+  }
+}

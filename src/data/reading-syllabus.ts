@@ -1,4 +1,5 @@
 import 'server-only'
+import { readingExtensionPrompt } from '@/lib/assignment-directions'
 import type { SyllabusStep } from '@/lib/reading-syllabus'
 
 // Original prompts and course notes. Section references use the existing Hewitt
@@ -8,7 +9,7 @@ function step(id: string, unit: number, title: string, sections: string, target:
   return { id, unit: `unit-${unit}`, title, sections: list, chapter: list.length ? Number(list[0].split('.')[0]) : 4, prerequisites, focus, passage,
     vocabularyTarget, words: words.split('|').map(w => { const [term, definition] = w.split('~'); return { term, definition } }),
     readingCheck: { prompt: readingPrompt, guide, target }, quizCheck: { prompt: quizPrompt, guide, target },
-    honors: { prompt: `Extend your explanation of this reading: ${quizPrompt} State a modeling assumption and explain a specific situation in which your conclusion would need to change.`, guide: `${guide} Extension: identifies a relevant assumption and correctly explains how changing it affects the prediction; accept multiple defensible examples.`, target } }
+    honors: { prompt: readingExtensionPrompt(quizPrompt), guide: `${guide} Extension: identifies a relevant assumption and correctly explains how changing it affects the prediction; accept multiple defensible examples.`, target } }
 }
 
 export const READING_SYLLABUS: SyllabusStep[] = [
@@ -113,7 +114,7 @@ export const READING_SYLLABUS: SyllabusStep[] = [
   step('forces',1,'Forces & interactions','2.1,2.3','u1.identify-forces','u1.identify-forces',
     'force~A push or pull exerted on one object by another.|normal force~A contact force perpendicular to a surface.|free-body diagram~A diagram of the external forces acting on one selected object.',
     'Identify the object and the agent responsible for each force.',
-    'Identify the forces on a book resting on a table and the object exerting each force.',
+    "Name the forces on a book resting on a table and the object exerting each force.",
     'A hanging lamp is motionless. Name the forces on the lamp and their directions.',
     'Gravity acts downward from Earth; support or tension acts upward from the table or cord. Every arrow must represent a force on the selected object.',['vectors']),
   step('inertia',1,'Inertia & Newton’s first law','3.3,3.4,3.5','u1.newtons-first-law-inertia','u1.identify-forces',
@@ -132,18 +133,18 @@ export const READING_SYLLABUS: SyllabusStep[] = [
     'net force~The vector sum of the forces acting on one object.|mass~A measure of inertia, expressed in kilograms.|newton~The SI force unit; 1 N equals 1 kg·m/s².',
     'Find the net force before connecting force to acceleration.',
     'Explain how doubling mass changes acceleration when net force stays the same.',
-    'A 2 kg cart has 10 N east and 4 N west acting on it. Find its acceleration and justify the direction.',
+    "A 2 kg cart has 10 N east and 4 N west acting on it. Find its acceleration and explain why that direction is correct.",
     'Net force is 6 N east, so acceleration is 3 m/s² east. At fixed net force, doubling mass halves acceleration.',['equilibrium','acceleration']),
   step('friction',1,'Friction & contact forces','6.4','u1.friction-static-kinetic','u1.identify-forces',
     'friction~A contact force opposing relative sliding or a tendency to slide between surfaces.|static friction~Friction between surfaces that are not sliding relative to one another.|kinetic friction~Friction between surfaces that are sliding relative to one another.',
     'Distinguish preventing a slide from resisting a slide already occurring.',
     'Explain how friction can act on a box that is pushed but remains at rest.',
-    'A box stays at rest while a 3 N horizontal push acts on it. Find the horizontal friction force. Must friction always have this value?',
+    "A box stays at rest while a 3 N horizontal push acts on it.\n\n1. Find the horizontal friction force.\n2. Must friction always have this value?",
     'Static friction is 3 N opposite the push in this case. It adjusts up to a maximum; sliding friction follows a different model.',['second-law']),
   step('third-law',1,'Force pairs & system boundaries','7.1,7.2,7.3','u1.third-law-pairs','u1.identify-forces',
     'interaction~A mutual influence between objects that produces paired forces.|action-reaction~Equal-magnitude, opposite-direction forces exerted by two objects on each other.|system~The object or collection of objects selected for analysis.',
     'Keep forces on one object separate from a pair acting on different objects.',
-    'Identify the reaction partner of Earth’s gravitational force on a book.',
+    "Name the reaction partner of Earth’s gravitational force on a book.",
     'A truck and a small car collide. Compare their interaction forces and explain why their accelerations can differ.',
     'The forces are equal in magnitude and opposite in direction, acting on different objects. Different masses produce different accelerations. The book pulls gravitationally on Earth.',['second-law']),
   step('free-fall',2,'Free fall & gravitational acceleration','4.5,4.6','u2.free-fall-g','u2.mass-vs-weight',
@@ -198,12 +199,12 @@ export const READING_SYLLABUS: SyllabusStep[] = [
     'conservation~Constancy of a total quantity for a system under stated conditions.|external force~A force exerted on a system by an object outside it.|recoil~Motion of one part of a system in response to another part moving oppositely.',
     'Choose the system and check external impulse before using conservation.',
     'Explain why two carts pushing apart can each gain momentum while their total momentum stays unchanged.',
-    'A person throws a package forward while standing on frictionless ice. Predict the person’s motion and state the system condition.',
+    "A person throws a package forward while standing on frictionless ice. Predict the person’s motion and say what must be true about forces from outside the objects you are studying.",
     'The person recoils backward. Total horizontal momentum of person plus package is conserved when external horizontal impulse is negligible.',['impulse','third-law']),
   step('collisions',3,'Elastic & inelastic collisions','8.5,8.6','u3.k4-collision-types','u3.k4-collision-types',
     'elastic collision~A collision that conserves total kinetic energy as well as momentum in an isolated system.|inelastic collision~A collision in which total kinetic energy decreases.|perfectly inelastic collision~A collision after which the objects move together.',
     'Distinguish momentum conservation from kinetic-energy conservation.',
-    'What additional condition makes an isolated collision elastic?',
+    "For an isolated collision to be elastic, what else must be true?",
     'A moving cart sticks to an identical cart initially at rest. Compare final speed with initial speed and explain which quantity is conserved.',
     'The combined carts move at half the original speed; momentum is conserved for negligible external impulse. Kinetic energy is not conserved.',['momentum-conservation']),
   step('work',4,'Work as energy transfer','9.1','u4.k1-work','u4.k1-work',
@@ -234,7 +235,7 @@ export const READING_SYLLABUS: SyllabusStep[] = [
     'power~The rate of energy transfer or work done.|watt~The SI unit of power, equal to one joule per second.|efficiency~Useful output energy divided by total input energy.',
     'Separate how much energy is transferred from how fast it transfers.',
     'Two motors lift the same load through the same height. Explain how they can do equal work at different powers.',
-    'A motor supplies 120 J of useful work in 3 s. Find its average useful power. How would its power change if it did the same work in 6 s?',
+    "A motor supplies 120 J of useful work in 3 s.\n\n1. Find its average useful power.\n2. How would its power change if it did the same work in 6 s?",
     'Useful power is 40 W, or 20 W if the work takes 6 s. Equal work performed in less time requires greater average power.',['energy-conservation','rates']),
   step('efficiency',4,'Useful energy & efficiency','9.8,9.9','u4.k7-power','u4.k7-power',
     'efficiency~Useful output energy divided by total input energy.|input~Energy supplied to a chosen device or system.|output~Energy transferred from a device or system.',
@@ -258,7 +259,7 @@ export const READING_SYLLABUS: SyllabusStep[] = [
     'conduction~Energy transfer through microscopic interactions without bulk movement of material.|convection~Energy transport by bulk movement of a fluid.|radiation~Energy transfer by electromagnetic waves.',
     'Identify the mechanism carrying energy from place to place.',
     'Describe a distinct example of each heat-transfer mechanism.',
-    'A metal spoon warms in soup while sunlight warms a table through a window. Identify the main transfer mechanism in each case.',
+    "A metal spoon warms in soup while sunlight warms a table through a window. Name the main transfer mechanism in each case.",
     'Conduction transfers energy along the spoon. Radiation transfers energy from sunlight. Convection involves bulk fluid motion, unlike these examples.',['temperature-heat']),
   step('phase-change',5,'Phase changes & latent heat','23.1,23.2,23.8','u5.k3-latent-heat','u5.k3-latent-heat',
     'phase change~A change between physical states such as solid, liquid, and gas.|latent heat~Energy per unit mass transferred during a phase change without a temperature change under fixed conditions.|heating curve~A graph relating a material’s temperature to energy added or heating time.',
@@ -329,7 +330,7 @@ export const READING_SYLLABUS: SyllabusStep[] = [
   step('charge',7,'Charge & electric interactions','32.1,32.2','u7.k1-coulombs-law','u7.k1-coulombs-law',
     'electric charge~A property of matter that produces electric interactions and can be positive or negative.|coulomb~The SI unit of electric charge.|electric force~The interaction between charged objects, which may attract or repel.',
     'Compare electric and gravitational interactions using signs and distance.',
-    'Explain how the signs of two charges determine attraction or repulsion.',
+    "Explain how the signs of two charges find attraction or repulsion.",
     'An initially neutral object gains electrons. What is its net charge, and what happened to the charge of the object supplying those electrons?',
     'The receiving object becomes negatively charged and the donor loses an equal amount of negative charge. Charge is transferred, not created. Like charges repel and unlike charges attract.',['gravitation']),
   step('coulombs-law',7,'Coulomb’s law & inverse-square reasoning','32.3','u7.k1-coulombs-law','u7.k1-coulombs-law',

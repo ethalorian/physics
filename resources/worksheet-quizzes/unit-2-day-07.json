@@ -9,7 +9,7 @@
     "Compare fields with the inverse-square relation.",
     "Explain why orbit is not a zero-gravity region."
   ],
-  "source_sha256": "5f8d49fd20752f93676ad874cf7a36742fdeac7263dc19b199bd9fe3a871ebb3",
+  "source_sha256": "8a12d7157baaadd92612ea67ec9e44a5d39b104d4d89952f726c34abb2ecbea0",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.493Z",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "Surface field is 20 N/kg. What is field at center distance 2R in the spherical model?",
+      "prompt": "A spherical planet’s surface field is 20 N/kg. What is the field at a distance of 2R from its center? R is the planet’s radius.",
       "options": [
         "80 N/kg",
         "10 N/kg",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "An orbiting station is only a small fraction of a planetary radius above the surface. Which claim is most plausible?",
+      "prompt": "An orbiting station is above a planet’s surface. Its height is only a small fraction of the planet’s radius. Which statement is most likely to be true?",
       "options": [
         "Gravity must be negligible solely because the station is in space.",
         "Field strength must exceed the surface value.",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "Surface field is 20 N/kg. What is field at center distance 2R in the spherical model?",
+      "prompt": "A spherical planet’s surface field is 20 N/kg. What is the field at a distance of 2R from its center? R is the planet’s radius.",
       "options": [
         "40 N/kg",
         "5 N/kg",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "An orbiting station is only a small fraction of a planetary radius above the surface. Which claim is most plausible?",
+      "prompt": "An orbiting station is above a planet’s surface. Its height is only a small fraction of the planet’s radius. Which statement is most likely to be true?",
       "options": [
         "Field strength must exceed the surface value.",
         "Gravity must be negligible solely because the station is in space.",

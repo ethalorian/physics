@@ -9,7 +9,7 @@
     "Distinguish tangent velocity from inward force.",
     "Connect circular speed to orbital radius."
   ],
-  "source_sha256": "a5b2a032e7683a56327e7198c25bb366df9c637792181e123cfbf3ff3c86e5cc",
+  "source_sha256": "27eca9e32c411916c0a26d3615341786464a8115ae164e742272f432a3e0cf5e",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.497Z",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A student claims a larger circular orbit requires greater speed because the path is longer. Which correction is supported by gravity?",
+      "prompt": "A student says a larger circular orbit needs a greater speed because the path is longer. Which correction does gravity support?",
       "options": [
         "Every orbit has the same period.",
         "Circular speed decreases with radius; period also depends on path length.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A student claims a larger circular orbit requires greater speed because the path is longer. Which correction is supported by gravity?",
+      "prompt": "A student says a larger circular orbit needs a greater speed because the path is longer. Which correction does gravity support?",
       "options": [
         "Path length alone determines speed.",
         "Every orbit has the same period.",

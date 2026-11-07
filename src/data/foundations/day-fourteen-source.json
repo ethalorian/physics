@@ -1,0 +1,45 @@
+{
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 14 Newtons Third Law.dc.html",
+  "sourceSha256": "600a0e200676fbae03f8a9b6d64dfae1826946588f7584de40cb14dd001d80e4",
+  "packagedSha256": "9b66276469641de48458912821e35e9bfa00796cdaed94ba84f4008fd56463bc",
+  "sourceStudentSlides": 30,
+  "teacherSlidesExcluded": 3,
+  "studentSlides": 34,
+  "panels": [
+    [
+      14,
+      1,
+      1,
+      448,
+      733
+    ],
+    [
+      21,
+      2,
+      2,
+      0,
+      892
+    ],
+    [
+      24,
+      3,
+      3,
+      435,
+      663
+    ],
+    [
+      26,
+      4,
+      4,
+      345,
+      538
+    ]
+  ],
+  "timers": [
+    "riddle",
+    "tug",
+    "exit"
+  ],
+  "lab": true
+}

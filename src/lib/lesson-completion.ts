@@ -1,4 +1,11 @@
-import { isBlockComplete, isRequiredCaptureBlock, type ContentBlock } from '@/data/content-blocks'
+import { isBlockComplete, isRequiredCaptureBlock, type ContentBlock, type BlockDocument } from '@/data/content-blocks'
+
+/** ETF keeps its optional paper records, but its required exit and the explicit
+ * submission step follow the same completion rules as the newer lessons. */
+export function requiresLessonSubmission(document?: BlockDocument | null): boolean {
+  return !!document && (document.presentation === 'physics-path' || !!document.reflection ||
+    document.presentation === 'trades-workshop' && document.blocks.some(block => block.id.startsWith('etf-book-')))
+}
 
 export interface LessonCompletion {
   state: 'not_started' | 'in_progress' | 'ready' | 'submitted' | 'reviewed' | 'revision'

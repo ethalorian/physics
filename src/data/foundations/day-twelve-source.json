@@ -1,0 +1,44 @@
+{
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 12 Second Law Lab Vary Force.dc.html",
+  "sourceSha256": "0db827b8f9738f1fbc60efbc2a186417118afec97509ddbb09f0b60d3cc72156",
+  "packagedSha256": "fefccce768bd936684e5243bfe7cbd471706a9ef028342620f5f9bd80de39625",
+  "sourceStudentSlides": 30,
+  "teacherSlidesExcluded": 3,
+  "studentSlides": 34,
+  "panels": [
+    [
+      11,
+      1,
+      1,
+      419,
+      768
+    ],
+    [
+      18,
+      2,
+      2,
+      337,
+      398
+    ],
+    [
+      23,
+      3,
+      3,
+      0,
+      691
+    ],
+    [
+      29,
+      4,
+      4,
+      384,
+      493
+    ]
+  ],
+  "timers": [
+    "lab",
+    "exit"
+  ],
+  "lab": true
+}

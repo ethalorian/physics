@@ -40,12 +40,12 @@ test('student copy excludes teacher-only content, retains all controls and conta
   assert.equal(sections.filter(n=>attr(n,'class')==='foundation-comic').length,4);
   const metadata = JSON.parse(fs.readFileSync('src/data/foundations/day-six-source.json'));
   for (const snapshot of metadata.snapshots) assert.equal(crypto.createHash('sha256').update(fs.readFileSync('public/comics/2026-xj/book-one-day-06-v1/'+snapshot.file)).digest('hex'),snapshot.sha256);
-  assert.ok(packaged.includes('prefers-reduced-motion: no-preference'));
-  assert.ok(packaged.includes('x · toward Earth'));
-  assert.ok(packaged.includes('−8,210 m/s'));
-  assert.ok(packaged.includes('Practice · 3 checks'));
-  assert.ok(packaged.includes('foundation-slide-fade'));
-  for(const page of ['01','02','03','04'])assert.ok(packaged.includes('/comics/2026-xj/book-one-day-06-v1/page-'+page+'.webp'));
+  assert.ok(packaged.replace(/<\/?(?:b|i|u)>/g,'').includes('prefers-reduced-motion: no-preference'));
+  assert.ok(packaged.replace(/<\/?(?:b|i|u)>/g,'').includes('x · toward Earth'));
+  assert.ok(packaged.replace(/<\/?(?:b|i|u)>/g,'').includes('−8,210 m/s'));
+  assert.ok(packaged.replace(/<\/?(?:b|i|u)>/g,'').includes('Practice · 3 checks'));
+  assert.ok(packaged.replace(/<\/?(?:b|i|u)>/g,'').includes('foundation-slide-fade'));
+  for(const page of ['01','02','03','04'])assert.ok(packaged.replace(/<\/?(?:b|i|u)>/g,'').includes('/comics/2026-xj/book-one-day-06-v1/page-'+page+'.webp'));
   const csp = nodes.find(n => attr(n, 'http-equiv') === 'Content-Security-Policy');
   assert.match(attr(csp, 'content'), /connect-src 'none'/);
   assert.match(attr(csp, 'content'), /form-action 'none'/);
@@ -87,11 +87,11 @@ test('original timers preserve pause/resume, extension, reset and one completion
 test('navigation bridge ignores foreign senders, channels and out-of-range requests', () => {
   const listeners = {}, messages = [], navigated = [], parent = {postMessage: (...args) => messages.push(args)};
   const stage = {index: 7, length: 30, goTo: index => navigated.push(index)};
-  const window = {parent, addEventListener: (type, listener) => {listeners[type] = listener;}};
+  const window = {parent, addEventListener: (type, listener) => {(listeners[type] ||= []).push(listener);}};
   const document = {referrer: 'https://lesson.example/interactive-assignments/day-1-foundation-briefing', querySelector: () => stage, addEventListener: () => {}};
   const bridge=nodes.filter(n=>n.tagName==='script'&&!attr(n,'type')).map(n=>p5.serialize(n)).find(code=>code.includes("const channel = 'physics-day-six-slides-v1'"));
-  vm.runInNewContext(bridge, {window, document, URL});
-  const send = (source, origin, data) => listeners.message({source, origin, data});
+  vm.runInNewContext(bridge, {window, document, URL, MutationObserver: class {observe(){} disconnect(){}}});
+  const send = (source, origin, data) => listeners.message.forEach(listener => listener({source, origin, data}));
   const valid = {channel: 'physics-day-six-slides-v1', type: 'navigate', index: 8};
   send({}, 'https://lesson.example', valid);
   send(parent, 'https://other.example', valid);

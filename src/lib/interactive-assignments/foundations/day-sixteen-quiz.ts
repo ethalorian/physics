@@ -1,0 +1,8 @@
+export const DAY_SIXTEEN_QUIZ={
+ title:'Day 16 · Quiz: Net force from diagrams',instructions:'Choose an axis. Keep direction and units in each answer.',
+ questions:[
+ {kind:'choice',points:1,prompt:'A 4 kg box feels 18 N right and 6 N left. What is its acceleration?',options:['3 m/s² right','6 m/s² right','12 m/s² right','3 m/s² left'],correct_index:0,guide:'The net force is 12 N right. Divide by 4 kg.',demand:{blooms:'Apply',dok:2,evidence:'Uses a signed sum and the object’s mass.'}},
+ {kind:'choice',points:1,prompt:'Which direction does the normal force on a block point on a tilted ramp?',options:['Vertically up','Perpendicular to and away from the ramp','Down the ramp','Into the ramp'],correct_index:1,guide:'The normal force is perpendicular to the contact surface.',demand:{blooms:'Understand',dok:1,evidence:'Distinguishes support from weight.'}},
+ {kind:'written',points:3,prompt:'A 3 kg block slides down a ramp. Weight contributes 12 N downhill and friction is 3 N uphill. Find the along-ramp net force and acceleration. Explain why the full weight is not added again.',guide:'Taking downhill as positive gives 9 N downhill and 3 m/s² downhill. The 12 N already describes the along-ramp contribution of weight.',demand:{blooms:'Analyze',dok:2,evidence:'Uses components once in a signed sum.'}},
+ {kind:'written',points:3,prompt:'A cart moves left while a net force points right. What happens to its speed at first? Explain using the directions of velocity and acceleration.',guide:'The acceleration points right with the net force. While velocity points left, the cart slows down.',demand:{blooms:'Analyze',dok:2,evidence:'Distinguishes motion from acceleration.'}},
+ ]}

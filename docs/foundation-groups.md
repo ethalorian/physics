@@ -1,5 +1,7 @@
 # Foundation groups
 
+**November 3 revision:** [Foundation discussions in class](foundation-in-class-routine.md) describes the new-room workflow. The account below documents the earlier published workflow, which existing rooms retain.
+
 Published on October 27, 2026 (October 28 UTC) as `dpl_73DWaMYbYUsTdJQUrqSfKzP6zEw6` at www.antocciphysics.com. The source migration `20261028004152_foundation_groups.sql` is recorded as production version `20261028011657`; do not reapply it because the timestamps differ.
 
 Days 1–9 share a code-based group lobby for two to four classmates in the same assignment. Each member uses their own account. The lobby displays saved names and canonical avatars. Starting closes membership. Three lesson-specific discussions require each student's own initial idea, response to the next member, and private reflection. Initial ideas stay hidden until everyone shares; reflections open after everyone responds and remain private to their author and teacher.

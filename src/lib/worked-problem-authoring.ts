@@ -36,7 +36,7 @@ export const WORKED_PROBLEM_PRACTICE: Record<'position' | 'signs', TripProblem[]
       planHint: 'Which calculation depends on the whole route? Which depends only on the endpoints?',
       interpretation: 'The displacement is zero because the endpoints coincide. There is no net direction, but both 7 m legs count toward distance.' },
     { id: 'three-legs', title: 'Practice 3 · Plan a longer trip', positions: [5, -1, 2, -3], direction: 'right',
-      prompt: 'A robot moves on one straight track through these positions in order: +5 m → −1 m → +2 m → −3 m. It moves directly between each listed position. Right is positive. Find its total distance and displacement. Show a model and a plan before calculating, then check that the distance is at least as large as the magnitude of the displacement.',
+      prompt: 'A robot moves on one straight track through these positions in order: +5 m → −1 m → +2 m → −3 m. It moves directly between each listed position. Right is positive. Find its total distance and displacement. Draw the route or organize the positions in a table. Explain how you will solve the problem before calculating, then check that the distance is at least as large as the magnitude of the displacement.',
       modelHint: 'Label each stop in order and count the legs. A table or a number-line sketch can organize the route.',
       planHint: 'Choose which positions each quantity needs. Explain your choice before doing the arithmetic.',
       interpretation: 'The robot finishes 8 m left of its start. The check is 14 m ≥ |−8 m|; changes of direction add distance without increasing the net change by the same amount.' },

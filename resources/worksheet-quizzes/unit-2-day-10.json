@@ -9,7 +9,7 @@
     "Find or use fall time before calculating range.",
     "Check units and interpret the landing point."
   ],
-  "source_sha256": "641201e22a0ef3ca5795aeb9d406d458ec93f591cdf00b2a04a55c61d14ee272",
+  "source_sha256": "f4bde2b0b8e499a6e17a3161fa6bf6499bb08be163b94255f579c7c0a1e7fcf1",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.495Z",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "A platform is 3.2 m high and launch speed is 6 m/s horizontally. Which values determine fall time in the ideal model?",
+      "prompt": "A platform is 3.2 m high. An object is launched horizontally at 6 m/s. Ignore air resistance. Which values are needed to find its fall time?",
       "options": [
         "Mass and color.",
         "Horizontal speed alone.",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "A horizontal launch falls 1.25 m. Use g = 10 m/s² and no drag. What is fall time?",
+      "prompt": "A horizontal launch falls 1.25 m.\n\n1. Use g = 10 m/s² and no drag.\n2. What is fall time?",
       "options": [
         "5 s",
         "0.5 s",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "A platform is 3.2 m high and launch speed is 6 m/s horizontally. Which values determine fall time in the ideal model?",
+      "prompt": "A platform is 3.2 m high. An object is launched horizontally at 6 m/s. Ignore air resistance. Which values are needed to find its fall time?",
       "options": [
         "Height, initial vertical velocity, and g.",
         "Horizontal speed alone.",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "A horizontal launch falls 1.25 m. Use g = 10 m/s² and no drag. What is fall time?",
+      "prompt": "A horizontal launch falls 1.25 m.\n\n1. Use g = 10 m/s² and no drag.\n2. What is fall time?",
       "options": [
         "5 s",
         "0.125 s",

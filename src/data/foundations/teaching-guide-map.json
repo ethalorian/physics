@@ -1,0 +1,2519 @@
+{
+  "day-one": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "evidence"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "evidence"
+    },
+    {
+      "number": 3,
+      "title": "Learning target",
+      "topic": "evidence"
+    },
+    {
+      "number": 4,
+      "title": "Welcome",
+      "topic": "evidence"
+    },
+    {
+      "number": 5,
+      "title": "Do now",
+      "topic": "evidence"
+    },
+    {
+      "number": 6,
+      "title": "What do we know?",
+      "topic": "evidence"
+    },
+    {
+      "number": 7,
+      "title": "Watch a pattern form",
+      "topic": "pattern"
+    },
+    {
+      "number": 8,
+      "title": "Silent read",
+      "topic": "evidence"
+    },
+    {
+      "number": 9,
+      "title": "Briefing text",
+      "topic": "evidence"
+    },
+    {
+      "number": 10,
+      "title": "Fiction / real",
+      "topic": "evidence"
+    },
+    {
+      "number": 11,
+      "title": "Use a pattern to predict",
+      "topic": "pattern"
+    },
+    {
+      "number": 12,
+      "title": "One more second",
+      "topic": "pattern"
+    },
+    {
+      "number": 13,
+      "title": "Notice & wonder",
+      "topic": "evidence"
+    },
+    {
+      "number": 14,
+      "title": "Gallery walk",
+      "topic": "evidence"
+    },
+    {
+      "number": 15,
+      "title": "Check the prediction",
+      "topic": "pattern"
+    },
+    {
+      "number": 16,
+      "title": "Which question can measurements answer?",
+      "topic": "evidence"
+    },
+    {
+      "number": 17,
+      "title": "Our questions",
+      "topic": "evidence"
+    },
+    {
+      "number": 18,
+      "title": "Six kinds",
+      "topic": "evidence"
+    },
+    {
+      "number": 19,
+      "title": "Reveal",
+      "topic": "evidence"
+    },
+    {
+      "number": 20,
+      "title": "Eight units",
+      "topic": "evidence"
+    },
+    {
+      "number": 21,
+      "title": "Your turn: a different pattern",
+      "topic": "pattern"
+    },
+    {
+      "number": 22,
+      "title": "A prediction needs information",
+      "topic": "evidence"
+    },
+    {
+      "number": 23,
+      "title": "Anchor question",
+      "topic": "evidence"
+    },
+    {
+      "number": 24,
+      "title": "Language of motion",
+      "topic": "position"
+    },
+    {
+      "number": 25,
+      "title": "Build a useful question",
+      "topic": "evidence"
+    },
+    {
+      "number": 26,
+      "title": "Exit ticket",
+      "topic": "evidence"
+    }
+  ],
+  "day-two": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "path"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "path"
+    },
+    {
+      "number": 3,
+      "title": "Today's learning target",
+      "topic": "path"
+    },
+    {
+      "number": 4,
+      "title": "The asteroid thread",
+      "topic": "path"
+    },
+    {
+      "number": 5,
+      "title": "How far did they walk?",
+      "topic": "path"
+    },
+    {
+      "number": 6,
+      "title": "Two correct answers? How can that be?",
+      "topic": "path"
+    },
+    {
+      "number": 7,
+      "title": "A trip can end where it began",
+      "topic": "path"
+    },
+    {
+      "number": 8,
+      "title": "Three different questions",
+      "topic": "path"
+    },
+    {
+      "number": 9,
+      "title": "A return trip",
+      "topic": "path"
+    },
+    {
+      "number": 10,
+      "title": "Two ways to measure a trip",
+      "topic": "path"
+    },
+    {
+      "number": 11,
+      "title": "Eli’s return trip",
+      "topic": "path"
+    },
+    {
+      "number": 12,
+      "title": "The words we'll use all year",
+      "topic": "path"
+    },
+    {
+      "number": 13,
+      "title": "A runner on a 400 m track",
+      "topic": "path"
+    },
+    {
+      "number": 14,
+      "title": "Choose a zero and a direction",
+      "topic": "position"
+    },
+    {
+      "number": 15,
+      "title": "Distance counts every part",
+      "topic": "path"
+    },
+    {
+      "number": 16,
+      "title": "Walk it. Measure it.",
+      "topic": "path"
+    },
+    {
+      "number": 17,
+      "title": "Who's surprised that distance and displa",
+      "topic": "path"
+    },
+    {
+      "number": 18,
+      "title": "A coordinate system makes position preci",
+      "topic": "position"
+    },
+    {
+      "number": 19,
+      "title": "Compare start and finish",
+      "topic": "path"
+    },
+    {
+      "number": 20,
+      "title": "Walk out and return",
+      "topic": "path"
+    },
+    {
+      "number": 21,
+      "title": "The courtyard route",
+      "topic": "path"
+    },
+    {
+      "number": 22,
+      "title": "If it moves 1 million km, does the direc",
+      "topic": "vector"
+    },
+    {
+      "number": 23,
+      "title": "Predicting a trajectory requires vectors",
+      "topic": "vector"
+    },
+    {
+      "number": 24,
+      "title": "A number needs a direction",
+      "topic": "vector"
+    },
+    {
+      "number": 25,
+      "title": "Two ways to describe the same route",
+      "topic": "path"
+    },
+    {
+      "number": 26,
+      "title": "Your turn: start away from zero",
+      "topic": "position"
+    },
+    {
+      "number": 27,
+      "title": "Worked route: out and back",
+      "topic": "path"
+    },
+    {
+      "number": 28,
+      "title": "Use the right word",
+      "topic": "path"
+    },
+    {
+      "number": 29,
+      "title": "Exit ticket · on your own",
+      "topic": "path"
+    }
+  ],
+  "day-three": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "rate"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "lab"
+    },
+    {
+      "number": 3,
+      "title": "Lab briefing",
+      "topic": "lab"
+    },
+    {
+      "number": 4,
+      "title": "Lab setup",
+      "topic": "lab"
+    },
+    {
+      "number": 5,
+      "title": "Setup check",
+      "topic": "lab"
+    },
+    {
+      "number": 6,
+      "title": "Today's learning target",
+      "topic": "pt"
+    },
+    {
+      "number": 7,
+      "title": "The asteroid thread",
+      "topic": "rate"
+    },
+    {
+      "number": 8,
+      "title": "What is your distance? Your displacement",
+      "topic": "path"
+    },
+    {
+      "number": 9,
+      "title": "Are they moving the same way?",
+      "topic": "rate"
+    },
+    {
+      "number": 10,
+      "title": "Same time, different travel",
+      "topic": "rate"
+    },
+    {
+      "number": 11,
+      "title": "Same trip, different rates",
+      "topic": "rate"
+    },
+    {
+      "number": 12,
+      "title": "Same displacement, different velocity",
+      "topic": "rate"
+    },
+    {
+      "number": 13,
+      "title": "Read a graph as a motion story",
+      "topic": "pt"
+    },
+    {
+      "number": 14,
+      "title": "Speed and velocity",
+      "topic": "rate"
+    },
+    {
+      "number": 15,
+      "title": "Convert the asteroid's speed",
+      "topic": "units"
+    },
+    {
+      "number": 16,
+      "title": "Average velocity and average speed",
+      "topic": "rate"
+    },
+    {
+      "number": 17,
+      "title": "Find a rate in two steps",
+      "topic": "rate"
+    },
+    {
+      "number": 18,
+      "title": "Round-trip rates",
+      "topic": "rate"
+    },
+    {
+      "number": 19,
+      "title": "A round trip still includes motion",
+      "topic": "rate"
+    },
+    {
+      "number": 20,
+      "title": "Walk the line.",
+      "topic": "pt"
+    },
+    {
+      "number": 21,
+      "title": "The sign gives the direction",
+      "topic": "rate"
+    },
+    {
+      "number": 22,
+      "title": "Position is the graph’s height; velocity",
+      "topic": "pt"
+    },
+    {
+      "number": 23,
+      "title": "What does a position–time graph tell us?",
+      "topic": "pt"
+    },
+    {
+      "number": 24,
+      "title": "Slope of a p–t graph = velocity",
+      "topic": "pt"
+    },
+    {
+      "number": 25,
+      "title": "Walk the graph, then explain it",
+      "topic": "pt"
+    },
+    {
+      "number": 26,
+      "title": "Velocity in the fictional model",
+      "topic": "rate"
+    },
+    {
+      "number": 27,
+      "title": "Read the endpoints",
+      "topic": "rate"
+    },
+    {
+      "number": 28,
+      "title": "Match the graph investigation",
+      "topic": "pt"
+    },
+    {
+      "number": 29,
+      "title": "Does a high line mean fast?",
+      "topic": "pt"
+    },
+    {
+      "number": 30,
+      "title": "Your turn: return toward zero",
+      "topic": "pt"
+    },
+    {
+      "number": 31,
+      "title": "Explain the slope",
+      "topic": "pt"
+    },
+    {
+      "number": 32,
+      "title": "Exit ticket · on your own",
+      "topic": "pt"
+    }
+  ],
+  "day-four": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "vt"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "vt"
+    },
+    {
+      "number": 3,
+      "title": "Today's learning target",
+      "topic": "vt"
+    },
+    {
+      "number": 4,
+      "title": "The asteroid thread",
+      "topic": "vector"
+    },
+    {
+      "number": 5,
+      "title": "What does a velocity–time graph look like?",
+      "topic": "vt"
+    },
+    {
+      "number": 6,
+      "title": "A flat line can show motion",
+      "topic": "vt"
+    },
+    {
+      "number": 7,
+      "title": "A horizontal line can mean motion",
+      "topic": "vt"
+    },
+    {
+      "number": 8,
+      "title": "Four seconds of equal steps",
+      "topic": "area"
+    },
+    {
+      "number": 9,
+      "title": "Sketch the v–t graph for yesterday’s walk",
+      "topic": "vt"
+    },
+    {
+      "number": 10,
+      "title": "The axis changes the meaning",
+      "topic": "vt"
+    },
+    {
+      "number": 11,
+      "title": "Read the axis before the line",
+      "topic": "vt"
+    },
+    {
+      "number": 12,
+      "title": "Use a rectangle to count change",
+      "topic": "area"
+    },
+    {
+      "number": 13,
+      "title": "Reading before calculating",
+      "topic": "vt"
+    },
+    {
+      "number": 14,
+      "title": "A vector is an arrow.",
+      "topic": "vector"
+    },
+    {
+      "number": 15,
+      "title": "Draw each velocity vector",
+      "topic": "vector"
+    },
+    {
+      "number": 16,
+      "title": "A common scale makes arrows useful",
+      "topic": "vector"
+    },
+    {
+      "number": 17,
+      "title": "Split the asteroid's velocity",
+      "topic": "angle"
+    },
+    {
+      "number": 18,
+      "title": "What happens below zero?",
+      "topic": "area"
+    },
+    {
+      "number": 19,
+      "title": "A velocity vector has two components",
+      "topic": "components"
+    },
+    {
+      "number": 20,
+      "title": "One diagonal, two directions",
+      "topic": "components"
+    },
+    {
+      "number": 21,
+      "title": "One motion, two components",
+      "topic": "components"
+    },
+    {
+      "number": 22,
+      "title": "Split 2026-XJ’s velocity into parts",
+      "topic": "angle"
+    },
+    {
+      "number": 23,
+      "title": "A model with limits",
+      "topic": "uncertainty"
+    },
+    {
+      "number": 24,
+      "title": "Say which axis the angle starts from",
+      "topic": "angle"
+    },
+    {
+      "number": 25,
+      "title": "Read components, not an angle",
+      "topic": "components"
+    },
+    {
+      "number": 26,
+      "title": "Choose axes for the asteroid arrow",
+      "topic": "components"
+    },
+    {
+      "number": 27,
+      "title": "A smaller component still matters",
+      "topic": "predict"
+    },
+    {
+      "number": 28,
+      "title": "Your turn: velocity and time",
+      "topic": "area"
+    },
+    {
+      "number": 29,
+      "title": "Name the graph before reading it",
+      "topic": "vt"
+    },
+    {
+      "number": 30,
+      "title": "Exit ticket · on your own",
+      "topic": "vt"
+    }
+  ],
+  "day-five": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "predict"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "predict"
+    },
+    {
+      "number": 3,
+      "title": "Today's learning target",
+      "topic": "predict"
+    },
+    {
+      "number": 4,
+      "title": "The asteroid thread",
+      "topic": "predict"
+    },
+    {
+      "number": 5,
+      "title": "Flip the definition",
+      "topic": "predict"
+    },
+    {
+      "number": 6,
+      "title": "Start somewhere, then move",
+      "topic": "predict"
+    },
+    {
+      "number": 7,
+      "title": "Units before multiplication",
+      "topic": "units"
+    },
+    {
+      "number": 8,
+      "title": "A prediction can be a range",
+      "topic": "uncertainty"
+    },
+    {
+      "number": 9,
+      "title": "Position includes the starting point",
+      "topic": "predict"
+    },
+    {
+      "number": 10,
+      "title": "Choose the axes before calculating",
+      "topic": "position"
+    },
+    {
+      "number": 11,
+      "title": "What we know",
+      "topic": "predict"
+    },
+    {
+      "number": 12,
+      "title": "Predict the new position",
+      "topic": "predict"
+    },
+    {
+      "number": 13,
+      "title": "Step 1: find the change",
+      "topic": "predict"
+    },
+    {
+      "number": 14,
+      "title": "A local prediction",
+      "topic": "predict"
+    },
+    {
+      "number": 15,
+      "title": "Step 2: add the starting position",
+      "topic": "predict"
+    },
+    {
+      "number": 16,
+      "title": "A prediction with steady velocity",
+      "topic": "predict"
+    },
+    {
+      "number": 17,
+      "title": "A negative coordinate is not a collision",
+      "topic": "uncertainty"
+    },
+    {
+      "number": 18,
+      "title": "How sure are we?",
+      "topic": "uncertainty"
+    },
+    {
+      "number": 19,
+      "title": "Sketch the window",
+      "topic": "uncertainty"
+    },
+    {
+      "number": 20,
+      "title": "Axes for the made-up asteroid story",
+      "topic": "position"
+    },
+    {
+      "number": 21,
+      "title": "Predict together",
+      "topic": "predict"
+    },
+    {
+      "number": 22,
+      "title": "Work out a position on two axes",
+      "topic": "predict"
+    },
+    {
+      "number": 23,
+      "title": "Read a measurement range",
+      "topic": "uncertainty"
+    },
+    {
+      "number": 24,
+      "title": "The window is part of the answer",
+      "topic": "uncertainty"
+    },
+    {
+      "number": 25,
+      "title": "The story is made up. The physics methods are real.",
+      "topic": "evidence"
+    },
+    {
+      "number": 26,
+      "title": "Position and change in position differ",
+      "topic": "predict"
+    },
+    {
+      "number": 27,
+      "title": "Why does more time matter?",
+      "topic": "uncertainty"
+    },
+    {
+      "number": 28,
+      "title": "Test what the math leaves out",
+      "topic": "uncertainty"
+    },
+    {
+      "number": 29,
+      "title": "Your turn: moving left",
+      "topic": "predict"
+    },
+    {
+      "number": 30,
+      "title": "Exit ticket · on your own",
+      "topic": "predict"
+    }
+  ],
+  "day-six": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "vector"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "vector"
+    },
+    {
+      "number": 3,
+      "title": "Today's learning target",
+      "topic": "vector"
+    },
+    {
+      "number": 4,
+      "title": "The asteroid thread",
+      "topic": "vector"
+    },
+    {
+      "number": 5,
+      "title": "Vectors are tools. Today we sharpen them",
+      "topic": "vector"
+    },
+    {
+      "number": 6,
+      "title": "Join the end to the next start",
+      "topic": "vector"
+    },
+    {
+      "number": 7,
+      "title": "Distance around a corner",
+      "topic": "path"
+    },
+    {
+      "number": 8,
+      "title": "The route and the shortcut",
+      "topic": "vector"
+    },
+    {
+      "number": 9,
+      "title": "Opposite arrows partly cancel",
+      "topic": "vector"
+    },
+    {
+      "number": 10,
+      "title": "Tip-to-tail addition",
+      "topic": "vector"
+    },
+    {
+      "number": 11,
+      "title": "Tip-to-tail",
+      "topic": "vector"
+    },
+    {
+      "number": 12,
+      "title": "The total arrow has a direction",
+      "topic": "vector"
+    },
+    {
+      "number": 13,
+      "title": "Put the asteroid’s velocity back together",
+      "topic": "components"
+    },
+    {
+      "number": 14,
+      "title": "Give each direction its own column",
+      "topic": "components"
+    },
+    {
+      "number": 15,
+      "title": "Add the parts along each axis",
+      "topic": "components"
+    },
+    {
+      "number": 16,
+      "title": "Add east–west first",
+      "topic": "components"
+    },
+    {
+      "number": 17,
+      "title": "Worked addition with signs",
+      "topic": "components"
+    },
+    {
+      "number": 18,
+      "title": "Rebuild the story’s velocity arrow",
+      "topic": "components"
+    },
+    {
+      "number": 19,
+      "title": "Find parts from the size and angle",
+      "topic": "angle"
+    },
+    {
+      "number": 20,
+      "title": "Split each vector into parts",
+      "topic": "angle"
+    },
+    {
+      "number": 21,
+      "title": "Now add north–south",
+      "topic": "components"
+    },
+    {
+      "number": 22,
+      "title": "Guided addition",
+      "topic": "components"
+    },
+    {
+      "number": 23,
+      "title": "Try two arrows together",
+      "topic": "vector"
+    },
+    {
+      "number": 24,
+      "title": "Split an arrow using the given angle",
+      "topic": "angle"
+    },
+    {
+      "number": 25,
+      "title": "Before you turn it in",
+      "topic": "vector"
+    },
+    {
+      "number": 26,
+      "title": "Your turn: a return west",
+      "topic": "vector"
+    },
+    {
+      "number": 27,
+      "title": "The same angle measured from another axis",
+      "topic": "angle"
+    },
+    {
+      "number": 28,
+      "title": "Check the angle before choosing sine or cosine",
+      "topic": "angle"
+    },
+    {
+      "number": 29,
+      "title": "A diagonal is not the sum of two lengths",
+      "topic": "components"
+    },
+    {
+      "number": 30,
+      "title": "Exit ticket · on your own",
+      "topic": "vector"
+    }
+  ],
+  "day-seven": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "acceleration"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "acceleration"
+    },
+    {
+      "number": 3,
+      "title": "Today's learning target",
+      "topic": "acceleration"
+    },
+    {
+      "number": 4,
+      "title": "The asteroid thread",
+      "topic": "acceleration"
+    },
+    {
+      "number": 5,
+      "title": "What's its acceleration?",
+      "topic": "acceleration"
+    },
+    {
+      "number": 6,
+      "title": "Watch the gaps grow",
+      "topic": "acceleration"
+    },
+    {
+      "number": 7,
+      "title": "A velocity graph tells the change",
+      "topic": "vt"
+    },
+    {
+      "number": 8,
+      "title": "Acceleration",
+      "topic": "acceleration"
+    },
+    {
+      "number": 9,
+      "title": "What changes each second?",
+      "topic": "acceleration"
+    },
+    {
+      "number": 10,
+      "title": "One step at a time",
+      "topic": "acceleration"
+    },
+    {
+      "number": 11,
+      "title": "Share the change across time",
+      "topic": "acceleration"
+    },
+    {
+      "number": 12,
+      "title": "How fast does velocity change?",
+      "topic": "acceleration"
+    },
+    {
+      "number": 13,
+      "title": "Compare to gravity",
+      "topic": "vertical"
+    },
+    {
+      "number": 14,
+      "title": "Slowing down is accelerating, too.",
+      "topic": "signs"
+    },
+    {
+      "number": 15,
+      "title": "Acceleration measures velocity change",
+      "topic": "acceleration"
+    },
+    {
+      "number": 16,
+      "title": "Speeding up, slowing down, or constant?",
+      "topic": "signs"
+    },
+    {
+      "number": 17,
+      "title": "Read the slope, not the height",
+      "topic": "vt"
+    },
+    {
+      "number": 18,
+      "title": "Braking is acceleration too",
+      "topic": "signs"
+    },
+    {
+      "number": 19,
+      "title": "Direction matters",
+      "topic": "signs"
+    },
+    {
+      "number": 20,
+      "title": "Equations of motion",
+      "topic": "equations"
+    },
+    {
+      "number": 21,
+      "title": "Keep the start velocity",
+      "topic": "equations"
+    },
+    {
+      "number": 22,
+      "title": "Signs describe directions",
+      "topic": "signs"
+    },
+    {
+      "number": 23,
+      "title": "Your turn: one calculation",
+      "topic": "acceleration"
+    },
+    {
+      "number": 24,
+      "title": "Negative does not mean slow",
+      "topic": "signs"
+    },
+    {
+      "number": 25,
+      "title": "Braking in the positive direction",
+      "topic": "signs"
+    },
+    {
+      "number": 26,
+      "title": "Braking in the negative direction",
+      "topic": "signs"
+    },
+    {
+      "number": 27,
+      "title": "Earth’s pull at the starting separation",
+      "topic": "gravity"
+    },
+    {
+      "number": 28,
+      "title": "Gravity changes along the path",
+      "topic": "gravity"
+    },
+    {
+      "number": 29,
+      "title": "A small change is still a change",
+      "topic": "gravity"
+    },
+    {
+      "number": 30,
+      "title": "Exit ticket · on your own",
+      "topic": "acceleration"
+    }
+  ],
+  "day-eight": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "equations"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "equations"
+    },
+    {
+      "number": 3,
+      "title": "Today's learning target",
+      "topic": "equations"
+    },
+    {
+      "number": 4,
+      "title": "The asteroid thread",
+      "topic": "equations"
+    },
+    {
+      "number": 5,
+      "title": "What's the acceleration?",
+      "topic": "acceleration"
+    },
+    {
+      "number": 6,
+      "title": "Ask: steady or changing?",
+      "topic": "pattern"
+    },
+    {
+      "number": 7,
+      "title": "A quick retrieval",
+      "topic": "acceleration"
+    },
+    {
+      "number": 8,
+      "title": "A picture can show distance",
+      "topic": "area"
+    },
+    {
+      "number": 9,
+      "title": "Three equations for steady acceleration",
+      "topic": "equations"
+    },
+    {
+      "number": 10,
+      "title": "Constant acceleration toolkit",
+      "topic": "equations"
+    },
+    {
+      "number": 11,
+      "title": "Which equation?",
+      "topic": "equations"
+    },
+    {
+      "number": 12,
+      "title": "Choose from what you know",
+      "topic": "equations"
+    },
+    {
+      "number": 13,
+      "title": "For steady velocity",
+      "topic": "predict"
+    },
+    {
+      "number": 14,
+      "title": "Use the same steps each time",
+      "topic": "equations"
+    },
+    {
+      "number": 15,
+      "title": "For a steady acceleration",
+      "topic": "equations"
+    },
+    {
+      "number": 16,
+      "title": "Work the set",
+      "topic": "equations"
+    },
+    {
+      "number": 17,
+      "title": "Worked braking distance",
+      "topic": "equations"
+    },
+    {
+      "number": 18,
+      "title": "Negative acceleration, positive displacement",
+      "topic": "signs"
+    },
+    {
+      "number": 19,
+      "title": "Check displacement with average velocity",
+      "topic": "area"
+    },
+    {
+      "number": 20,
+      "title": "Worked final position",
+      "topic": "predict"
+    },
+    {
+      "number": 21,
+      "title": "How did you choose your equation?",
+      "topic": "equations"
+    },
+    {
+      "number": 22,
+      "title": "Choose first, then calculate",
+      "topic": "equations"
+    },
+    {
+      "number": 23,
+      "title": "Guided launch from rest",
+      "topic": "equations"
+    },
+    {
+      "number": 24,
+      "title": "What you need changes the equation",
+      "topic": "equations"
+    },
+    {
+      "number": 25,
+      "title": "Build a final velocity together",
+      "topic": "equations"
+    },
+    {
+      "number": 26,
+      "title": "Use the same tools for up and down",
+      "topic": "vertical"
+    },
+    {
+      "number": 27,
+      "title": "At the top, which quantity is zero?",
+      "topic": "vertical"
+    },
+    {
+      "number": 28,
+      "title": "Your turn: a steady slowdown",
+      "topic": "equations"
+    },
+    {
+      "number": 29,
+      "title": "A method is a choice with a reason",
+      "topic": "equations"
+    },
+    {
+      "number": 30,
+      "title": "Exit ticket · on your own",
+      "topic": "equations"
+    }
+  ],
+  "day-nine": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "inertia"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "inertia"
+    },
+    {
+      "number": 3,
+      "title": "Today's learning target",
+      "topic": "inertia"
+    },
+    {
+      "number": 4,
+      "title": "The asteroid thread",
+      "topic": "inertia"
+    },
+    {
+      "number": 5,
+      "title": "Recall: read the slope",
+      "topic": "vt"
+    },
+    {
+      "number": 6,
+      "title": "Why do some objects stop sooner?",
+      "topic": "inertia"
+    },
+    {
+      "number": 7,
+      "title": "What keeps a cart moving?",
+      "topic": "inertia"
+    },
+    {
+      "number": 8,
+      "title": "Balanced does not mean stopped",
+      "topic": "inertia"
+    },
+    {
+      "number": 9,
+      "title": "After the hand lets go",
+      "topic": "inertia"
+    },
+    {
+      "number": 10,
+      "title": "The push ended. The motion did not.",
+      "topic": "inertia"
+    },
+    {
+      "number": 11,
+      "title": "Aristotle vs. Galileo",
+      "topic": "inertia"
+    },
+    {
+      "number": 12,
+      "title": "The zero-net-force condition",
+      "topic": "inertia"
+    },
+    {
+      "number": 13,
+      "title": "Inertia",
+      "topic": "inertia"
+    },
+    {
+      "number": 14,
+      "title": "Inertia means resisting a change",
+      "topic": "inertia"
+    },
+    {
+      "number": 15,
+      "title": "Why do real carts slow down?",
+      "topic": "inertia"
+    },
+    {
+      "number": 16,
+      "title": "Newton’s first law",
+      "topic": "inertia"
+    },
+    {
+      "number": 17,
+      "title": "Predict. Observe. Explain.",
+      "topic": "inertia"
+    },
+    {
+      "number": 18,
+      "title": "One coin, two directions",
+      "topic": "inertia"
+    },
+    {
+      "number": 19,
+      "title": "Why does the passenger continue forward?",
+      "topic": "inertia"
+    },
+    {
+      "number": 20,
+      "title": "A passenger keeps moving",
+      "topic": "inertia"
+    },
+    {
+      "number": 21,
+      "title": "A moving cart has balanced forces",
+      "topic": "inertia"
+    },
+    {
+      "number": 22,
+      "title": "Which cart changes more easily?",
+      "topic": "inertia"
+    },
+    {
+      "number": 23,
+      "title": "Constant velocity is a conditional model",
+      "topic": "inertia"
+    },
+    {
+      "number": 24,
+      "title": "What's pushing it?",
+      "topic": "interaction"
+    },
+    {
+      "number": 25,
+      "title": "No floor does not mean no force",
+      "topic": "gravity"
+    },
+    {
+      "number": 26,
+      "title": "Inertia and mass",
+      "topic": "inertia"
+    },
+    {
+      "number": 27,
+      "title": "Your turn: make sense of a stop",
+      "topic": "inertia"
+    },
+    {
+      "number": 28,
+      "title": "Do not draw a “force of motion”",
+      "topic": "interaction"
+    },
+    {
+      "number": 29,
+      "title": "A fair test with a cart",
+      "topic": "data"
+    },
+    {
+      "number": 30,
+      "title": "A moving object with balanced forces",
+      "topic": "inertia"
+    },
+    {
+      "number": 31,
+      "title": "Exit ticket · on your own",
+      "topic": "inertia"
+    }
+  ],
+  "day-ten": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "interaction"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "lab"
+    },
+    {
+      "number": 3,
+      "title": "Lab briefing",
+      "topic": "lab"
+    },
+    {
+      "number": 4,
+      "title": "Lab setup",
+      "topic": "lab"
+    },
+    {
+      "number": 5,
+      "title": "Setup check",
+      "topic": "lab"
+    },
+    {
+      "number": 6,
+      "title": "The slipping bag",
+      "topic": "interaction"
+    },
+    {
+      "number": 7,
+      "title": "Today's learning target",
+      "topic": "interaction"
+    },
+    {
+      "number": 8,
+      "title": "The asteroid thread",
+      "topic": "gravity"
+    },
+    {
+      "number": 9,
+      "title": "Recall: slope and area",
+      "topic": "area"
+    },
+    {
+      "number": 10,
+      "title": "So what IS a force?",
+      "topic": "interaction"
+    },
+    {
+      "number": 11,
+      "title": "Look for other objects",
+      "topic": "interaction"
+    },
+    {
+      "number": 12,
+      "title": "Forces on a seated student",
+      "topic": "interaction"
+    },
+    {
+      "number": 13,
+      "title": "Turn interactions into arrows",
+      "topic": "fbd"
+    },
+    {
+      "number": 14,
+      "title": "A force is a push or a pull.",
+      "topic": "interaction"
+    },
+    {
+      "number": 15,
+      "title": "Five forces to know",
+      "topic": "interaction"
+    },
+    {
+      "number": 16,
+      "title": "A force describes an interaction",
+      "topic": "interaction"
+    },
+    {
+      "number": 17,
+      "title": "Name the source and receiver",
+      "topic": "interaction"
+    },
+    {
+      "number": 18,
+      "title": "Common external forces",
+      "topic": "interaction"
+    },
+    {
+      "number": 19,
+      "title": "List every force — then draw them as arr",
+      "topic": "fbd"
+    },
+    {
+      "number": 20,
+      "title": "Draw forces on one book",
+      "topic": "fbd"
+    },
+    {
+      "number": 21,
+      "title": "Mass and weight are different",
+      "topic": "weight"
+    },
+    {
+      "number": 22,
+      "title": "Mass and weight",
+      "topic": "weight"
+    },
+    {
+      "number": 23,
+      "title": "Find a weight together",
+      "topic": "weight"
+    },
+    {
+      "number": 24,
+      "title": "Check the downhill car",
+      "topic": "ramp"
+    },
+    {
+      "number": 25,
+      "title": "The forces on 2026-XJ right now",
+      "topic": "gravity"
+    },
+    {
+      "number": 26,
+      "title": "Which forces can humans add to this pict",
+      "topic": "interaction"
+    },
+    {
+      "number": 27,
+      "title": "Follow the asteroid",
+      "topic": "gravity"
+    },
+    {
+      "number": 28,
+      "title": "Book on a table",
+      "topic": "fbd"
+    },
+    {
+      "number": 29,
+      "title": "Name the table’s support",
+      "topic": "interaction"
+    },
+    {
+      "number": 30,
+      "title": "A hanging object",
+      "topic": "interaction"
+    },
+    {
+      "number": 31,
+      "title": "Your turn: a rope and a box",
+      "topic": "interaction"
+    },
+    {
+      "number": 32,
+      "title": "A moving object after release",
+      "topic": "interaction"
+    },
+    {
+      "number": 33,
+      "title": "When contact ends, contact forces end",
+      "topic": "interaction"
+    },
+    {
+      "number": 34,
+      "title": "Exit ticket · individual",
+      "topic": "interaction"
+    }
+  ],
+  "day-eleven": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "masslab"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "masslab"
+    },
+    {
+      "number": 3,
+      "title": "Lab briefing",
+      "topic": "lab"
+    },
+    {
+      "number": 4,
+      "title": "Lab setup",
+      "topic": "lab"
+    },
+    {
+      "number": 5,
+      "title": "Setup check",
+      "topic": "lab"
+    },
+    {
+      "number": 6,
+      "title": "Today's learning target",
+      "topic": "masslab"
+    },
+    {
+      "number": 7,
+      "title": "The asteroid thread",
+      "topic": "gravity"
+    },
+    {
+      "number": 8,
+      "title": "Recall: a negative slope",
+      "topic": "vt"
+    },
+    {
+      "number": 9,
+      "title": "But HOW MUCH does a force change motion?",
+      "topic": "net"
+    },
+    {
+      "number": 10,
+      "title": "Make one change at a time",
+      "topic": "masslab"
+    },
+    {
+      "number": 11,
+      "title": "Same driving force, different mass",
+      "topic": "masslab"
+    },
+    {
+      "number": 12,
+      "title": "Plan a fair comparison",
+      "topic": "masslab"
+    },
+    {
+      "number": 13,
+      "title": "Watch the velocity grow",
+      "topic": "vt"
+    },
+    {
+      "number": 14,
+      "title": "Vary mass at constant force",
+      "topic": "masslab"
+    },
+    {
+      "number": 15,
+      "title": "The system includes the hanging mass",
+      "topic": "masslab"
+    },
+    {
+      "number": 16,
+      "title": "Know what is in the system",
+      "topic": "masslab"
+    },
+    {
+      "number": 17,
+      "title": "Variables and controls",
+      "topic": "masslab"
+    },
+    {
+      "number": 18,
+      "title": "Collect the data",
+      "topic": "data"
+    },
+    {
+      "number": 19,
+      "title": "Read the film sample",
+      "topic": "data"
+    },
+    {
+      "number": 20,
+      "title": "Plan one repeatable trial",
+      "topic": "lab"
+    },
+    {
+      "number": 21,
+      "title": "Procedure and safe release",
+      "topic": "lab"
+    },
+    {
+      "number": 22,
+      "title": "Spot an unfair comparison",
+      "topic": "masslab"
+    },
+    {
+      "number": 23,
+      "title": "What do you SEE in the data?",
+      "topic": "data"
+    },
+    {
+      "number": 24,
+      "title": "Acceleration and mass",
+      "topic": "masslab"
+    },
+    {
+      "number": 25,
+      "title": "Check the product",
+      "topic": "masslab"
+    },
+    {
+      "number": 26,
+      "title": "Its mass is huge. Any force we apply giv",
+      "topic": "gravity"
+    },
+    {
+      "number": 27,
+      "title": "A data table with units",
+      "topic": "data"
+    },
+    {
+      "number": 28,
+      "title": "Use the slope as evidence",
+      "topic": "acceleration"
+    },
+    {
+      "number": 29,
+      "title": "From a velocity graph to acceleration",
+      "topic": "acceleration"
+    },
+    {
+      "number": 30,
+      "title": "Describe a pattern in sample data",
+      "topic": "data"
+    },
+    {
+      "number": 31,
+      "title": "Online alternative: ideal model data",
+      "topic": "data"
+    },
+    {
+      "number": 32,
+      "title": "Write a claim from your own trials",
+      "topic": "data"
+    },
+    {
+      "number": 33,
+      "title": "Give a push time to act",
+      "topic": "net"
+    },
+    {
+      "number": 34,
+      "title": "Exit ticket · individual",
+      "topic": "masslab"
+    }
+  ],
+  "day-twelve": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "forcelab"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "forcelab"
+    },
+    {
+      "number": 3,
+      "title": "Lab briefing",
+      "topic": "lab"
+    },
+    {
+      "number": 4,
+      "title": "Lab setup",
+      "topic": "lab"
+    },
+    {
+      "number": 5,
+      "title": "Setup check",
+      "topic": "lab"
+    },
+    {
+      "number": 6,
+      "title": "Today's learning target",
+      "topic": "forcelab"
+    },
+    {
+      "number": 7,
+      "title": "The asteroid thread",
+      "topic": "gravity"
+    },
+    {
+      "number": 8,
+      "title": "Recall: three stages",
+      "topic": "vt"
+    },
+    {
+      "number": 9,
+      "title": "What if we hold MASS constant and vary F",
+      "topic": "forcelab"
+    },
+    {
+      "number": 10,
+      "title": "A stronger net push changes motion faste",
+      "topic": "net"
+    },
+    {
+      "number": 11,
+      "title": "A fair force comparison",
+      "topic": "forcelab"
+    },
+    {
+      "number": 12,
+      "title": "Which mass stays fixed?",
+      "topic": "forcelab"
+    },
+    {
+      "number": 13,
+      "title": "Compare two velocity graphs",
+      "topic": "vt"
+    },
+    {
+      "number": 14,
+      "title": "Vary force at constant mass",
+      "topic": "forcelab"
+    },
+    {
+      "number": 15,
+      "title": "What will happen as the hanging mass inc",
+      "topic": "forcelab"
+    },
+    {
+      "number": 16,
+      "title": "Transfer mass from cart to hanger",
+      "topic": "forcelab"
+    },
+    {
+      "number": 17,
+      "title": "Move mass; do not add mass",
+      "topic": "forcelab"
+    },
+    {
+      "number": 18,
+      "title": "Variables and controlled conditions",
+      "topic": "forcelab"
+    },
+    {
+      "number": 19,
+      "title": "Collect the data",
+      "topic": "data"
+    },
+    {
+      "number": 20,
+      "title": "Read the force series",
+      "topic": "data"
+    },
+    {
+      "number": 21,
+      "title": "The hanger’s weight drives the system",
+      "topic": "weight"
+    },
+    {
+      "number": 22,
+      "title": "Collection protocol",
+      "topic": "lab"
+    },
+    {
+      "number": 23,
+      "title": "Check the control",
+      "topic": "forcelab"
+    },
+    {
+      "number": 24,
+      "title": "Plot acceleration vs. force",
+      "topic": "data"
+    },
+    {
+      "number": 25,
+      "title": "F = ma. You derived it from your own dat",
+      "topic": "net"
+    },
+    {
+      "number": 26,
+      "title": "Combine the two patterns",
+      "topic": "net"
+    },
+    {
+      "number": 27,
+      "title": "Push on the asteroid",
+      "topic": "net"
+    },
+    {
+      "number": 28,
+      "title": "Model data for comparison or online work",
+      "topic": "data"
+    },
+    {
+      "number": 29,
+      "title": "Plot your measurements",
+      "topic": "data"
+    },
+    {
+      "number": 30,
+      "title": "Reading a slope as mass",
+      "topic": "slopeMass"
+    },
+    {
+      "number": 31,
+      "title": "Read a proportional pattern",
+      "topic": "forcelab"
+    },
+    {
+      "number": 32,
+      "title": "Use the two labs together",
+      "topic": "net"
+    },
+    {
+      "number": 33,
+      "title": "What a push can change",
+      "topic": "net"
+    },
+    {
+      "number": 34,
+      "title": "Exit ticket · individual",
+      "topic": "forcelab"
+    }
+  ],
+  "day-thirteen": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "net"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "net"
+    },
+    {
+      "number": 3,
+      "title": "Today's learning target",
+      "topic": "net"
+    },
+    {
+      "number": 4,
+      "title": "The asteroid thread",
+      "topic": "net"
+    },
+    {
+      "number": 5,
+      "title": "Recall: free fall on a graph",
+      "topic": "vertical"
+    },
+    {
+      "number": 6,
+      "title": "What's the acceleration of a 5 kg object",
+      "topic": "net"
+    },
+    {
+      "number": 7,
+      "title": "The arrows compete",
+      "topic": "net"
+    },
+    {
+      "number": 8,
+      "title": "What does F mean?",
+      "topic": "net"
+    },
+    {
+      "number": 9,
+      "title": "The leftover force changes velocity",
+      "topic": "net"
+    },
+    {
+      "number": 10,
+      "title": "The missing six newtons",
+      "topic": "net"
+    },
+    {
+      "number": 11,
+      "title": "A signed force sum",
+      "topic": "net"
+    },
+    {
+      "number": 12,
+      "title": "F = ma uses the NET force",
+      "topic": "net"
+    },
+    {
+      "number": 13,
+      "title": "A box pulled across the floor",
+      "topic": "net"
+    },
+    {
+      "number": 14,
+      "title": "Step 1: draw the forces",
+      "topic": "fbd"
+    },
+    {
+      "number": 15,
+      "title": "Worked force inventory",
+      "topic": "fbd"
+    },
+    {
+      "number": 16,
+      "title": "Step 2: find the net force",
+      "topic": "net"
+    },
+    {
+      "number": 17,
+      "title": "Work the set",
+      "topic": "net"
+    },
+    {
+      "number": 18,
+      "title": "Solving for a missing applied force",
+      "topic": "net"
+    },
+    {
+      "number": 19,
+      "title": "Step 3: divide by mass",
+      "topic": "net"
+    },
+    {
+      "number": 20,
+      "title": "Solving for mass",
+      "topic": "net"
+    },
+    {
+      "number": 21,
+      "title": "Three cards, three unknowns",
+      "topic": "net"
+    },
+    {
+      "number": 22,
+      "title": "Driving forward vs. stopping — which for",
+      "topic": "signs"
+    },
+    {
+      "number": 23,
+      "title": "Try the steps together",
+      "topic": "net"
+    },
+    {
+      "number": 24,
+      "title": "Braking force from motion data",
+      "topic": "acceleration"
+    },
+    {
+      "number": 25,
+      "title": "Braking while moving forward",
+      "topic": "signs"
+    },
+    {
+      "number": 26,
+      "title": "What if the forces balance?",
+      "topic": "inertia"
+    },
+    {
+      "number": 27,
+      "title": "Independent practice A",
+      "topic": "net"
+    },
+    {
+      "number": 28,
+      "title": "Your turn: left wins",
+      "topic": "net"
+    },
+    {
+      "number": 29,
+      "title": "Keep the direction in the answer",
+      "topic": "signs"
+    },
+    {
+      "number": 30,
+      "title": "Both forces act on one box",
+      "topic": "net"
+    },
+    {
+      "number": 31,
+      "title": "Exit ticket · individual",
+      "topic": "net"
+    }
+  ],
+  "day-fourteen": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "third"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "third"
+    },
+    {
+      "number": 3,
+      "title": "Lab briefing",
+      "topic": "lab"
+    },
+    {
+      "number": 4,
+      "title": "Lab setup",
+      "topic": "lab"
+    },
+    {
+      "number": 5,
+      "title": "Setup check",
+      "topic": "lab"
+    },
+    {
+      "number": 6,
+      "title": "Today's learning target",
+      "topic": "third"
+    },
+    {
+      "number": 7,
+      "title": "The asteroid thread",
+      "topic": "gravity"
+    },
+    {
+      "number": 8,
+      "title": "Recall: two objects, one graph",
+      "topic": "vt"
+    },
+    {
+      "number": 9,
+      "title": "So how does the cart ever move?",
+      "topic": "third"
+    },
+    {
+      "number": 10,
+      "title": "Two objects interact at once",
+      "topic": "third"
+    },
+    {
+      "number": 11,
+      "title": "A large object and a small object interact",
+      "topic": "third"
+    },
+    {
+      "number": 12,
+      "title": "Equal forces can have different effects",
+      "topic": "third"
+    },
+    {
+      "number": 13,
+      "title": "If A pushes B, B pushes A",
+      "topic": "third"
+    },
+    {
+      "number": 14,
+      "title": "Why the pair never cancels",
+      "topic": "third"
+    },
+    {
+      "number": 15,
+      "title": "One pull on each object",
+      "topic": "third"
+    },
+    {
+      "number": 16,
+      "title": "One interaction, two force statements",
+      "topic": "third"
+    },
+    {
+      "number": 17,
+      "title": "Swap the two object names",
+      "topic": "third"
+    },
+    {
+      "number": 18,
+      "title": "A hand and a wall",
+      "topic": "third"
+    },
+    {
+      "number": 19,
+      "title": "Watch both readings",
+      "topic": "data"
+    },
+    {
+      "number": 20,
+      "title": "So who wins a tug-of-war?",
+      "topic": "third"
+    },
+    {
+      "number": 21,
+      "title": "Why the pair does not cancel on one object",
+      "topic": "third"
+    },
+    {
+      "number": 22,
+      "title": "Paired-sensor investigation",
+      "topic": "lab"
+    },
+    {
+      "number": 23,
+      "title": "Compare the same instant",
+      "topic": "data"
+    },
+    {
+      "number": 24,
+      "title": "A foot pushes the ground backward",
+      "topic": "third"
+    },
+    {
+      "number": 25,
+      "title": "A DART-style impact",
+      "topic": "third"
+    },
+    {
+      "number": 26,
+      "title": "A smaller object can deflect a larger one",
+      "topic": "third"
+    },
+    {
+      "number": 27,
+      "title": "Two forces during impact",
+      "topic": "third"
+    },
+    {
+      "number": 28,
+      "title": "Example paired measurements",
+      "topic": "data"
+    },
+    {
+      "number": 29,
+      "title": "Are weight and support a third-law pair?",
+      "topic": "third"
+    },
+    {
+      "number": 30,
+      "title": "Find the book’s two partners",
+      "topic": "third"
+    },
+    {
+      "number": 31,
+      "title": "Equal forces, unequal accelerations",
+      "topic": "third"
+    },
+    {
+      "number": 32,
+      "title": "Your turn: unequal masses",
+      "topic": "third"
+    },
+    {
+      "number": 33,
+      "title": "Finish the sentence precisely",
+      "topic": "third"
+    },
+    {
+      "number": 34,
+      "title": "Exit ticket · individual",
+      "topic": "third"
+    }
+  ],
+  "day-fifteen": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "fbd"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "fbd"
+    },
+    {
+      "number": 3,
+      "title": "Today's learning target",
+      "topic": "fbd"
+    },
+    {
+      "number": 4,
+      "title": "The asteroid thread",
+      "topic": "gravity"
+    },
+    {
+      "number": 5,
+      "title": "Recall: up the ramp and back",
+      "topic": "ramp"
+    },
+    {
+      "number": 6,
+      "title": "From forces to acceleration",
+      "topic": "net"
+    },
+    {
+      "number": 7,
+      "title": "Start with the scene",
+      "topic": "fbd"
+    },
+    {
+      "number": 8,
+      "title": "The phone on the desk",
+      "topic": "fbd"
+    },
+    {
+      "number": 9,
+      "title": "Keep the interactions, remove the scenery",
+      "topic": "fbd"
+    },
+    {
+      "number": 10,
+      "title": "A diagram is a force inventory",
+      "topic": "fbd"
+    },
+    {
+      "number": 11,
+      "title": "One book, two forces",
+      "topic": "fbd"
+    },
+    {
+      "number": 12,
+      "title": "A repeatable drawing routine",
+      "topic": "fbd"
+    },
+    {
+      "number": 13,
+      "title": "Six rules",
+      "topic": "fbd"
+    },
+    {
+      "number": 14,
+      "title": "Guided diagram: hanging lamp",
+      "topic": "fbd"
+    },
+    {
+      "number": 15,
+      "title": "Resting on a level table",
+      "topic": "fbd"
+    },
+    {
+      "number": 16,
+      "title": "Guided diagram: a falling ball",
+      "topic": "vertical"
+    },
+    {
+      "number": 17,
+      "title": "Sliding without a continuing push",
+      "topic": "interaction"
+    },
+    {
+      "number": 18,
+      "title": "The ball at its highest point",
+      "topic": "vertical"
+    },
+    {
+      "number": 19,
+      "title": "Draw the FBD",
+      "topic": "fbd"
+    },
+    {
+      "number": 20,
+      "title": "Components do not create extra interactions",
+      "topic": "components"
+    },
+    {
+      "number": 21,
+      "title": "What belongs on the diagram?",
+      "topic": "fbd"
+    },
+    {
+      "number": 22,
+      "title": "Independent diagram set",
+      "topic": "fbd"
+    },
+    {
+      "number": 23,
+      "title": "Draw a hanging object",
+      "topic": "fbd"
+    },
+    {
+      "number": 24,
+      "title": "FBD for 2026-XJ as it approaches",
+      "topic": "gravity"
+    },
+    {
+      "number": 25,
+      "title": "What turns the car?",
+      "topic": "interaction"
+    },
+    {
+      "number": 26,
+      "title": "Critiquing an incorrect diagram",
+      "topic": "fbd"
+    },
+    {
+      "number": 27,
+      "title": "Your turn: a box pulled right",
+      "topic": "fbd"
+    },
+    {
+      "number": 28,
+      "title": "Four forces on the box",
+      "topic": "fbd"
+    },
+    {
+      "number": 29,
+      "title": "An asteroid’s force inventory",
+      "topic": "gravity"
+    },
+    {
+      "number": 30,
+      "title": "Check your drawing",
+      "topic": "fbd"
+    },
+    {
+      "number": 31,
+      "title": "Exit ticket · individual",
+      "topic": "fbd"
+    }
+  ],
+  "day-sixteen": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "topic": "net"
+    },
+    {
+      "number": 2,
+      "title": "How this lesson works",
+      "topic": "net"
+    },
+    {
+      "number": 3,
+      "title": "Today's learning target",
+      "topic": "net"
+    },
+    {
+      "number": 4,
+      "title": "The asteroid thread",
+      "topic": "gravity"
+    },
+    {
+      "number": 5,
+      "title": "Recall: a curving position graph",
+      "topic": "pt"
+    },
+    {
+      "number": 6,
+      "title": "Add forces as vectors",
+      "topic": "components"
+    },
+    {
+      "number": 7,
+      "title": "A ramp changes the support direction",
+      "topic": "ramp"
+    },
+    {
+      "number": 8,
+      "title": "From arrows to a result",
+      "topic": "net"
+    },
+    {
+      "number": 9,
+      "title": "Weight still points down",
+      "topic": "ramp"
+    },
+    {
+      "number": 10,
+      "title": "Each axis gets its own equation",
+      "topic": "components"
+    },
+    {
+      "number": 11,
+      "title": "Forces along one axis",
+      "topic": "net"
+    },
+    {
+      "number": 12,
+      "title": "Start on a level floor",
+      "topic": "net"
+    },
+    {
+      "number": 13,
+      "title": "Work along the ramp",
+      "topic": "ramp"
+    },
+    {
+      "number": 14,
+      "title": "An upward pull changes the normal force",
+      "topic": "ramp"
+    },
+    {
+      "number": 15,
+      "title": "Find what is left over",
+      "topic": "net"
+    },
+    {
+      "number": 16,
+      "title": "Split gravity on a tilted surface",
+      "topic": "ramp"
+    },
+    {
+      "number": 17,
+      "title": "Solve the incline",
+      "topic": "ramp"
+    },
+    {
+      "number": 18,
+      "title": "Axes along and perpendicular to a ramp",
+      "topic": "ramp"
+    },
+    {
+      "number": 19,
+      "title": "Rotate the axes, keep gravity down",
+      "topic": "ramp"
+    },
+    {
+      "number": 20,
+      "title": "Can the support equal the full weight?",
+      "topic": "ramp"
+    },
+    {
+      "number": 21,
+      "title": "Worked ramp with given friction",
+      "topic": "ramp"
+    },
+    {
+      "number": 22,
+      "title": "Two very different FBDs",
+      "topic": "fbd"
+    },
+    {
+      "number": 23,
+      "title": "Try a supplied ramp component",
+      "topic": "ramp"
+    },
+    {
+      "number": 24,
+      "title": "Guided frictionless ramp",
+      "topic": "ramp"
+    },
+    {
+      "number": 25,
+      "title": "Two different ramp models",
+      "topic": "ramp"
+    },
+    {
+      "number": 26,
+      "title": "Your turn: force and motion",
+      "topic": "signs"
+    },
+    {
+      "number": 27,
+      "title": "A box moving up can accelerate down",
+      "topic": "signs"
+    },
+    {
+      "number": 28,
+      "title": "Components are parts of one force",
+      "topic": "components"
+    },
+    {
+      "number": 29,
+      "title": "Add forces on matching axes",
+      "topic": "components"
+    },
+    {
+      "number": 30,
+      "title": "Independent flat-surface case",
+      "topic": "net"
+    },
+    {
+      "number": 31,
+      "title": "Exit ticket · individual",
+      "topic": "net"
+    }
+  ]
+}

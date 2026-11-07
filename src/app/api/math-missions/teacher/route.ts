@@ -1,3 +1,4 @@
+import { readingCourses } from '@/lib/textbook-assignments-server'
 import { ownerEmailsFor } from '@/lib/identity-aliases'
 import { calendarAssigned, CALENDAR_ASSIGNMENT_MESSAGE } from '@/lib/calendar-assignment'
 import {NextResponse} from 'next/server'
@@ -14,7 +15,10 @@ export const GET=withRole(['teacher','admin'],async(request,ctx)=>{
  if(wanted){sessions=sessions.eq('user_id',wanted);assignments=assignments.eq('user_id',wanted);}else if(ids){sessions=sessions.in('user_id',ids);assignments=assignments.in('user_id',ids);}
  const [s,a]=await Promise.all([sessions,assignments]);
  if(s.error||a.error)return NextResponse.json({error:'Could not load mission evidence.'},{status:503});
- return NextResponse.json({sessions:s.data,assignments:a.data});
+ const courses=wanted?(await readingCourses(ctx)).filter(c=>c.program==='physics'):[];
+ const enrollment=wanted&&courses.length?await supabaseAdmin.from('course_students').select('course_id').eq('student_id',wanted).eq('enrollment_state','ACTIVE').in('course_id',courses.map(c=>c.id)):null;
+ if(enrollment?.error)return NextResponse.json({error:'Could not load assignment classes.'},{status:503});
+ return NextResponse.json({sessions:s.data,assignments:a.data,courses:courses.filter(c=>enrollment?.data?.some(e=>e.course_id===c.id)).map(({id,name,section})=>({id,name,section}))});
 })
 export const POST=withRole(['teacher','admin'],async(request,ctx)=>{
  if(ctx.viewingAsTeacher||request.headers.get('origin')!==request.nextUrl.origin)return NextResponse.json({error:'Use your own account and reload before saving.'},{status:403});
@@ -24,7 +28,14 @@ export const POST=withRole(['teacher','admin'],async(request,ctx)=>{
   if(ctx.role==='teacher'&&!await teacherCanAccessStudent(ctx.scopeEmail,body.userId))return NextResponse.json({error:'Student not on your roster'},{status:403});
   const {data:student,error:studentError}=await supabaseAdmin.from('students').select('id').eq('id',body.userId).maybeSingle();if(studentError||!student)return NextResponse.json({error:'Student not found'},{status:404});
   if(!calendarAssigned(true,body.dueAt))return NextResponse.json({error:CALENDAR_ASSIGNMENT_MESSAGE},{status:400});
-  const {data,error}=await supabaseAdmin.from('math_mission_assignments').insert({teacher_email:ctx.scopeEmail,user_id:body.userId,mission:m.slug,code:body.code,title:`${m.name} · ${body.code}`,due_at:body.dueAt||null}).select().single();
+  if(body.courseId||body.unitId){
+   const course=(await readingCourses(ctx)).find(c=>c.program==='physics'&&c.id===body.courseId);
+   if(!course||typeof body.unitId!=='string') return NextResponse.json({error:'Choose the assignment’s class and unit.'},{status:400});
+   const [roster,unit]=await Promise.all([supabaseAdmin.from('course_students').select('student_id').eq('course_id',course.id).eq('student_id',body.userId).eq('enrollment_state','ACTIVE').maybeSingle(),supabaseAdmin.from('units').select('id').eq('id',body.unitId).eq('program','physics').maybeSingle()]);
+   if(roster.error||unit.error)return NextResponse.json({error:'Could not verify this assignment.'},{status:503});
+   if(!roster.data||!unit.data)return NextResponse.json({error:'Choose a unit in the student’s Physics class.'},{status:400});
+  }
+  const {data,error}=await supabaseAdmin.from('math_mission_assignments').insert({xp_course_id:body.courseId||null,xp_unit_id:body.unitId||null,teacher_email:ctx.scopeEmail,user_id:body.userId,mission:m.slug,code:body.code,title:`${m.name} · ${body.code}`,due_at:body.dueAt||null}).select().single();
   return error?NextResponse.json({error:'Could not assign mission.'},{status:503}):NextResponse.json({assignment:data});
  }
  if(body?.action==='review'){

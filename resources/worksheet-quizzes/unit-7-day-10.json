@@ -3,13 +3,13 @@
   "unit": 7,
   "day": 10,
   "title": "Circuit investigation",
-  "target": "Use measurements to test a circuit model safely.",
+  "target": "Use measurements to safely test a predicted circuit result.",
   "criteria": [
     "Draw and predict before powering a circuit.",
     "Place ammeters in series and voltmeters in parallel.",
-    "Compare measured and predicted values using evidence."
+    "Compare measured and predicted values using specific numbers."
   ],
-  "source_sha256": "2747eff6cfdc9f3ce48a028da29788a99ac499f8fefae910083149b15af794a5",
+  "source_sha256": "bb8d9b2945ba84f4a65519f5dfce2684bc71e3ea2855735cd755cb316083975c",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.564Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "Before connecting a 10 V supply across a 20 Ω resistor, what current should the ideal model predict?",
+      "prompt": "Before connecting a 10 V supply across a 20 Ω resistor, what current should you predict for an ideal resistor?",
       "options": [
         "2 A",
         "10 A",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A team finds a disagreement between model and measurement. Which next step best tests the cause?",
+      "prompt": "A team’s prediction and measurement disagree. Which next step best tests the cause?",
       "options": [
         "Conclude charge is not conserved.",
         "Check wiring, meter setup, component values, and repeat the measurement.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "Before connecting a 10 V supply across a 20 Ω resistor, what current should the ideal model predict?",
+      "prompt": "Before connecting a 10 V supply across a 20 Ω resistor, what current should you predict for an ideal resistor?",
       "options": [
         "2 A",
         "0.50 A",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A team finds a disagreement between model and measurement. Which next step best tests the cause?",
+      "prompt": "A team’s prediction and measurement disagree. Which next step best tests the cause?",
       "options": [
         "Invent a resistance that forces agreement and call it measured.",
         "Delete every trial that differs.",

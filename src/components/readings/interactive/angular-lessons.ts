@@ -81,7 +81,7 @@ export const angularLessons = {
         "by gravity pulling harder on a tuck."
       ],
       "correct": 1,
-      "hint": "Identify an external interaction that supplies angular impulse.",
+      "hint": "Name an external interaction that supplies angular impulse.",
       "feedback": [
         "Tucking changes inertia and speed while conserving existing momentum.",
         "Correct. The floor interaction can provide angular impulse.",
@@ -171,7 +171,7 @@ export const angularLessons = {
         "has units of kilograms."
       ],
       "correct": 1,
-      "hint": "Evaluate the perpendicular distance to its momentum line.",
+      "hint": "Find the perpendicular distance to the line along its momentum.",
       "feedback": [
         "Straight motion does not make r × p zero for every origin.",
         "Correct. The offset momentum line gives nonzero angular momentum.",
@@ -351,7 +351,7 @@ export const angularLessons = {
         "8."
       ],
       "correct": 1,
-      "hint": "Use Δθ = ½αt² under these stated conditions.",
+      "hint": "Use Δθ = ½αt² when the facts stated in this problem are true.",
       "feedback": [
         "Final angular speed doubles, but the accumulated angle grows faster.",
         "Correct. The time is squared.",

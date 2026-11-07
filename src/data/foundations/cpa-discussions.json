@@ -1,0 +1,754 @@
+{
+  "day-one": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "1. **Name one thing you saw** on a slide. Give its slide number.\n2. What does it tell you?\n3. How is the cart test different from the asteroid story?",
+        "1. **Name one idea we cannot check yet.**\n2. What fact is missing?\n3. What could we measure to check the idea?"
+      ],
+      "soloIdea": "1. **Name one thing you saw** on a slide. Give its slide number.\n2. What can it tell you?\n3. What can it not tell you?",
+      "math": "",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "We thought the next position would be **6 m**. We read **5 m** instead.\n1. **Give two reasons** this might happen.\n2. What could you check to tell which reason fits?",
+        "The cart is at **0 m, 2 m, and 4 m** at **0 s, 1 s, and 2 s**.\n1. **Find the next position at 3 s.**\n2. What must stay the same for your answer to work?"
+      ],
+      "soloIdea": "The cart is at **0 m, 2 m, and 4 m**, one second apart.\n1. **Find its next position.**\n2. What must stay the same?\n3. Give two reasons why the next reading might be **5 m**.",
+      "math": "Next position = last position + distance moved in one step.\nUse: **4 + (2 − 0) = __ m**. Compare the prediction with the new reading.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "1. **Choose a question** you have about the story.\n2. Make it clear what you want to find out.\n3. Do you need measurements, choices by people, or both? Explain.",
+        "1. **Choose a question** about the story.\n2. Name two things to measure. How would each help?\n3. Name a choice that measurements alone cannot make."
+      ],
+      "soloIdea": "1. **Choose a question** about the story.\n2. Do you need measurements, choices by people, or both? Explain.\n3. Name two things to measure. How would each help?",
+      "math": "",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-two": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "Eli walks **6 m east**, then **6 m west**.\n1. **Add the length of both parts.** This is distance traveled.\n2. Point to a detail in the comic that shows the route.",
+        "1. **Mark where Eli starts and ends** on his return trip.\n2. Find the change from start to end. This is displacement.\n3. Why does that answer not mean he stood still?"
+      ],
+      "soloIdea": "Eli walks **6 m east**, then **6 m west**.\n1. **Describe both parts of the trip.**\n2. Add both lengths to find distance.\n3. Compare start and end to find displacement.",
+      "math": "Distance = add all path lengths: **6 + 6 = __ m**.\nDisplacement = end position − start position. Keep the direction.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "Walk **5 equal steps north, 3 east, and 5 south**.\n1. **Find the change from start to end.** Give size and direction.\n2. What do you treat as true about the steps?\n3. What would you check if you did not end east of the start?",
+        "Use **5 equal steps north, 3 east, and 5 south**.\n1. **Draw the route**, or walk it safely.\n2. Add all three lengths to find distance.\n3. Why do the southward steps count? How will you keep steps the same size?"
+      ],
+      "soloIdea": "1. **Draw 5 steps north, 3 east, and 5 south.** Use equal step lengths.\n2. Add all lengths to find distance.\n3. Find the size and direction from start to end.\n4. Why must the step lengths match?",
+      "math": "Distance = **5 + 3 + 5 = __ steps**.\nNorth–south change = **5 − 5 = __ steps**. East–west change = **3 − 0 = __ steps**.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "Use the asteroid picture.\n1. **Draw two arrows from the same start.** Each is one million kilometers long. Give them different directions.\n2. Name your reference point and both directions. Mark both ends.",
+        "1. **List facts missing from the headline.**\n2. Name two things we could observe to find the direction.\n3. Explain why the two pictures show possible paths, not known future paths."
+      ],
+      "soloIdea": "1. **Draw two arrows from the same start.** Make their lengths equal and their directions different.\n2. Describe each change from start to end.",
+      "math": "",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-three": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "1. **Choose which way is positive.**\n2. Describe how to walk so a position–time line rises, stays flat, or falls.\n3. Explain why each walk makes that shape.",
+        "1. **Choose two points on each position–time line.**\n2. Find the position change and time taken. Use them to find slope.\n3. How would you check someone who used line height as velocity?"
+      ],
+      "soloIdea": "1. **Predict the line shape** for walking away, standing still, and walking toward the sensor.\n2. Explain each choice.",
+      "math": "Slope = velocity = (end position − start position) ÷ (end time − start time).\nWrite: (__ − __) m ÷ (__ − __) s = __ m/s.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "1. **Choose one trial and its repeat.**\n2. Use two labeled points from each to find velocity. Show units.\n3. What does the repeat help you check? What does it not prove?",
+        "1. **Choose your prediction and its trial.**\n2. Name a difference, or one thing the trial cannot tell you.\n3. Plan a check: did the walk change, or did the setup cause the result?"
+      ],
+      "soloIdea": "Use the supplied sample trials.\n1. **Find velocity** for moving away, standing still, and moving toward the sensor.\n2. Compare each with its repeat. Say that these readings were supplied.",
+      "math": "For each trial: position change = end − start. Time taken = end time − start time.\nVelocity = position change ÷ time taken. Keep the sign and **m/s** unit.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "Use the comic’s position–time graph.\n1. **Find velocity** on the rising, flat, and falling parts. Show the points and times you used.\n2. Find the average for the whole trip.\n3. Compare it with each part.",
+        "Someone says, “Zero average velocity means no motion.”\n1. **Check this idea** with the comic’s start, end, and middle readings.\n2. What would one speed alone leave out of an asteroid’s path?"
+      ],
+      "soloIdea": "Use the comic’s position–time graph.\n1. **Find velocity on each of its three parts.**\n2. Find average velocity for the whole trip. Show the readings you used.",
+      "math": "For each graph part: velocity = position change ÷ time taken.\nFor the whole trip, use the trip’s start and end, and the full time. Do not add the three velocities.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-four": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "The comic’s velocity line stays at **+1 m/s from 0 to 4 s**.\n1. **Describe the motion.**\n2. Find displacement.\n3. What would a flat position line mean instead?",
+        "1. **Read the label and unit on the graph’s side axis.**\n2. Name a mistake someone could make about a flat line.\n3. How does the label help you fix it?"
+      ],
+      "soloIdea": "The comic’s line stays at **+1 m/s for 4 s**.\n1. **Tell how the object moves.**\n2. Find how far its place changes. This change is displacement.",
+      "math": "For steady velocity: displacement = velocity × time.\nWrite: **(+1 m/s) × (4 s) = __ m**.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "The comic shows **4 m/s east** and **2 m/s north**.\n1. **Check both arrows** with one scale.\n2. If you turn an arrow but keep its length, what changes?",
+        "One velocity has parts **+4 m/s east** and **+3 m/s north**.\n1. **Draw the two parts.**\n2. Find the speed.\n3. Why can you not just add **4 + 3**?"
+      ],
+      "soloIdea": "1. **Draw +4 m/s east and +3 m/s north** using one scale.\n2. Draw the arrow for the whole velocity.\n3. Find its size.",
+      "math": "For two parts at right angles: speed = √(east part² + north part²).\nWrite: **√(4² + 3²) = __ m/s**. Square, add, then take the square root.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "The comic gives **8.21 km/s** and **2.20 km/s**, along two axes. Use **1.6 × 10⁷ s**.\n1. **Find the change in position along each axis.**\n2. What do these changes tell you? What do they not tell you?",
+        "Someone says the smaller sideways speed does not matter.\n1. **Check this idea** with the comic’s values.\n2. What do you need to know about the start position?\n3. Why might a steady-velocity prediction be wrong?"
+      ],
+      "soloIdea": "Use the comic’s **8.21 km/s** and **2.20 km/s** for **1.6 × 10⁷ s**.\n1. Treat both speeds as steady.\n2. **Find the two changes in position.**",
+      "math": "Change along one axis = velocity along that axis × time.\nUse **8.21 × (1.6 × 10⁷)** and **2.20 × (1.6 × 10⁷)**. The answers are in **km**.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-five": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "A cart starts at **+10 m**. Its velocity is **−3 m/s** for **2 s**.\n1. **Find its displacement.**\n2. Add that change to the start position.\n3. Explain each sign.",
+        "1. **Check the comic’s axes and start point.**\n2. Why is motion toward Earth negative today but positive on yesterday’s axis?\n3. What else do you need to predict position?"
+      ],
+      "soloIdea": "A cart starts at **+10 m** and moves at **−3 m/s for 2 s**.\n1. **Find its displacement.**\n2. Find its final position.",
+      "math": "Displacement = velocity × time = **(−3) × 2 = __ m**.\nFinal position = start position + displacement = **10 + __ = __ m**.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "Use the comic’s values: **x₀ = +120,000,000 km**, **y₀ = 0**, **vₓ = −8.210 km/s**, **vᵧ = +2.200 km/s**, **t = 16,000,000 s**.\n1. **Find each signed change in position.**\n2. Add each change to its start value.\n3. Show where you used the start values.",
+        "Use the same comic values and **16,000,000 s**.\n1. **Describe the final position.**\n2. Does a negative x alone show a crash? Explain.\n3. Is the distance at the end always the closest distance during the trip?"
+      ],
+      "soloIdea": "Use the comic’s start position and velocity along each axis. The time is **16,000,000 s**.\n1. **Find both signed changes in position.**\n2. Find both final position values.",
+      "math": "x change = **(−8.210) × 16,000,000 = __ km**.\ny change = **(+2.200) × 16,000,000 = __ km**.\nFinal x = **120,000,000 + x change**. Final y = **0 + y change**.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "Each start value may be off by **±50,000 km**. Each velocity part may be off by **±0.200 km/s**. Use **16,000,000 s**.\n1. **Find how far an end value could be from the center.**\n2. Describe the full range along both axes.\n3. Why does this range not give the chance of a crash?",
+        "Someone says the range covers every possible error.\n1. **Check that idea.** Which errors come from the starting numbers? Which come from physics left out?\n2. Suggest one new observation.\n3. Suggest one change to the calculation. How would each help?"
+      ],
+      "soloIdea": "Use **±50,000 km**, **±0.200 km/s**, and **16,000,000 s**.\n1. **Find the largest possible error** in each final position value.\n2. Describe the range around the predicted end point.",
+      "math": "Largest error from center to edge = start error + velocity error × time.\nUse **50,000 + (0.200 × 16,000,000) = __ km** along each axis.\nEach full range runs from center − error to center + error.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-six": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "1. **Draw 3 m east, then 4 m north**, as in the comic. State your scale.\n2. Add both lengths to find the route length.\n3. Draw one arrow from start to end. Find its size and direction.",
+        "Compare **3 m east then 4 m north** with **4 m east then 3 m north**.\n1. **Name what stays the same.**\n2. Name what changes.\n3. Why may you slide an arrow but not turn it when adding?"
+      ],
+      "soloIdea": "1. **Draw 3 m east, then 4 m north**, with one scale.\n2. Find distance traveled.\n3. Find the size and direction of the arrow from start to end.",
+      "math": "Path length = **3 + 4 = __ m**. Start-to-end size = **√(3² + 4²) = __ m**.\nAngle north of east = tan⁻¹(north part ÷ east part). Use degree mode.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "Add **A = (+6, +2) m** and **B = (−4, +3) m**.\n1. **Add the x parts and the y parts.**\n2. Find the size and direction of the whole arrow.\n3. Check that its direction fits your sketch.",
+        "The comic’s velocity parts are **(−8,210, +2,200) m/s**.\n1. **Find the speed.**\n2. Find its direction from +x, turning counterclockwise.\n3. Explain why the **15°** angle is not that full **165°** direction."
+      ],
+      "soloIdea": "Use the two parts **(−8,210, +2,200) m/s**.\n1. **Find the speed.**\n2. Find the angle from +x. Turn the way that goes against a clock’s hands.",
+      "math": "Add parts: x = **6 + (−4)**; y = **2 + 3**. Size = √(x² + y²).\nFor the comic’s velocity use **√((−8,210)² + 2,200²)**.\nFind the small angle with tan⁻¹(|y| ÷ |x|). Use the signs to place it on your sketch.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "An arrow is **10 m/s**, at **30° north of east**. It is also **60° east of north**.\n1. **Find its east and north parts** using each angle.\n2. Why should the two methods agree?",
+        "Two pulls are **20 N** each. One is **30° north of east**. The other is **30° east of north**.\n1. **Draw both arrows.**\n2. Find their east and north parts.\n3. Why do the part sizes switch?"
+      ],
+      "soloIdea": "An arrow is **10 m/s** at **30° north of east**, or **60° east of north**.\n1. **Find both parts** using the first angle.\n2. Check them using the second angle.",
+      "math": "For an angle from east: east part = size × cos(angle); north part = size × sin(angle).\nFor an angle from north, switch sine and cosine. Use degree mode.\nSubstitute the given **10 m/s** or **20 N** and the angle. Keep the units.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-seven": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "A cart goes from **+3 m/s to +15 m/s in 4 s**.\n1. **Find the change in velocity.** Subtract start from end.\n2. Divide by time to find acceleration.\n3. What does **m/s²** mean? How is the start value different from the change?",
+        "A cart goes from **+15 m/s to +3 m/s in 4 s**.\n1. **Find the velocity change.**\n2. Find average acceleration.\n3. Does it speed up or slow down? Compare the acceleration sign with the motion direction."
+      ],
+      "soloIdea": "Compare **+3 to +15 m/s** with **+15 to +3 m/s**. Each takes **4 s**.\n1. **Find each velocity change.**\n2. Divide each by the time.\n3. Explain what each acceleration means.",
+      "math": "Velocity change = end velocity − start velocity.\nAcceleration = velocity change ÷ time. Use **(15 − 3) ÷ 4** or **(3 − 15) ÷ 4**.\nThe unit **m/s²** means velocity change in m/s each second.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "1. **Draw a velocity–time line** from **(0 s, +2 m/s)** to **(4 s, +14 m/s)**.\n2. Find its slope and displacement. Treat acceleration as steady.\n3. How does the starting height affect your answer?",
+        "Use **v₀ = +2 m/s**, **a = +3 m/s²**, and **t = 4 s**. Keep a steady.\n1. **Find the end velocity.**\n2. Find how far the place changes. This is displacement.\n3. Start from rest and try both steps again. What stays the same? What changes?"
+      ],
+      "soloIdea": "Use **v₀ = +2 m/s**, **a = +3 m/s²**, and **t = 4 s**. Keep a steady.\n1. **Find the end velocity.**\n2. Find how far the place changes. This is displacement.\n3. Tell how the line on a velocity–time graph would look.",
+      "math": "With steady acceleration: end velocity = start velocity + acceleration × time.\nUse **2 + 3 × 4 = __ m/s**. Average velocity = (start + end) ÷ 2.\nDisplacement = average velocity × time. For the other case, replace start velocity with zero.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "Use Earth’s pull alone: **a = 2.8 × 10⁻⁸ m/s²**. Keep its size and direction fixed.\n1. **Find velocity change after 10 s.**\n2. Find it after **1.6 × 10⁷ s**.\n3. What can these answers show? What can they not show?",
+        "Someone says, “Earth’s pull is tiny, so our six-month path must be right.”\n1. **Name a force or change this idea leaves out.**\n2. How do the objects’ positions change?\n3. Choose a use for the prediction. How much error could you accept?"
+      ],
+      "soloIdea": "Use Earth’s pull alone: **2.8 × 10⁻⁸ m/s²**.\n1. Say what you keep fixed in this calculation.\n2. **Find velocity change after 10 s and 1.6 × 10⁷ s.**\n3. What do the results mean?",
+      "math": "Velocity change = acceleration × time.\nUse **(2.8 × 10⁻⁸) × 10**, then **(2.8 × 10⁻⁸) × (1.6 × 10⁷)**. Answers are in **m/s**.\nIn the second product, multiply the front numbers and add the powers of ten.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-eight": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "A car starts at **+20 m/s**. It brakes at steady **−4 m/s²** until it stops.\n1. **List what you know.** What value is zero at the end?\n2. You need braking displacement. Choose an equation with no time in it.\n3. Explain why it fits. Do not calculate yet.",
+        "A cart starts at **+3 m/s**. Its steady acceleration is **+2 m/s²** for **4 s**.\n1. **Choose an equation for final velocity.**\n2. Choose one for displacement.\n3. What extra value do you need for final position? Do not calculate yet."
+      ],
+      "soloIdea": "A car stops from **+20 m/s** at steady **−4 m/s²**.\n1. **Pick a rule to find how far the car moves as it stops.**\n2. Now think of a cart. You know its start velocity, a, and time. Pick a rule to find how far its place changes.\n3. Say why each rule fits before you use it.",
+      "math": "Equation menu for steady acceleration:\n**v = v₀ + at**; **Δx = v₀t + ½at²**; **v² = v₀² + 2aΔx**.\nv₀ is start velocity; v is end velocity; a is acceleration; t is time. Δx is displacement.\nCircle the given values. Match them to an equation. Final position also needs the start position.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "A car brakes from **+20 m/s to rest** at steady **−4 m/s²**.\n1. **Find braking displacement.**\n2. Check it with stopping time and average velocity.\n3. Explain its sign. Does it include distance before braking starts?",
+        "Use **x₀ = −3 m**, **v₀ = +2 m/s**, **a = +1 m/s²**, and **t = 4 s**.\n1. **Find the change in place, then the end place.** These are displacement and final position.\n2. Check the change with average velocity: add start and end, then divide by two.\n3. Why do the change and end place differ?"
+      ],
+      "soloIdea": "1. **Find braking displacement** from **+20 m/s to rest** at **−4 m/s²**.\n2. **Find final position** from **x₀ = −3 m**, **v₀ = +2 m/s**, **a = +1 m/s²**, after **4 s**.\n3. Say what you keep fixed about acceleration in both problems.",
+      "math": "Braking: **Δx = (0² − 20²) ÷ (2 × (−4))**.\nCheck: **t = (0 − 20) ÷ (−4)**, then Δx = average velocity × t.\nPosition case: **Δx = 2 × 4 + ½ × 1 × 4²**; **x = −3 + Δx**.\nCheck with end velocity **2 + 1 × 4** and average velocity.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "A ball starts upward at **+14 m/s**. Up is positive. Ignore air resistance.\n1. **Find how far it rises** without finding time first.\n2. Which value is zero at the top?\n3. What is acceleration at the top?",
+        "A train starts from rest. Its steady acceleration is **+0.50 m/s²** until it reaches **+12 m/s**.\n1. **Find the time and how far the train moves.**\n2. Say why each rule you chose fits.\n3. Check how far it moves: use the mean of the start and end speeds."
+      ],
+      "soloIdea": "Use the ball starting upward at **+14 m/s** and the train going from rest to **+12 m/s** at **+0.50 m/s²**.\n1. **Find the ball’s rise.**\n2. Find the train’s time and displacement.\n3. Name the zero value in each case.",
+      "math": "Ball: use **a = −9.8 m/s²** and zero end velocity at the top.\n**Δx = (0² − 14²) ÷ (2 × (−9.8))**.\nTrain: **t = (12 − 0) ÷ 0.50**; **Δx = ((0 + 12) ÷ 2) × t**.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-nine": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "Use the cart on **comic page 33**.\n1. **What happens to the hand’s push when it lets go?**\n2. Why can the cart keep moving?\n3. Compare a track with no resistance and a real track.",
+        "A moving box has **8 N right** from a rope and **8 N left** from friction.\n1. **Explain why it can keep moving.**\n2. How is an arrow for velocity different from one for force?"
+      ],
+      "soloIdea": "Compare the released cart and a moving box with **8 N right and 8 N left**.\n1. **Name the forces that stay.**\n2. Does velocity change? Explain each case.",
+      "math": "Choose right as positive. Net force = right force − left force.\nFor the box: **8 − 8 = __ N**. Net force changes velocity; it does not tell you the current velocity.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "Use the coin and card test, or **comic page 34**.\n1. **Name your source and describe what happened.**\n2. Explain the coin’s sideways motion during contact.\n3. Explain its up-or-down motion when support is gone.",
+        "Use the cloth and cups test, or **comic page 35**.\n1. **Name your source and describe what happened.**\n2. The cups move sideways only a little. Why does that not prove friction was zero?"
+      ],
+      "soloIdea": "Use **comic pages 34 and 35**. Label your source as the story.\n1. **Explain the coin’s sideways and up-or-down motion.**\n2. Explain why the cups move sideways only a little.",
+      "math": "",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "Someone says, “There is no floor friction in space, so the asteroid goes straight forever.”\n1. **Check this idea.**\n2. What does Newton’s first law say? When does it apply?\n3. Name a force the statement leaves out.",
+        "**Plan a test** of how a surface slows a released cart.\n1. What will you change?\n2. Name two things you will keep the same.\n3. What will you observe to compare the results?"
+      ],
+      "soloIdea": "1. **Describe an asteroid with zero net force.** What forces might a real asteroid still feel?\n2. Plan a cart test on two surfaces.\n3. Change one thing and keep the other key things the same. What will you observe?",
+      "math": "",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-ten": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "Report your unloaded reading and one pull. Name the source, sign and unit.",
+        "Report one push. Compare its sign with the pull and check the sensor direction."
+      ],
+      "soloIdea": "Report your unloaded reading and one pull. Name the source, sign and unit.",
+      "math": "",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "Draw gravity and the surface push on the downhill car. Use the ramp to place your arrows.",
+        "An arrow shows motion down the hill.\n1. **Should it be in a force sketch?**\n2. Use one detail in the picture to explain why."
+      ],
+      "soloIdea": "Draw gravity and the surface push on the downhill car. Use the ramp to place your arrows.",
+      "math": "",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "Sketch the forces on the asteroid while the craft touches it. Name the source of each force.",
+        "Sketch the forces after the craft leaves. Explain why one arrow should disappear."
+      ],
+      "soloIdea": "Sketch the forces on the asteroid while the craft touches it. Name the source of each force.",
+      "math": "",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-eleven": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "Sketch the moving system. Mark where you add mass and what stays fixed.",
+        "Draw two velocity lines for the same net force. Predict which mass gives the steeper line."
+      ],
+      "soloIdea": "Sketch the moving system. Mark where you add mass and what stays fixed.",
+      "math": "For the same net force: **a = Fₙₑₜ ÷ total mass**.\nCount the cart, added weights, and hanger when all are in the moving system.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "Share two mass and acceleration rows. Name your source, units, and what mass your rows represent.",
+        "Check how the slope was found. Explain what could make one trial unreliable."
+      ],
+      "soloIdea": "Share two mass and acceleration rows. Name your source, units, and what mass your rows represent.",
+      "math": "Choose two points on a straight velocity–time line.\nVelocity change = end − start. Time taken = end time − start time.\nAcceleration = velocity change ÷ time taken. Use **m/s²**.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "1. **Choose two rows.** In each, find mass × acceleration.\n2. Compare your two results.\n3. Do they fit what you thought would happen? Say why, or change your idea.",
+        "Use the same-force rule for an asteroid. Explain one limit of carrying the cart result over to space."
+      ],
+      "soloIdea": "1. **Choose two rows.** In each, find mass × acceleration.\n2. Compare your two results.\n3. Do they fit what you thought would happen? Say why, or change your idea.",
+      "math": "For each row: **mass × acceleration = __ kg × __ m/s² = __ N**.\nCompare the two products. For the same net force: **a = Fₙₑₜ ÷ mass**.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-twelve": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "Show a transfer of one weight from cart to hanger. Mark what stays fixed and what changes.",
+        "Sketch two velocity traces for the same total mass and different net forces. Explain your choice of slopes."
+      ],
+      "soloIdea": "Show a transfer of one weight from cart to hanger. Mark what stays fixed and what changes.",
+      "math": "Total moving mass = cart + weights on cart + hanger and its weights.\nAdd before and after the transfer. Compare the totals. **a = Fₙₑₜ ÷ total mass**.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "1. **Choose one row.**\n2. Find the weight of the hanging mass.\n3. Name the object or group of objects you mean.",
+        "Choose an acceleration. Explain how to get it from a straight velocity trace and how to check a bad release."
+      ],
+      "soloIdea": "1. **Choose one row.**\n2. Find the weight of the hanging mass.\n3. Name the object or group of objects you mean.",
+      "math": "Hanger weight = hanger mass in kg × **9.8 N/kg**.\nAcceleration = (end velocity − start velocity) ÷ time taken.\nWeight, string pull, and total net force are not always equal.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "1. **Choose two rows and name your source.**\n2. Divide the larger force by the smaller force.\n3. Do the same with their accelerations.\n4. Are the two results close? Say what they show.",
+        "Check your partner’s use of net force. Explain what the film can show about the trend and what it cannot prove exactly."
+      ],
+      "soloIdea": "1. **Choose two rows and name your source.**\n2. Divide the larger force by the smaller force.\n3. Do the same with their accelerations.\n4. Are the two results close? Say what they show.",
+      "math": "Force ratio = larger driving weight ÷ smaller driving weight.\nAcceleration ratio = the matching acceleration for the larger force ÷ the matching acceleration for the smaller force. Compare the two ratios.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-thirteen": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "Point to the longer horizontal arrow. Name the force it shows.",
+        "1. **Check the math.** Did it include friction? This is the force that resists sliding.\n2. Talk about the missing step. Then reveal the answer."
+      ],
+      "soloIdea": "Point to the longer horizontal arrow. Name the force it shows.",
+      "math": "Choose right as positive. **Fₙₑₜ = rightward force − leftward force**. Include friction with its direction.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "Find the net force the box needs. Then work backward to find the pull that also overcomes friction.",
+        "To find mass, divide net force by acceleration. Check that your answer is in kilograms."
+      ],
+      "soloIdea": "Find the net force the box needs. Then work backward to find the pull that also overcomes friction.",
+      "math": "First find **Fₙₑₜ = mass × acceleration**.\nIf friction acts against the pull: **pull = Fₙₑₜ + friction**.\nTo find mass instead: **mass = Fₙₑₜ ÷ acceleration**, in **kg**.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "A car moving forward can have a backward net force. Tell your group what happens to its speed.",
+        "1. **Find the change in velocity:** end − start.\n2. Divide that change by the time.\n3. Multiply your result by mass. Keep the sign and unit."
+      ],
+      "soloIdea": "A car moving forward can have a backward net force. Tell your group what happens to its speed.",
+      "math": "Acceleration = (end velocity − start velocity) ÷ time taken.\nThen **Fₙₑₜ = mass × acceleration**. Check whether its sign matches your chosen direction.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-fourteen": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "Draw one box for the horse and one for the cart. Put each pull on the object that feels it.",
+        "Trace each arrow. Name who pushes whom. Check that the arrows point opposite ways."
+      ],
+      "soloIdea": "Draw one box for the horse and one for the cart. Put each pull on the object that feels it.",
+      "math": "",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "Predict before pulling. Compare a gentle pull and a changing pull. Keep the sensors within range and ease off together.",
+        "Record the time and both signed readings. Repeat. Compare sizes at the same instant, using the same axis."
+      ],
+      "soloIdea": "Predict before pulling. Compare a gentle pull and a changing pull. Keep the sensors within range and ease off together.",
+      "math": "Use readings taken at the same time. Keep the signs in your notes.\nTo compare sizes, use each reading’s distance from zero.\nDifference in sizes = larger size − smaller size, in **N**.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "Compare the contact forces first. Then use each mass to compare how its velocity changes.",
+        "Check the receiver of each force. Then name the partner of the weight and the partner of the support force."
+      ],
+      "soloIdea": "Compare the contact forces first. Then use each mass to compare how its velocity changes.",
+      "math": "Compare the contact-force sizes first.\nFor the acceleration caused by that force: **a = force ÷ mass**. Use the mass of the object that feels the force.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-fifteen": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "Look at the crate. Name what touches it and what pulls on it from far away.",
+        "Start all arrows at the dot. A longer arrow means a larger force when you use one scale."
+      ],
+      "soloIdea": "Look at the crate. Name what touches it and what pulls on it from far away.",
+      "math": "Use one arrow scale. For example, state how many newtons one grid step means. Keep that scale for every force on the same diagram.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "After the hand lets go, remove its push. Keep the forces that still act on the sliding box.",
+        "Ask what could cause a rightward push. The cart’s motion alone cannot supply one."
+      ],
+      "soloIdea": "After the hand lets go, remove its push. Keep the forces that still act on the sliding box.",
+      "math": "",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "Gravity pulls toward its source.\n1. **Draw that pull on the asteroid.**\n2. Add a force from touch only while the craft touches it.\n3. Name what causes each force.",
+        "1. **Cross out the arrow for motion.** It is not a force.\n2. Cross out the extra arrow for net force. It is a sum, not a new push or pull."
+      ],
+      "soloIdea": "Gravity pulls toward its source.\n1. **Draw that pull on the asteroid.**\n2. Add a force from touch only while the craft touches it.\n3. Name what causes each force.",
+      "math": "",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ],
+  "day-sixteen": [
+    {
+      "id": "evidence",
+      "prompts": [
+        "Write right as positive. Subtract the leftward force before dividing by the box’s mass.",
+        "1. **Add forces on each axis on its own.**\n2. If the up–down acceleration is zero, the up–down sum is zero.\n3. Does this tell you the left–right sum? Explain."
+      ],
+      "soloIdea": "Write right as positive. Subtract the leftward force before dividing by the box’s mass.",
+      "math": "For each axis: add forces with their signs to find **Fₙₑₜ**.\nThen **a = Fₙₑₜ ÷ mass**. A zero sum on one axis says nothing about the other axis.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "model",
+      "prompts": [
+        "Split weight into two parts for the calculation. One acts along the ramp and the other into it.",
+        "Use one axis down the ramp and one out of it. Draw the full weight straight down, even on these tilted axes."
+      ],
+      "soloIdea": "Split weight into two parts for the calculation. One acts along the ramp and the other into it.",
+      "math": "For ramp angle θ above level ground: downhill weight part = **mg sin θ**; into-ramp part = **mg cos θ**.\nUse the slide’s values and degree mode. Use either the two parts or full weight in a sum, not both.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    },
+    {
+      "id": "questions",
+      "prompts": [
+        "1. **Choose the asteroid or the craft.**\n2. Draw forces on that object only.\n3. Add an engine push only if that object has an engine that is on.",
+        "1. **Draw arrows for velocity and acceleration.**\n2. Do they point opposite ways? If so, the object slows at first.\n3. Use your arrows to tell why."
+      ],
+      "soloIdea": "1. **Choose the asteroid or the craft.**\n2. Draw forces on that object only.\n3. Add an engine push only if that object has an engine that is on.",
+      "math": "First choose one object. Then use **a = Fₙₑₜ ÷ its mass**.\nCompare the directions of velocity and acceleration to decide how speed changes.",
+      "idea": "Start: “I used __. My answer is __ because __.”",
+      "discuss": "1. **Take turns explaining your steps.**\n2. Check one number, arrow, or graph label together.\n3. Each person writes their own answer.",
+      "reply": "1. **Point to one detail** in your classmate’s work.\n2. Check it with a number, picture, or fact from the lesson.\n3. Explain one thing to keep or fix.\n\nStart: “You wrote __. I checked __. I think __ because __.”",
+      "reflect": "1. **Write what you think now.**\n2. Name one check from your group. How did it help?\n\nStart: “I now think __ because __. Our check helped me __.”",
+      "critique": "1. **Read the example.** It may have an error.\n2. Check its numbers, arrows, or explanation with the lesson.\n3. Explain what is right, wrong, or missing. Show the check you used.\n\nStart: “The example says __. My check shows __ because __.”",
+      "soloReflect": "1. **Write your own final answer.**\n2. Say what you checked or changed after reading the example.\n\nStart: “I now think __ because __. I checked or changed __.”"
+    }
+  ]
+}

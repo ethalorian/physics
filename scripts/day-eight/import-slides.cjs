@@ -10,8 +10,8 @@ const snapshots=[
     "after": 11,
     "page": 29,
     "file": "page-01.webp",
-    "y": 1142,
-    "height": 354,
+    "y": 641,
+    "height": 856,
     "title": "Choose from what you know",
     "alt": "Nadia explains that the equation must connect what is known to what is needed. The notebook shows v squared equals initial velocity squared plus twice acceleration times displacement. No time is needed.",
     "body": "A stop supplies a hidden given: final velocity is zero. Choose an equation from the quantities, not the story.",
@@ -34,7 +34,7 @@ const snapshots=[
     "after": 21,
     "page": 32,
     "file": "page-04.webp",
-    "y": 400,
+    "y": 399,
     "height": 292,
     "title": "Different unknowns, different equations",
     "alt": "The novel’s train starts from rest with acceleration 0.50 meters per second squared and reaches eighty meters per second in 160 seconds. A separate cart starts at two meters per second and accelerates at 1.5 meters per second squared for four seconds, moving twenty meters.",
@@ -46,8 +46,8 @@ const snapshots=[
     "after": 23,
     "page": 31,
     "file": "page-03.webp",
-    "y": 915,
-    "height": 283,
+    "y": 398,
+    "height": 800,
     "title": "At the top, which quantity is zero?",
     "alt": "A separate paper model ignores air resistance and chooses upward positive. With launch velocity fifteen meters per second, final vertical velocity zero and acceleration negative 9.8 meters per second squared, the calculation gives a rise of about 11.5 meters.",
     "body": "The novel’s paper model launches at 15 m/s; the slide’s example uses 14 m/s. Gravity still acts at the top.",
@@ -59,7 +59,7 @@ function comic(s){return `<section data-label="${s.title}" class="foundation-com
  <div style="font:24px 'IBM Plex Mono',monospace;letter-spacing:2px;color:#a9a7ff;">2026-XJ · No Clock · Graphic novel, page ${s.page}</div>
  <h2 style="font-size:64px;line-height:1.1;font-weight:500;margin:22px 0 30px;">${s.title}</h2>
  <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:52px;align-items:center;flex:1;min-height:0;">
-  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" style="width:100%;height:auto;max-height:610px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-08-v1/${s.file}" width="1024" height="1536"/></svg>
+  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;justify-self:center;max-width:${Math.floor(610*1024/s.height)}px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-08-v1/${s.file}" width="1024" height="1536"/></svg>
   <div><p style="font-size:32px;line-height:1.4;margin:0 0 28px;">${s.body}</p><p style="font-size:38px;line-height:1.25;margin:0;">${s.question}</p></div>
  </div><div style="font:24px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:28px;">${s.work} · Write your own answer in Work.</div>
  <footer style="font:20px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:22px;">Fictional story · Original artwork · Day 8</footer></section>`;}
@@ -83,7 +83,7 @@ let number=0;
 html=html.replace(/<section\b[^>]*>[\s\S]*?<\/section>/g,section=>{number++;return section.replace(/data-screen-label="[^"]*"/,`data-screen-label="${String(number).padStart(2,'0')}"`).replace(/Antocci Physics · \d{2} \/ 29/g,`Antocci Physics · ${String(number).padStart(2,'0')} / 30`);});
 html = require('../foundation-groups/slide-copy.cjs')(html);
 const plain=n=>n.nodeName==='#text'?n.value.replace(/\{\{[^}]+\}\}/g,''):['button','script','style','image'].includes(n.tagName)?'':n.tagName==='sc-if'&&n.attrs.some(a=>/q\dOpen/.test(a.value))?'':(n.childNodes||[]).map(plain).join(' ');
-const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,title:m[1].match(/data-label="([^"]+)"/)[1],text:plain(p5.parseFragment(m[0])).replace(/\s+/g,' ').trim()}));
+const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,comicPage:m[0].match(/<image\b[^>]*\bhref="(\/comics\/2026-xj\/[^"]+\.webp)"/)?.[1],title:m[1].match(/data-label="([^"]+)"/)[1],text: require('../foundation-groups/slide-language.cjs').companion(p5.parseFragment(m[0]))}));
 const vendor='resources/foundations/day-one/vendor';
 const libraries=[['react.production.min.js','DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z'],['react-dom.production.min.js','gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1']].map(([file,integrity])=>{const bytes=fs.readFileSync(path.join(vendor,file));if(crypto.createHash('sha384').update(bytes).digest('base64')!==integrity)throw Error('Runtime integrity mismatch');return script(bytes.toString());}).join('\n');
 const stage=fs.readFileSync(base+'/deck-stage.js','utf8'),support=fs.readFileSync(base+'/support.js','utf8');

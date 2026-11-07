@@ -3,7 +3,7 @@ import type { VelocityState } from '@/lib/interactive-assignments/velocity'
 import { WrittenResponse } from './QuestionResponse'
 import s from './TransferBriefWorkspace.module.css'
 
-const labels = ['Build the evidence', 'Make your recommendation', 'Check a model limitation']
+const labels = ['Show your calculations', 'Give your advice', 'Check what could change your answer']
 
 /** Preserve canonical question IDs and native answer state for snapshots and grading. */
 export default function TransferBriefResponses({ lesson, state, onChange, readOnly }: {

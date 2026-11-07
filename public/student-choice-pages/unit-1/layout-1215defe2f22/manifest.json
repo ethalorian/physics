@@ -1,0 +1,11 @@
+{
+  "version": "layout-1215defe2f22",
+  "notes": 44,
+  "practice": 132,
+  "duplexPagesPerCourse": 44,
+  "narrativeBacks": "unchanged approved PDF content streams",
+  "historicalAssignments": "keys, versions, option order and metadata preserved; corrected presentation assets",
+  "sourceFrontsSha256": "dd09f13e407e6c9249b6e0a9d235296e00217691e4a36e9d7d5361a55802e121",
+  "print": "Letter 100%; duplex long edge; 0.9in left notes/practice and right narratives",
+  "layoutRules": "resources/student-choice/print-layout.css"
+}

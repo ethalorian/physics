@@ -5,11 +5,11 @@
   "title": "Kinds of collisions",
   "target": "Separate momentum conservation from kinetic-energy conservation.",
   "criteria": [
-    "Identify the system and external-impulse assumption.",
+    "Identify the system. State how you handle impulse from outside the system.",
     "Recognize sticking as perfectly inelastic.",
     "Use kinetic energy to distinguish elastic from inelastic."
   ],
-  "source_sha256": "0dc8168fcad9dd8fda076944d3e987a85ae851066fdc0150106b4e12fe57ac39",
+  "source_sha256": "b79b42c0e7a2daeeebd0eff5005b227ee25d30e4e6af52fb3c4bdfdfd3af8ed4",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.505Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "Which condition permits total momentum conservation during a collision?",
+      "prompt": "What must be true for total momentum to stay constant during a collision?",
       "options": [
         "Negligible net external impulse on the chosen system.",
         "Equal object masses.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "Which condition permits total momentum conservation during a collision?",
+      "prompt": "What must be true for total momentum to stay constant during a collision?",
       "options": [
         "Equal object masses.",
         "Identical initial speeds.",

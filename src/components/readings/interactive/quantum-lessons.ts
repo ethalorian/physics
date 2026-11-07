@@ -130,7 +130,7 @@ export const quantumLessons = {
     ],
     "worked": {
       "title": "Reason from the evidence",
-      "prompt": "Compare 1.0 mW sources at 400 nm and 800 nm. Which emits more photons each second?",
+      "prompt": "1. Compare 1.0 mW sources at 400 nm and 800 nm.\n2. Which emits more photons each second?",
       "reasoning": "At 800 nm each photon has half the energy of a 400 nm photon. Equal optical power therefore requires twice the photon rate at 800 nm."
     },
     "check": {
@@ -403,7 +403,7 @@ export const quantumLessons = {
         "The energy–momentum relationship differs for a photon and electron.",
         "Correct: p = h/λ applies to both objects."
       ],
-      "hint": "Start with the relationship that is shared, then use the appropriate energy model.",
+      "hint": "Start with the relationship that is shared, then use the energy equation or explanation that fits this situation.",
       "teacher": "Ask students to connect two different experimental observations without treating wave and particle as exclusive identities."
     }
   },
@@ -503,7 +503,7 @@ export const quantumLessons = {
         "Diffuse positive charge did not explain the observed large-angle events.",
         "Scattering did not establish a specific stable electron orbit."
       ],
-      "hint": "Connect the surprising observation to the feature of the model it tests.",
+      "hint": "Connect the surprising observation to the part of the explanation it tests.",
       "teacher": "Ask students which experimental result determines a ratio and which supplies the missing independent quantity."
     }
   },
@@ -553,7 +553,7 @@ export const quantumLessons = {
         "Negative bound energy means energy must be supplied to reach the continuum.",
         "Correct: the required increase is from −3.4 eV to the zero-energy continuum boundary."
       ],
-      "hint": "Identify the starting level and the chosen zero.",
+      "hint": "Name the starting level and the chosen zero.",
       "teacher": "Ask students to distinguish an energy-level diagram from a spatial orbit drawing."
     }
   },
@@ -651,7 +651,7 @@ export const quantumLessons = {
     },
     "check": {
       "title": "Predict, then explain",
-      "prompt": "In an equal-weight two-level gain model with 70 upper and 30 lower systems, which stimulated process dominates?",
+      "prompt": "A simple gain calculation has two energy levels. There are 70 systems in the upper level and 30 in the lower level. Give each system equal weight. Which stimulated process dominates?",
       "options": [
         "Emission",
         "Absorption",
@@ -663,7 +663,7 @@ export const quantumLessons = {
         "Absorption dominates when the lower population is larger in this model.",
         "The total population does not determine the sign of the difference."
       ],
-      "hint": "Compare the two relevant populations under the stated equal-weight assumption.",
+      "hint": "Compare the two relevant populations while treating each possible outcome as equally likely, as stated.",
       "teacher": "Ask students to identify the pump energy and the losses before describing a laser as an energy source."
     }
   },
@@ -796,7 +796,7 @@ export const quantumLessons = {
     ],
     "worked": {
       "title": "Reason from the evidence",
-      "prompt": "For n = 3 and l = 2, list ml values and determine L and the largest Lz.",
+      "prompt": "For n = 3 and l = 2, list ml values and find L and the largest Lz.",
       "reasoning": "ml can be −2, −1, 0, 1, or 2. L = √6ℏ, while the largest Lz is 2ℏ. The largest component is smaller than the magnitude."
     },
     "check": {

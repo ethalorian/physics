@@ -1,4 +1,5 @@
 'use client'
+import QuizContent from '@/components/quizzes/QuizContent'
 import { ASSESSMENT_SCOPE_CHANGE } from '@/components/admin/useAssessmentReviewGuard'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -56,7 +57,7 @@ export default function ReadingReview({ detail, onRefresh, initialStudent }: { d
   </div>
 }
 export function SubmittedAnswers({ submission }: { submission: ReadingSubmission }) {
-  return <div className={styles.stack}>{submission.snapshot.questions.map((q, i) => <article className={styles.question} key={q.id}><div className={styles.row}><span className={styles.number}>{i + 1}</span><h3 className="font-semibold">{q.reference || `Question ${i + 1}`}</h3></div>{q.prompt && <p className="whitespace-pre-wrap">{q.prompt}</p>}<div className={styles.answer}>{submission.answers[q.id] || 'No response'}</div></article>)}</div>
+  return <div className={styles.stack}>{submission.snapshot.questions.map((q, i) => <article className={styles.question} key={q.id}><div className={styles.row}><span className={styles.number}>{i + 1}</span><h3 className="font-semibold">{q.reference || `Question ${i + 1}`}</h3></div>{q.prompt && <QuizContent questionEmphasis content={q.prompt} allowFigures/>}<div className={styles.answer}>{submission.answers[q.id] || 'No response'}</div></article>)}</div>
 }
 function ReviewForm({ detail, submission, onSaved }: { detail: ReadingDetail; submission: ReadingSubmission; onSaved: () => Promise<void> }) {
   const [ratings, setRatings] = useState<Record<string, number>>({}), [note, setNote] = useState(''), [busy, setBusy] = useState(false), [error, setError] = useState('')
@@ -83,7 +84,7 @@ function ReviewForm({ detail, submission, onSaved }: { detail: ReadingDetail; su
     <SubmissionSuggestions source="reading" id={submission.id} disabled={busy} onRating={r=>{if(r.level!==null){dirty.current=true;setRatings(old=>({...old,[r.target_id]:r.level!}))}}} onFeedback={text=>{dirty.current=true;setNote(old=>old||text)}}/>
     <h3 className="text-title-3">Rate the understanding</h3><p className={styles.muted}>Use the quality of the explanation, not completion or word count. If there is not enough evidence, return it with a next step.</p>
     {targets.map(id => <fieldset key={id} disabled={busy} className={styles.stack}><legend className="mb-3 text-sm font-semibold">{detail.targets.find(t => t.id === id)?.statement ?? 'Mastery target'}</legend><div className={styles.ratings}>{RATING_LABELS.map((label, i) => <button key={label} type="button" aria-pressed={ratings[id] === i + 1} onClick={() => { dirty.current = true; setRatings(r => ({ ...r, [id]: i + 1 })) }}>{i + 1} · {label}</button>)}</div></fieldset>)}
-    <label className={styles.field}>Feedback and next time<textarea value={note} maxLength={2000} rows={3} onChange={e => { dirty.current = true; setNote(e.target.value) }} disabled={busy} placeholder="What is working? What will help on a future assignment?" /></label>
+    <label className={styles.field}>Feedback<textarea value={note} maxLength={2000} rows={3} onChange={e => { dirty.current = true; setNote(e.target.value) }} disabled={busy} placeholder="What is working? What will help on a future assignment?" /></label>
     {error && <p role="alert" className={styles.error}>{error}</p>}
     <div className={styles.actions}><Button disabled={busy} onClick={() => void submit('rated')}>{busy ? 'Saving…' : 'Release mastery & feedback'}</Button><Button variant="outline" disabled={busy} onClick={() => void submit('returned')}>Return for revision</Button></div>
   </div>

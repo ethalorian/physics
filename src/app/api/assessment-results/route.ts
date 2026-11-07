@@ -14,11 +14,16 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
   const course = (await readingCourses(ctx)).find(c => c.id === classId)
   if (!course) return readingJson({ error: 'Class unavailable for this account.' }, 403)
   if (unitId.length > 120 || !/^[a-zA-Z0-9_-]+$/.test(unitId) || unitId === 'auto') return readingJson({ error: 'Choose a unit or all units.' }, 400)
-  const results = await loadAssessmentResults(ctx, course, 'all')
+  // Independent reads overlap; keep the existing partial-results warning path.
+  const [results, settingsRead] = await Promise.all([
+    loadAssessmentResults(ctx, course, 'all'),
+    loadGradingSettings(course.id).then(value => ({ value }), error => ({ error })),
+  ])
   const termId = params.get('term') || 'all'
   results.gradingTermId = termId
   try {
-    const settings = await loadGradingSettings(course.id)
+    if ('error' in settingsRead) throw settingsRead.error
+    const settings = settingsRead.value
     if (!['all', 'unassigned'].includes(termId) && !settings.terms.some(t => t.id === termId)) return readingJson({ error: 'This grading term is unavailable. Choose another term.' }, 400)
     results.gradingSettings = settings
     results.termQuizTotals = Object.fromEntries(results.students.map(student => { const { earned, possible, percent, count } = termQuizTotal(results.activities, student.id, settings, termId); return [student.id, { earned, possible, percent, count }] }))

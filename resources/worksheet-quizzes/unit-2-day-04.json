@@ -9,7 +9,7 @@
     "Apply direct mass and inverse-square distance comparisons.",
     "Identify equal forces on the two interacting bodies."
   ],
-  "source_sha256": "b860fd0707312d317dcb77af835b3de1def57655aceb7b3211490f03b46854df",
+  "source_sha256": "5e9fc2067678cacc6b185b329e12a916996ca06fb46e2ea678e06c8ebb32d939",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.490Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "Two spherical objects have radii 1 m and 2 m with a 5 m surface gap. Which distance goes into the inverse-square force model?",
+      "prompt": "Two spherical objects have radii of 1 m and 2 m. The gap between their surfaces is 5 m. Which distance belongs in the inverse-square force equation?",
       "options": [
         "5 m",
         "2 m",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "Two spherical objects have radii 1 m and 2 m with a 5 m surface gap. Which distance goes into the inverse-square force model?",
+      "prompt": "Two spherical objects have radii of 1 m and 2 m. The gap between their surfaces is 5 m. Which distance belongs in the inverse-square force equation?",
       "options": [
         "5 m",
         "2 m",

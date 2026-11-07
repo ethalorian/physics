@@ -4,17 +4,21 @@ This is the required pattern for future slideshow lessons. It records Craig's de
 
 ## 1. Preserve the source experience
 
+Use the Claude presentation as the visual and instructional reference. Keep its cover, type, emphasis, slide order, worked examples, and lab procedures. Put simpler explanations in the reading guide. Match inserted comic panels to the source deck’s layout, colors, and typography. Document any corrections to scientific claims or changes needed for classroom roles.
+
 - Identify the intended current slideshow from the supplied project. Do not substitute a poster, an older export or the existing review activity.
 - Archive the original HTML, interaction scripts and artwork unchanged under `resources/foundations/day-<word>/original`. Record source and packaged hashes in `src/data/foundations/day-<word>-source.json`.
 - Package the original executable slideshow. Preserve every timer, start/pause/resume/reset/extension control, clickable answer reveal, diagram and cover. Do not replace interactive slides with screenshots or static reconstructions.
 - Use ordinary relative asset URLs for the cover. The Claude export's CSS parser splits on semicolons and breaks embedded image data URLs. Verify the cover visually and compare its bytes with the source.
 - Remove teacher-only slides and speaker notes from the student copy. Renumber slides and provide accurate titles and a text companion. Explicitly record any factual correction or missing-source substitution; never invent a source, measurement or handout.
 - Use the shared 260 ms incoming fade and respect reduced-motion preferences. Keep the iframe mounted through Slides, Work, Side by side and enlarged views so timers and reveals persist. A full page reload may reset the source slideshow's transient state.
-- Keep the script-only sandbox, restrictive document policy and navigation-only bridge. Validate the sender, origin, channel and slide bounds. The imported slideshow must not receive account credentials or access application APIs/storage.
+- Keep the script-only sandbox, restrictive document policy and display-only bridge for navigation and authored translations. Validate the sender, origin, channel and slide bounds. The imported slideshow must not receive account credentials, student writing or access to application APIs/storage.
 
 ## 2. Reuse one lesson workspace
 
 Use `AssignmentWorkspace`, `LessonActivity`, `QuestionResponse`, `FoundationSlides` and `FoundationExchange`. Register the new foundation in the existing catalog and slide/checkpoint registries. Do not create a parallel lesson shell, saving system or assessment model. Do not restore PhysicsPathView or the removed learning-sequence card.
+
+Give every slide a short reading guide in English, Spanish, and Brazilian Portuguese. Place it beside the slide when the viewer is wide and below it when space is tight. Match the guide to the visible slide and its Work section. For practice slides, explain how to begin and leave the result for the student to find.
 
 Match the established indigo/purple application theme. Keep implementation details out of student directions. Provide accessible controls, readable text companions, keyboard navigation and a usable compact layout.
 
@@ -28,7 +32,7 @@ Match the established indigo/purple application theme. Keep implementation detai
 
 ## 4. Require meaningful group participation throughout
 
-Use the shared foundation group lobby and three subject-specific discussion stops, normally after Parts 1–3. Students generate or enter a code to join the classmates actually doing the work, from their own accounts in the same assignment. Show saved names and canonical avatars. Support two, three or four students; never random matching or teacher approval for ordinary group formation. Students start once everyone has joined, closing membership for that lesson.
+Use the shared foundation group lobby and three subject-specific discussion stops, normally after Parts 1–3. Students generate or enter a code to join the classmates actually doing the work, from their own accounts in the same assignment. Show saved names and canonical avatars. Support two, three or four students; never random matching or teacher approval for ordinary group formation. Existing groups close membership when they start. Under the routine, a new table can start with two and accept classmates into open seats.
 
 Rotate these duties at each discussion:
 
@@ -36,7 +40,7 @@ Rotate these duties at each discussion:
 - Whiteboard scribe (primary): hold the dry erase marker and work problems at the whiteboard.
 - Timekeeper and checker (secondary duties). With two students, the lead also keeps time and the scribe checks. With three, the third student handles both support duties. With four, those duties are separate.
 
-Keep authored A/B physics prompts distinct from these practical roles. Each person writes an initial idea before any classmates’ ideas are revealed. After everyone shares, discuss the evidence at the whiteboard. Each student responds to the next group member in slot order, wrapping around so everyone receives a response. Once everyone responds, each writes a private reflection. Preserve all original writing and enforce sequential stops and final submission on the server.
+Keep authored A/B physics prompts distinct from the practical roles. Each person writes an initial idea before seeing a classmate’s writing. In the [in-class discussion routine](foundation-in-class-routine.md), new groups compare a real posted idea at the board, then each student saves their own response and private reflection. Start with two, allow late arrivals where there is room, and keep the stops in order per student. A provided example is an explicitly labeled alternative for one stalled stop in a started group; never credit it as peer interaction. Earlier groups retain their original blind, full-group turns and reply order. Preserve all saved writing and enforce submission on the server.
 
 Peer writing is context, never the student’s own mastery evidence. Never disclose peer reflections in the browser or grading model. Submitted group snapshots retain each author and reply recipient; the model receives sanitized slot labels without account IDs. Existing v1/v2 pair snapshots remain readable. Existing groups with any writing retain their two-person completion rules; empty groups and new groups use the new flow. Never reset existing drafts, shared writing, submissions, reviews, grades, mastery or dates during rollout.
 
@@ -46,7 +50,7 @@ Let a student flag that they are making up the lesson without a partner. Save a 
 
 After approval, replace each partner stop with an authored sequence: own idea, critique of a provided example, own reflection. Use lesson-specific examples, not generic participation checkboxes. Record approval, timing and independent-work provenance. Never fabricate a partner or measurement. For a lab, explicitly distinguish a supplied sample analysis from data the student actually collected; use a teacher-approved equipment alternative where appropriate.
 
-Use data-free Realtime change notifications and authenticated API reads, coalescing bursts. Never refresh the page or recreate the slideshow for group updates. Refresh on page return; a disconnected or pending-solo view may check once a minute while visible, with a manual status check available. Do not poll while hidden or after completion. An approved independent student retains their saved group writing; remaining new-group members can continue if at least two remain. A lone remaining student must request approval too. Request cancellation, automatic re-pairing and editing already-shared writing are not implemented.
+Use data-free Realtime change notifications and authenticated API reads, coalescing bursts. Never refresh the page or recreate the slideshow for group updates. Refresh on page return; a disconnected or pending-solo view may check once a minute while visible, with a manual status check available. Do not poll while hidden or after completion. An approved independent student retains their saved group writing; in the earlier group protocol, a lone remaining member also requests approval. In the routine, a member of a group that already started can finish a stalled stop by critiquing the lesson example. Canceling an independent make-up request, automatic re-pairing and editing already-shared writing are not implemented.
 
 ## 6. Keep tracking, mastery and grades separate
 
@@ -93,3 +97,37 @@ A lesson is ready only after these checks pass:
 - Verify live routes/assets, access boundaries and runtime errors; record deployment ID, rollback, source hashes, migration results, verification limits and screenshots. Never claim local fixture checks were live student tests.
 
 Update `AGENTS.md` and the release record with what actually shipped. Keep future lessons on this shared path; extend a registry or day-specific definition rather than copy a second implementation.
+
+## Foundation text convention — October 29, 2026
+
+Apply docs/assignment-language-standard.md to the complete foundation sequence: slide prose and captions, lesson and review questions, hints, supplied examples, group roles and stops, approved independent work, sentence starters, and quiz templates. Foundation slides, lesson questions, hints, examples, and group/solo directions target **fifth-grade sentence structure**. Keep the physics, required reasoning, and assessment demand. Use short sentences and separate steps. Define needed physics terms rather than removing them. Reviews and daily quizzes keep their own identities and are not rewritten by this foundation-only language update. Name the actual drawing, graph, calculation, or explanation instead of an unexplained “model.” Translate “claim,” “critique,” “condition,” and “assumption” into the action students must take. Define useful technical terms when introduced.
+
+Bold the given values with their signs and units and the specific requested result. Italicize and underline spelled-out compass directions in prose, including inside bold phrases. Use the shared authored-text renderer; never show raw Markdown markers. Keep student writing as submitted.
+
+All nine slide importers call scripts/foundation-groups/slide-language.cjs through slide-copy.cjs. Its reviewed text map and the shared emphasis implementation update the packaged slides and the readable companion. Keep source exports, artwork, executable logic, timers, answer reveals, geometry and navigation intact. Regenerate the package and metadata; do not hand-edit generated HTML. Verify slide counts, controls, text bounds and referenced assets. A graph that students must read must actually be provided. Keep answer reveals out of the companion.
+
+Preserve compact two-column printed worksheets and copying efficiency. Do not add text-response lines. Preserve stable question IDs, answers, scoring, and student records. Review saved quiz wording and future quiz templates together when either contains revised text.
+
+## Foundation language choices
+
+Offer English, Spanish, and Brazilian Portuguese for both slides and accompanying lesson questions. Translate only authored teaching text. Keep student answers, classmates’ names and writing, private reflections, grading, IDs, and answer-option order unchanged. A language change must keep the same input fields and iframe mounted; preserve slide position, active timers, open reveals, and unsaved writing. Apply slide text translations to existing text nodes and accessible labels, never by replacing slide HTML. Keep artwork unchanged; provide translated slide text beside pictures that contain English words.
+
+Prepare static language files using `scripts/foundation-language/source.cjs` and the reviewed translation pipeline. The translation generator reads only canonical lesson source and must have explicit permission for the API destination and authored payload before use. No translation API runs in a student session. Verify complete language keys and the current English version before release. A loading failure must leave English usable, explain the issue, and allow retry without refreshing the lesson. Recheck science, values, signs, units, equations, figures, language layout, and the preservation tests whenever source text changes.
+
+Run `npm run verify:foundation-languages` after generation; prebuild also requires it. This checks all nine lessons in both languages against their current English hashes and protects numbers, signs, math, links and emphasis. Keep generation caches outside `public`; only the reviewed per-lesson dictionaries belong there. The build-time generator supports `--locale=es`, `--locale=pt-BR`, an explicit private `--cache=...` directory, and `--pack-only` to assemble an already reviewed cache without calling the API. API output is draft authored content: validate complete passages and review physics and language before release.
+
+Direct human-reviewed translations can also be assembled offline with `node scripts/foundation-language/assemble.cjs --cache=/absolute/private/cache`. Supply dictionaries keyed by the exact canonical English passages, named `es.json` and `pt-BR.json`. Both assembly paths derive readable slide companions from the translated slide nodes; do not independently translate a second copy of each slide. Review short fragments in their full sentences, especially Spanish question punctuation. Numeric formatting intentionally follows the authored problems (decimal points and thousands commas), with an explanation beside the language selector. Never translate student writing or change stored answer values when changing display language.
+
+## CPA editions and independent reading guides — November 4, 2026
+
+Keep the current foundation question set as the Honors edition. CPA classes (`courses.track = 'cpa'`, including the existing untyped-class CPA default) automatically receive the authored `cpa-v1` questions when starting new work. This choice comes from the server, never a student toggle. The first save pins `foundationQuestionEdition` into the student's state. Existing saved work without a marker retains its original full or shortened questions, even in CPA classes. A class-track change must not reinterpret a saved draft, submission, assessment, or revision. Use `foundationEdition` for student display, validation, teacher review and AI assessment. Never rewrite an existing edition's scientific task after students have used it; introduce a new version and preserve the earlier renderer.
+
+CPA questions keep stable learning targets, per-student evidence, input types, group requirements, teacher-approved solo alternatives, independent exits and designated-lab reporting. Their demand is authored separately: shorter explanations, fewer concurrent comparisons, and visible math scaffolds. Give the equation, define needed symbols, provide substitution and operation order, then require the student to calculate and include units/direction. Do not claim that a student independently selected an equation that was supplied. The review and daily quiz remain separate activities; this edition does not silently rewrite their content.
+
+`src/data/foundations/cpa-questions.json` is the English source; `cpa-languages.json` carries Spanish and Brazilian Portuguese prompts. `cpa-language.ts` includes shared directions and objective feedback. Keep number values, options, diagram fields and input IDs aligned. Teacher evidence and AI assessment use the correct edition's expected evidence and demand. Never show a previous answer as a comparison when its edition differs.
+
+Every slide must have a teaching guide suitable for independent reading in all three languages. Preserve the original interactive deck. In the existing reading side panel, use a short “Key idea” paragraph and one “Try this” direction. Aim for fifth-grade wording and no more than 65 words in the key idea. Explain only the physics needed for the current slide; do not list unrelated formulas. Do not add a redundant self-check/explanation accordion or repeated practice directions. Do not reveal a solution to the student's independent exit. Keep a compact next-slide connection. Keep comic full-page links available. The guide scrolls separately on wide screens and flows beneath the slide on narrow screens; navigation resets only its scroll, not the iframe, timers, or student answers.
+
+Maintain explicit title/number mappings in `teaching-guide-map.json`, generated by `scripts/foundation-cpa/map-guides.cjs`, and review the matching topic explanations in `teaching-guide-topics.json`. Reusing an explanation for adjacent slides on the same concept is appropriate; each keeps its own direct instruction. Future decks must be added to both the mapping and the CPA source. `npm run verify:foundation-cpa` is a prebuild guard for slide alignment, languages, numeric values and figures. Run the edition-preservation tests and actual isolated route/database checks before release.
+
+Migration `20261104135419_foundation_question_editions.sql` makes completion gates recognize the original long, shortened Honors and CPA question contracts without changing saved rows or dates. Deploy it with the reviewed application change; do not delete older question keys from drafts to force an edition change.

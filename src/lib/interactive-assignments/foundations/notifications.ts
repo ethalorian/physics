@@ -13,15 +13,23 @@ export function watchFoundation(realtime:{url:string;key:string;topic:string}|nu
   const delay=2000-(Date.now()-last)
   if(delay>0){clearTimeout(timer);timer=setTimeout(()=>void run(),delay);return}
   pending=true;last=Date.now()
-  try{await refresh()}finally{pending=false;if(queued){queued=false;void run()}}
+  try{await refresh()}catch{/* Refresh errors are shown by the authorized data loader. */}finally{pending=false;if(queued){queued=false;void run()}}
  }
- const client=realtime?createClient(realtime.url,realtime.key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}}):null
- if(client&&realtime)client.channel(realtime.topic).on('broadcast',{event:'change'},()=>void run()).subscribe(status=>{
-  connected=status==='SUBSCRIBED'
-  if(connected)void run()
- })
+ let client:ReturnType<typeof createClient>|null=null
+ const disconnect=()=>{const previous=client;client=null;connected=false;if(previous)try{void previous.removeAllChannels().catch(()=>{})}catch{/* Browser may reject socket cleanup too. */}}
+ // Live hints are optional. A blocked socket must not unmount the lesson.
+ try{
+  if(realtime){
+   client=createClient(realtime.url,realtime.key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}})
+   client.channel(realtime.topic).on('broadcast',{event:'change'},()=>void run()).subscribe(status=>{
+    if(stopped)return
+    connected=status==='SUBSCRIBED'
+    if(connected)void run()
+   })
+  }
+ }catch{disconnect()}
  const fallback=setInterval(()=>{if(!connected)void run()},60000)
  const returned=()=>{if(document.visibilityState!=='hidden')void run()}
  document.addEventListener('visibilitychange',returned);window.addEventListener('focus',returned);window.addEventListener('online',returned)
- return()=>{stopped=true;clearTimeout(timer);clearInterval(fallback);document.removeEventListener('visibilitychange',returned);window.removeEventListener('focus',returned);window.removeEventListener('online',returned);void client?.removeAllChannels()}
+ return()=>{stopped=true;clearTimeout(timer);clearInterval(fallback);document.removeEventListener('visibilitychange',returned);window.removeEventListener('focus',returned);window.removeEventListener('online',returned);disconnect()}
 }

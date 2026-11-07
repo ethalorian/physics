@@ -1,0 +1,674 @@
+{
+  ". Keep the hanging mass the same.": [
+    ". Mantén fija la masa colgante.",
+    ". Mantenha a massa pendurada fixa."
+  ],
+  "1/M (kg⁻¹)": [
+    "1/M (kg⁻¹)",
+    "1/M (kg⁻¹)"
+  ],
+  "2026-XJ has a mass of about 3.5 × 10¹¹ kg.": [
+    "2026-XJ tiene una masa de unos 3.5 × 10¹¹ kg.",
+    "2026-XJ tem massa de cerca de 3.5 × 10¹¹ kg."
+  ],
+  "2026-XJ · 41": [
+    "2026-XJ · 41",
+    "2026-XJ · 41"
+  ],
+  "2026-XJ · 42": [
+    "2026-XJ · 42",
+    "2026-XJ · 42"
+  ],
+  "2026-XJ · 43": [
+    "2026-XJ · 43",
+    "2026-XJ · 43"
+  ],
+  "2026-XJ · 44": [
+    "2026-XJ · 44",
+    "2026-XJ · 44"
+  ],
+  "A data table with units": [
+    "Una tabla de datos con unidades",
+    "Uma tabela de dados com unidades"
+  ],
+  "A student adds mass to the cart AND increases the hanging mass.": [
+    "Un estudiante añade masa al carrito y también aumenta la masa colgante.",
+    "Um estudante acrescenta massa ao carrinho e também aumenta a massa pendurada."
+  ],
+  "Acceleration = 4 ÷ 2 = 2 m/s²": [
+    "Aceleración = 4 ÷ 2 = 2 m/s²",
+    "Aceleração = 4 ÷ 2 = 2 m/s²"
+  ],
+  "Acceleration and mass": [
+    "Aceleración y masa",
+    "Aceleração e massa"
+  ],
+  "Acceleration became": [
+    "La aceleración pasó a ser",
+    "A aceleração ficou"
+  ],
+  "Acceleration from the velocity–time slope": [
+    "Aceleración a partir de la pendiente de velocidad y tiempo",
+    "Aceleração pela inclinação do gráfico de velocidade e tempo"
+  ],
+  "Add mass to the cart.": [
+    "Añade masa al carrito.",
+    "Acrescente massa ao carrinho."
+  ],
+  "Antocci Physics · 06 / 34": [
+    "Antocci Physics · 06 / 34",
+    "Antocci Physics · 06 / 34"
+  ],
+  "Antocci Physics · 20 / 34": [
+    "Antocci Physics · 20 / 34",
+    "Antocci Physics · 20 / 34"
+  ],
+  "Antocci Physics · 24 / 34": [
+    "Antocci Physics · 24 / 34",
+    "Antocci Physics · 24 / 34"
+  ],
+  "Antocci Physics · 27 / 34": [
+    "Antocci Physics · 27 / 34",
+    "Antocci Physics · 27 / 34"
+  ],
+  "Antocci Physics · 41": [
+    "Antocci Physics · 41",
+    "Antocci Physics · 41"
+  ],
+  "Antocci Physics · 42": [
+    "Antocci Physics · 42",
+    "Antocci Physics · 42"
+  ],
+  "Antocci Physics · 43": [
+    "Antocci Physics · 43",
+    "Antocci Physics · 43"
+  ],
+  "Antocci Physics · 44": [
+    "Antocci Physics · 44",
+    "Antocci Physics · 44"
+  ],
+  "At 1 kg: 4 m/s². At 2 kg: 2 m/s².": [
+    "Con 1 kg: 4 m/s². Con 2 kg: 2 m/s².",
+    "Com 1 kg: 4 m/s². Com 2 kg: 2 m/s²."
+  ],
+  "But HOW MUCH does a force change motion?": [
+    "Pero ¿cuánto cambia una fuerza el movimiento?",
+    "Mas quanto uma força muda o movimento?"
+  ],
+  "Can the result isolate the effect of system mass?": [
+    "¿El resultado permite aislar el efecto de la masa del sistema?",
+    "O resultado permite separar o efeito da massa do sistema?"
+  ],
+  "Capture the v–t graph; find acceleration from its slope.": [
+    "Registra la gráfica v–t y halla la aceleración con su pendiente.",
+    "Registre o gráfico v–t e ache a aceleração pela inclinação."
+  ],
+  "Cart mass": [
+    "Masa del carrito",
+    "Massa do carrinho"
+  ],
+  "Cart mass and the slope of the v–t line.": [
+    "Masa del carrito y pendiente de la línea v–t.",
+    "Massa do carrinho e inclinação da linha v–t."
+  ],
+  "Cart still connected? Track level? String not rubbing?": [
+    "¿Carrito conectado? ¿Pista nivelada? ¿El hilo se roza?",
+    "Carrinho conectado? Pista nivelada? O fio está raspando?"
+  ],
+  "Choose a cart mass. Release the cart.": [
+    "Elige una masa para el carrito. Suelta el carrito.",
+    "Escolha uma massa para o carrinho. Solte o carrinho."
+  ],
+  "Choose the cart plus hanging mass as the moving system. Let M = cart mass + added masses + hanging mass.": [
+    "Elige el carrito y la masa colgante como sistema en movimiento. M = masa del carrito + masas añadidas + masa colgante.",
+    "Escolha o carrinho e a massa pendurada como sistema em movimento. M = massa do carrinho + massas acrescentadas + massa pendurada."
+  ],
+  "Claim": [
+    "Conclusión",
+    "Conclusão"
+  ],
+  "Clamp the pulley at the right end. Run the string from the cart over the pulley to a 50 g hanging mass.": [
+    "Sujeta la polea al extremo derecho. Pasa el hilo del carrito por la polea hasta una masa colgante de 50 g.",
+    "Prenda a polia na ponta direita. Passe o fio do carrinho sobre a polia até uma massa pendurada de 50 g."
+  ],
+  "Collect the data": [
+    "Recoge los datos",
+    "Colete os dados"
+  ],
+  "Compare a lighter system and a heavier system.": [
+    "Compara un sistema más ligero con uno más pesado.",
+    "Compare um sistema mais leve com um mais pesado."
+  ],
+  "Day 11 · Phase 2 — Building the tools": [
+    "Día 11 · Fase 2 — Herramientas para investigar",
+    "Dia 11 · Fase 2 — Ferramentas para investigar"
+  ],
+  "Describe a pattern in sample data": [
+    "Describe un patrón en los datos de muestra",
+    "Descreva um padrão nos dados de exemplo"
+  ],
+  "Describe any inconsistent trial honestly.": [
+    "Describe cualquier prueba que se aparte del patrón.",
+    "Descreva qualquer tentativa que fuja do padrão."
+  ],
+  "Do it consistently": [
+    "Sigue el mismo método",
+    "Siga o mesmo método"
+  ],
+  "Downhill line: negative velocity.": [
+    "Línea descendente: velocidad negativa.",
+    "Linha descendente: velocidade negativa."
+  ],
+  "Driving force changed": [
+    "Cambió la fuerza que impulsa el sistema",
+    "A força que move o sistema mudou"
+  ],
+  "During one clean trial, v = 0.10 m/s at 0.20 s and v = 0.40 m/s at 0.80 s. Find the fitted interval’s acceleration.": [
+    "En una prueba limpia, v = 0.10 m/s a los 0.20 s y v = 0.40 m/s a los 0.80 s. Halla la aceleración en ese intervalo.",
+    "Em uma tentativa limpa, v = 0.10 m/s em 0.20 s e v = 0.40 m/s em 0.80 s. Ache a aceleração nesse intervalo."
+  ],
+  "Each trial: add mass to the": [
+    "En cada prueba, añade masa al",
+    "Em cada tentativa, acrescente massa ao"
+  ],
+  "Equivalently": [
+    "Otra forma de expresarlo",
+    "Outra forma de expressar"
+  ],
+  "Evidence": [
+    "Pruebas",
+    "Evidências"
+  ],
+  "Example only: velocity rises from 0 to 4 m/s in 2 s.": [
+    "Solo un ejemplo: la velocidad sube de 0 a 4 m/s en 2 s.",
+    "Apenas um exemplo: a velocidade sobe de 0 a 4 m/s em 2 s."
+  ],
+  "Fallback data": [
+    "Datos alternativos",
+    "Dados alternativos"
+  ],
+  "Flat or jagged?": [
+    "¿Horizontal o irregular?",
+    "Horizontal ou irregular?"
+  ],
+  "For a cart pulled by a hanging mass, count all the mass that accelerates: cart, added masses, and hanger.": [
+    "Para un carrito tirado por una masa colgante, cuenta toda la masa que acelera: carrito, masas añadidas y masa colgante.",
+    "Para um carrinho puxado por uma massa pendurada, conte toda a massa que acelera: carrinho, massas acrescentadas e massa pendurada."
+  ],
+  "Forces cause changes in motion.": [
+    "Las fuerzas causan cambios en el movimiento.",
+    "As forças causam mudanças no movimento."
+  ],
+  "From a velocity graph to acceleration": [
+    "De una gráfica de velocidad a la aceleración",
+    "Do gráfico de velocidade à aceleração"
+  ],
+  "Greater mass resists velocity change.": [
+    "Una masa mayor se resiste más a cambiar su velocidad.",
+    "Uma massa maior resiste mais à mudança de velocidade."
+  ],
+  "Hanging mass, track angle, release position, apparatus": [
+    "Masa colgante, ángulo de la pista, lugar de salida y equipo",
+    "Massa pendurada, ângulo da pista, ponto de soltura e equipamento"
+  ],
+  "Hanging mass, track, and release method.": [
+    "Masa colgante, pista y método para soltar.",
+    "Massa pendurada, pista e modo de soltar."
+  ],
+  "Heavier": [
+    "Más pesado",
+    "Mais pesado"
+  ],
+  "How did acceleration change when mass doubled?": [
+    "¿Cómo cambió la aceleración cuando se duplicó la masa?",
+    "Como mudou a aceleração quando a massa dobrou?"
+  ],
+  "Ideal model predictions. Your actual data may differ.": [
+    "Predicciones del modelo ideal. Tus datos pueden diferir.",
+    "Previsões do modelo ideal. Seus dados podem ser diferentes."
+  ],
+  "If you doubled the mass of the cart but kept the force the same, what would happen to the acceleration?": [
+    "Si duplicaras la masa del carrito y mantuvieras igual la fuerza, ¿qué pasaría con la aceleración?",
+    "Se dobrasse a massa do carrinho e mantivesse a mesma força, o que aconteceria com a aceleração?"
+  ],
+  "Illustrative data": [
+    "Datos ilustrativos",
+    "Dados ilustrativos"
+  ],
+  "Illustrative data. 1 kg: 4; 2 kg: 2. These values teach the comparison; do not copy them as measured results.": [
+    "Datos ilustrativos. 1 kg: 4; 2 kg: 2. Estos valores muestran la comparación. Identifícalos como ejemplos.",
+    "Dados ilustrativos. 1 kg: 4; 2 kg: 2. Esses valores mostram a comparação. Identifique-os como exemplos."
+  ],
+  "Illustrative predictions for 4 N net force, not measured lab results.": [
+    "Predicciones de ejemplo con 4 N de fuerza neta, calculadas mediante el modelo.",
+    "Previsões de exemplo com força resultante de 4 N, calculadas pelo modelo."
+  ],
+  "Investigation 1.2": [
+    "Investigación 1.2",
+    "Investigação 1.2"
+  ],
+  "Investigation 1.2 · derive the law from our own data": [
+    "Investigación 1.2 · deduce la ley con nuestros datos",
+    "Investigação 1.2 · deduza a lei com nossos dados"
+  ],
+  "Investigation 1.2 · setup": [
+    "Investigación 1.2 · montaje",
+    "Investigação 1.2 · montagem"
+  ],
+  "Its mass is huge. Any force we apply giv": [
+    "Su masa es enorme",
+    "Sua massa é enorme"
+  ],
+  "Its mass is huge. Any force we apply gives a TINY acceleration.": [
+    "Su masa es enorme. Cualquier fuerza que apliquemos le da una aceleración diminuta.",
+    "Sua massa é enorme. Qualquer força que aplicarmos dá uma aceleração minúscula."
+  ],
+  "Its slope tells us the acceleration.": [
+    "Su pendiente indica la aceleración.",
+    "Sua inclinação indica a aceleração."
+  ],
+  "Keep fixed": [
+    "Mantén fijo",
+    "Mantenha fixo"
+  ],
+  "Keep the driving force approximately the same.": [
+    "Mantén casi igual la fuerza que impulsa el sistema.",
+    "Mantenha quase igual a força que move o sistema."
+  ],
+  "Keep the hanging mass fixed today.": [
+    "Mantén fija la masa colgante hoy.",
+    "Mantenha a massa pendurada fixa hoje."
+  ],
+  "Keep the hanging mass fixed while comparing system masses.": [
+    "Mantén fija la masa colgante al comparar masas del sistema.",
+    "Mantenha fixa a massa pendurada ao comparar massas do sistema."
+  ],
+  "Keep the string level with the track. Put a soft catch at the pulley end.": [
+    "Mantén el hilo paralelo a la pista. Coloca un tope blando en el extremo de la polea.",
+    "Mantenha o fio paralelo à pista. Ponha um batente macio na ponta da polia."
+  ],
+  "Know what is in the system": [
+    "Identifica qué pertenece al sistema",
+    "Identifique o que faz parte do sistema"
+  ],
+  "Lab handout: data table + graph template": [
+    "Hoja del laboratorio: tabla y plantilla para la gráfica",
+    "Folha do laboratório: tabela e modelo de gráfico"
+  ],
+  "Lab · Day 11 · 2nd Law Lab: Mass": [
+    "Laboratorio · Día 11 · 2ª ley: masa",
+    "Laboratório · Dia 11 · 2ª lei: massa"
+  ],
+  "Leave space for the hanger to fall and a soft stop before the cart reaches the pulley.": [
+    "Deja espacio para que caiga la masa colgante y pon un tope blando antes de que el carrito llegue a la polea.",
+    "Deixe espaço para a massa pendurada cair e um batente macio antes de o carrinho chegar à polia."
+  ],
+  "Level the track. Start from rest at the same place.": [
+    "Nivela la pista. Parte del reposo en el mismo lugar.",
+    "Nivele a pista. Parta do repouso no mesmo lugar."
+  ],
+  "Level the track: a cart set at rest should not roll either way.": [
+    "Nivela la pista: un carrito en reposo no debe rodar hacia ningún lado.",
+    "Nivele a pista: um carrinho parado não deve rolar para nenhum lado."
+  ],
+  "Lighter": [
+    "Más ligero",
+    "Mais leve"
+  ],
+  "Logger Pro / Graphical Analysis on laptops": [
+    "Logger Pro / Graphical Analysis en computadoras",
+    "Logger Pro / Graphical Analysis nos computadores"
+  ],
+  "M (kg)": [
+    "M (kg)",
+    "M (kg)"
+  ],
+  "Make one change at a time": [
+    "Haz un cambio a la vez",
+    "Faça uma mudança por vez"
+  ],
+  "Mass changed": [
+    "Cambió la masa",
+    "A massa mudou"
+  ],
+  "Mean a (m/s²)": [
+    "Promedio de a (m/s²)",
+    "Média de a (m/s²)"
+  ],
+  "Measure": [
+    "Mide",
+    "Meça"
+  ],
+  "Measure cart and hanger masses in kg. Secure added masses. Level the track.": [
+    "Mide las masas del carrito y del colgante en kg. Sujeta las masas añadidas. Nivela la pista.",
+    "Meça as massas do carrinho e da parte pendurada em kg. Prenda as massas acrescentadas. Nivele a pista."
+  ],
+  "Measure how acceleration changes with mass at constant force.": [
+    "Mide cómo cambia la aceleración con la masa si la fuerza es constante.",
+    "Meça como a aceleração muda com a massa sob força constante."
+  ],
+  "Measure velocity versus time.": [
+    "Mide la velocidad en función del tiempo.",
+    "Meça a velocidade em função do tempo."
+  ],
+  "Model inputs: mₕ = 0.050 kg, g = 9.8 m/s², negligible resistance. These values are calculated, not experimental measurements.": [
+    "Datos del modelo: mₕ = 0.050 kg, g = 9.8 m/s², resistencia despreciable. Estos valores provienen de cálculos.",
+    "Dados do modelo: mₕ = 0.050 kg, g = 9.8 m/s², resistência desprezível. Esses valores vêm de cálculos."
+  ],
+  "Model prediction: same net force": [
+    "Predicción del modelo: igual fuerza neta",
+    "Previsão do modelo: mesma força resultante"
+  ],
+  "Model prediction: same net force. 1 kg: 4; 2 kg: 2; 4 kg: 1. Illustrative predictions for 4 N net force, not measured lab results.": [
+    "Predicción del modelo: igual fuerza neta. 1 kg: 4; 2 kg: 2; 4 kg: 1. Predicciones de ejemplo para 4 N de fuerza neta, calculadas con el modelo.",
+    "Previsão do modelo: mesma força resultante. 1 kg: 4; 2 kg: 2; 4 kg: 1. Previsões de exemplo para força resultante de 4 N, calculadas com o modelo."
+  ],
+  "Monitor": [
+    "Vigila",
+    "Observe"
+  ],
+  "Newton's 2nd Law": [
+    "2ª ley de Newton",
+    "2ª lei de Newton"
+  ],
+  "Newton's 2nd Law: Vary Mass": [
+    "2ª ley de Newton: cambia la masa",
+    "2ª lei de Newton: varie a massa"
+  ],
+  "One comparison in our data is ___ versus ___.": [
+    "Una comparación de nuestros datos es ___ frente a ___.",
+    "Uma comparação em nossos dados é ___ com ___."
+  ],
+  "Online alternative: ideal model data": [
+    "Alternativa en línea: datos del modelo ideal",
+    "Alternativa on-line: dados do modelo ideal"
+  ],
+  "Pattern": [
+    "Patrón",
+    "Padrão"
+  ],
+  "Plan one repeatable trial": [
+    "Planea una prueba que puedas repetir",
+    "Planeje uma tentativa que possa repetir"
+  ],
+  "Position vs. time. Position (m) versus Time (s). Downhill line: negative velocity.": [
+    "Posición y tiempo. Posición (m) y tiempo (s). Línea descendente: velocidad negativa.",
+    "Posição e tempo. Posição (m) e tempo (s). Linha descendente: velocidade negativa."
+  ],
+  "Practice reading data": [
+    "Practica la lectura de datos",
+    "Pratique a leitura dos dados"
+  ],
+  "Predict: when will it reach x = 0?": [
+    "Predice: ¿cuándo llegará a x = 0?",
+    "Preveja: quando chegará a x = 0?"
+  ],
+  "Procedure and safe release": [
+    "Procedimiento y cómo soltar con seguridad",
+    "Procedimento e como soltar com segurança"
+  ],
+  "Reason": [
+    "Razón",
+    "Motivo"
+  ],
+  "Recall: a negative slope": [
+    "Repaso: una pendiente negativa",
+    "Revisão: uma inclinação negativa"
+  ],
+  "Record acceleration trials in m/s². Keep the raw values before rounding the mean.": [
+    "Anota cada aceleración en m/s². Conserva los datos originales antes de redondear el promedio.",
+    "Anote cada aceleração em m/s². Guarde os dados originais antes de arredondar a média."
+  ],
+  "Record all trials and note failed releases separately.": [
+    "Anota todas las pruebas e indica por separado las que fallaron al soltar.",
+    "Anote todas as tentativas e indique separadamente as que falharam na soltura."
+  ],
+  "Record mass and acceleration in your table.": [
+    "Anota la masa y la aceleración en tu tabla.",
+    "Anote a massa e a aceleração na tabela."
+  ],
+  "Release from rest": [
+    "Suelta desde el reposo",
+    "Solte a partir do repouso"
+  ],
+  "Release without a push. Catch the cart and hanger safely.": [
+    "Suelta sin empujar. Detén con cuidado el carrito y la masa colgante.",
+    "Solte sem empurrar. Segure com cuidado o carrinho e a massa pendurada."
+  ],
+  "Release without pushing. Fit a straight section of v–t data while the hanger is still falling.": [
+    "Suelta sin empujar. Ajusta una línea al tramo recto de los datos v–t mientras la masa colgante cae.",
+    "Solte sem empurrar. Ajuste uma reta ao trecho reto dos dados v–t enquanto a massa pendurada cai."
+  ],
+  "Repeat for 3–4 masses, then plot a vs. m.": [
+    "Repite con 3–4 masas y grafica a en función de m.",
+    "Repita com 3–4 massas e faça o gráfico de a em função de m."
+  ],
+  "Repeat three times for each of at least three total masses.": [
+    "Repite tres veces para cada una de al menos tres masas totales.",
+    "Repita três vezes para cada uma de pelo menos três massas totais."
+  ],
+  "Resistance, sensor quality, pulley motion": [
+    "Resistencia, calidad de las lecturas y giro de la polea",
+    "Resistência, qualidade das leituras e giro da polia"
+  ],
+  "Role": [
+    "Función",
+    "Função"
+  ],
+  "Run": [
+    "Haz la prueba",
+    "Faça a tentativa"
+  ],
+  "Run it · groups of 3–4": [
+    "Haz la prueba · grupos de 3–4",
+    "Faça a tentativa · grupos de 3–4"
+  ],
+  "Same driving force, different mass": [
+    "Misma fuerza impulsora, distinta masa",
+    "Mesma força motriz, massa diferente"
+  ],
+  "Same net force, different masses": [
+    "Misma fuerza neta, distintas masas",
+    "Mesma força resultante, massas diferentes"
+  ],
+  "Same net force, different masses. Velocity (m/s) versus Time (s). Ideal model predictions. Your actual data may differ.": [
+    "Misma fuerza neta, distintas masas. Velocidad (m/s) y tiempo (s). Predicciones del modelo ideal. Tus datos pueden diferir.",
+    "Mesma força resultante, massas diferentes. Velocidade (m/s) e tempo (s). Previsões do modelo ideal. Seus dados podem ser diferentes."
+  ],
+  "Say the pattern.": [
+    "Describe el patrón.",
+    "Descreva o padrão."
+  ],
+  "Set up the cart lab (vary mass)": [
+    "Monta el laboratorio del carrito (cambia la masa)",
+    "Monte o laboratório do carrinho (varie a massa)"
+  ],
+  "Set up the investigation": [
+    "Prepara la investigación",
+    "Prepare a investigação"
+  ],
+  "Smaller mass → bigger acceleration, at the same force.": [
+    "Menor masa → mayor aceleración con la misma fuerza.",
+    "Menor massa → maior aceleração sob a mesma força."
+  ],
+  "Spot an unfair comparison": [
+    "Detecta una comparación injusta",
+    "Identifique uma comparação injusta"
+  ],
+  "Target S3": [
+    "Meta S3",
+    "Meta S3"
+  ],
+  "That's why deflection is hard — and why lead time matters.": [
+    "Por eso cuesta desviarlo y es importante actuar pronto.",
+    "Por isso é difícil desviá-lo e é importante agir cedo."
+  ],
+  "The hanger’s weight mₕg drives the coupled motion. The string tension acts internally between the two parts.": [
+    "El peso de la masa colgante mₕg impulsa el movimiento del conjunto. La tensión del hilo actúa entre las dos partes del sistema.",
+    "O peso da massa pendurada mₕg move o conjunto. A tensão do fio age entre as duas partes do sistema."
+  ],
+  "The hanging weight is larger.": [
+    "El peso colgante es mayor.",
+    "O peso pendurado é maior."
+  ],
+  "The relationship": [
+    "La relación",
+    "A relação"
+  ],
+  "The system includes the hanging mass": [
+    "El sistema incluye la masa colgante",
+    "O sistema inclui a massa pendurada"
+  ],
+  "The system is heavier.": [
+    "El sistema es más pesado.",
+    "O sistema é mais pesado."
+  ],
+  "The system with twice the mass has half the acceleration, if the net force truly stays the same. Greater inertia means less velocity change per second.": [
+    "El sistema con el doble de masa tiene la mitad de la aceleración si la fuerza neta sigue igual. Mayor inercia significa menor cambio de velocidad por segundo.",
+    "O sistema com o dobro da massa tem metade da aceleração se a força resultante continuar igual. Mais inércia significa menor mudança de velocidade por segundo."
+  ],
+  "The v–t graph is a straight, rising line.": [
+    "La gráfica v–t es una línea recta que sube.",
+    "O gráfico v–t é uma linha reta que sobe."
+  ],
+  "These values teach the comparison; do not copy them as measured results.": [
+    "Estos valores muestran la comparación. Identifícalos como ejemplos y registra tus mediciones aparte.",
+    "Esses valores mostram a comparação. Identifique-os como exemplos e registre suas medições à parte."
+  ],
+  "This agrees with the same-net-force model.": [
+    "Esto concuerda con el modelo de fuerza neta constante.",
+    "Isso concorda com o modelo de força resultante constante."
+  ],
+  "To deflect it we need a huge force — or a small force over a long time. F = ma is the math behind every deflection strategy.": [
+    "Para desviarlo necesitamos una fuerza enorme o una pequeña durante mucho tiempo. F = ma es la relación que usamos al estudiar cómo desviarlo.",
+    "Para desviá-lo precisamos de uma força enorme ou de uma pequena por muito tempo. F = ma é a relação que usamos ao estudar como desviá-lo."
+  ],
+  "Today we find out from our own data — not a textbook.": [
+    "Hoy lo averiguamos con nuestros propios datos.",
+    "Hoje vamos descobrir com os nossos dados."
+  ],
+  "Total moving mass M, by adding mass to cart": [
+    "Masa total en movimiento M, añadiendo masa al carrito",
+    "Massa total em movimento M, acrescentando massa ao carrinho"
+  ],
+  "Total moving mass in kg.": [
+    "Masa total en movimiento en kg.",
+    "Massa total em movimento em kg."
+  ],
+  "Toward the origin (− direction) at": [
+    "Hacia el origen (sentido −) a",
+    "Em direção à origem (sentido −) a"
+  ],
+  "Tracks, hanging masses, string, pulley": [
+    "Pistas, masas colgantes, hilo y polea",
+    "Pistas, massas penduradas, fio e polia"
+  ],
+  "Turn the sensor cart on. In Graphical Analysis, connect it by Bluetooth and turn on Position and Velocity.": [
+    "Enciende el carrito con sensor. Conéctalo por Bluetooth en Graphical Analysis y activa Posición y Velocidad.",
+    "Ligue o carrinho com sensor. Conecte por Bluetooth no Graphical Analysis e ative Posição e Velocidade."
+  ],
+  "Two systems experience the same net force. One has twice the mass of the other. Predict how their accelerations compare and explain your reasoning.": [
+    "Dos sistemas reciben la misma fuerza neta. Uno tiene el doble de masa. Compara sus aceleraciones y explica tu predicción.",
+    "Dois sistemas recebem a mesma força resultante. Um tem o dobro da massa. Compare as acelerações e explique sua previsão."
+  ],
+  "Two things changed.": [
+    "Cambiaron dos cosas.",
+    "Duas coisas mudaram."
+  ],
+  "Use multiple trials at each mass.": [
+    "Haz varias pruebas con cada masa.",
+    "Faça várias tentativas com cada massa."
+  ],
+  "Use the slope as evidence": [
+    "Usa la pendiente como prueba",
+    "Use a inclinação como evidência"
+  ],
+  "Use two measured values.": [
+    "Usa dos valores medidos.",
+    "Use dois valores medidos."
+  ],
+  "Use your evidence": [
+    "Usa tus pruebas",
+    "Use suas evidências"
+  ],
+  "Use your measured graph in the actual lab.": [
+    "Usa tu gráfica medida en el laboratorio.",
+    "Use seu gráfico medido no laboratório."
+  ],
+  "Variables and controls": [
+    "Variables y controles",
+    "Variáveis e controles"
+  ],
+  "Vary mass at constant force": [
+    "Cambia la masa con fuerza constante",
+    "Varie a massa com força constante"
+  ],
+  "Velocity over time. Velocity (m/s) versus Time (s). Use your measured graph in the actual lab.": [
+    "Velocidad y tiempo. Velocidad (m/s) y tiempo (s). Usa tu gráfica medida en el laboratorio.",
+    "Velocidade e tempo. Velocidade (m/s) e tempo (s). Use seu gráfico medido no laboratório."
+  ],
+  "Vernier dynamics cart kits (1 per group of 4)": [
+    "Equipo de carritos Vernier (1 por grupo de 4)",
+    "Kit de carrinhos Vernier (1 por grupo de 4)"
+  ],
+  "Watch the velocity grow": [
+    "Observa cómo aumenta la velocidad",
+    "Observe a velocidade aumentar"
+  ],
+  "What do you SEE in the data?": [
+    "¿Qué ves en los datos?",
+    "O que você vê nos dados?"
+  ],
+  "When system mass increased, acceleration ___.": [
+    "Cuando aumentó la masa del sistema, la aceleración ___.",
+    "Quando a massa do sistema aumentou, a aceleração ___."
+  ],
+  "Which line gains velocity more quickly?": [
+    "¿Qué línea gana velocidad más rápido?",
+    "Qual linha ganha velocidade mais depressa?"
+  ],
+  "Which way is this object moving, and how fast?": [
+    "¿Hacia dónde se mueve el objeto y con qué rapidez?",
+    "Para onde o objeto se move e com que rapidez?"
+  ],
+  "Write a claim from your own trials": [
+    "Escribe una conclusión con tus pruebas",
+    "Escreva uma conclusão com suas tentativas"
+  ],
+  "add weights": [
+    "añade pesas",
+    "acrescente pesos"
+  ],
+  "cart": [
+    "carrito",
+    "carrinho"
+  ],
+  "half as large": [
+    "la mitad",
+    "metade"
+  ],
+  "m · a ≈ constant": [
+    "m · a ≈ constante",
+    "m · a ≈ constante"
+  ],
+  "mₕg − resistance ≈ Ma": [
+    "mₕg − resistencia ≈ Ma",
+    "mₕg − resistência ≈ Ma"
+  ],
+  "same hanging mass throughout": [
+    "la misma masa colgante en todas las pruebas",
+    "a mesma massa pendurada em todas as tentativas"
+  ],
+  "slope of the v–t graph": [
+    "pendiente de la gráfica v–t",
+    "inclinação do gráfico v–t"
+  ],
+  "≈ 10 min": [
+    "≈ 10 min",
+    "≈ 10 min"
+  ],
+  "≈ 25 min": [
+    "≈ 25 min",
+    "≈ 25 min"
+  ]
+}

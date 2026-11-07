@@ -1,4 +1,5 @@
 'use client'
+import QuizContent from '@/components/quizzes/QuizContent'
 
 /**
  * DailyMathTask — the math-literacy spine's home on the daily dashboard/hub.
@@ -127,7 +128,7 @@ export default function DailyMathTask({ onStatus, compact = false }: { onStatus?
               </span>
               <span className="text-xs text-muted-foreground">{item.competencyStatement}</span>
             </div>
-            <p className="text-sm font-medium text-foreground leading-relaxed whitespace-pre-wrap">{item.prompt}</p>
+            <QuizContent questionEmphasis content={item.prompt} allowFigures/>
 
             {alreadySubmitted ? (
               <div className="flex items-center gap-2 text-sm rounded-md px-3 py-2 bg-success/10 text-success">

@@ -8,6 +8,7 @@ const expectedBytes = 266882977
 const expectedSha256 = 'de438d7a0ed13339340d3e6bb93346920ef146c99e1275e8c84ba476555943d7'
 
 async function main() {
+  require('./reading-availability-index.cjs').verifyAvailabilityIndex()
   if (!fs.existsSync(file) || fs.statSync(file).size !== expectedBytes) {
     throw new Error('The honors textbook is missing or incomplete. Install Git LFS, run "git lfs install" and "git lfs pull", then retry. Enable Git LFS in Vercel project settings for Git deployments.')
   }

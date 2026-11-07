@@ -1,0 +1,44 @@
+{
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 15 Free Body Diagrams Part 1.dc.html",
+  "sourceSha256": "568e017fefaaa46327f685b41959601a26e3cc79b3b391e5b920f5943e1ba8ee",
+  "packagedSha256": "ca2f130fe2ee1a5d08b34fcf0e57dca1265db75859704e81643b1c4a3116e679",
+  "sourceStudentSlides": 27,
+  "teacherSlidesExcluded": 3,
+  "studentSlides": 31,
+  "panels": [
+    [
+      10,
+      1,
+      1,
+      430,
+      661
+    ],
+    [
+      16,
+      2,
+      2,
+      399,
+      784
+    ],
+    [
+      22,
+      3,
+      3,
+      431,
+      574
+    ],
+    [
+      24,
+      4,
+      4,
+      435,
+      720
+    ]
+  ],
+  "timers": [
+    "fbd",
+    "exit"
+  ],
+  "lab": false
+}

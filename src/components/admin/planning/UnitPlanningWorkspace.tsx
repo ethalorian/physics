@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent } from 'react'
 import { useSequenceDateConfirmation } from '@/components/admin/useSequenceDateConfirmation'
 import { DateChangeCancelled } from '@/lib/sequence-date-change'
 import Link from 'next/link'
@@ -14,6 +14,7 @@ import { useClassWork } from '@/components/admin/useClassWork'
 import { plannerDay, shiftDay } from '@/lib/reading-planner'
 import { assignedActivity, assignmentSettingsHref, planChanges } from '@/lib/teaching-plans/model'
 import { workIsAssigned } from '@/lib/class-work'
+import { calendarIndex, emptyCalendarDay } from '@/lib/teaching-plans/calendar-index'
 import type { PlanActivity, PlanStep, PlanningClass, PlanningData, TeachingSlot } from '@/lib/teaching-plans/types'
 import { matchesLibrary, readingTags } from '@/lib/activity-library'
 import SavedUnitSequences from './SavedUnitSequences'
@@ -23,7 +24,13 @@ import { sourcePresentation, sourceTitle, sourceTypeOptions, matchesSourceType }
 import { teachingWeek, teachingWeeks, unassignCalendarAssignment, type CalendarAssignment } from '@/lib/teaching-calendar'
 import s from './UnitPlanningWorkspace.module.css'
 
-const labelDay = (day: string) => new Date(day + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+const shortDate = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+const fullDate = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'short', day: 'numeric', timeZone: 'UTC' })
+const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: 'UTC' })
+const labelDay = (day: string) => {
+  const date = new Date(day + 'T12:00:00Z')
+  return Number.isNaN(date.getTime()) ? 'Invalid Date' : shortDate.format(date)
+}
 type Edit = { courseId: string; stepId?: string; action: 'apply' | 'step' }
 
 export default function UnitPlanningWorkspace({ classId, unitId, mode }: { classId: string | null; unitId: string; mode: 'plan' | 'calendar' }) {
@@ -76,7 +83,7 @@ function Workspace({ classId, unitId, mode }: { classId: string; unitId: string;
     if (saving.current || locked) return false
     saving.current = true; setBusy(true); setError(''); setNotice('')
     try {
-      await dateRequest.send('/api/teaching-plans', { unitId, classId, ...body }); await load(); await work.load(); setNotice(message); return true
+      await dateRequest.send('/api/teaching-plans', { unitId, classId, ...body }); await Promise.all([load(), work.load()]); setNotice(message); return true
     } catch (e) { if (!(e instanceof DateChangeCancelled)) setError((e as Error).message); return false }
     finally { saving.current = false; setBusy(false) }
   }
@@ -116,7 +123,7 @@ function Workspace({ classId, unitId, mode }: { classId: string; unitId: string;
     saving.current = true; setBusy(true); setError(''); setNotice('')
     try {
       await unassignCalendarAssignment(assignment)
-      await load(); await work.load()
+      await Promise.all([load(), work.load()])
       setNotice('Removed from this class’s calendar. Linked activities were unassigned together; student work and grades stay saved.')
       return true
     } catch (e) { setError((e as Error).message); return false }
@@ -248,7 +255,14 @@ function TeachingCalendar({ course, data, work, disabled, saveError, onPlace, on
   const canRemove = (id: string) => canUnassign && !!state?.meetings[id]
   const remove = (id: string) => { if (canRemove(id)) { setSelected(''); void onPlace(id, null) } }
   const pointer = useRef<{ id: string; x: number; y: number; moved: boolean } | null>(null), suppressClick = useRef(false)
-  const [dragging, setDragging] = useState(false), [over, setOver] = useState(''), [point, setPoint] = useState({ x: 0, y: 0 })
+  const [dragging, setDragging] = useState(false), [over, setOver] = useState('')
+  const point = useRef({ x: 0, y: 0 }), ghost = useRef<HTMLDivElement | null>(null), frame = useRef<number | null>(null), hover = useRef('')
+  const positionGhost = useCallback((node: HTMLDivElement | null) => {
+    ghost.current = node
+    if (node) node.style.transform = `translate3d(${point.current.x + 14}px, ${point.current.y + 14}px, 0)`
+  }, [])
+  const index = useMemo(() => calendarIndex(data.catalog, course.state?.steps ?? data.plan?.steps ?? [], course.state?.meetings ?? {}, work.data?.items ?? [], data.assignments, course.id), [data.catalog, data.plan?.steps, data.assignments, course.state?.steps, course.state?.meetings, course.id, work.data?.items])
+  useEffect(() => () => { if (frame.current !== null) cancelAnimationFrame(frame.current) }, [])
   const calendarRef = useRef<HTMLElement>(null)
   const [dayDetails, setDayDetails] = useState<string | null>(null)
   const [dateEdit, setDateEdit] = useState<ClassWorkItem | null>(null)
@@ -260,11 +274,15 @@ function TeachingCalendar({ course, data, work, disabled, saveError, onPlace, on
     if (removed) { setRemoval(null); setSelected('') }
   }
   const selectDrop = (id: string, slot: TeachingSlot) => { if (canPlace && steps.some(st => st.id === id)) { setSelected(''); void onPlace(id, slot) } }
-  const targetAt = (event: PointerEvent<HTMLButtonElement>) => {
+  const targetAt = (event: { clientX: number; clientY: number }) => {
     const element = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-teaching-drop]')
     return element && calendarRef.current?.contains(element) ? element.dataset.teachingDrop ?? '' : ''
   }
-  const endDrag = () => { pointer.current = null; setDragging(false); setOver('') }
+  const endDrag = useCallback(() => {
+    if (frame.current !== null) { cancelAnimationFrame(frame.current); frame.current = null }
+    pointer.current = null; hover.current = ''; setDragging(false); setOver('')
+  }, [])
+  useEffect(() => { if (!canDrag) endDrag() }, [canDrag, endDrag])
   function pointerStart(event: PointerEvent<HTMLButtonElement>, id: string) {
     if (!canDrag || event.button !== 0 || event.pointerType === 'touch' && !(event.target as Element).closest('[data-drag-handle]')) return
     suppressClick.current = false; pointer.current = { id, x: event.clientX, y: event.clientY, moved: false }
@@ -273,33 +291,37 @@ function TeachingCalendar({ course, data, work, disabled, saveError, onPlace, on
   function pointerMove(event: PointerEvent<HTMLButtonElement>) {
     const current = pointer.current
     if (!current || !canDrag || !current.moved && Math.hypot(event.clientX - current.x, event.clientY - current.y) < 7) return
-    event.preventDefault(); current.moved = true; setDragging(true); setPoint({ x: event.clientX, y: event.clientY }); setOver(targetAt(event))
+    event.preventDefault()
+    point.current = { x: event.clientX, y: event.clientY }
+    if (!current.moved) { current.moved = true; setDragging(true) }
+    // The hint follows the latest coordinates at most once per display frame.
+    // Only entering a different drop target needs a React update.
+    if (frame.current === null) frame.current = requestAnimationFrame(() => {
+      frame.current = null
+      if (!pointer.current?.moved) return
+      positionGhost(ghost.current)
+      const target = targetAt({ clientX: point.current.x, clientY: point.current.y })
+      if (target !== hover.current) { hover.current = target; setOver(target) }
+    })
   }
   function pointerEnd(event: PointerEvent<HTMLButtonElement>) {
     const current = pointer.current, target = targetAt(event); endDrag()
     if (current?.moved) { suppressClick.current = true; if (target === 'unassign') remove(current.id); else if (target) { const [date, block] = target.split('|'); selectDrop(current.id, { date, block }) } }
   }
   function renderDay(day: string, detail = false) {
-          const meetings = ready ? weekMeetings.meetings.filter(m => m.date === day) : [], planned = steps.filter(st => {
-            if (!state?.meetings[st.id]) return false
-            const item = work.data?.items.find(i => assignedActivity(i, data.catalog)?.key === st.activityKey)
-            const date = item?.sequenceRole && item.dueAt && (item.access === 'open' || item.access === 'scheduled') ? item.dateOnly ? item.dueAt : plannerDay(item.dueAt) : state.meetings[st.id].date
-            return date === day
-          })
-          const shownKeys = new Set(planned.map(st => st.activityKey))
-          const deadlines = data.assignments.filter(a => a.course_id === course.id && a.due_on === day && !shownKeys.has('interactive:' + a.slug))
-          const otherDeadlines = (work.data?.items ?? []).filter(item => item.kind !== 'interactive' && !shownKeys.has(assignedActivity(item, data.catalog)?.key ?? '') && (item.access === 'open' || item.access === 'scheduled') && item.dueAt && (item.dateOnly ? item.dueAt : plannerDay(item.dueAt)) === day)
-          return <div key={day} data-teaching-drop={canPlace && meetings.length === 1 ? day + '|' + meetings[0].block : undefined} data-over={over.startsWith(day + '|') || undefined} id={detail ? undefined : 'teaching-day-' + day} className={`${s.day} ${detail ? s.dayDetail : ''} ${selected ? s.placing : ''} ${day === today ? s.today : ''}`}><div className={s.dayHeading}><h4 className={s.dayNumber}><button type="button" className={s.dayOpen} onClick={() => setDayDetails(day)} disabled={detail} aria-label={'View assignments for ' + new Date(day + 'T12:00:00Z').toLocaleDateString('en-US', {weekday:'long',month:'short',day:'numeric',timeZone:'UTC'})}><time dateTime={day} aria-current={day === today ? 'date' : undefined}><span>{new Date(day + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' })}</span><strong>{labelDay(day)}</strong></time></button></h4>
+          const meetings = ready ? weekMeetings.meetings.filter(m => m.date === day) : []
+          const { planned, deadlines, otherDeadlines } = index.days.get(day) ?? emptyCalendarDay
+          return <div key={day} data-teaching-drop={canPlace && meetings.length === 1 ? day + '|' + meetings[0].block : undefined} data-over={over.startsWith(day + '|') || undefined} id={detail ? undefined : 'teaching-day-' + day} className={`${s.day} ${detail ? s.dayDetail : ''} ${selected ? s.placing : ''} ${day === today ? s.today : ''}`}><div className={s.dayHeading}><h4 className={s.dayNumber}><button type="button" className={s.dayOpen} onClick={() => setDayDetails(day)} disabled={detail} aria-label={'View assignments for ' + fullDate.format(new Date(day + 'T12:00:00Z'))}><time dateTime={day} aria-current={day === today ? 'date' : undefined}><span>{weekday.format(new Date(day + 'T12:00:00Z'))}</span><strong>{labelDay(day)}</strong></time></button></h4>
             {meetings.map(slot => <button key={slot.block} className={s.meeting} disabled={!canPlace} data-teaching-drop={day + '|' + slot.block} data-over={over === day + '|' + slot.block || undefined} onClick={() => selectDrop(selected, slot)} aria-label={`Place activity on ${labelDay(day)}, ${slot.block} block`}>{slot.block} block{slot.long ? ' · long' : ''}</button>)}
             {!meetings.length && <small className={s.noMeeting}>{ready ? issue ? 'Schedule needs setup' : 'No class meeting' : 'Loading meetings'}</small>}</div>{!detail && <button className={s.dayCount} onClick={() => setDayDetails(day)} aria-label={'View ' + (planned.length + deadlines.length + otherDeadlines.length) + ' assignments for ' + labelDay(day)}><strong>{planned.length + deadlines.length + otherDeadlines.length}</strong><span>items</span></button>}<div className={s.dayActivities}>
             {!planned.length && !deadlines.length && !otherDeadlines.length && <p className={s.emptyDay}>No activities scheduled</p>}
             {planned.map(st => {
-              const item = (work.data?.items ?? []).find(i => assignedActivity(i, data.catalog)?.key === st.activityKey)
+              const item = index.work.get(st.activityKey)
               const dueHere = item?.dueAt && (item.dateOnly ? item.dueAt : plannerDay(item.dueAt)) === day && (item.access === 'open' || item.access === 'scheduled')
-              return <article key={st.id} className={s.scheduledCard}><button className={s.plannedCard} draggable={false} disabled={!canDrag} onPointerDown={e => pointerStart(e, st.id)} onPointerMove={pointerMove} onPointerUp={pointerEnd} onPointerCancel={endDrag} onLostPointerCapture={endDrag} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return } setDayDetails(null); onEdit({ action: 'step', courseId: course.id, stepId: st.id }) }}><GripVertical size={14} data-drag-handle /><span><AssignmentIdentity source={data.catalog.find(a => a.key === st.activityKey) ?? st} layout="card"/><small>{state!.meetings[st.id].date === day ? state!.meetings[st.id].block + ' block · ' : ''}{dueHere ? 'Assigned · due ' + labelDay(day) : 'Teaching plan · select to assign'}</small></span></button><div className={s.cardActions}><button className={s.moveAction} disabled={!canPlace} aria-pressed={selected === st.id} onClick={() => { setDayDetails(null); setSelected(st.id) }} aria-label={'Move ' + sourceTitle(data.catalog.find(a => a.key === st.activityKey) ?? st)}><CalendarDays size={13} aria-hidden="true"/>Move</button>{item?.canEditDue && item.sequenceRole && <button className={s.moveAction} disabled={disabled} onClick={() => { setDayDetails(null); setDateEdit(item) }} aria-label={'Edit date for ' + sourceTitle(item)}>Edit date</button>}<button className={s.removeAction} disabled={!canRemove(st.id)} onClick={() => { setDayDetails(null); setRemoval({ step: st }) }} aria-label={'Remove ' + sourceTitle(data.catalog.find(a => a.key === st.activityKey) ?? st) + ' from calendar'} title="Remove from calendar"><Trash2 size={13} aria-hidden="true"/>Remove</button></div></article>
+              return <article key={st.id} className={s.scheduledCard}><button className={s.plannedCard} draggable={false} disabled={!canDrag} onPointerDown={e => pointerStart(e, st.id)} onPointerMove={pointerMove} onPointerUp={pointerEnd} onPointerCancel={endDrag} onLostPointerCapture={endDrag} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return } setDayDetails(null); onEdit({ action: 'step', courseId: course.id, stepId: st.id }) }}><GripVertical size={14} data-drag-handle /><span><AssignmentIdentity source={index.activities.get(st.activityKey) ?? st} layout="card"/><small>{state!.meetings[st.id].date === day ? state!.meetings[st.id].block + ' block · ' : ''}{dueHere ? 'Assigned · due ' + labelDay(day) : 'Teaching plan · select to assign'}</small></span></button><div className={s.cardActions}><button className={s.moveAction} disabled={!canPlace} aria-pressed={selected === st.id} onClick={() => { setDayDetails(null); setSelected(st.id) }} aria-label={'Move ' + sourceTitle(index.activities.get(st.activityKey) ?? st)}><CalendarDays size={13} aria-hidden="true"/>Move</button>{item?.canEditDue && item.sequenceRole && <button className={s.moveAction} disabled={disabled} onClick={() => { setDayDetails(null); setDateEdit(item) }} aria-label={'Edit date for ' + sourceTitle(item)}>Edit date</button>}<button className={s.removeAction} disabled={!canRemove(st.id)} onClick={() => { setDayDetails(null); setRemoval({ step: st }) }} aria-label={'Remove ' + sourceTitle(index.activities.get(st.activityKey) ?? st) + ' from calendar'} title="Remove from calendar"><Trash2 size={13} aria-hidden="true"/>Remove</button></div></article>
             })}
             {deadlines.map(a => {
-              const activity = data.catalog.find(item => item.key === 'interactive:' + a.slug), title = activity?.title ?? a.slug, editable = work.data?.items.find(item => item.kind === 'interactive' && item.sourceId === a.slug && item.canEditDue)
+              const activity = index.activities.get('interactive:' + a.slug), title = activity?.title ?? a.slug, editable = work.data?.items.find(item => item.kind === 'interactive' && item.sourceId === a.slug && item.canEditDue)
               return <article className={s.scheduledCard} key={a.id}><Link className={s.deadline} href={activity?.href ?? '/interactive-assignments/' + a.slug} target="_blank" rel="noopener noreferrer" aria-label={`Student preview: ${title} (opens in a new tab)`}><AssignmentIdentity source={activity ?? {kind:'interactive',sourceId:a.slug,title}} layout="card"/><small>Due {labelDay(day)}</small></Link>{editable && <button className={s.removeAction} disabled={disabled} onClick={() => { setDayDetails(null); setDateEdit(editable) }} aria-label={'Edit date for ' + sourceTitle(editable)}>Edit date</button>}<button className={s.removeAction} disabled={disabled} onClick={() => { setDayDetails(null); setRemoval({ assignment: a }) }} aria-label={'Remove ' + sourceTitle(activity ?? {kind:'interactive',sourceId:a.slug,title}) + ' from calendar'} title="Remove from calendar"><Trash2 size={13} aria-hidden="true"/>Remove</button></article>
             })}
             {otherDeadlines.map(item => <article className={s.scheduledCard} key={item.id}><Link className={s.deadline} href={item.href}><AssignmentIdentity source={item} layout="card"/><small>Due {labelDay(day)}</small></Link>{item.canEditDue && item.sequenceRole && <button className={s.removeAction} disabled={disabled} onClick={() => { setDayDetails(null); setDateEdit(item) }} aria-label={'Edit date for ' + sourceTitle(item)}>Edit date</button>}</article>)}
@@ -314,19 +336,19 @@ function TeachingCalendar({ course, data, work, disabled, saveError, onPlace, on
     {meetingError && <p role="alert" className={s.error}>{meetingError} <button onClick={() => setRetry(n => n + 1)}>Retry meetings</button></p>}
     {!ready && !meetingError && <p role="status" className={s.subtle}>Loading calendar meetings…</p>}
     <>
-      <div className={s.calendarHeading}><div><h3>Assign from your course sequence</h3><p>Drag an activity to a class block, or choose Move and then its new block. Open a date to read its cards in a larger view.</p></div><div className={s.calendarNavigation}><div className={s.viewSwitch} role="group" aria-label="Calendar view"><button type="button" aria-pressed={weekCount === 1} onClick={() => { setDayDetails(null); setWeekCount(1) }}>1 week</button><button type="button" aria-pressed={weekCount === 2} onClick={() => { setDayDetails(null); setWeekCount(2) }}>2 weeks</button></div><div className={s.month}><button aria-label="Previous week" onClick={() => setWeek(shiftDay(week, -7))}><ChevronLeft size={18} /></button><strong>{labelDay(week)} – {labelDay(through)}</strong><button aria-label="Next week" onClick={() => setWeek(shiftDay(week, 7))}><ChevronRight size={18} /></button><button onClick={() => setWeek(teachingWeek(today)[0])}>This week</button></div></div></div>
+      <div className={s.calendarHeading}><div><h3>Assign from your course sequence</h3><p>Drag an activity to a class block, or choose Move and then its new block. Open a date to read its cards in a larger view.</p></div><div className={s.calendarNavigation}><Link href={'/admin/control-room?view=choices&class=' + course.id + '&unit=' + data.unitId}>Assign Student Choice</Link><div className={s.viewSwitch} role="group" aria-label="Calendar view"><button type="button" aria-pressed={weekCount === 1} onClick={() => { setDayDetails(null); setWeekCount(1) }}>1 week</button><button type="button" aria-pressed={weekCount === 2} onClick={() => { setDayDetails(null); setWeekCount(2) }}>2 weeks</button></div><div className={s.month}><button aria-label="Previous week" onClick={() => setWeek(shiftDay(week, -7))}><ChevronLeft size={18} /></button><strong>{labelDay(week)} – {labelDay(through)}</strong><button aria-label="Next week" onClick={() => setWeek(shiftDay(week, 7))}><ChevronRight size={18} /></button><button onClick={() => setWeek(teachingWeek(today)[0])}>This week</button></div></div></div>
       <div className={s.sequenceControls}><p><strong>{data.unitName}</strong><span>{steps.length} activities in {course.label}’s sequence</span></p><button type="button" disabled={disabled} onClick={() => { setSelected(''); onChangeSequence() }}>Change sequence</button></div>
       {state && data.plan && state.plan_version !== data.plan.version && <div className={s.notice}><p>This class is using an earlier sequence with {steps.length} activities. The saved sequence has {data.plan.steps.length}.</p><button type="button" disabled={disabled} onClick={() => { setSelected(''); onEdit({ action: 'apply', courseId: course.id }) }}>Use saved sequence</button></div>}
-      <div className={s.calendarTools}><details className={s.sequencePicker}><summary>Choose an activity from the sequence ({steps.length})</summary><div className={s.shelf} aria-label="Course sequence activities">{steps.map((step, i) => <button key={step.id} draggable={false} disabled={!canPlace} aria-pressed={selected === step.id} onPointerDown={e => pointerStart(e, step.id)} onPointerMove={pointerMove} onPointerUp={pointerEnd} onPointerCancel={endDrag} onLostPointerCapture={endDrag} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return } setSelected(selected === step.id ? '' : step.id) }}><GripVertical size={14} data-drag-handle /><span><span className={s.sequenceNumber}>Step {i + 1}</span><AssignmentIdentity source={data.catalog.find(a => a.key === step.activityKey) ?? step} layout="card"/><small>{state?.meetings[step.id] ? `Scheduled ${labelDay(state.meetings[step.id].date)}` : 'Drag to assign'}</small></span></button>)}</div></details>
+      <div className={s.calendarTools}><details className={s.sequencePicker}><summary>Choose an activity from the sequence ({steps.length})</summary><div className={s.shelf} aria-label="Course sequence activities">{steps.map((step, i) => <button key={step.id} draggable={false} disabled={!canPlace} aria-pressed={selected === step.id} onPointerDown={e => pointerStart(e, step.id)} onPointerMove={pointerMove} onPointerUp={pointerEnd} onPointerCancel={endDrag} onLostPointerCapture={endDrag} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return } setSelected(selected === step.id ? '' : step.id) }}><GripVertical size={14} data-drag-handle /><span><span className={s.sequenceNumber}>Step {i + 1}</span><AssignmentIdentity source={index.activities.get(step.activityKey) ?? step} layout="card"/><small>{state?.meetings[step.id] ? `Scheduled ${labelDay(state.meetings[step.id].date)}` : 'Drag to assign'}</small></span></button>)}</div></details>
         <button className={s.unassignDrop} data-teaching-drop={canUnassign ? 'unassign' : undefined} data-over={over === 'unassign' && canRemove(pointer.current?.id ?? '') || undefined} disabled={!canUnassign} onClick={() => remove(selected)} aria-label="Unassign selected activity"><ArrowLeft size={18} /><span><strong>Unassign</strong><small>{selected && canRemove(selected) ? 'Return selected activity to the sequence' : 'Drag a scheduled card here'}</small></span></button>
       </div>
-      {dragging && <div className={s.dragGhost} style={{ left: point.x + 14, top: point.y + 14 }}>{over === 'unassign' && canRemove(pointer.current?.id ?? '') ? 'Drop to unassign · student work stays saved' : 'Drop on a class day to assign'}</div>}
+      {dragging && <div ref={positionGhost} className={s.dragGhost} style={{ left: 0, top: 0 }}>{over === 'unassign' && canRemove(pointer.current?.id ?? '') ? 'Drop to unassign · student work stays saved' : 'Drop on a class day to assign'}</div>}
       {selected && <p role="status" className={`${s.notice} ${s.placementNotice}`}>Choose a class block for {steps.find(st => st.id === selected)?.title}. You can choose either visible week or navigate to another week. It will be assigned and due that day.{canRemove(selected) && ' Or choose Unassign to take it off the calendar.'} <button onClick={() => setSelected('')}>Cancel placement</button></p>}
       <p className={s.smallCalendarHint}>{selected ? 'Tap a day, then choose a class block to move the activity.' : 'Tap a day to read its assignments.'}</p>
       <div className={s.calendarWeeks} role="region" aria-label={weekCount === 2 ? 'Teaching two-week calendar' : 'Teaching week calendar'}>
         {weeks.map(days => <section key={days[0]} aria-label={'Week of ' + labelDay(days[0])}><h4 className={s.weekLabel}>{labelDay(days[0])} – {labelDay(days[6])}</h4><div className={s.calendarGrid}>{days.map(day => renderDay(day))}</div></section>)}
       </div>
-      <p className={s.subtle}>Activities are due on the day you choose, at 11:59 PM Eastern. New discussions schedule their review and quiz three school days later. For existing linked activities, review the dates and confirm either an individual date override or the normal linked spacing. Spacing skips weekends and saved no-school dates. Removing either lesson unassigns the whole group while preserving student work. Worksheet quizzes follow the next Monday, Wednesday, or Friday, keeping any later quiz spacing when moved. Reading quizzes keep their existing unlock and scheduling rules. Use Student choice to offer a menu instead of assigning work to the whole class.</p>
+      <p className={s.subtle}>Activities are due on the day you choose, at 11:59 PM Eastern. New discussions schedule their review and quiz three school days later. For existing linked activities, review the dates and confirm either an individual date override or the normal linked spacing. Spacing skips weekends and saved no-school dates. Removing either lesson unassigns the whole group while preserving student work. Worksheet quizzes follow the next Monday, Wednesday, or Friday, keeping any later quiz spacing when moved. Reading quizzes keep their existing unlock and scheduling rules. Use Student Choice to schedule an independent notebook and practice assignment with a teacher-selected letter grade.</p>
     </>
     {dateEdit && <WorkEditor edit={{ item: dateEdit, action: 'due' }} classId={course.id} onClose={() => setDateEdit(null)} onSaved={async () => { setDateEdit(null); await Promise.all([work.load(), onRefresh()]) }} />}
     {dayDetails && <Dialog open onOpenChange={open => { if (!open) setDayDetails(null) }}><DialogContent className={`${s.dialog} ${s.dayDialog}`}><DialogTitle>Assignments · {labelDay(dayDetails)}</DialogTitle><DialogDescription>{course.label} · Full assignment titles and thinking prompts</DialogDescription>{renderDay(dayDetails, true)}</DialogContent></Dialog>}

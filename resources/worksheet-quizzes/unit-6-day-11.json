@@ -9,7 +9,7 @@
     "Interpret a logarithmic sound-level difference.",
     "Predict approach and recession Doppler trends."
   ],
-  "source_sha256": "0ea21f58399c6f22e999db4c6ac4cc346e3d1cb5fd36d8e86585fea7a30e4013",
+  "source_sha256": "f66a729fd975040d75aa5ab6d5170c9d62cbc0db13742ad584dc8f54a8d5eba0",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.552Z",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "Use Δβ = 10 log₁₀(I₂/I₁). If intensity increases by 1,000, what is sound-level change?",
+      "prompt": "1. Use Δβ = 10 log₁₀(I₂/I₁).\n2. If intensity increases by 1,000, what is sound-level change?",
       "options": [
         "3 dB",
         "30 dB",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "Use Δβ = 10 log₁₀(I₂/I₁). If intensity increases by 1,000, what is sound-level change?",
+      "prompt": "1. Use Δβ = 10 log₁₀(I₂/I₁).\n2. If intensity increases by 1,000, what is sound-level change?",
       "options": [
         "30 dB",
         "100 dB",

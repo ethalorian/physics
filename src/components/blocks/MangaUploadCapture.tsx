@@ -1,4 +1,5 @@
 'use client'
+import QuizContent from '@/components/quizzes/QuizContent'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { LessonReadingPreview } from '@/components/readings/LessonReadingContext'
@@ -42,7 +43,7 @@ export default function MangaUploadCapture({ block, lessonId, value, readOnly, o
   const href = answer.attachmentId ? `/api/lessons/artifacts?id=${encodeURIComponent(answer.attachmentId)}` : ''
   return <div className="space-y-4">
     <p>{block.instruction}</p>
-    {block.prompts && <ul className="list-disc space-y-1 pl-5 text-sm">{block.prompts.map(prompt => <li key={prompt}>{prompt}</li>)}</ul>}
+    {block.prompts && <ul className="list-disc space-y-4 pl-5">{block.prompts.map(prompt => <li key={prompt}><QuizContent questionEmphasis content={prompt} allowFigures/></li>)}</ul>}
     {receipt && <figure className="space-y-2 rounded-xl border bg-card p-3">
       {receipt.content_type.startsWith('image/') && /* eslint-disable-next-line @next/next/no-img-element */ <img src={href} alt="Your uploaded manga page" className="max-h-[40rem] w-full rounded-lg object-contain" />}
       <figcaption><a className="inline-flex min-h-11 items-center underline" href={href} target="_blank" rel="noopener noreferrer">{receipt.content_type === 'application/pdf' ? 'Download PDF' : 'Open uploaded page'} · {receipt.name}</a></figcaption>

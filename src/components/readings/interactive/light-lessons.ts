@@ -518,7 +518,7 @@ export const lightLessons:Record<string,LessonContent> = {
       "prompt": "Two filters in series have nonoverlapping passbands. Their output is…",
       "options": [
         "A brighter combination of both colors",
-        "Very small or zero in the ideal model",
+        "Very small or zero in this ideal case",
         "Automatically white"
       ],
       "correct": 1,
@@ -747,7 +747,7 @@ export const lightLessons:Record<string,LessonContent> = {
     ],
     "worked": {
       "title": "Work through the idea",
-      "prompt": "Compare 450 nm and 650 nm scattering under the same Rayleigh conditions.",
+      "prompt": "Compare scattering at 450 nm and 650 nm. Keep the same setup and use the Rayleigh scattering relationship.",
       "reasoning": "The ratio is (650/450)⁴ ≈ 4.35. The shorter wavelength is scattered more strongly, without traveling faster in vacuum."
     },
     "check": {

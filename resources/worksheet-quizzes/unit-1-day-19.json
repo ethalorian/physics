@@ -9,7 +9,7 @@
     "Show a corrected method with units.",
     "Apply the repair to a different problem."
   ],
-  "source_sha256": "9496acd1823607cb4f81f6c1b92a0c5b24161417714d91f7b7a319ca046d4252",
+  "source_sha256": "b4abd7d2fea870e67fd83b7abc6bb7e101cc37545dace56427bc6453f90db84d",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.483Z",

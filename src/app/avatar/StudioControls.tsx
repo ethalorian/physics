@@ -1,6 +1,6 @@
 'use client'
 
-import { Check, LockKeyhole, Sparkles, X } from 'lucide-react'
+import { Check, Sparkles, X } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
 import { TRAIT_LABELS, TRAIT_OPTIONS, type AvatarTraits, type CatalogEntry, type EquippedItems } from '@/lib/avatar/types'
 import { SKIN, HAIR, SHIRT, EYE } from '@/lib/avatar/palette'
@@ -30,9 +30,7 @@ export function TraitPicker({ trait, traits, onChange }: { trait: keyof AvatarTr
 }
 export function itemStatus(item: CatalogEntry): string {
   if (item.state === 'owned') return item.enabled === false ? 'Owned · archived' : 'Owned'
-  if (item.state === 'staff_free') return 'Free for staff'
-  if (item.unlock_target_id) return item.state === 'unlock_available' ? 'Ready to claim' : 'Mastery reward'
-  return `${(item.cost_xp ?? 0).toLocaleString()} XP`
+  return 'Free'
 }
 export function ItemTile({ item, traits, equipped, items, selected, wearing, onTry }: {
   item: CatalogEntry; traits: AvatarTraits; equipped: EquippedItems; items: CatalogEntry[]
@@ -43,23 +41,19 @@ export function ItemTile({ item, traits, equipped, items, selected, wearing, onT
   return <button type="button" className={styles.itemTile} data-slot={item.slot} aria-pressed={selected} aria-label={`Try on ${item.name} · ${itemStatus(item)}`} onClick={onTry}>
     <span className={styles.itemArt}><Avatar traits={traits} equipped={{ ...(figure ? { head: equipped.head } : {}), [item.slot]: item.slug }} items={items} size={figure ? 92 : 102} crop={figure ? 'figure' : item.slot === 'background' || item.slot === 'pin' ? 'medium' : 'head'} decorative /></span>
     {wearing && <span className={styles.wornBadge}><Check size={11} />Wearing</span>}
-    {item.state === 'locked_until_mastery' && <LockKeyhole size={13} className={styles.lockBadge} aria-hidden="true" />}
     <span className={styles.itemName}>{item.name}</span><span className={styles.itemPrice}>{itemStatus(item)}</span>
   </button>
 }
-export function ItemDetail({ item, wearing, trying, balance, onEquip, onBuy, onClose, onRemove }: {
-  item: CatalogEntry; wearing: boolean; trying: boolean; balance: number
-  onEquip: () => void; onBuy: () => void; onClose: () => void; onRemove: () => void
+export function ItemDetail({ item, wearing, trying, onEquip, onClaim, onClose, onRemove }: {
+  item: CatalogEntry; wearing: boolean; trying: boolean
+  onEquip: () => void; onClaim: () => void; onClose: () => void; onRemove: () => void
 }) {
-  const owned = item.state === 'owned', locked = item.state === 'locked_until_mastery'
-  const canAcquire = item.enabled !== false && ['affordable', 'staff_free', 'unlock_available'].includes(item.state)
+  const owned = item.state === 'owned'
   return <section className={styles.itemDetail} aria-label="Selected item">
     <div className={styles.detailCopy}><p className={styles.eyebrow}>{trying ? 'IN THE FITTING ROOM' : 'IN YOUR LOOK'}</p><h3>{item.name}</h3><p>{itemStatus(item)}{trying ? ' · Preview only' : ''}</p>
-      {item.unlock_target_id && !owned && <p>{item.target_statement || 'Build mastery to unlock this item.'} · Level {(item.unlock_progress ?? 0).toFixed(1)} / {Number(item.unlock_min_level ?? 2.5).toFixed(1)}</p>}
-      {item.state === 'too_expensive' && <p>Earn {Math.max(0, (item.cost_xp ?? 0) - balance).toLocaleString()} more XP to get this.</p>}
     </div>
     <div className={styles.detailActions}>
-      {owned ? <button type="button" className={styles.primary} onClick={wearing ? onRemove : onEquip}>{wearing ? 'Remove item' : item.slot === 'background' ? 'Use scene' : 'Wear this'}</button> : <button type="button" className={styles.primary} disabled={!canAcquire} onClick={onBuy}>{item.state === 'staff_free' ? 'Add to wardrobe' : item.state === 'unlock_available' ? 'Claim item' : locked ? 'Mastery locked' : `Buy · ${(item.cost_xp ?? 0).toLocaleString()} XP`}</button>}
+      {owned ? <button type="button" className={styles.primary} onClick={wearing ? onRemove : onEquip}>{wearing ? 'Remove item' : item.slot === 'background' ? 'Use scene' : 'Wear this'}</button> : <button type="button" className={styles.primary} disabled={item.enabled === false} onClick={onClaim}>Add to wardrobe</button>}
       {trying && <button type="button" className={styles.textButton} onClick={onClose}><X size={13} />End try-on</button>}
     </div>
   </section>

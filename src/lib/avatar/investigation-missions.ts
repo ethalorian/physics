@@ -65,7 +65,7 @@ export function assignmentMission(lesson: LessonAssignment): InvestigationMissio
   return mission(SIMULATION_ROLES[lesson.simulation??''] ?? DAY_ROLES[lesson.day] ?? 'Physics investigator',
     sections[0]?.questions[0]?.prompt ?? lesson.targets[0] ?? lesson.title,
     sections.find(s=>s.explorer)?.learn ?? sections[1]?.learn ?? sections[0]?.learn ?? lesson.title,
-    sections.at(-1)?.questions.find(q=>!q.independent)?.prompt ?? sections.at(-1)?.learn ?? lesson.title)
+    sections[sections.length-1]?.questions.find(q=>!q.independent)?.prompt ?? sections[sections.length-1]?.learn ?? lesson.title)
 }
 const DAY_ROLES: Record<number,string>={1:'Mission decision team',2:'Route explorer',3:'Motion investigator',4:'Motion coach',5:'Mission uncertainty analyst',6:'Navigation planner',7:'Motion coach',8:'Kinematics investigator',9:'Inertia investigator',10:'Force inspector',11:'Cart test engineer',12:'Cart test engineer',13:'Dynamics investigator',14:'Interaction investigator',15:'Force inspector',16:'Force investigator',17:'Grip and slip investigator',18:'Rigging engineer',19:'Model revision investigator',20:'Mission physics team'}
 

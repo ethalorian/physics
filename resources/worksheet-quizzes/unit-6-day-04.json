@@ -9,7 +9,7 @@
     "Distinguish fixed-end from free-end pulse reflection.",
     "Track energy without assuming equal amplitudes."
   ],
-  "source_sha256": "1d2b5ba148816d423e0349b585f9de0a4bc51fa815043bd5d7210867f4acf237",
+  "source_sha256": "9998ae367bcaf1bf84e7d8d169eca5521bf669a4ab5e58126d77f9496a66d5b3",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.545Z",

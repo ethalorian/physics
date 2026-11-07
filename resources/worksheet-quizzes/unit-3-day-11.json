@@ -2,14 +2,14 @@
   "version": 1,
   "unit": 3,
   "day": 11,
-  "title": "A kinetic-impact deflection model",
+  "title": "Predicting a deflection from an impact",
   "target": "Estimate a velocity change and explain the value of lead time.",
   "criteria": [
-    "State the simplified collision model.",
+    "State how you simplify the collision.",
     "Connect delivered momentum to target velocity change.",
     "Explain why real deflection includes ejecta and orbital effects."
   ],
-  "source_sha256": "86064919f24289cc5ce8951d1d89196c21e061462bac0c63ac7598a7a592f03d",
+  "source_sha256": "cb7c3aec1e9e1dd59340b86b8df81f468215c126ceeb4e29271ce6108c1b2bdd",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.509Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "A simplified kinetic-impact model treats a small probe as sticking to a target with negligible external impulse during impact. Which equation governs their shared final velocity?",
+      "prompt": "A small probe hits a target and sticks to it. Ignore impulse from outside forces during the impact. Which equation gives their shared final velocity?",
       "options": [
         "Momentum is ignored because the target is large.",
         "Final velocity = probe mass alone.",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "An added sideways velocity of 0.03 m/s persists for 400 s in a drift model. What offset results?",
+      "prompt": "An object gains a sideways velocity of 0.03 m/s. This added velocity stays constant for 400 s. How far sideways does it move?",
       "options": [
         "12 m",
         "120 m",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "Why can real impact momentum transfer differ from a simple sticking model?",
+      "prompt": "Why might the momentum transferred in a real impact differ from a prediction that treats the objects as sticking together?",
       "options": [
         "Impulse exists only in air.",
         "Momentum has no direction in space.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "A simplified kinetic-impact model treats a small probe as sticking to a target with negligible external impulse during impact. Which equation governs their shared final velocity?",
+      "prompt": "A small probe hits a target and sticks to it. Ignore impulse from outside forces during the impact. Which equation gives their shared final velocity?",
       "options": [
         "Every impact conserves kinetic energy.",
         "Final velocity = probe mass alone.",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "An added sideways velocity of 0.03 m/s persists for 400 s in a drift model. What offset results?",
+      "prompt": "An object gains a sideways velocity of 0.03 m/s. This added velocity stays constant for 400 s. How far sideways does it move?",
       "options": [
         "0.000075 m",
         "12 m",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "Why can real impact momentum transfer differ from a simple sticking model?",
+      "prompt": "Why might the momentum transferred in a real impact differ from a prediction that treats the objects as sticking together?",
       "options": [
         "Momentum has no direction in space.",
         "Target mass never matters.",

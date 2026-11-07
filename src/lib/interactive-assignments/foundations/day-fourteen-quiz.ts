@@ -1,0 +1,8 @@
+export const DAY_FOURTEEN_QUIZ={
+ title:'Day 14 · Quiz: Newton’s third law',instructions:'Work on your own. Name the object that feels each force.',
+ questions:[
+ {kind:'choice',points:1,prompt:'A hand pushes a wall right with 12 N. Which is its interaction partner?',options:['Wall on hand, 12 N left','Wall on hand, 12 N right','Earth on hand, 12 N down','Hand on wall, 12 N left'],correct_index:0,guide:'Swap the two objects and reverse direction.',demand:{blooms:'Understand',dok:1,evidence:'Identifies both receivers.'}},
+ {kind:'choice',points:1,prompt:'Two force sensors report signed readings on a common axis. Which comparison tests the third law?',options:['The largest reading on each graph at any time','Both readings at the same instant','Each sensor before the pull','The mass of each sensor'],correct_index:1,guide:'The two interaction forces occur at the same time.',demand:{blooms:'Apply',dok:2,evidence:'Selects simultaneous data.'}},
+ {kind:'written',points:3,prompt:'A table pushes a book up while Earth pulls the book down. Someone calls these a third-law pair. Check the claim and name each force’s actual partner.',guide:'Both act on the book. The partners are book on table and book on Earth, respectively.',demand:{blooms:'Analyze',dok:2,evidence:'Distinguishes balance from interaction pairs.'}},
+ {kind:'written',points:3,prompt:'A 2 kg cart and an 8 kg cart interact with 16 N of horizontal force on each. Ignore other horizontal forces. Compare directions and find both acceleration sizes.',guide:'The forces have opposite directions on different carts. Accelerations are 8 m/s² and 2 m/s² respectively, also opposite.',demand:{blooms:'Apply',dok:2,evidence:'Uses each mass with its own interaction force.'}},
+ ]}

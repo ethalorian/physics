@@ -3,13 +3,13 @@
   "unit": 4,
   "day": 20,
   "title": "Escape speed",
-  "target": "Explain escape in an ideal gravitational-energy model.",
+  "target": "Explain escape using a simplified gravitational-energy calculation.",
   "criteria": [
     "State the zero-at-infinity energy convention.",
     "Distinguish escape speed from circular-orbit speed.",
     "Name neglected effects in the ideal calculation."
   ],
-  "source_sha256": "2a3b50bfecafd832ff2d04763085c05184092152f62fd7240b4477fa9a578883",
+  "source_sha256": "62ba26394ec02e63f57654b31353a6032956e1abd8367f06244caf103351c995",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.528Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "With U = 0 at infinity, an object starts with U = −72 J. What minimum initial K allows it to reach infinity with zero final speed in the ideal model?",
+      "prompt": "Set U = 0 at infinity. An object starts with U = −72 J. Ignore energy losses. What is the smallest initial K that lets it reach infinity with zero final speed?",
       "options": [
         "36 J",
         "−72 J",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "A spacecraft is in a stable circular orbit with no thrust. Which claim is correct?",
+      "prompt": "A spacecraft is in a stable circular orbit with no thrust. Which statement is correct?",
       "options": [
         "Any nonzero altitude means escape.",
         "It must be moving at escape speed.",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "Which assumption belongs to the simple escape-speed model?",
+      "prompt": "What does the simple escape-speed calculation treat as true?",
       "options": [
         "Negligible atmospheric drag and no later propulsion.",
         "The launch speed can be zero for any planet.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "With U = 0 at infinity, an object starts with U = −72 J. What minimum initial K allows it to reach infinity with zero final speed in the ideal model?",
+      "prompt": "Set U = 0 at infinity. An object starts with U = −72 J. Ignore energy losses. What is the smallest initial K that lets it reach infinity with zero final speed?",
       "options": [
         "−72 J",
         "0 J",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "A spacecraft is in a stable circular orbit with no thrust. Which claim is correct?",
+      "prompt": "A spacecraft is in a stable circular orbit with no thrust. Which statement is correct?",
       "options": [
         "Circular orbit means gravity is zero.",
         "It must be moving at escape speed.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "Which assumption belongs to the simple escape-speed model?",
+      "prompt": "What does the simple escape-speed calculation treat as true?",
       "options": [
         "Gravity becomes zero immediately above the surface.",
         "Mass grows continuously as the craft rises.",

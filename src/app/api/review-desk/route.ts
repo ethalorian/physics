@@ -3,12 +3,20 @@ import { withRole, type AuthContext } from '@/lib/api-auth'
 import { readingCourses } from '@/lib/textbook-assignments-server'
 import { teacherCanAccessStudent } from '@/lib/teacher-scope'
 import { supabaseAdmin } from '@/lib/supabase'
-import { loadReview, row } from '@/lib/review-desk/sources'
+import { loadReview, row, type SourceRow } from '@/lib/review-desk/sources'
 import { validateDecision, type ReviewDocument } from '@/lib/review-desk/types'
 import { reviewActions, performNativeAction, type NativeAction } from '@/lib/review-desk/native-actions'
 import { suggestEvidence } from '@/lib/review-desk/suggestions'
 export const maxDuration=180
 const json=(body:unknown,status=200)=>NextResponse.json(body,{status,headers:{'Cache-Control':'private, no-store'}})
+// A legacy quiz request with a choice score is rejected before the quiz writes anything.
+function hasRejectedChoiceScore(saved:SourceRow|null) {
+ if(saved?.state!=='releasing'||!Array.isArray(saved.completed_actions)||saved.completed_actions.length!==0||!Array.isArray(saved.release_plan)||saved.release_plan.length!==1)return false
+ const action=saved.release_plan[0],snap=saved.review_snapshot
+ if(!snap?.submissionId||!Array.isArray(snap.scoreItems)||action?.route!=='quiz'||saved.source_key!=='quiz:'+action.id||action.body?.action!=='review'||action.body.decision!=='graded'||action.body.submission_id!==snap.submissionId||action.body.request_id!==saved.request_id)return false
+ const scores=action.body.scores
+ return !!scores && snap.scoreItems.some((i:ReviewDocument['scoreItems'][number])=>typeof i.automatic==='number' && Object.hasOwn(scores,i.id) && scores[i.id]===i.automatic)
+}
 export const GET=withRole(['teacher','admin'],async(request,ctx)=>{
  const p=request.nextUrl.searchParams,courseId=p.get('class')??''
  if(!(await readingCourses(ctx)).some(c=>c.id===courseId))return json({error:'Class unavailable.'},403)
@@ -18,19 +26,31 @@ export const GET=withRole(['teacher','admin'],async(request,ctx)=>{
   return json({drafts:drafts.data,revisions:revisions.data})
  }
  try{
-  const {doc}=await loadReview(ctx,courseId,p.get('assignment')??'',p.get('student')??'',p.get('submission')??undefined)
-  const suggestions=await row('review_desk_suggestions',{source_key:doc.activity.key,user_id:doc.userId,source_version:doc.version})
+  const {doc,native}=await loadReview(ctx,courseId,p.get('assignment')??'',p.get('student')??'',p.get('submission')??undefined)
+  if(doc.draft && doc.state==='submitted' && !native.review && hasRejectedChoiceScore(doc.draft))doc.draft.canReopenQuiz=true
+  const suggestions=await row('review_desk_suggestions',{source_key:doc.activity.key,user_id:doc.userId,source_version:doc.suggestionVersion??doc.version})
   if(doc.evidence.length&&!ctx.viewingAsTeacher&&!ctx.session.experience&&(!suggestions||suggestions.status==='queued'||suggestions.status==='processing'&&Date.parse(suggestions.lease_until)<Date.now()))after(()=>suggestEvidence(doc))
   return json({document:doc,suggestions,readOnly:ctx.viewingAsTeacher||!!ctx.session.experience})
  }catch(e){if(e instanceof Error)return json({error:e.message},409);throw e}
 })
-async function publish(request:NextRequest,ctx:AuthContext,id:string,version:number,returning:boolean){
+async function publish(request:NextRequest,ctx:AuthContext,id:string,version:number,returning:boolean,reopen=false){
  const saved=await row('review_desk_drafts',{id,reviewer_email:ctx.scopeEmail})
  if(!saved||!(await readingCourses(ctx)).some(c=>c.id===saved.course_id)||!await teacherCanAccessStudent(ctx.scopeEmail,saved.user_id))throw Error('Saved review unavailable.')
  const finalState=returning?'returned':'released',working=returning?'returning':'releasing'
- if(saved.state===finalState)return {saved:true,state:finalState}
+ if(!reopen && saved.state===finalState)return {saved:true,state:finalState}
  if(saved.version!==version)throw Error('This review changed in another tab. Reload before releasing.')
  if(saved.lease_until&&Date.parse(saved.lease_until)>Date.now())throw Error('This review is already being saved. Wait a moment, then refresh.')
+ if(reopen || hasRejectedChoiceScore(saved)){
+  if(!reopen)throw Error('Refresh this review and choose Reopen saved review. Your scores and feedback are saved.')
+  if(!hasRejectedChoiceScore(saved))throw Error('This review cannot be reopened. Refresh to see its current status.')
+  const {doc,native}=await loadReview(ctx,saved.course_id,saved.source_key,saved.user_id,saved.review_snapshot.submissionId)
+  if(doc.state!=='submitted'||native.kind!=='quiz'||native.review||doc.version!==saved.source_version||doc.submissionId!==saved.review_snapshot.submissionId||doc.reviewVersion!==saved.review_snapshot.reviewVersion)throw Error('The quiz or review changed. Refresh before continuing.')
+  const scores={...saved.payload.scores}
+  for(const i of doc.scoreItems)if(i.automatic!==undefined && scores[i.id]===i.automatic)delete scores[i.id]
+  const result=await supabaseAdmin.from('review_desk_drafts').update({state:'draft',payload:{...saved.payload,scores},version:version+1,release_plan:null,lease_until:null,updated_at:new Date().toISOString()}).eq('id',id).eq('version',version).eq('state','releasing').or('lease_until.is.null,lease_until.lt.'+new Date().toISOString()).select('id,version,state,payload,request_id').maybeSingle()
+  if(result.error)throw result.error;if(!result.data)throw Error('Another review operation started. Refresh before continuing.')
+  return {draft:result.data}
+ }
  let actions=saved.release_plan as NativeAction[]|null,snapshot=saved.review_snapshot as ReviewDocument|null
  if(saved.state!==working){
   if(saved.state!=='ready'&&!returning)throw Error('Mark this review ready before release.')
@@ -65,9 +85,9 @@ export const POST=withRole(['teacher','admin'],async(request,ctx)=>{
  const b=await request.json().catch(()=>null)
  if(!b||typeof b!=='object')return json({error:'Invalid review.'},400)
  try{
-  if(b.action==='release'||b.action==='return'){
+  if(b.action==='release'||b.action==='return'||b.action==='reopen_quiz'){
    if(typeof b.id!=='string'||!Number.isInteger(b.version))return json({error:'Reload the saved review.'},400)
-   return json(await publish(request,ctx,b.id,b.version,b.action==='return'))
+   return json(await publish(request,ctx,b.id,b.version,b.action==='return',b.action==='reopen_quiz'))
   }
   if(!['save','suggest'].includes(b.action)||![b.classId,b.assignment,b.student].every(x=>typeof x==='string'&&x.length>0&&x.length<240))return json({error:'Choose an assignment and student.'},400)
   const {doc}=await loadReview(ctx,b.classId,b.assignment,b.student,b.submissionId)

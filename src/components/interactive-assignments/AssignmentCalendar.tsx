@@ -3,7 +3,7 @@ import AssignmentIdentity from '@/components/AssignmentIdentity'
 import { sourceTitle } from '@/lib/assignment-source-presentation'
 import { classDayTool } from '@/lib/class-day-tools'
 
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent } from 'react'
 import { useSequenceDateConfirmation } from '@/components/admin/useSequenceDateConfirmation'
 import { DateChangeCancelled } from '@/lib/sequence-date-change'
 import Link from 'next/link'
@@ -14,6 +14,7 @@ import { useLearningResource } from '@/app/home/useLearningWeek'
 import { ALL_ASSIGNMENTS, assignmentByDay, assignmentBySlug, type LessonAssignment } from '@/lib/interactive-assignments/catalog'
 import type { Assignment } from '@/lib/interactive-assignments/server'
 import { calendarDays, plannerDay, shiftDay } from '@/lib/reading-planner'
+import { useCalendarDragPreview, type CalendarPointer } from '@/lib/use-calendar-drag-preview'
 import styles from '@/components/readings/ReadingPlanner.module.css'
 import layout from './AssignmentCalendar.module.css'
 
@@ -98,19 +99,32 @@ function Planner({ initialSlug='',courseId, assignments, disabled, onBusy, onSav
   const [selected, setSelected] = useState<string | null>(initialSlug||null), [date, setDate] = useState(assignments.find(a=>a.slug===initialSlug)?.due_on??'')
   const [kind,setKind]=useState(initialSlug.startsWith('simulation-')?'simulations':'all'),[topic,setTopic]=useState('all')
   const [busy, setBusy] = useState(false), [error, setError] = useState(''), [notice, setNotice] = useState('')
-  const [over, setOver] = useState<string | null>(null), [dragging, setDragging] = useState(false), [point, setPoint] = useState({ x: 0, y: 0 })
+  const [over, setOver] = useState<string | null>(null), [dragging, setDragging] = useState(false)
   const [undo, setUndo] = useState<{ slug: string; due: string | null } | null>(null)
   const plannerRef = useRef<HTMLElement>(null), busyRef = useRef(false), suppressClick = useRef(false)
   const pointerRef = useRef<{ slug: string; x: number; y: number; moved: boolean } | null>(null)
-  const items: Item[] = ALL_ASSIGNMENTS.map(lesson => ({ lesson, assignment: assignments.find(a => a.slug === lesson.slug) }))
-  const current = items.find(i => i.lesson.slug === selected), locked = disabled || busy
+  const hover = useRef<string | null>(null)
+  const items: Item[] = useMemo(() => {
+    const bySlug = new Map<string, Assignment>()
+    for (const assignment of assignments) if (!bySlug.has(assignment.slug)) bySlug.set(assignment.slug, assignment)
+    return ALL_ASSIGNMENTS.map(lesson => ({ lesson, assignment: bySlug.get(lesson.slug) }))
+  }, [assignments])
+  const itemBySlug = useMemo(() => new Map(items.map(item => [item.lesson.slug, item])), [items])
+  const byDay = useMemo(() => {
+    const days = new Map<string, Item[]>()
+    for (const item of items) if (item.assignment?.due_on) { const group = days.get(item.assignment.due_on) ?? []; group.push(item); days.set(item.assignment.due_on, group) }
+    return days
+  }, [items])
+  const days = useMemo(() => calendarDays(month), [month])
+  const dayLabels = useMemo(() => new Map(days.map(day => [day, dateLabel(day)])), [days])
+  const current = itemBySlug.get(selected ?? ''), locked = disabled || busy
   const shelf = items.filter(i => !i.assignment?.due_on && (kind==='all'||kind==='simulations'&&i.lesson.simulation||kind==='lessons'&&!i.lesson.simulation) && (topic==='all'||i.lesson.investigationGroup===topic) && `${i.lesson.title} ${i.lesson.investigationGroup??''}`.toLowerCase().includes(search.toLowerCase()))
   const dated = items.filter(i => i.assignment?.due_on)
   const select = (item: Item) => { setSelected(item.lesson.slug); setDate(item.assignment?.due_on ?? ''); setError('') }
-  const endDrag = () => { pointerRef.current = null; setDragging(false); setOver(null) }
+  const endDrag = () => { preview.cancel(); hover.current = null; pointerRef.current = null; setDragging(false); setOver(null) }
   async function change(slug: string, day: string | null, restoring = false) {
     if (locked || busyRef.current) return
-    const item = items.find(i => i.lesson.slug === slug)
+    const item = itemBySlug.get(slug)
     if (!item || !day && !item.assignment || item.assignment && item.assignment.due_on === day) return
     busyRef.current = true; setBusy(true); onBusy(true); setError(''); setNotice('')
     try {
@@ -125,10 +139,17 @@ function Planner({ initialSlug='',courseId, assignments, disabled, onBusy, onSav
     } catch (e) { if (!(e instanceof DateChangeCancelled)) setError((e as Error).message) }
     finally { busyRef.current = false; setBusy(false); onBusy(false) }
   }
-  const targetAt = (event: PointerEvent<HTMLButtonElement>) => {
+  const targetAt = (event: CalendarPointer) => {
     const target = document.elementFromPoint(event.clientX, event.clientY)?.closest<HTMLElement>('[data-assignment-drop]')
     return target && plannerRef.current?.contains(target) ? target.dataset.assignmentDrop ?? null : null
   }
+  const preview = useCalendarDragPreview(point => {
+    const pointer = pointerRef.current
+    if (!pointer?.moved || locked) return
+    const target = targetAt(point)
+    const next = target === 'unscheduled' && !itemBySlug.get(pointer.slug)?.assignment?.due_on ? null : target
+    if (next !== hover.current) { hover.current = next; setOver(next) }
+  }, plannerRef)
   const pointerStart = (event: PointerEvent<HTMLButtonElement>, item: Item) => {
     if (locked || event.button !== 0 || event.pointerType === 'touch' && !(event.target as Element).closest('[data-drag-handle]')) return
     suppressClick.current = false
@@ -140,22 +161,19 @@ function Planner({ initialSlug='',courseId, assignments, disabled, onBusy, onSav
     if (!pointer || locked || !pointer.moved && Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y) < 7) return
     event.preventDefault()
     if (!pointer.moved) { pointer.moved = true; setDragging(true); setSelected(pointer.slug) }
-    const rect = plannerRef.current?.getBoundingClientRect()
-    setPoint({ x: event.clientX - (rect?.left ?? 0), y: event.clientY - (rect?.top ?? 0) })
-    const target = targetAt(event)
-    setOver(target === 'unscheduled' && !items.find(i => i.lesson.slug === pointer.slug)?.assignment?.due_on ? null : target)
+    preview.move(event)
   }
   const pointerEnd = (event: PointerEvent<HTMLButtonElement>) => {
     const pointer = pointerRef.current, target = targetAt(event)
     endDrag()
-    if (pointer?.moved) { suppressClick.current = true; if (target && (target !== 'unscheduled' || items.find(i => i.lesson.slug === pointer.slug)?.assignment?.due_on)) void change(pointer.slug, target === 'unscheduled' ? null : target) }
+    if (pointer?.moved) { suppressClick.current = true; if (target && (target !== 'unscheduled' || itemBySlug.get(pointer.slug)?.assignment?.due_on)) void change(pointer.slug, target === 'unscheduled' ? null : target) }
   }
   const card = (item: Item, calendar = false) => <button key={item.lesson.slug} type="button" draggable={false} data-drag-handle={calendar || undefined} disabled={locked} onPointerDown={event => pointerStart(event, item)} onPointerMove={pointerMove} onPointerUp={pointerEnd} onPointerCancel={endDrag} onLostPointerCapture={endDrag} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return } select(item) }} className={calendar ? styles.dueCard : styles.readingCard} aria-label={`${calendar ? 'Due assignment' : 'Plan assignment'}: ${item.lesson.title}`} aria-pressed={selected === item.lesson.slug}>
     <GripVertical size={15} aria-hidden="true" data-drag-handle /><span><AssignmentIdentity source={{kind:'interactive',sourceId:item.lesson.slug,title:item.lesson.title}} compact={calendar}/>{item.lesson.simulation&&<small>{item.lesson.investigationGroup==='Extension'?'Optional extension':item.lesson.investigationGroup} · {item.lesson.minutes??25} min · {item.lesson.questions.length} questions</small>}<small>{item.assignment?.due_on ? `Due ${dateLabel(item.assignment.due_on, true)}` : 'Not assigned'}</small></span>
   </button>
   return <section ref={plannerRef} className={styles.planner} aria-label="Interactive assignment planner" aria-busy={busy} onKeyDown={event => { if (event.key === 'Escape') { setSelected(null); endDrag() } }}>
     {dateRequest.confirmation}
-    {dragging && current && <div className={styles.dragPreview} style={{ left: point.x + 14, top: point.y + 14 }} aria-hidden="true"><GripVertical size={15} />{sourceTitle({kind:'interactive',sourceId:current.lesson.slug,title:current.lesson.title})}</div>}
+    {dragging && current && <div ref={preview.ref} className={styles.dragPreview} aria-hidden="true"><GripVertical size={15} />{sourceTitle({kind:'interactive',sourceId:current.lesson.slug,title:current.lesson.title})}</div>}
     <div className={styles.rules}><CalendarDays size={20} aria-hidden="true" /><span><strong>Assign by dropping onto a due date</strong><small>Foundations schedule their review and quiz three school days later. Placing a review schedules its foundation three school days earlier.</small><small>Spacing skips weekends and saved no-school dates. Moving either lesson moves the group; student work and feedback stay saved.</small></span><span className={styles.saveLabel} role="status">{busy ? 'Saving…' : 'Changes save automatically'}</span></div>
     {error && <div className={styles.error} role="alert">{error}<Button disabled={busy} variant="ghost" onClick={onRefresh}>Refresh calendar</Button></div>}
     {notice && <div className={styles.notice} role="status"><span>{notice}</span>{undo && <Button disabled={locked} variant="ghost" onClick={() => void change(undo.slug, undo.due, true)}><Undo2 size={16} />Undo date</Button>}</div>}
@@ -175,9 +193,9 @@ function Planner({ initialSlug='',courseId, assignments, disabled, onBusy, onSav
         <div className={styles.legend}><span><i />Student deadline</span><small>{dated.length} assigned on the calendar</small></div>
         <div className={styles.calendarScroll} tabIndex={0} aria-label="Assignment month calendar"><div className={styles.calendar}>
           {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => <div key={day} className={styles.weekday}>{day}</div>)}
-          {calendarDays(month).map(day => <div key={day} className={styles.day} data-assignment-drop={day} data-outside={!day.startsWith(month.slice(0, 7))} data-over={over === day} data-today={day === today} data-selecting={!!current && !locked}>
-            <button type="button" className={styles.dayNumber} disabled={!current || locked} aria-label={`${current ? 'Set due date to' : 'Calendar day'} ${dateLabel(day)}`} onClick={() => current && void change(current.lesson.slug, day)}><span>{Number(day.slice(8))}</span>{day === today && <small>Today</small>}</button>
-            {dated.filter(item => item.assignment!.due_on === day).map(item => card(item, true))}
+          {days.map(day => <div key={day} className={styles.day} data-assignment-drop={day} data-outside={!day.startsWith(month.slice(0, 7))} data-over={over === day} data-today={day === today} data-selecting={!!current && !locked}>
+            <button type="button" className={styles.dayNumber} disabled={!current || locked} aria-label={`${current ? 'Set due date to' : 'Calendar day'} ${dayLabels.get(day)}`} onClick={() => current && void change(current.lesson.slug, day)}><span>{Number(day.slice(8))}</span>{day === today && <small>Today</small>}</button>
+            {(byDay.get(day) ?? []).map(item => card(item, true))}
             {over === day && <span className={styles.dropHint}>Drop to set due date</span>}
           </div>)}
         </div></div>

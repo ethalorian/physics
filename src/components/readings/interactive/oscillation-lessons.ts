@@ -36,7 +36,7 @@ export const oscillationLessons = {
         "Nowhere because it is moving"
       ],
       "correct": 1,
-      "hint": "Use a signed displacement, define equilibrium, and state the assumptions of the model.",
+      "hint": "Use a signed displacement, define equilibrium, and state what your equation or explanation treats as true.",
       "feedback": [
         "Restoring force opposes displacement, not necessarily velocity.",
         "Correct: x is negative, so −kx is positive.",
@@ -81,7 +81,7 @@ export const oscillationLessons = {
         "20"
       ],
       "correct": 1,
-      "hint": "Use a signed displacement, define equilibrium, and state the assumptions of the model.",
+      "hint": "Use a signed displacement, define equilibrium, and state what your equation or explanation treats as true.",
       "feedback": [
         "There are two crossings per complete cycle.",
         "Correct: direction of motion must repeat too.",
@@ -126,7 +126,7 @@ export const oscillationLessons = {
         "Both zero"
       ],
       "correct": 1,
-      "hint": "Use a signed displacement, define equilibrium, and state the assumptions of the model.",
+      "hint": "Use a signed displacement, define equilibrium, and state what your equation or explanation treats as true.",
       "feedback": [
         "The object is turning around, not moving fastest.",
         "Correct: it is instantaneously at rest and accelerates toward equilibrium.",
@@ -171,7 +171,7 @@ export const oscillationLessons = {
         "Halves"
       ],
       "correct": 1,
-      "hint": "Use a signed displacement, define equilibrium, and state the assumptions of the model.",
+      "hint": "Use a signed displacement, define equilibrium, and state what your equation or explanation treats as true.",
       "feedback": [
         "Energy depends on amplitude squared.",
         "Correct: E = ½kA².",
@@ -216,7 +216,7 @@ export const oscillationLessons = {
         "Only if the radius is nonzero"
       ],
       "correct": 1,
-      "hint": "Use a signed displacement, define equilibrium, and state the assumptions of the model.",
+      "hint": "Use a signed displacement, define equilibrium, and state what your equation or explanation treats as true.",
       "feedback": [
         "A constant vector magnitude can have changing components.",
         "Correct: projection changes the motion being measured.",
@@ -261,7 +261,7 @@ export const oscillationLessons = {
         "Damping never changes motion"
       ],
       "correct": 1,
-      "hint": "Use a signed displacement, define equilibrium, and state the assumptions of the model.",
+      "hint": "Use a signed displacement, define equilibrium, and state what your equation or explanation treats as true.",
       "feedback": [
         "That overlooks the overdamped regime.",
         "Correct: compare complete relaxation, not just suppression of oscillation.",
@@ -306,7 +306,7 @@ export const oscillationLessons = {
         "The source frequency had to decrease"
       ],
       "correct": 1,
-      "hint": "Use a signed displacement, define equilibrium, and state the assumptions of the model.",
+      "hint": "Use a signed displacement, define equilibrium, and state what your equation or explanation treats as true.",
       "feedback": [
         "Power through the entire sphere remains conserved.",
         "Correct: compare local intensity with total power.",

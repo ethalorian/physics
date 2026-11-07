@@ -9,7 +9,7 @@
     "Square the distance before dividing.",
     "Check units and the scale of the result."
   ],
-  "source_sha256": "562ac35246c145e33e7a57880f0486ff80787b3b4897933f8e977d04d36a2aae",
+  "source_sha256": "a6327aa4061b03c51302fab89523a7a2ba3b2ea08edfe37298f281eaa64dd0bc",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.491Z",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "A model supplies Gm₁m₂ = 75 N·m² and r = 5 m. What is F?",
+      "prompt": "Use Gm₁m₂ = 75 N·m² and r = 5 m. What is F?",
       "options": [
         "3 N",
         "15 N",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "A model supplies Gm₁m₂ = 75 N·m² and r = 5 m. What is F?",
+      "prompt": "Use Gm₁m₂ = 75 N·m² and r = 5 m. What is F?",
       "options": [
         "1,875 N",
         "375 N",

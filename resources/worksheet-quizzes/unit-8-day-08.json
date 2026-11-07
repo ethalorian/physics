@@ -2,14 +2,14 @@
   "version": 1,
   "unit": 8,
   "day": 8,
-  "title": "Practice runs and evidence",
-  "target": "Use repeated trials to prepare an evidence-based design explanation.",
+  "title": "Practice runs and test results",
+  "target": "Use repeated trials to explain and support your design.",
   "criteria": [
     "Measure the actual course distance and run times.",
     "Calculate average speed and describe variation.",
-    "Choose a final change supported by repeated evidence."
+    "Choose a final change supported by results from repeated trials."
   ],
-  "source_sha256": "09e36d0a112793c364e362cbde18dcc9883f6a84840db4d2906c3109286b1616",
+  "source_sha256": "80bc6081d87c8f59f3709923e076336deb79649b7f617483cab1401b52f00a62",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.577Z",

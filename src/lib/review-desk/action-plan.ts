@@ -7,7 +7,7 @@ function childId(id:string,key:string){const h=createHash('sha256').update(id+':
 export function reviewActions({doc,native:n}:SourceReview,d:ReviewDecision,requestId:string,returning=false):NativeAction[]{
  const id=doc.submissionId,ratings=Object.fromEntries(doc.targets.map(t=>[t.id,t.released??d.ratings[t.id]])),feedback=d.note
  if(returning&&!doc.canReturn)throw Error('This activity uses a fresh reassessment instead of reopening its submitted evidence.')
- if(n.kind==='quiz')return [{route:'quiz',id:n.sub.quiz_id,body:{action:'review',submission_id:id,request_id:requestId,draft_version:n.draft?.version??0,decision:returning?'returned':'graded',scores:returning?{}:d.scores,ratings:returning?{}:ratings,question_notes:d.feedback,note:feedback,grade_value:returning?null:d.gradeValue}}]
+ if(n.kind==='quiz')return [{route:'quiz',id:n.sub.quiz_id,body:{action:'review',submission_id:id,request_id:requestId,draft_version:n.draft?.version??0,decision:returning?'returned':'graded',scores:returning?{}:Object.fromEntries(doc.scoreItems.filter(i=>i.automatic===undefined && Object.hasOwn(d.scores,i.id)).map(i=>[i.id,d.scores[i.id]])),ratings:returning?{}:ratings,question_notes:d.feedback,note:feedback,grade_value:returning?null:d.gradeValue}}]
  if(n.kind==='reading')return [{route:'reading',id:n.sub.assignment_id,body:{action:'review',submission_id:id,request_id:requestId,decision:returning?'returned':'rated',ratings:returning?{}:ratings,note:feedback}}]
  if(n.kind==='interactive'||n.kind==='simulation'){
   if(returning)return [{route:'interactive',body:{action:'reopen',assignmentId:n.assignment.id,userId:doc.userId,version:n.work.version}}]

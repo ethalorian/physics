@@ -332,7 +332,7 @@ function GewaWorkedExample({ prompt, given, equation, work, answer }: { prompt: 
   return (
     <div className="rounded-xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
       <div className="text-overline font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--muted-foreground)' }}>Worked example · GEWA</div>
-      <div className="text-sm font-medium mb-3" style={{ color: 'var(--foreground)' }}><MathMarkdown content={prompt} /></div>
+      <div className="text-sm font-medium mb-3" style={{ color: 'var(--foreground)' }}><MathMarkdown questionEmphasis content={prompt} /></div>
       <ol style={{ listStyle: 'none', margin: 0, padding: 0 }} className="space-y-3">
         {shown.map((s, i) => {
           const isAnswer = s.key === 'answer'
@@ -707,7 +707,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     case 'observation':
       return <ObservationCapture b={b} saved={saved} save={save} onDraft={onDraft} />
     case 'transfer_prompt':
-      return b.task?.prompt ? <div><MathMarkdown content={b.task.prompt} />{b.task.rubric && <details className="my-3"><summary className="cursor-pointer font-medium">How this transfer task is reviewed</summary>{Object.entries(b.task.rubric).map(([dimension, criterion]) => <div key={dimension} className="mt-2"><h4 className="font-medium capitalize">{dimension}</h4><MathMarkdown content={typeof criterion === 'string' ? criterion : criterion && typeof criterion === 'object' && 'description' in criterion ? String(criterion.description) : ''} /></div>)}</details>}<SeiTextCapture sei={b.sei} prompt="Explain your transfer solution and supporting physics evidence." value={saved} onDraft={onDraft} onSave={(r, scaffolds, mode) => save(b.id, 'transfer_prompt', { ...r, masteryTaskId: b.task!.id }, { response_mode: mode, scaffolds_used: scaffolds, target_id: b.targetId })} /></div> : <p role="alert">This transfer task could not be loaded. Ask your teacher to check its task reference; your other work is kept.</p>
+      return b.task?.prompt ? <div><MathMarkdown questionEmphasis content={b.task.prompt} />{b.task.rubric && <details className="my-3"><summary className="cursor-pointer font-medium">How this transfer task is reviewed</summary>{Object.entries(b.task.rubric).map(([dimension, criterion]) => <div key={dimension} className="mt-2"><h4 className="font-medium capitalize">{dimension}</h4><MathMarkdown content={typeof criterion === 'string' ? criterion : criterion && typeof criterion === 'object' && 'description' in criterion ? String(criterion.description) : ''} /></div>)}</details>}<SeiTextCapture sei={b.sei} prompt="Explain your transfer solution and supporting physics evidence." value={saved} onDraft={onDraft} onSave={(r, scaffolds, mode) => save(b.id, 'transfer_prompt', { ...r, masteryTaskId: b.task!.id }, { response_mode: mode, scaffolds_used: scaffolds, target_id: b.targetId })} /></div> : <p role="alert">This transfer task could not be loaded. Ask your teacher to check its task reference; your other work is kept.</p>
     case 'interactive_question':
       return <InteractiveQuestion task={b.task} value={saved as InteractiveAnswer|undefined} readOnly={readOnly} onDraft={onDraft} onSave={value=>save(b.id,b.type,value,{target_id:b.targetId,response_mode:b.task.parts.every(p=>p.kind==='choice')?'choice':'text'})}/>
     case 'question':

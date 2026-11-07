@@ -9,7 +9,7 @@
     "Explain why negative potential energy does not mean negative kinetic energy.",
     "Compute changes from final minus initial energy."
   ],
-  "source_sha256": "619a0cd7f97d9186a0ea1f2eee13b24b0b74a4fd43e097349b66bc7e62a4b2ed",
+  "source_sha256": "d81804393641ca4a9b4eb2ccc6e1e5a4ea7b5ac7dd269fd7a7ea362ffd896eb4",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.522Z",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "In a model GMm = 60 J·m. An object moves from r = 5 m to r = 10 m. What is ΔU?",
+      "prompt": "Use GMm = 60 J·m. An object moves from r = 5 m to r = 10 m. What is ΔU?",
       "options": [
         "+6 J",
         "−6 J",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "In a model GMm = 60 J·m. An object moves from r = 5 m to r = 10 m. What is ΔU?",
+      "prompt": "Use GMm = 60 J·m. An object moves from r = 5 m to r = 10 m. What is ΔU?",
       "options": [
         "+6 J",
         "+18 J",

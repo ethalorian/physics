@@ -3,13 +3,13 @@
   "unit": 4,
   "day": 21,
   "title": "An energy budget",
-  "target": "Connect work, motion, heating and an honest model conclusion.",
+  "target": "Connect work, motion, and heating. State a conclusion that fits the calculation’s limits.",
   "criteria": [
     "Keep all terms in consistent energy units.",
     "Distinguish mechanical-energy change from total-energy loss.",
-    "Report assumptions with the energy budget."
+    "State what you treat as true when you account for the energy."
   ],
-  "source_sha256": "dcda0b7b49077f15227a0426245e15fa09cb995746b12a5ade5f7bf0c7622ae7",
+  "source_sha256": "74ae61618f81178201a4c0fe342eaba4a0c33621db934545389157c06427c9a5",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.529Z",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "Which claim is required before treating K + U as constant?",
+      "prompt": "What must be true before you can treat K + U as constant?",
       "options": [
         "Every force must vanish.",
         "The system must have zero mass.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "Which claim is required before treating K + U as constant?",
+      "prompt": "What must be true before you can treat K + U as constant?",
       "options": [
         "The system must have zero mass.",
         "The object must always move in a straight line.",

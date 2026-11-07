@@ -1,0 +1,184 @@
+{
+  "version": "honors-complete-77f3e9dfede4",
+  "generatedBy": "Codex in this conversation; no Claude or external model API invoked",
+  "authorization": "Craig requested Honors notes for all days using this session, November 5, 2026",
+  "templateSource": "Unit 1 Honors Notebook Pages.dc.html#day-3",
+  "templateSha256": "92925a77a19b4dac9ff118bbd326a4ef8cdad92f815628ec74a2e356f275df7a",
+  "generatorSha256": "289fbc504e8495de87375f5bbb8c9a483c26eff911ac1758de0c3ab6b44a0d12",
+  "originalVersion": "original-1805385887d1",
+  "originalHonorsDaysPreserved": [
+    1,
+    2,
+    3
+  ],
+  "newHonorsDays": [
+    {
+      "day": 4,
+      "file": "day-04-honors-notes.html",
+      "sha256": "f775001cc3a979d3abf059b1a7c581ad3c4d608460590d67c09ccf5518c25adf",
+      "sectionSha256": "4048811625b338681e697625166ad96aeeac0a8ee33a88fa60a9f8a2f1e6d14a",
+      "figure": "velocity_components",
+      "newlyAuthored": true
+    },
+    {
+      "day": 5,
+      "file": "day-05-honors-notes.html",
+      "sha256": "00619377085269832b6c272d9760a582d2b959a7a0472ebdd0d9ea2676ff1450",
+      "sectionSha256": "e7e9ad071eb531ac491544d22b353742e09994fbd52b7548c1c59ae610b39493",
+      "figure": "prediction_range",
+      "newlyAuthored": true
+    },
+    {
+      "day": 6,
+      "file": "day-06-honors-notes.html",
+      "sha256": "b01b352dd9ed9faf54a7deadb18c6b22a8161756086bb77c9b8940fe678704af",
+      "sectionSha256": "c4c4e70c56524ebdd686f3f70a7bc532b42716bcff99537759151cc475713b1d",
+      "figure": "vector_sum",
+      "newlyAuthored": true
+    },
+    {
+      "day": 7,
+      "file": "day-07-honors-notes.html",
+      "sha256": "d566d588c01d7805716e74d6d1ba6d8182a6a6b6e1c886d09314c466ed36cfda",
+      "sectionSha256": "cc31877788d0e6c3b833c7f57e5b30e6f671918c9136f5a02320625918a8f86a",
+      "figure": "velocity_reversal",
+      "newlyAuthored": true
+    },
+    {
+      "day": 8,
+      "file": "day-08-honors-notes.html",
+      "sha256": "3dfdfc6b8987983b68049dfefbee45125edd29500237547bf89256234865edc5",
+      "sectionSha256": "36c201fdbaacbb7f827e7004056c33acf070f78a8c0a0c3f85fa7a60057b73e9",
+      "figure": "braking_graph",
+      "newlyAuthored": true
+    },
+    {
+      "day": 9,
+      "file": "day-09-honors-notes.html",
+      "sha256": "af7d94be7d4c9c45d6875d3dbb4df361ec29cf31aa9187565304fd1f1f1063aa",
+      "sectionSha256": "dc49e17d9e61d3c5fd254466f0fd3174b72825f86dc7f5ee724799e0f78e1705",
+      "figure": "balanced_cart",
+      "newlyAuthored": true
+    },
+    {
+      "day": 10,
+      "file": "day-10-honors-notes.html",
+      "sha256": "c790988e8e47eb9cdc903cfbbb7c84e6d019f173353d1b97adf7f55e75356de6",
+      "sectionSha256": "673f77d0f56eedf481d75c4d4b321668b6faad5be1caa3bdac2eda50cf927199",
+      "figure": "supported_crate",
+      "newlyAuthored": true
+    },
+    {
+      "day": 11,
+      "file": "day-11-honors-notes.html",
+      "sha256": "38644633b9c92c905e1f6b4535f5974764e5c481b42824933700f364ab14f77d",
+      "sectionSha256": "3e1d55ccd6f595c30d28e826d04cde7c3e30d2260fcb7ffbf1a51702d0ec52d4",
+      "figure": "inverse_mass",
+      "newlyAuthored": true
+    },
+    {
+      "day": 12,
+      "file": "day-12-honors-notes.html",
+      "sha256": "4ccf395976a2c8a2112acdaeb840354d2cfd0a8da6d1c2608699d479157a4e20",
+      "sectionSha256": "7b9637a3670bee36528770d90bf687a6e16b4e54a0478eaf779ec57399b77a95",
+      "figure": "force_graph",
+      "newlyAuthored": true
+    },
+    {
+      "day": 13,
+      "file": "day-13-honors-notes.html",
+      "sha256": "3d5bb2f80efb05cc732929743f1e19977cb4b2ed117963b6751fb57594951236",
+      "sectionSha256": "8d71bda14fc4b42f38253d030be5c0766fe5f15968c7231941b2df1d8359c2e9",
+      "figure": "opposed_motion",
+      "newlyAuthored": true
+    },
+    {
+      "day": 14,
+      "file": "day-14-honors-notes.html",
+      "sha256": "7acd0f6a702e809a2e0e76ba13f4012784394de79ae697d51a97928bf9eab776",
+      "sectionSha256": "eed44afcf8d882aa3e25e74533290a5ac0e70d76c9a8e584e54eff5d1a28e3d2",
+      "figure": "interaction_pair",
+      "newlyAuthored": true
+    },
+    {
+      "day": 15,
+      "file": "day-15-honors-notes.html",
+      "sha256": "fc763ebe9eef3b209d1aa457e8413eda42dc343e2aa1a30fb647c02fa4a9bbd9",
+      "sectionSha256": "86ef39dec973d73e6da93b06c319e0747469fcf0d7cbd189204505ef5a2e8e6a",
+      "figure": "lamp_fbd",
+      "newlyAuthored": true
+    },
+    {
+      "day": 16,
+      "file": "day-16-honors-notes.html",
+      "sha256": "4a1b19dbdc9b12ff09da47c0719e03b84f8ebaaa0e26956d0c104ce5081132a6",
+      "sectionSha256": "f16047030a0a0b8329ef71a77fe1909786c70e721a2df7bb3ffef216dea3272d",
+      "figure": "incline",
+      "newlyAuthored": true
+    },
+    {
+      "day": 17,
+      "file": "day-17-honors-notes.html",
+      "sha256": "f7b58822fac8f3b1fbcf4ee1a60d6d31234b85d402c2f98da3a605857a974342",
+      "sectionSha256": "dee14ac18e08fe89e0445db65eb67061945d03ef68d3e9b69582df40a20dc7ab",
+      "figure": "friction",
+      "newlyAuthored": true
+    },
+    {
+      "day": 18,
+      "file": "day-18-honors-notes.html",
+      "sha256": "1b98497c42fc83dda0b140460f93e51eb27d68d9ce07fc43c75cce7425522d0f",
+      "sectionSha256": "bc054b0926624ef554dab2cf92010816ed50f688641eb1548f04df671c041910",
+      "figure": "two_ropes",
+      "newlyAuthored": true
+    },
+    {
+      "day": 19,
+      "file": "day-19-honors-notes.html",
+      "sha256": "02d3e3dfadee343c0df01a2bb9417358ddc4053a0282cfb44f2b05ef398a662f",
+      "sectionSha256": "05bba0325a3b3cfb16c5fa5fe19018fe4d197db16d624f3dde7f6b7d1c6c8c8e",
+      "figure": "repair_graph",
+      "newlyAuthored": true
+    },
+    {
+      "day": 20,
+      "file": "day-20-honors-notes.html",
+      "sha256": "4350e393665514f54ba9eeebce74bbd396f145c2e5de3f29990e615cab3b0f10",
+      "sectionSha256": "c21911d78ac992e45bd10742f1944523653646a337c3bbe2fba4dd1f6b5ae537",
+      "figure": "full_chain",
+      "newlyAuthored": true
+    },
+    {
+      "day": 21,
+      "file": "day-21-honors-notes.html",
+      "sha256": "0be7c22d443947df65e3d11baddb0e4aa8937849482b6668992370d9380b4b17",
+      "sectionSha256": "bfb5cab4145a64c206001ab66e93e9c86d5eb0d2840d1e60ac9052ce559c27a6",
+      "figure": "two_dimensional",
+      "newlyAuthored": true
+    },
+    {
+      "day": 22,
+      "file": "day-22-honors-notes.html",
+      "sha256": "771dbb8e90bd1109495a2b0aaf24ab1efb44f3f7d133f26172f8b282b2828275",
+      "sectionSha256": "e791139d24514a3803d5dee648bef027e0470d689a235169e48392c1db777276",
+      "figure": "revised_range",
+      "newlyAuthored": true
+    }
+  ],
+  "daysAvailable": 22,
+  "practiceOptionsAndCPAPagesUnchanged": true,
+  "oldAssignmentsRemainPinned": true,
+  "bundle": {
+    "file": "unit-1-honors-notebook.html",
+    "sha256": "ded7b3f9f454c5570139938be5f021e55f39d6f47291ba947ff5cd2f1f6dc22f"
+  },
+  "verification": {
+    "newPagesRendered": 19,
+    "allNewCardsFit": true,
+    "allNewSVGLabelsFit": true,
+    "workedCalculations": "independently checked",
+    "originalHonorsDay3": "preserved; pre-existing card overflow about 17px and SVG axis-label clipping",
+    "printDelivery": "HTML with original local fonts and SVG; raster QA proof only",
+    "physicalPrint": false
+  }
+}

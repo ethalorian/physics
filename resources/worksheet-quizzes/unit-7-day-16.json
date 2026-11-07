@@ -3,13 +3,13 @@
   "unit": 7,
   "day": 16,
   "title": "Magnetosphere and changing fields",
-  "target": "Use evidence to distinguish a magnetic-field model from an unsupported space-weather claim.",
+  "target": "Use specific measurements or observations to compare a magnetic-field explanation with an unsupported statement about space weather.",
   "criteria": [
     "Connect changing magnetic fields with induced electric effects.",
-    "Distinguish an assumption from an observation.",
-    "Name evidence required for a space-weather prediction."
+    "Distinguish a fact you treat as true from something you observed.",
+    "Name the measurements or observations needed to predict space weather."
   ],
-  "source_sha256": "998bb3d09369bed9bc3a7a4613e6adcb011edcf35e1b3483ca96f92e00ce6db0",
+  "source_sha256": "b2f38c702cff427f37cf873ceb83dfd2a878a4e5ecbf01c53c0c672f6e089266",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.570Z",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "In a coil model, tripling the flux-change rate triples induced emf when other conditions are fixed. If the original magnitude is 1.5 V, what is the new magnitude?",
+      "prompt": "For a coil, tripling the rate of magnetic-flux change triples the induced emf when everything else stays fixed. The original emf magnitude is 1.5 V. What is the new magnitude?",
       "options": [
         "2.25 V",
         "0.50 V",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "A model assumes an Earth field is uniform across a loop. Which observation would directly challenge that assumption?",
+      "prompt": "A calculation treats Earth’s magnetic field as uniform across a loop. Which observation would directly challenge that choice?",
       "options": [
         "The model uses the word uniform.",
         "Measurements show substantially different field strengths at opposite sides of the loop.",
@@ -134,9 +134,9 @@
       }
     },
     {
-      "prompt": "A simplified model predicts a voltage pulse but omits shielding and circuit response. What claim is justified?",
+      "prompt": "A simple calculation predicts a voltage pulse. It leaves out shielding and the circuit’s response. Which conclusion can you support?",
       "options": [
-        "It suggests a possible induced effect, but cannot by itself determine actual equipment damage.",
+        "It suggests a possible induced effect, but cannot by itself find actual equipment damage.",
         "All equipment will certainly fail.",
         "Model uncertainty proves no field change occurred.",
         "All equipment will certainly be safe."
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "In a coil model, tripling the flux-change rate triples induced emf when other conditions are fixed. If the original magnitude is 1.5 V, what is the new magnitude?",
+      "prompt": "For a coil, tripling the rate of magnetic-flux change triples the induced emf when everything else stays fixed. The original emf magnitude is 1.5 V. What is the new magnitude?",
       "options": [
         "2.25 V",
         "0.50 V",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "A model assumes an Earth field is uniform across a loop. Which observation would directly challenge that assumption?",
+      "prompt": "A calculation treats Earth’s magnetic field as uniform across a loop. Which observation would directly challenge that choice?",
       "options": [
         "The loop has a familiar shape.",
         "The model uses the word uniform.",
@@ -268,9 +268,9 @@
       }
     },
     {
-      "prompt": "A simplified model predicts a voltage pulse but omits shielding and circuit response. What claim is justified?",
+      "prompt": "A simple calculation predicts a voltage pulse. It leaves out shielding and the circuit’s response. Which conclusion can you support?",
       "options": [
-        "It suggests a possible induced effect, but cannot by itself determine actual equipment damage.",
+        "It suggests a possible induced effect, but cannot by itself find actual equipment damage.",
         "All equipment will certainly fail.",
         "Model uncertainty proves no field change occurred.",
         "All equipment will certainly be safe."

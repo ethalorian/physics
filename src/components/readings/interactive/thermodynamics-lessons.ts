@@ -125,7 +125,7 @@ export const thermodynamicsLessons = {
     },
     "check": {
       "title": "Explain the change",
-      "prompt": "Which condition defines an adiabatic process?",
+      "prompt": "What makes a process adiabatic?",
       "options": [
         "Constant temperature",
         "Negligible heat transfer",

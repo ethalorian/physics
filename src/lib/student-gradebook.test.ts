@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { currentStudentRows, isStudentHomework, studentCompletionTotal, studentGradebookRows, studentWorkStatus, studentQuizTotal, studentRowOrder } from './student-gradebook'
+import { currentStudentRows, isStudentDueWork, isStudentHomework, recentStudentResults, studentCompletionTotal, studentHomeworkTotal, studentGradebookRows, studentWorkStatus, studentQuizTotal, studentRowOrder } from './student-gradebook'
 import { emptyGradingSettings } from './grading-terms'
 import type { ResultActivity, ResultCell } from './assessment-results/types'
 
@@ -37,6 +37,20 @@ test('student projection excludes private review state, other students, unassign
   assert.equal('version' in result[0].grade!, false)
   assert.doesNotMatch(JSON.stringify(result), /secret|assessment|Private other student|reviewIds|pendingTargets/)
   assert.equal(studentQuizTotal(result, 'all').percent, 80)
+})
+test('recent results includes final mastery, keeps pending attempts distinct and excludes private suggestions', () => {
+  const records = studentGradebookRows([
+    row('lesson:returned', { cells: { me: { ...cell, state: 'reviewed', reviewReleasedAt: '2026-10-28' } } }),
+    row('lesson:legacy', { cells: { me: { ...cell, state: 'reviewed', submittedAt: '2026-10-19' } } }),
+    row('lesson:revised', { cells: { me: { ...cell, state: 'submitted', needsReview: true, reviewReleasedAt: '2026-10-20' } } }),
+    row('lesson:suggestion', { cells: { me: { ...cell, state: 'submitted', assessment: 'ready' } } }),
+    row('worksheet:received', { kind: 'worksheet', cells: { me: { ...cell, state: 'completed' } } }),
+  ], 'me', emptyGradingSettings())
+  const recent = recentStudentResults(records)
+  assert.deepEqual(recent.map(r => r.key), ['lesson:returned', 'lesson:revised', 'lesson:legacy'])
+  assert.equal(recent[0].statusLabel, 'Review returned')
+  assert.equal(recent[1].status, 'pending')
+  assert.ok(recent.every(r => r.grade === null))
 })
 test('paper completion stays separate from paired quiz score and links', () => {
   const result = studentGradebookRows([
@@ -101,4 +115,31 @@ test('completion and quiz percentages use the same teacher-controlled term place
   assert.equal(studentQuizTotal(rows, 't2').percent, 80)
   assert.equal(studentQuizTotal(rows, 't1').percent, null)
   assert.equal(studentCompletionTotal(rows, 'unassigned').percent, null)
+  const now = new Date('2026-11-04T03:00:00Z')
+  assert.equal(studentHomeworkTotal(rows, 't1', now).percent, 0)
+  assert.equal(studentHomeworkTotal(rows, 't2', now).percent, 100)
+  assert.equal(studentHomeworkTotal(rows, 'unassigned', now).percent, null)
+  assert.equal(studentHomeworkTotal(rows, 'all', now).percent, 50)
+})
+
+test('Homework date-only deadlines end on the Eastern day, including both sides of daylight saving', () => {
+  for (const [day, midnight] of [['2026-10-31','2026-11-01T04:00:00Z'], ['2026-11-01','2026-11-02T05:00:00Z'], ['2026-03-08','2026-03-09T04:00:00Z']]) {
+    const deadline = new Date(midnight)
+    const records = studentGradebookRows([row('worksheet:paper', { kind:'worksheet', dueAt:day, cells:{me:{...cell,state:'completed'}} })], 'me', emptyGradingSettings())
+    assert.equal(studentHomeworkTotal(records, 'all', new Date(deadline.getTime()-1)).percent, null)
+    assert.equal(studentHomeworkTotal(records, 'all', deadline).percent, 100)
+    assert.equal(isStudentDueWork(records[0], deadline), true, 'completed past-due work belongs in the counted-activities filter')
+    assert.equal(isStudentHomework(records[0], deadline), false, 'completed work is not homework to finish')
+  }
+})
+
+test('rescheduled deadlines change Homework eligibility without mutating work or counting invalid dates', () => {
+  const now = new Date('2026-11-04T03:00:00Z')
+  const records = studentGradebookRows([row('worksheet:paper', {kind:'worksheet',dueAt:'2026-11-02',cells:{me:{...cell,state:'completed'}}})], 'me', emptyGradingSettings())
+  const original = JSON.stringify(records)
+  assert.equal(studentHomeworkTotal(records, 'all', now).percent,100)
+  for (const dueAt of ['2026-11-05', 'not-a-date', null]) assert.equal(studentHomeworkTotal([{...records[0],dueAt}], 'all', now).percent,null)
+  assert.equal(studentHomeworkTotal([{...records[0],archived:true}], 'all', now).percent,null)
+  assert.equal(studentHomeworkTotal([{...records[0],status:'excused'}], 'all', now).percent,null)
+  assert.equal(JSON.stringify(records),original)
 })

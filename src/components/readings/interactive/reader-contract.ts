@@ -1,6 +1,7 @@
+import { etfChapter } from '@/data/etf-original/source'
 import type { ReadingAssignment, ReadingQuestion } from '@/lib/textbook-assignments'
 
-export type TextbookId = 'hewitt' | 'openstax'
+export type TextbookId = 'hewitt' | 'openstax' | 'etf'
 export type SourceFigureCoverage = {
   sourceLabel: string; printedPage: number; section: string
   treatment: 'adapted' | 'pdf-only'; anchors: readonly string[]; note: string
@@ -34,6 +35,7 @@ export function assignmentSource(a: ReadingAssignment): { book: TextbookId; sect
     return { book: 'openstax', sections: a.honors_reading.sections, chapter: chapters.length === 1 ? chapters[0] : null }
   }
   if (a.passage) return null
+  if (etfChapter(a.chapter, a.section_ids)) return {book:'etf', sections:a.section_ids, chapter:a.chapter}
   return { book: 'hewitt', sections: a.section_ids, chapter: a.chapter }
 }
 

@@ -7,9 +7,9 @@
   "criteria": [
     "Choose the correct energy terms and units.",
     "Show a consistent numerical balance.",
-    "Explain model assumptions and limitations."
+    "Explain what your calculation treats as true and when it stops working."
   ],
-  "source_sha256": "8e94a9edd1109f3fc954d0cfe40e32d400cf77177f1e0a6dfd9af5c3f74e9669",
+  "source_sha256": "46bddaafe80e2c797835cf0486b053bb94728bf1ca7fcaab942d128d161a81bb",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.529Z",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "A model predicts an impact’s energy accurately. What additional information is needed to predict detailed damage?",
+      "prompt": "A calculation accurately predicts an impact’s energy. What else must you know to predict the damage in detail?",
       "options": [
         "Only the object’s name.",
         "No additional information is ever needed.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "A model predicts an impact’s energy accurately. What additional information is needed to predict detailed damage?",
+      "prompt": "A calculation accurately predicts an impact’s energy. What else must you know to predict the damage in detail?",
       "options": [
         "Only the object’s name.",
         "No additional information is ever needed.",

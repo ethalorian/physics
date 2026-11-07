@@ -1,5 +1,6 @@
 'use client'
 
+import {useFoundationLanguage} from './FoundationLanguage'
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 import type {InvestigationMission} from '@/lib/avatar/investigation-missions'
 import AvatarInvestigation from '@/components/avatar/AvatarInvestigation'
@@ -9,20 +10,22 @@ import { useAvatarPortrait } from '@/hooks/useAvatarPortrait'
 import type { StoryLanguage } from '@/components/readings/interactive/reader-story-content'
 import type { MeBundle } from '@/app/api/avatar/me/route'
 
-type Classroom = { language: StoryLanguage; setLanguage: (value: StoryLanguage) => void; workVisible: boolean; portrait: MeBundle | null; sample: boolean; active: string | null; setActive: (id: string | null) => void }
+type Classroom = { foundationLanguage?:StoryLanguage; language: StoryLanguage; setLanguage: (value: StoryLanguage) => void; workVisible: boolean; portrait: MeBundle | null; sample: boolean; active: string | null; setActive: (id: string | null) => void }
 const ClassroomContext = createContext<Classroom | null>(null)
 
 /** One portrait and one active experiment for the entire assignment. Answers remain in its existing store. */
 export function AssignmentAvatarProvider({ children, sample = false, workVisible = true }: { children: ReactNode; sample?: boolean; workVisible?: boolean }) {
   const { portrait } = useAvatarPortrait(!sample)
-  const [language, setLanguage] = useState<StoryLanguage>('en')
+  const foundation=useFoundationLanguage()
+  const [sceneLanguage, setLanguage] = useState<StoryLanguage>('en')
+  const language=foundation.foundation?foundation.locale:sceneLanguage
   const [active, setActive] = useState<string | null>(null)
   useEffect(() => {
     const pause = () => { if (document.hidden) setActive(null) }
     document.addEventListener('visibilitychange', pause)
     return () => document.removeEventListener('visibilitychange', pause)
   }, [])
-  return <ClassroomContext.Provider value={{ portrait, sample, active, setActive, language, setLanguage, workVisible }}>{children}</ClassroomContext.Provider>
+  return <ClassroomContext.Provider value={{ portrait, sample, active, setActive, language, setLanguage, workVisible, foundationLanguage:foundation.foundation?foundation.locale:undefined }}>{children}</ClassroomContext.Provider>
 }
 
 export function useAssignmentAvatar() { return useContext(ClassroomContext) }
@@ -36,7 +39,7 @@ export function AssignmentExperiment({ id, title, focus, children, readOnly = fa
   const classroom = useAssignmentAvatar()
   if (!classroom) return <>{children}</>
   const active = classroom.active === id && visible
-  return <ExperimentContext.Provider value={active}><AvatarInvestigation mission={mission} id={id} title={title} focus={focus} portrait={classroom.portrait} sample={classroom.sample} language={classroom.language} onLanguageChange={classroom.setLanguage} active={active} onActiveChange={value => classroom.setActive(value ? id : null)} actorInModel={actorInModel} interactive={interactive} readOnly={readOnly}>{children}</AvatarInvestigation></ExperimentContext.Provider>
+  return <ExperimentContext.Provider value={active}><AvatarInvestigation mission={mission} id={id} title={title} focus={focus} portrait={classroom.portrait} sample={classroom.sample} language={classroom.language} contentLanguage={classroom.foundationLanguage} onLanguageChange={classroom.foundationLanguage?undefined:classroom.setLanguage} active={active} onActiveChange={value => classroom.setActive(value ? id : null)} actorInModel={actorInModel} interactive={interactive} readOnly={readOnly}>{children}</AvatarInvestigation></ExperimentContext.Provider>
 }
 
 export function AssignmentModelActor({ x, y }: { x: number; y: number }) {
@@ -55,8 +58,9 @@ export function AssignmentModelActor({ x, y }: { x: number; y: number }) {
 }
 
 export function AssignmentClassroomScene({ title, focus, expanded = false, mission }: { title: string; focus: string; expanded?: boolean; mission?: InvestigationMission }) {
+  const {t}=useFoundationLanguage()
   return <details open={expanded || undefined} className="my-4 min-w-0 rounded-xl border border-border bg-card px-3">
-    <summary className="min-h-11 cursor-pointer content-center text-sm font-semibold">Learn with your avatar</summary>
+    <summary className="min-h-11 cursor-pointer content-center text-sm font-semibold">{t('Learn with your avatar')}</summary>
     <AssignmentExperiment mission={mission} id={title} title={title} focus={focus} interactive={false} />
   </details>
 }

@@ -10,8 +10,8 @@ const snapshots=[
     "after": 9,
     "page": 33,
     "file": "page-01.webp",
-    "y": 925,
-    "height": 198,
+    "y": 922,
+    "height": 554,
     "title": "The push ended. The motion did not.",
     "alt": "After Maz releases the cart, it keeps moving. The novel states that the push ended but the motion did not.",
     "body": "The hand loses contact, so its force ends. The cart can still move. Real surface and air interactions can change its velocity.",
@@ -22,8 +22,8 @@ const snapshots=[
     "after": 16,
     "page": 34,
     "file": "page-02.webp",
-    "y": 790,
-    "height": 302,
+    "y": 789,
+    "height": 678,
     "title": "One coin, two directions",
     "alt": "Mr. Antocci explains that friction had little time to change the coin’s horizontal velocity. Mei explains that gravity made it fall after the card was removed.",
     "body": "The supplied story shows little sideways motion and a downward fall. These are story observations, not measurements you collected.",
@@ -34,8 +34,8 @@ const snapshots=[
     "after": 17,
     "page": 35,
     "file": "page-03.webp",
-    "y": 608,
-    "height": 540,
+    "y": 606,
+    "height": 543,
     "title": "A passenger keeps moving",
     "alt": "In a classroom toy model, the car stops while the passenger continues forward. Nadia says no new forward force threw it, and Mei explains that the strap supplies the force that slows it.",
     "body": "Use the classroom frame. The car and passenger can change velocity at different times because different interactions act on them.",
@@ -46,8 +46,8 @@ const snapshots=[
     "after": 21,
     "page": 36,
     "file": "page-04.webp",
-    "y": 438,
-    "height": 280,
+    "y": 435,
+    "height": 558,
     "title": "No floor does not mean no force",
     "alt": "Mr. Antocci says gravity still acts, especially the Sun’s. Mei says zero net force is a model, not the asteroid’s actual situation.",
     "body": "Space lacks the classroom floor, but gravitational interactions remain. Constant velocity is a conditional model.",
@@ -59,7 +59,7 @@ function comic(s){return `<section data-label="${s.title}" class="foundation-com
  <div style="font:24px 'IBM Plex Mono',monospace;letter-spacing:2px;color:#a9a7ff;">2026-XJ · Keep Going · Graphic novel, page ${s.page}</div>
  <h2 style="font-size:64px;line-height:1.1;font-weight:500;margin:22px 0 30px;">${s.title}</h2>
  <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:52px;align-items:center;flex:1;min-height:0;">
-  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" style="width:100%;height:auto;max-height:610px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-09-v1/${s.file}" width="1024" height="1536"/></svg>
+  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;justify-self:center;max-width:${Math.floor(610*1024/s.height)}px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-09-v1/${s.file}" width="1024" height="1536"/></svg>
   <div><p style="font-size:32px;line-height:1.4;margin:0 0 28px;">${s.body}</p><p style="font-size:38px;line-height:1.25;margin:0;">${s.question}</p></div>
  </div><div style="font:24px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:28px;">${s.work} · Write your own answer in Work.</div>
  <footer style="font:20px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:22px;">Fictional story · Original artwork · Day 9</footer></section>`;}
@@ -86,7 +86,7 @@ let number=0;
 html=html.replace(/<section\b[^>]*>[\s\S]*?<\/section>/g,section=>{number++;return section.replace(/data-screen-label="[^"]*"/,`data-screen-label="${String(number).padStart(2,'0')}"`).replace(/Antocci Physics · \d{2} \/ 30/g,`Antocci Physics · ${String(number).padStart(2,'0')} / 31`);});
 html = require('../foundation-groups/slide-copy.cjs')(html);
 const plain=n=>n.nodeName==='#text'?n.value.replace(/\{\{[^}]+\}\}/g,''):['button','script','style','image'].includes(n.tagName)?'':n.tagName==='sc-if'&&n.attrs.some(a=>/q\dOpen/.test(a.value))?'':(n.childNodes||[]).map(plain).join(' ');
-const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,title:m[1].match(/data-label="([^"]+)"/)[1],text:plain(p5.parseFragment(m[0])).replace(/\s+/g,' ').trim()}));
+const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,comicPage:m[0].match(/<image\b[^>]*\bhref="(\/comics\/2026-xj\/[^"]+\.webp)"/)?.[1],title:m[1].match(/data-label="([^"]+)"/)[1],text: require('../foundation-groups/slide-language.cjs').companion(p5.parseFragment(m[0]))}));
 const vendor='resources/foundations/day-one/vendor';
 const libraries=[['react.production.min.js','DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z'],['react-dom.production.min.js','gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1']].map(([file,integrity])=>{const bytes=fs.readFileSync(path.join(vendor,file));if(crypto.createHash('sha384').update(bytes).digest('base64')!==integrity)throw Error('Runtime integrity mismatch');return script(bytes.toString());}).join('\n');
 const stage=fs.readFileSync(base+'/deck-stage.js','utf8'),support=fs.readFileSync(base+'/support.js','utf8');

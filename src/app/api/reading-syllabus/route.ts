@@ -10,17 +10,25 @@ import { READING_UUID, validateReading, type ReadingTarget } from '@/lib/textboo
 import { validateQuiz } from '@/lib/quizzes/validation'
 import { vocabularyFor } from '@/lib/vocab-scope-server'
 import { isInteractiveReading, isInteractiveSyllabusStep, INTERACTIVE_READING_ONLY } from '@/lib/reading-availability'
+import { readingCalendarCourse } from '@/lib/reading-calendar-server'
 
 export const GET = withAuth(async(req,ctx)=>{
-  const requested=new URL(req.url).searchParams.get('course_id')
-  const courses=(await readingCourses(ctx)).filter(c=>c.program==='physics')
-  if(requested&&!courses.some(c=>c.id===requested))return readingJson({error:'Choose an available Physics class.'},403)
-  const selected=requested?[requested]:courses.map(c=>c.id),staff=readingStaff(ctx)
+  const params=new URL(req.url).searchParams,requested=params.get('course_id'),calendar=params.get('calendar')==='1'
+  const available=await readingCourses(ctx),courses=available.filter(c=>c.program==='physics'),staff=readingStaff(ctx)
+  if(calendar&&!staff)return readingJson({error:'This dashboard is for teachers.'},403)
+  const course=calendar?readingCalendarCourse(available,requested):null
+  // Assigned readers also use this endpoint to look up optional connections.
+  // Authoring stays Physics-only, but an enrolled Engineering reader with no
+  // syllabus bundle is a valid empty result, not an authorization error.
+  if(requested&&(calendar?!course:!available.some(c=>c.id===requested)))return readingJson({error:'Choose an available class.'},403)
+  const selected=calendar?course?.program==='physics'?[course.id]:[]:requested?[requested]:courses.map(c=>c.id)
   const [bundles,targets]=await Promise.all([
     syllabusBundles(selected,staff?undefined:ctx.userId),
-    staff?readingRows<ReadingTarget>((a,b)=>supabaseAdmin.from('learning_targets').select('id,slug,statement,unit_id,domain,program').eq('program','physics').eq('exclude_from_growth',false).order('id').range(a,b)):[],
+    staff&&!calendar?readingRows<ReadingTarget>((a,b)=>supabaseAdmin.from('learning_targets').select('id,slug,statement,unit_id,domain,program').eq('program','physics').eq('exclude_from_growth',false).order('id').range(a,b)):[],
   ])
-  const assignable = (step: (typeof READING_SYLLABUS)[number]) => courses.filter(c => selected.includes(c.id)).some(c => isInteractiveSyllabusStep(step, c.track))
+  // Keep the same shared shelf metadata (including legacy linked steps); the
+  // planner applies the selected track. Authoring targets load on detail views.
+  const assignable = (step: (typeof READING_SYLLABUS)[number]) => courses.filter(c => calendar || selected.includes(c.id)).some(c => isInteractiveSyllabusStep(step, c.track))
   return readingJson({staff,readOnly:ctx.viewingAsTeacher,courses:courses.map(({id,name,section,program,track})=>({id,name,section,program,track})),bundles,targets,textbookSteps:staff?TEXTBOOK_SYLLABUS.filter(assignable):[],
     steps:staff?READING_SYLLABUS.filter(assignable).map(s=>({...s,honorsReading:HONORS_READING_MAP[s.id]})):READING_SYLLABUS.map(({id,unit,title,focus,prerequisites})=>({id,unit,title,focus,prerequisites}))})
 })

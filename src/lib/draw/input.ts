@@ -8,6 +8,12 @@ import { type Stroke, type StrokeTool, type Point, sprayDots, isBackgroundFill }
 
 export type EditorTool = StrokeTool | 'fill' | 'eraser'
 
+export type StrokeGesture = {
+  pointerId: number
+  canvas: HTMLCanvasElement
+  bounds: Pick<DOMRect, 'left' | 'top' | 'width' | 'height'>
+}
+
 export interface StrokeHandlerOpts {
   canvas: HTMLCanvasElement | null
   W: number
@@ -15,6 +21,8 @@ export interface StrokeHandlerOpts {
   strokesRef: { current: Stroke[] }
   redoRef: { current: Stroke[] }
   drawingRef: { current: boolean }
+  /** Persist pointer ownership and geometry across autosave rerenders. */
+  gestureRef?: { current: StrokeGesture | null }
   tool: EditorTool
   color: string
   size: number
@@ -55,6 +63,15 @@ export function makeStrokeHandlers(o: StrokeHandlerOpts) {
   }
 
   const onDown = (e: RPointerEvent<HTMLCanvasElement>) => {
+    if (o.gestureRef) {
+      if (o.gestureRef.current || e.isPrimary === false || e.button !== 0) return
+      const bounds = e.currentTarget.getBoundingClientRect()
+      if (!bounds.width || !bounds.height) return
+      if (o.tool !== 'fill') {
+        o.gestureRef.current = { pointerId: e.pointerId, canvas: e.currentTarget, bounds }
+        try { e.currentTarget.setPointerCapture(e.pointerId) } catch { /* Leave/cancel still finishes the stroke. */ }
+      }
+    }
     const p = toPoint(e)
     if (o.tool === 'fill') { bucketFill(); return }
     o.drawingRef.current = true
@@ -78,6 +95,17 @@ export function makeStrokeHandlers(o: StrokeHandlerOpts) {
 
   const onMove = (e: RPointerEvent<HTMLCanvasElement>) => {
     if (!o.drawingRef.current) return
+    const gesture = o.gestureRef?.current
+    if (gesture) {
+      if (e.pointerId !== gesture.pointerId) return
+      const bounds = e.currentTarget.getBoundingClientRect()
+      // Scrolling, resizing or late content must not turn a stationary pointer
+      // into a long line. Keep the valid partial stroke and wait for a new press.
+      if (e.buttons === 0 || (['left', 'top', 'width', 'height'] as const).some(key => Math.abs(bounds[key] - gesture.bounds[key]) > 1)) {
+        onUp(e)
+        return
+      }
+    }
     let p = toPoint(e)
     if (o.snapAngles && (o.tool === 'line' || o.tool === 'arrow')) {
       const start = o.strokesRef.current[o.strokesRef.current.length-1]?.points[0]
@@ -93,7 +121,13 @@ export function makeStrokeHandlers(o: StrokeHandlerOpts) {
     o.repaint()
   }
 
-  const onUp = () => {
+  const onUp = (e?: RPointerEvent<HTMLCanvasElement>) => {
+    const gesture = o.gestureRef?.current
+    if (gesture && e && e.pointerId !== gesture.pointerId) return
+    if (o.gestureRef) o.gestureRef.current = null
+    if (gesture) {
+      try { gesture.canvas.releasePointerCapture(gesture.pointerId) } catch { /* Already released by the browser. */ }
+    }
     if (o.drawingRef.current) { o.drawingRef.current = false; o.emit(); o.bump() }
   }
 

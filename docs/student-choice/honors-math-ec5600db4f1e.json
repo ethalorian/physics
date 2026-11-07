@@ -1,0 +1,155 @@
+{
+  "version": "honors-math-ec5600db4f1e",
+  "baseVersion": "honors-complete-77f3e9dfede4",
+  "authorization": "Craig requested clearer variable typography across Honors notes, November 5, 2026",
+  "change": "Italic mathematical symbols, upright units/operators and clear indices; wording and diagram geometry preserved",
+  "pages": [
+    {
+      "day": 1,
+      "file": "day-01-honors-notes.html",
+      "sha256": "732c4968d4890bd319fd4eab8e2d5c7fb19bd002f14e09c6c3abc4281591981b",
+      "styledSymbols": 6
+    },
+    {
+      "day": 2,
+      "file": "day-02-honors-notes.html",
+      "sha256": "c7e8c150fb82d7e6db5db7ddbd436e600371dda5fb1f53e8e5bac38130fa3ffa",
+      "styledSymbols": 21
+    },
+    {
+      "day": 3,
+      "file": "day-03-honors-notes.html",
+      "sha256": "b054c2dbc64efc77303bbd6aead592a98cef099d426d76f9bdf6104990a502ca",
+      "styledSymbols": 34
+    },
+    {
+      "day": 4,
+      "file": "day-04-honors-notes.html",
+      "sha256": "325cb2bb96f349844fb59b83d7d8ec88d17042d2b96915bcce449e6d585c5a6f",
+      "styledSymbols": 22
+    },
+    {
+      "day": 5,
+      "file": "day-05-honors-notes.html",
+      "sha256": "ab3d3cf642dd53635b809c941d50f8caa9118052e00cb26ee01b1672f144325e",
+      "styledSymbols": 27
+    },
+    {
+      "day": 6,
+      "file": "day-06-honors-notes.html",
+      "sha256": "5d4edda1a1e0d75d8cdd1a23e3159b13f745659ae27c1808feb064d6258ccf66",
+      "styledSymbols": 29
+    },
+    {
+      "day": 7,
+      "file": "day-07-honors-notes.html",
+      "sha256": "3f4f52069017aa5e34e688a18f3a392730a25d04be1eb08684a3c4a8cf6c0dc2",
+      "styledSymbols": 30
+    },
+    {
+      "day": 8,
+      "file": "day-08-honors-notes.html",
+      "sha256": "df10ff606f7978e307dbef37fd42205a8d6f4352b64980e4243bb895ae099fc0",
+      "styledSymbols": 25
+    },
+    {
+      "day": 9,
+      "file": "day-09-honors-notes.html",
+      "sha256": "0c8457d58790f48844701caaeaa7fe8fd27f62c1946b19dd740c9541397f3777",
+      "styledSymbols": 23
+    },
+    {
+      "day": 10,
+      "file": "day-10-honors-notes.html",
+      "sha256": "4ae9c3f5129a1d570625b3f19594cb2624629dc3826ee1f1aa4051f44d3d3d59",
+      "styledSymbols": 29
+    },
+    {
+      "day": 11,
+      "file": "day-11-honors-notes.html",
+      "sha256": "143ff0cb26768abc30959069ba7e0faddef23712ff304868daf9e859aaefefa6",
+      "styledSymbols": 28
+    },
+    {
+      "day": 12,
+      "file": "day-12-honors-notes.html",
+      "sha256": "dcfaaf8ff4460f517b5b1b230a25154e55f2bd3ded9f63c6ae653147c4854105",
+      "styledSymbols": 23
+    },
+    {
+      "day": 13,
+      "file": "day-13-honors-notes.html",
+      "sha256": "2061dd359720bc1d4ba3b709be9c7e6043760263c416602a706466857384c496",
+      "styledSymbols": 34
+    },
+    {
+      "day": 14,
+      "file": "day-14-honors-notes.html",
+      "sha256": "af0231eeaeb7ed452121d6d76a9eb54d3348c01efeb7b04c570960cf05c07bfa",
+      "styledSymbols": 18
+    },
+    {
+      "day": 15,
+      "file": "day-15-honors-notes.html",
+      "sha256": "9a70e8111980d1d366cd53fad04cdaaa24007770addacc73d45a40f0965e9b27",
+      "styledSymbols": 23
+    },
+    {
+      "day": 16,
+      "file": "day-16-honors-notes.html",
+      "sha256": "db3fbccf5cf6fd66b8afd7d603ca6f06d9644263b4feec0b751fabbfb6e5920b",
+      "styledSymbols": 39
+    },
+    {
+      "day": 17,
+      "file": "day-17-honors-notes.html",
+      "sha256": "f28401082a6c53bc2ab8ddc279e59c299df540385ad0559e4852d1d5ff950fa1",
+      "styledSymbols": 31
+    },
+    {
+      "day": 18,
+      "file": "day-18-honors-notes.html",
+      "sha256": "9851069d737096067fa8a589e12b38e64489c1f4ee373dece6b2f4b47ebaecc4",
+      "styledSymbols": 19
+    },
+    {
+      "day": 19,
+      "file": "day-19-honors-notes.html",
+      "sha256": "52c3c510e0babf929787daa295d3563a0a9891718c61249994b77591ffe56b22",
+      "styledSymbols": 13
+    },
+    {
+      "day": 20,
+      "file": "day-20-honors-notes.html",
+      "sha256": "20edd52d1140ce2877eb14ba0c483c857a78352005bd91eee1a546ee1a3dec1b",
+      "styledSymbols": 28
+    },
+    {
+      "day": 21,
+      "file": "day-21-honors-notes.html",
+      "sha256": "20a8b4bf356cc749c421f045f5e6c3c04734e8b9c938cf1745136f2ddb58d7e3",
+      "styledSymbols": 34
+    },
+    {
+      "day": 22,
+      "file": "day-22-honors-notes.html",
+      "sha256": "e1ce08174d92eea273a8811cc1c5a59004cf387f6f87c58e702d7b9ade5ef13f",
+      "styledSymbols": 17
+    }
+  ],
+  "bundle": {
+    "file": "unit-1-honors-notebook.html",
+    "sha256": "7fc7699ba467468a04ea28a991217c3ad4361e31c4fb7e4219161fa2c8d64946"
+  },
+  "textPreservation": "all 22 sections matched",
+  "originalEditionsUnchanged": true,
+  "practiceAndCPAUnchanged": true,
+  "oldAssignmentsRemainPinned": true,
+  "verification": {
+    "text": "22 of 22 normalized section texts unchanged",
+    "layout": "22 checked; no new card overflow; original Day 3 ~17px preserved",
+    "visual": "Day 2,4,8,13,14,16,17,21,22 reviewed",
+    "font": "Bundled KaTeX Math Italic and Main Regular; local assets and license",
+    "svg": "No newly out-of-bounds labels"
+  }
+}

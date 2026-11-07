@@ -9,7 +9,7 @@
     "Use inverse-square scaling.",
     "Calculate force with charge in coulombs and distance in meters."
   ],
-  "source_sha256": "8bd294d6afaf8d9ccbccedc83c87a42f161e0c0e977324ff447230c868ed36a8",
+  "source_sha256": "b8b6e0952736a28cfe3d2606867a8016d0cf2166110771f5348388e71496c8a1",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.559Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "Charges +q and −2q are held apart. What does the minus sign determine?",
+      "prompt": "Charges +q and −2q are held apart. What does the minus sign find?",
       "options": [
         "The force is always zero.",
         "The force magnitude is a negative distance.",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "In a model, k = 9.0 × 10⁹ N·m²/C², q₁ = 1.0 × 10⁻⁶ C, q₂ = 3.0 × 10⁻⁶ C, and r = 0.30 m. What is force magnitude?",
+      "prompt": "Use k = 9.0 × 10⁹ N·m²/C², q₁ = 1.0 × 10⁻⁶ C, q₂ = 3.0 × 10⁻⁶ C, and r = 0.30 m. What is the force magnitude?",
       "options": [
         "0.090 N",
         "30 N",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "Charges +q and −2q are held apart. What does the minus sign determine?",
+      "prompt": "Charges +q and −2q are held apart. What does the minus sign find?",
       "options": [
         "The force is always zero.",
         "The interaction is attractive.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "In a model, k = 9.0 × 10⁹ N·m²/C², q₁ = 1.0 × 10⁻⁶ C, q₂ = 3.0 × 10⁻⁶ C, and r = 0.30 m. What is force magnitude?",
+      "prompt": "Use k = 9.0 × 10⁹ N·m²/C², q₁ = 1.0 × 10⁻⁶ C, q₂ = 3.0 × 10⁻⁶ C, and r = 0.30 m. What is the force magnitude?",
       "options": [
         "30 N",
         "0.090 N",

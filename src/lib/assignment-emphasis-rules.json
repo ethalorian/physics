@@ -1,0 +1,44 @@
+{
+  "description": "Bold given numbers with units and concise requested actions. Italicize and underline compass directions in prose. Preserve original text, math and links. Shared by Python print and JS online/deck renderers.",
+  "patterns": [
+    {
+      "source": "(?<![\\w.\u0391-\u03c9])[+\u2212-]?(?:\\d{1,3}(?:,\\d{3})+(?:\\.\\d+)?|\\d+(?:\\.\\d+)?|\\.\\d+)(?:[\u2070\u00b9\u00b2\u00b3\u2074\u2075\u2076\u2077\u2078\u2079\u207b\u207a]+|\\^[+\u2212-]?\\d+(?:\\.\\d+)?)?(?:\\s*[\u00d7x]\\s*10(?:\\^[+\u2212-]?\\d+(?:\\.\\d+)?|[\u2070\u00b9\u00b2\u00b3\u2074\u2075\u2076\u2077\u2078\u2079\u207b\u207a]+)|[eE][+-]?\\d+)?(?:/\\d+(?:\\.\\d+)?)?(?:[ \\t]*(?:ohms?|webers?|teslas?|decibels?|microseconds?|nanoseconds?|milliseconds?|years?|months?|days?|cycles|revolutions?|turns|tons?|tonnes?|kilocalories?|calories?|liters?|litres?|kilometers?|centimeters?|milliseconds?|kilograms?|seconds?|minutes?|meters?|metres?|hours?|grams?|newtons?|joules?|watts?|volts?|amperes?|degrees?|(?:da|k|M|G|m|c|n|p|\u03bc|\u00b5)?(?:Wb|Hz|Pa|eV|Bq|Gy|Sv|lm|lx|N|J|W|V|A|C|\u03a9|T|F|H|L)|AU|dB|rpm|rev|kg|mg|g|(?:k|c|m|n|\u03bc|\u00b5)?m|ms|min|rad|s|h|K|\u00b0\\s?[CF]|\u00b0|%)(?:[\u2070\u00b9\u00b2\u00b3\u2074\u2075\u2076\u2077\u2078\u2079\u207b\u207a]+|\\^[+\u2212-]?\\d+(?:\\.\\d+)?)?(?:(?:\\s*[\u00b7*/]\\s*|\\s+(?=(?:kg|m|s)\\b))(?:kilometers?|centimeters?|milliseconds?|kilograms?|seconds?|minutes?|meters?|metres?|hours?|grams?|newtons?|joules?|watts?|volts?|amperes?|degrees?|(?:da|k|M|G|m|c|n|p|\u03bc|\u00b5)?(?:Wb|Hz|Pa|eV|Bq|Gy|Sv|lm|lx|N|J|W|V|A|C|\u03a9|T|F|H|L)|AU|dB|rpm|rev|kg|mg|g|(?:k|c|m|n|\u03bc|\u00b5)?m|ms|min|rad|s|h|K|\u00b0\\s?[CF]|\u00b0|%)(?:[\u2070\u00b9\u00b2\u00b3\u2074\u2075\u2076\u2077\u2078\u2079\u207b\u207a]+|\\^[+\u2212-]?\\d+(?:\\.\\d+)?)?)*(?![\\w]))?(?![\\w])",
+      "flags": "g"
+    },
+    {
+      "source": "\\bhow (?:far(?: (?:north|south|east|west|up|down))?|long|fast|high|deep|wide|many(?: (?:seconds|minutes|meters|degrees|trials|examples))?|much(?: (?:speed|time|energy|force|work|power|mass))?)\\b",
+      "flags": "gi"
+    },
+    {
+      "source": "(?:^|(?<=[.!?;:]\\s)|(?<=\\n)|(?<=\\) )|(?<=and )|(?<=then )|(?<=to ))\\b(?:calculate|find|determine|estimate|measure|predict|compare|read|sketch|draw|label|complete|describe|identify|choose|state|write|give|test|check|support|use|show|explain|record)\\s+(?:(?:the|a|an|its|her|his|their|your|each|both|these|two)\\s+)?(?:change in (?:sideways )?(?:velocity|speed|momentum|energy|position|temperature)|total (?:distance|energy|momentum|force)|resultant(?: displacement)?|average (?:speed|velocity|acceleration)|initial (?:speed|velocity)|final (?:speed|velocity)|net force|acceleration|displacement|distance|velocity|speed|time|angle|mass|weight|force|momentum|energy|power|work|pressure|density|volume|temperature|current|voltage|resistance|frequency|wavelength|period|height|range|direction(?: of motion)?|components|magnitude|speeds|velocities|forces|angles|measurements|results|predictions|observations|answers|equations|relationships|patterns|differences|similarities|evidence|reasoning|explanation|graph|route|diagram|sketch|table|data|velocity-time graph|force diagram|velocity arrow|acceleration arrow|arrow|arrows|overall direction)\\b",
+      "flags": "gi"
+    },
+    {
+      "source": "\\b(?:what|which) (?:feature|direction|angle|distance|time|speed|velocity|acceleration|force|evidence|measurement|observation|graph|equation|relationship|pattern|difference|similarity|changes?|happens|else)\\b",
+      "flags": "gi"
+    },
+    {
+      "source": "(?:^|(?<=[.!?;:]\\s)|(?<=\\n)|(?<=\\) )|(?<=and )|(?<=then )|(?<=to ))\\b(?:explain|describe|predict|show|decide|check|test) (?:why|how|what|whether)\\b",
+      "flags": "gi"
+    },
+    {
+      "source": "(?<=then )(?:(?:the|a|an|its|her|his|their|your|each|both|these|two)\\s+)?(?:change in (?:sideways )?(?:velocity|speed|momentum|energy|position|temperature)|total (?:distance|energy|momentum|force)|resultant(?: displacement)?|average (?:speed|velocity|acceleration)|initial (?:speed|velocity)|final (?:speed|velocity)|net force|acceleration|displacement|distance|velocity|speed|time|angle|mass|weight|force|momentum|energy|power|work|pressure|density|volume|temperature|current|voltage|resistance|frequency|wavelength|period|height|range|direction(?: of motion)?|components|magnitude|speeds|velocities|forces|angles|measurements|results|predictions|observations|answers|equations|relationships|patterns|differences|similarities|evidence|reasoning|explanation|graph|route|diagram|sketch|table|data|velocity-time graph|force diagram|velocity arrow|acceleration arrow|arrow|arrows|overall direction)\\b",
+      "flags": "gi"
+    },
+    {
+      "source": "\\b(?:including (?:its |the )?direction|to scale|in your own words|show your (?:work|reasoning)|support your answer|compare and contrast|do you agree|when (?:is|does|will|would))\\b",
+      "flags": "gi"
+    },
+    {
+      "source": "\\bthe [A-Za-z]+[\u2019\\x27]s overall direction\\b",
+      "flags": "gi"
+    },
+    {
+      "source": "(?:^|(?<=[.!?;:]\\s)|(?<=\\n)|(?<=\\) )|(?<=and )|(?<=then )|(?<=to ))(?:calculate|find|determine|estimate|measure|predict|compare|read|sketch|draw|label|complete|describe|identify|choose|state|write|give|test|check|support|show|explain|record|name|list|mark|add|shade|decide)(?:[ \\t]+(?!(?:at|from|to|for|when|while|because|if|by|whether|between|with|on|in|and|then|using|without|that|so|is|are|was|were|does|do|will)\\b)[A-Za-z][A-Za-z\u2019\\x27-]*){1,4}\\b",
+      "flags": "gi"
+    }
+  ],
+  "protectedMarkup": "\\*\\*[\\s\\S]*?\\*\\*|<(?:b|strong|sub|sup|super|code|pre)\\b[^>]*>[\\s\\S]*?</(?:b|strong|sub|sup|super|code|pre)>|<[^>]+>|`[^`]*`|\\$\\$[\\s\\S]*?\\$\\$|\\$[^$\\n]+\\$|\\\\\\([\\s\\S]*?\\\\\\)|\\\\\\[[\\s\\S]*?\\\\\\]|!?\\[[^\\]]*\\]\\([^)]*\\)|https?://[^\\s<]+",
+  "directionPattern": "\\b(?:(?:north|south)(?:[- ]?(?:east|west))?|east|west)(?:wards?|bound)?\\b",
+  "directionProtectedMarkup": "<(?:u|sub|sup|super|code|pre)\\b[^>]*>[\\s\\S]*?</(?:u|sub|sup|super|code|pre)>|<[^>]+>|`[^`]*`|\\$\\$[\\s\\S]*?\\$\\$|\\$[^$\\n]+\\$|\\\\\\([\\s\\S]*?\\\\\\)|\\\\\\[[\\s\\S]*?\\\\\\]|!?\\[[^\\]]*\\]\\([^)]*\\)|https?://[^\\s<]+"
+}

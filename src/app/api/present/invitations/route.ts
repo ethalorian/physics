@@ -6,17 +6,16 @@ import {classLesson} from '@/lib/present-server'
 import type {PresentInvitation} from '@/lib/present-invitation'
 import {isTicket} from '@/lib/presentation-tools'
 import type {Pulse} from '@/lib/presentation-tools'
+import {studentInvitationCourses} from '@/lib/student-context'
+import {lookupDatabase} from '@/lib/lookup-database'
+import {observedLookup} from '@/lib/request-runtime'
 
 /** All active class invitations, independent of which page a student has open. */
 export const GET=withEnrolledStudent(async(_req,ctx)=>{
  const json=(items:PresentInvitation[])=>NextResponse.json({invitations:items},{headers:{'Cache-Control':'private, no-store'}})
- const members=await supabaseAdmin.from('course_students').select('course_id').eq('student_id',ctx.userId).eq('enrollment_state','ACTIVE')
- if(members.error)throw members.error
- if(!members.data?.length)return json([])
- const courses=await supabaseAdmin.from('courses').select('id,name,section').in('id',members.data.map(m=>m.course_id)).is('archived_at',null)
- if(courses.error)throw courses.error
- if(!courses.data?.length)return json([])
- const sessions=await supabaseAdmin.from('present_sessions').select('id,course_id,lesson_id,poll_block_id,poll_run_id,poll_locked,poll_revealed,created_at').in('course_id',courses.data.map(c=>c.id)).eq('status','live').order('created_at',{ascending:false}).limit(20)
+ const courses=await studentInvitationCourses(ctx.userId)
+ if(!courses.length)return json([])
+ const sessions=await observedLookup('poll_sessions',()=>lookupDatabase.from('present_sessions').select('id,course_id,lesson_id,poll_block_id,poll_run_id,poll_locked,poll_revealed,created_at').in('course_id',courses.map(c=>c.id)).eq('status','live').order('created_at',{ascending:false}).limit(20))
  if(sessions.error)throw sessions.error
  if(!sessions.data?.length)return json([])
  const ids=sessions.data.map(s=>s.id)
@@ -45,7 +44,7 @@ export const GET=withEnrolledStudent(async(_req,ctx)=>{
  const answeredQuestions = new Set((answers.data ?? []).map(row=>row.present_session_id+':'+row.poll_run_id))
  const items:PresentInvitation[]=[]
  for(const session of sessions.data){
-  const course=courses.data.find(c=>c.id===session.course_id)!
+  const course=courses.find(c=>c.id===session.course_id)!
   const base={sessionId:session.id,courseName:[course.name,course.section].filter(Boolean).join(' · ')}
   for(const row of pulses.data??[]){
    if(row.session_id!==session.id)continue

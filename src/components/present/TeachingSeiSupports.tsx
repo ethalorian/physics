@@ -12,7 +12,7 @@ export default function TeachingSeiSupports({ block, enabled }: { block?: Conten
   if (!frame && !words.length && !translations.length) return null
   return <aside className="teach-sei-supports" aria-label="SEI supports">
     <strong>Language support</strong>
-    {frame && <div><span>Sentence starter</span><MathMarkdown content={frame} /></div>}
+    {frame && <div><span>Sentence starter</span><MathMarkdown content={frame} questionEmphasis /></div>}
     {words.length > 0 && <div><span>Word bank</span><p>{words.join(' · ')}</p></div>}
     {translations.map(([language, text]) => <div key={language} lang={language}><MathMarkdown content={text!} /></div>)}
   </aside>

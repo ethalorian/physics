@@ -10,8 +10,8 @@ const snapshots=[
     "after": 7,
     "page": 21,
     "file": "page-01.webp",
-    "y": 1187,
-    "height": 300,
+    "y": 1189,
+    "height": 297,
     "title": "The route and the shortcut",
     "alt": "Nadia asks how far Eli is from his start. The notebook shows three meters east followed by four meters north, a seven-meter walking route. The straight displacement still needs to be found.",
     "body": "The novel walks 3 m east, then 4 m north. The preceding slide swaps those two legs.",
@@ -23,7 +23,7 @@ const snapshots=[
     "page": 22,
     "file": "page-02.webp",
     "y": 355,
-    "height": 440,
+    "height": 775,
     "title": "The resultant has a direction",
     "alt": "A schematic triangle joins a three-meter east arrow to a four-meter north arrow. The resultant runs from the first tail to the final tip. Its magnitude is five meters and its direction is 53.1 degrees north of east.",
     "body": "Translate an arrow without turning or stretching it. Use a stated scale for your own drawing.",
@@ -34,8 +34,8 @@ const snapshots=[
     "after": 15,
     "page": 24,
     "file": "page-04.webp",
-    "y": 380,
-    "height": 275,
+    "y": 379,
+    "height": 559,
     "title": "Rebuild the fictional velocity",
     "alt": "The classroom model points positive x away from Earth. The velocity components are negative 8210 meters per second in x and positive 2200 in y. They give speed about 8500 meters per second and direction about 15 degrees from toward Earth toward positive y.",
     "body": "With +x away from Earth, vₓ = −8,210 m/s and vᵧ = +2,200 m/s.",
@@ -46,8 +46,8 @@ const snapshots=[
     "after": 24,
     "page": 23,
     "file": "page-03.webp",
-    "y": 380,
-    "height": 585,
+    "y": 377,
+    "height": 812,
     "title": "Check the angle before choosing sine or cosine",
     "alt": "The same ten-meter-per-second vector is shown 30 degrees above horizontal, equivalently 60 degrees from vertical. Its components stay 8.66 horizontally and 5 vertically. Mr. Antocci explains that cosine belongs to the component beside the marked angle.",
     "body": "Changing the reference angle does not change the arrow. Cosine goes with the adjacent component.",
@@ -59,7 +59,7 @@ function comic(s){return `<section data-label="${s.title}" class="foundation-com
  <div style="font:24px 'IBM Plex Mono',monospace;letter-spacing:2px;color:#a9a7ff;">2026-XJ · The Arrow Test · Graphic novel, page ${s.page}</div>
  <h2 style="font-size:64px;line-height:1.1;font-weight:500;margin:22px 0 30px;">${s.title}</h2>
  <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:52px;align-items:center;flex:1;min-height:0;">
-  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" style="width:100%;height:auto;max-height:610px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-06-v1/${s.file}" width="1024" height="1536"/></svg>
+  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;justify-self:center;max-width:${Math.floor(610*1024/s.height)}px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-06-v1/${s.file}" width="1024" height="1536"/></svg>
   <div><p style="font-size:32px;line-height:1.4;margin:0 0 28px;">${s.body}</p><p style="font-size:38px;line-height:1.25;margin:0;">${s.question}</p></div>
  </div><div style="font:24px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:28px;">${s.work} · Write your own answer in Work.</div>
  <footer style="font:20px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:22px;">Fictional story · Original artwork · Day 6</footer></section>`;}
@@ -84,7 +84,7 @@ let number=0;
 html=html.replace(/<section\b[^>]*>[\s\S]*?<\/section>/g,section=>{number++;return section.replace(/data-screen-label="[^"]*"/,`data-screen-label="${String(number).padStart(2,'0')}"`).replace(/Antocci Physics · \d{2} \/ 29/g,`Antocci Physics · ${String(number).padStart(2,'0')} / 30`);});
 html = require('../foundation-groups/slide-copy.cjs')(html);
 const plain=n=>n.nodeName==='#text'?n.value.replace(/\{\{[^}]+\}\}/g,''):['button','script','style','image'].includes(n.tagName)?'':n.tagName==='sc-if'&&n.attrs.some(a=>/q\dOpen/.test(a.value))?'':(n.childNodes||[]).map(plain).join(' ');
-const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,title:m[1].match(/data-label="([^"]+)"/)[1],text:plain(p5.parseFragment(m[0])).replace(/\s+/g,' ').trim()}));
+const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,comicPage:m[0].match(/<image\b[^>]*\bhref="(\/comics\/2026-xj\/[^"]+\.webp)"/)?.[1],title:m[1].match(/data-label="([^"]+)"/)[1],text: require('../foundation-groups/slide-language.cjs').companion(p5.parseFragment(m[0]))}));
 const vendor='resources/foundations/day-one/vendor';
 const libraries=[['react.production.min.js','DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z'],['react-dom.production.min.js','gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1']].map(([file,integrity])=>{const bytes=fs.readFileSync(path.join(vendor,file));if(crypto.createHash('sha384').update(bytes).digest('base64')!==integrity)throw Error('Runtime integrity mismatch');return script(bytes.toString());}).join('\n');
 const stage=fs.readFileSync(base+'/deck-stage.js','utf8'),support=fs.readFileSync(base+'/support.js','utf8');

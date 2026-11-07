@@ -9,7 +9,7 @@
     "Trace principal rays with a clear optical axis.",
     "State whether an image is real or virtual in the given case."
   ],
-  "source_sha256": "23aa2ec52b50ec5d74ec15dbe9ff56038e18ca52456a97ce5f3526724ff57e7e",
+  "source_sha256": "bb4301e21b196a10f6fd641efef7185ba13e39c75aaaf1b15ff77fcb0ed36594",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.554Z",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "In the ideal thin-lens model, how is a ray through the optical center usually drawn?",
+      "prompt": "For an ideal thin lens, how do you usually draw a ray that passes through the optical center?",
       "options": [
         "Stopped at the center.",
         "Straight through without significant angular deflection.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A magnifying glass is used with the object closer to the lens than its focal length. Which image is predicted by the ideal converging-lens model?",
+      "prompt": "An object is closer to a magnifying glass than its focal length. What image does an ideal converging lens produce?",
       "options": [
         "Upright and virtual on the object side.",
         "No image can be seen.",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "In the ideal thin-lens model, how is a ray through the optical center usually drawn?",
+      "prompt": "For an ideal thin lens, how do you usually draw a ray that passes through the optical center?",
       "options": [
         "Always reflected back.",
         "Stopped at the center.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A magnifying glass is used with the object closer to the lens than its focal length. Which image is predicted by the ideal converging-lens model?",
+      "prompt": "An object is closer to a magnifying glass than its focal length. What image does an ideal converging lens produce?",
       "options": [
         "Inverted and real on a screen beyond the lens.",
         "No image can be seen.",

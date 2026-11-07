@@ -1,0 +1,529 @@
+{
+  "evidence": {
+    "learn": {
+      "en": "An observation tells what you see or measure. A prediction tells what you think will happen next. Use a detail from the slide to support your idea.",
+      "es": "Una observación dice lo que ves o mides. Una predicción dice lo que crees que pasará. Usa un detalle de la diapositiva para apoyar tu idea.",
+      "pt-BR": "Uma observação diz o que você vê ou mede. Uma previsão diz o que acha que vai acontecer. Use um detalhe do slide para apoiar sua ideia."
+    },
+    "check": {
+      "en": "Is “it will reach the door next” an observation or a prediction?",
+      "es": "¿“Llegará a la puerta después” es observación o predicción?",
+      "pt-BR": "“Vai chegar à porta depois” é observação ou previsão?"
+    },
+    "answer": {
+      "en": "A prediction: it describes a future event. Check it with a later observation.",
+      "es": "Una predicción: describe un suceso futuro. Compruébala con otra observación.",
+      "pt-BR": "Uma previsão: descreve um evento futuro. Confira com outra observação."
+    }
+  },
+  "pattern": {
+    "learn": {
+      "en": "Look at where the object is at equal time steps. Equal gaps mean steady speed. Bigger gaps mean it is speeding up. Use the pattern to guess where it goes next.",
+      "es": "Mira dónde está el objeto en pasos de tiempo iguales. Espacios iguales indican rapidez constante. Espacios mayores indican que va más rápido. Usa el patrón para predecir dónde estará.",
+      "pt-BR": "Veja onde o objeto está em passos de tempo iguais. Espaços iguais indicam rapidez constante. Espaços maiores indicam que ele está ficando mais rápido. Use o padrão para prever onde estará."
+    },
+    "check": {
+      "en": "What must you check before extending a pattern?",
+      "es": "¿Qué debes revisar antes de extender un patrón?",
+      "pt-BR": "O que deve conferir antes de continuar um padrão?"
+    },
+    "answer": {
+      "en": "Whether the same change per time interval still fits the motion.",
+      "es": "Si el mismo cambio por intervalo aún describe el movimiento.",
+      "pt-BR": "Se a mesma mudança por intervalo ainda descreve o movimento."
+    }
+  },
+  "position": {
+    "learn": {
+      "en": "Position tells where something is. Start at zero and read the scale. A minus sign puts it on the negative side of zero. It does not tell which way it is moving.",
+      "es": "La posición dice dónde está algo. Empieza en cero y lee la escala. El signo menos lo ubica en el lado negativo del cero. No dice hacia dónde se mueve.",
+      "pt-BR": "A posição diz onde algo está. Comece no zero e leia a escala. O sinal de menos indica o lado negativo do zero. Não diz para onde o objeto se move."
+    },
+    "check": {
+      "en": "Can an object at a negative position move in the positive direction?",
+      "es": "¿Un objeto en posición negativa puede moverse en dirección positiva?",
+      "pt-BR": "Um objeto em posição negativa pode se mover na direção positiva?"
+    },
+    "answer": {
+      "en": "Yes. Position says where it is; velocity says how its position changes.",
+      "es": "Sí. La posición dice dónde está; la velocidad dice cómo cambia su posición.",
+      "pt-BR": "Sim. A posição diz onde está; a velocidade diz como a posição muda."
+    }
+  },
+  "path": {
+    "learn": {
+      "en": "Distance counts the whole trip. Displacement compares the end with the start. Walk out and back: you travel a distance, but your displacement is zero.",
+      "es": "La distancia cuenta todo el recorrido. El desplazamiento compara el final con el inicio. Si vas y vuelves al inicio, recorres una distancia, pero tu desplazamiento es cero.",
+      "pt-BR": "A distância conta todo o caminho. O deslocamento compara o fim com o início. Se você vai e volta ao início, percorre uma distância, mas seu deslocamento é zero."
+    },
+    "check": {
+      "en": "Does zero displacement mean no motion happened?",
+      "es": "¿Desplazamiento cero significa que no hubo movimiento?",
+      "pt-BR": "Deslocamento zero significa que não houve movimento?"
+    },
+    "answer": {
+      "en": "No. A trip that returns to its start has zero displacement.",
+      "es": "No. Un viaje que vuelve al inicio tiene desplazamiento cero.",
+      "pt-BR": "Não. Uma viagem que volta ao início tem deslocamento zero."
+    }
+  },
+  "rate": {
+    "learn": {
+      "en": "Average speed tells how far you go each second: distance ÷ time. Average velocity uses displacement ÷ time. For velocity, keep the sign that tells direction.",
+      "es": "La rapidez media dice cuánto avanzas por segundo: distancia ÷ tiempo. La velocidad media usa desplazamiento ÷ tiempo. Para la velocidad, conserva el signo que indica dirección.",
+      "pt-BR": "A rapidez média diz quanto você anda por segundo: distância ÷ tempo. A velocidade média usa deslocamento ÷ tempo. Para a velocidade, mantenha o sinal que indica direção."
+    },
+    "check": {
+      "en": "Which calculation uses the whole path: average speed or average velocity?",
+      "es": "¿Qué cálculo usa todo el camino: rapidez media o velocidad media?",
+      "pt-BR": "Qual cálculo usa todo o caminho: rapidez média ou velocidade média?"
+    },
+    "answer": {
+      "en": "Average speed. Average velocity uses the change from start to finish.",
+      "es": "La rapidez media. La velocidad media usa el cambio del inicio al final.",
+      "pt-BR": "Rapidez média. Velocidade média usa a mudança do início ao fim."
+    }
+  },
+  "units": {
+    "learn": {
+      "en": "Units tell what a number measures. Make the units match before doing the math. Write the unit next to your answer, such as meters or seconds.",
+      "es": "Las unidades dicen qué mide un número. Usa unidades que coincidan antes de calcular. Escribe la unidad junto a la respuesta, como metros o segundos.",
+      "pt-BR": "As unidades dizem o que um número mede. Use unidades que combinem antes de calcular. Escreva a unidade junto da resposta, como metros ou segundos."
+    },
+    "check": {
+      "en": "What unit comes from (m/s) × s?",
+      "es": "¿Qué unidad resulta de (m/s) × s?",
+      "pt-BR": "Qual unidade resulta de (m/s) × s?"
+    },
+    "answer": {
+      "en": "Meters: the seconds cancel.",
+      "es": "Metros: se cancelan los segundos.",
+      "pt-BR": "Metros: os segundos se cancelam."
+    }
+  },
+  "pt": {
+    "learn": {
+      "en": "On a position–time graph, height tells where the object is. Slope tells its velocity. A flat line means it stays in the same place.",
+      "es": "En una gráfica de posición y tiempo, la altura dice dónde está el objeto. La pendiente indica su velocidad. Una línea plana significa que se queda en el mismo lugar.",
+      "pt-BR": "Em um gráfico de posição e tempo, a altura diz onde o objeto está. A inclinação indica sua velocidade. Uma linha plana significa que fica no mesmo lugar."
+    },
+    "check": {
+      "en": "Two parallel position–time lines have different heights. What is the same?",
+      "es": "Dos rectas paralelas de posición–tiempo tienen alturas distintas. ¿Qué es igual?",
+      "pt-BR": "Duas retas paralelas de posição–tempo têm alturas diferentes. O que é igual?"
+    },
+    "answer": {
+      "en": "Their slopes and velocities are the same; their positions differ.",
+      "es": "Sus pendientes y velocidades son iguales; sus posiciones difieren.",
+      "pt-BR": "As inclinações e velocidades são iguais; as posições diferem."
+    }
+  },
+  "vt": {
+    "learn": {
+      "en": "On a velocity–time graph, height tells velocity. Slope tells how velocity changes. A flat line above zero means the object keeps moving at a steady velocity.",
+      "es": "En una gráfica de velocidad y tiempo, la altura indica velocidad. La pendiente muestra cómo cambia. Una línea plana sobre cero significa que el objeto sigue con velocidad constante.",
+      "pt-BR": "Em um gráfico de velocidade e tempo, a altura indica velocidade. A inclinação mostra como ela muda. Uma linha plana acima de zero indica que o objeto segue com velocidade constante."
+    },
+    "check": {
+      "en": "Can a flat velocity–time graph show a moving object?",
+      "es": "¿Un gráfico velocidad–tiempo horizontal puede mostrar movimiento?",
+      "pt-BR": "Um gráfico velocidade–tempo horizontal pode mostrar movimento?"
+    },
+    "answer": {
+      "en": "Yes, if its height is not zero. Its acceleration is zero.",
+      "es": "Sí, si su altura no es cero. Su aceleración es cero.",
+      "pt-BR": "Sim, se a altura não for zero. Sua aceleração é zero."
+    }
+  },
+  "area": {
+    "learn": {
+      "en": "The area between a velocity–time line and zero tells displacement. For a rectangle, multiply its height by its width. Count area below zero as negative.",
+      "es": "El área entre la línea de velocidad y tiempo y el cero indica desplazamiento. Para un rectángulo, multiplica altura por ancho. El área bajo cero cuenta como negativa.",
+      "pt-BR": "A área entre a linha de velocidade e tempo e o zero indica deslocamento. Para um retângulo, multiplique altura por largura. A área abaixo de zero conta como negativa."
+    },
+    "check": {
+      "en": "What does equal area above and below zero mean?",
+      "es": "¿Qué significa tener igual área sobre y bajo cero?",
+      "pt-BR": "O que significa ter áreas iguais acima e abaixo de zero?"
+    },
+    "answer": {
+      "en": "Zero total displacement, though the object traveled a distance.",
+      "es": "Desplazamiento total cero, aunque recorrió una distancia.",
+      "pt-BR": "Deslocamento total zero, embora o objeto tenha percorrido uma distância."
+    }
+  },
+  "vector": {
+    "learn": {
+      "en": "A vector is an arrow with a size and direction. A longer arrow means a larger size. To add arrows, put the start of the next at the tip of the first. Do not turn them.",
+      "es": "Un vector es una flecha con tamaño y dirección. Una flecha más larga indica mayor tamaño. Para sumar flechas, pon el inicio de la siguiente en la punta de la primera. No las gires.",
+      "pt-BR": "Um vetor é uma seta com tamanho e direção. Uma seta maior indica tamanho maior. Para somar setas, coloque o início da próxima na ponta da primeira. Não gire as setas."
+    },
+    "check": {
+      "en": "Does sliding an arrow change the vector?",
+      "es": "¿Deslizar una flecha cambia el vector?",
+      "pt-BR": "Deslizar uma seta muda o vetor?"
+    },
+    "answer": {
+      "en": "No, if its length and direction stay the same. Turning it would change the vector.",
+      "es": "No, si conserva longitud y dirección. Girarla sí cambia el vector.",
+      "pt-BR": "Não, se mantém comprimento e direção. Girar a seta muda o vetor."
+    }
+  },
+  "components": {
+    "learn": {
+      "en": "One arrow can be split into a sideways part and an up-or-down part. These are its components. Add parts on the same axis. Keep track of each direction.",
+      "es": "Una flecha se puede dividir en una parte horizontal y otra vertical. Son sus componentes. Suma las partes del mismo eje. Ten en cuenta cada dirección.",
+      "pt-BR": "Uma seta pode ser dividida em uma parte horizontal e outra vertical. São seus componentes. Some as partes do mesmo eixo. Preste atenção em cada direção."
+    },
+    "check": {
+      "en": "Do two perpendicular parts describe two separate trips?",
+      "es": "¿Dos partes perpendiculares describen dos viajes separados?",
+      "pt-BR": "Duas partes perpendiculares descrevem duas viagens separadas?"
+    },
+    "answer": {
+      "en": "Not for a velocity vector: both components describe one motion happening at the same time.",
+      "es": "No para un vector velocidad: ambas describen un movimiento al mismo tiempo.",
+      "pt-BR": "Não para um vetor velocidade: ambas descrevem um movimento ao mesmo tempo."
+    }
+  },
+  "angle": {
+    "learn": {
+      "en": "Find where the angle starts. In a right triangle, use cosine for the side next to that angle and sine for the side across from it. Set your calculator to degrees for angles marked °.",
+      "es": "Busca dónde empieza el ángulo. En un triángulo rectángulo, usa coseno para el lado junto al ángulo y seno para el lado de enfrente. Usa grados en la calculadora para ángulos con °.",
+      "pt-BR": "Veja onde o ângulo começa. Em um triângulo retângulo, use cosseno para o lado junto ao ângulo e seno para o lado em frente. Use graus na calculadora para ângulos com °."
+    },
+    "check": {
+      "en": "Is the x component always found with cosine?",
+      "es": "¿La componente x siempre usa coseno?",
+      "pt-BR": "A componente x sempre usa cosseno?"
+    },
+    "answer": {
+      "en": "No. It depends on which axis the given angle is measured from.",
+      "es": "No. Depende del eje desde el que se mide el ángulo.",
+      "pt-BR": "Não. Depende do eixo a partir do qual o ângulo é medido."
+    }
+  },
+  "predict": {
+    "learn": {
+      "en": "At steady velocity, multiply velocity by time to find the change in position. Then add the starting position. This works only while the velocity stays the same.",
+      "es": "Con velocidad constante, multiplica velocidad por tiempo para hallar el cambio de posición. Luego suma la posición inicial. Esto sirve solo mientras la velocidad siga igual.",
+      "pt-BR": "Com velocidade constante, multiplique velocidade por tempo para achar a mudança de posição. Depois some a posição inicial. Isso vale só enquanto a velocidade continuar igual."
+    },
+    "check": {
+      "en": "Does vt give the final position every time?",
+      "es": "¿vt siempre da la posición final?",
+      "pt-BR": "vt sempre dá a posição final?"
+    },
+    "answer": {
+      "en": "No. It gives displacement at steady velocity. Add x₀ unless the start is zero.",
+      "es": "No. Da el desplazamiento con velocidad constante. Suma x₀ si el inicio no es cero.",
+      "pt-BR": "Não. Dá o deslocamento com velocidade constante. Some x₀ se o início não for zero."
+    }
+  },
+  "uncertainty": {
+    "learn": {
+      "en": "A measurement may be a little too high or low. Give a range when you are not sure of one exact answer. Small errors in velocity can make a bigger difference over more time.",
+      "es": "Una medida puede ser un poco alta o baja. Da un rango si no sabes una respuesta exacta. Pequeños errores de velocidad pueden causar una diferencia mayor con más tiempo.",
+      "pt-BR": "Uma medida pode ser um pouco alta ou baixa. Dê uma faixa se não souber uma resposta exata. Pequenos erros de velocidade podem causar uma diferença maior com mais tempo."
+    },
+    "check": {
+      "en": "Does a small measurement error prove the model includes all important physics?",
+      "es": "¿Un error pequeño prueba que el modelo incluye toda la física importante?",
+      "pt-BR": "Um erro pequeno prova que o modelo inclui toda a física importante?"
+    },
+    "answer": {
+      "en": "No. A precise measurement can still be used in a model missing an important force.",
+      "es": "No. Una medición precisa puede usarse en un modelo que omite una fuerza importante.",
+      "pt-BR": "Não. Uma medida precisa pode ser usada num modelo que omite uma força importante."
+    }
+  },
+  "acceleration": {
+    "learn": {
+      "en": "Acceleration tells how fast velocity changes. Subtract the start velocity from the end velocity. Then divide by the time taken. The unit m/s² means a change in m/s each second.",
+      "es": "La aceleración dice qué tan rápido cambia la velocidad. Resta la velocidad inicial de la final. Luego divide por el tiempo que pasó. La unidad m/s² indica un cambio de m/s cada segundo.",
+      "pt-BR": "A aceleração diz quão rápido a velocidade muda. Subtraia a velocidade inicial da final. Depois divida pelo tempo que passou. A unidade m/s² indica uma mudança de m/s a cada segundo."
+    },
+    "check": {
+      "en": "What changes during acceleration: position only, or velocity?",
+      "es": "¿Qué cambia durante la aceleración: solo posición o velocidad?",
+      "pt-BR": "O que muda durante a aceleração: só posição ou velocidade?"
+    },
+    "answer": {
+      "en": "Velocity changes in size, direction, or both.",
+      "es": "La velocidad cambia en tamaño, dirección o ambos.",
+      "pt-BR": "A velocidade muda em tamanho, direção ou ambos."
+    }
+  },
+  "signs": {
+    "learn": {
+      "en": "The signs tell direction. If velocity and acceleration point the same way, speed grows. If they point opposite ways, speed drops until the object stops. A minus sign alone does not mean slowing down.",
+      "es": "Los signos indican dirección. Si velocidad y aceleración apuntan igual, la rapidez aumenta. Si apuntan en sentidos opuestos, baja hasta detenerse. Un signo menos no siempre significa frenar.",
+      "pt-BR": "Os sinais indicam direção. Se velocidade e aceleração apontam para o mesmo lado, a rapidez aumenta. Se apontam para lados opostos, ela cai até parar. Um sinal de menos nem sempre significa frear."
+    },
+    "check": {
+      "en": "Can negative acceleration make an object speed up?",
+      "es": "¿Una aceleración negativa puede aumentar la rapidez?",
+      "pt-BR": "Uma aceleração negativa pode aumentar a rapidez?"
+    },
+    "answer": {
+      "en": "Yes, when the object is moving in the negative direction.",
+      "es": "Sí, si se mueve en dirección negativa.",
+      "pt-BR": "Sim, se estiver se movendo na direção negativa."
+    }
+  },
+  "equations": {
+    "learn": {
+      "en": "These equations work when acceleration stays steady. First list what you know and what you need to find. Use the equation shown on this slide. Put in the values, solve, and add units.",
+      "es": "Estas ecuaciones sirven cuando la aceleración es constante. Primero anota lo que sabes y lo que debes hallar. Usa la ecuación de esta diapositiva. Pon los valores, calcula y agrega unidades.",
+      "pt-BR": "Estas equações valem quando a aceleração é constante. Primeiro liste o que sabe e o que precisa achar. Use a equação deste slide. Coloque os valores, calcule e acrescente unidades."
+    },
+    "check": {
+      "en": "What is the first choice: an equation you remember or the quantity you need?",
+      "es": "¿Qué eliges primero: una ecuación conocida o la cantidad buscada?",
+      "pt-BR": "O que escolhe primeiro: uma equação conhecida ou a quantidade buscada?"
+    },
+    "answer": {
+      "en": "Identify the needed quantity, then choose an equation linking it to the known values.",
+      "es": "Identifica la cantidad buscada y luego una ecuación que la conecte con los datos.",
+      "pt-BR": "Identifique a quantidade buscada e depois uma equação que a ligue aos dados."
+    }
+  },
+  "vertical": {
+    "learn": {
+      "en": "Near Earth, gravity changes a falling object’s velocity by about 9.8 m/s each second if we ignore air resistance. It pulls down even at the top of a toss. Choose which direction is positive.",
+      "es": "Cerca de la Tierra, la gravedad cambia la velocidad de caída unos 9.8 m/s cada segundo si ignoramos el aire. Tira hacia abajo incluso en lo más alto de un lanzamiento. Elige la dirección positiva.",
+      "pt-BR": "Perto da Terra, a gravidade muda a velocidade de queda em cerca de 9.8 m/s a cada segundo se ignorarmos o ar. Ela puxa para baixo até no ponto mais alto de um lançamento. Escolha a direção positiva."
+    },
+    "check": {
+      "en": "At the top of a toss, which is zero: vertical velocity or gravity’s acceleration?",
+      "es": "En lo alto de un lanzamiento, ¿qué es cero: velocidad vertical o aceleración gravitatoria?",
+      "pt-BR": "No topo de um lançamento, o que é zero: velocidade vertical ou aceleração da gravidade?"
+    },
+    "answer": {
+      "en": "Vertical velocity is zero at that instant. Downward acceleration remains.",
+      "es": "La velocidad vertical es cero en ese instante. La aceleración hacia abajo sigue.",
+      "pt-BR": "A velocidade vertical é zero naquele instante. A aceleração para baixo continua."
+    }
+  },
+  "inertia": {
+    "learn": {
+      "en": "An object keeps the same velocity unless the forces on it add up to a nonzero force. Inertia is how much it resists a change in motion. More mass means more inertia.",
+      "es": "Un objeto mantiene su velocidad si las fuerzas sobre él suman cero. La inercia es cuánto se resiste a cambiar su movimiento. Más masa significa más inercia.",
+      "pt-BR": "Um objeto mantém sua velocidade se as forças sobre ele somam zero. A inércia é quanto ele resiste a mudar seu movimento. Mais massa significa mais inércia."
+    },
+    "check": {
+      "en": "Does zero net force require zero velocity?",
+      "es": "¿Fuerza neta cero exige velocidad cero?",
+      "pt-BR": "Força resultante zero exige velocidade zero?"
+    },
+    "answer": {
+      "en": "No. It requires unchanged velocity, which may be zero or nonzero.",
+      "es": "No. Exige velocidad sin cambio, que puede ser cero o distinta de cero.",
+      "pt-BR": "Não. Exige velocidade sem mudança, que pode ser zero ou diferente de zero."
+    }
+  },
+  "interaction": {
+    "learn": {
+      "en": "A force is a push or pull from another object. Pick the object you are studying. Ask: what is touching it, or pulling it from a distance? Moving is not itself a force.",
+      "es": "Una fuerza es un empujón o tirón de otro objeto. Elige el objeto que estudias. Pregunta: ¿qué lo toca o tira de él a distancia? Moverse no es una fuerza.",
+      "pt-BR": "Uma força é um empurrão ou puxão de outro objeto. Escolha o objeto que estuda. Pergunte: o que toca nele ou o puxa de longe? Mover-se não é uma força."
+    },
+    "check": {
+      "en": "A hand releases a moving ball. Does the hand keep pushing it?",
+      "es": "Una mano suelta una pelota en movimiento. ¿Sigue empujándola?",
+      "pt-BR": "Uma mão solta uma bola em movimento. Continua empurrando?"
+    },
+    "answer": {
+      "en": "No. That contact force ends when contact ends. Other forces, such as gravity, can remain.",
+      "es": "No. La fuerza de contacto termina al separarse. Otras fuerzas, como gravedad, pueden seguir.",
+      "pt-BR": "Não. A força de contato termina ao separar. Outras forças, como gravidade, podem continuar."
+    }
+  },
+  "weight": {
+    "learn": {
+      "en": "Mass is measured in kilograms. Weight is the pull of gravity, measured in newtons. Find weight by multiplying mass by g. Use the value of g given in the problem.",
+      "es": "La masa se mide en kilogramos. El peso es la fuerza de gravedad y se mide en newtons. Para hallar el peso, multiplica la masa por g. Usa el valor de g del problema.",
+      "pt-BR": "A massa é medida em quilogramas. O peso é a força da gravidade, medida em newtons. Para achar o peso, multiplique a massa por g. Use o valor de g do problema."
+    },
+    "check": {
+      "en": "Do kilograms and newtons measure the same quantity?",
+      "es": "¿Kilogramos y newtons miden lo mismo?",
+      "pt-BR": "Quilogramas e newtons medem a mesma grandeza?"
+    },
+    "answer": {
+      "en": "No. Kilograms measure mass; newtons measure force, including weight.",
+      "es": "No. Kilogramos miden masa; newtons miden fuerza, incluido el peso.",
+      "pt-BR": "Não. Quilogramas medem massa; newtons medem força, incluindo peso."
+    }
+  },
+  "net": {
+    "learn": {
+      "en": "Net force is the total force on one object. Add forces in the same direction. Subtract forces in opposite directions. Divide the net force by mass to find acceleration.",
+      "es": "La fuerza neta es la fuerza total sobre un objeto. Suma fuerzas del mismo sentido. Resta fuerzas de sentidos opuestos. Divide la fuerza neta por la masa para hallar la aceleración.",
+      "pt-BR": "A força resultante é a força total sobre um objeto. Some forças no mesmo sentido. Subtraia forças em sentidos opostos. Divida a força resultante pela massa para achar a aceleração."
+    },
+    "check": {
+      "en": "Which way does acceleration point relative to net force?",
+      "es": "¿Cómo apunta la aceleración respecto a la fuerza neta?",
+      "pt-BR": "Como a aceleração aponta em relação à força resultante?"
+    },
+    "answer": {
+      "en": "In the same direction, regardless of which way the object currently moves.",
+      "es": "En la misma dirección, sin importar hacia dónde se mueve en ese momento.",
+      "pt-BR": "Na mesma direção, não importa para onde o objeto se move naquele momento."
+    }
+  },
+  "fbd": {
+    "learn": {
+      "en": "A force diagram shows pushes and pulls on one object. Draw the object as a dot or box. Add one labeled arrow for each force. Do not draw an extra force for motion.",
+      "es": "Un diagrama de fuerzas muestra empujones y tirones sobre un objeto. Dibuja el objeto como punto o caja. Agrega una flecha con nombre por cada fuerza. No agregues una fuerza por moverse.",
+      "pt-BR": "Um diagrama de forças mostra empurrões e puxões sobre um objeto. Desenhe o objeto como ponto ou caixa. Acrescente uma seta com nome para cada força. Não acrescente uma força por estar se movendo."
+    },
+    "check": {
+      "en": "Should a force exerted by the box on the floor appear on the box’s diagram?",
+      "es": "¿La fuerza de la caja sobre el piso va en el diagrama de la caja?",
+      "pt-BR": "A força da caixa no piso vai no diagrama da caixa?"
+    },
+    "answer": {
+      "en": "No. Draw the floor’s force on the box.",
+      "es": "No. Dibuja la fuerza del piso sobre la caja.",
+      "pt-BR": "Não. Desenhe a força do piso na caixa."
+    }
+  },
+  "ramp": {
+    "learn": {
+      "en": "Gravity points straight down on a ramp too. The ramp’s support force points away from its surface at a right angle. Split weight into parts along and across the ramp when you do the math.",
+      "es": "La gravedad apunta hacia abajo también en una rampa. La fuerza de apoyo sale de la superficie en ángulo recto. Al calcular, divide el peso en partes paralela y perpendicular a la rampa.",
+      "pt-BR": "A gravidade aponta para baixo também em uma rampa. A força de apoio sai da superfície em ângulo reto. Ao calcular, divida o peso em partes paralela e perpendicular à rampa."
+    },
+    "check": {
+      "en": "Does rotating the axes rotate the real direction of gravity?",
+      "es": "¿Girar los ejes gira la gravedad real?",
+      "pt-BR": "Girar os eixos gira a gravidade real?"
+    },
+    "answer": {
+      "en": "No. The axes change how we describe gravity, not the force itself.",
+      "es": "No. Cambia cómo describimos la gravedad, no la fuerza.",
+      "pt-BR": "Não. Muda como descrevemos a gravidade, não a força."
+    }
+  },
+  "masslab": {
+    "learn": {
+      "en": "Change the moving mass. Keep the pulling setup the same. Count the hanger in the moving mass. With the same net force, more mass means less acceleration. Check this with repeated trials.",
+      "es": "Cambia la masa que se mueve. Mantén igual el sistema que tira. Incluye el portapesas en la masa. Con la misma fuerza neta, más masa da menos aceleración. Compruébalo con varios ensayos.",
+      "pt-BR": "Mude a massa que se move. Mantenha igual o sistema que puxa. Inclua o suporte de pesos na massa. Com a mesma força resultante, mais massa dá menos aceleração. Confira com vários testes."
+    },
+    "check": {
+      "en": "Does doubling only the cart always double the total moving mass?",
+      "es": "¿Duplicar solo el carrito siempre duplica la masa total móvil?",
+      "pt-BR": "Dobrar só o carrinho sempre dobra a massa total móvel?"
+    },
+    "answer": {
+      "en": "No. Include the hanger and all other moving masses in the total.",
+      "es": "No. Incluye el portapesas y las otras masas móviles.",
+      "pt-BR": "Não. Inclua o suporte pendurado e as outras massas móveis."
+    }
+  },
+  "forcelab": {
+    "learn": {
+      "en": "Move weights from the cart to the hanger. Keep the total moving mass the same. A larger net force should give more acceleration. Friction can affect your results.",
+      "es": "Pasa pesas del carrito al portapesas. Mantén igual la masa total que se mueve. Una fuerza neta mayor debe dar más aceleración. La fricción puede cambiar tus resultados.",
+      "pt-BR": "Passe pesos do carrinho para o suporte de pesos. Mantenha igual a massa total que se move. Uma força resultante maior deve dar mais aceleração. O atrito pode mudar seus resultados."
+    },
+    "check": {
+      "en": "Why transfer a weight instead of adding one from outside?",
+      "es": "¿Por qué transferir una pesa en vez de añadir otra?",
+      "pt-BR": "Por que transferir um peso em vez de acrescentar outro?"
+    },
+    "answer": {
+      "en": "To change driving weight without changing total moving mass.",
+      "es": "Para cambiar el peso que tira sin cambiar la masa total móvil.",
+      "pt-BR": "Para mudar o peso que puxa sem mudar a massa total móvel."
+    }
+  },
+  "third": {
+    "learn": {
+      "en": "When one object pushes another, the other pushes back. The forces are equal in size and opposite in direction. They act on different objects, so they do not cancel on one object.",
+      "es": "Cuando un objeto empuja a otro, el otro también lo empuja. Las fuerzas tienen igual tamaño y sentidos opuestos. Actúan sobre objetos distintos, así que no se cancelan en un solo objeto.",
+      "pt-BR": "Quando um objeto empurra outro, o outro também o empurra. As forças têm tamanho igual e sentidos opostos. Agem em objetos diferentes, então não se anulam em um só objeto."
+    },
+    "check": {
+      "en": "Are weight and table support on one book a third-law pair?",
+      "es": "¿Peso y apoyo de la mesa en un libro son un par de tercera ley?",
+      "pt-BR": "Peso e apoio da mesa num livro são um par da terceira lei?"
+    },
+    "answer": {
+      "en": "No. Both act on the book. Third-law partners act on different objects.",
+      "es": "No. Ambas actúan en el libro. Un par de tercera ley actúa en objetos distintos.",
+      "pt-BR": "Não. Ambas atuam no livro. Um par da terceira lei atua em objetos diferentes."
+    }
+  },
+  "lab": {
+    "learn": {
+      "en": "Read the setup steps before you start. Check the zero, direction, and units. Try one gentle test. Write down what you measure. If you need to work alone, ask your teacher for approval.",
+      "es": "Lee los pasos antes de empezar. Revisa el cero, la dirección y las unidades. Haz una prueba suave. Anota lo que mides. Si necesitas trabajar sin grupo, pide permiso al docente.",
+      "pt-BR": "Leia os passos antes de começar. Confira o zero, a direção e as unidades. Faça um teste suave. Anote o que mede. Se precisar trabalhar sem grupo, peça autorização ao professor."
+    },
+    "check": {
+      "en": "What should you do with a failed release or bad reading?",
+      "es": "¿Qué haces con una suelta fallida o lectura mala?",
+      "pt-BR": "O que fazer com uma soltura que falhou ou leitura ruim?"
+    },
+    "answer": {
+      "en": "Mark it and explain the problem, then repeat if safe. Keep its source clear.",
+      "es": "Márcala, explica el problema y repite si es seguro. Aclara la fuente.",
+      "pt-BR": "Marque, explique o problema e repita se for seguro. Deixe clara a fonte."
+    }
+  },
+  "data": {
+    "learn": {
+      "en": "Keep your original readings. Label your table and graph with units. Compare several trials to find a pattern. Say what may have changed your results.",
+      "es": "Guarda tus medidas originales. Pon unidades en la tabla y la gráfica. Compara varios ensayos para buscar un patrón. Di qué pudo cambiar tus resultados.",
+      "pt-BR": "Guarde suas medidas originais. Coloque unidades na tabela e no gráfico. Compare vários testes para achar um padrão. Diga o que pode ter mudado seus resultados."
+    },
+    "check": {
+      "en": "Why keep the original readings after calculating a result?",
+      "es": "¿Por qué guardar las lecturas originales después de calcular?",
+      "pt-BR": "Por que guardar as leituras originais depois de calcular?"
+    },
+    "answer": {
+      "en": "They let you or a classmate check the calculation and trace where the result came from.",
+      "es": "Permiten revisar el cálculo y saber de dónde viene el resultado.",
+      "pt-BR": "Permitem conferir o cálculo e saber de onde veio o resultado."
+    }
+  },
+  "gravity": {
+    "learn": {
+      "en": "Gravity pulls masses toward each other, even when they do not touch. The pull gets weaker farther away. For gravity calculations, measure distance from the center of one object to the center of the other.",
+      "es": "La gravedad atrae masas aunque no se toquen. La fuerza se hace menor al alejarse. Para calcular, mide la distancia desde el centro de un objeto hasta el centro del otro.",
+      "pt-BR": "A gravidade atrai massas mesmo sem contato. A força fica menor com a distância. Para calcular, meça a distância do centro de um objeto até o centro do outro."
+    },
+    "check": {
+      "en": "Can a drifting asteroid still experience forces?",
+      "es": "¿Un asteroide a la deriva puede sentir fuerzas?",
+      "pt-BR": "Um asteroide à deriva pode sofrer forças?"
+    },
+    "answer": {
+      "en": "Yes. Gravity can act even when nothing touches it.",
+      "es": "Sí. La gravedad puede actuar sin contacto.",
+      "pt-BR": "Sim. A gravidade pode atuar sem contato."
+    }
+  },
+  "slopeMass": {
+    "learn": {
+      "en": "On a graph of acceleration versus net force, mass = 1 ÷ slope. A slope of 0.5 gives a mass of 2 kg. Check the axis labels first; this rule needs those axes.",
+      "es": "En una gráfica de aceleración frente a fuerza neta, masa = 1 ÷ pendiente. Una pendiente de 0.5 da una masa de 2 kg. Revisa primero los ejes; esta regla necesita esos ejes.",
+      "pt-BR": "Em um gráfico de aceleração versus força resultante, massa = 1 ÷ inclinação. Uma inclinação de 0.5 dá massa de 2 kg. Confira primeiro os eixos; esta regra precisa desses eixos."
+    },
+    "check": {
+      "en": "On this acceleration-versus-force graph, does a steeper slope mean more mass?",
+      "es": "En este gráfico aceleración contra fuerza, ¿mayor pendiente significa más masa?",
+      "pt-BR": "Neste gráfico aceleração contra força, maior inclinação significa mais massa?"
+    },
+    "answer": {
+      "en": "No. Slope is 1/mass, so a steeper slope corresponds to less mass under the model assumptions.",
+      "es": "No. La pendiente es 1/masa: una pendiente mayor corresponde a menor masa bajo las condiciones del modelo.",
+      "pt-BR": "Não. A inclinação é 1/massa: maior inclinação corresponde a menor massa nas condições do modelo."
+    }
+  }
+}

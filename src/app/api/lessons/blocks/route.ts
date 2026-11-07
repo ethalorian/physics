@@ -2,6 +2,7 @@ import { ownsLessonArtifact } from '@/lib/lesson-artifacts-server'
 import { isAssignedTrade } from '@/lib/vocational'
 import { recordEvidence } from '@/lib/math-spine-server'
 import { checkedLessonResponse } from '@/lib/lesson-response-validation'
+import { requiresLessonSubmission } from '@/lib/lesson-completion'
 import { authorizeLesson } from '@/lib/lesson-access'
 import { validateLivePoll } from '@/lib/present-server'
 import { NextResponse } from 'next/server'
@@ -138,7 +139,7 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
         }
         // For physics lessons, reserving the final step for submission prevents a
         // save (or XP award) from claiming that the lesson has been turned in.
-        const needsSubmission = lessonRow.content_blocks?.presentation === 'physics-path' || !!lessonRow.content_blocks?.reflection
+        const needsSubmission = requiresLessonSubmission(lessonRow.content_blocks)
         const pct = Math.round((done.size / (captureIds.length + (needsSubmission ? 1 : 0))) * 100)
         const completed = !needsSubmission && pct >= 100
         await supabaseAdmin.from('lesson_progress').upsert(

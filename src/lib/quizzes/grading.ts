@@ -25,7 +25,7 @@ export function validQuizAssessment(v:unknown,quiz:Quiz,answers:QuizAnswers):v i
  })
 }
 export function quizAssessmentDraft(result:QuizAssessment,quiz:Quiz){
- return {scores:Object.fromEntries(result.items.filter(i=>quiz.questions.some(q=>q.id===i.id&&q.kind!=='choice')).map(i=>[i.id,i.score])),ratings:Object.fromEntries((result.mastery??[]).map(r=>[r.target_id,r.level])),question_notes:Object.fromEntries(result.items.map(i=>[i.id,i.feedback])),note:`${result.summary}\n\nNext time: ${nextTimeText(result.next_step)}`}
+ return {scores:Object.fromEntries(result.items.filter(i=>quiz.questions.some(q=>q.id===i.id&&q.kind!=='choice')).map(i=>[i.id,i.score])),ratings:Object.fromEntries((result.mastery??[]).map(r=>[r.target_id,r.level])),question_notes:Object.fromEntries(result.items.map(i=>[i.id,i.feedback])),note:`${result.summary}\n\n${nextTimeText(result.next_step)}`}
 }
 export function quizAiPending(review:QuizAiReview){return review.status==='queued'||review.status==='processing'}
 export function quizAiClaimable(review:QuizAiReview,now=Date.now()){return review.status==='queued'||review.status==='processing'&&!!review.locked_until&&Date.parse(review.locked_until)<now}

@@ -9,7 +9,7 @@
     "Distinguish mass from weight with units.",
     "Include only forces acting on the chosen object."
   ],
-  "source_sha256": "d3ce04240353cafc348cd854f3c5ac6fbdbb7fb0806b1dd16923dd75b33e00e9",
+  "source_sha256": "b5340b0faa3999a823ebd9503a3dd14b3d58678421c16732405096e6ace271ef",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.477Z",

@@ -7,9 +7,9 @@
   "criteria": [
     "Identify what a wave can carry.",
     "Separate signal travel time from source speed.",
-    "Name evidence needed to interpret an observation."
+    "Name the measurements or details you need to explain an observation."
   ],
-  "source_sha256": "01e25e35700c0a5e7cb08ef5391483bf570fc79ec7d053065174aa94aa4e8b0d",
+  "source_sha256": "c74d21fda5efa4f02606a66c980ae64c9cab28f40fb3fe466faa7d56b5541be8",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.542Z",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A receiver detects a later pulse than expected. Which evidence would help distinguish a farther source from a slower propagation path?",
+      "prompt": "A receiver detects a pulse later than expected. Which measurements would help you tell whether the source is farther away or the pulse travels more slowly?",
       "options": [
         "An assumption that later always means faster.",
         "Only the pulse arrival time again.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A receiver detects a later pulse than expected. Which evidence would help distinguish a farther source from a slower propagation path?",
+      "prompt": "A receiver detects a pulse later than expected. Which measurements would help you tell whether the source is farther away or the pulse travels more slowly?",
       "options": [
         "Only the pulse arrival time again.",
         "Independent information about the path’s signal speed or the source distance.",

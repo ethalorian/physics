@@ -36,7 +36,7 @@ export const phaseLessons = {
         "Only in a vacuum"
       ],
       "correct": 1,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "Boiling is a different bulk process involving vapor bubbles.",
         "Correct: surface evaporation occurs across a range of temperatures.",
@@ -81,7 +81,7 @@ export const phaseLessons = {
         "Liquid crosses through ordinary intact glass"
       ],
       "correct": 0,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "Correct: water comes from the surrounding vapor.",
         "Coldness is not a material that becomes water.",
@@ -126,7 +126,7 @@ export const phaseLessons = {
         "Only condensation remains"
       ],
       "correct": 1,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "A steady bulk state does not imply stationary molecules.",
         "Correct: opposing exchanges continue while their net effect vanishes.",
@@ -171,7 +171,7 @@ export const phaseLessons = {
         "Is always 100°C"
       ],
       "correct": 0,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "Correct for water over the range explored.",
         "A higher pressure would require a higher boiling temperature.",
@@ -216,7 +216,7 @@ export const phaseLessons = {
         "Only if its mass disappears"
       ],
       "correct": 0,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "Correct: phase fraction can change at nearly constant temperature.",
         "The freezing plateau separates energy change from temperature change.",
@@ -261,7 +261,7 @@ export const phaseLessons = {
         "An unchanged sealed mass at fixed pressure"
       ],
       "correct": 0,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "Correct: include the energy transported across the open boundary.",
         "No new form of energy is needed.",
@@ -306,7 +306,7 @@ export const phaseLessons = {
         "Only for a thick wire"
       ],
       "correct": 1,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "A shifted melting condition does not erase the energy balance.",
         "Correct: heat transfer and local phase changes both matter.",
@@ -351,7 +351,7 @@ export const phaseLessons = {
         "The temperature must rise at the same rate"
       ],
       "correct": 0,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "Correct: the proportions of solid and liquid change.",
         "The same matter changes arrangement.",
@@ -396,7 +396,7 @@ export const phaseLessons = {
         "Any pressure and temperature scale"
       ],
       "correct": 1,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "Both zero points would make the proportional law incorrect.",
         "Correct: use absolute quantities and consistent units.",
@@ -441,7 +441,7 @@ export const phaseLessons = {
         "Half as large"
       ],
       "correct": 1,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "Kinetic energy doubles, but speed enters squared.",
         "Correct: vrms is proportional to √T at fixed molecular mass.",
@@ -486,7 +486,7 @@ export const phaseLessons = {
         "All phase boundaries are vertical"
       ],
       "correct": 0,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "Correct: a different pressure gives a different equilibrium boiling temperature.",
         "Molecular identity need not change during a phase change.",
@@ -531,7 +531,7 @@ export const phaseLessons = {
         "Only at sea level"
       ],
       "correct": 1,
-      "hint": "Identify the phase, the surrounding pressure, and the energy path.",
+      "hint": "Name the phase, the surrounding pressure, and the energy path.",
       "feedback": [
         "Relative humidity is not a composition percentage.",
         "Correct: the denominator changes strongly with temperature.",

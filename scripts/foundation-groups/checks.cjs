@@ -31,6 +31,14 @@ module.exports=async({api,sql,q,json,id,rows,call,student,teacher,course,foundat
   assert.deepEqual(rows('interactive_assignment_work').find(w=>w.assignment_id===assignment&&w.user_id===users[0]),work);
   return {c,users,sequence,assignment,action,view,code,work,draft};
  }
+ if(process.env.FOUNDATION_PACE_ONLY==='1'){
+  if(process.env.FOUNDATION_GROUPS_PREVIEW==='1'){
+   sql(require('node:fs').readFileSync(root+'/supabase/migrations/20261103151353_foundation_discussion_pace.sql','utf8'));
+   sql('begin;drop function foundation_write_at_table(uuid,uuid,text,text,text,text);'+require('node:fs').readFileSync(root+'/supabase/migrations/20261103160015_foundation_table_switch.sql','utf8')+'commit;');
+   await require('./preview.cjs')({api,student,teacher,root,out,room,sql,q});
+  }else await require('./pace-checks.cjs')({api,sql,q,rows,call,student,teacher,foundationLesson,room,root,ok});
+  return;
+ }
  for(const size of [2,3,4]){
   const r=await room(size),members=r.users.slice(0,size);
   for(const [index,stop] of ['evidence','model','questions'].entries()){
@@ -112,9 +120,10 @@ module.exports=async({api,sql,q,json,id,rows,call,student,teacher,course,foundat
  assert.equal((await r.action(creator,'create')).status,200);const code=(await r.view(creator)).code;
  const racers=Array.from({length:4},()=>id(fixtureNumber++));
  sql(`insert into students(id,name) values ${racers.map(u=>`(${q(u)},'Race fixture')`)};insert into course_students(course_id,student_id,enrollment_state) values ${racers.map(u=>`(${q(r.c)},${q(u)},'ACTIVE')`)};`);
- const join=u=>new Promise(resolve=>{const child=spawn('/opt/homebrew/bin/psql',['-h','/private/tmp','-p','55439','-U','postgres','-d',db,'-v','ON_ERROR_STOP=1','-qAt']);let err='';child.stderr.on('data',d=>err+=d);child.on('close',code=>resolve({code,err}));child.stdin.end(`set role service_role;select foundation_partner_action(${q(assignment)},${q(u)},'join',${q(code)})`)});
+ const join=u=>new Promise(resolve=>{const child=spawn('/opt/homebrew/bin/psql',['-h',process.env.FOUNDATION_TEST_SOCKET||'/private/tmp','-p','55439','-U','postgres','-d',db,'-v','ON_ERROR_STOP=1','-qAt']);let err='';child.stderr.on('data',d=>err+=d);child.on('close',code=>resolve({code,err}));child.stdin.end(`set role service_role;select foundation_partner_action(${q(assignment)},${q(u)},'join',${q(code)})`)});
  const results=await Promise.all(racers.map(join));assert.equal(results.filter(r=>r.code===0).length,3);assert.equal(results.filter(r=>r.err.includes('full')).length,1);
  assert.equal((await r.view(creator)).members.length,4);
  ok('Four simultaneous join attempts admit exactly three classmates alongside the creator');
+ await require('./pace-checks.cjs')({api,sql,q,rows,call,student,teacher,foundationLesson,room,root,ok});
  if(process.env.FOUNDATION_GROUPS_PREVIEW==='1')await require('./preview.cjs')({api,sql,q,json,id,rows,request:undefined,call,student,teacher,root,out,room});
 };

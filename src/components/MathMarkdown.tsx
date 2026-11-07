@@ -3,6 +3,7 @@ import { useEffect, useRef, createElement, Children, type ReactNode, type HTMLAt
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
+import remarkAssignmentEmphasis from '@/lib/remark-assignment-emphasis'
 import rehypeKatex from 'rehype-katex'
 import rehypeRaw from 'rehype-raw'
 import GlossaryTerm from '@/components/lessons/GlossaryTerm'
@@ -19,6 +20,8 @@ export interface GlossaryEntry {
 
 interface MathMarkdownProps {
   content: string
+  /** Highlight supplied values and requested actions in authored questions. */
+  questionEmphasis?: boolean
   /** Retained for back-compat with existing call sites; no longer used now that
    *  rendering is delimiter-driven (we never guess where math is). */
   skipAutoDetect?: boolean
@@ -118,13 +121,13 @@ function transformCallouts(src: string): string {
   )
 }
 
-export default function MathMarkdown({ content, glossary }: MathMarkdownProps) {
+export default function MathMarkdown({ content, glossary, questionEmphasis = false }: MathMarkdownProps) {
   const processed = transformCallouts(normalizeDelimiters(content ?? ''))
   const components = glossary ? buildGlossaryComponents(glossary) : undefined
   return (
     <div className="markdown-content max-w-none">
       <ReactMarkdown
-        remarkPlugins={[remarkGfm, remarkMath]}
+        remarkPlugins={questionEmphasis ? [remarkGfm, remarkMath, remarkAssignmentEmphasis] : [remarkGfm, remarkMath]}
         rehypePlugins={[rehypeRaw, [rehypeKatex, { throwOnError: false, macros: KATEX_MACROS }]]}
         components={components}
       >

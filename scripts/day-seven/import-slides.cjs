@@ -10,7 +10,7 @@ const snapshots=[
     "after": 9,
     "page": 25,
     "file": "page-01.webp",
-    "y": 1174,
+    "y": 1173,
     "height": 310,
     "title": "What changes each second?",
     "alt": "Nadia and Mei describe acceleration as how much velocity changes each second and in which direction. Their notebook shows acceleration equals change in velocity divided by elapsed time.",
@@ -22,8 +22,8 @@ const snapshots=[
     "after": 15,
     "page": 26,
     "file": "page-02.webp",
-    "y": 353,
-    "height": 310,
+    "y": 352,
+    "height": 545,
     "title": "Read the slope, not the height",
     "alt": "Supplied practice data on a velocity–time graph rise from zero meters per second at zero seconds to twelve meters per second at four seconds. The slope is positive three meters per second squared.",
     "body": "The graph’s height gives velocity. Its slope gives acceleration. These are supplied practice data.",
@@ -34,8 +34,8 @@ const snapshots=[
     "after": 18,
     "page": 27,
     "file": "page-03.webp",
-    "y": 1109,
-    "height": 365,
+    "y": 1105,
+    "height": 368,
     "title": "Keep the initial velocity",
     "alt": "Eli presents a practice cart with initial velocity two meters per second, acceleration three meters per second squared and time four seconds. Nadia calculates final velocity as two plus three times four, which equals fourteen meters per second.",
     "body": "The cart already moves at the start. Under constant acceleration, v = v₀ + at.",
@@ -46,8 +46,8 @@ const snapshots=[
     "after": 20,
     "page": 28,
     "file": "page-04.webp",
-    "y": 380,
-    "height": 522,
+    "y": 387,
+    "height": 551,
     "title": "A small change is still a change",
     "alt": "An Earth-only classroom estimate gives acceleration magnitude 2.8 times ten to the minus eight meters per second squared. If constant for 1.6 times ten to the seven seconds, the change is about 0.448 meters per second. Mr. Antocci says the Sun’s effect is larger here and gravity changes along the path.",
     "body": "This is a conditional estimate for a fictional scenario. It is not a complete orbit forecast.",
@@ -59,7 +59,7 @@ function comic(s){return `<section data-label="${s.title}" class="foundation-com
  <div style="font:24px 'IBM Plex Mono',monospace;letter-spacing:2px;color:#a9a7ff;">2026-XJ · What Changes · Graphic novel, page ${s.page}</div>
  <h2 style="font-size:64px;line-height:1.1;font-weight:500;margin:22px 0 30px;">${s.title}</h2>
  <div style="display:grid;grid-template-columns:1.55fr 1fr;gap:52px;align-items:center;flex:1;min-height:0;">
-  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" style="width:100%;height:auto;max-height:610px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-07-v1/${s.file}" width="1024" height="1536"/></svg>
+  <svg role="img" aria-label="${s.alt}" viewBox="0 ${s.y} 1024 ${s.height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;justify-self:center;max-width:${Math.floor(610*1024/s.height)}px;display:block;background:#fff;border:2px solid #9291bf;"><title>${s.alt}</title><image href="/comics/2026-xj/book-one-day-07-v1/${s.file}" width="1024" height="1536"/></svg>
   <div><p style="font-size:32px;line-height:1.4;margin:0 0 28px;">${s.body}</p><p style="font-size:38px;line-height:1.25;margin:0;">${s.question}</p></div>
  </div><div style="font:24px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:28px;">${s.work} · Write your own answer in Work.</div>
  <footer style="font:20px 'IBM Plex Mono',monospace;color:#c8c7e2;margin-top:22px;">Fictional story · Original artwork · Day 7</footer></section>`;}
@@ -77,11 +77,38 @@ let html=original.replace(/<section\b[^>]*>[\s\S]*?<\/section>/g,section=>{
 
  return section+(snapshots.find(s=>s.after===index)?comic(snapshots.find(s=>s.after===index)):'');
 }).replace(/ data-speaker-notes="[^"]*"/g,'');
+// Keep the four existing Work stops while ordering examples within each stop.
+const sequence = [
+  [1, 2, 3, 4, 5, 6, 7, 9, 10, 13, 14, 8, 11, 12, 15], // Observe, define, model, then try.
+  [16, 17, 19, 20, 18, 21], // Read graphs, interpret direction, then predict.
+  [25, 26, 27, 28, 29, 22, 23, 24], // Practice signs, then return to the asteroid.
+  [30], // Independent exit.
+].flat();
+const sectionPattern = /<section\b[^>]*>[\s\S]*?<\/section>/g;
+const imported = html.match(sectionPattern);
+if (sequence.length !== imported.length || new Set(sequence).size !== imported.length ||
+    sequence.some(n => !imported[n - 1])) throw Error('Invalid Day 7 reading order');
+let position = 0;
+html = html.replace(sectionPattern, () => imported[sequence[position++] - 1]);
 let number=0;
 html=html.replace(/<section\b[^>]*>[\s\S]*?<\/section>/g,section=>{number++;return section.replace(/data-screen-label="[^"]*"/,`data-screen-label="${String(number).padStart(2,'0')}"`).replace(/Antocci Physics · \d{2} \/ 29/g,`Antocci Physics · ${String(number).padStart(2,'0')} / 30`);});
 html = require('../foundation-groups/slide-copy.cjs')(html);
+// Place each teaching step in the deck and its accessible text companion.
+const teachingSteps = require('./teaching-steps.json');
+html = html.replace(/<section\b[^>]*>[\s\S]*?<\/section>/g, section => {
+  const title = section.match(/data-label="([^"]+)"/)[1];
+  const step = teachingSteps[title];
+  if (!step) throw Error('Missing teaching step for ' + title);
+  const note = '<div class="teaching-step" style="display:none;">' + step + '</div>';
+  // Reuse the running footer space while keeping cover and artwork credits.
+  const footer = /<div style="margin-bottom:34px;border-top:[^>]+><div>Day [\s\S]*?<\/div><\/div>/;
+  if (footer.test(section)) return section.replace(footer, note);
+  const credit = /<footer |<div style="margin-bottom:40px;align-self:flex-start/;
+  if (!credit.test(section)) throw Error('Missing slide credit for ' + title);
+  return section.replace(credit, match => note + match);
+});
 const plain=n=>n.nodeName==='#text'?n.value.replace(/\{\{[^}]+\}\}/g,''):['button','script','style','image'].includes(n.tagName)?'':n.tagName==='sc-if'&&n.attrs.some(a=>/q\dOpen/.test(a.value))?'':(n.childNodes||[]).map(plain).join(' ');
-const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,title:m[1].match(/data-label="([^"]+)"/)[1],text:plain(p5.parseFragment(m[0])).replace(/\s+/g,' ').trim()}));
+const slides=[...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)].map((m,i)=>({number:i+1,comicPage:m[0].match(/<image\b[^>]*\bhref="(\/comics\/2026-xj\/[^"]+\.webp)"/)?.[1],teachingStep:teachingSteps[m[1].match(/data-label="([^"]+)"/)[1]],title:m[1].match(/data-label="([^"]+)"/)[1],text: require('../foundation-groups/slide-language.cjs').companion(p5.parseFragment(m[0]))}));
 const vendor='resources/foundations/day-one/vendor';
 const libraries=[['react.production.min.js','DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z'],['react-dom.production.min.js','gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1']].map(([file,integrity])=>{const bytes=fs.readFileSync(path.join(vendor,file));if(crypto.createHash('sha384').update(bytes).digest('base64')!==integrity)throw Error('Runtime integrity mismatch');return script(bytes.toString());}).join('\n');
 const stage=fs.readFileSync(base+'/deck-stage.js','utf8'),support=fs.readFileSync(base+'/support.js','utf8');

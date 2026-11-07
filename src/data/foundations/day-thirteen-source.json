@@ -1,0 +1,44 @@
+{
+  "project": "Asteroid 2026-XJ briefing",
+  "file": "Day 13 F-ma in Practice.dc.html",
+  "sourceSha256": "168f04f283951dfc1b686bb2b7590ee38e521fb2813604a5c5f8fa442a6252b8",
+  "packagedSha256": "c7520cd62043e914e20df757228792032623a479da9e547175bec9baeb87713e",
+  "sourceStudentSlides": 27,
+  "teacherSlidesExcluded": 3,
+  "studentSlides": 31,
+  "panels": [
+    [
+      9,
+      1,
+      1,
+      380,
+      852
+    ],
+    [
+      19,
+      2,
+      2,
+      0,
+      758
+    ],
+    [
+      22,
+      3,
+      3,
+      0,
+      929
+    ],
+    [
+      26,
+      4,
+      4,
+      78,
+      568
+    ]
+  ],
+  "timers": [
+    "pairs",
+    "exit"
+  ],
+  "lab": false
+}

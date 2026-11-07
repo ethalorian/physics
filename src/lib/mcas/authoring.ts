@@ -5,7 +5,7 @@ import type {ContentBlock} from '@/data/content-blocks'
 export function mcasQuizQuestion(item:McasSummary,targetId='',id=crypto.randomUUID()):QuizQuestion {
   const choice=item.type==='multiple_choice',open=item.type==='open_response'
   const guide=item.answer?`Official DESE key: ${item.answer}. ${choice?'Award the available point for the correct choice.':'Semicolons separate successive parts; commas separate multiple selections. Review point criteria before publishing.'}`:''
-  return {id,mcas_id:item.id,kind:choice?'choice':open?'problem':'written',prompt:`MCAS ${item.year} · Question ${item.number}\n${choice?'Choose one answer from the original question.':open?'Respond to every labeled part. Use the drawing tools where a graph or model is requested.':'Record the requested selections for every labeled part, using the original answer letters.'}`,target_id:targetId,points:choice?1:open?4:2,guide,...(choice?{options:['A','B','C','D'],correct_index:item.answer&&/^[A-D]$/.test(item.answer)?item.answer.charCodeAt(0)-65:-1}:{})}
+  return {id,mcas_id:item.id,kind:choice?'choice':open?'problem':'written',prompt:`MCAS ${item.year} · Question ${item.number}\n${choice?'Choose one answer from the original question.':open?"Answer every labeled part. Use the drawing tools when you are asked to draw a graph or diagram.":'Record the requested selections for every labeled part, using the original answer letters.'}`,target_id:targetId,points:choice?1:open?4:2,guide,...(choice?{options:['A','B','C','D'],correct_index:item.answer&&/^[A-D]$/.test(item.answer)?item.answer.charCodeAt(0)-65:-1}:{})}
 }
 
 export function mcasLessonBlock(item:McasSummary,targetId:string,id=crypto.randomUUID()):ContentBlock {

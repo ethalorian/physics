@@ -622,7 +622,7 @@ export const fluidLessons = {
     },
     "check": {
       "title": "Predict and explain",
-      "prompt": "Which condition is needed for this simple Bernoulli comparison?",
+      "prompt": "What must be true to use this simple Bernoulli comparison?",
       "options": [
         "Negligible energy loss between the selected points.",
         "Any two unrelated moving fluids.",
@@ -899,7 +899,7 @@ export const fluidLessons = {
     ],
     "worked": {
       "title": "Work it through",
-      "prompt": "A tube radius decreases to half while other Poiseuille conditions stay fixed. What happens to flow?",
+      "prompt": "A tube’s radius decreases to half its original value. Everything else required by the Poiseuille equation stays the same. What happens to flow?",
       "reasoning": "Q becomes (1/2)⁴ = 1/16 of its previous value. Maintaining the old flow would require sixteen times the pressure difference."
     },
     "check": {
@@ -1038,7 +1038,7 @@ export const fluidLessons = {
     ],
     "worked": {
       "title": "Work it through",
-      "prompt": "If diffusion across a distance takes 2 seconds, estimate the time across three times that distance under the same conditions.",
+      "prompt": "If diffusion across a distance takes 2 seconds, estimate the time across three times that distance with the same setup.",
       "reasoning": "The characteristic time grows as distance squared, so the estimate is 9 × 2 = 18 seconds."
     },
     "check": {
@@ -1050,7 +1050,7 @@ export const fluidLessons = {
         "neither side under every condition."
       ],
       "correct": 0,
-      "hint": "State the equal-pressure and selective-permeability assumptions.",
+      "hint": "State whether you treat the pressures as equal and which particles you allow to cross the membrane.",
       "feedback": [
         "Correct under these initial conditions; a pressure difference can later oppose the transfer.",
         "That reverses the initial osmotic tendency.",

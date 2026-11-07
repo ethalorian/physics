@@ -9,7 +9,7 @@
     "Use speed and distance to estimate travel time.",
     "Explain why a simple travel time does not predict damage."
   ],
-  "source_sha256": "7985d403bdf96a03090d4ed40d88bf16bd9e07a8defdc189f554a032e13da1b5",
+  "source_sha256": "41b3094d29f4c96788e07f3b077c629d5291be8d88b1553a7f05330731a938e0",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.555Z",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "A long ocean wave passes a floating marker. Which distinction is appropriate in a simple wave model?",
+      "prompt": "A long ocean wave passes a floating marker. Which statement correctly compares the wave’s motion with the marker’s motion?",
       "options": [
         "The disturbance travels across water while a water parcel moves locally.",
         "Every parcel must travel from the source to the shore at wave speed.",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "A model wave travels 360 km at a constant 180 km/h. What is travel time?",
+      "prompt": "A wave travels 360 km at a constant 180 km/h. How long does it take?",
       "options": [
         "180 h",
         "64,800 h",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "A simple model predicts when a coastal wave arrives. What else is needed to estimate local damage?",
+      "prompt": "A simple calculation predicts when a coastal wave will arrive. What else is needed to estimate local damage?",
       "options": [
         "Nothing; arrival time uniquely determines damage.",
         "Only the predicted arrival time.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "Two coastal sites have the same modeled arrival time but different shoreline shapes. Which claim is justified?",
+      "prompt": "Two coastal sites have the same predicted wave arrival time but different shoreline shapes. Which conclusion can you support?",
       "options": [
         "They need not experience the same wave height or damage.",
         "They must experience identical damage.",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "A long ocean wave passes a floating marker. Which distinction is appropriate in a simple wave model?",
+      "prompt": "A long ocean wave passes a floating marker. Which statement correctly compares the wave’s motion with the marker’s motion?",
       "options": [
         "Ocean waves require no water.",
         "Every parcel must travel from the source to the shore at wave speed.",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "A model wave travels 360 km at a constant 180 km/h. What is travel time?",
+      "prompt": "A wave travels 360 km at a constant 180 km/h. How long does it take?",
       "options": [
         "180 h",
         "0.50 h",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "A simple model predicts when a coastal wave arrives. What else is needed to estimate local damage?",
+      "prompt": "A simple calculation predicts when a coastal wave will arrive. What else is needed to estimate local damage?",
       "options": [
         "Only the predicted arrival time.",
         "Wave size and energy, coastal geometry, and local exposure or vulnerability.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "Two coastal sites have the same modeled arrival time but different shoreline shapes. Which claim is justified?",
+      "prompt": "Two coastal sites have the same predicted wave arrival time but different shoreline shapes. Which conclusion can you support?",
       "options": [
         "Equal time proves equal water depth everywhere.",
         "They need not experience the same wave height or damage.",

@@ -7,9 +7,9 @@
   "criteria": [
     "Identify horizontal and vertical velocity components.",
     "Use the same elapsed time for both axes.",
-    "State the negligible-air-resistance assumption."
+    "State that you are treating air resistance as small enough to ignore."
   ],
-  "source_sha256": "bb78525db82206334f8379d95549cd893418e7eb2be7aee90e13c541846f4bfc",
+  "source_sha256": "3d2851a79459dc91a3adf7bab75092ac4e7677c2e182cc64353329edc08f2c92",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.494Z",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "prompt": "Which assumption allows horizontal velocity to remain constant after launch?",
+      "prompt": "What must be true for horizontal velocity to stay constant after launch?",
       "options": [
         "Negligible horizontal force, including air resistance.",
         "No gravitational force.",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "Strong air resistance slows a real projectile horizontally. What must change in the ideal model?",
+      "prompt": "Strong air resistance slows a real projectile horizontally. What must change in a prediction that leaves out air resistance?",
       "options": [
         "Continue using constant vx without qualification.",
         "Allow horizontal velocity to vary with time.",
@@ -246,7 +246,7 @@
       }
     },
     {
-      "prompt": "Which assumption allows horizontal velocity to remain constant after launch?",
+      "prompt": "What must be true for horizontal velocity to stay constant after launch?",
       "options": [
         "No gravitational force.",
         "An increasing horizontal acceleration.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "Strong air resistance slows a real projectile horizontally. What must change in the ideal model?",
+      "prompt": "Strong air resistance slows a real projectile horizontally. What must change in a prediction that leaves out air resistance?",
       "options": [
         "Allow horizontal velocity to vary with time.",
         "Remove elapsed time from both axes.",

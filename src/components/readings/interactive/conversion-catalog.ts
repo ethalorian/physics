@@ -1,3 +1,5 @@
+import chapters from '@/data/etf-original/chapters.json'
+import { etfSectionId } from '@/data/etf-original/source'
 import { TEXTBOOK_CHAPTERS } from '@/data/textbook'
 import { TEXTBOOK_SECTIONS } from '@/data/textbook-sections'
 import honorsChapters from '@/data/honors-textbook-chapters.json'
@@ -7,6 +9,7 @@ import type { TextbookId } from './reader-contract'
 
 /** Source inventory stays comprehensive; only reviewed sections become available. */
 export const conversionCatalog = [
+  ...chapters.map(c => ({book:'etf' as TextbookId, chapter:c.number,title:c.title,sections:[etfSectionId(c.number)],pdfUrl:c.url})),
   ...TEXTBOOK_CHAPTERS.map(c => ({ book: 'hewitt' as TextbookId, chapter: c.n, title: c.title, sections: TEXTBOOK_SECTIONS[c.n]?.sections.map(s => s.id) ?? [], pdfUrl: `/textbook?ch=${c.n}&lang=en` })),
   ...honorsChapters.map(c => ({ book: 'openstax' as TextbookId, chapter: c.number, title: c.title, sections: openstax.sections.filter(s => Number(s.id.split('.')[0]) === c.number).map(s => s.id), pdfUrl: `/textbook/honors?page=${c.from}` })),
 ].map(c => {

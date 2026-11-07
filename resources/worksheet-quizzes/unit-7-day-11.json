@@ -9,7 +9,7 @@
     "Use E=Pt with seconds for joules.",
     "Distinguish power from total energy."
   ],
-  "source_sha256": "8d88105f8a9212046518447081aec7b5b7a3b1217aed832242ad13cc704748e2",
+  "source_sha256": "d5e3a815cc8f4bc68d5fdb20e7ceefe996bdbc1be81ae936a98a012ef315cc5b",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.565Z",

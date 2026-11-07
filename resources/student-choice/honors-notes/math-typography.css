@@ -1,0 +1,10 @@
+@font-face{font-family:'Binder Math';font-style:italic;font-weight:400;src:url('./fonts/KaTeX_Math-Italic.woff2') format('woff2')}
+@font-face{font-family:'Binder Math Roman';font-style:normal;font-weight:400;src:url('./fonts/KaTeX_Main-Regular.woff2') format('woff2')}
+.math-var{font-family:'Binder Math',serif;font-style:italic;font-weight:400;font-size:1.08em;line-height:0;letter-spacing:0}
+.math-symbol .math-var,.math-symbol .math-operator{font-size:18px}
+div[style="font-size:17px;font-weight:500;line-height:1.2"] .math-var{font-size:1em}
+.math-operator{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;line-height:0;letter-spacing:0}
+.math-index{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;font-size:.74em;line-height:0;vertical-align:-.24em;letter-spacing:0}
+.math-unicode-index{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;font-size:.74em;line-height:0;vertical-align:-.24em;letter-spacing:0}
+svg .math-unicode-index{baseline-shift:sub}
+.math-svg-index{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;font-size:74%;baseline-shift:sub;letter-spacing:0}

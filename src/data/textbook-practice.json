@@ -1,0 +1,179 @@
+{
+  "26": {
+    "Think and Solve #45": "A bat makes a sound in a cave and hears its echo 0.10 s later. **Use calculations to show** that the cave wall is 17 m away.",
+    "Think and Solve #47": "You clap in a cave and hear an echo 1 second later. **How far away is the cave wall?**",
+    "Think and Solve #48": "Susie hits a wood block 85 m from a brick wall. She hears an echo 0.5 s after each hit. **Use these measurements to show** that the speed of sound is 340 m/s.",
+    "Think and Solve #44": "Sound travels at about 340 m/s. **Find its wavelength at each frequency.**\n\n1. 20 Hz\n2. 20 kHz",
+    "Think and Solve #49": "Middle C on a keyboard has a frequency of 256 Hz.\n\n1. Use calculations to show that one vibration takes 0.00391 s.\n2. The sound travels through air at 340 m/s. Use calculations to show that its wavelength is 1.33 m.",
+    "Think and Solve #51": "Sounds at 240 Hz and 243 Hz occur at the same time. **What beat frequency do you hear?**",
+    "Think and Solve #52": "Two notes play together. One has a frequency of 440 Hz. You hear a beat frequency of 5 Hz. **What could the other note's frequency be?**"
+  },
+  "3": {
+    "Think and Solve #51": "**Calculate** your mass in kilograms and your weight in newtons.",
+    "Think and Solve #53": "A car has a mass of 1800 kg. **Find its weight in newtons.**",
+    "Think and Solve #52": "A car weighs about 3000 pounds. **Find its mass in kilograms.**"
+  },
+  "4": {
+    "Think and Solve #52": "An apple falls from a tree and hits the ground 1.5 s later. **Find its speed just before it hits the ground.**",
+    "Think and Solve #53": "On another planet, a falling object accelerates at 20 m/s². An object is dropped from rest. **How far does it fall in 1.8 s?**",
+    "Think and Solve #56": "Kenny drops a book from a balcony. It hits the ground 1.5 s later. Ignore air resistance.\n\n1. Find the book's speed just before it hits the ground.\n2. Find the height of the balcony.",
+    "Think and Solve #51": "A race car moves north at 15 m/s. After 4 seconds, it moves north at 25 m/s. **Find its acceleration during these 4 seconds.**",
+    "Think and Solve #54": "You throw a ball straight up at 10 m/s.\n\n1. How long does it take to reach zero speed?\n2. How long does it take to return to its starting point?\n3. How fast is it moving when it returns?"
+  },
+  "6": {
+    "Think and Solve #55": "A jet has a mass of 30,000 kg. Each of its four engines provides 30,000 N of thrust during takeoff. **Find the jet's acceleration.**",
+    "Think and Solve #62": "In this problem, use 30g as the given limit for slowing down during a crash. **Calculate the force on a 70 kg person slowing down at 30g.**",
+    "Think and Solve #58": "Toby has a mass of 100 kg. He is skateboarding at 9.0 m/s when he hits a wall and stops in 0.2 s. **Use calculations to show** that he slows down at 45 m/s², about 4.5 times g.",
+    "Think and Solve #65": "A 10 kg object is on a horizontal air track with no friction. A string runs over a pulley and connects it to a hanging 10 kg object. Use the diagram.\n\n![A 10 kg object on a horizontal air track is connected by a string over a pulley to a hanging 10 kg object.](/assignment-figures/air-track-pulley.svg)\n\n1. Find the force of gravity on the hanging object, in newtons.\n2. Find the acceleration of the two objects together.",
+    "Think and Solve #57": "Irene applies a net force of 10.0 N to a 6.7 kg cart for 3.0 s. **Use calculations to show** that the cart's acceleration is 1.5 m/s².",
+    "Think and Solve #60": "A truck has a mass of 2000 kg. It slows from 22.0 m/s to rest in 4.0 s. **Use calculations to show** that the size of the braking force is 11,000 N.",
+    "Think and Solve #61": "A loaded truck accelerates at 1 m/s². It loses its load, so its mass becomes three-fourths of the original mass. The driving force stays the same. **Find its new acceleration.**",
+    "Think and Solve #56": "A net force makes a 2 kg cart accelerate at 3 m/s². **What acceleration would the same net force produce on a 4 kg cart?**",
+    "Think and Solve #59": "A net force of 10.0 N makes a foam box accelerate at 2.0 m/s². **Use calculations to show** that the box's mass is 5.0 kg."
+  },
+  "10": {
+    "Think and Solve #53": "A 1 kg object moves in a circle at 2 m/s on a string 2 m long. **Use F = mv²/r to find the tension in the string.**",
+    "Think and Solve #54": "Start with a 1 kg object moving at 2 m/s in a circle of radius 2 m on a string. **Find the string tension for each change.** Use the original values for everything that does not change.\n\n1. Double the mass.\n2. Double the speed.\n3. Double the string length, which is the radius.\n4. Double the mass, speed, and radius at the same time."
+  },
+  "34": {
+    "Think and Solve #59": "A lightning strike lasts 0.05 s and transfers 100 C of charge. **Find its current in amperes.**",
+    "Think and Solve #60": "A calculator uses a current of 0.0001 A. **How much charge flows through it each minute?**",
+    "Think and Solve #61": "**What voltage is needed for a current of 2 A to flow through a resistance of 8 Ω?**",
+    "Think and Solve #67": "A lightbulb carries 0.4 A when the voltage across it is 3.0 V. **Find the resistance of its filament.**",
+    "Think and Solve #68": "A lightbulb is marked “120 V, 60 W.”\n\n1. Find the current through its filament when it is on.\n2. Use calculations to show that the filament's resistance is 240 Ω.",
+    "Think and Solve #69": "A microwave oven is marked “120 V, 1100 W.”\n\n1. Find the current it draws.\n2. Use calculations to show that heating 380 g of water from 20°C to 86°C takes at least 95 s.",
+    "Think and Solve #74": "A toaster has a resistance of 14 Ω and is plugged into a 120 V outlet. **Find its power.**"
+  },
+  "35": {
+    "Think and Solve #51": "Speakers with resistances of 16 Ω and 8 Ω are connected in parallel to an amplifier. Treat the speakers as resistors. **Find their equivalent resistance.**",
+    "Think and Solve #53": "**How many 4 Ω resistors must be connected in parallel to give an equivalent resistance of 0.5 Ω?**",
+    "Think and Solve #54": "**Find the current through the battery in the circuit shown.** What must you find before you can calculate this current?\n\n![A 10 V battery connected to a 5 ohm resistor in series with two parallel 30 ohm resistors.](/assignment-figures/combination-circuit.svg)",
+    "Think and Solve #58": "For parallel branches, 1/R_eq = 1/R₁ + 1/R₂ + …. **Use algebra to show** that for two branches this becomes R_eq = (R₁R₂)/(R₁ + R₂).",
+    "Think and Solve #48": "A 30 Ω resistor is connected across 240 V. **Find the current through it.**",
+    "Think and Solve #49": "A lightbulb connected to a 3.0 V battery draws 1.2 A. **Find the bulb's resistance.**"
+  },
+  "8": {
+    "Think and Solve #60": "A 1200 kg car moves at 25 m/s. Its brakes bring it to rest in 20.0 s. **Use calculations to show** that the size of the braking force is 1500 N.",
+    "Think and Solve #62": "A 1 kg ostrich egg moves at 2 m/s when it hits a bed sheet. The sheet stops the egg in 0.2 s. **Use calculations to show** that the average force on the egg is 10 N.",
+    "Think and Solve #63": "A train engine weighs four times as much as a freight car. The engine moves at 5 km/h and hits the car, which is at rest. They join together. **How fast do they move just after joining?**",
+    "Think and Solve #65": "A 5 kg fish swims at 1 m/s and swallows a 1 kg fish that is at rest.\n\n1. Find the large fish's speed just after it swallows the small fish.\n2. Find its speed if the small fish had instead been swimming toward it at 4 m/s.",
+    "Think and Solve #57": "A 2 kg piece of putty moves at 3 m/s and hits a 2 kg piece at rest. They stick together.\n\n1. Find their speed just after the collision.\n2. Find their speed if the piece at rest had a mass of 4 kg instead.",
+    "Think and Solve #56": "A 1000 kg car moves at 20 m/s. **Find the braking force needed to stop it in 10 s.**",
+    "Think and Solve #61": "A 20.0 kg object moves at 3.0 m/s. A constant force of 15.0 N stops it. **Use calculations to show** that it takes 4.0 s to stop.",
+    "Think and Solve #55": "A 1000 kg car moves at 20 m/s, hits a building, and stops. **Decide which questions you can answer with this information. Explain why for each one.**\n\n1. What impulse acts on the car?\n2. What is the force on the car during the collision?",
+    "Think and Solve #58": "A 1 kg dart moves horizontally at 10 m/s. It hits and sticks to a 9 kg wood block on a level surface with no friction. **Find the speed of the block and dart just after the collision.**",
+    "Think and Solve #59": "An 8 kg bowling ball moves at 2 m/s, hits a spring, and bounces back at the same speed.\n\n1. Find its momentum after it bounces back.\n2. Find its change in momentum. Hint: compare this with a temperature change from 1° to −1°.\n3. The ball and spring interact for 0.5 s. Find the average force the spring exerts on the ball.",
+    "Think and Explain #51": "The same cannon fires a solid ball and then a hollow ball. **How would the cannon's backward motion differ? Explain why.**",
+    "Think and Solve #64": "In a comic, a superhero throws an asteroid at 100 m/s in space. The asteroid's mass is 1000 times the superhero's mass. The drawing shows the superhero at rest after the throw.\n\n1. According to physics, what should the superhero's backward speed be?\n2. Convert that speed to miles per hour.",
+    "Think and Solve #54": "**Use units to show** that kg·m/s and N·s are equivalent."
+  },
+  "5": {
+    "Think and Solve #39": "A vector is 14 units long and points 45° above the horizontal. **Find its horizontal and vertical components**—the part along each direction.",
+    "Think and Solve #38": "A boat is rowed at 8 km/h relative to the water, directly across a river. The river flows at 6 km/h. Use the diagram.\n\n![A boat points across the river at 8 km/h while the water flows downstream at 6 km/h.](/assignment-figures/river-boat.svg)\n\n1. Find the boat's speed relative to the shore.\n2. How fast and in what direction could the boat be rowed to reach a point directly across the river?",
+    "Think and Solve #44": "A boy throws a ball horizontally from the tower shown. **Find the speed of the ball when he throws it, in m/s.**\n\n![A horizontal throw from a 20 m tower lands 60 m from the base.](/assignment-figures/tower-throw.svg)",
+    "Think and Solve #45": "A cannonball is launched at 141 m/s, at 45° above the horizontal. It hits a balloon at the highest point of its curved path. Ignore air resistance.\n\n1. Find the cannonball's speed when it hits the balloon.\n2. Find its acceleration just before it hits.",
+    "Think and Solve #49": "Harry jumps to a height of 1.25 m and moves 3 m horizontally. **Find his hang time**—the total time he is in the air. Then find his hang time if he reaches the same height but moves 6 m horizontally.",
+    "Think and Solve #40": "Harry falls from a helicopter moving horizontally at 15 m/s. He lands in a pool 2 seconds later. Ignore air resistance. **How far horizontally was he from the pool when he fell?**",
+    "Think and Solve #46": "Joshua throws a stone horizontally from a cliff at 20 m/s. It hits the ground 2.0 s later.\n\n1. Use vectors to show that its speed just before it hits is about 28 m/s.\n2. Find the angle at which it hits the ground.",
+    "Think and Solve #42": "A balcony is 45 m above the ground. A pool is 15 m horizontally from the bottom of the building. **Calculate the horizontal speed needed to reach the pool from the balcony.**",
+    "Think and Solve #47": "A bowling ball rolls 10 m in 1 second, so its speed is 10 m/s. Now imagine dropping the ball from rest off a building. **What would its speed be after 1 second?**",
+    "Think and Solve #48": "A bowling ball rolls horizontally off a building at 10 m/s. **Find its speed 1 second later.** Hint: think about vectors."
+  },
+  "9": {
+    "Think and Explain #46": "A fly moves inside a fast-moving train. **Compare its kinetic energy measured relative to the train with its kinetic energy measured relative to the ground. Are they the same or different?**",
+    "Think and Solve #52": "A hammer falls from a roof and hits the ground. Imagine dropping it from a roof four times as high. Ignore air resistance.\n\n1. How would its kinetic energy just before hitting the ground compare?\n2. How would its speed just before hitting compare?",
+    "Think and Solve #54": "A car moving at 60 km/h skids 20 m when its brakes lock. **How far would it skid if it were moving at 120 km/h when its brakes locked?**",
+    "Think and Explain #47": "A driver uses the brakes to keep a car moving downhill at a constant speed. Its kinetic energy stays the same, but its potential energy decreases.\n\n1. Where does that energy go?\n2. Where does most of it go in a hybrid car?",
+    "Think and Solve #51": "A boulder weighs 1000 N and rests on a ledge 5 m above the ground.\n\n1. Find its gravitational potential energy relative to the ground, in joules.\n2. If it falls, find its kinetic energy just before it hits the ground.\n3. Find its speed just before it hits.",
+    "Think and Solve #50": "A stunt performer on a cliff has 10,000 J of potential energy. **Use calculations to show** that the performer has 8000 J of kinetic energy when the potential energy has fallen to 2000 J.",
+    "Think and Solve #53": "A car speeds up from 0 to 100 km/h in 10 s. **How long would this take if the engine supplied twice the power?**"
+  },
+  "14": {
+    "Think and Solve #43": "A satellite follows an elliptical orbit. At one point, its gravitational potential energy relative to Earth's surface is 5000 MJ and its kinetic energy is 4500 MJ. At another point, its potential energy is 6000 MJ. **Find its kinetic energy at the second point.**",
+    "Think and Solve #40": "**Calculate Earth's speed around the Sun, in m/s.** Treat the orbit as nearly circular.",
+    "Think and Solve #50": "A space shuttle orbits 200 km above Earth's surface. **Use T = 2π√(r³/GM) to show** that its orbital period is about 90 minutes.",
+    "Think and Solve #47": "Io, one of Jupiter's moons, is 4.2 × 10⁸ m from Jupiter's center. Its orbital period is 1.5 × 10⁵ s. **Calculate Jupiter's mass.**",
+    "Think and Solve #48": "A planet takes time T to travel once around a circular orbit of radius r. **Write its orbital speed in terms of r and T.**",
+    "Think and Solve #41": "A spaceship follows a circular orbit 2.0 × 10⁶ m from the Moon's center.\n\n1. Use calculations to show that its orbital period is 2.2 h.\n2. Use calculations to show that its speed relative to the Moon is about 5800 km/h.",
+    "Think and Solve #42": "**Calculate the Moon's speed around Earth, in m/s.** Treat the orbit as nearly circular."
+  },
+  "21": {
+    "Think and Solve #62": "A 50 g piece of metal at 100°C is placed in 400 g of water at 20°C. The water warms to 22°C. **Find the metal's specific heat capacity.**",
+    "Think and Solve #63": "An amount of heat raises a sample of iron's temperature by 10°C. **Use calculations to show** that the same heat would raise the temperature of an equal mass of lead by 35°C.",
+    "Think and Solve #54": "You want to warm 100 kg of bath water by 15°C. **Find the heat needed, in both calories and joules.**",
+    "Think and Solve #57": "Mix 50 g of water at 20°C with 50 g of water at 40°C. **Find the final temperature.**",
+    "Think and Solve #61": "Place 100 g of iron nails at 40°C into 100 g of water at 20°C. The specific heat of iron is 0.12 cal/(g·°C). **Find the final temperature.**"
+  },
+  "24": {
+    "Think and Solve #50": "A large bag of air floats 10 km above the ground. The air in the bag is at −35°C. Imagine pulling it suddenly down to Earth's surface. **Estimate the air's new temperature.**",
+    "Think and Explain #43": "**Is turning on all the lights a waste of energy in each building? Explain your reasoning for each answer.**\n\n1. A building heated by electricity.\n2. A building cooled by air conditioning.",
+    "Think and Explain #44": "**Why does whether a heat release counts as “thermal pollution” depend on the situation?** Explain what it depends on.",
+    "Think and Solve #51": "A car engine heats fuel to 2700 K. The outdoor air is at 300 K. **Find the engine's ideal efficiency.**",
+    "Think and Solve #55": "A heat engine takes in 100 kJ from a source at 800 K. It releases 50 kJ to a reservoir at 300 K. **Find both its ideal efficiency and its actual efficiency.**",
+    "Think and Solve #57": "In one cycle, an ideal heat engine releases 3800 J of heat and does 1200 J of useful work. Anthony says its efficiency is 0.24. **Use calculations to show that he is correct.**"
+  },
+  "13": {
+    "Think and Solve #57": "Two objects each double in mass. The distance between them also doubles. **How does the force of gravity between them change?**",
+    "Think and Solve #60": "Two planets each double in mass. Their distance apart stays the same. **By what factor does the force of gravity between them change?**",
+    "Think and Solve #58": "Imagine standing on a ladder so tall that your distance from Earth's center doubles. **How would your weight compare with your weight at Earth's surface?**",
+    "Think and Solve #59": "Imagine standing on a ladder at a distance of three Earth radii from Earth's center. **Use calculations to show** that your weight would be one-ninth of your weight at Earth's surface.",
+    "Think and Solve #61": "Two planets keep the same masses. Their distance apart becomes four times as large. **By what factor does the force of gravity between them change?**",
+    "Think and Solve #62": "Two planets keep the same masses. Their distance apart becomes one-fourth as large. **By what factor does the force of gravity between them change?**",
+    "Think and Solve #53": "Your weight is mg. Newton's equation for the force of gravity at Earth's surface is GMm/R². Here, M is Earth's mass and R is Earth's radius. **Set these expressions equal and show that g = GM/R².**",
+    "Think and Solve #55": "The symbol g can describe acceleration due to gravity or gravitational field strength. **Use units to show** that m/s² and N/kg are equivalent.",
+    "Think and Solve #56": "Imagine that Earth's diameter and mass both double. **By what factor would your weight change?**",
+    "Think and Solve #63": "Two planets keep the same masses. Their distance apart becomes one-fifth as large. **By what factor does the force of gravity between them change?**",
+    "Think and Solve #64": "Earth's mass is 6 × 10²⁴ kg. Its radius is 6.38 × 10⁶ m, or 6380 km. A space shuttle is 200 km above Earth's surface. **Use the inverse-square law to show** that gravity's force on the shuttle is about 94% of its value at Earth's surface."
+  },
+  "29": {
+    "Think and Solve #49": "You walk toward a mirror at 1 m/s. **How fast do you and your image get closer to each other?** The answer is not 1 m/s.",
+    "Think and Solve #51": "A spider hangs at eye level, 20 cm in front of a flat mirror. You stand behind the spider, 50 cm from the mirror. **Use calculations to show** that your eye is 70 cm from the spider's image.",
+    "Think and Solve #50": "A radio wave leaves Earth, hits an asteroid, and returns to Earth 1 second after it was sent. **How far away is the asteroid?**",
+    "Think and Solve #52": "Light slows to 0.75c when it enters a piece of plastic.\n\n1. How does its frequency change?\n2. How does its wavelength change?"
+  },
+  "33": {
+    "Think and Solve #36": "A charge of 50 μC feels a force of 2.0 N at a point in an electric field. **Find the electric field strength at that point.** Use 1 μC = 10⁻⁶ C.",
+    "Think and Solve #38": "A 12 μC charge is in an electric field of 350 N/C. **Use calculations to show** that the electric force on it is 0.0042 N.",
+    "Think and Solve #35": "You do 10 J of work to push 1 C of charge against an electric field.\n\n1. Find its voltage relative to its starting point.\n2. You release it. What is its kinetic energy as it passes its starting point?",
+    "Think and Solve #39": "You do 12 J of work to push 0.001 C of charge from point A to point B in an electric field.\n\n1. Find the voltage difference between A and B.\n2. You release the charge. Find its kinetic energy as it passes point A again. State the physics principle that supports your answer.",
+    "Think and Solve #40": "A 0.0001 C charge has 0.5 J of electric potential energy. **Find the voltage at its location.** Voltage and potential energy use the same reference point."
+  },
+  "22": {
+    "Think and Solve #40": "A car's cooling system holds 12 liters of water. The water warms from 20°C to 70°C. **Use calculations to show** that it absorbs 600 kilocalories.",
+    "Think and Solve #43": "In a lab, a 0.6 g peanut burns below 50 g of water. The water warms from 22°C to 50°C.\n\n1. Assume 40% efficiency. Use calculations to show that the peanut's food energy is 3500 calories, or 3.5 food Calories.\n2. Find its food energy in Calories per gram.",
+    "Think and Solve #44": "A hammer drives a 6 cm nail into wood with an average force of 500 N. The nail has a mass of 5 g and a specific heat capacity of 450 J/(kg·°C). Assume all the heat goes into the nail. **Use calculations to show** that its temperature rises by slightly more than 13°C."
+  },
+  "27": {
+    "Think and Solve #57": "A radio station broadcasts at 101 MHz, or 101 million vibrations per second. **Find the wavelength of its waves. How does that length compare with your height?**",
+    "Think and Solve #58": "Blue-green light has a frequency of about 6 × 10¹⁴ Hz.\n\n1. Use c = λf to show that its wavelength in air is 5 × 10⁻⁷ m.\n2. An atom's diameter is about 10⁻¹⁰ m. How many times larger is the wavelength than this diameter?",
+    "Think and Solve #59": "A laser pointer produces light with a wavelength of 533 nm.\n\n1. Find the light's frequency.\n2. Identify its color.",
+    "Think and Solve #64": "A laser pulse travels from Earth to the Moon and back. The distance between Earth and the Moon is 3.8 × 10⁸ m.\n\n1. Use calculations to show that the round trip takes about 2.5 s.\n2. Explain why an astronaut on the Moon must wait during a conversation with Mission Control on Earth."
+  },
+  "25": {
+    "Think and Solve #63": "A tuning fork vibrates at 340 Hz. Sound travels at 340 m/s. **How does the sound's wavelength compare with the length of a meter stick?**",
+    "Think and Solve #64": "A wave vibrates three times each second. Its wavelength is 2 m. **Find its frequency, period, and speed.**",
+    "Think and Solve #67": "Radio waves travel at 300,000 km/s. **Find the wavelength of an FM radio wave at 100 MHz.**",
+    "Think and Solve #61": "Melanie counts 84 heartbeats in one minute. She calculates a period of 0.71 s and a frequency of 1.4 Hz. **Are both results correct?**",
+    "Think and Solve #62": "A skyscraper is expected to sway in strong winds at 0.15 Hz. **How long would one complete back-and-forth swing take?**",
+    "Think and Explain #55": "One earthquake sends out transverse and longitudinal waves. The two types travel through the ground at different speeds. **How can scientists at different locations work out where the earthquake began?**"
+  },
+  "2": {
+    "Think and Solve #44": "Harry weighs 1200 N. He stands with one foot on each of two scales. One scale reads twice as much as the other. **Find both scale readings.**",
+    "Think and Solve #48": "Two children push a crate in the same horizontal direction. One pushes with 155 N; the other pushes with 187 N. The crate moves at a constant speed. **Use calculations to show** that the friction force is 342 N.",
+    "Think and Solve #42": "Two vertical chains hold up a log that weighs 1000 N. The tension in one chain is 400 N. **Find the tension in the other chain.**",
+    "Think and Solve #43": "Lucy stands with one foot on each of two scales. Each scale reads 300 N. **What is Lucy's weight?**"
+  },
+  "23": {
+    "Think and Solve #57": "**How much energy, in joules, is needed to melt 5 kg of ice at 0°C?**",
+    "Think and Solve #58": "**How much energy enters your body when 0.5 kg of steam condenses on your skin?** Condenses means changes from gas to liquid.",
+    "Think and Solve #61": "**How much energy, in joules, is needed to change 1 kg of ice at −10°C into steam at 120°C?**"
+  },
+  "32": {
+    "Think and Solve #47": "**By what factor does the electric force between two ions decrease when their distance apart is doubled? What if the distance is tripled?**",
+    "Think and Solve #48": "Two pellets each have a charge of 1 μC. They are 0.30 m apart. **Use calculations to show** that the electric force between them is 0.1 N."
+  },
+  "7": {
+    "Think and Solve #53": "A 60 kg person on roller skates pushes on a wall with a force of 30 N. **Find the person's acceleration away from the wall.**",
+    "Think and Solve #56": "A falling barrel weighs 100 N. It hits the pavement with a force of 5000 N. **Find the net force on the barrel while it hits the pavement.**"
+  }
+}

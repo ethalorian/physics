@@ -258,7 +258,7 @@ function ItemView({ item, value, result, disabled, onAnswer }: {
       <div className="flex items-start gap-2">
         <span className="text-sm font-semibold shrink-0" style={{ color: C.ink }}>{item.n}.</span>
         <div className="flex-1 min-w-0">
-          <div className="text-sm" style={{ color: C.ink }}><MathMarkdown content={item.prompt} />{tag}</div>
+          <div className="text-sm" style={{ color: C.ink }}><MathMarkdown questionEmphasis content={item.prompt} />{tag}</div>
           <div className="mt-1.5">
             {item.type === 'fill_in' && <FillIn item={item} value={value} disabled={disabled} onAnswer={onAnswer} />}
             {item.type === 'true_false' && <TrueFalse n={item.n} value={value as string} disabled={disabled} onAnswer={onAnswer} />}

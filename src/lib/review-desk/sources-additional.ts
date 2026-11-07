@@ -1,4 +1,5 @@
 import 'server-only'
+import { vocabChoiceEvidence } from './vocab-choice'
 import { NextRequest } from 'next/server'
 import { getMasteryStudentWork } from '@/lib/mastery-student-work'
 import { vocabularyProgress } from '@/lib/vocab-mastery'
@@ -39,7 +40,8 @@ export async function loadAdditionalSource(ctx:AuthContext,doc:ReviewDocument,na
       if(!sub?.completed_at)throw Error('No completed vocabulary submission is available.')
       // The source validates the complete evidence identity when a practice rating is released.
       const progress=vocabularyProgress(task as Parameters<typeof vocabularyProgress>[0],checks as Parameters<typeof vocabularyProgress>[1],reviews as Parameters<typeof vocabularyProgress>[2])
-      Object.assign(native,{sub,progress});doc.submissionId=sub.id;doc.version=sub.id;doc.evidence=(sub.result??[]).map((r:SourceRow)=>({id:r.term_id,prompt:r.term??task.words?.find((w:SourceRow)=>w.id===r.term_id)?.term??'Vocabulary response',response:r.response,guide:r.definition,targetIds:doc.targets.map(t=>t.id)}))
+      Object.assign(native,{sub,progress});doc.submissionId=sub.id;doc.version=sub.id;doc.evidence=(sub.result??[]).map((r:SourceRow)=>({id:r.term_id,prompt:r.term??task.words?.find((w:SourceRow)=>w.id===r.term_id)?.term??'Vocabulary response',response:r.response,guide:r.definition,...vocabChoiceEvidence(sub.items??[],{term_id:r.term_id,response:r.response,correct:r.correct}),targetIds:doc.targets.map(t=>t.id)}))
+      if(sub.items?.some((item:SourceRow)=>item.options?.length))doc.suggestionVersion=sub.id+':choice-labels-v1'
       if(task.task_kind==='quiz'){doc.gradeMode='points';doc.scoreItems=(sub.result??[]).map((r:SourceRow)=>({id:r.term_id,label:r.term??'Vocabulary response',possible:1,step:1,...(r.correct!==null&&r.correct!==undefined?{suggested:r.correct?1:0}:{})}))}else doc.targets.forEach(t=>t.allowSkip=false)
       doc.limitation='Vocabulary practice stays available to the student. A quiz reassessment uses the original assignment controls.'
     }

@@ -3,7 +3,7 @@ import { TEXTBOOK_SECTIONS } from '@/data/textbook-sections'
 import type { ReadingAssignment } from '@/lib/textbook-assignments'
 
 export interface TextbookGroupActivity { id:string; label:string; prompt:string; blockId:string|null; targetId:string|null; targetSlug:string|null; bookUrl:string; debrief:string }
-const debrief='Compare two groups’ explanations. Which evidence or equation supports the claim? Resolve one disagreement, then each student records a revised explanation.'
+const debrief='Compare two groups’ explanations. Which measurement, example, or equation supports the answer? Resolve one disagreement, then each student records a revised explanation.'
 export function collectTextbookActivities(doc:BlockDocument,chapters:{chapter:number;sections:ExSection[]}[],assignments:ReadingAssignment[]):TextbookGroupActivity[] {
  const activities:TextbookGroupActivity[]=[]
  for(const b of doc.blocks) {
@@ -14,7 +14,7 @@ export function collectTextbookActivities(doc:BlockDocument,chapters:{chapter:nu
     const section=TEXTBOOK_SECTIONS[b.chapter]?.sections.find(s=>s.id===id)
     if(section?.conceptCheck)activities.push({...base,id:`reading:${b.id}:${id}`,label:`§${id} · ${section.title}`,prompt:`Conceptual Physics §${id}, p. ${section.page}\n\n${section.conceptCheck}`})
    }
-   for(const n of b.thinkAndSolve??[])activities.push({...base,id:`solve:${b.id}:${n}`,label:`Chapter ${b.chapter} · Think and Solve ${n}`,prompt:`Open Conceptual Physics Chapter ${b.chapter}, Think and Solve question ${n}. Read the full problem and figure in the textbook, then agree on a solution with units and a reasonableness check.`})
+   for(const n of b.thinkAndSolve??[])activities.push({...base,id:`solve:${b.id}:${n}`,label:`Chapter ${b.chapter} · Think and Solve ${n}`,prompt:`Open Conceptual Physics Chapter ${b.chapter}, Think and Solve question ${n}. Read the full question in the textbook, including any figure supplied with it. Agree on a solution, include units, and check whether the answer makes sense.`})
   } else {
    for(const section of chapters.find(c=>c.chapter===b.chapter)?.sections??[]) {
     if(b.sectionIds?.length&&!b.sectionIds.includes(section.id))continue
@@ -26,5 +26,5 @@ export function collectTextbookActivities(doc:BlockDocument,chapters:{chapter:nu
  return activities
 }
 export function groupTextbookPrompt(activity:TextbookGroupActivity):string {
- return `${activity.prompt}\n\n1. Think independently for 30 seconds.\n2. Take turns explaining; check the text, diagram, or calculation together.\n3. Submit one group claim with evidence and reasoning. Include a diagram or equation when useful.\n4. Identify a disagreement or uncertainty to discuss.\n\n[Open textbook](${activity.bookUrl})`
+ return `${activity.prompt}\n\n1. Think independently for 30 seconds.\n2. Take turns explaining; check the text, diagram, or calculation together.\n3. Submit one group answer. Give a measurement, example, or calculation that supports it. Explain how it supports your answer. Include a diagram or equation when useful.\n4. Name one point you disagree about or are unsure of. Discuss it.\n\n[Open textbook](${activity.bookUrl})`
 }

@@ -8,5 +8,5 @@ export const GET = withAuth(async (_request, ctx) => {
     supabaseAdmin.rpc('student_term_xp', { p_user: ctx.userId }),
   ])
   if (report.error || term.error || !report.data) return NextResponse.json({ error: 'XP progress could not load. Please retry.' }, { status: 503 })
-  return NextResponse.json({ ...report.data, term: term.data ?? null })
+  return NextResponse.json({ ...report.data, term: term.data ?? null }, { headers: { 'Cache-Control':'private, no-store' } })
 })

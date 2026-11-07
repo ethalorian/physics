@@ -18,7 +18,7 @@ type StoryCopy = {
 export const READER_STORY: Record<StoryLanguage, StoryCopy> = {
   en: {
     title: 'You’re part of the story.',
-    intro: 'Join Mr. Antocci in the classroom. Make a prediction, test the model, and take the idea into our fictional asteroid investigation.',
+    intro: "Join Mr. Antocci in the classroom. Make a prediction, test it in the simulation, and take the idea into our fictional asteroid investigation.",
     language: 'Story language', show: 'Show story panels', classroom: 'Mr. Antocci’s physics class',
     you: 'You', sample: 'Sample student', customize: 'Change your look', missing: 'Open your avatar', loading: 'Loading your avatar…',
     prediction: 'Your prediction', selected: 'Prediction chosen. Now look for evidence.', test: 'Try the model below',

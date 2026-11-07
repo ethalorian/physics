@@ -9,7 +9,7 @@
     "Draw force arrows in physically correct directions.",
     "Remove velocity and net force as extra interaction arrows."
   ],
-  "source_sha256": "c0c841587c3a9b9f9efad0a9babe49ff76a8575dec6bd1365bcd960691f72cb9",
+  "source_sha256": "8384f16fd165ba13f24fe89873402c188ea2fbb3e175716eef5c25a2842bacd8",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.481Z",

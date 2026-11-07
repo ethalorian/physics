@@ -1,0 +1,5 @@
+.xpBadge { display: inline-flex; align-items: center; justify-self: start; gap: 4px; max-width: 100%; padding: 2px 7px; border-radius: var(--radius-full); background: var(--reward); color: var(--reward-foreground); font-size: .6875rem; font-weight: 650; line-height: 1.4; }
+.xpBadge svg { flex: none; }
+.xpBadge[data-xp=earned] { background: color-mix(in oklab,var(--success) 18%,var(--card)); color: var(--foreground); }
+.xpBadge[data-xp=pending] { background: var(--secondary); color: var(--secondary-foreground); }
+.explanation { color: var(--muted-foreground); font-size: .8125rem; line-height: 1.55; }

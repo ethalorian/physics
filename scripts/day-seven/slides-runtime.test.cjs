@@ -41,8 +41,8 @@ test('student copy excludes teacher-only content, retains all controls and conta
   const metadata = JSON.parse(fs.readFileSync('src/data/foundations/day-seven-source.json'));
   for (const snapshot of metadata.snapshots) assert.equal(crypto.createHash('sha256').update(fs.readFileSync('public/comics/2026-xj/book-one-day-07-v1/'+snapshot.file)).digest('hex'),snapshot.sha256);
   assert.ok(packaged.includes('prefers-reduced-motion: no-preference'));
-  assert.ok(packaged.includes('Earth-only estimate at this separation'));
-  assert.ok(packaged.includes('It does not include the Sun'));
+  assert.ok(packaged.includes('This estimate uses only Earth’s pull at this distance.'));
+  assert.ok(packaged.includes('It leaves out the Sun.'));
   assert.ok(!packaged.includes("that's why Day 5"));
   assert.ok(packaged.includes('foundation-slide-fade'));
   for(const page of ['01','02','03','04'])assert.ok(packaged.includes('/comics/2026-xj/book-one-day-07-v1/page-'+page+'.webp'));
@@ -89,11 +89,11 @@ test('original timers preserve pause/resume, extension, reset and one completion
 test('navigation bridge ignores foreign senders, channels and out-of-range requests', () => {
   const listeners = {}, messages = [], navigated = [], parent = {postMessage: (...args) => messages.push(args)};
   const stage = {index: 7, length: 30, goTo: index => navigated.push(index)};
-  const window = {parent, addEventListener: (type, listener) => {listeners[type] = listener;}};
+  const window = {parent, addEventListener: (type, listener) => {(listeners[type] ||= []).push(listener);}};
   const document = {referrer: 'https://lesson.example/interactive-assignments/day-1-foundation-briefing', querySelector: () => stage, addEventListener: () => {}};
   const bridge=nodes.filter(n=>n.tagName==='script'&&!attr(n,'type')).map(n=>p5.serialize(n)).find(code=>code.includes("const channel = 'physics-day-seven-slides-v1'"));
-  vm.runInNewContext(bridge, {window, document, URL});
-  const send = (source, origin, data) => listeners.message({source, origin, data});
+  vm.runInNewContext(bridge, {window, document, URL, MutationObserver: class {observe(){} disconnect(){}}});
+  const send = (source, origin, data) => listeners.message.forEach(listener => listener({source, origin, data}));
   const valid = {channel: 'physics-day-seven-slides-v1', type: 'navigate', index: 8};
   send({}, 'https://lesson.example', valid);
   send(parent, 'https://other.example', valid);

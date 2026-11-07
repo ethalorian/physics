@@ -9,7 +9,7 @@
     "Calculate distance per wheel revolution.",
     "Explain the tradeoff between ideal speed and available torque."
   ],
-  "source_sha256": "87953695371a70323ca75a2c83f7820e61db10f67e94ae9b908551340fdf7f80",
+  "source_sha256": "e7985a1220301dc054ca98942ad62812e8251d94edc839155986c2dbccd4f249",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.574Z",
@@ -90,7 +90,7 @@
       }
     },
     {
-      "prompt": "A wheel diameter is 0.10 m. Use π = 3.14. How far does it travel in two complete turns without slipping?",
+      "prompt": "A wheel diameter is 0.10 m.\n\n1. Use π = 3.14.\n2. How far does it travel in two complete turns without slipping?",
       "options": [
         "0.628 m",
         "6.28 m",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A team doubles wheel diameter and predicts twice the speed. Which condition is needed for that ideal prediction?",
+      "prompt": "A team doubles wheel diameter and predicts twice the speed. What must be true for this ideal prediction to work?",
       "options": [
         "The axle rate stays the same and the wheels do not slip.",
         "Axle rate must also double.",
@@ -224,7 +224,7 @@
       }
     },
     {
-      "prompt": "A wheel diameter is 0.10 m. Use π = 3.14. How far does it travel in two complete turns without slipping?",
+      "prompt": "A wheel diameter is 0.10 m.\n\n1. Use π = 3.14.\n2. How far does it travel in two complete turns without slipping?",
       "options": [
         "0.628 m",
         "0.314 m",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A team doubles wheel diameter and predicts twice the speed. Which condition is needed for that ideal prediction?",
+      "prompt": "A team doubles wheel diameter and predicts twice the speed. What must be true for this ideal prediction to work?",
       "options": [
         "Axle rate must also double.",
         "The axle rate stays the same and the wheels do not slip.",

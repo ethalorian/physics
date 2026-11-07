@@ -1,0 +1,1557 @@
+{
+  "version": "original-1805385887d1",
+  "sourceArtifact": "18e62b3a-7126-40f3-8ea3-7996d7bc4211",
+  "sourceFiles": [
+    {
+      "file": "_gen/build.js",
+      "sha256": "25bd0f5774b4e85673fc80a4049c972c9d65154d9e074e5990ffeacc6b6a1f20"
+    },
+    {
+      "file": "_gen/index-cards.html",
+      "sha256": "d0ec2db89537117c3a04ca5b1ced31b53993b027d5db270dda2335f497f9c691"
+    },
+    {
+      "file": "_gen/lib.js",
+      "sha256": "405edb0b14ee0949e894cde035eb6fe126b253fa841ec54d5e0c231d70dc66e5"
+    },
+    {
+      "file": "_gen/specs/d01.json",
+      "sha256": "59ed7e4b486435da4833e0c05f512b0f742eacc8b4ab4fd2c2c6c25c4778c45f"
+    },
+    {
+      "file": "_gen/specs/d02.json",
+      "sha256": "6db27f047ebebb394b6120174faf0de8cf82847dd68e32b8021e68188dd8a7bb"
+    },
+    {
+      "file": "_gen/specs/d03.json",
+      "sha256": "1f3163296aa9528ffe821a324c5d105a5773372d17213711a99525214c65974d"
+    },
+    {
+      "file": "_gen/specs/d04.json",
+      "sha256": "bf64a2254de2a02da2da0568a973a072217a3bad71855258d0c036aa8ac8a93f"
+    },
+    {
+      "file": "_gen/specs/d05.json",
+      "sha256": "d198332b1d4567f8490886a31b65314ab3c19ecd5ba94f170056ae90aba09008"
+    },
+    {
+      "file": "_gen/specs/d06.json",
+      "sha256": "291612a2b3ac49d73c33fe062567a6d5b8fcae2f7522e82c36e5491dcf7a0d1e"
+    },
+    {
+      "file": "_gen/specs/d07.json",
+      "sha256": "1f83b1fdaa64f720e2d0d50aab9a7314b3355040781cbcc757334d3e5595e5ec"
+    },
+    {
+      "file": "_gen/specs/d08.json",
+      "sha256": "ad4fc253bcb5c0c03fe4c5c0e0f820ddc0b917aa30df8d64fdfeecd895f0814a"
+    },
+    {
+      "file": "_gen/specs/d09.json",
+      "sha256": "209964c4a523ae494ec914fe9aabdad22996725d1b384a9479aef733d752d1a5"
+    },
+    {
+      "file": "_gen/specs/d10.json",
+      "sha256": "622095d72c29cb4af12d21b5e313934fbf8be1b93c240bcda56df4ac55b8516b"
+    },
+    {
+      "file": "_gen/specs/d11.json",
+      "sha256": "ad6bc7bc10e1773ec2f2183bfdcf40fdfcf022d15621f1390f2282dc86bbcf3e"
+    },
+    {
+      "file": "_gen/specs/d12.json",
+      "sha256": "e6d87dd00a10068190ff7d72209b33e0545e4020e05864b410e519bb7cfb3fd5"
+    },
+    {
+      "file": "_gen/specs/d13.json",
+      "sha256": "dc6f1934ac8a047b4b70c0d9c8cd1b103e4a4a23664178345c100c94af54369b"
+    },
+    {
+      "file": "_gen/specs/d14.json",
+      "sha256": "44fd105ac317763812681d04b3eb00831df1fa8e91daeae0f721c1b549f72bac"
+    },
+    {
+      "file": "_gen/specs/d15.json",
+      "sha256": "842e43ea3ee942d0d774e9ccae37142b34dc9d6aaae804b46396ddc742441198"
+    },
+    {
+      "file": "_gen/specs/d16.json",
+      "sha256": "f901282f0d4c9d8300e70758a162b55d0d46f73e124b77270d43e48ae5533f5a"
+    },
+    {
+      "file": "_gen/specs/d17.json",
+      "sha256": "1361333dd90e31c859bcfe991089e899ceb8fd2a589543868fa4d82aca476ad2"
+    },
+    {
+      "file": "_gen/specs/d18.json",
+      "sha256": "402232e92b4f9349783396d185a10b6a039c2126d42f2fb452acd011596329fe"
+    },
+    {
+      "file": "_gen/specs/d19.json",
+      "sha256": "5207d898f33a8a522c9a92b0da3109a35e64a68989a872049a78d17316e0fa63"
+    },
+    {
+      "file": "_gen/specs/d20.json",
+      "sha256": "a6298906490e93ad93efde035bcce93cfa430e06ecbda8328717ffc2aae0ecbd"
+    },
+    {
+      "file": "_gen/specs/d21.json",
+      "sha256": "8247f6e557a3d5253695b920c4497183c3d9ace4afdd4d0d5413d4c6169409a2"
+    },
+    {
+      "file": "_gen/specs/d22.json",
+      "sha256": "56d4f5536ffa64cfda6ce83416c316df3e169b9f4d65b0ccc64aff339f3a4b16"
+    },
+    {
+      "file": "compat.json",
+      "sha256": "975f87d06b74005cf9beb278cced22abb1e599adde2f71d8f93674540204418b"
+    },
+    {
+      "file": "doc-page.js",
+      "sha256": "f52ae9c02fca7ab44c37f3ff363194fdf81caa20ae63e2fe1f518ed21133185e"
+    },
+    {
+      "file": "fonts/mono400.ttf",
+      "sha256": "a7fdc993f9f0387caedba4e42521136fa97e4c0837ae6239bf0413ccf8af00c2"
+    },
+    {
+      "file": "fonts/mono500.ttf",
+      "sha256": "4fc14a73ca53ba9d32fd759ae1ca1a3133326035d0dd337862b3ee1633cc156e"
+    },
+    {
+      "file": "fonts/mono600.ttf",
+      "sha256": "754dfc9d50cf7aabfb6b108d2c2f7d20a3f1f2cc6f6c01640c6728091272cec0"
+    },
+    {
+      "file": "fonts/news400.ttf",
+      "sha256": "b8f5e0a8bdd6a12c722ca5635d9da87e77ccbb2d0172112e34e00c4e55f2cd5a"
+    },
+    {
+      "file": "fonts/news500.ttf",
+      "sha256": "68c4493c7c6c9aaff48defeeb6408e7ce705efc4c33363de4d9d6f5e07775064"
+    },
+    {
+      "file": "fonts/news600.ttf",
+      "sha256": "04188d5295f4e1100ce91a96b864f15b7af5be976e9fb9cc279af737be804272"
+    },
+    {
+      "file": "logo.png",
+      "sha256": "ef5d9c0520264b4cd91a20704b3b727b0ce2fe6373c88ae3e2bee827e2f5fce2"
+    },
+    {
+      "file": "Practice Style A - Mission File.dc.html",
+      "sha256": "cf84813e50f57025bd98066c875630b02e332cb643162d412f3f5a40bbf8ca53"
+    },
+    {
+      "file": "Practice Style B - Doodle Notes.dc.html",
+      "sha256": "ae7fab35bdf536abae9b651ca762fcee5440122600aac450893621550ca90d94"
+    },
+    {
+      "file": "Practice Style C - Unlock the Code.dc.html",
+      "sha256": "fc5bba78798aca610b45fec1ec0d7c0d906f2072655c31d56f629c5c831b9064"
+    },
+    {
+      "file": "Practice Style D - Choice Board.dc.html",
+      "sha256": "5c04db069d300c7879f084dcb0ddf4e130cfd427a99b2243431f1fc9f3c6fba8"
+    },
+    {
+      "file": "Practice Style E - Comic Storyboard.dc.html",
+      "sha256": "2e17cfd5958a7e968d3b747ddc4ff1a28f0988d068a7730460d66c4120bc373d"
+    },
+    {
+      "file": "Practice Style F - Graph Annotation.dc.html",
+      "sha256": "c3d40d4533c038652a6a53ab96db03a213d8709d8f08534e00a4754a145ca46d"
+    },
+    {
+      "file": "Practice Style G - Loop Chain.dc.html",
+      "sha256": "341c162e4aebeece51c652264371ebfaa40a7697073c96b77d578b68505d90de"
+    },
+    {
+      "file": "Practice Style H - Frayer Model.dc.html",
+      "sha256": "67b68efe4a051c95968c4ebe21325a7f8bc3a69da05b0c32af4cb2c782910c83"
+    },
+    {
+      "file": "Practice Style I - Who's Right.dc.html",
+      "sha256": "ff47c1a248c2584b62a7734aeeacd7432e8ec9ee1af57437e88bd1ac8b68640e"
+    },
+    {
+      "file": "Practice Style J - SEI Sentence Frames.dc.html",
+      "sha256": "0eb58ecc39322567dd2769246d01f232b54e2fcb3c78be9039bc70f4e5f2de76"
+    },
+    {
+      "file": "Practice Style K - SEI Visual Glossary.dc.html",
+      "sha256": "6532915c955921de163c883a1dbfbf45ed963b6c6a6204a8364aeaaca65eba4b"
+    },
+    {
+      "file": "Practice Style L - SEI Partner Talk.dc.html",
+      "sha256": "98272b1adf4682f65a2d1a300dac60e3c92f7f736ee84cf5991959f78d380a10"
+    },
+    {
+      "file": "Practice Style M - Read Draw Solve Write.dc.html",
+      "sha256": "4d8d93f565fe90e1e9a3603d8225f1dada78704b5a4bbcfa3c2ab06d0b34c535"
+    },
+    {
+      "file": "Practice Style N - Sort It.dc.html",
+      "sha256": "894c73d69a85e3f74fec650d11f95b95ebc7774c742d4c5033b2027dcbe9a059"
+    },
+    {
+      "file": "Practice Style O - Choose Your Path.dc.html",
+      "sha256": "031705f4c2ea20edf5afd2eca2a2c85c2953d24614e01e4a9084c2741bfca11e"
+    },
+    {
+      "file": "Practice Style P - Vector Racer.dc.html",
+      "sha256": "a4f39b24feaab445ca36529863fab44ffe8b3d342592c35d3dcd14f6413d358a"
+    },
+    {
+      "file": "Practice Style Q - The Daily.dc.html",
+      "sha256": "c4a208f1a182ec483c4185ca897a8f02080627019009d268ea647cc591c62bca"
+    },
+    {
+      "file": "Practice Style R - Group Chat.dc.html",
+      "sha256": "206e01337bba34f05936d595c13df3ade65058fa97ea41051299fdf354093506"
+    },
+    {
+      "file": "Practice Style S - Trading Cards.dc.html",
+      "sha256": "9041bc796a5c82a71b5cf608db7cf90e6f124758d8d76796099b147114ba2a9f"
+    },
+    {
+      "file": "Practice Style T - Crime Scene.dc.html",
+      "sha256": "c2f01973255595f27d7e6f71ddee200c6c08a67afc7f7cc5114617fcd83b0200"
+    },
+    {
+      "file": "Practice Style U - Recipe Card.dc.html",
+      "sha256": "a578cf0af510ea78c187449566f479347abac25be18407baebf7e092aa07a02a"
+    },
+    {
+      "file": "Practice Style V - Blueprint.dc.html",
+      "sha256": "1635a44270a16d69a1257d80c122b2eec8662f8b5702f0708ef580dbaad09191"
+    },
+    {
+      "file": "Practice Style W - Mic Check Lyrics.dc.html",
+      "sha256": "83da52d070c3d49ab9d2c06c0e1a50c62dc7ad1d643c25fb314f9ba8dbcccc1c"
+    },
+    {
+      "file": "Practice Style X - Instant Replay.dc.html",
+      "sha256": "d3343e4e5755952ec569455e46d3c6e88f6a6b86ececee51e2851adc4563eb15"
+    },
+    {
+      "file": "Practice Style Y - Wanted Posters.dc.html",
+      "sha256": "f134a5b8c0661e2dbec1337ffb6555c8470cf2cb4521f2beaffeb536fd18dd1a"
+    },
+    {
+      "file": "Practice Style Z - The Tank Pitch.dc.html",
+      "sha256": "dd9d4c24e24be5a293aefeaeab611628f38320de0860df19323624f97525cbec"
+    },
+    {
+      "file": "Practice Styles Gallery.dc.html",
+      "sha256": "8bf1658952c843dfa5da84eb961bc9a04eb57ab54b81bee77bf32263b70205a3"
+    },
+    {
+      "file": "screens/01-d1.jpg",
+      "sha256": "f1e9c9bba870799cd43fbd7eeecb607e9fba3f692e9a28e15bf7c9e949d804e3"
+    },
+    {
+      "file": "screens/01-d2.jpg",
+      "sha256": "71c2946a4a2f72ea74654552a5f38363389fd9d8be3778c9a7ee33bb9ca07706"
+    },
+    {
+      "file": "screens/01-d20.jpg",
+      "sha256": "bef9b15f445e4ea9e8236ee70d48b57fe60968fa4a69b356d1922cf0800c7233"
+    },
+    {
+      "file": "screens/01-d3.jpg",
+      "sha256": "1410ee07111d0473bc93b7b10a3f117f1be92b0a1db5a287907e26b947c30634"
+    },
+    {
+      "file": "screens/01-d9.jpg",
+      "sha256": "4653306f2b994f5cb0e1ddb9ab17932e3e19c2189ecddabdc9a4a7a1a0fe2975"
+    },
+    {
+      "file": "screens/01-g19.jpg",
+      "sha256": "c213f7338c4420f01e3de8f0e8f8d61244ac062d5784744ec3e2e1524c781377"
+    },
+    {
+      "file": "screens/01-p.jpg",
+      "sha256": "88e7ae9fcd1d34e4b9350fe402a364f05f77d7b18316f8069e9026f80d5d7d2b"
+    },
+    {
+      "file": "screens/02-d1.jpg",
+      "sha256": "a611628129b451e30c0513d3811d8cb30b78b58938866c3bb1f97e53c709baa6"
+    },
+    {
+      "file": "screens/02-d2.jpg",
+      "sha256": "736fff4d42ec5db404c80cdcafbf8ab95446f00f51a223723c698b85fc177c3e"
+    },
+    {
+      "file": "screens/02-d20.jpg",
+      "sha256": "ab47ae8c9b352696d0508aa92d4db19b5813bd51cf7090e06af5f3a4f1c38e57"
+    },
+    {
+      "file": "screens/02-d3.jpg",
+      "sha256": "e14e01af531d2db648ffd05b54d1a8065748ee7bb7affb07566f007a66197c9d"
+    },
+    {
+      "file": "screens/02-d9.jpg",
+      "sha256": "e8e6358feccab4adb102473fa746c68d3eb4c25de6c3cccd6b6f5a778f71f15b"
+    },
+    {
+      "file": "screens/02-g19.jpg",
+      "sha256": "263074f3056761f769c04a2edfb06dfd28ac5fdb6688d1946d44a25c8d8705cf"
+    },
+    {
+      "file": "screens/02-p.jpg",
+      "sha256": "1ad2edf06ba29d1733f42a6f6f161de21b5a9a40727dc2098a0b159a2b516f6b"
+    },
+    {
+      "file": "screens/a.jpg",
+      "sha256": "d75036a62b00fb7f77a3aea20db23b017c3b250e65a5890dba404ec4c8e32cc3"
+    },
+    {
+      "file": "screens/b.jpg",
+      "sha256": "d71356f235cfe2ebaee10a76255a3a6ddfe8afbbb746c0cff1dceab415a6678e"
+    },
+    {
+      "file": "support.js",
+      "sha256": "8fe7df74405f3c55f49b7249c74ea1397e65d07dea2b1bd3b4a489bec2e28cbe"
+    },
+    {
+      "file": "Unit 1 Color Code.dc.html",
+      "sha256": "7a519e22077007fc108d5ac51bdb0abf2dd73a470a727c0c204362e0d082fd15"
+    },
+    {
+      "file": "Unit 1 Day 01 Practice.dc.html",
+      "sha256": "83bce8935d3b72f686adf7756f03bd9eabcddc62c9f337dc9c4688544d3bd0e3"
+    },
+    {
+      "file": "Unit 1 Day 02 Practice.dc.html",
+      "sha256": "440b8c5d7722a245bf508ceb6eb9631f8d1a0a8f6f3ae7321e4a1c4d118a2ef6"
+    },
+    {
+      "file": "Unit 1 Day 03 Practice.dc.html",
+      "sha256": "86c197c4bd90d1fff8f34c03745ef4d7149d3e846d68b16c8b52db9dc81fe4bf"
+    },
+    {
+      "file": "Unit 1 Day 04 Practice.dc.html",
+      "sha256": "f03eca2f2d884ded68f816d35bc18b823349455739facc65ff6db585012cbf17"
+    },
+    {
+      "file": "Unit 1 Day 05 Practice.dc.html",
+      "sha256": "f2c42c787fc737f985f0a65e86cd3a4cff2dd3e46cd65a0473c3178c6322d62a"
+    },
+    {
+      "file": "Unit 1 Day 06 Practice.dc.html",
+      "sha256": "d3a2a3044b349c6a07c7218d9a7d949029a4708023c7fd5df4fc78a00c17a53c"
+    },
+    {
+      "file": "Unit 1 Day 07 Practice.dc.html",
+      "sha256": "4bf1326b4f539a5ca97163931d629f1f5d40a09444a0bdc62514fd301721ce5a"
+    },
+    {
+      "file": "Unit 1 Day 08 Practice.dc.html",
+      "sha256": "56a352f471391ae01194cf9fb7284750e2a7d5ba1716887f80c0fe097507fb52"
+    },
+    {
+      "file": "Unit 1 Day 09 Practice.dc.html",
+      "sha256": "2e813609f64d16fc878caf24802e28f2e5f1a73b4b231f42c9bbbf093f61fab1"
+    },
+    {
+      "file": "Unit 1 Day 10 Practice.dc.html",
+      "sha256": "1818df09202a8dd76eb1b09b913e78cdc7c5b1589f71a8d584aaf9ef3fad9e1b"
+    },
+    {
+      "file": "Unit 1 Day 11 Practice.dc.html",
+      "sha256": "b851e9587ea5668d2b86993b62574bb7b4721ac5e4f612e0efad91be9ed7a44b"
+    },
+    {
+      "file": "Unit 1 Day 12 Practice.dc.html",
+      "sha256": "69b1b5eb52f2c68e3d2057f42c2c82052d9f366c5f13f4f1455d4e76cf6b4db4"
+    },
+    {
+      "file": "Unit 1 Day 13 Practice.dc.html",
+      "sha256": "f7e3ee0e38822c16792679bbedd0818f62a6fc7b9a1fbc1d36f8e62cf8a83b8c"
+    },
+    {
+      "file": "Unit 1 Day 14 Practice.dc.html",
+      "sha256": "7a37830332c49ea1811017a55df287797d226cf922d3e2b919afadec536e19f8"
+    },
+    {
+      "file": "Unit 1 Day 15 Practice.dc.html",
+      "sha256": "ba35a916afffea5716a918e4f142b5d86ec80e628b62760b4934a80d4130762f"
+    },
+    {
+      "file": "Unit 1 Day 16 Practice.dc.html",
+      "sha256": "e67535d9bae3e6a78490b1be86dcf1ceaed771a33694d4f7d313fa0ba37a4ddf"
+    },
+    {
+      "file": "Unit 1 Day 17 Practice.dc.html",
+      "sha256": "50e1f3088c494594e3cd9b02f703c59c9424aec067fc0f4dac208c389f0df43a"
+    },
+    {
+      "file": "Unit 1 Day 18 Practice.dc.html",
+      "sha256": "55ef22a731416b136c547e9b113d6283f6dad80914c2e26780e8b592185efca1"
+    },
+    {
+      "file": "Unit 1 Day 19 Practice.dc.html",
+      "sha256": "9abb7bd8e5de94a95f847eb298f428695e52d37bd32d00d6d8fc7e3343985a39"
+    },
+    {
+      "file": "Unit 1 Day 20 Practice.dc.html",
+      "sha256": "86ea1300fe2123182740b1e2abdb97ad56b5f41ea0b5126396800b11efa8fcdc"
+    },
+    {
+      "file": "Unit 1 Day 21 Practice.dc.html",
+      "sha256": "d9f401e2ec9ee5b8dd9a743a6b2d8c61c40dc0cc5fb0840081a93f6630184ce1"
+    },
+    {
+      "file": "Unit 1 Day 22 Practice.dc.html",
+      "sha256": "99981f5a2f8f3fc368902cba2b6cd937b4bd9443cee0aacb73b6574d319a5a8f"
+    },
+    {
+      "file": "Unit 1 Honors Notebook Pages.dc.html",
+      "sha256": "7a2cb8ab2acf6027a2c694d17e279985ee2ba503e7bb66c19a86aa13a6a58ba9"
+    },
+    {
+      "file": "Unit 1 Honors Practice Pages.dc.html",
+      "sha256": "a8f8152d55ec73daa82dc1ba650b5b6dcb129265ca1b00baf0175e858c9d22ff"
+    },
+    {
+      "file": "Unit 1 Notebook Pages v2.dc.html",
+      "sha256": "b3958dcc01787250c9506c676d9bbfacf3b693ce7522d1509253965eecb5de94"
+    },
+    {
+      "file": "Unit 1 Notebook Pages.dc.html",
+      "sha256": "b5b026e997d77ab1a6337c7d970fc317fa8212d33385ad65a784b47287b418c7"
+    },
+    {
+      "file": "Unit 1 Practice Index.dc.html",
+      "sha256": "f631c207878b00217d0473964ff8086e9997b9b634c102e9d7454d70016d9d37"
+    },
+    {
+      "file": "Unit 1 Practice Pages v2.dc.html",
+      "sha256": "363c5bf90ae289029013085283aca66ac25c91eb90accf88bbb7d7ff130d352f"
+    },
+    {
+      "file": "Unit 1 Practice Pages.dc.html",
+      "sha256": "75ebd7b7e389fc47482b89da94b08880c4ec0b799a17418654dc0765ab8fa713"
+    }
+  ],
+  "pages": [
+    {
+      "file": "color-code.html",
+      "source": "Unit 1 Color Code.dc.html",
+      "sectionId": "color-code",
+      "sectionSha256": "f327373b9f5ff8daffd3a63bcbc732f406d8ab430ad415095ecddb4e5d7e834a",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-01-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-1",
+      "sectionSha256": "97cb026e5d345df994ec00c59944983e3354137ac8bcb8c5af3c618509aca2a4",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-01-honors-notes.html",
+      "source": "Unit 1 Honors Notebook Pages.dc.html",
+      "sectionId": "day-1",
+      "sectionSha256": "208b499ce7f624766f8e505e90efa910efa999b89641afa6e4608d9bdada4221",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-01-option-1.html",
+      "source": "Unit 1 Day 01 Practice.dc.html",
+      "sectionId": "d1-A",
+      "sectionSha256": "6368e74d5d7107f644371b2926c90bc508e24ac0ed761c5b9310f87c84e851a2",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-01-option-2.html",
+      "source": "Unit 1 Day 01 Practice.dc.html",
+      "sectionId": "d1-J",
+      "sectionSha256": "5052a78dd989258baee7805e9630f7ebb9c26cdb6feacece24439677ab171152",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-01-option-3.html",
+      "source": "Unit 1 Day 01 Practice.dc.html",
+      "sectionId": "d1-Q",
+      "sectionSha256": "596fa5eaaa58eb023fe210649ba445d295e2f5a250b96f31a6f8656467eeca72",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-01-option-4.html",
+      "source": "Unit 1 Day 01 Practice.dc.html",
+      "sectionId": "d1-K",
+      "sectionSha256": "cd02c1236e88504947bdf90f2320ed415422c99991f404e954d8981fa898e9f2",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-01-option-5.html",
+      "source": "Unit 1 Day 01 Practice.dc.html",
+      "sectionId": "d1-I",
+      "sectionSha256": "4a60724f5b11937ebdcb59c3dc70c54489cdd14fe8652aa42580e65072aa6645",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-01-option-6.html",
+      "source": "Unit 1 Day 01 Practice.dc.html",
+      "sectionId": "d1-N",
+      "sectionSha256": "64e87b9e4a0c8cc38d93c2530f8270b9102e6862ed20c62d87ccfaf2d5aa9636",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-02-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-2",
+      "sectionSha256": "0725f23cea3a2a5de5880baffe02800cb2e5e0ec45e189e681b4809e8c4574e6",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-02-honors-notes.html",
+      "source": "Unit 1 Honors Notebook Pages.dc.html",
+      "sectionId": "day-2",
+      "sectionSha256": "1e735a92cd75b3bb439d1bdeb347891e7c2c1ae5821e5c27afaf2bf836ea0008",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-02-option-1.html",
+      "source": "Unit 1 Day 02 Practice.dc.html",
+      "sectionId": "d2-H",
+      "sectionSha256": "df420bcf5090163e3acb00dd870076755155644cd38334f2160347905b266e0e",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-02-option-2.html",
+      "source": "Unit 1 Day 02 Practice.dc.html",
+      "sectionId": "d2-K",
+      "sectionSha256": "9637ef9f947cbb9b408cd3b4f51307f1c72e72b13b556e333fbe4013dd445c33",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-02-option-3.html",
+      "source": "Unit 1 Day 02 Practice.dc.html",
+      "sectionId": "d2-R",
+      "sectionSha256": "f1e10cf50cba3df9dbdc28a0b1e5220c5d6242a97ba849e0b953017b42764004",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-02-option-4.html",
+      "source": "Unit 1 Day 02 Practice.dc.html",
+      "sectionId": "d2-J",
+      "sectionSha256": "a95ff9689d4016549d2f906ef3715257d0c44ede13168eae78975652ec13830a",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-02-option-5.html",
+      "source": "Unit 1 Day 02 Practice.dc.html",
+      "sectionId": "d2-T",
+      "sectionSha256": "fd4b282fa64c90a7b9b5f2c8ce42866230e8fbe101c2fe9044cf2995d537c6e2",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-02-option-6.html",
+      "source": "Unit 1 Day 02 Practice.dc.html",
+      "sectionId": "d2-N",
+      "sectionSha256": "c1631d89f363ccea09f6340b173dc7d82a8017460b9abe10a6912404e683e6d2",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-03-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-3",
+      "sectionSha256": "c634d443d94410e408bd363e7638ea6c52cefec914254491be0ae82ec0140e1e",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-03-honors-notes.html",
+      "source": "Unit 1 Honors Notebook Pages.dc.html",
+      "sectionId": "day-3",
+      "sectionSha256": "92925a77a19b4dac9ff118bbd326a4ef8cdad92f815628ec74a2e356f275df7a",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-03-option-1.html",
+      "source": "Unit 1 Day 03 Practice.dc.html",
+      "sectionId": "d3-F",
+      "sectionSha256": "2c395bf6cb108143cb67ad2f878f8b064afc0a566ae341b10b8f92403d968630",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-03-option-2.html",
+      "source": "Unit 1 Day 03 Practice.dc.html",
+      "sectionId": "d3-K",
+      "sectionSha256": "a4998231ca8cf339710397522d9fb0880573f652a74bd973ab6254d5c495d838",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-03-option-3.html",
+      "source": "Unit 1 Day 03 Practice.dc.html",
+      "sectionId": "d3-X",
+      "sectionSha256": "6fd5f7427dd04bc6ce12f66b16f617444a533ea273c1636901d08303bac907be",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-03-option-4.html",
+      "source": "Unit 1 Day 03 Practice.dc.html",
+      "sectionId": "d3-M",
+      "sectionSha256": "3fefd8ab779347244337730d59989bfd446066d6869284bdcc8ec50c347c8322",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-03-option-5.html",
+      "source": "Unit 1 Day 03 Practice.dc.html",
+      "sectionId": "d3-L",
+      "sectionSha256": "2e9e86c624953159438a52c71aff35c8975d7407d570e9307c8fa0d6806c1eb5",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-03-option-6.html",
+      "source": "Unit 1 Day 03 Practice.dc.html",
+      "sectionId": "d3-C",
+      "sectionSha256": "0ed05a90ada33d099247ab7f8052abc8cfbd37ea76f375795c18139927e7b9cb",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-04-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-4",
+      "sectionSha256": "4a24629dd597b7866bafbd45e045ca63894429b641ec0100bf767fc067ddc2bb",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-04-option-1.html",
+      "source": "Unit 1 Day 04 Practice.dc.html",
+      "sectionId": "d4-F",
+      "sectionSha256": "8a0f543139e200ab26f9cc5deee08b10c19f0caacc7f285bfb119f42267dbb9b",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-04-option-2.html",
+      "source": "Unit 1 Day 04 Practice.dc.html",
+      "sectionId": "d4-D",
+      "sectionSha256": "572a12df72ecff338f3ac41e176a04cf248c0eca9c0587edecec936d3bbaa73b",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-04-option-3.html",
+      "source": "Unit 1 Day 04 Practice.dc.html",
+      "sectionId": "d4-J",
+      "sectionSha256": "be843a6c336aebc364c06630741faee32df6fbb9ce940116d842afa3efd0624e",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-04-option-4.html",
+      "source": "Unit 1 Day 04 Practice.dc.html",
+      "sectionId": "d4-K",
+      "sectionSha256": "df0380d6a100251cd5f4d167f7a33e3827d565172ebe96c1e3e48499e5f0a426",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-04-option-5.html",
+      "source": "Unit 1 Day 04 Practice.dc.html",
+      "sectionId": "d4-V",
+      "sectionSha256": "0f8e3669958b3cfab1ff88c83ac12b99941043bf70b0699114adfb76f606b9e1",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-04-option-6.html",
+      "source": "Unit 1 Day 04 Practice.dc.html",
+      "sectionId": "d4-G",
+      "sectionSha256": "2d370c604640ad7d9747db5adf111797410fbfd131b6c4beb9bb59f0d7bf44ad",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-05-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-5",
+      "sectionSha256": "20e2d667cf4e43b96b23082c2d9bdab53e2927617f50ff9960623ad113752d28",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-05-option-1.html",
+      "source": "Unit 1 Day 05 Practice.dc.html",
+      "sectionId": "d5-A",
+      "sectionSha256": "3cd7aa27f20675d799263b57d6be88b34d70af623056e4f0c582a9e2ce7550f9",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-05-option-2.html",
+      "source": "Unit 1 Day 05 Practice.dc.html",
+      "sectionId": "d5-M",
+      "sectionSha256": "6e525727c3728840d53029221b8573069f12053cb10ca51a22657b23f9865bff",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-05-option-3.html",
+      "source": "Unit 1 Day 05 Practice.dc.html",
+      "sectionId": "d5-K",
+      "sectionSha256": "42df5c6ce143b7d9bf89b92c9ed8c7635e065c83c61d23bd55ed148fa040ac62",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-05-option-4.html",
+      "source": "Unit 1 Day 05 Practice.dc.html",
+      "sectionId": "d5-Q",
+      "sectionSha256": "3a5e751bf4b7e55b2e4685a16d2fc671c20a396260812ef6bf00a52d48462dde",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-05-option-5.html",
+      "source": "Unit 1 Day 05 Practice.dc.html",
+      "sectionId": "d5-J",
+      "sectionSha256": "96a80bdb4e1a34f40bc8a051ec44238f0476c9936e60420c67c18f6b8b325e76",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-05-option-6.html",
+      "source": "Unit 1 Day 05 Practice.dc.html",
+      "sectionId": "d5-C",
+      "sectionSha256": "1d9eec97d7384cd8c15f6b66ecd714b34346dfcfba6c9e9c419214a33df0e78e",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-06-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-6",
+      "sectionSha256": "c64d37d6e0c083e7778580904868d39e767aba4cf36c1a432488c44f1d61e9fe",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-06-option-1.html",
+      "source": "Unit 1 Day 06 Practice.dc.html",
+      "sectionId": "d6-K",
+      "sectionSha256": "0ffcdf9ef3fdd50ce1cd4c10fd9ecbcbde48ce6579c4ff2c6822362e4d813d15",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-06-option-2.html",
+      "source": "Unit 1 Day 06 Practice.dc.html",
+      "sectionId": "d6-L",
+      "sectionSha256": "55127d7cf5290fa39606e19fb9cf9074c2399fa722125de1f96ce38d96ef5a37",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-06-option-3.html",
+      "source": "Unit 1 Day 06 Practice.dc.html",
+      "sectionId": "d6-T",
+      "sectionSha256": "a8b22a82bcbf155c5b6860ccdb65b2562621c3b3a54e5741a22caa4f39e8f579",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-06-option-4.html",
+      "source": "Unit 1 Day 06 Practice.dc.html",
+      "sectionId": "d6-H",
+      "sectionSha256": "7cf05d83c878869f94b8de7381a11375bb9a0da471c8e63f61250e6616be6aa8",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-06-option-5.html",
+      "source": "Unit 1 Day 06 Practice.dc.html",
+      "sectionId": "d6-M",
+      "sectionSha256": "303c728d15feb66210dcec4194142ae9a29889e8227467b80885188856340b64",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-06-option-6.html",
+      "source": "Unit 1 Day 06 Practice.dc.html",
+      "sectionId": "d6-G",
+      "sectionSha256": "907ce7f1936e4b9d657995d010f333e0ee9d6c076baedb59932e5f790f29b2b1",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-07-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-7",
+      "sectionSha256": "3cd1cef98d44534188c95ad42a10026a05f57aaf8895e5d6f74b5e3d6a3e79a2",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-07-option-1.html",
+      "source": "Unit 1 Day 07 Practice.dc.html",
+      "sectionId": "d7-C",
+      "sectionSha256": "63a8316200a50178866511964304905337d7c0b398f569e0b688bfa3b0f9df0c",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-07-option-2.html",
+      "source": "Unit 1 Day 07 Practice.dc.html",
+      "sectionId": "d7-L",
+      "sectionSha256": "c25da457944a174414e48a551f9f8e1019e5e89c38e7e6f0181b95f7e196f78b",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-07-option-3.html",
+      "source": "Unit 1 Day 07 Practice.dc.html",
+      "sectionId": "d7-I",
+      "sectionSha256": "25f5472efe523f29c887cd65c54d48d564d7fe13d82e35d785b3a36f2b6f090d",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-07-option-4.html",
+      "source": "Unit 1 Day 07 Practice.dc.html",
+      "sectionId": "d7-J",
+      "sectionSha256": "43c5ba9f64e662ad307232c2d0943963384c52167476394f3f8726f06110fb31",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-07-option-5.html",
+      "source": "Unit 1 Day 07 Practice.dc.html",
+      "sectionId": "d7-X",
+      "sectionSha256": "fc87e42c8671a4a85adebfe2093100eba8d58e5a60255fdd3155e4e112bd975f",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-07-option-6.html",
+      "source": "Unit 1 Day 07 Practice.dc.html",
+      "sectionId": "d7-G",
+      "sectionSha256": "0fb5b4130b64de23f22a61ad32c388e5f93caac11d1e4901873bccbfef9dbfb4",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-08-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-8",
+      "sectionSha256": "b716a1555b0514a97efa33b010eb0c737092853bc966fa5abb2d64c8d9ff8d6d",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-08-option-1.html",
+      "source": "Unit 1 Day 08 Practice.dc.html",
+      "sectionId": "d8-J",
+      "sectionSha256": "d0070cc6b4336429de43a3e5f3ffdd0875c3ed7e132c9d2b782b58257e9d8f8d",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-08-option-2.html",
+      "source": "Unit 1 Day 08 Practice.dc.html",
+      "sectionId": "d8-C",
+      "sectionSha256": "8f764eddcb741930733582a7a65a3c6ecb76383536679c3ef9073a2d189af511",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-08-option-3.html",
+      "source": "Unit 1 Day 08 Practice.dc.html",
+      "sectionId": "d8-V",
+      "sectionSha256": "014692b81e6a5966ef9ec06135a71164cb47a03884724065eca7239976e494e2",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-08-option-4.html",
+      "source": "Unit 1 Day 08 Practice.dc.html",
+      "sectionId": "d8-M",
+      "sectionSha256": "3aa9aefa6e517bea8261628550f94fc15bf932209ef1612f9ecdd22c4561914b",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-08-option-5.html",
+      "source": "Unit 1 Day 08 Practice.dc.html",
+      "sectionId": "d8-L",
+      "sectionSha256": "8a530c11d0011e778faffe41226c8256d8ffc6cbd3b67e66642dfdf53600022f",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-08-option-6.html",
+      "source": "Unit 1 Day 08 Practice.dc.html",
+      "sectionId": "d8-N",
+      "sectionSha256": "cb99c29a1f4c571999f9e1445830fd5e830e42f8759ff7c7f844020f351b4bd6",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-09-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-9",
+      "sectionSha256": "876cdb1d40163451faa1eb1baad9412b4b5e13cd4806ae2a72c2579b083e6e2e",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-09-option-1.html",
+      "source": "Unit 1 Day 09 Practice.dc.html",
+      "sectionId": "d9-L",
+      "sectionSha256": "9019ffc19d167179dea39889de67bb1421dafc4423917154c8cf50e0f6f5335c",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-09-option-2.html",
+      "source": "Unit 1 Day 09 Practice.dc.html",
+      "sectionId": "d9-Y",
+      "sectionSha256": "b0c5ca2fdd1c8c4de2111606b79ef9a48474d1addd79896bd6c37fcd5acf98fb",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-09-option-3.html",
+      "source": "Unit 1 Day 09 Practice.dc.html",
+      "sectionId": "d9-E",
+      "sectionSha256": "f370157eb1bc17798e2e5009c0210cd1579b717bf9201b029c9ab424c83ce41c",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-09-option-4.html",
+      "source": "Unit 1 Day 09 Practice.dc.html",
+      "sectionId": "d9-K",
+      "sectionSha256": "02c6655202b87673ca333e6baae7ea067089526b509aa444fedde9f797c91aa8",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-09-option-5.html",
+      "source": "Unit 1 Day 09 Practice.dc.html",
+      "sectionId": "d9-R",
+      "sectionSha256": "ac4518e36c6e61cecb067e5622a44fc0eb9099e6b1326175dde6e143a49e4589",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-09-option-6.html",
+      "source": "Unit 1 Day 09 Practice.dc.html",
+      "sectionId": "d9-I",
+      "sectionSha256": "0364462ca2e71df7af0804fc244906ec453c82aaa54c85d60209b21dc4047c7f",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-10-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-10",
+      "sectionSha256": "0b3c2815c442a07b7221319a264b604cce6762c4b7b5a2c3ef669d3f3b81a1a7",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-10-option-1.html",
+      "source": "Unit 1 Day 10 Practice.dc.html",
+      "sectionId": "d10-J",
+      "sectionSha256": "cf34a4fbc90f4255394383f781bfa10d4b658be2e6521a1f378af37a9c6a7a2f",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-10-option-2.html",
+      "source": "Unit 1 Day 10 Practice.dc.html",
+      "sectionId": "d10-H",
+      "sectionSha256": "8927c12a62a61f95628cf7c2c92de536b44d73db0c22d0380835c45356b9d0a1",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-10-option-3.html",
+      "source": "Unit 1 Day 10 Practice.dc.html",
+      "sectionId": "d10-K",
+      "sectionSha256": "bc33175685175a31245a94596e836eb6a5240d61844eaf6ed2a0c69c0ab16400",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-10-option-4.html",
+      "source": "Unit 1 Day 10 Practice.dc.html",
+      "sectionId": "d10-T",
+      "sectionSha256": "b5ce763084ea335ff0bd56b7ffccdf31e013202708023001988a814945c4463d",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-10-option-5.html",
+      "source": "Unit 1 Day 10 Practice.dc.html",
+      "sectionId": "d10-G",
+      "sectionSha256": "00b0ad5a24ba095ccd392aa7622270516e95b0ae6467fe1686289443b6071ae4",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-10-option-6.html",
+      "source": "Unit 1 Day 10 Practice.dc.html",
+      "sectionId": "d10-N",
+      "sectionSha256": "1bd952a598f1b57fa8345c474a1930983326d901e15f1c91271cdfc6f575ab73",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-11-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-11",
+      "sectionSha256": "2aa59ed0956d18305cf35466bf6d3a7ce455ebcc88d6cd10f87cd2b514142a43",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-11-option-1.html",
+      "source": "Unit 1 Day 11 Practice.dc.html",
+      "sectionId": "d11-A",
+      "sectionSha256": "8d197a1f9032f2abe01bf6305765136cec0b209b0c13385e752d445bf6c1de05",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-11-option-2.html",
+      "source": "Unit 1 Day 11 Practice.dc.html",
+      "sectionId": "d11-F",
+      "sectionSha256": "51e9bf87a945e6b48a7e0691675deea55da76f9d9c17675176043c0804c9db15",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-11-option-3.html",
+      "source": "Unit 1 Day 11 Practice.dc.html",
+      "sectionId": "d11-L",
+      "sectionSha256": "8100d1c7fffa30e9b51395be0a8514862fc73b2ec7cb949802c39d63530412ae",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-11-option-4.html",
+      "source": "Unit 1 Day 11 Practice.dc.html",
+      "sectionId": "d11-J",
+      "sectionSha256": "a8e1ccaf708a672cfd24763f56c6bdfd992a0adb6ace4d55c9c725643de0ae79",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-11-option-5.html",
+      "source": "Unit 1 Day 11 Practice.dc.html",
+      "sectionId": "d11-D",
+      "sectionSha256": "de1c3958c620ed2895ce83881aecb8cd90f6ddec69ee30548365b44bade6af8f",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-11-option-6.html",
+      "source": "Unit 1 Day 11 Practice.dc.html",
+      "sectionId": "d11-I",
+      "sectionSha256": "f2e11714fd829b9dbe7b562c95910aa6eae1b417ec19981cc91bfdebc37bb522",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-12-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-12",
+      "sectionSha256": "4419ba97034f0b2c0c00b6da9be9d78f406f965063089cc5d7f6e64d42f051b8",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-12-option-1.html",
+      "source": "Unit 1 Day 12 Practice.dc.html",
+      "sectionId": "d12-A",
+      "sectionSha256": "93c582ab3a60f1377a0037188020b1759eb86f0ee36f7103a50a1f1dc94b5604",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-12-option-2.html",
+      "source": "Unit 1 Day 12 Practice.dc.html",
+      "sectionId": "d12-F",
+      "sectionSha256": "368481746158d5959ef3e1801f13e5b874e3c5bea5171dbd471f5bff5e59a777",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-12-option-3.html",
+      "source": "Unit 1 Day 12 Practice.dc.html",
+      "sectionId": "d12-J",
+      "sectionSha256": "3b09c69b83972853db88fe56cac5064f4e63cea804efd467a6d3aecc7b78083f",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-12-option-4.html",
+      "source": "Unit 1 Day 12 Practice.dc.html",
+      "sectionId": "d12-L",
+      "sectionSha256": "78ef2e0e65b9e28a348ac4beb290b1aea38c6a71fa540f20849328d9bd493afa",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-12-option-5.html",
+      "source": "Unit 1 Day 12 Practice.dc.html",
+      "sectionId": "d12-Z",
+      "sectionSha256": "6a3a6636531ecd7e40ce2d56239c28b5bd6fdc3507836b6362919c12678e7149",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-12-option-6.html",
+      "source": "Unit 1 Day 12 Practice.dc.html",
+      "sectionId": "d12-N",
+      "sectionSha256": "1fbe1ea3a7d6fbe7b7720cdf71f14bf1dc26e9742bee02601844504342f4aa0b",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-13-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-13",
+      "sectionSha256": "53e72253a92c738205b8cabd2ea9f65ccbd51392a578ffa36a850d6ef29421da",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-13-option-1.html",
+      "source": "Unit 1 Day 13 Practice.dc.html",
+      "sectionId": "d13-C",
+      "sectionSha256": "ba7b5121262a42e7b39c47adbe23260c61c07925c00e4543934f0583802c5ab1",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-13-option-2.html",
+      "source": "Unit 1 Day 13 Practice.dc.html",
+      "sectionId": "d13-L",
+      "sectionSha256": "f5abb51a0c8991533e04673c48f29d3ba59c527c481e72508422760f036fd312",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-13-option-3.html",
+      "source": "Unit 1 Day 13 Practice.dc.html",
+      "sectionId": "d13-M",
+      "sectionSha256": "3577159a42ca61405497e1d52381878c9a1613daea02f6b8c8a7ad34eedb3a6b",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-13-option-4.html",
+      "source": "Unit 1 Day 13 Practice.dc.html",
+      "sectionId": "d13-R",
+      "sectionSha256": "3ef3cc43ae0da809aa416c3051acf38605130dca537f9fd7218391c9c914ca1c",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-13-option-5.html",
+      "source": "Unit 1 Day 13 Practice.dc.html",
+      "sectionId": "d13-K",
+      "sectionSha256": "956ee35bc5d618bb850c4fcc06551f9dd8862bab84b3d251ee47d40638d43cda",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-13-option-6.html",
+      "source": "Unit 1 Day 13 Practice.dc.html",
+      "sectionId": "d13-G",
+      "sectionSha256": "edae24db67e66417374c91b9a262b9ff6b47ea8ae42d82f75475e8ba7e61a1a2",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-14-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-14",
+      "sectionSha256": "1c66177af5f39b09d63615cb53d7d87994218dec56b75f1699a74054506e8514",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-14-option-1.html",
+      "source": "Unit 1 Day 14 Practice.dc.html",
+      "sectionId": "d14-I",
+      "sectionSha256": "0941d608087d57b9df9847744eb29c46eb6fb6d77f336013021ff8707df0a313",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-14-option-2.html",
+      "source": "Unit 1 Day 14 Practice.dc.html",
+      "sectionId": "d14-K",
+      "sectionSha256": "610cd8362c275fd9954c6dcd84a2a6953ee94eba3d906384f2c6edcd02a6263f",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-14-option-3.html",
+      "source": "Unit 1 Day 14 Practice.dc.html",
+      "sectionId": "d14-E",
+      "sectionSha256": "b8751ffa7646ffcd51effdab12ef5a68d91bf04d4f023adf56fbe017e0c46313",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-14-option-4.html",
+      "source": "Unit 1 Day 14 Practice.dc.html",
+      "sectionId": "d14-L",
+      "sectionSha256": "b8eb4372a5623520bae5623806ab647229f373d6eba304dc8f9f829ace5674c0",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-14-option-5.html",
+      "source": "Unit 1 Day 14 Practice.dc.html",
+      "sectionId": "d14-Y",
+      "sectionSha256": "3883c78972dc7aab6c5ad0df08eddc29e5a19c250ec336ca586b2006d1310160",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-14-option-6.html",
+      "source": "Unit 1 Day 14 Practice.dc.html",
+      "sectionId": "d14-N",
+      "sectionSha256": "5b8e747e5b40fd22a46f58374c6feea57a7880e684413eeaf184c8f6c9087792",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-15-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-15",
+      "sectionSha256": "d578b47a8a9e49c85da8049782021280da6d54bc91a9f9892cf435f6b2abf8cf",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-15-option-1.html",
+      "source": "Unit 1 Day 15 Practice.dc.html",
+      "sectionId": "d15-D",
+      "sectionSha256": "518ed20b07d90c7fb09e02e2f792a52ef60a6789b7edb10369f898f93db424b0",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-15-option-2.html",
+      "source": "Unit 1 Day 15 Practice.dc.html",
+      "sectionId": "d15-K",
+      "sectionSha256": "5987e2094a55af9aee5edd7d1274c728ef97642642232f562533bfafd294fc37",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-15-option-3.html",
+      "source": "Unit 1 Day 15 Practice.dc.html",
+      "sectionId": "d15-T",
+      "sectionSha256": "25f9782f7886ab8f67ef78e3f81077ac948624e8cc661b70b3ac94dd336e1412",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-15-option-4.html",
+      "source": "Unit 1 Day 15 Practice.dc.html",
+      "sectionId": "d15-J",
+      "sectionSha256": "f3ebad6cc30c05351eced0df1313690ac5358d1a5d8ad3190903986ca8c4fa38",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-15-option-5.html",
+      "source": "Unit 1 Day 15 Practice.dc.html",
+      "sectionId": "d15-M",
+      "sectionSha256": "d1005c93c61e776a5ea49c6a284dbff537fa0c74774207e8f61c1238c0647000",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-15-option-6.html",
+      "source": "Unit 1 Day 15 Practice.dc.html",
+      "sectionId": "d15-N",
+      "sectionSha256": "dc8b3e55c71e433af561b93483697597af33a9c5d2d949da1828b9867dcf9ce3",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-16-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-16",
+      "sectionSha256": "d35bc226ceb2d24b1082dd2a82e163bcc32e1309d584725efb2e6fd2e9cb74ca",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-16-option-1.html",
+      "source": "Unit 1 Day 16 Practice.dc.html",
+      "sectionId": "d16-V",
+      "sectionSha256": "05ffd9868c505e8122891dcc4a4f98a77a5d11ab2dfbab4824e291c4ead61724",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-16-option-2.html",
+      "source": "Unit 1 Day 16 Practice.dc.html",
+      "sectionId": "d16-C",
+      "sectionSha256": "6a66089eeff6e9b041323882d57b5c53fd578145637540cc55a136fc23431fef",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-16-option-3.html",
+      "source": "Unit 1 Day 16 Practice.dc.html",
+      "sectionId": "d16-J",
+      "sectionSha256": "1982ab5bce2a3c04ef64fd546813b9b36faefeaa198c96f52a82661e64d2dcd1",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-16-option-4.html",
+      "source": "Unit 1 Day 16 Practice.dc.html",
+      "sectionId": "d16-M",
+      "sectionSha256": "a73efbb008c29ac1d77050e4b4d67b768ccbdc64be937e4fd997e35c9d604142",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-16-option-5.html",
+      "source": "Unit 1 Day 16 Practice.dc.html",
+      "sectionId": "d16-K",
+      "sectionSha256": "4b4323b54cacd03af3c459c9e9502a199e9dee19d3d97c10080feedcadb05262",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-16-option-6.html",
+      "source": "Unit 1 Day 16 Practice.dc.html",
+      "sectionId": "d16-G",
+      "sectionSha256": "989f918ccd6cd377cb7ea8a661f0e126f5cb8383d5d0ab849212147c1e29f5db",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-17-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-17",
+      "sectionSha256": "f30b7c7b8fb51f7a14f60cdecebb60275b1dcf10ea785d2cac2c5a15bdb97876",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-17-option-1.html",
+      "source": "Unit 1 Day 17 Practice.dc.html",
+      "sectionId": "d17-L",
+      "sectionSha256": "01ecb0ebf02574812b1c047a3f5108c4df0c56d4e3aa00ae63b0b5007519bdc4",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-17-option-2.html",
+      "source": "Unit 1 Day 17 Practice.dc.html",
+      "sectionId": "d17-C",
+      "sectionSha256": "146f5d9ab67a6c3907c8f6d67019b8ad5bd63a7b3e32fb78536fb379c7cc9938",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-17-option-3.html",
+      "source": "Unit 1 Day 17 Practice.dc.html",
+      "sectionId": "d17-X",
+      "sectionSha256": "bdc948b643e46c67ef1e164ab0ed75b259241736e7a116581e64dc018c858524",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-17-option-4.html",
+      "source": "Unit 1 Day 17 Practice.dc.html",
+      "sectionId": "d17-K",
+      "sectionSha256": "96238fa2aab9fb805cd2fe9aa4aef0a4c18974f67a485ab703df6556a8f7b05d",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-17-option-5.html",
+      "source": "Unit 1 Day 17 Practice.dc.html",
+      "sectionId": "d17-D",
+      "sectionSha256": "78de04b6646bf85c129646f343cbb7d82319a95bea3ca90ed8fa88b4a3a49ca0",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-17-option-6.html",
+      "source": "Unit 1 Day 17 Practice.dc.html",
+      "sectionId": "d17-N",
+      "sectionSha256": "a5eabe599bd0f41680e719fe54118308a4598542ec11728b6abf3b2bcfe46421",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-18-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-18",
+      "sectionSha256": "06b612ecf77d8f4827d0b9ecd525b1211b2f6135e6bd0e134ccf4b70463d658c",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-18-option-1.html",
+      "source": "Unit 1 Day 18 Practice.dc.html",
+      "sectionId": "d18-J",
+      "sectionSha256": "a921eec441c1c09edf1e6041dd1926a6495c188b107d6babac8c2c6139657c5b",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-18-option-2.html",
+      "source": "Unit 1 Day 18 Practice.dc.html",
+      "sectionId": "d18-Y",
+      "sectionSha256": "cc9ef7447d12c0dd451010050563c5f73b1e910e25322d99320697e32105118d",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-18-option-3.html",
+      "source": "Unit 1 Day 18 Practice.dc.html",
+      "sectionId": "d18-V",
+      "sectionSha256": "0f83ad1dd9aa38102880b2013f944f71f462699eecaea1c636f464cd90824fc4",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-18-option-4.html",
+      "source": "Unit 1 Day 18 Practice.dc.html",
+      "sectionId": "d18-H",
+      "sectionSha256": "8043f7c12ea60647557f8b5fd5765362e1b1a83292522a65d251f0876971ebd2",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-18-option-5.html",
+      "source": "Unit 1 Day 18 Practice.dc.html",
+      "sectionId": "d18-L",
+      "sectionSha256": "93872b186a0db2f9f4475a119b47a553cfe0e8537554dc73fa587d63eacf2400",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-18-option-6.html",
+      "source": "Unit 1 Day 18 Practice.dc.html",
+      "sectionId": "d18-C",
+      "sectionSha256": "81cae13b59a414dd1b29395de72a7cce88ae08fbc4a78812ee8c51f9fbe92d4f",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-19-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-19",
+      "sectionSha256": "158c35823f903baf48b8289930aa2cf718ae9bc83d4cca30f72b7c01a326babd",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-19-option-1.html",
+      "source": "Unit 1 Day 19 Practice.dc.html",
+      "sectionId": "d19-I",
+      "sectionSha256": "eacf0b06437950094f91fbdb0bd2efd5c867ecf7086442ae838ae0f61b2c3af2",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-19-option-2.html",
+      "source": "Unit 1 Day 19 Practice.dc.html",
+      "sectionId": "d19-Y",
+      "sectionSha256": "d22d623624a9996a87ece58ef0971f8e6aa4afb104e19da9a88b846318cb64a1",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-19-option-3.html",
+      "source": "Unit 1 Day 19 Practice.dc.html",
+      "sectionId": "d19-L",
+      "sectionSha256": "d806bc9ed8966a3e3f0d31bac611d0f830f678ad97f86202b5b87c30746f2592",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-19-option-4.html",
+      "source": "Unit 1 Day 19 Practice.dc.html",
+      "sectionId": "d19-T",
+      "sectionSha256": "ff3a87f6aa89f528eb6023a2795aefd51bfc04b06e31ab5280c1719bce29362f",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-19-option-5.html",
+      "source": "Unit 1 Day 19 Practice.dc.html",
+      "sectionId": "d19-J",
+      "sectionSha256": "d105476f3702c638c25dd53c17001c2469dd3a5f4a6ca92352ef07afb50f1fa0",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-19-option-6.html",
+      "source": "Unit 1 Day 19 Practice.dc.html",
+      "sectionId": "d19-D",
+      "sectionSha256": "b7f9fcf322be17deeac0196856a844cae328919068e8e186981fcb18c60c2f75",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-20-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-20",
+      "sectionSha256": "7da6cfa209e5e0cf33f293a06e1e46aae138c1807f2bbb48de446b018e42874f",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-20-option-1.html",
+      "source": "Unit 1 Day 20 Practice.dc.html",
+      "sectionId": "d20-A",
+      "sectionSha256": "c50f45d5030fc7b83672cb482c34fc0f3c47547166bbbddde9a7608237cbb68e",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-20-option-2.html",
+      "source": "Unit 1 Day 20 Practice.dc.html",
+      "sectionId": "d20-Q",
+      "sectionSha256": "6aae1a9acd23bc849a58786eb5503e4bfeb305c5d52e94912fdedf867f766a72",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-20-option-3.html",
+      "source": "Unit 1 Day 20 Practice.dc.html",
+      "sectionId": "d20-K",
+      "sectionSha256": "65b43914dfda923fc3cb425e9526274b87d9c839b5983fac35ed3037d1c58dd0",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-20-option-4.html",
+      "source": "Unit 1 Day 20 Practice.dc.html",
+      "sectionId": "d20-V",
+      "sectionSha256": "fc17597a924be40c591b950142a2eb6f5ac58a2467361c5150d1c67c0ec9768b",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-20-option-5.html",
+      "source": "Unit 1 Day 20 Practice.dc.html",
+      "sectionId": "d20-J",
+      "sectionSha256": "cf985348f2427508909455c032ab8475bb09c96857b843878bb98ff1fc038e18",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-20-option-6.html",
+      "source": "Unit 1 Day 20 Practice.dc.html",
+      "sectionId": "d20-R",
+      "sectionSha256": "a71097c89c10fe58a225761a280e3653c46af0f63c8b0d1dbeac7b5f56049e13",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-21-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-21",
+      "sectionSha256": "cb89626fab230a518d9eaeb14ef60a9485f4c47e97a94d6c9921497d33aca781",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-21-option-1.html",
+      "source": "Unit 1 Day 21 Practice.dc.html",
+      "sectionId": "d21-A",
+      "sectionSha256": "7a97487836dd3e7fbb4d7e453fefaa672b3cd5f234556e2d13e8f1a5af04e923",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-21-option-2.html",
+      "source": "Unit 1 Day 21 Practice.dc.html",
+      "sectionId": "d21-D",
+      "sectionSha256": "f8e14c91d48e78d2d4bcf741950a7601b10514dece4dbe5e1ed69459598ea4f9",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-21-option-3.html",
+      "source": "Unit 1 Day 21 Practice.dc.html",
+      "sectionId": "d21-K",
+      "sectionSha256": "13520b5af9a9bd7325d02b7faeea638d070bc396b543cf844228229b56dc709e",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-21-option-4.html",
+      "source": "Unit 1 Day 21 Practice.dc.html",
+      "sectionId": "d21-J",
+      "sectionSha256": "f82bb356e1b749459773d49bd9d7afc04334264ced6cbcdb8fd19dd32bbaaf4b",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-21-option-5.html",
+      "source": "Unit 1 Day 21 Practice.dc.html",
+      "sectionId": "d21-Q",
+      "sectionSha256": "e825687fe0ee314f70383f274b9258bc5f0f82a4577bba34ffdeb66138b676cf",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-21-option-6.html",
+      "source": "Unit 1 Day 21 Practice.dc.html",
+      "sectionId": "d21-R",
+      "sectionSha256": "b3ac8a23e9a074693f22de5e5a1ff5200d14005e7dbb9404e3d91eaeadb43c01",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-22-cpa-notes.html",
+      "source": "Unit 1 Notebook Pages v2.dc.html",
+      "sectionId": "day-22",
+      "sectionSha256": "688c8d56d99aee58aec79f2a876f14e10e17d894b42801f5edcb29e79df53daf",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-22-option-1.html",
+      "source": "Unit 1 Day 22 Practice.dc.html",
+      "sectionId": "d22-Q",
+      "sectionSha256": "32963ab5ee25a446bed9a52807107a1b5d963ae24a5b4d2988148a80033cb4ad",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-22-option-2.html",
+      "source": "Unit 1 Day 22 Practice.dc.html",
+      "sectionId": "d22-L",
+      "sectionSha256": "7d8ab0d0c89af3ddce085b89f6006309d8d195d884cc680004c42672fc95becd",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-22-option-3.html",
+      "source": "Unit 1 Day 22 Practice.dc.html",
+      "sectionId": "d22-W",
+      "sectionSha256": "68bbcdddab1bd9a4d725fab68d13fb35fe544f973e0e23fbe51b507631a9aafe",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-22-option-4.html",
+      "source": "Unit 1 Day 22 Practice.dc.html",
+      "sectionId": "d22-Z",
+      "sectionSha256": "70c0e29d69173e2d28b9b928e3105ccfcf8ff1767aa06b49fe733e0975c67e34",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-22-option-5.html",
+      "source": "Unit 1 Day 22 Practice.dc.html",
+      "sectionId": "d22-J",
+      "sectionSha256": "f3974b051ce715dab3b697b81848fa30d92c7e4d9bf82c2eeadf8d957044be9c",
+      "originalSectionIdentical": true
+    },
+    {
+      "file": "day-22-option-6.html",
+      "source": "Unit 1 Day 22 Practice.dc.html",
+      "sectionId": "d22-I",
+      "sectionSha256": "1a31766d4a7b63a6c2dc8ec8d5ca7cc76a5852eaf84df38ba68e05ac1d601f34",
+      "originalSectionIdentical": true
+    }
+  ],
+  "cpaDays": 22,
+  "honorsDays": [
+    1,
+    2,
+    3
+  ],
+  "practiceDays": 22,
+  "optionsPerDay": 6,
+  "seiPerDay": 2,
+  "generatedPages": 158,
+  "packagingOnly": true
+}

@@ -9,7 +9,7 @@
     "Predict constant velocity when net force is zero.",
     "Explain why changing direction requires net force."
   ],
-  "source_sha256": "d19b82d2ed6e2b382790965fa945d490ad117b0b184bb7510ed680857eb59ce2",
+  "source_sha256": "f6378a7113d75881459969f4d03c8c2edd188abd4fd6af50bf48c68c96379fac",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.476Z",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "A claim says zero net force means the object is stationary. Which is a counterexample?",
+      "prompt": "Someone says, “Zero net force means the object is still.” Which example shows that this statement is wrong?",
       "options": [
         "A rocket accelerating forward.",
         "A car turning at constant speed.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "A claim says zero net force means the object is stationary. Which is a counterexample?",
+      "prompt": "Someone says, “Zero net force means the object is still.” Which example shows that this statement is wrong?",
       "options": [
         "A car turning at constant speed.",
         "A rocket accelerating forward.",

@@ -1,9 +1,27 @@
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
 import {assessmentContent,assessmentResults} from './comparison'
+import {quizCells} from '../assessment-results/model'
 import type {Quiz,QuizReview} from './types'
 const quiz:Quiz={id:'a',title:'Motion',course_id:'c1',status:'published',version:1,questions:[{id:'q1',kind:'choice',prompt:'Which?',options:['A','B'],correct_index:0,points:2,target_id:'t',guide:'Guide'},{id:'q2',kind:'written',prompt:'Explain',points:4,target_id:'t',guide:'Guide'}],instructions:'Explain your thinking',kind:'mixed',grade_mode:'numeric',student_ids:null,source_quiz_id:null,created_at:'2026-01-01',due_at:null}
 const copy={...quiz,id:'b',course_id:'c2',title:'Another class',questions:quiz.questions.map(q=>({...q,id:q.id+'b'}))}
+test('editing a quiz preserves the release for that attempt and a later submission still needs review',()=>{
+ const edited={...quiz,instructions:'Updated directions',questions:quiz.questions.map(q=>({...q,prompt:q.prompt+' Explain.',points:8}))}
+ const work={quiz_id:quiz.id,user_id:'student',state:'graded' as const,answers:{},version:2,submission_id:'first'}
+ const submission={id:'first',quiz_id:quiz.id,user_id:work.user_id,answers:{},snapshot:{...quiz,grade_mode:'credit' as const},submitted_at:'2026-10-23'}
+ const review:QuizReview={id:'release',submission_id:'first',decision:'graded',scores:{q2:3},ratings:{t:2},note:'Reviewed',question_notes:{},earned:3,possible:6,grade_mode:'credit',grade_value:'credit',reviewed_at:'2026-10-28'}
+ const input={quizzes:[edited],courses:[],enrollments:[{course_id:quiz.course_id,student_id:work.user_id,name:'Student'}],work:[work],submissions:[submission],reviews:[review],groupCopies:false}
+ const released=assessmentResults(input)[0]
+ const cell=quizCells(released).student
+ assert.equal(cell.needsReview,false)
+ assert.equal(cell.label,'Credit')
+ assert.deepEqual([cell.grade?.earned,cell.grade?.possible],[3,6])
+ assert.deepEqual(released.students[0].questionScores,[null,null])
+ assert.equal(assessmentResults({...input,groupCopies:true})[0].students[0].percent,null)
+ const next=assessmentResults({...input,work:[{...work,state:'submitted',submission_id:'second'}],submissions:[submission,{...submission,id:'second',snapshot:edited}]})[0]
+ assert.equal(quizCells(next).student.needsReview,true)
+ assert.equal(quizCells(next).student.grade,undefined)
+})
 test('matching content groups across question IDs, titles, and classes; edited assessment stays separate',()=>{assert.equal(assessmentContent(quiz),assessmentContent(copy));for(const changed of [{...quiz,instructions:'Use notes'},{...quiz,questions:quiz.questions.map(q=>({...q,guide:'Different criteria'}))},{...quiz,questions:quiz.questions.map(q=>({...q,points:3}))}])assert.notEqual(assessmentContent(quiz),assessmentContent(changed))})
 test('comparisons exclude pending and missing work, use partial credit, and keep target ratings separate',()=>{
  const review={id:'r1',submission_id:'s1',decision:'graded',scores:{q2:2},ratings:{t:3},reviewed_at:'2026-01-02',note:'',question_notes:{},earned:4,possible:6,grade_mode:'numeric',grade_value:null} satisfies QuizReview

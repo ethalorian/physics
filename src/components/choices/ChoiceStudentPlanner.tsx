@@ -1,9 +1,10 @@
 'use client'
-import { useRef, useState, type PointerEvent, type ReactNode } from 'react'
+import { useMemo, useRef, useState, type PointerEvent, type ReactNode } from 'react'
 import { ArrowLeft, ArrowRight, GripVertical, Undo2 } from 'lucide-react'
 import { dateLabel } from '@/lib/learning-week'
 import { choiceStepDate, type ChoiceOption, type ChoiceSection, type ChoiceStep } from '@/lib/choice-calendar'
 import type { ChoiceSnapshot } from '@/lib/choice-calendar-server'
+import { useCalendarDragPreview, type CalendarPointer } from '@/lib/use-calendar-drag-preview'
 import s from './ChoiceCalendar.module.css'
 
 type Item = { key: string; section: ChoiceSection; number: number; option: ChoiceOption; step?: ChoiceStep; title: string; day: string | null }
@@ -20,22 +21,48 @@ export default function ChoiceStudentPlanner({ section, data, userId, dates, dis
 }) {
   const shelf = useRef<HTMLDivElement>(null), planner = useRef<HTMLDivElement>(null)
   const drag = useRef<{ item: Item; x: number; y: number; moved: boolean } | null>(null)
-  const [ghost, setGhost] = useState<{ title: string; x: number; y: number } | null>(null), [over, setOver] = useState<string | null>(null)
+  const [ghost, setGhost] = useState<{ title: string } | null>(null), [over, setOver] = useState<string | null>(null)
+  const hover = useRef<string | null>(null)
+  const { selections: savedSelections, bookings: savedBookings, slots: savedSlots, progress: savedProgress } = data
+  const lookup = useMemo(() => {
+    const key = (sectionId: string, optionId: string) => JSON.stringify([sectionId, optionId])
+    const selections = new Map<string, typeof savedSelections[number]>()
+    const bookings = new Map<string, typeof savedBookings[number]>()
+    const slots = new Map<string, typeof savedSlots[number]>()
+    for (const item of savedSelections) if (item.user_id === userId && !selections.has(key(item.section_id, item.option_id))) selections.set(key(item.section_id, item.option_id), item)
+    for (const item of savedBookings) if (item.user_id === userId && !bookings.has(key(item.section_id, item.option_id))) bookings.set(key(item.section_id, item.option_id), item)
+    for (const item of savedSlots) if (!slots.has(item.id)) slots.set(item.id, item)
+    const progress = new Map(Object.entries(savedProgress[userId] ?? {}).map(([id, value]) => [id, new Map(value.options.slice().reverse().map(item => [item.option.id, item]))]))
+    return { key, selections, bookings, slots, progress }
+  }, [savedSelections, savedBookings, savedSlots, savedProgress, userId])
   // The carousel follows the selected menu; the calendar keeps every menu's planned work.
-  const items: Item[] = data.sections.flatMap(menu => menu.options.flatMap(option => {
-    const selection = data.selections.find(v => v.section_id === menu.id && v.option_id === option.id && v.user_id === userId)
+  const items: Item[] = useMemo(() => data.sections.flatMap(menu => menu.options.flatMap(option => {
+    const selection = lookup.selections.get(lookup.key(menu.id, option.id))
     const steps = option.steps.filter(s => !s.followUp)
     return [
       ...steps.map(step => ({ key: menu.id + ':' + option.id + ':' + step.id, section: menu, option, step, title: steps.length === 1 && !option.lab ? option.title : step.title, day: choiceStepDate(option, selection, step.id) })),
       ...(option.lab ? [{ key: menu.id + ':' + option.id + ':lab', section: menu, option, title: option.title + (option.labType === 'problem-solving' ? ' · Problem-solving lab' : ' · Lab time'), day: selection?.selected ? selection.planned_on : null }] : []),
     ]
-  }).map((item, index) => ({ ...item, number: index + 1 })))
+  }).map((item, index) => ({ ...item, number: index + 1 }))), [data.sections, lookup])
+  const byDay = useMemo(() => {
+    const days = new Map<string, Item[]>()
+    for (const item of items) if (item.day) { const group = days.get(item.day) ?? []; group.push(item); days.set(item.day, group) }
+    return days
+  }, [items])
   const available = items.filter(item => item.section.id === section.id && !item.day)
-  const stop = () => { drag.current = null; setGhost(null); setOver(null) }
-  const targetAt = (e: PointerEvent<HTMLElement>) => {
+  const stop = () => { preview.cancel(); hover.current = null; drag.current = null; setGhost(null); setOver(null) }
+  const targetAt = (e: CalendarPointer) => {
     const target = document.elementFromPoint(e.clientX, e.clientY)?.closest<HTMLElement>('[data-choice-drop]')
     return target && planner.current?.contains(target) ? target.dataset.choiceDrop ?? null : null
   }
+  const preview = useCalendarDragPreview(point => {
+    if (!drag.current?.moved || disabled) return
+    const target = targetAt(point)
+    if (target !== hover.current) { hover.current = target; setOver(target) }
+    // Keep the same edge-scroll distance, bounded to one update per frame.
+    if (point.clientY > innerHeight - 80) window.scrollBy(0, 16)
+    else if (point.clientY < 80) window.scrollBy(0, -16)
+  }, undefined, 12)
   const start = (e: PointerEvent<HTMLElement>, item: Item) => {
     if (disabled || e.button !== 0 || (e.target as HTMLElement).closest('button,a,input') && !(e.target as HTMLElement).closest('[data-choice-grip]') || e.pointerType === 'touch' && !(e.target as HTMLElement).closest('[data-choice-grip]')) return
     drag.current = { item, x: e.clientX, y: e.clientY, moved: false }; e.currentTarget.setPointerCapture(e.pointerId)
@@ -43,10 +70,8 @@ export default function ChoiceStudentPlanner({ section, data, userId, dates, dis
   const move = (e: PointerEvent<HTMLElement>) => {
     const d = drag.current; if (!d || disabled) return
     if (!d.moved && Math.hypot(e.clientX - d.x, e.clientY - d.y) < 7) return
-    e.preventDefault(); d.moved = true; setGhost({ title: d.item.title, x: e.clientX, y: e.clientY }); setOver(targetAt(e))
-    // Keep the calendar reachable while dragging on a phone or short screen.
-    if (e.clientY > innerHeight - 80) window.scrollBy(0, 16)
-    else if (e.clientY < 80) window.scrollBy(0, -16)
+    e.preventDefault(); preview.move(e)
+    if (!d.moved) { d.moved = true; setGhost({ title: d.item.title }) }
   }
   const end = (e: PointerEvent<HTMLElement>) => {
     const d = drag.current, target = targetAt(e); stop()
@@ -55,10 +80,10 @@ export default function ChoiceStudentPlanner({ section, data, userId, dates, dis
     else if (target) { if (!d.item.step && d.item.option.lab) open(d.item.option.id, d.item.section.id); else schedule(d.item.option.id, target, d.item.step?.id, d.item.section.id) }
   }
   const card = (item: Item, compact = false) => {
-    const state = data.progress[userId]?.[item.section.id]?.options.find(o => o.option.id === item.option.id)
-    const selection = data.selections.find(v => v.section_id === item.section.id && v.option_id === item.option.id && v.user_id === userId)
-    const booking = data.bookings.find(b => b.section_id === item.section.id && b.option_id === item.option.id && b.user_id === userId)
-    const slot = !item.step && data.slots.find(s => s.id === booking?.slot_id)
+    const state = lookup.progress.get(item.section.id)?.get(item.option.id)
+    const selection = lookup.selections.get(lookup.key(item.section.id, item.option.id))
+    const booking = lookup.bookings.get(lookup.key(item.section.id, item.option.id))
+    const slot = !item.step && lookup.slots.get(booking?.slot_id ?? '')
     const grip = <span data-choice-grip className={s.grip} aria-label="Drag handle"><GripVertical size={compact ? 18 : 24} aria-hidden="true" /></span>
     const status = state?.grade === 'missing' ? 'Missing · Required choice' : state?.completed ? 'Complete' : item.day ? 'Planned' : 'Not planned'
     return <article key={item.key} className={`${s.card} ${compact ? s.calendarCard : ''}`} data-complete={state?.completed} data-plannable={!disabled} draggable={false} onPointerDown={e => start(e, item)} onPointerMove={move} onPointerUp={end} onPointerCancel={stop} onLostPointerCapture={stop}>
@@ -77,7 +102,7 @@ export default function ChoiceStudentPlanner({ section, data, userId, dates, dis
       <div ref={shelf} className={s.carousel} role="group" aria-roledescription="carousel" aria-label="Choice activity carousel" tabIndex={0}>{available.map(item => card(item))}{!available.length && <p className={s.empty}>All activities have a date. You can move them on the calendar.</p>}</div>
       <div data-choice-drop="bank" className={`${s.returnZone} ${over === 'bank' ? s.drop : ''}`}><Undo2 size={18} aria-hidden="true"/><span>Drop here to remove a choice. If it includes several activities, the whole choice is removed. Started work needs teacher approval.</span></div>
     </section>
-    {renderCalendar ? renderCalendar({ dragging: !!ghost, over, hasDay: day => items.some(item => item.day === day), renderDay: day => items.filter(item => item.day === day).map(item => card(item, true)) }) : <div className={s.week}>{dates.map(day => <section key={day} data-choice-drop={day} className={`${s.day} ${over === day ? s.drop : ''}`} aria-label={dateLabel(day, true)}><h3>{dateLabel(day, true)}</h3>{items.filter(item => item.day === day).map(item => card(item))}{over === day && <p className={s.badge}>Drop to plan this activity</p>}</section>)}</div>}
-    {ghost && <div className={s.dragPreview} style={{ left: ghost.x + 12, top: ghost.y + 12 }} aria-hidden="true">{ghost.title}</div>}
+    {renderCalendar ? renderCalendar({ dragging: !!ghost, over, hasDay: day => byDay.has(day), renderDay: day => (byDay.get(day) ?? []).map(item => card(item, true)) }) : <div className={s.week}>{dates.map(day => <section key={day} data-choice-drop={day} className={`${s.day} ${over === day ? s.drop : ''}`} aria-label={dateLabel(day, true)}><h3>{dateLabel(day, true)}</h3>{(byDay.get(day) ?? []).map(item => card(item))}{over === day && <p className={s.badge}>Drop to plan this activity</p>}</section>)}</div>}
+    {ghost && <div ref={preview.ref} className={s.dragPreview} aria-hidden="true">{ghost.title}</div>}
   </div>
 }

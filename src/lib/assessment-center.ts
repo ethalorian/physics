@@ -27,6 +27,7 @@ export function assessmentScopeHref(search: string, key: 'class' | 'unit', value
 
 /** Open a source's existing review desk without losing the unified gradebook filters. */
 export function assessmentResultHref(kind: import('./assessment-results/types').ResultKind, sourceId: string, classId: string, search: string, studentId?: string) {
+  if (kind === 'student_choice') return '/student-choice/' + encodeURIComponent(sourceId)
   if(kind==='worksheet')return '/admin/worksheets?'+new URLSearchParams({id:sourceId,class:classId,return:assessmentCenterHref('results',null,classId,search)})
   if (['vocabulary', 'math', 'video', 'reflection', 'choice', 'lesson', 'presentation'].includes(kind)) {
     const params = new URLSearchParams(assessmentCenterHref('results', null, classId, search).split('?')[1]); params.set('resultKind', kind); if (studentId) params.set('resultStudent', studentId); return '/admin/control-room?' + params

@@ -14,6 +14,7 @@ export function sourcePresentation(source: AssignmentSource) {
   const interactive = ['interactive', 'simulation'].includes(source.kind) || key.startsWith('interactive:')
   const metadata = interactive ? ASSIGNMENT_METADATA.find(a => a.slug === slug) : undefined
   let activityType = source.activityType ?? metadata?.activityType
+  if (source.kind === 'student_choice') activityType = 'student_choice'
   if (!activityType && metadata) activityType = 'daily-review'
   if (!activityType && source.kind === 'quiz' && (source.pairedKey?.startsWith('worksheet:') || / · Paired quiz$/i.test(source.title))) activityType = 'worksheet-quiz'
   if (!activityType && (source.format === 'graphic-novel' || ['reflection','lesson'].includes(source.kind) && /^Graphic novel · Chapter /i.test(source.title))) activityType = 'chapter-response'

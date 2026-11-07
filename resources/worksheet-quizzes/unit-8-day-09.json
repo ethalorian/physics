@@ -3,13 +3,13 @@
   "unit": 8,
   "day": 9,
   "title": "Race, explain and transfer",
-  "target": "Evaluate a model against measured performance and defend design decisions.",
+  "target": "Compare your predicted result with measured performance. Use the results to explain your design choices.",
   "criteria": [
     "Report measured distance, time and average speed.",
     "Compare actual speed with a stated prediction.",
-    "Use evidence to explain three physical design choices."
+    "Use measurements or observations to explain three physical design choices."
   ],
-  "source_sha256": "bed713d5a718c21dbbe02dad3cb28bcb8d9ab907bb51b6c23d27b9a526b3ec0b",
+  "source_sha256": "e80467df0f7ea3586490b83789fcf35e238c9a78a46749a58f35c1d7ab9f574d",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.578Z",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "prompt": "Which report separates a real observation from a model prediction?",
+      "prompt": "Which report clearly separates an actual observation from a prediction?",
       "options": [
         "“Our car must match the example because it is the same color.”",
         "“Measured 0.60 m/s,” copied from the model without timing.",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "prompt": "A model predicts 0.80 m/s. Example measured average speed is 0.60 m/s. Relative to the prediction, how much lower is the measured speed?",
+      "prompt": "A calculation predicts 0.80 m/s. An example measurement gives an average speed of 0.60 m/s. Compared with the prediction, how much lower is the measured speed?",
       "options": [
         "75%",
         "20%",
@@ -180,7 +180,7 @@
       }
     },
     {
-      "prompt": "Which report separates a real observation from a model prediction?",
+      "prompt": "Which report clearly separates an actual observation from a prediction?",
       "options": [
         "“Measured 0.60 m/s,” copied from the model without timing.",
         "“Predicted and measured mean the same thing.”",
@@ -202,7 +202,7 @@
       }
     },
     {
-      "prompt": "A model predicts 0.80 m/s. Example measured average speed is 0.60 m/s. Relative to the prediction, how much lower is the measured speed?",
+      "prompt": "A calculation predicts 0.80 m/s. An example measurement gives an average speed of 0.60 m/s. Compared with the prediction, how much lower is the measured speed?",
       "options": [
         "20%",
         "75%",

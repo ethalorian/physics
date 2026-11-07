@@ -9,7 +9,7 @@
     "Compare speed near and far from the central body.",
     "Use T²=a³ only with the specified units and central body."
   ],
-  "source_sha256": "8cba85f606e2d98ca6bd32ae6967223e1f447fea93638b867c59c188907adeaa",
+  "source_sha256": "67255a7e88f8a1280406c7ec70b93d33eb742cf6c3de90186f05c78aa24ddbf1",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.498Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "Where is the Sun located in the ideal elliptical orbit model?",
+      "prompt": "Where is the Sun in an ideal elliptical orbit?",
       "options": [
         "At one focus.",
         "At both foci simultaneously.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "Where is the Sun located in the ideal elliptical orbit model?",
+      "prompt": "Where is the Sun in an ideal elliptical orbit?",
       "options": [
         "At every point on the orbit.",
         "At one focus.",

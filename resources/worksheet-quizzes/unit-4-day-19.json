@@ -6,10 +6,10 @@
   "target": "Convert an energy estimate without claiming a complete damage prediction.",
   "criteria": [
     "Convert speed units before squaring.",
-    "Calculate kinetic energy from stated model values.",
+    "Calculate kinetic energy from the supplied mass and velocity.",
     "Distinguish an energy equivalent from an explosion or damage forecast."
   ],
-  "source_sha256": "a0b17746f983779319716dd5cf9c24f1359bff4a1a62fcc683c3876f74fd3b98",
+  "source_sha256": "b33e45fa0d23ab1e2967f1d8b1c9cad8710769111abc7af09b8a49f03c10928b",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.528Z",
@@ -134,7 +134,7 @@
       }
     },
     {
-      "prompt": "Two impacts have the same TNT energy equivalent but different impact angles and materials. Which claim is justified?",
+      "prompt": "Two impacts have the same TNT energy equivalent but different angles and materials. Which conclusion can you support?",
       "options": [
         "Equal total energy does not guarantee equal local damage.",
         "The crater diameters must match exactly.",
@@ -268,7 +268,7 @@
       }
     },
     {
-      "prompt": "Two impacts have the same TNT energy equivalent but different impact angles and materials. Which claim is justified?",
+      "prompt": "Two impacts have the same TNT energy equivalent but different angles and materials. Which conclusion can you support?",
       "options": [
         "The crater diameters must match exactly.",
         "Equal total energy does not guarantee equal local damage.",

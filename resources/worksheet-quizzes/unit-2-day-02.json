@@ -5,11 +5,11 @@
   "title": "Free fall",
   "target": "Describe and calculate ideal free fall near Earth.",
   "criteria": [
-    "State the no-air-resistance assumption.",
+    "State that you are ignoring air resistance.",
     "Use equal velocity changes in equal times.",
     "Separate acceleration from mass and current velocity."
   ],
-  "source_sha256": "c10733a57e7ec81b5d478fc75ffe9900f6ab6fc6435c0c0ef338490af5f1c58d",
+  "source_sha256": "ecaca0502c4bd690f02baa1ba3376c9afa6335b4105e6df424c5ae036add79ab",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.489Z",
@@ -24,7 +24,7 @@
   },
   "cpa": [
     {
-      "prompt": "Which condition is required for the simple near-surface free-fall model?",
+      "prompt": "What must be true to use the simple free-fall calculation near Earth’s surface?",
       "options": [
         "The object has no mass.",
         "Air resistance is negligible and gravity is approximately uniform.",
@@ -158,7 +158,7 @@
   ],
   "honors": [
     {
-      "prompt": "Which condition is required for the simple near-surface free-fall model?",
+      "prompt": "What must be true to use the simple free-fall calculation near Earth’s surface?",
       "options": [
         "Its velocity is always downward.",
         "Air resistance is negligible and gravity is approximately uniform.",

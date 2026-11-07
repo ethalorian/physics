@@ -12,6 +12,7 @@ import { planTeachHref } from '@/lib/course-plan-presentation'
 import { deckForDay } from '@/data/lesson-decks'
 import { classDayTool, classDayToolHref } from '@/lib/class-day-tools'
 import tradesResetUnits from '@/data/trades-reset-units.json'
+import originalProjects from '@/data/etf-original/projects.json'
 import tradesEtfUnits from '@/data/trades-etf-units.json'
 
 interface DayPlan { lessons?: {id:string;title:string}[]; day: number; title: string; bodyHtml: string; kind?: 'daily'|'week-overview'; plan_fingerprint: string; lesson?: {id:string;published:boolean;content_fingerprint:string;revision:string}|null; alignment?: {status:string;message:string} }
@@ -19,6 +20,7 @@ const TRACK_LABEL: Record<string, string> = { cpa: 'CPA Physics', honors: 'Honor
 const UNIT_LABEL: Record<string, string> = {
   ...tradesResetUnits,
   ...tradesEtfUnits,
+  ...Object.fromEntries(originalProjects.map(p => ['trades-etfbook-'+p.number,'ETF '+p.number+' · '+p.name])),
   'unit-1': 'Unit 1 · Motion & Forces',
   'unit-2': 'Unit 2 · Gravitation & Fields',
   'unit-3': 'Unit 3 · Momentum & Collisions',
@@ -38,7 +40,7 @@ const UNIT_LABEL: Record<string, string> = {
 // Project Physics packs two grains into one `day` number: week*10 is that week's
 // overview, week*10 + n is day n inside it. Trades numbers sessions 1.1–3.5.
 function dayLabel(unit: string, day: number): string {
-  if (unit.startsWith('trades-reset-') || unit.startsWith('trades-etf-')) return `Meeting ${day}`
+  if (unit.startsWith('trades-reset-') || unit.startsWith('trades-etf-') || unit.startsWith('trades-etfbook-')) return `Meeting ${day}`
   if (unit.startsWith('trades-')) return `Session ${Math.floor((day - 1) / 5) + 1}.${((day - 1) % 5) + 1}`
   if (unit.startsWith('proj-')) {
     const wk = Math.floor(day / 10)
@@ -166,7 +168,7 @@ export default function CourseGuide({ embedded = false }: { embedded?: boolean }
         </div>
       )}
 
-      {physicsPlan ? null : unit.startsWith('trades-etf-') ? (
+      {physicsPlan ? null : unit.startsWith('trades-etfbook-') ? <p className="text-sm mb-5">Choose a workbook task below. <Link className="underline" href={'/admin/control-room?view=calendar&class='+encodeURIComponent(courseId)+'&unit='+encodeURIComponent(unit)}>Place the lesson and reading on your class calendar</Link>.</p> : unit.startsWith('trades-etf-') ? (
         <p className="text-sm mb-5">
           Four ETF projects with trades math, measuring, and drawing/plan interpretation.
           {' '}<a className="underline" href="/trades-etf/index.html" target="_blank" rel="noopener noreferrer">Course map and printable lessons</a>.

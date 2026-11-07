@@ -23,14 +23,14 @@ export default function TeachingQuestion({ block, lessonId, referenceBlocks, sei
     <section className={`teach-question${hasVisual ? ' teach-question-with-visual' : ''}`} aria-label="Classroom question">
       <div className="teach-question-copy">
         <p className="teach-question-kicker">{status ?? teachingCue(block)}</p>
-        <div role="heading" aria-level={1} className="teach-question-prompt"><MathMarkdown content={question.prompt} /></div>
+        <div role="heading" aria-level={1} className="teach-question-prompt"><MathMarkdown questionEmphasis content={question.prompt} /></div>
         {options.length > 0 && <ol className="teach-question-choices" aria-label="Answer choices">
           {options.map((option, index) => <li key={option.id}>
             <span className="teach-question-letter" aria-hidden="true">{String.fromCharCode(65 + index)}</span>
             <div><MathMarkdown content={option.text} />{results && <p className="teach-poll-count">{results.tally[option.id] ?? 0} responses · {results.saved ? Math.round((results.tally[option.id] ?? 0) / results.saved * 100) : 0}%</p>}</div>
           </li>)}
         </ol>}
-        {question.explain && <div className="teach-question-explain"><strong>Explain your thinking</strong><MathMarkdown content={question.explain} /></div>}
+        {question.explain && <div className="teach-question-explain"><strong>Explain your thinking</strong><MathMarkdown questionEmphasis content={question.explain} /></div>}
         {!hasVisual && <TeachingSeiSupports block={block} enabled={seiEnabled} />}
       </div>
       {hasVisual && <div><TeachingVisual block={block} blocks={referenceBlocks} lessonId={lessonId} /><TeachingSeiSupports block={block} enabled={seiEnabled} /></div>}

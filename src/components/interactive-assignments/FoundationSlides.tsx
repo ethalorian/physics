@@ -1,12 +1,20 @@
 'use client'
+import {useFoundationLanguage} from './FoundationLanguage'
+import QuizContent from '@/components/quizzes/QuizContent'
 
 import {useEffect, useRef, useState} from 'react'
 import {foundationSlides} from '@/lib/interactive-assignments/foundations/slides'
 import type {FoundationKey} from '@/lib/interactive-assignments/foundations/checkpoints'
+import FoundationReadingGuide from './FoundationReadingGuide'
+import readingGuides from '@/data/foundations/reading-guides.json'
+import type {LessonSection} from '@/lib/interactive-assignments/catalog'
 import s from './Foundation.module.css'
 
 
-export default function FoundationSlides({foundation='day-one'}:{foundation?:FoundationKey}) {
+const guidesByLesson: Partial<Record<FoundationKey, Record<string, string>>> = readingGuides
+
+export default function FoundationSlides({foundation='day-one', sections}:{foundation?:FoundationKey; sections:LessonSection[]}) {
+  const {t,locale,map}=useFoundationLanguage()
   const {slides,day,src,channel}=foundationSlides[foundation]
   const [index, setIndex] = useState(0)
   const [ready, setReady] = useState(false)
@@ -15,8 +23,18 @@ export default function FoundationSlides({foundation='day-one'}:{foundation?:Fou
   const [enlarged, setEnlarged] = useState(false)
   const frame = useRef<HTMLIFrameElement>(null)
   const panel = useRef<HTMLElement>(null)
+  const guide = useRef<HTMLElement>(null)
   const enlargeButton = useRef<HTMLButtonElement>(null)
   const slide = slides[index]
+  const teachingStep = 'teachingStep' in slide && typeof slide.teachingStep === 'string'
+    ? slide.teachingStep : guidesByLesson[foundation]?.[slide.title]
+
+  useEffect(() => { if (guide.current) guide.current.scrollTop = 0 }, [index])
+
+  const chapter = sections.find(section => {
+    const [first, last = first] = section.stop.match(/\d+/g)?.map(Number) ?? []
+    return slide.number >= first && slide.number <= last
+  })
 
   useEffect(() => {
     function receive(event: MessageEvent) {
@@ -58,6 +76,10 @@ export default function FoundationSlides({foundation='day-one'}:{foundation?:Fou
     frame.current?.contentWindow?.postMessage({channel, type: 'navigate', index: next}, '*')
   }
 
+  useEffect(() => {
+    if (ready) frame.current?.contentWindow?.postMessage({channel, type: 'language', locale, map}, '*')
+  }, [channel, locale, map, ready, attempt])
+
   async function toggleEnlarged() {
     try {
       if (document.fullscreenElement === panel.current) await document.exitFullscreen()
@@ -74,28 +96,37 @@ export default function FoundationSlides({foundation='day-one'}:{foundation?:Fou
     setAttempt(value => value + 1)
   }
 
-  return <section ref={panel} id="assignment-teaching-tool" className={s.viewer} aria-label={`Day ${day} slide viewer`}>
+  return <section ref={panel} id="assignment-teaching-tool" className={s.viewer} data-guided={chapter ? true : undefined} aria-label={`Day ${day} slide viewer`}>
     <div className={s.slideHeader}>
-      <div><p>Day {day} · Foundational slides</p><h2>{slide.title}</h2></div>
-      <button ref={enlargeButton} type="button" onClick={toggleEnlarged}>{enlarged ? 'Close enlarged slides' : 'Enlarge'}</button>
+      {chapter ? <h2>{t('Day')} {day} · {t(chapter.title)}</h2> : <div><p>{t('Day')} {day} · {t('Foundational slides')}</p><h2>{t(slide.title)}</h2></div>}
+      <button ref={enlargeButton} type="button" onClick={toggleEnlarged}>{t(enlarged ? 'Close enlarged slides' : 'Enlarge')}</button>
     </div>
     {/* Keep this one iframe mounted through slide changes, Work and fullscreen. */}
+    <div className={teachingStep ? s.guidedBody : s.slideOnly}>
     <div className={s.slideFrame}>
       <iframe key={attempt} ref={frame} className={s.originalSlides} title={`Original Day ${day} interactive slideshow`}
         src={src} sandbox="allow-scripts"
         onLoad={() => frame.current?.contentWindow?.postMessage({channel, type: 'status'}, '*')}
         onError={() => setError('The slideshow could not load. Try reloading the slides.')}/>
     </div>
-    {!ready && !error && <p className={s.slideCount} role="status">Loading interactive slides…</p>}
-    {error && <div className={s.slideError}><p role="alert">{error}</p><button type="button" onClick={retry}>Reload slides</button></div>}
-    <div className={s.slideControls}>
-      <button type="button" disabled={!ready || index === 0} onClick={() => navigate(index - 1)} aria-label="Previous slide">← Previous</button>
-      <label>Slide<select disabled={!ready} value={index} onChange={event => navigate(Number(event.target.value))}>
-        {slides.map((item, i) => <option value={i} key={item.number}>{item.number}. {item.title}</option>)}
-      </select></label>
-      <button type="button" disabled={!ready || index === slides.length - 1} onClick={() => navigate(index + 1)} aria-label="Next slide">Next →</button>
+    {teachingStep && <aside ref={guide} className={s.teachingNote} tabIndex={0} aria-label={locale==='es'?'Guía de lectura':locale==='pt-BR'?'Guia de leitura':'Reading guide'}>
+      <small>{locale === 'es' ? 'Guía de lectura' : locale === 'pt-BR' ? 'Guia de leitura' : 'Reading guide'}</small>
+      <h3>{t(slide.title)}</h3>
+      <FoundationReadingGuide foundation={foundation} number={slide.number} title={slide.title} step={teachingStep} previous={slides[index-1]?.title} next={slides[index+1]?.title}/>
+      {'comicPage' in slide && typeof slide.comicPage === 'string' && <a href={slide.comicPage} target="_blank" rel="noopener noreferrer" style={{textDecoration:'underline'}}>{locale==='es'?'Abrir página completa de la novela gráfica':locale==='pt-BR'?'Abrir página inteira da história em quadrinhos':'Open full graphic novel page'}</a>}
+    </aside>}
     </div>
-    <p className={s.slideCount} aria-live="polite">{index + 1} of {slides.length} · Use Work for your responses and group discussion.</p>
-    <details className={s.companion}><summary>Read slide text</summary><p>{slide.text}</p></details>
+    {!ready && !error && <p className={s.slideCount} role="status">{t("Loading interactive slides…")}</p>}
+    {error && <div className={s.slideError}><p role="alert">{error}</p><button type="button" onClick={retry}>{t("Reload slides")}</button></div>}
+    <div className={s.slideControls}>
+      <button type="button" disabled={!ready || index === 0} onClick={() => navigate(index - 1)} aria-label={t("Previous slide")}>{t("← Previous")}</button>
+      <label>{t("Slide")}<select disabled={!ready} value={index} onChange={event => navigate(Number(event.target.value))}>
+        {slides.map((item, i) => <option value={i} key={item.number}>{item.number}. {t(item.title)}</option>)}
+      </select></label>
+      <button type="button" disabled={!ready || index === slides.length - 1} onClick={() => navigate(index + 1)} aria-label={t("Next slide")}>{t("Next →")}</button>
+    </div>
+    <p className={s.slideCount} aria-live="polite">{index + 1} {t('of')} {slides.length} · {t("Use Work for your responses and group discussion.")}</p>
+    {locale!=='en'&&<p className={s.slideCount}>{t('Words inside pictures stay in the original art. Read the translated slide text below.')}</p>}
+    <details className={s.companion}><summary>{t('Read slide text')}</summary><QuizContent content={t(slide.text)} questionEmphasis/></details>
   </section>
 }

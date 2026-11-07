@@ -9,7 +9,7 @@
     "Add series resistances.",
     "Check that voltage drops add to the supply voltage."
   ],
-  "source_sha256": "063979b360bad68edda53d437bcbf8d8f51057331f354ed9f830d8da58853897",
+  "source_sha256": "a81eea11a73ade734b6fd30e027463b5847b5982413efb63dcf56175c425f474",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.563Z",

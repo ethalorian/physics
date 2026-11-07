@@ -9,7 +9,7 @@
     "Use momentum change to compare stopping force for equal times.",
     "Avoid claiming that momentum alone determines damage."
   ],
-  "source_sha256": "64050e0fae32db1e75d70acf18ed3401808608e8c587c14cef1184be5f9f9695",
+  "source_sha256": "b19379cdace21ac4a9f073d3d6247e9d46db1c43ac13f7eb5040f6ab36b7198c",
   "authoring": {
     "provider": "Codex session",
     "checked_at": "2026-10-24T00:31:50.501Z",
@@ -136,7 +136,7 @@
     {
       "prompt": "Equal-momentum impacts damage different surfaces differently. Which conclusion is justified?",
       "options": [
-        "Momentum alone does not determine damage; contact time, area, and materials matter.",
+        "Momentum alone does not find damage; contact time, area, and materials matter.",
         "One impact must violate conservation.",
         "Momentum has no physical relevance.",
         "Damage must be identical."
@@ -273,7 +273,7 @@
         "One impact must violate conservation.",
         "Damage must be identical.",
         "Momentum has no physical relevance.",
-        "Momentum alone does not determine damage; contact time, area, and materials matter."
+        "Momentum alone does not find damage; contact time, area, and materials matter."
       ],
       "correct_index": 3,
       "guide": "A momentum account constrains impulse but not every local effect.",
