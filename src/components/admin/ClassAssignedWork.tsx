@@ -10,6 +10,7 @@ import AssignmentIdentity from '@/components/AssignmentIdentity'
 import { sourcePresentation, sourceTitle, sourceTypeOptions, matchesSourceType } from '@/lib/assignment-source-presentation'
 import { assignedWorkDetailHref, lessonWorkAccess, workKinds, workAccessLabels, workDueTime, workMatches, type ClassWorkItem, type WorkFilter } from '@/lib/class-work'
 import { toLocalDateTime } from '@/lib/lesson-release'
+import { readingDashboardHref } from '@/lib/reading-dashboard'
 import { useClassWork, saveClassWork } from './useClassWork'
 import s from './ClassAssignedWork.module.css'
 
@@ -35,7 +36,10 @@ export default function ClassAssignedWork({classId,resource,onChanged}:{classId:
       <button className={s.secondary} disabled={loading} onClick={()=>void load().then(()=>setNow(Date.now()))} aria-label="Refresh assigned work"><RefreshCw size={16}/></button>
       <details className={s.add}><summary><Plus size={17}/>Assign work</summary><div>
         <button onClick={e=>{change('workStatus','unassigned');change('workKind','homework');e.currentTarget.closest('details')?.removeAttribute('open')}}>Video homework</button>
-        <Link href={`/admin/control-room?view=quizzes&class=${classId}`}>Quiz</Link><Link href={`/admin/control-room?view=readings&class=${classId}&create=1`}>Reading</Link><Link href={`/admin/reading-syllabus?class=${classId}`}>Reading sequence</Link><Link href={`/admin/vocabulary/tasks?class=${classId}`}>Vocabulary</Link>
+        <Link href={`/admin/control-room?view=quizzes&class=${classId}`}>Quiz</Link>
+        <Link href={`/admin/control-room?view=readings&class=${classId}&create=1`}>Reading</Link>
+        <Link href={readingDashboardHref({ view: 'syllabus', courseId: classId })}>Reading sequence</Link>
+        <Link href={`/admin/vocabulary/tasks?class=${classId}`}>Vocabulary</Link>
       </div></details>
     </div></div>
     {error&&<p role="alert" className={s.error}>{error} <button onClick={()=>void load()}>Try again</button></p>}

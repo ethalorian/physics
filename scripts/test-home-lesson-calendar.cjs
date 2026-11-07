@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- Node CommonJS browser fixture. */
 // Real home API, class-window and submission readers, hook, page and calendar.
 // Only storage/auth and unrelated panels are fixtures; no live student writes.
 const fs = require('node:fs'), path = require('node:path'), http = require('node:http'), assert = require('node:assert/strict');
@@ -77,7 +78,6 @@ let server, browser;
     'next-auth/react': `export const useSession=()=>({data:{user:{name:'Example',role:'student'}}});`,
     '@/components/EnrollmentGate': `export default function Gate({children}){return children}`,
     './StudentCheckIn': `export default function CheckIn(){return null}`,
-    './LearningPace': `export default function Pace(){return null}`,
     './LearningJourney': `export default function Journey(){return null}`,
   })] });
   const css = await pkg('postcss')([pkg('@tailwindcss/postcss/dist/index.js')({ base: root })]).process(fs.readFileSync(root + '/src/app/globals.css', 'utf8'), { from: root + '/src/app/globals.css' });

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- Node CommonJS audit. */
 /** Conservative import reachability audit. Report candidates; never auto-delete. */
 const fs = require('node:fs')
 const path = require('node:path')
@@ -11,20 +12,18 @@ if (process.argv.includes('--css')) {
 const config = ts.parseJsonConfigFileContent(
   ts.readConfigFile('tsconfig.json', ts.sys.readFile).config, ts.sys, '.',
 )
-function scriptFiles(dir) {
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
-    const file = path.join(dir, entry.name)
-    return entry.isDirectory() ? scriptFiles(file) : /\.(?:cjs|mjs|js)$/.test(file) ? [file] : []
-  })
-}
+const javascript = ['.js', '.jsx', '.cjs', '.mjs']
 const files = [...new Set([
   ...config.fileNames.filter(file => file.startsWith('src/') || file.startsWith('scripts/')),
-  ...scriptFiles('scripts'),
+  ...ts.sys.readDirectory('scripts', javascript),
+  ...ts.sys.readDirectory('src', [...javascript, '.css']),
 ])]
 const edges = new Map()
 for (const file of files) {
   const content = fs.readFileSync(file, 'utf8')
-  const imports = ts.preProcessFile(content, true, true).importedFiles.map(i => i.fileName)
+  const imports = file.endsWith('.css')
+    ? Array.from(content.matchAll(/(?:@import\s+(?:url\(\s*)?|\bfrom\s+)['"]?([^\s'")]+\.css)\b/g), match => match[1])
+    : ts.preProcessFile(content, true, true).importedFiles.map(i => i.fileName)
   // Browser harnesses embed imports in template strings; game builds use string
   // entryPoints. These are real consumers even though tsc does not include .cjs.
   if (file.startsWith('scripts/')) {
@@ -32,6 +31,10 @@ for (const file of files) {
   }
   edges.set(path.resolve(file), imports.flatMap(fileName => {
     if (/^(?:\.\/)?src\//.test(fileName)) fileName = './' + path.relative(path.dirname(file), fileName.replace(/^\.\//, ''))
+    if (fileName.endsWith('.css')) {
+      const css = fileName.startsWith('@/') ? path.resolve('src', fileName.slice(2)) : path.resolve(path.dirname(file), fileName)
+      return [css]
+    }
     const resolved = ts.resolveModuleName(fileName, file, config.options, ts.sys).resolvedModule
     return resolved ? [path.resolve(resolved.resolvedFileName)] : []
   }))
@@ -42,14 +45,25 @@ function visit(file) {
   reachable.add(file)
   for (const dependency of edges.get(file) ?? []) visit(dependency)
 }
-// Treat all route files, maintenance scripts, tests and middleware as entry points.
-// This deliberately preserves potentially externally invoked routes and scripts.
+// Next discovers these files by convention. Colocated components and engines
+// under src/app still need a caller. Preserve external routes and script entry points.
+const appEntry = /\/(?:page|route|layout|loading|error|global-error|not-found|global-not-found|forbidden|unauthorized|template|default|robots|manifest|sitemap|(?:icon|apple-icon|opengraph-image|twitter-image)\d*)\.[jt]sx?$/
+const frameworkHooks = new Set(['src/middleware.ts', 'src/instrumentation.ts', 'src/instrumentation-client.ts'])
 for (const file of files) {
-  if (file.startsWith('src/app/') || file.startsWith('scripts/') || /\.test\./.test(file) || ['src/middleware.ts', 'src/instrumentation.ts', 'src/instrumentation-client.ts'].includes(file)) {
+  // scripts/sim-render/render.mjs discovers definitions by directory at runtime.
+  const simulationDefinition = /^src\/app\/simulations\/[^/]+\/def\.ts$/.test(file)
+  // Deck builders and the explainer packager also read authored files by name.
+  const authoredAsset = file.startsWith('src/data/deck-sources/') || file.startsWith('src/data/explainers/claude-source/')
+  const frameworkEntry = file.startsWith('src/app/') && appEntry.test(file)
+  if (frameworkEntry || frameworkHooks.has(file) || simulationDefinition || authoredAsset || file.startsWith('scripts/') || /\.(?:test|spec)\./.test(file)) {
     visit(path.resolve(file))
   }
 }
-const candidates = files.filter(file => !file.endsWith('.d.ts') && !reachable.has(path.resolve(file)))
-console.log(`${files.length} source/script files checked; ${candidates.length} unreachable candidates.`)
+// Plain CSS can also be served or copied by content builders without an import.
+const candidates = files.filter(file => {
+  if (file.endsWith('.d.ts') || (file.endsWith('.css') && !file.endsWith('.module.css'))) return false
+  return !reachable.has(path.resolve(file))
+})
+console.log(`${files.length} source, script and stylesheet files checked; ${candidates.length} unreachable candidates.`)
 for (const file of candidates) console.log(file)
 console.log('Manually check runtime string references, external consumers and framework conventions before deleting candidates.')

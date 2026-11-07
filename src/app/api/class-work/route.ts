@@ -1,4 +1,5 @@
 import { isInteractiveReading, INTERACTIVE_READING_ONLY } from '@/lib/reading-availability'
+import { readingDashboardHref } from '@/lib/reading-dashboard'
 import type { ReadingAssignment } from '@/lib/textbook-assignments'
 import { reviewWindowActive } from '@/lib/review-modules/schedule'
 import { calendarAssigned, CALENDAR_ASSIGNMENT_MESSAGE } from '@/lib/calendar-assignment'
@@ -42,7 +43,7 @@ export const GET = withRole(['teacher', 'admin'], async (req, ctx) => {
   const missions = studentIds.length ? await source('Math missions',readingRows<{id:string;title:string;due_at:string|null;cancelled_at:string|null;user_id:string;teacher_email:string}>((a,b)=>supabaseAdmin.from('math_mission_assignments').select('id,title,due_at,cancelled_at,user_id,teacher_email').in('user_id',studentIds).order('id').range(a,b))) : []
   const audience = (ids: string[] | null) => ids ? `${ids.filter(id=>studentIds.includes(id)).length} selected students` : 'Whole class'
   const href = (view: 'lessons'|'quizzes'|'readings', id?: string) => assessmentCenterHref(view,id,course.id)
-  const syllabusHref = `/admin/reading-syllabus?class=${encodeURIComponent(course.id)}`
+  const syllabusHref = readingDashboardHref({ view: 'syllabus', courseId: course.id })
   const windowBy = new Map(windows.map(w=>[w.lesson_id,w]))
   const items: ClassWorkItem[] = lessons.filter(l=>appliesToClass(l,{...course,track:course.track??null})).map(l=>{
     const window = windowBy.get(l.id)

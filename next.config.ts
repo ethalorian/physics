@@ -19,13 +19,21 @@ const nextConfig: NextConfig = {
     '/api/teacher/worksheets/*/*/presentation': ['./resources/worksheet-decks/generated/*.html'],
   },
   async redirects() {
-    return Array.from({ length: 7 }, (_, i) => i + 1).flatMap(unit =>
+    const packetRedirects = Array.from({ length: 7 }, (_, i) => i + 1).flatMap(unit =>
       ['pdf', 'docx'].map(format => ({
         source: `/student-packets/unit-${unit}.${format}`,
         destination: `/worksheets/unit-${unit}/index.html`,
         permanent: true,
       })),
     );
+    return [
+      ...packetRedirects,
+      {
+        source: '/simulations/distance-displacement/assignment',
+        destination: '/simulations/distance-displacement',
+        permanent: false,
+      },
+    ];
   },
 
   // Environment variables prefixed with NEXT_PUBLIC_ are automatically exposed to the browser

@@ -556,7 +556,7 @@ All API routes are in `src/app/api/` and support the pages above:
 - `POST /api/gradebook/sync-to-classroom` - Sync to Google Classroom
 
 ### Admin
-- `GET /api/admin/stats` - Dashboard statistics
+- `GET /api/admin/oversight` - Data for the Oversight dashboard
 - `POST /api/admin/run-migration` - Run migration
 - `GET /api/admin/check-migration` - Check migration status
 - `GET /api/admin/list-simulations` - List all simulations

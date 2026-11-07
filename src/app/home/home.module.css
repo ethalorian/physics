@@ -120,24 +120,6 @@
   .rewardLinks a { padding-inline: 8px; }
 }
 
-/* The optional avatar showcase is mounted only when extras are expanded. */
-.spotlight { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 0 16px 16px; background: var(--card); }
-.sectionHeader { padding: 16px 0; border-bottom: 1px solid var(--border); }
-.sectionHeadingRow { display: flex; align-items: center; gap: 12px; }
-.sectionHeadingIcon { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--secondary); color: var(--foreground); }
-.sectionEyebrow { font-size: 0.6875rem; line-height: 1.5; font-weight: 600; color: var(--muted-foreground); }
-.sectionTitle { font-size: 1.125rem; line-height: 1.3; font-weight: 600; }
-.sectionDescription { margin-top: 12px; color: var(--muted-foreground); font-size: 0.875rem; line-height: 1.6; }
-.avatarDeck { position: relative; height: 285px; margin: 12px 0 4px; }
-.playerCard { position: absolute; left: 50%; top: 14px; width: 148px; min-height: 239px; padding: 14px 12px; border-radius: var(--radius-lg); border: 2px solid var(--border); display: flex; align-items: center; flex-direction: column; color: var(--foreground); background: var(--card); box-shadow: 0 6px 16px color-mix(in oklab, var(--primary) 12%, transparent); transition: transform 220ms var(--ease-out-expo); cursor: pointer; }
-.playerCard[data-position='0'] { transform: translateX(-50%); z-index: 3; border-color: var(--primary); }
-.playerCard[data-position='1'] { transform: translateX(calc(-50% - 52px)) translateY(14px) rotate(-10deg); z-index: 1; background: color-mix(in oklab, var(--viz-up) 16%, var(--card)); }
-.playerCard[data-position='2'] { transform: translateX(calc(-50% + 52px)) translateY(14px) rotate(10deg); z-index: 2; background: color-mix(in oklab, var(--viz-down) 16%, var(--card)); }
-.playerCard:focus-visible { outline: 3px solid var(--primary); outline-offset: 4px; z-index: 4; }
-.cardRank { align-self: start; border-radius: var(--radius-full); background: var(--reward); color: var(--reward-foreground); padding: 2px 9px; font-size: 0.8125rem; font-weight: 700; }
-@media (max-width: 380px) { .playerCard { width: 132px; } .playerCard[data-position='1'] { transform: translateX(calc(-50% - 38px)) translateY(14px) rotate(-8deg); } .playerCard[data-position='2'] { transform: translateX(calc(-50% + 38px)) translateY(14px) rotate(8deg); } }
-@media (prefers-reduced-motion: reduce) { .playerCard { transition: none; } }
-
 /* Learning Week: a shared action baseline beneath the raised portrait and XP plaque. */
 .checkIn { grid-template-columns: 360px minmax(0, 1fr) 174px; grid-template-areas: 'portrait welcome xp' 'personalize actions actions'; row-gap: 25px; padding: 30px; overflow: visible; background: radial-gradient(ellipse at 15% 0%,color-mix(in oklab,var(--home-hero-muted) 20%,transparent),transparent 55%),var(--home-hero); box-shadow: 0 12px 28px color-mix(in oklab,var(--primary) 15%,transparent); }
 .checkIn::before { display: none; }

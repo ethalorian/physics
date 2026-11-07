@@ -31,6 +31,7 @@
     "test:avatar-browser": "node scripts/test-avatar-browser.cjs",
     "avatar:catalog-check": "node scripts/avatar-catalog-sql.cjs",
     "audit:unused": "node scripts/audit-unused-source.cjs",
+    "audit:routes": "node scripts/audit-routes.cjs",
     "audit:styles": "node scripts/audit-styles.cjs",
     "test:question-bank": "tsx --test src/lib/question-bank-view.test.ts",
     "test:tether": "node scripts/test-tether-physics.cjs && tsx --test src/lib/tether-bridge.test.ts && node scripts/test-tether-routes.cjs",
