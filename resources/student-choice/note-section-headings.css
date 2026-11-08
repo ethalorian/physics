@@ -1,0 +1,33 @@
+/* Section references on the reading back use the same words as these tabs. */
+.note-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  margin: 0;
+  color: #181818;
+  font: 700 13.5px/1.08 Arial, sans-serif;
+  letter-spacing: .015em;
+}
+.note-section-heading[data-section="A"] { margin-bottom: 4px; }
+.note-section-tab {
+  flex: none;
+  padding: 0 5px;
+  border: 1.5px solid #202020;
+  background-color: #202020;
+  color: white;
+  font: 600 12px/15px 'IBM Plex Mono', monospace;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+/* These three dense fronts need smaller gaps between blocks at the larger heading size. */
+.page[data-section-spacing="compact"] > div > div:first-child { gap: 2px !important; }
+.page[data-section-spacing="compact"] > div > div:first-child > div:nth-child(4),
+.page[data-section-spacing="compact"] > div > div:first-child > div:last-child {
+  padding-top: 3px !important;
+  padding-bottom: 4px !important;
+  gap: 3px !important;
+}
+.page[data-section-spacing="compact"] > div > div:first-child > div:nth-child(5) { gap: 3px !important; }

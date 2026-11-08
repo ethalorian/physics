@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en"><head><base href="/student-choice-pages/unit-1/honors-math-ec5600db4f1e/"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@font-face{font-family:'IBM Plex Mono';font-weight:400;src:url('./fonts/mono400.ttf') format('truetype')}
+@font-face{font-family:'IBM Plex Mono';font-weight:500;src:url('./fonts/mono500.ttf') format('truetype')}
+@font-face{font-family:'IBM Plex Mono';font-weight:600;src:url('./fonts/mono600.ttf') format('truetype')}
+@font-face{font-family:'Newsreader';font-weight:400;src:url('./fonts/news400.ttf') format('truetype')}
+@font-face{font-family:'Newsreader';font-weight:500;src:url('./fonts/news500.ttf') format('truetype')}
+@font-face{font-family:'Newsreader';font-weight:600;src:url('./fonts/news600.ttf') format('truetype')}
+body{margin:0}img{filter:grayscale(1)}
+a{color:#565656}a:hover{color:#252525}
+doc-page:not(:defined){visibility:hidden}
+</style>
+<script src="./doc-page.js"></script>
+<title>Honors notebook · Day 21 · Student Choice</title><style>.binder-tools{padding:12px 20px;display:flex;gap:16px;align-items:center;background:white;color:#171717;font:15px system-ui}.binder-tools button{font:inherit;padding:8px 18px;cursor:pointer}@media print{.binder-tools{display:none!important}*,*::before,*::after{print-color-adjust:exact;-webkit-print-color-adjust:exact}}</style><style>@font-face{font-family:'Binder Math';font-style:italic;font-weight:400;src:url('./fonts/KaTeX_Math-Italic.woff2') format('woff2')}
+@font-face{font-family:'Binder Math Roman';font-style:normal;font-weight:400;src:url('./fonts/KaTeX_Main-Regular.woff2') format('woff2')}
+.math-var{font-family:'Binder Math',serif;font-style:italic;font-weight:400;font-size:1.08em;line-height:0;letter-spacing:0}
+.math-symbol .math-var,.math-symbol .math-operator{font-size:18px}
+div[style="font-size:17px;font-weight:500;line-height:1.2"] .math-var{font-size:1em}
+.math-operator{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;line-height:0;letter-spacing:0}
+.math-index{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;font-size:.74em;line-height:0;vertical-align:-.24em;letter-spacing:0}
+.math-unicode-index{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;font-size:.74em;line-height:0;vertical-align:-.24em;letter-spacing:0}
+svg .math-unicode-index{baseline-shift:sub}
+.math-svg-index{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;font-size:74%;baseline-shift:sub;letter-spacing:0}
+</style><style id="student-choice-print-layout">/* Letter pages: the lesson, color key, and footer each own a grid row. */
+.page[data-layout] > div {
+  box-sizing:border-box!important;
+  height:11in!important;
+  padding:.30in .30in .30in .90in!important;
+  display:grid!important;
+  grid-template-rows:minmax(0,1fr) auto 24px!important;
+  align-items:stretch!important;
+  gap:12px!important;
+}
+.page[data-layout] > div > div:first-child {
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  zoom:1!important;
+  box-sizing:border-box!important;
+}
+.page[data-layout="notes"] > div > div:first-child {
+  padding:6px 22px!important;
+  gap:4px!important;
+}
+.page[data-layout="notes"] > div > div:first-child > div:first-child { padding-bottom:5px!important; }
+.page[data-layout="notes"] > div > div:first-child > div:nth-child(2) { padding-top:5px!important; padding-bottom:5px!important; }
+.page[data-layout="notes"] > div > div:first-child > div:nth-child(4),
+.page[data-layout="notes"] > div > div:first-child > div:last-child { padding-top:5px!important; padding-bottom:6px!important; }
+.page[data-layout] > div > div:nth-child(2) { box-sizing:border-box!important; margin:0!important; }
+.page[data-layout] > div > div:last-child {
+  box-sizing:border-box!important;
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  font:500 9px/12px 'IBM Plex Mono',monospace!important;
+  letter-spacing:.04em!important;
+  color:#565656!important;
+  margin:0!important;
+}
+@media print {
+  @page { size:letter; margin:0; }
+  .page[data-layout] { break-inside:avoid; break-after:page; }
+  .page[data-layout]:last-child { break-after:auto; }
+}
+</style><style id="note-section-styles">
+/* Section references on the reading back use the same words as these tabs. */
+.note-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  margin: 0;
+  color: #181818;
+  font: 700 13.5px/1.08 Arial, sans-serif;
+  letter-spacing: .015em;
+}
+.note-section-heading[data-section="A"] { margin-bottom: 4px; }
+.note-section-tab {
+  flex: none;
+  padding: 0 5px;
+  border: 1.5px solid #202020;
+  background-color: #202020;
+  color: white;
+  font: 600 12px/15px 'IBM Plex Mono', monospace;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+/* These three dense fronts need smaller gaps between blocks at the larger heading size. */
+.page[data-section-spacing="compact"] > div > div:first-child { gap: 2px !important; }
+.page[data-section-spacing="compact"] > div > div:first-child > div:nth-child(4),
+.page[data-section-spacing="compact"] > div > div:first-child > div:last-child {
+  padding-top: 3px !important;
+  padding-bottom: 4px !important;
+  gap: 3px !important;
+}
+.page[data-section-spacing="compact"] > div > div:first-child > div:nth-child(5) { gap: 3px !important; }
+</style></head><body><nav class="binder-tools" aria-label="Page printing"><button type="button" onclick="window.print()">Print pages</button><span>US Letter · 100% scale · Turn on background graphics</span></nav><doc-page size="letter">
+<section class="page" id="day-21" data-screen-label="Day 21" data-layout="notes">
+<div style="padding:0.35in 0.3in 0 0.9in;display:flex;flex-direction:column;align-items:center;gap:6px">
+<div style="width:7.3in;height:9.85in;box-sizing:border-box;border:1.25px solid transparent;padding:16px 22px;display:flex;flex-direction:column;gap:7px;font-family:Newsreader,Georgia,serif;color:#252525;background:#ffffff">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid #252525;padding-bottom:9px">
+    <div>
+      <div style="font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#565656">HONORS PHYSICS · UNIT 1 · DAY 21</div>
+      <div style="font-size:29px;font-weight:500;line-height:1.05;letter-spacing:-.01em;margin-top:5px">Plan a prediction in two dimensions</div>
+    </div>
+    <img src="./logo.png" alt="" style="width:38px;height:38px;border-radius:7px;flex:none">
+  </div>
+  <div style="border:1.5px solid #252525;padding:9px 14px;display:flex;gap:14px;align-items:baseline">
+    <div style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;flex:none">LEARNING TARGET</div>
+    <div style="font-size:17px;font-weight:500;line-height:1.2">I can plan a prediction using evidence and fixed axes.</div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:16px">
+    <div>
+      <h2 class="note-section-heading" data-section="A"><span class="note-section-tab">SECTION A</span> <span>KEY VOCABULARY</span></h2>
+      <div style="display:grid;grid-template-columns:auto 1fr;font-size:14px;line-height:1.2"><div style="font-weight:600;padding:3px 10px 3px 0;border-bottom:1px solid #d6d6d6">Frame</div><div style="padding:3px 0;border-bottom:1px solid #d6d6d6">Keep the origin and axes fixed.</div>
+<div style="font-weight:600;padding:3px 10px 3px 0;border-bottom:1px solid #d6d6d6">Components</div><div style="padding:3px 0;border-bottom:1px solid #d6d6d6">Signed <span class="math-var">x</span> and <span class="math-var">y</span> parts; calculate separately.</div>
+<div style="font-weight:600;padding:3px 10px 3px 0;border-bottom:1px solid #d6d6d6">Units</div><div style="padding:3px 0;border-bottom:1px solid #d6d6d6">Make all units match before substituting.</div>
+<div style="font-weight:600;padding:3px 10px 3px 0;">Limit</div><div style="padding:3px 0;">State assumptions, such as steady velocity.</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <h2 class="note-section-heading" data-section="B"><span class="note-section-tab">SECTION B</span> <span>KEY EQUATIONS + UNITS</span></h2>
+      <div style="border:1.5px solid #252525;background:#f7f7f7;padding:12px;font:500 20px/1.4 'IBM Plex Mono',monospace;text-align:center"><span class="math-var">x</span><sub class="math-index">f</sub> = <span class="math-var">x</span><sub class="math-index">0</sub> + <span class="math-var">v</span><sub class="math-index">x</sub><span class="math-var">t</span><div style="font-size:14px;border-top:1px solid #d6d6d6;margin-top:6px;padding-top:6px"><span class="math-var">y</span><sub class="math-index">f</sub> = <span class="math-var">y</span><sub class="math-index">0</sub> + <span class="math-var">v</span><sub class="math-index">y</sub><span class="math-var">t</span></div></div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:15px"><div style="font:500 13px 'IBM Plex Mono',monospace" class="math-symbol"><span class="math-var">v</span><sub class="math-index">x</sub></div><div><span class="math-var">v</span> cos <span class="math-var">θ</span></div><div style="font:500 13px 'IBM Plex Mono',monospace" class="math-symbol"><span class="math-var">v</span><sub class="math-index">y</sub></div><div><span class="math-var">v</span> sin <span class="math-var">θ</span>; <span class="math-var">θ</span> from +<span class="math-var">x</span></div></div>
+    </div>
+  </div>
+  <div style="border:1.5px solid #252525;padding:8px 14px 10px;display:flex;flex-direction:column;gap:5px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+      <h2 class="note-section-heading" data-section="C"><span class="note-section-tab">SECTION C</span> <span>COLOR IT · START + CHANGE</span></h2>
+      <div style="font-size:14px;font-style:italic;color:#5f5f5f">Probe example; fixed axes.</div>
+    </div>
+    <svg viewBox="0 0 616 250" style="width:100%;display:block" role="img" aria-label="Position plane with initial point (−20,5) m and final point (−2.68,15) m reached along a 30 degree velocity direction; origin stays fixed."><line x1="73" y1="218" x2="564" y2="218" stroke="#252525" stroke-width="1.5"></line><line x1="410" y1="33" x2="410" y2="225" stroke="#252525" stroke-width="1.5"></line><text x="568" y="222" text-anchor="start" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace">+<tspan class="math-var">x</tspan></text><text x="430" y="31" text-anchor="start" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace">+<tspan class="math-var">y</tspan></text><line x1="190" y1="212" x2="190" y2="224" stroke="#252525" stroke-width="1.5"></line><text x="190" y="230" text-anchor="middle" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace" transform="translate(0 7)">-20</text><line x1="300" y1="212" x2="300" y2="224" stroke="#252525" stroke-width="1.5"></line><text x="300" y="230" text-anchor="middle" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace" transform="translate(0 7)">-10</text><line x1="410" y1="212" x2="410" y2="224" stroke="#252525" stroke-width="1.5"></line><text x="410" y="230" text-anchor="middle" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace" transform="translate(0 8)">0</text><line x1="520" y1="212" x2="520" y2="224" stroke="#252525" stroke-width="1.5"></line><text x="520" y="230" text-anchor="middle" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace" transform="translate(0 7)">10</text><line x1="404" y1="163" x2="416" y2="163" stroke="#252525" stroke-width="1.5"></line><text x="424" y="167" text-anchor="start" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace">5</text><line x1="404" y1="108" x2="416" y2="108" stroke="#252525" stroke-width="1.5"></line><text x="424" y="112" text-anchor="start" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace">10</text><line x1="404" y1="53" x2="416" y2="53" stroke="#252525" stroke-width="1.5"></line><text x="424" y="57" text-anchor="start" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace">15</text><line x1="190" y1="163" x2="368.39573326319766" y2="60.00015400508219" stroke="#252525" stroke-width="8"></line><line x1="190" y1="163" x2="368.39573326319766" y2="60.00015400508219" stroke="#ffffff" stroke-width="5"></line><path d="M 380.52 53 L 364.89565626065655 53.93802063668102 L 371.89581026573876 66.06228737348336 Z" fill="#ffffff" stroke="#252525" stroke-width="1.5"></path><line x1="190" y1="163" x2="380.52" y2="163" stroke="#252525" stroke-width="1.5" stroke-dasharray="4 4"></line><line x1="380.52" y1="163" x2="380.52" y2="53" stroke="#252525" stroke-width="1.5" stroke-dasharray="4 4"></line><rect x="186" y="159" width="8" height="8" fill="#ffffff" stroke="#252525" stroke-width="1.5"></rect><rect x="376.52" y="49" width="8" height="8" fill="#ffffff" stroke="#252525" stroke-width="1.5"></rect><text x="91" y="188" text-anchor="start" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace">(−20, 5) m</text><text x="275" y="48" text-anchor="start" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace">(−2.68, 15) m</text><text x="215" y="162" text-anchor="start" fill="#252525" style="font:400 12px 'IBM Plex Mono',monospace" transform="translate(14 -4)">30°</text><circle cx="468" cy="220" r="11" fill="#ffffff" stroke="#252525" stroke-width="1.5"></circle><text x="468" y="224" text-anchor="middle" fill="#252525" style="font:600 12px 'IBM Plex Mono',monospace">1</text><circle cx="355" cy="72" r="11" fill="#ffffff" stroke="#252525" stroke-width="1.5"></circle><text x="355" y="76" text-anchor="middle" fill="#252525" style="font:600 12px 'IBM Plex Mono',monospace">2</text><circle cx="243" cy="104" r="11" fill="#ffffff" stroke="#252525" stroke-width="1.5"></circle><text x="243" y="108" text-anchor="middle" fill="#252525" style="font:600 12px 'IBM Plex Mono',monospace">3</text><text x="91" y="18" text-anchor="start" fill="#252525" style="font:400 13px 'IBM Plex Mono',monospace">steady velocity for 2 s</text></svg>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;font-size:14px;line-height:1.2"><div style="display:flex;gap:8px;align-items:center"><div style="width:26px;height:18px;border:1.5px solid #252525;flex:none"></div><div><strong style="font:600 12px 'IBM Plex Mono',monospace">1 · PENCIL</strong><br>Origin and axes</div></div><div style="display:flex;gap:8px;align-items:center"><div style="width:26px;height:18px;border:1.5px solid #252525;flex:none"></div><div><strong style="font:600 12px 'IBM Plex Mono',monospace">2 · BLUE</strong><br>Start and end positions</div></div><div style="display:flex;gap:8px;align-items:center"><div style="width:26px;height:18px;border:1.5px solid #252525;flex:none"></div><div><strong style="font:600 12px 'IBM Plex Mono',monospace">3 · BLUE</strong><br>Displacement direction</div></div></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:7px">
+    <h2 class="note-section-heading" data-section="D"><span class="note-section-tab">SECTION D</span> <span>WORKED EXAMPLE</span></h2>
+    <div style="font-size:15.5px;line-height:1.3">A probe starts at (−20, 5) m and moves at <b>10 m/s</b>, <b>30°</b> from +<span class="math-var">x</span> toward +<span class="math-var">y</span>, for <b>2 s</b>. <b>Find its new coordinates.</b></div>
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1.5px solid #252525;font-size:14.5px;line-height:1.3"><div style="padding:7px 9px;border-right:1px solid #252525"><div style="font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;margin-bottom:4px">GIVEN</div><span class="math-var">x</span><sub class="math-index">0</sub> = <b>−20 m</b>; <span class="math-var">y</span><sub class="math-index">0</sub> = <b>5 m</b><br><span class="math-var">v</span> = <b>10 m/s</b>; <span class="math-var">θ</span> = <b>30°</b><br><span class="math-var">t</span> = <b>2 s</b>; steady <span class="math-var">v</span></div><div style="padding:7px 9px;border-right:1px solid #252525"><div style="font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;margin-bottom:4px">EQUATION</div>Resolve <span class="math-var">v</span>:<br><span class="math-var">v</span><sub class="math-index">x</sub> = <b>8.66 m/s</b><br><span class="math-var">v</span><sub class="math-index">y</sub> = <b>5 m/s</b></div><div style="padding:7px 9px;border-right:1px solid #252525"><div style="font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;margin-bottom:4px">WORK</div><span class="math-var">x</span><sub class="math-index">f</sub> = −20 + 8.66(2)<br><span class="math-var">y</span><sub class="math-index">f</sub> = 5 + 5(2)</div><div style="padding:7px 9px;background:#f7f7f7"><div style="font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;margin-bottom:4px">ANSWER</div><strong style="font-size:17px">(−2.68, 15) m</strong><br>Final <span class="math-var">x</span> is still negative.</div></div>
+  </div>
+
+  <div style="margin-top:auto;border:1.5px solid #252525;border-left:6px solid #252525;padding:9px 14px 11px;display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><h2 class="note-section-heading" data-section="E"><span class="note-section-tab">SECTION E</span> <span>THE 2026-XJ THREAD</span></h2><div style="font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#5f5f5f;white-space:nowrap">DAY 21 OF 22 · NEW TOOL: A TWO-AXIS PLAN</div></div><div style="font-size:15.5px;line-height:1.35">For fictional XJ, name the frame, units and motion assumptions. Fixed Earth and steady velocity are classroom simplifications.</div><div style="font-size:13px;font-style:italic;color:#5f5f5f">Unit question: How fast is it moving, and where will it arrive?</div></div>
+</div>
+<div style="align-self:stretch;display:flex;flex-wrap:wrap;align-items:center;gap:3px 12px;border:1px solid #252525;padding:4px 10px;font:500 12px/1.2 'IBM Plex Mono',monospace;color:#252525"><span style="font-weight:600;letter-spacing:.1em">UNIT 1 COLOR CODE</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">green</b> speeding up</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">red</b> slowing down</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">yellow</b> steady · balanced</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">blue</b> position · displacement</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">purple</b> velocity</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">orange</b> forces</span><span style="white-space:nowrap;color:#565656">pencil · everything else</span></div>
+<div style="font:400 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#8d8d8d">STUDENT CHOICE BINDER · HONORS · 8.5 × 11 in · 3-HOLE PUNCH LEFT</div>
+</div>
+</section></doc-page></body></html>

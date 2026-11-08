@@ -31,14 +31,14 @@ def pdf_bytes(pages, title, unit=False):
     writer.add_metadata({'/Title': title, '/Author': 'Craig Antocci'})
     writer.root_object[NameObject('/ViewerPreferences')] = DictionaryObject({
         NameObject('/PrintScaling'): NameObject('/None'),
-        NameObject('/Duplex'): NameObject('/DuplexFlipLongEdge'),
+        NameObject('/Duplex'): NameObject('/Simplex' if len(pages) == 1 else '/DuplexFlipLongEdge'),
     })
     output = io.BytesIO()
     writer.write(output)
     return output.getvalue()
 
 
-def package(course, back_path, catalog, files):
+def package(course, back_path, catalog, files, notes_directory=None):
     fronts = {}
     for packet in catalog:
         if packet['unit'] == 'unit-1' and course in packet.get('printPackets', {}):
@@ -49,11 +49,24 @@ def package(course, back_path, catalog, files):
     assert set(fronts) == set(DAYS)
     backs = PdfReader(back_path)
     assert len(backs.pages) == len(DAYS)
+    if notes_directory:
+        book = f'unit-1-{course}-notebook'
+        revised = PdfReader(notes_directory / f'{book}.pdf')
+        assert len(revised.pages) == len(DAYS)
+        files[f'{book}.html'] = (notes_directory / f'{book}.html').read_bytes()
     pages = []
     for day in DAYS:
         notes = PdfReader(PUBLIC / fronts[day].lstrip('/'))
         assert len(notes.pages) == 1
-        front, back = notes.pages[0], backs.pages[day-1]
+        front = revised.pages[day-1] if notes_directory else notes.pages[0]
+        back = backs.pages[day-1]
+        if notes_directory:
+            stem = f'day-{day:02}-{course}-notes'
+            html = (notes_directory / f'{stem}.html').read_bytes()
+            assert re.findall(rb'<h2 class="note-section-heading" data-section="([A-E])"', html) == [b'A', b'B', b'C', b'D', b'E']
+            assert re.findall(r'\bSECTION\s+([A-E])\b', front.extract_text()) == list('ABCDE')
+            files[f'{stem}.html'] = html
+            files[f'{stem}.pdf'] = pdf_bytes([front], f'Day {day} {course.upper()} notes')
         for page in (front, back):
             assert tuple(page.mediabox) == (0, 0, 612, 792)
             header = page.extract_text().splitlines()[0]
@@ -70,14 +83,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('cpa_backs', type=Path)
     parser.add_argument('honors_backs', type=Path)
+    parser.add_argument('--notes-directory', type=Path,
+                        help='Reviewed daily and notebook HTML, plus each 22-front notebook PDF')
     args = parser.parse_args()
     catalog = json.loads(CATALOG.read_text())
     files = {}
     for course, path in [('cpa', args.cpa_backs), ('honors', args.honors_backs)]:
-        package(course, path, catalog, files)
+        package(course, path, catalog, files, args.notes_directory)
     hashes = {name: hashlib.sha256(data).hexdigest() for name, data in files.items()}
     digest = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()[:12]
-    prefix = f'/student-choice-pages/unit-1/reading-references-{digest}'
+    edition = 'note-sections' if args.notes_directory else 'reading-references'
+    prefix = f'/student-choice-pages/unit-1/{edition}-{digest}'
     folder = PUBLIC / prefix.lstrip('/')
     folder.mkdir(parents=True, exist_ok=True)
     for name, data in files.items():
@@ -85,6 +101,11 @@ def main():
     for packet in catalog:
         if packet['unit'] != 'unit-1':
             continue
+        if args.notes_directory:
+            for course in ('cpa', 'honors'):
+                if course in packet['notes']:
+                    name = f'day-{packet["day"]:02}-{course}-notes.pdf'
+                    packet['notes'][course].update(path=f'{prefix}/{name}', sha256=hashes[name])
         for course, bundle in packet.get('printPackets', {}).items():
             if course not in ('cpa', 'honors'):
                 continue

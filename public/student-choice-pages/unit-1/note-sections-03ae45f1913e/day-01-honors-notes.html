@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en"><head><base href="/student-choice-pages/unit-1/honors-math-ec5600db4f1e/"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@font-face{font-family:'IBM Plex Mono';font-weight:400;src:url('./fonts/mono400.ttf') format('truetype')}
+@font-face{font-family:'IBM Plex Mono';font-weight:500;src:url('./fonts/mono500.ttf') format('truetype')}
+@font-face{font-family:'IBM Plex Mono';font-weight:600;src:url('./fonts/mono600.ttf') format('truetype')}
+@font-face{font-family:'Newsreader';font-weight:400;src:url('./fonts/news400.ttf') format('truetype')}
+@font-face{font-family:'Newsreader';font-weight:500;src:url('./fonts/news500.ttf') format('truetype')}
+@font-face{font-family:'Newsreader';font-weight:600;src:url('./fonts/news600.ttf') format('truetype')}
+body{margin:0}img{filter:grayscale(1)}
+a{color:#565656}a:hover{color:#252525}
+doc-page:not(:defined){visibility:hidden}
+</style>
+<script src="./doc-page.js"></script>
+<title>Honors notebook · Day 1 · Student Choice</title><style>.binder-tools{padding:12px 20px;display:flex;gap:16px;align-items:center;background:white;color:#171717;font:15px system-ui}.binder-tools button{font:inherit;padding:8px 18px;cursor:pointer}@media print{.binder-tools{display:none!important}*,*::before,*::after{print-color-adjust:exact;-webkit-print-color-adjust:exact}}</style><style>@font-face{font-family:'Binder Math';font-style:italic;font-weight:400;src:url('./fonts/KaTeX_Math-Italic.woff2') format('woff2')}
+@font-face{font-family:'Binder Math Roman';font-style:normal;font-weight:400;src:url('./fonts/KaTeX_Main-Regular.woff2') format('woff2')}
+.math-var{font-family:'Binder Math',serif;font-style:italic;font-weight:400;font-size:1.08em;line-height:0;letter-spacing:0}
+.math-symbol .math-var,.math-symbol .math-operator{font-size:18px}
+div[style="font-size:17px;font-weight:500;line-height:1.2"] .math-var{font-size:1em}
+.math-operator{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;line-height:0;letter-spacing:0}
+.math-index{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;font-size:.74em;line-height:0;vertical-align:-.24em;letter-spacing:0}
+.math-unicode-index{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;font-size:.74em;line-height:0;vertical-align:-.24em;letter-spacing:0}
+svg .math-unicode-index{baseline-shift:sub}
+.math-svg-index{font-family:'Binder Math Roman',serif;font-style:normal;font-weight:400;font-size:74%;baseline-shift:sub;letter-spacing:0}
+</style><style id="student-choice-print-layout">/* Letter pages: the lesson, color key, and footer each own a grid row. */
+.page[data-layout] > div {
+  box-sizing:border-box!important;
+  height:11in!important;
+  padding:.30in .30in .30in .90in!important;
+  display:grid!important;
+  grid-template-rows:minmax(0,1fr) auto 24px!important;
+  align-items:stretch!important;
+  gap:12px!important;
+}
+.page[data-layout] > div > div:first-child {
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  zoom:1!important;
+  box-sizing:border-box!important;
+}
+.page[data-layout="notes"] > div > div:first-child {
+  padding:6px 22px!important;
+  gap:4px!important;
+}
+.page[data-layout="notes"] > div > div:first-child > div:first-child { padding-bottom:5px!important; }
+.page[data-layout="notes"] > div > div:first-child > div:nth-child(2) { padding-top:5px!important; padding-bottom:5px!important; }
+.page[data-layout="notes"] > div > div:first-child > div:nth-child(4),
+.page[data-layout="notes"] > div > div:first-child > div:last-child { padding-top:5px!important; padding-bottom:6px!important; }
+.page[data-layout] > div > div:nth-child(2) { box-sizing:border-box!important; margin:0!important; }
+.page[data-layout] > div > div:last-child {
+  box-sizing:border-box!important;
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  font:500 9px/12px 'IBM Plex Mono',monospace!important;
+  letter-spacing:.04em!important;
+  color:#565656!important;
+  margin:0!important;
+}
+@media print {
+  @page { size:letter; margin:0; }
+  .page[data-layout] { break-inside:avoid; break-after:page; }
+  .page[data-layout]:last-child { break-after:auto; }
+}
+</style><style id="note-section-styles">
+/* Section references on the reading back use the same words as these tabs. */
+.note-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  margin: 0;
+  color: #181818;
+  font: 700 13.5px/1.08 Arial, sans-serif;
+  letter-spacing: .015em;
+}
+.note-section-heading[data-section="A"] { margin-bottom: 4px; }
+.note-section-tab {
+  flex: none;
+  padding: 0 5px;
+  border: 1.5px solid #202020;
+  background-color: #202020;
+  color: white;
+  font: 600 12px/15px 'IBM Plex Mono', monospace;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+/* These three dense fronts need smaller gaps between blocks at the larger heading size. */
+.page[data-section-spacing="compact"] > div > div:first-child { gap: 2px !important; }
+.page[data-section-spacing="compact"] > div > div:first-child > div:nth-child(4),
+.page[data-section-spacing="compact"] > div > div:first-child > div:last-child {
+  padding-top: 3px !important;
+  padding-bottom: 4px !important;
+  gap: 3px !important;
+}
+.page[data-section-spacing="compact"] > div > div:first-child > div:nth-child(5) { gap: 3px !important; }
+</style></head><body><nav class="binder-tools" aria-label="Page printing"><button type="button" onclick="window.print()">Print pages</button><span>US Letter · 100% scale · Turn on background graphics</span></nav><doc-page size="letter">
+<section class="page" id="day-1" data-screen-label="Day 1" data-layout="notes">
+<div style="padding:0.35in 0.3in 0 0.9in;display:flex;flex-direction:column;align-items:center;gap:6px">
+<div style="width:7.3in;height:9.85in;box-sizing:border-box;border:1.25px solid transparent;padding:16px 22px;display:flex;flex-direction:column;gap:7px;font-family:Newsreader,Georgia,serif;color:#252525;background:#ffffff">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:2px solid #252525;padding-bottom:9px">
+    <div>
+      <div style="font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#565656">HONORS PHYSICS · UNIT 1 · DAY 1</div>
+      <div style="font-size:29px;font-weight:500;line-height:1.05;letter-spacing:-.01em;margin-top:5px">The briefing: evidence, inference, prediction</div>
+    </div>
+    <img src="./logo.png" alt="" style="width:38px;height:38px;border-radius:7px;flex:none">
+  </div>
+  <div style="border:1.5px solid #252525;padding:9px 14px;display:flex;gap:14px;align-items:baseline">
+    <div style="font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.1em;flex:none">LEARNING TARGET · R1</div>
+    <div style="font-size:17px;font-weight:500;line-height:1.2">I can separate evidence from inference and name the measurements needed to predict a future position.</div>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:16px">
+    <div>
+      <h2 class="note-section-heading" data-section="A"><span class="note-section-tab">SECTION A</span> <span>KEY VOCABULARY</span></h2>
+      <div style="display:grid;grid-template-columns:auto 1fr;font-size:14px;line-height:1.2">
+        <div style="font-weight:600;padding:3px 10px 3px 0;border-bottom:1px solid #d6d6d6">Evidence</div><div style="padding:3px 0;border-bottom:1px solid #d6d6d6">What was actually stated or measured. “An object is approaching.”</div><div style="font-weight:600;padding:3px 10px 3px 0;border-bottom:1px solid #d6d6d6">Inference</div><div style="padding:3px 0;border-bottom:1px solid #d6d6d6">A conclusion that still needs testing. “It will hit Earth.”</div>
+        <div style="font-weight:600;padding:3px 10px 3px 0;border-bottom:1px solid #d6d6d6">Model</div><div style="padding:3px 0;border-bottom:1px solid #d6d6d6">A simplified description with stated assumptions that makes a testable prediction.</div>
+        
+        <div style="font-weight:600;padding:3px 10px 3px 0">Testable question</div><div style="padding:3px 0">“Is it bad?” → “Will its predicted path intersect Earth’s position at the same time?”</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <h2 class="note-section-heading" data-section="B"><span class="note-section-tab">SECTION B</span> <span>MODEL + WHAT A PREDICTION NEEDS</span></h2>
+      <div style="border:1.5px solid #252525;background:#f7f7f7;padding:12px;font:500 15px/1.45 'IBM Plex Mono',monospace;text-align:center">new position<br>= starting position<br>+ change × elapsed time</div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:15px">
+        <div style="font:500 13px 'IBM Plex Mono',monospace" class="math-symbol">needs</div><div>current position</div>
+        <div style="font:500 13px 'IBM Plex Mono',monospace" class="math-symbol"></div><div>velocity <em>with direction</em></div><div style="font:500 13px 'IBM Plex Mono',monospace" class="math-symbol"></div><div>elapsed time + does <span class="math-var">v</span> change?</div>
+      </div>
+      <div style="font:500 13px 'IBM Plex Mono',monospace;border-top:1px solid #d6d6d6;padding-top:7px;text-align:center">CLAIM · EVIDENCE · REASONING · LIMIT</div>
+    </div>
+  </div>
+  <div style="border:1.5px solid #252525;padding:8px 14px 10px;display:flex;flex-direction:column;gap:5px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+      <h2 class="note-section-heading" data-section="C"><span class="note-section-tab">SECTION C</span> <span>COLOR IT · WATCH A PATTERN FORM</span></h2>
+      <div style="font-size:14px;font-style:italic;color:#5f5f5f">One dot marks the cart’s position each second.</div>
+    </div>
+    <svg viewBox="0 26 616 149" style="width:100%;display:block" role="img" aria-label="Cart positions 0, 2, 4 m at 0, 1, 2 s, with a predicted 6 m at 3 s">
+      <path d="M60,84 Q120,36 180,84" fill="none" stroke="#252525" stroke-width="10" stroke-linecap="round"></path>
+      <path d="M60,84 Q120,36 180,84" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round"></path>
+      <path d="M180,84 Q240,36 300,84" fill="none" stroke="#252525" stroke-width="10" stroke-linecap="round"></path>
+      <path d="M180,84 Q240,36 300,84" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round"></path>
+      <path d="M300,84 Q360,36 420,84" fill="none" stroke="#252525" stroke-width="10" stroke-linecap="round" stroke-dasharray="14 7"></path>
+      <path d="M300,84 Q360,36 420,84" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round"></path>
+      <text x="120" y="48" text-anchor="middle" style="font:500 13px 'IBM Plex Mono',monospace" fill="#252525">+2 m</text>
+      <text x="240" y="48" text-anchor="middle" style="font:500 13px 'IBM Plex Mono',monospace" fill="#252525">+2 m</text>
+      <text x="360" y="48" text-anchor="middle" style="font:500 13px 'IBM Plex Mono',monospace" fill="#252525">+2 m ?</text>
+      <line x1="40" y1="120" x2="560" y2="120" stroke="#252525" stroke-width="1.5"></line>
+      <g stroke="#252525" stroke-width="1.5"><line x1="60" y1="114" x2="60" y2="126"></line><line x1="120" y1="114" x2="120" y2="126"></line><line x1="180" y1="114" x2="180" y2="126"></line><line x1="240" y1="114" x2="240" y2="126"></line><line x1="300" y1="114" x2="300" y2="126"></line><line x1="360" y1="114" x2="360" y2="126"></line><line x1="420" y1="114" x2="420" y2="126"></line><line x1="480" y1="114" x2="480" y2="126"></line><line x1="540" y1="114" x2="540" y2="126"></line></g>
+      <g style="font:400 12px 'IBM Plex Mono',monospace" fill="#252525" text-anchor="middle"><text x="60" y="143">0</text><text x="120" y="143">1</text><text x="180" y="143">2</text><text x="240" y="143">3</text><text x="300" y="143">4</text><text x="360" y="143">5</text><text x="420" y="143">6</text><text x="480" y="143">7</text><text x="540" y="143">8</text></g>
+      <text x="570" y="124" style="font:500 12px 'IBM Plex Mono',monospace" fill="#252525">m</text>
+      <g style="font:500 12px 'IBM Plex Mono',monospace" fill="#5f5f5f" text-anchor="middle"><text x="60" y="166">0 s</text><text x="180" y="166">1 s</text><text x="300" y="166">2 s</text><text x="420" y="166">3 s ?</text></g>
+      <text x="14" y="166" style="font:500 12px 'IBM Plex Mono',monospace" fill="#5f5f5f"><tspan class="math-var">t</tspan> =</text>
+      <circle cx="60" cy="100" r="11" fill="#ffffff" stroke="#252525" stroke-width="1.75"></circle>
+      <circle cx="180" cy="100" r="11" fill="#ffffff" stroke="#252525" stroke-width="1.75"></circle>
+      <circle cx="300" cy="100" r="11" fill="#ffffff" stroke="#252525" stroke-width="1.75"></circle>
+      <circle cx="420" cy="100" r="11" fill="#ffffff" stroke="#252525" stroke-width="1.75" stroke-dasharray="4 3"></circle>
+      <g style="font:600 11px 'IBM Plex Mono',monospace" text-anchor="middle">
+        <circle cx="24" cy="100" r="10" fill="#252525"></circle><text x="24" y="104" fill="#ffffff">1</text>
+        <circle cx="456" cy="100" r="10" fill="#252525"></circle><text x="456" y="104" fill="#ffffff">2</text>
+        <circle cx="84" cy="44" r="10" fill="#252525"></circle><text x="84" y="48" fill="#ffffff">3</text>
+      </g>
+    </svg>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;font-size:14px;line-height:1.2">
+      <div style="display:flex;gap:8px;align-items:center"><div style="width:26px;height:18px;border:1.5px solid #252525;flex:none"></div><div><strong style="font:600 12px 'IBM Plex Mono',monospace">1 · BLUE</strong><br>Observations: measured positions</div></div>
+      <div style="display:flex;gap:8px;align-items:center"><div style="width:26px;height:18px;border:1.5px solid #252525;flex:none"></div><div><strong style="font:600 12px 'IBM Plex Mono',monospace">2 · BLUE</strong><br>Prediction: dashed outline</div></div>
+      <div style="display:flex;gap:8px;align-items:center"><div style="width:26px;height:18px;border:1.5px solid #252525;flex:none"></div><div><strong style="font:600 12px 'IBM Plex Mono',monospace">3 · PURPLE</strong><br>The pattern: +2 m each second</div></div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:7px">
+    <h2 class="note-section-heading" data-section="D"><span class="note-section-tab">SECTION D</span> <span>WORKED EXAMPLE</span></h2>
+    <div style="font-size:15.5px;line-height:1.3">A cart is at 10 m, 8 m, and 6 m at 0, 1, and 2 s. Predict its position at 4 s, and name an observation that would challenge the model.</div>
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1.5px solid #252525;font-size:14.5px;line-height:1.3">
+      <div style="padding:7px 9px;border-right:1px solid #252525"><div style="font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;margin-bottom:4px">GIVEN</div><span class="math-var">x</span> = 10, 8, 6 m<br><span class="math-var">t</span> = 0, 1, 2 s</div>
+      <div style="padding:7px 9px;border-right:1px solid #252525"><div style="font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;margin-bottom:4px">EQUATION</div>new <span class="math-var">x</span> = start + change × time</div>
+      <div style="padding:7px 9px;border-right:1px solid #252525"><div style="font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;margin-bottom:4px">WORK</div>change = −2 m each second<br><span class="math-var">x</span>(4 s) = 6 + (−2)(2)</div>
+      <div style="padding:7px 9px;background:#f7f7f7"><div style="font:600 10.5px 'IBM Plex Mono',monospace;letter-spacing:.1em;margin-bottom:4px">ANSWER</div><strong style="font-size:17px">2 m</strong><br>limit: a 3 m reading would challenge it</div>
+    </div>
+  </div>
+
+  <div style="margin-top:auto;border:1.5px solid #252525;border-left:6px solid #252525;padding:9px 14px 11px;display:flex;flex-direction:column;gap:5px"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><h2 class="note-section-heading" data-section="E"><span class="note-section-tab">SECTION E</span> <span>THE 2026-XJ THREAD</span></h2><div style="font:500 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#5f5f5f;white-space:nowrap">DAY 1 OF 22 · NEW TOOL: EVIDENCE VS. INFERENCE</div></div><div style="font-size:15.5px;line-height:1.35">The desk holds evidence (what was measured) and inference (what it suggests). A forecast for 2026-XJ must rest on the evidence: positions, times, and their uncertainty.</div><div style="font-size:13px;font-style:italic;color:#5f5f5f">Unit question: How fast is it moving, and where will it arrive?</div></div>
+</div>
+<div style="align-self:stretch;display:flex;flex-wrap:wrap;align-items:center;gap:3px 12px;border:1px solid #252525;padding:4px 10px;font:500 10.5px/1.2 'IBM Plex Mono',monospace;color:#252525"><span style="font-weight:600;letter-spacing:.1em">UNIT 1 COLOR CODE</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">green</b> speeding up</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">red</b> slowing down</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">yellow</b> steady · balanced</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">blue</b> position · displacement</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">purple</b> velocity</span><span style="white-space:nowrap"><span style="display:inline-block;width:14px;height:10px;border:1.25px solid #252525;margin-right:4px;vertical-align:-1px"></span><b style="font-weight:600">orange</b> forces</span><span style="white-space:nowrap;color:#565656">pencil · everything else</span></div>
+<div style="font:400 9px 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#8d8d8d">STUDENT CHOICE BINDER · HONORS · 8.5 × 11 in · 3-HOLE PUNCH LEFT</div>
+</div>
+</section></doc-page></body></html>
