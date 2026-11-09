@@ -1,0 +1,274 @@
+{
+  "day-one": {
+    "day": 1,
+    "slide": 11,
+    "slideTitle": "Use a pattern to predict",
+    "stop": 2,
+    "section": "D",
+    "cpa": {
+      "en": "The cart readings are 2, 3, and 4 m, one second apart. Mark the next dot in pencil. What would you change if the next measured position were 4 m again?",
+      "es": "Las posiciones del carrito son 2, 3 y 4 m, separadas por un segundo. Marca a lápiz el siguiente punto. ¿Qué cambiarías si la siguiente posición medida volviera a ser 4 m?",
+      "pt-BR": "As posições do carrinho são 2, 3 e 4 m, com um segundo entre elas. Marque a lápis o próximo ponto. O que você mudaria se a próxima posição medida também fosse 4 m?"
+    },
+    "honors": {
+      "en": "The last measured position is 6 m at 2 s. Predict at 4 s, then decide whether a measurement of 3.9 ± 0.2 m at 3 s challenges your model. Show how the range affects your decision.",
+      "es": "La última posición medida es 6 m a los 2 s. Predice la posición a los 4 s. ¿Una medida de 3.9 ± 0.2 m a los 3 s pone en duda tu modelo? Usa el intervalo para decidir.",
+      "pt-BR": "A última posição medida é 6 m no instante 2 s. Preveja a posição em 4 s. Uma medida de 3.9 ± 0.2 m em 3 s põe o modelo em dúvida? Use o intervalo para decidir."
+    }
+  },
+  "day-two": {
+    "day": 2,
+    "slide": 19,
+    "slideTitle": "Compare start and finish",
+    "stop": 1,
+    "section": "D",
+    "cpa": {
+      "en": "Walk the route 2 m → 6 m → 4 m. Now move the zero mark to your starting spot and keep right positive. Which numbers on the board change? Which two answers stay the same?",
+      "es": "Recorre la ruta 2 m → 6 m → 4 m. Pon el cero donde empezaste y mantén la derecha como sentido positivo. ¿Qué números cambian en la pizarra? ¿Qué dos resultados siguen iguales?",
+      "pt-BR": "Percorra o trajeto 2 m → 6 m → 4 m. Coloque o zero onde você começou e mantenha a direita positiva. Quais números mudam no quadro? Quais dois resultados continuam iguais?"
+    },
+    "honors": {
+      "en": "Keep the origin, but make left positive. Relabel −3 m → +2 m → −1 m for that same trip. Show why the distance is unchanged and why the displacement changes sign.",
+      "es": "Conserva el origen y toma la izquierda como positiva. Escribe las nuevas coordenadas del mismo recorrido, −3 m → +2 m → −1 m. Explica por qué la distancia se conserva y el desplazamiento cambia de signo.",
+      "pt-BR": "Mantenha a origem e adote a esquerda como positiva. Escreva as novas coordenadas do mesmo trajeto, −3 m → +2 m → −1 m. Explique por que a distância se mantém e o deslocamento muda de sinal."
+    }
+  },
+  "day-three": {
+    "day": 3,
+    "slide": 24,
+    "slideTitle": "Slope of a p–t graph = velocity",
+    "stop": 2,
+    "section": "D",
+    "cpa": {
+      "en": "The cart goes from 8 m to 2 m in 3 s. Draw the line for steady motion. A partner moves the entire line up 5 m. Check the two slopes. What actually changed?",
+      "es": "El carrito va de 8 m a 2 m en 3 s. Dibuja la recta para movimiento uniforme. Tu compañero sube toda la recta 5 m. Compara las pendientes. ¿Qué cambió?",
+      "pt-BR": "O carrinho vai de 8 m a 2 m em 3 s. Trace a reta para o movimento uniforme. Seu colega sobe a reta inteira em 5 m. Compare as inclinações. O que mudou?"
+    },
+    "honors": {
+      "en": "Two points give an average velocity. Draw a curved line through the same two points as the straight line in Section D. Which velocity result still holds? Can you still predict the position at 8 s?",
+      "es": "Dos puntos dan una velocidad media. Dibuja una curva que pase por los mismos dos puntos de la recta de la sección D. ¿Qué resultado sigue siendo válido? ¿Puedes predecir la posición a los 8 s?",
+      "pt-BR": "Dois pontos dão uma velocidade média. Trace uma curva pelos mesmos dois pontos da reta da seção D. Qual resultado continua válido? Ainda dá para prever a posição em 8 s?"
+    }
+  },
+  "day-four": {
+    "day": 4,
+    "slide": 12,
+    "slideTitle": "Use a rectangle to count change",
+    "stop": 1,
+    "section": "C",
+    "cpa": {
+      "en": "Trace the two velocity rectangles as consecutive trips. Shade each area. How much ground did the cart cover, and where did it finish relative to the start? Point to the rectangle that makes those answers different.",
+      "es": "Trata los dos rectángulos de velocidad como tramos consecutivos. Sombrea sus áreas. ¿Cuánta distancia recorrió el carrito? ¿Dónde terminó respecto al inicio? Señala el rectángulo que hace diferentes las respuestas.",
+      "pt-BR": "Trate os dois retângulos de velocidade como trechos consecutivos. Sombreie as áreas. Que distância o carrinho percorreu? Onde terminou em relação ao início? Aponte o retângulo que faz as respostas diferirem."
+    },
+    "honors": {
+      "en": "The signed areas in the figure are +6 m and −2 m. Reverse the order of the intervals. Sketch both trips. Compare the final displacement, total distance, and position at the end of the first interval.",
+      "es": "Las áreas con signo son +6 m y −2 m. Invierte el orden de los intervalos. Dibuja ambos recorridos. Compara el desplazamiento final, la distancia total y la posición al final del primer intervalo.",
+      "pt-BR": "As áreas com sinal são +6 m e −2 m. Inverta a ordem dos intervalos. Desenhe os dois trajetos. Compare o deslocamento final, a distância total e a posição ao fim do primeiro intervalo."
+    }
+  },
+  "day-five": {
+    "day": 5,
+    "slide": 24,
+    "slideTitle": "The window is part of the answer",
+    "stop": 3,
+    "section": "C",
+    "cpa": {
+      "en": "Mark 8 ± 1 m on a number line. The next measurement is 9.5 m. Would it fit that prediction? What measurement would you repeat before changing your model?",
+      "es": "Marca 8 ± 1 m en una recta. La siguiente medida es 9.5 m. ¿Cae dentro de la predicción? ¿Qué medición repetirías antes de cambiar el modelo?",
+      "pt-BR": "Marque 8 ± 1 m em uma reta. A próxima medida é 9.5 m. Ela está dentro da previsão? Qual medição você repetiria antes de mudar o modelo?"
+    },
+    "honors": {
+      "en": "Use the starting-position and velocity bounds from the figure. If the exact forecast time doubles from 3 s to 6 s, which contribution to the bound doubles? Sketch the new interval around its new center.",
+      "es": "Usa los límites de posición inicial y velocidad de la figura. Si el tiempo exacto pasa de 3 s a 6 s, ¿qué aporte al margen se duplica? Dibuja el nuevo intervalo alrededor de su nuevo centro.",
+      "pt-BR": "Use os limites de posição inicial e velocidade da figura. Se o tempo exato passar de 3 s para 6 s, qual contribuição para a margem dobra? Desenhe o novo intervalo em torno do novo centro."
+    }
+  },
+  "day-six": {
+    "day": 6,
+    "slide": 15,
+    "slideTitle": "Add the parts along each axis",
+    "stop": 2,
+    "section": "C",
+    "cpa": {
+      "en": "Use the two arrows on the grid. Put B first and A second, without turning either arrow. Mark the new corner and the final dot. Which one moved? Use east–west and north–south steps to explain.",
+      "es": "Usa las dos flechas de la cuadrícula. Coloca B antes de A sin girarlas. Marca el nuevo punto de giro y el punto final. ¿Cuál cambió? Explica con pasos este–oeste y norte–sur.",
+      "pt-BR": "Use as duas setas da malha. Coloque B antes de A sem girá-las. Marque a nova esquina e o ponto final. Qual mudou? Explique com passos leste–oeste e norte–sul."
+    },
+    "honors": {
+      "en": "Keep A = (6, −4) m. Reflect B = (−4, 8) m across the y-axis. Predict the new quadrant of the resultant, then check with components. Which component of the original sum survives?",
+      "es": "Mantén A = (6, −4) m. Refleja B = (−4, 8) m respecto al eje y. Predice el cuadrante de la resultante y compruébalo con componentes. ¿Qué componente de la suma se conserva?",
+      "pt-BR": "Mantenha A = (6, −4) m. Reflita B = (−4, 8) m em relação ao eixo y. Preveja o quadrante da resultante e confira pelas componentes. Qual componente da soma se mantém?"
+    }
+  },
+  "day-seven": {
+    "day": 7,
+    "slide": 16,
+    "slideTitle": "Speeding up, slowing down, or constant?",
+    "stop": 1,
+    "section": "D",
+    "cpa": {
+      "en": "With uniform acceleration on each trip, compare 0 → +8 m/s in 4 s with +8 → 0 m/s in 4 s. Draw a velocity arrow at each end. Which change points left? Does either cart actually move left?",
+      "es": "Con aceleración uniforme en cada recorrido, compara 0 → +8 m/s en 4 s con +8 → 0 m/s en 4 s. Dibuja una flecha de velocidad en cada extremo. ¿Qué cambio apunta a la izquierda? ¿Algún carrito se mueve hacia la izquierda?",
+      "pt-BR": "Com aceleração uniforme em cada trajeto, compare 0 → +8 m/s em 4 s com +8 → 0 m/s em 4 s. Desenhe uma seta de velocidade em cada extremo. Qual variação aponta para a esquerda? Algum carrinho se move para a esquerda?"
+    },
+    "honors": {
+      "en": "For the uniform change from +6 to −2 m/s in 4 s, mark the turn on a velocity–time graph. Compare the slopes just before and after it. How can speed start increasing while acceleration keeps the same sign?",
+      "es": "Para el cambio uniforme de +6 a −2 m/s en 4 s, marca la inversión de sentido en la gráfica velocidad–tiempo. Compara las pendientes antes y después. ¿Cómo aumenta la rapidez si la aceleración conserva su signo?",
+      "pt-BR": "Para a variação uniforme de +6 a −2 m/s em 4 s, marque a inversão de sentido no gráfico velocidade–tempo. Compare as inclinações antes e depois. Como a rapidez aumenta se a aceleração mantém o sinal?"
+    }
+  },
+  "day-eight": {
+    "day": 8,
+    "slide": 19,
+    "slideTitle": "Check displacement with average velocity",
+    "stop": 2,
+    "section": "D",
+    "cpa": {
+      "en": "Sketch 0 → 8 m/s in 4 s with steady acceleration. Find displacement using the triangle and using average velocity. Now the cart waits for the first 2 s, then speeds up steadily to 8 m/s in the last 2 s. Which area changes?",
+      "es": "Dibuja el cambio de 0 a 8 m/s en 4 s con aceleración constante. Calcula el desplazamiento con el triángulo y con la velocidad media. Ahora el carrito espera los primeros 2 s y acelera uniformemente hasta 8 m/s en los últimos 2 s. ¿Qué área cambia?",
+      "pt-BR": "Desenhe a variação de 0 a 8 m/s em 4 s com aceleração constante. Calcule o deslocamento pelo triângulo e pela velocidade média. Agora o carrinho espera os primeiros 2 s e acelera uniformemente até 8 m/s nos últimos 2 s. Qual área muda?"
+    },
+    "honors": {
+      "en": "For the 20 m/s car, choose an equation for braking distance without time. Check it with signed area. Now give the driver 1 s of reaction time at 20 m/s before braking. Which distance changes?",
+      "es": "Para el auto a 20 m/s, elige una ecuación sin tiempo para la distancia de frenado. Compruébala con el área con signo. Añade 1 s de reacción a 20 m/s antes de frenar. ¿Qué distancia cambia?",
+      "pt-BR": "Para o carro a 20 m/s, escolha uma equação sem tempo para a distância de frenagem. Confira pela área com sinal. Acrescente 1 s de reação a 20 m/s antes de frear. Qual distância muda?"
+    }
+  },
+  "day-nine": {
+    "day": 9,
+    "slide": 21,
+    "slideTitle": "A moving cart has balanced forces",
+    "stop": 1,
+    "section": "D",
+    "cpa": {
+      "en": "A cart rolling right slows down. Draw its velocity and its net force. Then show the same cart crossing the same spot at steady speed. Which arrow can stay the same at that instant?",
+      "es": "Un carrito va hacia la derecha y pierde rapidez. Dibuja su velocidad y la fuerza neta. Luego muéstralo pasando por el mismo punto a rapidez constante. ¿Qué flecha puede ser igual en ese instante?",
+      "pt-BR": "Um carrinho vai para a direita e perde rapidez. Desenhe a velocidade e a força resultante. Depois mostre o carrinho no mesmo ponto com rapidez constante. Qual seta pode ser igual nesse instante?"
+    },
+    "honors": {
+      "en": "External forces balance for 4 s on a cart starting at −2 m. Compare initial velocities +3 and −3 m/s. Predict each endpoint. What information about motion does a zero force sum leave open?",
+      "es": "Las fuerzas externas se equilibran durante 4 s sobre un carrito que parte de −2 m. Compara velocidades iniciales de +3 y −3 m/s. Predice cada posición final. ¿Qué dato del movimiento no determina la fuerza neta cero?",
+      "pt-BR": "As forças externas se equilibram por 4 s em um carrinho que parte de −2 m. Compare velocidades iniciais de +3 e −3 m/s. Preveja as posições finais. Que informação sobre o movimento a resultante zero deixa em aberto?"
+    }
+  },
+  "day-ten": {
+    "day": 10,
+    "slide": 20,
+    "slideTitle": "Draw forces on one book",
+    "stop": 2,
+    "section": "D",
+    "cpa": {
+      "en": "A 3 kg object rests on a table. Use the note’s 10 N/kg. Draw the two force arrows. If a hand presses down with 5 N and the object stays still, which arrow from the table must change?",
+      "es": "Un objeto de 3 kg está en reposo sobre una mesa. Usa 10 N/kg, como en los apuntes. Dibuja las dos fuerzas. Si una mano presiona hacia abajo con 5 N y el objeto sigue quieto, ¿cómo cambia la flecha de la mesa?",
+      "pt-BR": "Um objeto de 3 kg está em repouso sobre a mesa. Use 10 N/kg, como nas notas. Desenhe as duas forças. Se uma mão empurrar para baixo com 5 N e o objeto continuar parado, como muda a seta da mesa?"
+    },
+    "honors": {
+      "en": "The crate has weight 29.4 N. Increase the upward rope pull from 10 N to 20 N while the crate rests on the table. Predict the scale reading in newtons. At what pull would contact just be lost?",
+      "es": "La caja pesa 29.4 N. Aumenta la tensión hacia arriba de 10 N a 20 N mientras la caja está en reposo en la mesa. Predice la lectura de la báscula en newtons. ¿Con qué tensión está a punto de perder el contacto?",
+      "pt-BR": "O caixote pesa 29.4 N. Aumente a tração para cima de 10 N para 20 N enquanto o caixote repousa sobre a mesa. Preveja a leitura da balança em newtons. Com que tração o contato está prestes a cessar?"
+    }
+  },
+  "day-eleven": {
+    "day": 11,
+    "slide": 15,
+    "slideTitle": "The system includes the hanging mass",
+    "stop": 3,
+    "section": "C",
+    "cpa": {
+      "en": "The example uses a 4 N net force for each trial. Compare the 1 kg and 2 kg rows. Predict the acceleration at 4 kg. Name everything you would weigh to test this with a cart and hanger.",
+      "es": "El ejemplo usa una fuerza neta de 4 N en cada ensayo. Compara las filas de 1 y 2 kg. Predice la aceleración con 4 kg. ¿Qué pesarías para probarlo con un carrito y una masa colgante?",
+      "pt-BR": "O exemplo usa resultante de 4 N em cada ensaio. Compare as linhas de 1 e 2 kg. Preveja a aceleração com 4 kg. O que você pesaria para testar isso com um carrinho e uma massa suspensa?"
+    },
+    "honors": {
+      "en": "Use the ideal 4 N data to sketch acceleration against 1/M for total moving mass M. What physical quantity and units does the slope have? Explain how omitting the hanger changes the horizontal coordinates.",
+      "es": "Usa los datos ideales de 4 N para trazar aceleración frente a 1/M, con M igual a la masa móvil total. ¿Qué magnitud y unidades tiene la pendiente? Explica cómo omitir la masa colgante cambia las coordenadas horizontales.",
+      "pt-BR": "Use os dados ideais de 4 N para traçar aceleração em função de 1/M, sendo M a massa total em movimento. Qual grandeza e quais unidades a inclinação representa? Explique como omitir a massa suspensa muda as coordenadas horizontais."
+    }
+  },
+  "day-twelve": {
+    "day": 12,
+    "slide": 24,
+    "slideTitle": "Plot acceleration vs. force",
+    "stop": 3,
+    "section": "D",
+    "cpa": {
+      "en": "The same ideal 2 kg system gets a 2 N and then a 4 N net force. Plot the two points. How would you move weights between the cart and hanger to change the driving force while keeping total moving mass fixed?",
+      "es": "El mismo sistema ideal de 2 kg recibe primero 2 N y luego 4 N de fuerza neta. Dibuja los dos puntos. ¿Cómo pasarías pesas del carrito a la masa colgante para que la clase pruebe un solo cambio?",
+      "pt-BR": "O mesmo sistema ideal de 2 kg recebe primeiro 2 N e depois 4 N de força resultante. Marque os dois pontos no gráfico. Como você passaria pesos do carrinho para o suporte suspenso para testar uma única mudança?"
+    },
+    "honors": {
+      "en": "Plot both rows for the 2 kg system with 0.4 N opposing friction. Keep only the sliding trials. Compare the graphs made with driving force and with net force on the horizontal axis. What shifts? What stays the same?",
+      "es": "Grafica ambas filas del sistema de 2 kg con 0.4 N de rozamiento opuesto. Usa solo ensayos con deslizamiento. Compara usar fuerza motriz o fuerza neta en el eje horizontal. ¿Qué se desplaza y qué se conserva?",
+      "pt-BR": "Marque as duas linhas do sistema de 2 kg com atrito contrário de 0.4 N. Use só ensaios em deslizamento. Compare os gráficos com força motriz e com força resultante no eixo horizontal. O que se desloca e o que fica igual?"
+    }
+  },
+  "day-thirteen": {
+    "day": 13,
+    "slide": 22,
+    "slideTitle": "Driving forward vs. stopping — which for",
+    "stop": 3,
+    "section": "D",
+    "cpa": {
+      "en": "A 4 kg cart has 12 N right and 4 N left. Find its acceleration. If it is already moving left, which way does its velocity change in the next second? Draw both arrows.",
+      "es": "Un carrito de 4 kg recibe 12 N hacia la derecha y 4 N hacia la izquierda. Halla la aceleración. Si ya va hacia la izquierda, ¿en qué sentido cambia su velocidad en el siguiente segundo? Dibuja ambas flechas.",
+      "pt-BR": "Um carrinho de 4 kg recebe 12 N para a direita e 4 N para a esquerda. Calcule a aceleração. Se já vai para a esquerda, em que sentido varia sua velocidade no próximo segundo? Desenhe as duas setas."
+    },
+    "honors": {
+      "en": "Use the cart’s −3 m/s initial velocity. Keep the same forces for 2 s. Mark the instant it turns. Compare its distance and displacement over the entire interval using signed areas.",
+      "es": "Usa la velocidad inicial de −3 m/s. Mantén las fuerzas durante 2 s. Marca el instante de la inversión. Compara la distancia y el desplazamiento en todo el intervalo usando áreas con signo.",
+      "pt-BR": "Use a velocidade inicial de −3 m/s. Mantenha as forças por 2 s. Marque o instante da inversão. Compare a distância e o deslocamento no intervalo inteiro usando áreas com sinal."
+    }
+  },
+  "day-fourteen": {
+    "day": 14,
+    "slide": 12,
+    "slideTitle": "Equal forces can have different effects",
+    "stop": 3,
+    "section": "C",
+    "cpa": {
+      "en": "Each cart feels a 6 N push from the other. Name the source and receiver of each arrow. With no other horizontal forces, which cart changes velocity more in the same time? Explain using the masses.",
+      "es": "Cada carrito recibe un empuje de 6 N del otro. Nombra quién ejerce y quién recibe cada fuerza. Sin otras fuerzas horizontales, ¿cuál cambia más su velocidad en el mismo tiempo? Usa las masas para explicar.",
+      "pt-BR": "Cada carrinho recebe um empurrão de 6 N do outro. Diga quem exerce e quem recebe cada força. Sem outras forças horizontais, qual muda mais de velocidade no mesmo tempo? Use as massas para explicar."
+    },
+    "honors": {
+      "en": "Draw a boundary around the 1 kg cart alone, then around both carts. Where do the 6 N forces appear in each horizontal force sum? Explain how the two-cart center of mass behaves if no outside horizontal force acts.",
+      "es": "Traza un límite alrededor del carrito de 1 kg y luego alrededor de ambos. ¿Dónde aparecen las fuerzas de 6 N en cada suma horizontal? Explica qué hace el centro de masa si no actúa una fuerza horizontal externa.",
+      "pt-BR": "Trace um limite em torno do carrinho de 1 kg e depois dos dois juntos. Onde entram as forças de 6 N em cada soma horizontal? Explique o movimento do centro de massa se não houver força horizontal externa."
+    }
+  },
+  "day-fifteen": {
+    "day": 15,
+    "slide": 14,
+    "slideTitle": "Guided diagram: hanging lamp",
+    "stop": 1,
+    "section": "D",
+    "cpa": {
+      "en": "The lamp hangs at rest from one vertical rope. Draw its two forces to scale. Now the same lamp rises at steady speed. Which arrows would you redraw? Use the change in velocity to defend your choice.",
+      "es": "La lámpara cuelga en reposo de una cuerda vertical. Dibuja sus dos fuerzas a escala. Ahora sube a rapidez constante. ¿Qué flechas volverías a dibujar? Justifica con el cambio de velocidad.",
+      "pt-BR": "A lâmpada está parada, presa a um fio vertical. Desenhe suas duas forças em escala. Agora ela sobe com rapidez constante. Quais setas você mudaria? Justifique pela variação da velocidade."
+    },
+    "honors": {
+      "en": "The 2 kg lamp accelerates upward at 1.5 m/s². Draw the forces. Now have the lamp move downward with that same upward acceleration. Which arrows change? Explain what happens to its speed.",
+      "es": "La lámpara de 2 kg acelera hacia arriba a 1.5 m/s². Dibuja las fuerzas. Ahora baja con esa misma aceleración hacia arriba. ¿Qué flechas cambian? Explica qué pasa con su rapidez.",
+      "pt-BR": "A lâmpada de 2 kg acelera para cima a 1.5 m/s². Desenhe as forças. Agora ela desce com essa mesma aceleração para cima. Quais setas mudam? Explique o que acontece com a rapidez."
+    }
+  },
+  "day-sixteen": {
+    "day": 16,
+    "slide": 21,
+    "slideTitle": "Worked ramp with given friction",
+    "stop": 2,
+    "section": "D",
+    "cpa": {
+      "en": "The block slides downhill. Its downhill weight component is 7 N and friction is 3 N uphill. If friction increases to 5 N while it still slides downhill, predict how the acceleration of the 2 kg block changes.",
+      "es": "El bloque se desliza cuesta abajo. La componente del peso cuesta abajo es 7 N y el rozamiento cuesta arriba es 3 N. Si el rozamiento sube a 5 N mientras el bloque sigue bajando, ¿cómo cambia la aceleración del bloque de 2 kg?",
+      "pt-BR": "O bloco desliza rampa abaixo. A componente do peso ao longo da rampa é 7 N e o atrito para cima é 3 N. Se o atrito aumentar para 5 N enquanto o bloco ainda desce, como muda a aceleração do bloco de 2 kg?"
+    },
+    "honors": {
+      "en": "Keep the 2 kg block on the 30° ramp and reverse its sliding direction. Kinetic friction still has magnitude 2 N. Which force reverses? Compare the downhill acceleration and the normal force in the two cases.",
+      "es": "Mantén el bloque de 2 kg en la rampa de 30° e invierte su sentido de deslizamiento. El rozamiento cinético sigue siendo de 2 N. ¿Qué fuerza se invierte? Compara la aceleración cuesta abajo y la fuerza normal en ambos casos.",
+      "pt-BR": "Mantenha o bloco de 2 kg na rampa de 30° e inverta o sentido do deslizamento. O atrito cinético continua sendo de 2 N. Qual força se inverte? Compare a aceleração rampa abaixo e a força normal nos dois casos."
+    }
+  }
+}

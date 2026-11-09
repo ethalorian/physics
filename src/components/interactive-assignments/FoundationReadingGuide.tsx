@@ -4,6 +4,7 @@ import topics from '@/data/foundations/teaching-guide-topics.json'
 import mapping from '@/data/foundations/teaching-guide-map.json'
 import {useFoundationLanguage} from './FoundationLanguage'
 import QuizContent from '@/components/quizzes/QuizContent'
+import FoundationNoteExample from './FoundationNoteExample'
 import s from './Foundation.module.css'
 
 const labels={
@@ -18,6 +19,7 @@ export default function FoundationReadingGuide({foundation,number,title,step,nex
  return <div className={s.guideLesson}>
   {topic&&<><h4>{copy.learn}</h4><QuizContent content={topic.learn[locale]} questionEmphasis/></>}
   <h4>{copy.use}</h4><QuizContent content={t(step)} questionEmphasis/>
+  <FoundationNoteExample at="slide" number={number}/>
   {/exit/i.test(title)&&<p>{copy.exit}</p>}
   {next&&<p className={s.guideConnection}>{copy.next}: {t(next)}</p>}
  </div>

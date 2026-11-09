@@ -642,5 +642,53 @@
   "— constant velocity.": [
     "— velocidad constante.",
     "— velocidade constante."
+  ],
+  "Put 80 g of spare masses on the cart. Keep the total moving mass fixed.": [
+    "Coloca 80 g de pesas en el carrito. Mantén fija la masa móvil total.",
+    "Coloque 80 g de pesos no carrinho. Mantenha fixa a massa total em movimento."
+  ],
+  "Start with 20 g hanging. Move 20 g from cart to hanger per setting, up to 100 g hanging.": [
+    "Empieza con 20 g colgando. Pasa 20 g del carrito al soporte en cada ajuste, hasta tener 100 g colgando.",
+    "Comece com 20 g suspensos. Transfira 20 g do carrinho para o suporte a cada ajuste, até ter 100 g suspensos."
+  ],
+  "Driving force is hanger weight. Subtract resistance to find net force.": [
+    "La fuerza motriz es el peso colgante. Resta la fuerza de resistencia para hallar la fuerza neta.",
+    "A força motriz é o peso suspenso. Subtraia a resistência para achar a força resultante."
+  ],
+  "transfer weights from cart to hanger": [
+    "pasa pesas del carrito al soporte",
+    "transfira pesos do carrinho para o suporte"
+  ],
+  "Total moving mass": [
+    "Masa móvil total",
+    "Massa total em movimento"
+  ],
+  "cart, hanger and weights": [
+    "carrito, soporte y pesas",
+    "carrinho, suporte e pesos"
+  ],
+  "Transfer weights to the hanger. Release the cart from rest.": [
+    "Pasa pesas al soporte colgante. Suelta el carrito desde el reposo.",
+    "Transfira pesos para o suporte suspenso. Solte o carrinho do repouso."
+  ],
+  "Driving weight: a 0.05 kg hanger pulls the system with 0.49 N.": [
+    "Peso motor: un soporte colgante de 0.05 kg tira del sistema con 0.49 N.",
+    "Peso motor: um suporte suspenso de 0.05 kg puxa o sistema com 0.49 N."
+  ],
+  "Record driving weight and acceleration. Label the force axis.": [
+    "Registra el peso que impulsa el sistema y la aceleración. Rotula el eje de fuerza.",
+    "Registre o peso que impulsiona o sistema e a aceleração. Identifique o eixo da força."
+  ],
+  "1 ÷ M (total moving mass)": [
+    "1 ÷ M (masa móvil total)",
+    "1 ÷ M (massa total em movimento)"
+  ],
+  "Use net force; keep M fixed": [
+    "Usa la fuerza neta; mantén M fija",
+    "Use a força resultante; mantenha M fixa"
+  ],
+  "How well do your results support the net-force model?": [
+    "¿Qué tan bien apoyan tus resultados el modelo de fuerza neta?",
+    "Até que ponto seus resultados apoiam o modelo de força resultante?"
   ]
 }

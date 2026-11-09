@@ -15,3 +15,27 @@ for(const [key,entries]of Object.entries(mapping)){
  original.forEach((slide,i)=>{assert.equal(entries[i].number,slide.number);assert.equal(entries[i].title,slide.title,key+' needs guide review');const topic=topics[entries[i].topic];assert(topic,key+' unknown topic');for(const locale of ['en','es','pt-BR'])for(const field of ['learn','check','answer'])assert(topic[field][locale]?.trim(),key+' '+locale+' '+field);slides++});
 }
 console.log(`${Object.keys(bank).length} CPA questions translated; ${slides} slide guides aligned in all three languages.`);
+
+const noteExamples = read(base + 'binder-examples.json');
+assert.deepEqual(Object.keys(noteExamples).sort(), Object.keys(mapping).sort());
+const checkedDays = new Set();
+for (const [key, example] of Object.entries(noteExamples)) {
+ const source = read(base + key + '-source.json');
+ assert.equal(mapping[key].find(slide => slide.number === example.slide)?.title, example.slideTitle, key + ' moved its note example');
+ assert.ok(source.file.includes('Day ' + example.day + ' '), key + ' day mismatch');
+ assert.ok(!checkedDays.has(example.day), key + ' duplicates a binder day');
+ checkedDays.add(example.day);
+ assert.ok([1, 2, 3].includes(example.stop), key + ' missing discussion stop');
+ for (const edition of ['cpa', 'honors']) {
+  const filename = edition + '-' + String(example.day).padStart(2, '0') + '.json';
+  const lesson = read('public/student-choice-pages/unit-1/interactive-v1/' + filename);
+  assert.equal(lesson.edition, edition);
+  assert.ok(lesson.sections[example.section]?.text.trim(), key + ' missing note section');
+  const prompt = example[edition];
+  for (const locale of ['en', 'es', 'pt-BR']) {
+   assert.ok(prompt[locale]?.trim(), key + ' missing ' + edition + ' ' + locale);
+   assert.deepEqual(numbers(prompt[locale]), numbers(prompt.en), key + ' quantities differ in ' + locale);
+  }
+ }
+}
+console.log(checkedDays.size + ' Foundation days linked to the matching CPA and Honors note sections.');

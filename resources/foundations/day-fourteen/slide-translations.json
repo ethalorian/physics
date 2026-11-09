@@ -682,5 +682,17 @@
   "A smaller object can deflect a larger one": [
     "Un objeto pequeño puede desviar uno grande",
     "Um objeto pequeno pode desviar um grande"
+  ],
+  "Identify the receiver of each third-law force. Draw the system boundary.": [
+    "Identifica qué objeto recibe cada fuerza de la tercera ley. Dibuja el límite del sistema.",
+    "Identifique qual objeto recebe cada força da terceira lei. Desenhe o limite do sistema."
+  ],
+  "Which system are we studying?": [
+    "¿Qué sistema estudiamos?",
+    "Qual sistema estamos estudando?"
+  ],
+  "Each object feels one force of the pair. In the combined system, the two internal forces sum to zero.": [
+    "Cada objeto recibe una fuerza del par. En el sistema conjunto, las dos fuerzas internas suman cero.",
+    "Cada objeto recebe uma força do par. No sistema combinado, a soma das duas forças internas é zero."
   ]
 }

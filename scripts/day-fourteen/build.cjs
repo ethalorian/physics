@@ -36,6 +36,10 @@ let html=original.replace(sectionPattern,section=>{
  const labStyle=sourceSections[3][0].match(/^<section[^>]* style="([^"]*)"/)[1];
  return section+`<section data-label="${copy['t'+k]}" style="${labStyle}"><div style="font:26px 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#4b4ba8;">2026-XJ · ${52+page}</div><h2 style="font-size:78px;font-weight:500;letter-spacing:-.02em;margin:36px 0;">${copy['t'+k]}</h2><div style="display:grid;grid-template-columns:1.5fr 1fr;gap:42px;align-items:center;flex:1;min-height:0"><svg role="img" aria-label="${copy['alt'+k]}" viewBox="0 ${y} 1024 ${height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;justify-self:center;max-width:${Math.floor(580*1024/height)}px;border:2px solid #e1d7c8;background:white;"><title>${copy['alt'+k]}</title><image href="/comics/2026-xj/book-one-day-14-v1/page-0${page}.webp" width="1024" height="1536"/></svg><p style="font-size:42px;line-height:1.35">${copy['b'+k]}</p></div><footer style="font:22px 'IBM Plex Mono',monospace;color:#625f72;border-top:1px solid #dbd2c3;padding:20px 0 32px;">Antocci Physics · ${52+page}</footer></section>`;
 }).replace(/ data-speaker-notes="[^"]*"/g,'');
+// State the system boundary in the slide text and its navigation label.
+html = html.replaceAll("3rd-Law force pairs, and why they never cancel.", "Identify the receiver of each third-law force. Draw the system boundary.");
+html = html.replaceAll("Why the pair never cancels", "Which system are we studying?");
+html = html.replaceAll("The two forces act on DIFFERENT objects — so they can't cancel.", "Each object feels one force of the pair. In the combined system, the two internal forces sum to zero.");
 html=html.replace(sectionPattern,s=>{number++;return s.replace(/data-screen-label="[^"]*"/,`data-screen-label="${number}"`).replace(/Antocci Physics · \d{2} \/ 33/g,`Antocci Physics · ${String(number).padStart(2,'0')} / 34`);});
 html=require('../foundation-groups/slide-copy.cjs')(html,{preserveSlideCopy:true});
 const companion=require('../foundation-groups/slide-language.cjs').companion;

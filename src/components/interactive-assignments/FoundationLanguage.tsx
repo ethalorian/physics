@@ -9,7 +9,7 @@ import {FOUNDATION_CHROME, type FoundationLocale} from '@/lib/interactive-assign
 import s from './Foundation.module.css'
 
 type Dictionary = Record<string,string>
-type LanguageContext = {foundation?:true;locale:FoundationLocale; map:Dictionary; t:(text:string)=>string}
+type LanguageContext = {foundation?:true; foundationKey?:FoundationKey; edition?:'cpa'|'honors';locale:FoundationLocale; map:Dictionary; t:(text:string)=>string}
 const empty:Dictionary={}
 const identity=(text:string)=>text
 const Context=createContext<LanguageContext>({locale:'en',map:empty,t:identity})
@@ -17,10 +17,10 @@ const cache=new Map<string,Dictionary>() // Authored text only; never stores res
 const preference='physics.foundation-language.v1'
 export const useFoundationLanguage=()=>useContext(Context)
 
-export default function FoundationLanguage({foundation,cpa=false,children}:{foundation?:FoundationKey;cpa?:boolean;children:ReactNode}){
- return foundation?<LessonLanguage foundation={foundation} cpa={cpa}>{children}</LessonLanguage>:<>{children}</>
+export default function FoundationLanguage({foundation,edition,cpa=false,children}:{foundation?:FoundationKey;edition?:'cpa'|'honors';cpa?:boolean;children:ReactNode}){
+ return foundation?<LessonLanguage foundation={foundation} edition={edition ?? (cpa ? 'cpa' : 'honors')} cpa={cpa}>{children}</LessonLanguage>:<>{children}</>
 }
-function LessonLanguage({foundation,cpa,children}:{foundation:FoundationKey;cpa:boolean;children:ReactNode}){
+function LessonLanguage({foundation,edition,cpa,children}:{foundation:FoundationKey;edition:'cpa'|'honors';cpa:boolean;children:ReactNode}){
  const [selected,setSelected]=useState<FoundationLocale>('en')
  const [loaded,setLoaded]=useState<{key:string;map:Dictionary}|null>(null)
  const [error,setError]=useState(false),[retry,setRetry]=useState(0)
@@ -42,7 +42,7 @@ function LessonLanguage({foundation,cpa,children}:{foundation:FoundationKey;cpa:
   return()=>{current=false;window.clearTimeout(timeout);controller.abort()}
  },[foundation,key,selected,version,retry])
  const t=useCallback((text:string)=>locale==='en'?text:(cpa?(supportLanguages[locale] as Dictionary)[text]:undefined)??CPA_LANGUAGE[locale][text]??FOUNDATION_CHROME[locale][text]??map[text]??text,[locale,map,cpa])
- const value=useMemo(()=>({foundation:true as const,locale,map,t}),[locale,map,t])
+ const value=useMemo(()=>({foundation:true as const,foundationKey:foundation,edition,locale,map,t}),[foundation,edition,locale,map,t])
  function choose(next:FoundationLocale){setSelected(next);try{localStorage.setItem(preference,next)}catch{/* Optional preference only. */}}
  const notice=selected==='es'?{loading:'Cargando español… Tu trabajo sigue aquí.',error:'No se pudo cargar español. El texto sigue en inglés. Tu trabajo sigue aquí.',retry:'Intentar de nuevo'}:selected==='pt-BR'?{loading:'Carregando português… Seu trabalho continua aqui.',error:'Não foi possível carregar português. O texto continua em inglês. Seu trabalho continua aqui.',retry:'Tentar novamente'}:{loading:'Loading language… Your work stays here.',error:'The language could not load. English is still available. Your work stays here.',retry:'Try again'}
  return <Context.Provider value={value}><div lang={locale} className={s.languageScope}>

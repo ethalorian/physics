@@ -28,6 +28,27 @@ let html=original.replace(sectionPattern,section=>{
  const labStyle=sourceSections[3][0].match(/^<section[^>]* style="([^"]*)"/)[1];
  return section+`<section data-lab-day="1" data-label="${copy['t'+k]}" style="${labStyle}"><div style="font:26px 'IBM Plex Mono',monospace;letter-spacing:.1em;color:#4b4ba8;">2026-XJ · ${44+page}</div><h2 style="font-size:78px;font-weight:500;letter-spacing:-.02em;margin:36px 0;">${copy['t'+k]}</h2><div style="display:grid;grid-template-columns:1.5fr 1fr;gap:42px;align-items:center;flex:1;min-height:0"><svg role="img" aria-label="${copy['alt'+k]}" viewBox="0 ${y} 1024 ${height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;justify-self:center;max-width:${Math.floor(580*1024/height)}px;border:2px solid #e1d7c8;background:white;"><title>${copy['alt'+k]}</title><image href="/comics/2026-xj/book-one-day-12-v1/page-0${page}.webp" width="1024" height="1536"/></svg><p style="font-size:42px;line-height:1.35">${copy['b'+k]}</p></div><footer style="font:22px 'IBM Plex Mono',monospace;color:#625f72;border-top:1px solid #dbd2c3;padding:20px 0 32px;">Antocci Physics · ${44+page}</footer></section>`;
 }).replace(/ data-speaker-notes="[^"]*"/g,'');
+// Align the packaged lab with the system measured in the daily notes.
+const labCopy = {
+  "Take all added masses OFF the cart. Its mass stays the same today.": "Put 80 g of spare masses on the cart. Keep the total moving mass fixed.",
+  "Start with a 20 g hanging mass. Each trial, add 20 g (up to 100 g).": "Start with 20 g hanging. Move 20 g from cart to hanger per setting, up to 100 g hanging.",
+  "Force from the hanging mass: F ≈ m × 9.8 (m in kg).": "Driving force is hanger weight. Subtract resistance to find net force.",
+  "this sets the force": "transfer weights from cart to hanger",
+  "Cart mass": "Total moving mass",
+  "no added weights": "cart, hanger and weights",
+  "Choose a hanging mass. Release the cart.": "Transfer weights to the hanger. Release the cart from rest.",
+  "Force: F ≈ m × g — 0.05 kg gives F ≈ 0.49 N.": "Driving weight: a 0.05 kg hanger pulls the system with 0.49 N.",
+  "Record force vs. acceleration for each trial.": "Record driving weight and acceleration. Label the force axis.",
+  "1 ÷ m (cart mass)": "1 ÷ M (total moving mass)",
+  "a ∝ F (constant m)": "Use net force; keep M fixed",
+  "F = ma. You derived it from your own data.": "How well do your results support the net-force model?"
+};
+for (const [sourceText, studentText] of Object.entries(labCopy)) {
+ const node = '>' + sourceText + '<';
+ if (!html.includes(node)) throw Error('Missing lab source text: ' + sourceText);
+ html = html.replaceAll(node, '>' + studentText + '<');
+}
+html = html.replace('Cart%20(mass%20fixed)', 'Cart%20and%20weights');
 html=html.replace(sectionPattern,s=>{number++;return s.replace(/data-screen-label="[^"]*"/,`data-screen-label="${number}"`).replace(/Antocci Physics · \d{2} \/ 33/g,`Antocci Physics · ${String(number).padStart(2,'0')} / 34`);});
 html=require('../foundation-groups/slide-copy.cjs')(html,{preserveSlideCopy:true});
 const companion=require('../foundation-groups/slide-language.cjs').companion;
@@ -42,7 +63,7 @@ const transition=fs.readFileSync('resources/foundations/day-one/slides-transitio
 html=html.replace('<script src="./support.js"></script>',()=>libraries+setup+script(bridge)+script(support))
  .replace('<html>','<html lang="en">')
  .replace('</head>',`<style data-lesson-transition>${transition}</style></head>`)
- .replace('<head>',`<head><title>Day 12 · Newton’s second law: Vary mass</title><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">`);
+ .replace('<head>',`<head><title>Day 12 · Newton’s second law: Vary force</title><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">`);
 // Keep a normal asset URL: the original style parser splits on semicolons,
 // which truncates data URLs before their image payload.
 fs.mkdirSync(dest+'/art',{recursive:true});

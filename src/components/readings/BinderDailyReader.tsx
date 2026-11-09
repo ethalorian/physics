@@ -62,15 +62,15 @@ function VelocityGraph({honors}:{honors:boolean}) {
     </svg><p aria-live="polite"><strong>Δx = ½({vi} + {vf}) × {seconds} = {displacement} m</strong></p></details>
 }
 
-export default function BinderDailyReader({source,heading=true}:{source:BinderSource;heading?:boolean}) {
+export default function BinderDailyReader({source,heading=true,initialSection}:{source:BinderSource;heading?:boolean;initialSection?:BinderSection}) {
   const [lesson,setLesson]=useState<BinderLesson|null>(null),[error,setError]=useState(false),[retry,setRetry]=useState(0),[section,setSection]=useState<BinderSection|null>(null)
   const url=binderMaterials(source)
   useEffect(()=>{
     const controller=new AbortController()
-    setLesson(null);setError(false);setSection(null)
+    setLesson(null);setError(false);setSection(initialSection??null)
     fetch(url+'.json',{signal:controller.signal}).then(r=>{if(!r.ok)throw Error();return r.json()}).then(data=>{if(!controller.signal.aborted)setLesson(data)}).catch(()=>{if(!controller.signal.aborted)setError(true)})
     return ()=>controller.abort()
-  },[url,retry])
+  },[url,retry,initialSection])
   if(error)return <p role="alert">The binder reading could not load. <button type="button" onClick={()=>setRetry(retry+1)}>Retry</button></p>
   if(!lesson)return <p role="status">Opening the daily reading…</p>
   return <article className={s.reader}><header><p className={s.eyebrow}>{lesson.edition.toUpperCase()} Physics · Unit 1 · Day {lesson.day}</p>

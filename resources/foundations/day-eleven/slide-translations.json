@@ -670,5 +670,13 @@
   "≈ 25 min": [
     "≈ 25 min",
     "≈ 25 min"
+  ],
+  "Record total moving mass and acceleration for each trial.": [
+    "Registra la masa móvil total y la aceleración de cada ensayo.",
+    "Registre a massa total em movimento e a aceleração de cada ensaio."
+  ],
+  "At the same net force, compare doubling the whole moving mass with doubling only the cart mass. When is acceleration exactly halved?": [
+    "Con la misma fuerza neta, compara duplicar la masa móvil total con duplicar solo la masa del carrito. ¿Cuándo se reduce la aceleración exactamente a la mitad?",
+    "Com a mesma força resultante, compare dobrar a massa total em movimento com dobrar apenas a massa do carrinho. Quando a aceleração cai exatamente pela metade?"
   ]
 }

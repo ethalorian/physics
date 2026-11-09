@@ -1,4 +1,5 @@
 'use client'
+import FoundationNoteExample from './FoundationNoteExample'
 import {takeawayText,takeawayCopy,stopSteps} from '@/lib/interactive-assignments/foundations/takeaways'
 import {FOUNDATION_SUBMISSION_GATES_PAUSED,FOUNDATION_SUBMISSION_PAUSED_NOTICE} from '@/lib/interactive-assignments/foundations/recovery'
 
@@ -345,6 +346,7 @@ function TakeawayStop({index}:{index:number}){
    {step<2&&<>
     <p className={s.stopDirection}>{independent?(step===0?steps.soloTry:steps.soloCompare):(step===0?steps.try:steps.compare)}</p>
     <QuizContent content={t(independent?(step===0?definition.solo.idea:definition.solo.example):definition.prompts[step])} questionEmphasis/>
+    {step===1&&!context.archived&&<FoundationNoteExample at="stop" number={index+1}/>}
     {cpa&&<details><summary>{steps.help}</summary><CpaDiscussionHelp index={index}/></details>}
     {!independent&&<details><summary>{steps.roles}</summary><GroupMembers index={index}/></details>}
     <button type="button" onClick={()=>setStep(step+1)}>{steps.next}: {steps.steps[step+1]} →</button>
