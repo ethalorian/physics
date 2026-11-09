@@ -24,7 +24,7 @@ test('every day prepares the correct source, two comprehension items, a new appl
     assert(isInteractiveReading(validateReading(drafts.reading)))
     const reading=validateQuiz(drafts.readingQuiz), vocabulary=validateQuiz(drafts.vocabularyQuiz)
     assert.deepEqual(reading.questions.map(q=>q.prompt.split(' — ')[0]),['Daily reading','Section C · Diagram','Apply the daily reading'])
-    for(const q of reading.questions){assert(q.guide.length>30);assert(!uniquePrompts.has(q.prompt));uniquePrompts.add(q.prompt)}
+    for(const q of reading.questions){assert(q.guide && q.guide.length>30);assert(!uniquePrompts.has(q.prompt));uniquePrompts.add(q.prompt)}
     assert.equal(vocabulary.questions.length,step.words.length+1)
     assert.deepEqual(vocabulary.questions.slice(0,-1).map(q=>q.vocabulary?.[0]),step.words.map(w=>w.term))
     const path='public'+binderMaterials(source)
@@ -34,6 +34,6 @@ test('every day prepares the correct source, two comprehension items, a new appl
     assert.equal(Object.keys(content.sections).join(''),'ABCDE')
     assert(existsSync('public'+content.packet)&&existsSync(path+'.webp'))
     assert.equal(drafts.reading.status,'draft')
-    for(const q of reading.questions)assert(!JSON.stringify(content).includes(q.guide))
+    for(const q of reading.questions){assert(q.guide);assert(!JSON.stringify(content).includes(q.guide))}
   }
 })
