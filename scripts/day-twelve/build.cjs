@@ -37,7 +37,7 @@ const labCopy = {
   "Cart mass": "Total moving mass",
   "no added weights": "cart, hanger and weights",
   "Choose a hanging mass. Release the cart.": "Transfer weights to the hanger. Release the cart from rest.",
-  "Force: F ≈ m × g — 0.05 kg gives F ≈ 0.49 N.": "Driving weight: a 0.05 kg hanger pulls the system with 0.49 N.",
+  "Force: F ≈ m × g — 0.05 kg gives F ≈ 0.49 N.": "Earth pulls down on the 0.05 kg hanging mass with 0.49 N.",
   "Record force vs. acceleration for each trial.": "Record driving weight and acceleration. Label the force axis.",
   "1 ÷ m (cart mass)": "1 ÷ M (total moving mass)",
   "a ∝ F (constant m)": "Use net force; keep M fixed",
