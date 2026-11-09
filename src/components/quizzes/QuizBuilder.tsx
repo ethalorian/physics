@@ -1,4 +1,5 @@
 'use client'
+import type {BinderSource} from '@/lib/binder-reading'
 import {QUIZ_SCHEDULE_LABELS} from '@/lib/quiz-schedule'
 import AssignmentDueInput from '@/components/ui/assignment-due-input'
 import { dueDateDraft, dueDateValue, dueDatePreview } from '@/lib/assignment-due-input'
@@ -21,7 +22,7 @@ import {mcasQuizQuestion} from '@/lib/mcas/authoring'
 export function blankQuiz(course=''):Quiz{return {id:crypto.randomUUID(),course_id:course,title:'',kind:'mixed',instructions:'Work independently. Use the vocabulary precisely and show your reasoning. Your teacher will review your work before returning your grade and mastery feedback.',grade_mode:'numeric',questions:[],due_at:null,status:'draft',version:0,student_ids:null,source_quiz_id:null}}
 export function copyQuiz(q:Quiz):Quiz{return {...q,id:crypto.randomUUID(),version:0,title:`${q.title} · Reassessment`.slice(0,160),status:'draft',due_at:null,source_quiz_id:q.id,questions:q.questions.map(question=>({...question,id:crypto.randomUUID()}))}}
 function QuestionEditor({initialOpen,summary,children}:{initialOpen:boolean;summary:string;children:ReactNode}){const[open,setOpen]=useState(initialOpen);return <details className={s.questionEditor} open={open} onToggle={e=>setOpen(e.currentTarget.open)}><summary>{summary}</summary>{children}</details>}
-export default function QuizBuilder({initial,onSaved,onCancel,onDeleted}:{initial:Quiz;onSaved:(q:Quiz)=>void;onCancel:()=>void;onDeleted?:(draft:DeletedQuizDraft)=>void}){
+export default function QuizBuilder({initial,onSaved,onCancel,onDeleted,binderReading}:{initial:Quiz;binderReading?:BinderSource|null;onSaved:(q:Quiz)=>void;onCancel:()=>void;onDeleted?:(draft:DeletedQuizDraft)=>void}){
  const {data:catalog,error:loadError,load}=useQuizData<QuizCatalog>('/api/quizzes/catalog')
  const [quiz,setQuiz]=useState(initial),[busy,setBusy]=useState(false),[error,setError]=useState(''),[approved,setApproved]=useState(false),[preview,setPreview]=useState(false)
  const [due,setDue]=useState(()=>dueDateDraft(initial.due_at))
@@ -36,7 +37,7 @@ export default function QuizBuilder({initial,onSaved,onCancel,onDeleted}:{initia
   if(busy)return;setError('')
   try{if(status==='published'&&!approved)throw Error('Review the student preview and confirm the questions before publishing.');const payload=validateQuiz({...quiz,due_at:dueDateValue(due),status});setBusy(true);const r=await quizFetch<{quiz:Quiz}>('/api/quizzes',payload);onSaved(r.quiz)}catch(e){setError((e as Error).message)}finally{setBusy(false)}
  }
- if(preview)return <QuizPreview targets={targets} quiz={{...quiz,due_at:dueDatePreview(due)}} onClose={()=>setPreview(false)}/>
+ if(preview)return <QuizPreview binderReading={binderReading} targets={targets} quiz={{...quiz,due_at:dueDatePreview(due)}} onClose={()=>setPreview(false)}/>
  return <div className={s.app}><header className={s.hero}><p className={s.eyebrow}>QUIZ STUDIO</p><h1>{quiz.source_quiz_id?'A new chance to show it.':'Build evidence, question by question.'}</h1><p>Start with the learning target. Choose vocabulary, an explanation, or a worked problem that will reveal what students understand.</p></header><div className={`${s.row} ${s.toolbar}`}><button className={s.secondary} onClick={()=>{if(canLeave())onCancel()}} disabled={busy}><ArrowLeft size={16}/>Back to quizzes</button>{initial.version>0&&initial.status==='draft'&&onDeleted&&<QuizDeleteDraft quiz={initial} disabled={busy||!catalog||catalog.readOnly} onDeleted={onDeleted}/>}<span className={s.muted}>Published questions stay fixed. You can create a new reassessment.</span></div>
  {(error||loadError)&&<p className={s.error} role="alert">{error||loadError}{loadError&&<button className={s.secondary} onClick={()=>void load()}>Retry</button>}</p>}
  {!catalog?<p role="status">Loading your classes and targets…</p>:<fieldset disabled={busy||catalog.readOnly} className={s.builder}><div className={s.stack}>

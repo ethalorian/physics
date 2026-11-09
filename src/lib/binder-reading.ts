@@ -18,7 +18,11 @@ export function binderDayLabel(day: number) { return `Unit 1 Day ${day}` }
 // references resolve to the read-only published sources.
 export function binderPassage(source: BinderSource) { return 'Student Choice Binder v1 / ' + binderStepId(source) }
 export function binderSource(passage?: string | null): BinderSource | null {
-  const match = /^Student Choice Binder v1 \/ binder-u1-(cpa|honors)-(0[1-9]|1[0-9]|2[0-2])$/.exec(passage ?? '')
+  const prefix = 'Student Choice Binder v1 / '
+  return passage?.startsWith(prefix) ? binderSourceForStep(passage.slice(prefix.length)) : null
+}
+export function binderSourceForStep(stepId: string): BinderSource | null {
+  const match = /^binder-u1-(cpa|honors)-(0[1-9]|1[0-9]|2[0-2])$/.exec(stepId)
   return match ? { edition: match[1] as ChoiceEdition, day: Number(match[2]) } : null
 }
 export function binderMaterials({edition, day}: BinderSource) {

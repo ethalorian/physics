@@ -3,6 +3,14 @@ import 'server-only'
 import { readingExemptions } from './reading-exemptions-server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { readingRows } from './textbook-assignments-server'
+import { binderSourceForStep } from './binder-reading'
+
+export async function binderForReadingQuiz(quizId: string, courseId: string) {
+  const { data, error } = await supabaseAdmin.from('reading_syllabus_bundles').select('step_id')
+    .eq('course_id', courseId).eq('reading_quiz_id', quizId).maybeSingle()
+  if (error) throw error
+  return data ? binderSourceForStep(data.step_id) : null
+}
 
 /** Submission completes the reading prerequisite. Later teacher feedback does
  * not revoke access or discard quiz work. Unrelated quizzes have no prerequisite.

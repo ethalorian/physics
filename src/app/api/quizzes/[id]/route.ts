@@ -9,13 +9,15 @@ import {supabaseAdmin} from '@/lib/supabase'
 import {accessQuiz,quizJson,quizRows,quizRoster,quizStaff,quizRpcError,quizListWork} from '@/lib/quizzes/server'
 import {QUIZ_UUID,studentQuiz,type QuizSubmission,type QuizReview} from '@/lib/quizzes/types'
 import {validateAnswers,validateReview} from '@/lib/quizzes/validation'
+import {binderForReadingQuiz} from '@/lib/reading-quiz-access'
 export const GET=withAuth<{id:string}>(async(_req,ctx)=>{
  const {id}=await ctx.params;if(!QUIZ_UUID.test(id))return quizJson({error:'Quiz unavailable.'},404)
  const access=await accessQuiz(id,ctx);if(!access)return quizJson({error:'Quiz unavailable for this account.'},404)
  const staff=quizStaff(ctx),quiz=access.quiz,students=staff?await quizRoster(quiz):[],users=staff?students.map(s=>s.id):[ctx.userId]
  const {data:worksheet,error:worksheetError}=await supabaseAdmin.from('worksheet_assignments').select('id,title,due_at,course_id,unit_id').eq('quiz_id',id).maybeSingle();if(worksheetError)throw worksheetError
  const targetIds=[...new Set(quiz.questions.map(q=>q.target_id).filter(Boolean))]
- const [allWork,submissions,targets]=await Promise.all([
+ const [binderReading,allWork,submissions,targets]=await Promise.all([
+  binderForReadingQuiz(id,quiz.course_id),
   quizListWork([id],staff?undefined:ctx.userId),
   users.length?quizRows<QuizSubmission>((a,b)=>supabaseAdmin.from('quiz_submissions').select('*').eq('quiz_id',id).in('user_id',users).order('submitted_at',{ascending:false}).order('id').range(a,b)):[],
   targetIds.length?quizRows((a,b)=>supabaseAdmin.from('learning_targets').select('id,statement,unit_id,domain,program').in('id',targetIds).order('id').range(a,b)):[]
@@ -32,7 +34,7 @@ export const GET=withAuth<{id:string}>(async(_req,ctx)=>{
   after(async()=>{await Promise.allSettled(resume.map(a=>processQuizSubmission(a.submission_id,true)))})
  }
  const graded=new Set(reviews.filter(r=>r.decision==='graded').map(r=>r.submission_id))
- return quizJson({worksheet,... (staff?{ai,claudeConfigured:!worksheet&&!!process.env.ANTHROPIC_API_KEY,claudeModel:quizGradingModel()}:{}),drafts,staff,readOnly:ctx.viewingAsTeacher,quiz:staff?quiz:studentQuiz(quiz),students,work:allWork.filter(w=>users.includes(w.user_id)),submissions:staff?submissions:submissions.map(s=>({...s,snapshot:graded.has(s.id)?{...studentQuiz(s.snapshot),questions:s.snapshot.questions}:studentQuiz(s.snapshot)})),reviews,targets})
+ return quizJson({worksheet,binderReading,... (staff?{ai,claudeConfigured:!worksheet&&!!process.env.ANTHROPIC_API_KEY,claudeModel:quizGradingModel()}:{}),drafts,staff,readOnly:ctx.viewingAsTeacher,quiz:staff?quiz:studentQuiz(quiz),students,work:allWork.filter(w=>users.includes(w.user_id)),submissions:staff?submissions:submissions.map(s=>({...s,snapshot:graded.has(s.id)?{...studentQuiz(s.snapshot),questions:s.snapshot.questions}:studentQuiz(s.snapshot)})),reviews,targets})
 })
 export const POST=withAuth<{id:string}>(async(req,ctx)=>{
  const {id}=await ctx.params;if(!QUIZ_UUID.test(id))return quizJson({error:'Quiz unavailable.'},404)

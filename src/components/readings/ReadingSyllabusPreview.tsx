@@ -1,12 +1,13 @@
 'use client'
 
-import BinderDailyReader from './BinderDailyReader'
+import BinderResponsePreview from './BinderResponsePreview'
+import QuizPreview from '@/components/quizzes/QuizPreview'
 import { binderSource } from '@/lib/binder-reading'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { buildSyllabusReading, type SyllabusCatalog } from '@/lib/reading-syllabus'
+import { buildSyllabusDrafts, buildSyllabusReading, type SyllabusCatalog } from '@/lib/reading-syllabus'
 import { readingDashboardHref } from '@/lib/reading-dashboard'
 import { Button } from '@/components/ui/button'
 import AssignmentChapterReader from './interactive/AssignmentChapterReader'
@@ -17,7 +18,7 @@ import styles from './readings.module.css'
 
 /** This page only reads the staff-scoped catalog; previewing never prepares or
  * publishes work. Saved bundles always open the actual editable assignment. */
-export default function ReadingSyllabusPreview({ courseId, stepId }: { courseId: string; stepId: string }) {
+export default function ReadingSyllabusPreview({ courseId, stepId, readingCheck = false }: { courseId: string; stepId: string; readingCheck?: boolean }) {
   const { data: session } = useSession()
   const router = useRouter()
   const [data, setData] = useState<(SyllabusCatalog & { staff: boolean }) | null>(null)
@@ -30,8 +31,9 @@ export default function ReadingSyllabusPreview({ courseId, stepId }: { courseId:
       .then(setData).catch(e => { if (!controller.signal.aborted) setError(e.message) })
     return () => controller.abort()
   }, [courseId, stepId])
-  const savedId = data?.staff ? data.bundles.find(bundle => bundle.course_id === courseId && bundle.step_id === stepId)?.reading.id : undefined
-  useEffect(() => { if (savedId) router.replace('/readings/' + encodeURIComponent(savedId) + '?reader=interactive') }, [savedId, router])
+  const bundle = data?.staff ? data.bundles.find(bundle => bundle.course_id === courseId && bundle.step_id === stepId) : undefined
+  const savedId = readingCheck ? bundle?.reading_quiz_id : bundle?.reading.id
+  useEffect(() => { if (savedId) router.replace(readingCheck ? '/quizzes/' + encodeURIComponent(savedId) : '/readings/' + encodeURIComponent(savedId) + '?reader=interactive') }, [savedId, readingCheck, router])
   const backHref = readingDashboardHref({ view: 'syllabus', courseId, stepId })
   const unavailable = (message: string) => <div className={styles.page}><h1 className="text-title-1">Reading preview</h1><p role="alert">{message}</p><Button asChild><Link href={data && !data.staff ? '/readings' : backHref}>Back to readings</Link></Button></div>
   if (error) return unavailable(error)
@@ -45,7 +47,14 @@ export default function ReadingSyllabusPreview({ courseId, stepId }: { courseId:
   let sequence = 0
   const assignment = buildSyllabusReading(step, steps, course, slug => data.targets.find(target => target.slug === slug)?.id ?? '', () => `preview-${step.id}-${sequence++}`)
   const binder = binderSource(assignment.passage)
-  if (binder) return <div className={styles.page}><Link href={backHref}>← Back to reading plan</Link><BinderDailyReader source={binder}/><h2>Assigned responses</h2>{assignment.questions.map(q=><article key={q.id} className={styles.question}><h3>{q.reference}</h3><p>{q.prompt}</p></article>)}</div>
+  if (binder && readingCheck) {
+    try {
+      const drafts = buildSyllabusDrafts(step, steps, course, data.targets, () => `preview-${step.id}-${sequence++}`)
+      return <QuizPreview key={step.id} quiz={drafts.readingQuiz} binderReading={binder} backHref={backHref}/>
+    } catch (error) { return unavailable((error as Error).message) }
+  }
+  if (binder) return <div className={styles.page}><Link href={backHref}>← Back to reading plan</Link>
+    <BinderResponsePreview key={step.id} source={binder} assignment={assignment}/></div>
   const definition = interactiveChapterForAssignment(assignment)
   if (!definition) return unavailable('This reading does not fit a single interactive chapter. Open its source reading from the syllabus.')
   return <AssignmentChapterReader definition={definition} teacher assignment={assignment}
