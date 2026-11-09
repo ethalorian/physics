@@ -12,6 +12,8 @@ export function binderStepId({edition, day}: BinderSource) {
   return `binder-u1-${edition}-${String(day).padStart(2, '0')}`
 }
 
+export function binderDayLabel(day: number) { return `Unit 1 Day ${day}` }
+
 // Course passages already have a dedicated field. Only these exact, versioned
 // references resolve to the read-only published sources.
 export function binderPassage(source: BinderSource) { return 'Student Choice Binder v1 / ' + binderStepId(source) }

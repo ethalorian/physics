@@ -1,4 +1,5 @@
 import type { ReadingAssignment } from './textbook-assignments'
+import { isInteractiveSyllabusStep } from './reading-availability'
 import type { SyllabusCatalog, SyllabusStep } from './reading-syllabus'
 
 export const READING_TIME_ZONE = 'America/New_York'
@@ -39,7 +40,11 @@ export function plannerReadings(catalog: SyllabusCatalog, assignments: ReadingAs
   const byId = new Map(assignments.filter(a => a.course_id === courseId).map(a => [a.id, a]))
   const bundles = new Map(catalog.bundles.filter(b => b.course_id === courseId).map(b => [b.step_id, b]))
   const used = new Set<string>()
-  const readings = catalog.steps.map(step => {
+  const course = catalog.courses.find(c => c.id === courseId)
+  const dailySteps = course ? (catalog.textbookSteps ?? []).filter(step =>
+    step.sourceBook === 'binder' && isInteractiveSyllabusStep(step, course.track)
+  ) : []
+  const readings = [...dailySteps, ...catalog.steps].map(step => {
     const id = bundles.get(step.id)?.reading_id
     if (id) used.add(id)
     return { key: 'step:' + step.id, title: step.title, unit: step.unit, step, assignment: id ? byId.get(id) : undefined }

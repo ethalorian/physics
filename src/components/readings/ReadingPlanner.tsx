@@ -22,7 +22,7 @@ export default function ReadingPlanner({ syllabus, readings, courseId, onChanged
   const today = plannerDay(new Date())
   const [month, setMonth] = useState(today.slice(0, 7) + '-01')
   const [search, setSearch] = useState(''), [unit, setUnit] = useState('')
-  const [source, setSource] = useState('sequence')
+  const [source, setSource] = useState('all')
   const [selected, setSelected] = useState<string | null>(null), [date, setDate] = useState('')
   const [over, setOver] = useState<string | null>(null), [dragging, setDragging] = useState(false)
   const [overrides, setOverrides] = useState<Record<string, ReadingAssignment>>({})
@@ -43,7 +43,14 @@ export default function ReadingPlanner({ syllabus, readings, courseId, onChanged
   const current = itemByKey.get(selected ?? '')
   const assigned = useMemo(() => items.filter(item => item.assignment?.status === 'published'), [items])
   const unscheduled = assigned.filter(item => !item.assignment?.due_at)
-  const library = items.filter(item => (item.assignment ? isInteractiveReading(item.assignment) : !!item.step && isInteractiveSyllabusStep(item.step, syllabus.courses.find(c => c.id === courseId)?.track)) && item.assignment?.status !== 'published' && (!unit || item.unit === unit) && (source === 'all' || !!item.step && !item.step.sourceBook) && (!search || `${item.title} ${item.assignment?.reading ?? ''}`.toLowerCase().includes(search.toLowerCase())))
+  const track = syllabus.courses.find(c => c.id === courseId)?.track
+  const library = items.filter(item => {
+    if (item.assignment?.status === 'published' || (unit && item.unit !== unit)) return false
+    if (source === 'binder' && item.step?.sourceBook !== 'binder') return false
+    if (source === 'sequence' && (!item.step || item.step.sourceBook)) return false
+    if (search && !`${item.title} ${item.assignment?.reading ?? ''}`.toLowerCase().includes(search.toLowerCase())) return false
+    return item.assignment ? isInteractiveReading(item.assignment) : !!item.step && isInteractiveSyllabusStep(item.step, track)
+  })
   const days = useMemo(() => calendarDays(month), [month])
   const dayLabels = useMemo(() => new Map(days.map(day => [day, dateLabel(day)])), [days])
   const { byDay, openings } = useMemo(() => {
@@ -144,7 +151,7 @@ export default function ReadingPlanner({ syllabus, readings, courseId, onChanged
           {!dragging && current?.assignment?.status === 'published' && <Button variant="outline" disabled={disabled} onClick={() => void change(current.key, null)}>Unassign reading & linked work</Button>}
         </div>
         <label className={styles.search}><Search size={16} aria-hidden="true" /><input aria-label="Search reading shelf" placeholder="Find a reading…" value={search} onChange={event => setSearch(event.target.value)} /></label>
-        <select aria-label="Reading collection" value={source} onChange={event => setSource(event.target.value)}><option value="sequence">Course sequence</option><option value="all">All available readings</option></select>
+        <select aria-label="Reading collection" value={source} onChange={event => setSource(event.target.value)}><option value="all">All available readings</option><option value="binder">Daily binder readings</option><option value="sequence">Course sequence</option></select>
         <select aria-label="Filter reading unit" value={unit} onChange={event => setUnit(event.target.value)}><option value="">All units</option>{SYLLABUS_UNITS.map(([id, name], i) => <option key={id} value={id}>{i + 1}. {name}</option>)}</select>
         <div className={styles.library}>{library.map(item => card(item))}{!library.length && <p className={styles.empty}>No unassigned readings match. Try another collection or unit.</p>}</div>
         <Link className={styles.detailsLink} href={stepHref()}>Browse textbooks & reading details <ArrowRight size={14} /></Link>

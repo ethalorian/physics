@@ -3,7 +3,7 @@ import lessons from '../../resources/student-choice/daily-reader/lessons.json'
 import cpa from '../../resources/student-choice/unit-1-readings/cpa.json'
 import honors from '../../resources/student-choice/unit-1-readings/honors.json'
 import checks from '../../resources/student-choice/daily-reader/checks.json'
-import { binderPassage, binderStepId } from '@/lib/binder-reading'
+import { binderDayLabel, binderPassage, binderStepId } from '@/lib/binder-reading'
 import type { SyllabusStep } from '@/lib/reading-syllabus'
 import { READING_SYLLABUS } from './reading-syllabus'
 
@@ -20,7 +20,7 @@ export const BINDER_READINGS: SyllabusStep[] = lessons.map(lesson => {
   if (!figure) throw Error('Missing note diagram explanation.')
   const target = topic.readingCheck.target
   return {
-    id: binderStepId(source), sourceBook:'binder', unit:'unit-1', title: `Day ${lesson.day} · ${lesson.title}`, focus:lesson.focus,
+    id: binderStepId(source), sourceBook:'binder', unit:'unit-1', title: `${binderDayLabel(lesson.day)} · ${lesson.title}`, focus:lesson.focus,
     // The existing course-passage schema uses chapter 4 with no textbook sections.
     chapter:4, sections:[], prerequisites:[], passage:binderPassage(source),
     words:lesson.words, vocabularyTarget:topic.vocabularyTarget,

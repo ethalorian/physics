@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { binderMaterials, type BinderLesson, type BinderSection, type BinderSource } from '@/lib/binder-reading'
+import { binderDayLabel, binderMaterials, type BinderLesson, type BinderSection, type BinderSource } from '@/lib/binder-reading'
 import s from './BinderDailyReader.module.css'
 
 const letters: BinderSection[] = ['A','B','C','D','E']
@@ -73,8 +73,8 @@ export default function BinderDailyReader({source,heading=true,initialSection}:{
   },[url,retry,initialSection])
   if(error)return <p role="alert">The binder reading could not load. <button type="button" onClick={()=>setRetry(retry+1)}>Retry</button></p>
   if(!lesson)return <p role="status">Opening the daily reading…</p>
-  return <article className={s.reader}><header><p className={s.eyebrow}>{lesson.edition.toUpperCase()} Physics · Unit 1 · Day {lesson.day}</p>
-    {heading&&<h1>{lesson.title}</h1>}<p>{lesson.subtitle}</p></header>
+  return <article className={s.reader}><header><p className={s.eyebrow}>{lesson.edition.toUpperCase()} Physics{!heading && ` · ${binderDayLabel(lesson.day)}`}</p>
+    {heading&&<h1>{binderDayLabel(lesson.day)} · {lesson.title}</h1>}<p>{lesson.subtitle}</p></header>
     <nav aria-label="Daily note sections"><p>Open a tab to inspect the original note page.</p><div>{letters.map(letter=><button type="button" key={letter} className={s.tab} onClick={()=>setSection(letter)}>Section {letter}</button>)}</div></nav>
     <div className={s.prose}>{lesson.paragraphs.map((p,i)=><p key={i}>{paragraph(p,setSection)}</p>)}</div>
     {lesson.day===8&&<VelocityGraph honors={lesson.edition==='honors'}/>}

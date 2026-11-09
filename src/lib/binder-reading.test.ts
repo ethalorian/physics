@@ -29,6 +29,11 @@ test('every day prepares the correct source, two comprehension items, a new appl
     assert.deepEqual(vocabulary.questions.slice(0,-1).map(q=>q.vocabulary?.[0]),step.words.map(w=>w.term))
     const path='public'+binderMaterials(source)
     const content:BinderLesson=JSON.parse(readFileSync(path+'.json','utf8'))
+    const title = `Unit 1 Day ${source.day} · ${content.title}`
+    assert.equal(step.title, title)
+    assert.equal(drafts.reading.title, title)
+    assert.equal(reading.title, title + ' · Reading check')
+    assert.equal(vocabulary.title, title + ' · Vocabulary check')
     assert.deepEqual(content.paragraphs,(source.edition==='cpa'?cpa:honors)[source.day-1].paragraphs)
     assert.deepEqual(content.words,step.words)
     assert.equal(Object.keys(content.sections).join(''),'ABCDE')
