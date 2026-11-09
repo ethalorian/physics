@@ -1,6 +1,8 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { PDFArray, PDFDocument, PDFRawStream, type PDFPage } from 'pdf-lib'
+import manifest from '@/data/student-choice-practice-pdfs.json'
 import catalog from '@/data/student-choice-binder.json'
 import { renderChoicePracticePrint } from './student-choice-print'
 import { GET } from '@/app/student-choice-print/route'
@@ -16,13 +18,35 @@ test('all 63 subsets of every pinned edition contain only exact original section
     }
   }
 })
-test('public print route validates subsets and pinned editions without accessing student records', async () => {
-  const p = catalog[0], url = `http://fixture/student-choice-print?packet=${p.key}&edition=${p.version}&options=`
-  for (const options of ['1', '2,5', '1,2,3,4,5,6']) {
-    const response = GET(new Request(url + options))
-    assert.equal(response.status, 200)
-    assert.equal((await response.text()).match(/<section\b/g)?.length, options.split(',').length)
+// Compare the printed content streams so a packet of repeated first pages fails.
+function pageContent(page: PDFPage) {
+  const contents = page.node.Contents()
+  const streams = contents instanceof PDFArray ? contents.asArray() : [contents]
+  return streams.map(ref => page.doc.context.lookup(ref, PDFRawStream).getContents())
+}
+
+test('teacher packets and student subsets contain the requested physical Letter pages', async () => {
+  const files: Record<string, string> = manifest
+  for (const packet of catalog) {
+    assert.ok(fs.existsSync('public/student-choice-pages/practice-pdfs/' + files[packet.key + '@' + packet.version]))
   }
-  for (const options of ['', '0', '7', '1,1', '1.5', '1,2,3,4,5,6,1', '<script>']) assert.equal(GET(new Request(url + options)).status, 400)
-  assert.equal(GET(new Request('http://fixture/student-choice-print?packet=__proto__&edition=x&options=1')).status, 404)
+  const packet = catalog.find(p => p.day === 12)!
+  const url = `http://fixture/student-choice-print?packet=${packet.key}&edition=${packet.version}&options=`
+  const request = (choices: string) => GET(new Request(url + choices))
+  const full = await request('1,2,3,4,5,6')
+  assert.equal(full.headers.get('Content-Type'), 'application/pdf')
+  const originals = (await PDFDocument.load(await full.arrayBuffer())).getPages()
+  assert.equal(originals.length, 6)
+  for (const choices of [[6], [5, 2], [6, 2, 4], [5, 4, 3, 2], [5, 4, 3, 2, 1]]) {
+    const response = await request(choices.join(','))
+    assert.equal(response.status, 200)
+    const result = (await PDFDocument.load(await response.arrayBuffer())).getPages()
+    assert.equal(result.length, choices.length)
+    choices.sort((a, b) => a - b).forEach((n, i) => {
+      assert.deepEqual(result[i].getSize(), { width: 612, height: 792 })
+      assert.deepEqual(pageContent(result[i]), pageContent(originals[n - 1]))
+    })
+  }
+  for (const options of ['', '0', '7', '1,1', '1.5', '1,2,3,4,5,6,1', '<script>']) assert.equal((await request(options)).status, 400)
+  assert.equal((await GET(new Request('http://fixture/student-choice-print?packet=__proto__&edition=x&options=1'))).status, 404)
 })

@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     webpackBuildWorker: true,
   },
   outputFileTracingIncludes: {
+    '/student-choice-print': ['./public/student-choice-pages/practice-pdfs/*.pdf'],
     '/api/etf-reader/*': ['./resources/etf-readers/**/*'],
     '/api/teaching-plans': ['./resources/worksheet-quizzes/bank.json','./resources/worksheet-decks/source.json'],
     '/api/worksheet-assignments': ['./resources/worksheet-quizzes/bank.json','./resources/worksheet-decks/source.json'],
@@ -28,6 +29,12 @@ const nextConfig: NextConfig = {
     );
     return [
       ...packetRedirects,
+      {
+        // Previously published all-six links also open the printable PDF.
+        source: '/student-choice-pages/unit-1/:edition(layout-1215defe2f22|readings-f35334d84aee)/day-:day(\\d{2})-practice-all.html',
+        destination: '/student-choice-print?format=pdf&packet=unit-1-day-:day&edition=:edition&options=1,2,3,4,5,6',
+        permanent: false,
+      },
       {
         source: '/simulations/distance-displacement/assignment',
         destination: '/simulations/distance-displacement',

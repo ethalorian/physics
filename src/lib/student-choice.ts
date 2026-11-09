@@ -29,7 +29,7 @@ export function validateChoiceSelection(value: unknown, required = DEFAULT_CHOIC
 }
 export function choicePracticePrintPath(packet: BinderDay, choices: number[]) {
   const { option_numbers } = validateChoiceSelection({ option_numbers: choices, version: 0 }, choices.length)
-  return `/student-choice-print?packet=${encodeURIComponent(packet.key)}&edition=${encodeURIComponent(packet.version)}&options=${option_numbers.join(',')}`
+  return `/student-choice-print?format=pdf&packet=${encodeURIComponent(packet.key)}&edition=${encodeURIComponent(packet.version)}&options=${option_numbers.join(',')}`
 }
 export function choiceReviewLabel(review?: StudentChoiceReview) { return review?.letter_grade ? `Reviewed · ${review.letter_grade}` : CHOICE_PAPER_LABELS[review?.state ?? 'not_received'] }
 /** End of the chosen school day, independent of the teacher's device timezone. */

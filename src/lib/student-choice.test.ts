@@ -53,7 +53,7 @@ test('students must save three distinct choices; printing always follows the sor
   for (const options of [[], [1], [1, 2], [1, 2, 3, 4], [1, 1, 2], [0, 1, 2], [1, 2, 7], [1, 2, 2.5], [1, 2, '3'], [1, 2, null], [1, 2, NaN], null]) assert.throws(() => validateChoiceSelection({option_numbers: options, version: 0}))
   for (const version of [-1, 0.5, '1', null, undefined]) assert.throws(() => validateChoiceSelection({option_numbers: [1, 2, 3], version}))
   const packet = {key: 'unit1-day02', version: 'reviewed', day: 2} as BinderDay
-  assert.equal(choicePracticePrintPath(packet, [6, 3, 1]), '/student-choice-print?packet=unit1-day02&edition=reviewed&options=1,3,6')
+  assert.equal(choicePracticePrintPath(packet, [6, 3, 1]), '/student-choice-print?format=pdf&packet=unit1-day02&edition=reviewed&options=1,3,6')
   assert.match(choicePracticePrintPath(packet, [1, 2]), /options=1,2$/)
   assert.throws(() => choicePracticePrintPath(packet, []))
 })
