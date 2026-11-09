@@ -71,7 +71,7 @@ def package(course, back_path, catalog, files, notes_directory=None):
             assert tuple(page.mediabox) == (0, 0, 612, 792)
             header = page.extract_text().splitlines()[0]
             assert course.upper() in header and re.search(rf'\bDAY {day}\b', header), header
-        refs = set(re.findall(r'\bSection\s+([A-E])\b', back.extract_text()))
+        refs = set(re.findall(r'\bSECTION\s+([A-E])\b', back.extract_text().upper()))
         assert 'C' in refs and len(refs) >= 2, (course, day, refs)
         pages.extend([front, back])
         files[f'day-{day:02}-{course}-notes-and-reading.pdf'] = pdf_bytes(
