@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
-import { PDFArray, PDFDocument, PDFRawStream, type PDFPage } from 'pdf-lib'
+import { PDFArray, PDFDocument, PDFStream, type PDFPage } from 'pdf-lib'
 import manifest from '@/data/student-choice-practice-pdfs.json'
 import catalog from '@/data/student-choice-binder.json'
 import { renderChoicePracticePrint } from './student-choice-print'
@@ -22,7 +22,7 @@ test('all 63 subsets of every pinned edition contain only exact original section
 function pageContent(page: PDFPage) {
   const contents = page.node.Contents()
   const streams = contents instanceof PDFArray ? contents.asArray() : [contents]
-  return streams.map(ref => page.doc.context.lookup(ref, PDFRawStream).getContents())
+  return streams.map(ref => page.doc.context.lookup(ref, PDFStream).getContents())
 }
 
 test('teacher packets and student subsets contain the requested physical Letter pages', async () => {
