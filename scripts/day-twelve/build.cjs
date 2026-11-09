@@ -49,6 +49,8 @@ for (const [sourceText, studentText] of Object.entries(labCopy)) {
  html = html.replaceAll(node, '>' + studentText + '<');
 }
 html = html.replace('Cart%20(mass%20fixed)', 'Cart%20and%20weights');
+// The original navigation title is a truncated copy of the old slide text.
+html = html.replace('data-label="F = ma. You derived it from your own dat"', 'data-label="How well do your results support the net-force model?"');
 html=html.replace(sectionPattern,s=>{number++;return s.replace(/data-screen-label="[^"]*"/,`data-screen-label="${number}"`).replace(/Antocci Physics · \d{2} \/ 33/g,`Antocci Physics · ${String(number).padStart(2,'0')} / 34`);});
 html=require('../foundation-groups/slide-copy.cjs')(html,{preserveSlideCopy:true});
 const companion=require('../foundation-groups/slide-language.cjs').companion;
