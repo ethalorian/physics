@@ -1,0 +1,87 @@
+{
+  "day": 15,
+  "title": "A force diagram begins with one chosen object",
+  "subtitle": "External interactions, scaled arrows, and an accelerating lamp",
+  "paragraphs": [
+    "A useful force diagram leaves out many visible details so that the interactions become easier to see. The first decision is the object or system we are studying. Every force arrow in that diagram must act on that chosen receiver. Today I want us to draw that boundary before writing Newton's second law.",
+    "Consider a <b>2 kg lamp</b> hanging from a taut vertical rope. The lamp accelerates upward at <b>1.5 m/s²</b>. We choose the lamp as our object. The rope exerts upward tension on it, and Earth exerts downward weight. Those are the two external forces in this model. The force the lamp exerts on the rope belongs on the rope's diagram, not on the lamp's.",
+    "Use the positive direction in <b>Section B</b>, upward. The lamp's weight magnitude is <eq><var>W</var> = <var>m</var><var>g</var> = (2 kg)(9.8 m/s²) = 19.6 N</eq>. Because weight acts downward, it enters the vertical sum with a minus sign. Tension acts upward and enters with a plus sign. Newton's second law becomes <eq><var>T</var> − <var>m</var><var>g</var> = <var>m</var><var>a</var><sub>y</sub></eq>.",
+    "Rearranging gives <eq><var>T</var> = <var>m</var><var>g</var> + <var>m</var><var>a</var><sub>y</sub></eq>. Substituting, <eq><var>T</var> = 19.6 N + (2 kg)(1.5 m/s²) = 22.6 N</eq>. The rope must supply enough upward force to balance the weight and an additional 3.0 N to produce the upward acceleration. The net force is therefore 3.0 N upward, not 22.6 N.",
+    "Compare the lengths of the two force arrows in <b>Section C</b>. Draw the upward tension arrow longer than the downward weight arrow, using the same length scale for both. Their difference represents the net force. A separately labeled net-force arrow can summarize the calculation, but it is not a third interaction to add to tension and weight. Adding it again would count the same imbalance twice.",
+    "Tension and weight are not a third-law pair. They both act on the lamp, come from different sources, and here even have different magnitudes. The tension's partner is the lamp's pull on the rope. The weight's partner is the lamp's gravitational pull on Earth. Neither partner belongs in this single-object diagram.",
+    "An upward acceleration also does not, by itself, prove that the lamp is moving upward. It could be moving downward and slowing. If it is already moving upward, it speeds up. The forces determine the change in velocity; a starting velocity is still needed to determine the motion. Any velocity arrow should be kept distinct from the orange force arrows so it cannot be mistaken for another force.",
+    "For our fictional asteroid, 2026-XJ, we will use exactly this discipline. Define the asteroid as the receiver, list the external interactions on it, and draw their directions before combining them. An uncluttered diagram is useful because it makes missing forces, incorrect receivers, and double-counted components easier to catch before they affect the forecast."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Object The receiver of every force in the diagram. External A force from outside the chosen boundary. Length Use one scale to show each force’s size. Net force Sum of forces, not another interaction.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS T − mg = ma y T = m ( g + a y ) + up W Earth on lamp",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · LAMP ACCELERATES UP",
+      "text": "SECTION C COLOR IT · LAMP ACCELERATES UP Forces on the lamp only. chosen object lamp a is upward T = 22.6 N W = 19.6 N forces ON the lamp 1 2 3 1 · ORANGE Tension: longer arrow 2 · ORANGE Weight: shorter arrow 3 · PENCIL Lamp and boundary",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        247.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A rope lifts a 2 kg lamp with upward acceleration 1.5 m/s² . Find the tension. Use g = 9.8 m/s² . GIVEN m = 2 kg a y = +1.5 m/s² g = 9.8 m/s² EQUATION Up is +. T − mg = ma y . WORK W = 2(9.8) = 19.6 N T = 19.6 + 2(1.5) ANSWER T = 22.6 N T and W are not a third-law pair.",
+      "box": [
+        75.75,
+        469.5,
+        515.25,
+        159.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 15 OF 22 · NEW TOOL: OBJECT BOUNDARY An XJ force diagram contains forces on XJ, not the forces XJ exerts on other bodies. Defining that boundary keeps the acceleration calculation consistent. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Object",
+      "definition": "The receiver of every force in the diagram."
+    },
+    {
+      "term": "External force",
+      "definition": "A force from outside the chosen boundary."
+    },
+    {
+      "term": "Force-arrow scale",
+      "definition": "Use one scale to show each force’s size."
+    },
+    {
+      "term": "Net force",
+      "definition": "Sum of forces, not another interaction."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-15-honors-notes-and-reading.pdf"
+}

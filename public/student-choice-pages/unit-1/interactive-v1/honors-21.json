@@ -1,0 +1,87 @@
+{
+  "day": 21,
+  "title": "Build a prediction one coordinate at a time",
+  "subtitle": "A two-dimensional plan with fixed axes and clear assumptions",
+  "paragraphs": [
+    "A two-dimensional prediction can look complicated because the motion points at an angle. The solution becomes manageable when we keep one fixed frame and calculate each coordinate separately. I want the plan to show what was measured, what is being assumed, and how the result follows. Our probe example gives us a way to practice that reasoning.",
+    "Locate the probe’s starting point in <b>Section C</b>. It starts at <b>(−20, 5) m</b> and moves steadily at <b>10 m/s</b>, directed <b>30° from the positive horizontal axis toward the positive vertical axis</b>. We want its position after <b>2 s</b>. The coordinates describe where it starts. The speed and angle describe its velocity. They do not describe the same thing, and the negative starting coordinate does not mean negative horizontal motion.",
+    "Resolve the velocity along the fixed axes. Because the angle begins at the positive horizontal axis, <eq><var>v</var><sub>x</sub> = <var>v</var> cos 30° = (10 m/s) cos 30° ≈ 8.66 m/s</eq>. The vertical component is <eq><var>v</var><sub>y</sub> = <var>v</var> sin 30° = 5.00 m/s</eq>. Both are positive. Using 10 m/s independently along each axis would invent a larger velocity than the one we were given.",
+    "Use the two steady-velocity equations in <b>Section B</b>, one for each coordinate: <eq><var>x</var><sub>f</sub> = <var>x</var><sub>0</sub> + <var>v</var><sub>x</sub><var>t</var></eq> and <eq><var>y</var><sub>f</sub> = <var>y</var><sub>0</sub> + <var>v</var><sub>y</sub><var>t</var></eq>. Both calculations use the same two seconds. Horizontally, <eq><var>x</var><sub>f</sub> = −20 m + (8.66 m/s)(2 s) ≈ −2.68 m</eq>. Vertically, <eq><var>y</var><sub>f</sub> = 5 m + (5 m/s)(2 s) = 15 m</eq>.",
+    "The predicted coordinates are therefore <b>(−2.68, 15) m</b>, using rounded horizontal components. The probe has moved rightward, yet remains left of the vertical axis. That is consistent: starting at −20 m and moving 17.32 m right does not quite reach zero. The blue start and end points on the notes page should tell the same story as those signed calculations.",
+    "Check the displacement components: <eq>Δ<var>x</var> ≈ +17.32 m</eq> and <eq>Δ<var>y</var> = +10 m</eq>. Their combined magnitude is approximately 20 m, matching a speed of 10 m/s maintained for two seconds. The displacement points in the same direction as the steady velocity. Agreement between the component calculation, diagram, and total travel is stronger evidence than a calculator result alone.",
+    "A complete plan also checks that all units match before substitution and that the chosen model fits the interval. If velocity changes, the two steady-velocity equations cannot describe the whole trip as written. If the starting measurements have uncertainty, the final coordinates should carry appropriate uncertainty too. More digits in the arithmetic do not create more precise measurements.",
+    "For our fictional asteroid, 2026-XJ, treating Earth as fixed and velocity as steady are classroom simplifications. Real orbital predictions must account for changing gravitational effects and Earth's motion. Within our model, we can still make a defensible claim by naming the axes, future time, assumptions, and predicted coordinates, then asking whether both objects occupy the same place at the same time."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Frame Keep the origin and axes fixed. Components Signed x and y parts; calculate separately. Units Make all units match before substituting. Limit State assumptions, such as steady velocity.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS x f = x 0 + v x t y f = y 0 + v y t v x v cos θ v y v sin θ ; θ from + x",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · START + CHANGE",
+      "text": "SECTION C COLOR IT · START + CHANGE Probe example; fixed axes. + x + y -20 -10 0 10 5 10 15 (−20, 5) m (−2.68, 15) m 30° 1 2 3 steady velocity for 2 s 1 · PENCIL Origin and axes 2 · BLUE Start and end positions 3 · BLUE Displacement direction",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A probe starts at (−20, 5) m and moves at 10 m/s , 30° from + x toward + y , for 2 s . Find its new coordinates. GIVEN x 0 = −20 m ; y 0 = 5 m v = 10 m/s ; θ = 30° t = 2 s ; steady v EQUATION Resolve v : v x = 8.66 m/s v y = 5 m/s WORK x f = −20 + 8.66(2) y f = 5 + 5(2) ANSWER (−2.68, 15) m Final x is still negative.",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 21 OF 22 · NEW TOOL: A TWO-AXIS PLAN For fictional XJ, name the frame, units and motion assumptions. Fixed Earth and steady velocity are classroom simplifications. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Reference frame",
+      "definition": "Keep the origin and axes fixed."
+    },
+    {
+      "term": "Components",
+      "definition": "Signed x and y parts; calculate separately."
+    },
+    {
+      "term": "Units",
+      "definition": "Make all units match before substituting."
+    },
+    {
+      "term": "Limit",
+      "definition": "State assumptions, such as steady velocity."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-21-honors-notes-and-reading.pdf"
+}

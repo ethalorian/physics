@@ -1,0 +1,87 @@
+{
+  "day": 10,
+  "title": "Name what is doing the pushing or pulling",
+  "subtitle": "Force sources, contact forces, mass, and weight",
+  "paragraphs": [
+    "A force arrow should tell us about an interaction, not just point in a direction that looks useful. I want you to be able to finish this sentence for every arrow: “The ___ exerts a ___ force on the object.” The first blank identifies the source. The object receiving the force is the receiver.",
+    "Some forces require contact. A normal force is a surface's push perpendicular to the surface. Friction acts along the contact surface and opposes slipping or the tendency to slip. Tension is a taut rope's pull along the rope. An applied force can be a person's push or pull. These names describe how objects interact.",
+    "Gravity can act without contact. Near Earth's surface, Earth pulls objects downward. We call the size of that gravitational force weight. Mass describes how much matter an object has and is measured in kilograms. Weight is a force and is measured in newtons. A three-kilogram object does not have a weight of three kilograms; those units describe its mass.",
+    "Use the weight equation in <b>Section B</b>: <eq><var>W</var> = <var>m</var><var>g</var></eq>, also written using gravitational force as <eq><var>F</var><sub>g</sub> = <var>m</var><var>g</var></eq>. Near Earth, <eq><var>g</var> ≈ 9.8 N/kg</eq>. That means each kilogram has about 9.8 N of gravitational force acting on it. For estimates and today's worked example, the notes round this to <b>10 N/kg</b>.",
+    "The worked example places a <b>3 kg object</b> at rest on a level table. Its estimated weight is <eq><var>W</var> = (3 kg)(10 N/kg) = 30 N</eq> downward. The table supplies an upward normal force. Because the object remains at rest and there are no other vertical forces in this example, the normal force must also be <b>30 N</b>. Equal upward and downward forces give zero vertical acceleration.",
+    "Name the source of each of the four force arrows on the crate in <b>Section C</b>. The rope pulls right with 6 N of tension. The table supplies 2 N of backward friction and 10 N of upward normal force. Earth supplies 10 N of downward weight. One source, the table, can supply two different contact forces. The vertical forces balance, while the horizontal forces have a net effect to the right.",
+    "Normal force is not automatically equal to weight. That equality followed from the level-table situation with no other vertical pull and no vertical acceleration. A ramp or another supporting force can change it. Similarly, a velocity arrow is not a force source. “It is moving” cannot fill in the first blank of our interaction sentence.",
+    "For our fictional asteroid, 2026-XJ, naming sources helps us decide which forces belong in its model. Gravity from other bodies can change its motion without contact. A rope or table force belongs only if such an interaction exists. A complete, realistic force list is the starting point for explaining a changing path."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Interaction Every force has a source (what pushes or pulls) and a receiver. Contact force Normal (surface, ⟂), friction (along surface, opposes slip), tension (rope), applied (a push). Non-contact force Gravity acts without touching. Mass vs. weight Mass is amount of matter (kg). Weight is Earth’s gravitational pull (N).",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        156.0
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATION + UNITS",
+      "text": "SECTION B KEY EQUATION + UNITS F g = m g g = 9.8 N/kg (≈ 10 to estimate) m mass, kilograms (kg) W weight, newtons (N)",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        156.0
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · NAME EVERY SOURCE",
+      "text": "SECTION C COLOR IT · NAME EVERY SOURCE The ___ exerts a ___ force on the crate. crate tension 6 N · rope 1 friction 2 N · table 2 normal 10 N · table 2 weight 10 N · Earth 3 1 · ORANGE Force from the rope 2 · ORANGE Forces from the table 3 · ORANGE Force from Earth",
+      "box": [
+        75.75,
+        272.25,
+        515.25,
+        222.0
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 3 kg object rests on a level table. Find its weight and name the force that supports it. GIVEN m = 3 kg g ≈ 10 N/kg EQUATION W = m × g WORK W = 3 × 10 = 30 N down table pushes up equally ANSWER 30 N normal force 30 N up",
+      "box": [
+        75.75,
+        494.25,
+        515.25,
+        135.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 10 OF 22 · NEW TOOL: NAMING FORCES If XJ’s path ever bends or speeds up, something is pulling on it. Naming the source of every force (out there, mostly gravity) is how analysts explain a change. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Interaction",
+      "definition": "Every force has a source (what pushes or pulls) and a receiver."
+    },
+    {
+      "term": "Contact force",
+      "definition": "Normal (surface, ⟂), friction (along surface, opposes slip), tension (rope), applied (a push)."
+    },
+    {
+      "term": "Non-contact force",
+      "definition": "Gravity acts without touching."
+    },
+    {
+      "term": "Mass vs. weight",
+      "definition": "Mass is amount of matter (kg). Weight is Earth’s gravitational pull (N)."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-10-cpa-notes-and-reading.pdf"
+}

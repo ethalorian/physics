@@ -1,0 +1,87 @@
+{
+  "day": 21,
+  "title": "Make the situation clear before calculating",
+  "subtitle": "A reference frame, useful evidence, and a prediction plan",
+  "paragraphs": [
+    "A prediction begins with a situation, not a formula. Before calculating, I want us to identify where the object starts, how it moves, and what we need to find. A clear sketch and a short list of given values can prevent mistakes that are difficult to notice after several lines of arithmetic.",
+    "Choose a reference point and mark it as zero. Name the positive direction, or both axes if the motion is two-dimensional. Find the three features of the sketch in <b>Section C</b>: a reference point, a current location, and a motion arrow. Those features do different jobs. Blue identifies location, purple identifies motion, and the reference axes remain in pencil.",
+    "Copy each given quantity with its unit. A position in meters is different from a velocity in meters per second. Time must also use units that match the velocity or acceleration. Keeping each quantity on its own line makes it easier to see whether an equation uses all the information it needs.",
+    "Next choose a model and state its assumption. If velocity stays steady, use <eq><var>x</var><sub>f</sub> = <var>x</var><sub>i</sub> + <var>v</var><var>t</var></eq>. If constant acceleration changes velocity, <eq><var>v</var><sub>f</sub> = <var>v</var><sub>i</sub> + <var>a</var><var>t</var></eq> describes that change. A position prediction under acceleration also needs an appropriate displacement step. Do not choose a steady-velocity model simply because it gives the shortest calculation.",
+    "The prediction in <b>Section D</b> gives a starting position of <b>2 m</b>, a steady velocity of <b>+3 m/s</b>, and an elapsed time of <b>4 s</b>. The question asks for final position. First find the change: <eq>Δ<var>x</var> = (3 m/s)(4 s) = +12 m</eq>. Then add the start: <eq><var>x</var><sub>f</sub> = 2 m + 12 m = 14 m</eq>. Writing both steps makes it clear why the answer is not just 12 m.",
+    "Check the result against the story. Positive velocity should increase the coordinate. Four seconds at three meters per second should add twelve meters. Starting at two meters then places the object at fourteen meters. A number-line sketch can confirm both the direction and the size of that change. The units also reduce correctly to meters.",
+    "In two dimensions, solve the horizontal and vertical coordinates separately using the corresponding velocity components and the same elapsed time. Do not use the whole diagonal speed as if it were the speed along each axis. If the evidence includes a prediction range, read its lower and upper limits before making a claim; the central value alone does not describe the whole result.",
+    "For our fictional asteroid, 2026-XJ, the plan connects relevant measurements to a stated model. A classroom model may treat Earth as a fixed reference and velocity as steady over a chosen interval. Those are assumptions to explain and check. A defensible plan shows how the evidence can answer where the asteroid will be at a particular future time without claiming information the measurements do not provide."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Reference point The zero everything is measured from. Mark it on your sketch. Given Every value copied with its unit. Model assumption State it: steady velocity or constant acceleration. Range Read the lower and upper values before making a claim.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        152.25
+      ]
+    },
+    "B": {
+      "title": "KEY HABIT + TOOLS",
+      "text": "SECTION B KEY HABIT + TOOLS quantity → numbers + units → result x f = x i + v × t v f = v i + a × t one line one quantity E–W, N–S solve separately",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        152.25
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · MAKE THE SITUATION VISIBLE",
+      "text": "SECTION C COLOR IT · MAKE THE SITUATION VISIBLE Your sketch needs all three. E N reference point (0, 0) east part north part current location motion 1 2 3 1 · PENCIL Reference point 2 · BLUE Current location 3 · PURPLE Motion direction",
+      "box": [
+        75.75,
+        268.5,
+        515.25,
+        198.0
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE Check a prediction: an object starts at 2 m and moves at a steady +3 m/s for 4 s. GIVEN x i = 2 m v = +3 m/s t = 4 s · steady v EQUATION x f = x i + v × t WORK change = 3 × 4 = +12 m x f = 2 + 12 ANSWER 14 m check: direction + size + start",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.75
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 21 OF 22 · NEW TOOL: YOUR PLAN Now it’s your forecast. Pick the evidence on XJ that matters, choose a model, and plan the calculation that answers the unit question. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Reference point",
+      "definition": "The zero everything is measured from. Mark it on your sketch."
+    },
+    {
+      "term": "Known quantity",
+      "definition": "Every value copied with its unit."
+    },
+    {
+      "term": "Model assumption",
+      "definition": "State it: steady velocity or constant acceleration."
+    },
+    {
+      "term": "Range",
+      "definition": "Read the lower and upper values before making a claim."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-21-cpa-notes-and-reading.pdf"
+}

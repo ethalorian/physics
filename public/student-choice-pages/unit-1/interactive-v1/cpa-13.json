@@ -1,0 +1,87 @@
+{
+  "day": 13,
+  "title": "Find the net force before dividing by mass",
+  "subtitle": "Using Newton's second law with opposing forces",
+  "paragraphs": [
+    "A strong pull does not act alone when friction is also present. To predict acceleration, we need the combined effect of all the forces on the object. Newton's second law uses net force. I want that force sum to appear before the division by mass, so the calculation shows which interactions were included.",
+    "Choose an axis and a positive direction. With right positive, a rightward force enters the sum as positive and a leftward force as negative. Along the horizontal axis, <eq>Σ<var>F</var><sub>x</sub> = <var>m</var><var>a</var><sub>x</sub></eq>. The symbol Σ means sum. For two opposing forces, this becomes <eq>Σ<var>F</var><sub>x</sub> = <var>F</var><sub>right</sub> − <var>F</var><sub>left</sub></eq>.",
+    "Compare the horizontal arrows in <b>Section C</b>. They act on a <b>2 kg cart</b> pulled right by <b>6 N</b>, with <b>2 N of friction left</b>. Its horizontal net force is <eq>6 N − 2 N = 4 N</eq> right. The 20 N upward normal force balances the 20 N downward weight. Those vertical forces do not contribute to the horizontal sum, and their own vertical sum is zero.",
+    "The thick net-force arrow summarizes the two horizontal forces. It is not an additional interaction to add again. If we counted the pull, friction, and net-force arrow as three separate forces, we would count the same imbalance twice. The diagram and force equation are two ways to describe the same situation.",
+    "The example in <b>Section D</b> uses a <b>4 kg cart</b>, a <b>12 N pull right</b>, and <b>4 N of friction left</b>. First combine the forces: <eq><var>F</var><sub>net</sub> = 12 N − 4 N = +8 N</eq>. Then use <eq><var>a</var> = <var>F</var><sub>net</sub> ÷ <var>m</var></eq>, giving <eq><var>a</var> = 8 N ÷ 4 kg = 2 m/s²</eq> right. Dividing 12 N by 4 kg would ignore friction.",
+    "Acceleration points in the direction of the net force. Its size tells us the velocity change each second. The unit check agrees: <eq>1 N = 1 kg·m/s²</eq>, so newtons divided by kilograms give m/s². We can also check backward: <eq>(4 kg)(2 m/s²) = 8 N</eq>, matching the net force we found.",
+    "A rightward acceleration does not prove the cart is moving right. If it already moves right, it speeds up. If it moves left, it initially slows down. We need its starting velocity to describe that part of the motion. If the forces balance, acceleration is zero; the cart can remain still or keep a constant velocity.",
+    "For our fictional asteroid, 2026-XJ, mass and net force determine acceleration. Then the existing velocity and elapsed time tell us how that acceleration changes the motion. A careful force sum is the first link in that chain. It keeps a missing or double-counted interaction from changing the entire forecast."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Net force Combine opposite forces: subtract and keep the direction of the larger one. F = ma Uses the net force, never just one pull. Direction Acceleration points the same way as the net force. Balanced Net force 0 N → a = 0 m/s² (still or constant velocity).",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        141.75
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATION + UNITS",
+      "text": "SECTION B KEY EQUATION + UNITS ΣF x = m a x ΣF x = F right − F left F newtons (N) m · a kg · m/s² (1 N = 1 kg·m/s²)",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        141.75
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · THE ARROWS COMPETE",
+      "text": "SECTION C COLOR IT · THE ARROWS COMPETE Vertical forces balance. 2 kg pull 6 N 1 friction 2 N 1 normal 20 N 2 weight 20 N 2 net force 4 N → 3 1 · ORANGE Horizontal forces 2 · YELLOW Vertical forces (balanced) 3 · ORANGE Net force (thick arrow)",
+      "box": [
+        75.75,
+        258.0,
+        515.25,
+        222.0
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 4 kg cart has 12 N pulling right and 4 N of friction left. Find the acceleration. GIVEN m = 4 kg 12 N right 4 N left EQUATION a = F net ÷ m WORK F net = 12 − 4 = 8 N right a = 8 ÷ 4 ANSWER 2 m/s² right with the net force",
+      "box": [
+        75.75,
+        480.0,
+        515.25,
+        149.25
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 13 OF 22 · NEW TOOL: F = MA F = ma links it all: from XJ’s mass and the net force on it, we can calculate its acceleration, and from that, how its velocity will change. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Net force",
+      "definition": "Combine opposite forces: subtract and keep the direction of the larger one."
+    },
+    {
+      "term": "Newton’s second law",
+      "definition": "Uses the net force, never just one pull."
+    },
+    {
+      "term": "Direction",
+      "definition": "Acceleration points the same way as the net force."
+    },
+    {
+      "term": "Balanced",
+      "definition": "Net force 0 N → a = 0 m/s² (still or constant velocity)."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-13-cpa-notes-and-reading.pdf"
+}

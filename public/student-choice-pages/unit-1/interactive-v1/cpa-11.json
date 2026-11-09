@@ -1,0 +1,87 @@
+{
+  "day": 11,
+  "title": "Change the mass and watch the acceleration",
+  "subtitle": "A fair test with the same net force",
+  "paragraphs": [
+    "Imagine pushing an empty cart and then the same cart loaded with more mass. With the same net force, the loaded cart changes velocity more slowly. Today's lab tests that relationship. I want the evidence to come from measured motion, with the force conditions kept as consistent as possible.",
+    "A fair test changes one intended quantity at a time. Here that quantity is the total moving mass. In our cart-and-hanger system, count the cart, added masses, and hanger if all of them move as part of the system. Leaving out part of the moving mass would make the comparison incomplete.",
+    "Keep the hanging mass, track, starting point, and release method consistent as the notes describe. Releasing without an extra push matters because a different starting motion could change the trial. Holding the hanging mass steady keeps the driving pull similar. Friction and other resistance still need attention because the relationship we want concerns the net force, not merely the hanging weight.",
+    "Use the two velocities and elapsed time in <b>Section D</b>. We find acceleration from the slope of each velocity-time graph: <eq><var>a</var> = Δ<var>v</var> ÷ Δ<var>t</var></eq>. In the worked example, velocity rises from <b>0 m/s to 4 m/s in 2 s</b>. First find <eq>Δ<var>v</var> = 4 m/s − 0 m/s = 4 m/s</eq>. Then <eq><var>a</var> = 4 m/s ÷ 2 s = 2 m/s²</eq>. Your experiment uses your own measured graph, not these example readings.",
+    "Compare the three masses in <b>Section C</b>. The picture gives illustrative values for a fixed <b>4 N net force</b>. A 1 kg system accelerates at 4 m/s², a 2 kg system at 2 m/s², and a 4 kg system at 1 m/s². Doubling mass halves acceleration when the net force stays the same. This is an inverse relationship: as mass increases, acceleration decreases in that particular way.",
+    "Another check is the product of mass and acceleration. The examples give <eq>(1 kg)(4 m/s²) = 4 N</eq>, <eq>(2 kg)(2 m/s²) = 4 N</eq>, and <eq>(4 kg)(1 m/s²) = 4 N</eq>. Each product is the same because the net force is the same. Real measurements may not match perfectly, so look for a pattern while considering measurement uncertainty and changes in resistance.",
+    "I want a conclusion to name both parts of the comparison: increasing total mass reduces acceleration under the same net force. Saying only “more mass means less acceleration” leaves out the condition. If the force changes too, we cannot predict the result from mass alone. The green acceleration arrows in the diagram show the relative sizes in the illustrated speeding-up cases.",
+    "For our fictional asteroid, 2026-XJ, mass matters when considering a proposed push. The same net push has less effect on a larger mass. But gravity's force can also change with mass, so we should not use today's fixed-force comparison to claim that all heavier objects fall more slowly. We must keep track of what is actually being held constant."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Fair test Change one thing at a time. Changed variable Total system mass: cart + added masses + hanger. Controls Hanging mass, track, start point, release (no push). Evidence The slope of each velocity–time graph is the acceleration.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        150.75
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATION + PATTERN",
+      "text": "SECTION B KEY EQUATION + PATTERN a ∝ 1 ÷ m m × a ≈ constant a = Δv ÷ Δt (slope) mass kilograms (kg) a m/s²",
+      "box": [
+        373.25,
+        120.75,
+        217.75,
+        146.25
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · DOUBLE THE MASS",
+      "text": "SECTION C COLOR IT · DOUBLE THE MASS Illustrative values — not your data. 1 kg 4 m/s² 1 2 kg 2 m/s² 2 4 kg 1 m/s² 3 acceleration system mass (same 4 N net force) 1 · GREEN 1 kg system (dark) 2 · GREEN 2 kg system (medium) 3 · GREEN 4 kg system (light)",
+      "box": [
+        75.75,
+        267.0,
+        515.25,
+        219.0
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE In one trial, velocity rises from 0 to 4 m/s in 2 s. Find the acceleration. GIVEN v i = 0 m/s v f = 4 m/s Δt = 2 s EQUATION a = Δv ÷ Δt WORK Δv = 4 − 0 = 4 m/s a = 4 ÷ 2 ANSWER 2 m/s² use your own measured graph",
+      "box": [
+        75.75,
+        486.0,
+        515.25,
+        143.25
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 11 OF 22 · NEW TOOL: MASS A massive object is hard to nudge. The bigger XJ’s mass, the smaller the acceleration any push or pull gives it, which matters for any plan to deflect it. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Fair test",
+      "definition": "Change one thing at a time."
+    },
+    {
+      "term": "Changed variable",
+      "definition": "Total system mass: cart + added masses + hanger."
+    },
+    {
+      "term": "Controls",
+      "definition": "Hanging mass, track, start point, release (no push)."
+    },
+    {
+      "term": "Evidence",
+      "definition": "The slope of each velocity–time graph is the acceleration."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-11-cpa-notes-and-reading.pdf"
+}

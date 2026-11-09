@@ -60,7 +60,7 @@ export const POST = withRole(['teacher','admin'],async(req,ctx)=>{
   const resolved=resolveSyllabusWords(step.words,catalog.words,new Set(catalog.sets.filter(s=>s.unit_id===step.unit&&s.access[course.id]).map(s=>s.id)))
   let drafts
   try{
-    drafts=buildSyllabusDrafts({...step,words:resolved.map(w=>({term:w.existing?.term??w.term,definition:w.existing?.definition??w.definition}))},READING_SYLLABUS,course,catalog.targets,()=>crypto.randomUUID())
+    drafts=buildSyllabusDrafts({...step,words:step.sourceBook === 'binder' ? step.words : resolved.map(w=>({term:w.existing?.term??w.term,definition:w.existing?.definition??w.definition}))},READING_SYLLABUS,course,catalog.targets,()=>crypto.randomUUID())
     drafts.reading=validateReading(drafts.reading) as typeof drafts.reading
     if (!isInteractiveReading(drafts.reading)) throw Error(INTERACTIVE_READING_ONLY)
     drafts.readingQuiz=validateQuiz(drafts.readingQuiz);drafts.vocabularyQuiz=validateQuiz(drafts.vocabularyQuiz)

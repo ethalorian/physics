@@ -1,0 +1,87 @@
+{
+  "day": 13,
+  "title": "The force tells us how motion changes",
+  "subtitle": "Net force, acceleration, and a cart moving the other way",
+  "paragraphs": [
+    "A force arrow pointing right does not guarantee that the object is moving right. It tells us about an interaction. The net force determines acceleration, and acceleration tells us how velocity changes. To describe the motion itself, we also need the velocity the object already has. Today we will follow that chain carefully.",
+    "Choose right as positive. Our <b>4 kg cart</b> has a <b>12 N force to the right</b> and a <b>4 N force to the left</b>. Both forces act on the cart, so they belong in the same horizontal sum: <eq>Σ<var>F</var><sub>x</sub> = 12 N − 4 N = +8 N</eq>. Using only the larger force would ignore a real interaction. Adding both magnitudes without signs would ignore their opposite directions.",
+    "Use the force sum in <b>Section B</b> with right as positive: <eq>Σ<var>F</var><sub>x</sub> = <var>m</var><var>a</var><sub>x</sub></eq>. Thus <eq><var>a</var><sub>x</sub> = +8 N ÷ 4 kg = +2 m/s²</eq>. The acceleration points right, matching the net force. The vertical forces are balanced, so they produce no vertical acceleration and do not add to the horizontal force sum.",
+    "Now include the starting velocity, <b>−3 m/s</b>. The cart initially moves left. With constant forces and mass, acceleration remains constant, so after <b>1 s</b> we use <eq><var>v</var><sub>f</sub> = <var>v</var><sub>i</sub> + <var>a</var><sub>x</sub><var>t</var></eq>. Substitution gives <eq><var>v</var><sub>f</sub> = −3 m/s + (2 m/s²)(1 s) = −1 m/s</eq>. The cart still moves left, but its speed has fallen from 3 m/s to 1 m/s.",
+    "This is what positive acceleration means here: the signed velocity becomes more positive by 2 m/s each second. It does not instantly become positive. From −3 to −1 is an increase in velocity but a decrease in speed. I want you to say both parts when interpreting the answer, because the sign and the size describe different features of the motion.",
+    "If the same forces continue, the cart reaches zero velocity after <eq><var>t</var> = (0 − (−3)) m/s ÷ (2 m/s²) = 1.5 s</eq>. It then moves right and speeds up. There is no need for the net force to reverse at the turning point. The same rightward acceleration first slows the leftward motion and then builds rightward motion.",
+    "In <b>Section C</b>, compare the cart’s force and velocity arrows. The orange arrows identify forces and the purple arrow identifies initial velocity. The red label applies to the first second because speed decreases during that interval. The net-force arrow is a summary of the force sum, shown separately; it is not an additional force to add again. Keeping the picture and calculation connected helps prevent double-counting.",
+    "For our fictional asteroid, 2026-XJ, a force toward Earth tells us the direction of its acceleration due to that interaction. Its existing velocity might have components toward, away from, or across that direction. A useful forecast combines the net force with that initial motion and an elapsed time, rather than assuming the asteroid immediately travels along the force arrow."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Force sum Add signed forces along the same axis. Acceleration Velocity change from net force per mass. Velocity Current motion; it can oppose a . Speed trend Opposite v and a : slows before reversal.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS Σ F x = ma x v f = v i + a x t Σ F x F right − F left + right",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · FORCE OPPOSES MOTION",
+      "text": "SECTION C COLOR IT · FORCE OPPOSES MOTION The cart moves left. 4 kg 4 N 12 N v i = −3 m/s Σ F = +8 N after 1 s: v = −1 m/s; speed is smaller 1 2 3 1 · ORANGE Forces and separate net 2 · PURPLE Leftward velocity 3 · RED Slows for the first 1 s",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 4 kg cart has forces of 12 N right and 4 N left. Its initial velocity is −3 m/s . Find a and v after 1 s . GIVEN m = 4 kg F right = 12 N ; F left = 4 N v i = −3 m/s EQUATION Sum forces first. Σ F x = ma x . v = v i + a x t . WORK Σ F x = 12 − 4 = +8 N a x = 8/4 = +2 m/s² v = −3 + 2(1) ANSWER v = −1 m/s Still leftward; speed is now 1 m/s .",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 13 OF 22 · NEW TOOL: FORCE TO MOTION The direction of XJ's net force tells us its acceleration direction. Its existing velocity must also be known to say whether it speeds up, slows down or turns. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Net force",
+      "definition": "Add signed forces along the same axis."
+    },
+    {
+      "term": "Acceleration",
+      "definition": "Velocity change from net force per mass."
+    },
+    {
+      "term": "Velocity",
+      "definition": "Current motion; it can oppose a ."
+    },
+    {
+      "term": "Speed trend",
+      "definition": "Opposite v and a : slows before reversal."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-13-honors-notes-and-reading.pdf"
+}

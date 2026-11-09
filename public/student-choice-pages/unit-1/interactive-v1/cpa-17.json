@@ -1,0 +1,87 @@
+{
+  "day": 17,
+  "title": "Friction adjusts before sliding begins",
+  "subtitle": "Static friction, its limit, and kinetic friction",
+  "paragraphs": [
+    "A gentle push on a crate may leave it at rest. A stronger push may still leave it at rest. That does not mean the pushing force disappeared. Static friction can adjust to balance the pull, up to a limit. Today I want us to decide whether the surfaces are sliding before choosing a friction value.",
+    "Static friction acts when the contact surfaces are not slipping relative to each other. In the simple horizontal example, it matches the pull while the crate remains at rest. If the pull is 2 N, static friction can be 2 N backward. If the pull rises to 5 N, it can rise to 5 N, provided the maximum available friction has not been exceeded.",
+    "Find where the rising line stops in <b>Section C</b>. The graph uses a <b>6 N static-friction limit</b>. The rising line shows friction matching the pull up to that limit. A pull greater than the limit cannot be balanced by static friction in this example, so sliding begins. The 6 N value is the greatest available static friction, not the friction that acts during every smaller pull.",
+    "During sliding, we use kinetic friction. The illustrative crate has <b>4 N of kinetic friction</b>, shown by the lower horizontal part of the graph. The friction value changes because the contact is in a different state. We should not continue using the maximum static value after the crate is sliding.",
+    "The example in <b>Section D</b> gives a <b>2 kg crate sliding right</b>, a <b>10 N pull right</b>, and <b>4 N of kinetic friction left</b>. First find the net force: <eq><var>F</var><sub>net</sub> = 10 N − 4 N = 6 N</eq> right. Then <eq><var>a</var> = <var>F</var><sub>net</sub> ÷ <var>m</var> = 6 N ÷ 2 kg = 3 m/s²</eq> right. The crate is moving right and accelerating right, so it speeds up.",
+    "Sometimes kinetic friction is not given directly. If a coefficient μ and normal force are supplied, use <eq><var>f</var><sub>k</sub> = <var>μ</var><var>F</var><sub>N</sub></eq>. The coefficient has no unit, so the answer has the same force unit as the normal force: newtons. For instance, a coefficient of 0.20 with a 20 N normal force would give <eq>(0.20)(20 N) = 4 N</eq>. Find the normal force from the situation rather than assuming a value.",
+    "Friction opposes slipping, or the tendency to slip, at the contact. Its direction must follow that contact behavior. It is not a rule that friction always points opposite an object's overall motion in every possible situation. A shoe can receive forward static friction from the ground while a person walks forward.",
+    "For our fictional asteroid, 2026-XJ, there is no rubbing surface in empty space to apply this kind of friction. Gravity can still change its speed or direction, and atmospheric drag would be a different interaction inside an atmosphere. I want us to include the forces whose sources are actually present."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Static friction Before sliding. Adjusts to match the pull, up to a limit. Maximum static The greatest static friction possible. Pull past it and sliding starts. Kinetic friction During sliding. Use the supplied value. Coefficient (μ) When given: kinetic friction = μ × normal force.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        141.75
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS at rest: f s = pull (≤ limit) sliding: f k = μ × F N friction newtons (N) μ no unit",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        141.75
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · BEFORE AND DURING SLIDING",
+      "text": "SECTION C COLOR IT · BEFORE AND DURING SLIDING Example crate: limit 6 N, kinetic 4 N. 0 2 4 6 8 10 0 2 4 6 8 horizontal pull (N) friction force (N) limit: 6 N static: matches pull kinetic: 4 N 1 2 3 1 · ORANGE Static friction: matches pull 2 · ORANGE The limit (dashed) 3 · ORANGE Kinetic friction",
+      "box": [
+        75.75,
+        258.0,
+        515.25,
+        228.75
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 2 kg crate slides right. Pull = 10 N right; kinetic friction = 4 N left. Find its acceleration. GIVEN m = 2 kg pull 10 N right f k 4 N left EQUATION a = F net ÷ m WORK F net = 10 − 4 = 6 N right a = 6 ÷ 2 ANSWER 3 m/s² right",
+      "box": [
+        75.75,
+        486.75,
+        515.25,
+        142.5
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 17 OF 22 · NEW TOOL: FRICTION Friction needs surfaces rubbing together. In space there are none to slow XJ down, one more reason it keeps its speed between observations. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Static friction",
+      "definition": "Before sliding. Adjusts to match the pull, up to a limit."
+    },
+    {
+      "term": "Maximum static friction",
+      "definition": "The greatest static friction possible. Pull past it and sliding starts."
+    },
+    {
+      "term": "Kinetic friction",
+      "definition": "During sliding. Use the supplied value."
+    },
+    {
+      "term": "Coefficient (μ)",
+      "definition": "When given: kinetic friction = μ × normal force."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-17-cpa-notes-and-reading.pdf"
+}

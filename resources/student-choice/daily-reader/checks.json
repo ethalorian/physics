@@ -1,0 +1,398 @@
+[
+  {
+    "edition": "cpa",
+    "day": 1,
+    "diagramPrompt": "Which dot in Section C is a forecast? Use the spacing and clock times to explain how you know.",
+    "transferPrompt": "A cart is measured at 1, 4 and 7 m at one-second intervals. Predict its next position and name a measurement that would make you reconsider.",
+    "guide": "10 m if the +3 m per second pattern continues. A different measured next position beyond measurement uncertainty challenges that model.",
+    "narrativePrompt": "The reading separates seeing 2026-XJ approach from predicting that it will hit Earth. What information is missing from the sighting?",
+    "narrativeGuide": "Approaching describes a direction, not an intersection. Credit two relevant needs such as timed positions, direction including sideways motion, or measurement uncertainty, and explaining how those help forecast a future location."
+  },
+  {
+    "edition": "cpa",
+    "day": 2,
+    "diagramPrompt": "Trace the outward and return legs in Section C. Which marks would you use to find displacement without tracing the route?",
+    "transferPrompt": "A walker goes from 1 m to 5 m and back to 2 m. Report both distance and displacement with right positive.",
+    "guide": "4 + 3 = 7 m traveled. Final minus initial is +1 m.",
+    "narrativePrompt": "Why does the reading ask you to choose a zero and a positive direction before reporting the asteroid’s position? Explain what the route length leaves out.",
+    "narrativeGuide": "Position needs an origin and signed axis. Distance measures all travel, while displacement from a known starting point locates the finish."
+  },
+  {
+    "edition": "cpa",
+    "day": 3,
+    "diagramPrompt": "At which times in Section C does the cart stand still? Explain what the height and slope tell you there.",
+    "transferPrompt": "A straight position–time line falls from 9 m to 3 m in 2 s. Find the velocity and explain its sign.",
+    "guide": "Displacement is −6 m; velocity is −3 m/s. Position decreases along the chosen positive axis.",
+    "narrativePrompt": "Why does the reading ask for both positions and their times to estimate 2026-XJ’s velocity? Explain what the sign of the result adds.",
+    "narrativeGuide": "Position differences alone give displacement; elapsed time converts that change to an average velocity. Its sign describes direction on the chosen axis."
+  },
+  {
+    "edition": "cpa",
+    "day": 4,
+    "diagramPrompt": "Compare the two areas in Section C. Why does the area below the time axis have a different sign?",
+    "transferPrompt": "A cart moves steadily at −2 m/s for 3 s. Use the velocity–time graph to give its displacement and distance.",
+    "guide": "The signed rectangular area is −6 m. Its magnitude is 6 m of distance since there is no reversal.",
+    "narrativePrompt": "Why would using the asteroid’s entire speed as its speed toward Earth give a misleading forecast?",
+    "narrativeGuide": "Speed includes sideways motion. Only the component along the Earth–asteroid line measures approach; the sideways component can carry it past Earth."
+  },
+  {
+    "edition": "cpa",
+    "day": 5,
+    "diagramPrompt": "On Section C, identify the start, the change, and the finish. Why is the motion arrow alone insufficient to locate the cart?",
+    "transferPrompt": "A cart starts at 9 m and rolls at −2 m/s for 4 s. Predict its final position. What assumption did you make?",
+    "guide": "Change is −8 m and final position is 1 m, assuming velocity stays constant.",
+    "narrativePrompt": "According to the reading, what needs to accompany a predicted position so another person can judge the forecast? Explain why a change of velocity matters.",
+    "narrativeGuide": "Include forecast time, reference location, range, and the assumption that velocity stays steady. A changed velocity requires updating the model."
+  },
+  {
+    "edition": "cpa",
+    "day": 6,
+    "diagramPrompt": "In Section C, trace each displacement, then the single arrow that replaces the trip. Which start and end must that arrow connect?",
+    "transferPrompt": "A hiker moves 3 m east and 4 m north. Give the resultant’s components and length. Why is 7 m a different quantity?",
+    "guide": "Components are 3 m east and 4 m north. Pythagoras gives 5 m; 7 m is the path length.",
+    "narrativePrompt": "In the asteroid example, why distinguish motion toward Earth from motion across our line of sight?",
+    "narrativeGuide": "The two components change different coordinates. A sideways component can produce a miss even when distance to Earth initially decreases."
+  },
+  {
+    "edition": "cpa",
+    "day": 7,
+    "diagramPrompt": "How can you recognize speeding up in Section C when the dots have no speed labels? Explain why equal time intervals matter.",
+    "transferPrompt": "A cart going right slows from +9 to +3 m/s in 3 s. Find its average acceleration and describe its motion.",
+    "guide": "Δv = −6 m/s so a = −2 m/s². The cart keeps moving right but loses speed.",
+    "narrativePrompt": "The reading says that a new velocity can call a steady-velocity forecast into question. Which two features of velocity could change, even if the asteroid is still moving?",
+    "narrativeGuide": "Either magnitude or direction can change. Turning at constant speed still changes the velocity and invalidates a fixed-velocity forecast."
+  },
+  {
+    "edition": "cpa",
+    "day": 8,
+    "diagramPrompt": "Why do the triangle and the average-velocity rectangle in Section C cover the same area?",
+    "transferPrompt": "A cart speeds up uniformly from 2 to 10 m/s in 4 s. Find its displacement and explain why using 10 m/s for all 4 s fails.",
+    "guide": "Mean velocity is 6 m/s, giving +24 m. The final velocity applies only at the end.",
+    "narrativePrompt": "What evidence would make you choose steady acceleration rather than steady velocity? Explain why a correct substitution can still give a poor prediction.",
+    "narrativeGuide": "Look for equal velocity changes in equal time intervals, or a straight sloping velocity–time line. An equation calculated correctly still fails if its assumption is false."
+  },
+  {
+    "edition": "cpa",
+    "day": 9,
+    "diagramPrompt": "Which two pairs of forces balance in Section C? What does the separate velocity arrow show?",
+    "transferPrompt": "A cart is rolling left at 2 m/s as its horizontal forces balance. Predict its velocity and displacement after 3 s.",
+    "guide": "Velocity stays 2 m/s left; displacement is 6 m left. Balanced forces give zero acceleration.",
+    "narrativePrompt": "Why does the reading say the asteroid can keep moving without a forward push and still follow a curved path?",
+    "narrativeGuide": "Inertia maintains the existing velocity when net force is zero. Gravity can provide a net force and change the velocity’s direction."
+  },
+  {
+    "edition": "cpa",
+    "day": 10,
+    "diagramPrompt": "In Section C, how can the table be the source of two different forces on the same crate?",
+    "transferPrompt": "On a level table a 4 kg crate is at rest. Using g = 10 N/kg, name the sources, directions and sizes of its two vertical forces.",
+    "guide": "Earth pulls down with 40 N of weight; the table pushes up with a 40 N normal force. They balance on the crate.",
+    "narrativePrompt": "In the reading, what rule decides whether gravity, a rope force, or a table force belongs in an asteroid’s force model?",
+    "narrativeGuide": "Include a force only if the identified source interacts with the asteroid. Gravity needs no contact; table and rope forces need actual contact."
+  },
+  {
+    "edition": "cpa",
+    "day": 11,
+    "diagramPrompt": "Use two trials in Section C to describe how mass affects acceleration. What has to stay fixed for that comparison?",
+    "transferPrompt": "Under the same net force, a 2 kg system accelerates at 3 m/s². Predict the acceleration of a 6 kg system and describe one control.",
+    "guide": "The net force is 6 N, so acceleration falls to 1 m/s². Keep the net driving force fixed and use consistent track/release conditions.",
+    "narrativePrompt": "Why does the reading warn against concluding that heavier objects must fall more slowly from the fixed-force cart trials?",
+    "narrativeGuide": "The experiment holds net force fixed while increasing mass. Under gravity the force itself grows with mass, so the fixed-force result does not show that heavier objects fall more slowly."
+  },
+  {
+    "edition": "cpa",
+    "day": 12,
+    "diagramPrompt": "What does each point on the line in Section C represent? What must stay constant for doubling force to double acceleration?",
+    "transferPrompt": "A 3 kg cart experiences 6 N of net force, then 9 N in the same direction. Predict both accelerations and compare the ratios.",
+    "guide": "2 and 3 m/s² respectively. With fixed mass, acceleration increases by the same factor of 1.5 as net force.",
+    "narrativePrompt": "In the asteroid example, why do we need the net push and the mass before predicting a change in velocity?",
+    "narrativeGuide": "The acceleration is the net force divided by mass. A driving push may be opposed by other forces; the same net force changes a larger mass’s velocity more slowly."
+  },
+  {
+    "edition": "cpa",
+    "day": 13,
+    "diagramPrompt": "In Section C, which forces enter the horizontal sum, and what happens to the two vertical forces?",
+    "transferPrompt": "A 3 kg cart is pulled right by 10 N with 4 N friction left. Find its net force and acceleration.",
+    "guide": "6 N right, then 6/3 = 2 m/s² right. Opposite horizontal forces subtract.",
+    "narrativePrompt": "Why does the reading start its forecast with a force sum? Name the additional information needed to turn the resulting acceleration into a velocity prediction.",
+    "narrativeGuide": "Acceleration depends on the signed sum of forces. Initial velocity and elapsed time are also needed to predict the later velocity."
+  },
+  {
+    "edition": "cpa",
+    "day": 14,
+    "diagramPrompt": "Trace the two interaction arrows in Section C. Who receives each force, and why should you draw them on different objects?",
+    "transferPrompt": "A skater pushes a wall west with 30 N. Describe the partner force and explain why the two arrows cannot cancel on the skater.",
+    "guide": "The wall pushes the skater east with 30 N. The first force acts on the wall; only the partner acts on the skater.",
+    "narrativePrompt": "Earth and the asteroid pull on one another. According to the reading, how can their forces be equal while their accelerations differ?",
+    "narrativeGuide": "Earth and asteroid exert equal and opposite forces on different receivers. The smaller mass has greater acceleration for the same force magnitude."
+  },
+  {
+    "edition": "cpa",
+    "day": 15,
+    "diagramPrompt": "How many forces does the floor exert on the box in Section C? Identify what produces each one.",
+    "transferPrompt": "A lamp weighing 35 N hangs motionless on one vertical rope. List the forces on the lamp, with sources and sizes.",
+    "guide": "Earth exerts 35 N down and the rope exerts 35 N tension up. Zero acceleration requires balance.",
+    "narrativePrompt": "What is the first decision the reading asks you to make before drawing a free-body diagram? Explain how it keeps a force on the wrong object off the diagram.",
+    "narrativeGuide": "Choose one object as the receiver. Draw only forces exerted on it by identifiable sources and put its partner forces on the other objects’ diagrams."
+  },
+  {
+    "edition": "cpa",
+    "day": 16,
+    "diagramPrompt": "Which dashed arrow in Section C represents part of another force? Explain how you would use it without counting weight twice.",
+    "transferPrompt": "A 3 kg block has 12 N of weight along a ramp downhill and 3 N of uphill friction. Find its acceleration along the ramp.",
+    "guide": "Net downhill force is 9 N, giving 3 m/s² downhill. Only the parallel component of weight enters that sum.",
+    "narrativePrompt": "Why does knowing the asteroid’s acceleration direction alone leave its future path uncertain?",
+    "narrativeGuide": "Acceleration gives the direction of velocity change. The current velocity also contributes to the path, so acceleration alone cannot give the direction of travel."
+  },
+  {
+    "edition": "cpa",
+    "day": 17,
+    "diagramPrompt": "Where does the friction line in Section C stop matching the pull? What changes once the box slides?",
+    "transferPrompt": "A box is at rest with a static-friction limit of 8 N. What friction acts during a 5 N horizontal pull? What happens if the pull grows to 9 N?",
+    "guide": "Static friction is 5 N opposite at first. A 9 N pull exceeds the limit and starts sliding; the kinetic value needs more information.",
+    "narrativePrompt": "Why does the reading omit sliding friction from the asteroid model in empty space? Describe a different interaction that could change its velocity.",
+    "narrativeGuide": "Sliding friction requires rubbing surfaces. Gravity can accelerate the asteroid in space; atmospheric drag would be possible in an atmosphere."
+  },
+  {
+    "edition": "cpa",
+    "day": 18,
+    "diagramPrompt": "Do the upward tensions in Section C have to match each other? Use the labeled forces to defend your answer.",
+    "transferPrompt": "A 60 N sign hangs at rest from two vertical ropes. One pulls up with 22 N. Find the other tension and explain your balance equation.",
+    "guide": "22 N + T = 60 N, so T = 38 N upward. The sum of the vertical forces is zero.",
+    "narrativePrompt": "Why would balanced forces fail to bring an already-moving asteroid to a stop? Explain when the reading considers steady motion a reasonable model.",
+    "narrativeGuide": "Balance means zero acceleration, which preserves the existing velocity. A steady-motion approximation needs zero or negligible net force during the interval."
+  },
+  {
+    "edition": "cpa",
+    "day": 19,
+    "diagramPrompt": "Use the out-and-back strip in Section C to repair the claim about distance. What should the student have counted?",
+    "transferPrompt": "A student divides a 14 N pull by 4 kg and ignores 6 N of opposing friction. Identify the first error and repair the result.",
+    "guide": "Use the sum of forces before dividing. Net force is 8 N toward the pull, so acceleration is 2 m/s².",
+    "narrativePrompt": "Why does the reading ask you to locate the first wrong step in a forecast instead of simply replacing the last number?",
+    "narrativeGuide": "An early sign, frame, or input error propagates. Finding it explains which later calculations need to change and preserves earlier correct reasoning."
+  },
+  {
+    "edition": "cpa",
+    "day": 20,
+    "diagramPrompt": "Trace the links in Section C from the arrows to the final position. Where does the starting position enter the chain?",
+    "transferPrompt": "A 2 kg cart starts at rest at 3 m. It feels a constant +4 N net force for 2 s. Give acceleration, final velocity and final position.",
+    "guide": "a = +2 m/s²; final v = +4 m/s; displacement is +4 m; final position is 7 m.",
+    "narrativePrompt": "The reading follows a chain from force to position. Why can two objects with the same net force and mass still finish at different positions?",
+    "narrativeGuide": "Force and mass determine acceleration, not initial position or velocity. Different initial conditions give different endpoints under identical acceleration."
+  },
+  {
+    "edition": "cpa",
+    "day": 21,
+    "diagramPrompt": "How do the reference point, starting dot and motion arrow in Section C do different jobs?",
+    "transferPrompt": "A probe starts at −5 m and travels at a steady +2 m/s for 4 s. Write a forecast, naming your axis and one condition that could invalidate it.",
+    "guide": "With the stated positive direction, displacement is +8 m and final position is +3 m. A change in velocity invalidates the constant-velocity forecast.",
+    "narrativePrompt": "Why does the reading ask you to label the reference frame and state a model assumption before defending a predicted position?",
+    "narrativeGuide": "A frame gives the coordinates physical meaning. A stated assumption permits another reader to test whether the model applies to the predicted interval."
+  },
+  {
+    "edition": "cpa",
+    "day": 22,
+    "diagramPrompt": "In the Section C defense, which part is evidence, and which part explains why that evidence supports a position forecast?",
+    "transferPrompt": "A forecast is 12 ± 1 m. A reliable measurement gives 15 m. State the forecast interval, assess the match and name a measurement you would recheck before revising it.",
+    "guide": "Interval is 11–13 m; 15 m lies outside it. Identify a relevant input such as initial position, velocity, force or timing and explain how revising it changes the forecast.",
+    "narrativePrompt": "When a new measurement challenges a forecast, what does the reading ask you to preserve and explain when revising your claim?",
+    "narrativeGuide": "Keep the original evidence and forecast; identify which input or assumption the new observation challenges. Show the revised calculation, result and remaining uncertainty."
+  },
+  {
+    "edition": "honors",
+    "day": 1,
+    "diagramPrompt": "In Section C, distinguish a measured position from an inferred pattern. What assumption lets you draw the dashed position?",
+    "transferPrompt": "A cart is observed at 12, 9 and 6 m at 0, 1 and 2 s. Predict x at 4 s and specify a result that would challenge your extrapolation.",
+    "guide": "Constant −3 m/s predicts 0 m at 4 s. A discrepant measurement outside uncertainty challenges the constant-velocity assumption.",
+    "narrativePrompt": "The reading treats an inference differently from a measured position. Explain how a later observation could weaken an inference without changing the old measurements.",
+    "narrativeGuide": "Measurements report recorded positions and times. A rule extending their pattern is inferred; a new measurement can contradict constant motion while the old data remain valid."
+  },
+  {
+    "edition": "honors",
+    "day": 2,
+    "diagramPrompt": "If you reverse the positive axis of Section C, which of distance and displacement changes sign? Justify this using the endpoints.",
+    "transferPrompt": "A cart goes from −4 m to +3 m to −2 m. Give distance, displacement and the displacement when the positive axis is reversed.",
+    "guide": "Lengths 7 m and 5 m total 12 m. Displacement is +2 m on the original axis and −2 m on the reversed axis.",
+    "narrativePrompt": "Why can two observers using opposite positive directions agree on the motion yet report different signed displacements?",
+    "narrativeGuide": "A reversal of axes reverses coordinate signs for both endpoints and hence displacement. The actual locations and unsigned path length do not change."
+  },
+  {
+    "edition": "honors",
+    "day": 3,
+    "diagramPrompt": "Which segments of Section C cancel in the average velocity over the whole trip? Explain why the average speed is still positive.",
+    "transferPrompt": "A line passes through (1 s, 9 m) and (5 s, 1 m). Predict x at 7 s. What property of the graph makes your extension reasonable?",
+    "guide": "Slope is −2 m/s, giving x = −3 m at 7 s if the straight-line motion continues.",
+    "narrativePrompt": "Why could an average velocity calculated from just the first and last positions conceal a reversal? Identify evidence the reading uses to recover that information.",
+    "narrativeGuide": "Average velocity uses only net change divided by time. The rising, flat, and falling segments of the position graph reveal a stop and a reversal that endpoints can conceal."
+  },
+  {
+    "edition": "honors",
+    "day": 4,
+    "diagramPrompt": "How would the area calculation in Section C change if the question asked for total distance?",
+    "transferPrompt": "A cart travels at +4 m/s for 3 s, then −2 m/s for 2 s. From signed areas, find displacement, distance and average velocity over the full trip.",
+    "guide": "Areas are +12 and −4 m. Displacement +8 m, distance 16 m, average velocity +1.6 m/s.",
+    "narrativePrompt": "Explain why one velocity component toward Earth cannot establish that the asteroid will hit Earth. What information about motion is absent?",
+    "narrativeGuide": "A toward-Earth component gives only one coordinate change. The perpendicular component and initial relative position determine whether the paths intersect at the same time."
+  },
+  {
+    "edition": "honors",
+    "day": 5,
+    "diagramPrompt": "Why do the lower starting position and most negative velocity go together at one end of Section C’s interval?",
+    "transferPrompt": "At exact time 2 s, project x from x₀ = 5 ± 0.2 m and steady v = −1.0 ± 0.1 m/s. Give a conservative interval using endpoints.",
+    "guide": "Lowest is 4.8 − 2.2 = 2.6 m; highest is 5.2 − 1.8 = 3.4 m. Center 3.0 m, half-width 0.4 m.",
+    "narrativePrompt": "What does the reading mean by a prediction interval? Explain how a new observation can distinguish ordinary uncertainty from a failing model.",
+    "narrativeGuide": "The interval gives lower and upper positions consistent with input bounds and assumptions. A measurement inside is consistent; non-overlap calls the bounds, data or model into question."
+  },
+  {
+    "edition": "honors",
+    "day": 6,
+    "diagramPrompt": "In Section C, why can you translate a displacement arrow to build the sum? Identify what must stay the same.",
+    "transferPrompt": "Add A = (−5, 2) m and B = (2, 2) m. Give magnitude and direction relative to west.",
+    "guide": "Resultant (−3, 4) m has magnitude 5 m and lies about 53° north of west. The negative x component fixes the quadrant.",
+    "narrativePrompt": "Why must the component sum and the tip-to-tail drawing end in the same quadrant? Explain what discarding component signs would lose.",
+    "narrativeGuide": "Both methods add the same directed displacements. Dropping component signs confuses east with west or north with south and can put the endpoint in the wrong quadrant."
+  },
+  {
+    "edition": "honors",
+    "day": 7,
+    "diagramPrompt": "Use the zero crossing in Section C to distinguish a reversal from a change in acceleration.",
+    "transferPrompt": "Velocity starts at +8 m/s and changes at −2 m/s² for 6 s. When does the object reverse, and during which interval does it speed up?",
+    "guide": "v = 0 at 4 s. Before 4 s its speed falls; after 4 s velocity and acceleration are both negative, so speed increases.",
+    "narrativePrompt": "Why does the reading require both the existing velocity and its change before deciding whether the asteroid speeds up or turns?",
+    "narrativeGuide": "Acceleration describes a change in velocity. Compare it with the existing velocity: parallel increases speed, opposite decreases it before reversal, and a perpendicular component turns it."
+  },
+  {
+    "edition": "honors",
+    "day": 8,
+    "diagramPrompt": "Explain why the area in Section C stays positive while the acceleration in the braking example is negative.",
+    "transferPrompt": "A car moving at +18 m/s brakes uniformly at −3 m/s². Find stopping distance without time, then check it using a velocity–time graph.",
+    "guide": "0 = 18² − 6Δx gives +54 m. Stop time is 6 s, so triangular area is ½ × 6 × 18 = 54 m.",
+    "narrativePrompt": "What assumption makes both the no-time braking equation and the straight-line graph check valid? Explain what you would reconsider if the braking force varied.",
+    "narrativeGuide": "Constant acceleration makes velocity linear in time and permits the no-time UAM relationship. Variable braking requires the actual graph or another model for the change of velocity."
+  },
+  {
+    "edition": "honors",
+    "day": 9,
+    "diagramPrompt": "In Section C, what do the horizontal force arrows tell you that the velocity arrow alone cannot?",
+    "transferPrompt": "A cart starts at +5 m moving at −2 m/s while its forces balance. Locate it 4 s later. Why does passing the origin require no change in net force?",
+    "guide": "Final position −3 m. Net force is zero and velocity stays −2 m/s; the origin is a coordinate choice.",
+    "narrativePrompt": "The reading distinguishes zero acceleration from zero velocity. Explain how the initial velocity resolves the two possible motions of a balanced cart.",
+    "narrativeGuide": "Zero acceleration preserves the initial velocity. A cart initially at rest stays there; a moving cart continues with the same speed and direction."
+  },
+  {
+    "edition": "honors",
+    "day": 10,
+    "diagramPrompt": "Compare the upward arrows in Section C. Why is the normal force smaller than the weight in this case?",
+    "transferPrompt": "A 4 kg crate rests on a level floor while a rope pulls up with 12 N. Find the normal force using g = 9.8 N/kg. When would the contact model cease to apply?",
+    "guide": "Weight 39.2 N, normal force 27.2 N. At loss of contact normal is zero; continued upward pull beyond the weight lifts the crate.",
+    "narrativePrompt": "Why does naming both the source and the receiver of a force matter when predicting the motion of just the crate or just the asteroid?",
+    "narrativeGuide": "Each force links an agent and a receiver. Only forces on the chosen receiver enter its net force, so including its partner would incorrectly cancel an interaction."
+  },
+  {
+    "edition": "honors",
+    "day": 11,
+    "diagramPrompt": "Which product stays constant across the Section C trials? Use it to explain why a graph of acceleration against mass curves.",
+    "transferPrompt": "A 1.5 kg cart accelerates at 4 m/s². With the same net force, what mass gives 1.5 m/s²? Identify a plot that would be linear across the trials.",
+    "guide": "F = 6 N and required mass is 4 kg. Plot a against 1/M for a straight line of slope F.",
+    "narrativePrompt": "Why can an inverse mass–acceleration trend in these trials coexist with equal gravitational acceleration in free fall?",
+    "narrativeGuide": "The cart experiment holds net force fixed. In free fall the gravitational force increases in proportion to the falling mass, so F/m can stay constant."
+  },
+  {
+    "edition": "honors",
+    "day": 12,
+    "diagramPrompt": "Why are the two lines in Section C shifted even though their slopes agree?",
+    "transferPrompt": "A 3 kg sliding system has constant opposing friction of 0.6 N. For driving forces of 3.6 N and 6.6 N, find a and identify the driving-force intercept where a is zero.",
+    "guide": "Net forces 3 and 6 N give 1 and 2 m/s². The zero-acceleration intercept is 0.6 N of drive.",
+    "narrativePrompt": "Why is an engine’s driving force alone insufficient to forecast an asteroid’s acceleration? Explain the role of opposing or differently directed forces.",
+    "narrativeGuide": "The engine is only one interaction. Combine all external forces as vectors, including gravity, and divide the resultant by mass to obtain acceleration."
+  },
+  {
+    "edition": "honors",
+    "day": 13,
+    "diagramPrompt": "Use the force and velocity arrows in Section C to explain how positive acceleration can initially reduce speed.",
+    "transferPrompt": "A 2 kg cart moving at −4 m/s experiences +6 N and −2 N for 3 s. Find its final velocity and state when it reverses.",
+    "guide": "a = +2 m/s², v = +2 m/s at 3 s. It passes through v = 0 at 2 s.",
+    "narrativePrompt": "Why does a force toward Earth specify acceleration without specifying the direction of the asteroid’s velocity? Use the distinction the reading makes.",
+    "narrativeGuide": "The force predicts the change of velocity, while the existing velocity is an independent initial condition. A transverse velocity and inward acceleration can produce a curved path."
+  },
+  {
+    "edition": "honors",
+    "day": 14,
+    "diagramPrompt": "Track each receiver in Section C. Why can equal interaction forces give unequal accelerations?",
+    "transferPrompt": "Carts of 2 kg and 5 kg push apart with 10 N each, with no other horizontal force. Find both acceleration magnitudes and explain how the pair enters the combined-system sum.",
+    "guide": "5 and 2 m/s², in opposite directions. The forces act on separate carts and cancel as internal forces for the two-cart system.",
+    "narrativePrompt": "Explain why Earth’s pull belongs on the asteroid’s diagram while the equal partner force does not. Where does that second force belong?",
+    "narrativeGuide": "Earth’s pull acts on the asteroid; the equal and opposite pull acts on Earth. Each belongs on the diagram of its own receiver."
+  },
+  {
+    "edition": "honors",
+    "day": 15,
+    "diagramPrompt": "Why is a net-force arrow in Section C a summary rather than another interaction to count?",
+    "transferPrompt": "A 3 kg lamp accelerates downward at 1.0 m/s² on a vertical rope. Find T using g = 9.8 m/s² and compare the force-arrow lengths.",
+    "guide": "With up positive, T − 29.4 = −3.0 N, hence T = 26.4 N. Weight arrow is longer than tension.",
+    "narrativePrompt": "Why would adding a net-force arrow to tension and weight as a third physical interaction give the wrong result?",
+    "narrativeGuide": "Net force is the vector sum of the interactions already drawn. Adding that sum as another force counts the same interactions twice."
+  },
+  {
+    "edition": "honors",
+    "day": 16,
+    "diagramPrompt": "Why does Section C separate the force diagram from the component triangle? Which direction has zero acceleration?",
+    "transferPrompt": "A 4 kg block slides down a 30° ramp against 3 N friction. With g = 9.8 m/s², find its downhill acceleration and normal force.",
+    "guide": "Downhill weight component 19.6 N minus 3 N gives 16.6 N; a = 4.15 m/s². N = 39.2 cos 30° ≈ 33.9 N.",
+    "narrativePrompt": "The reading permits different axis choices on a ramp. Explain which parts of the description can change and which physical prediction must agree.",
+    "narrativeGuide": "Changing axes changes numerical components, not the actual forces or acceleration vector. Properly transformed calculations predict the same motion."
+  },
+  {
+    "edition": "honors",
+    "day": 17,
+    "diagramPrompt": "Why does the rising part of Section C end at a threshold, while the sliding part is drawn level?",
+    "transferPrompt": "A crate with N = 50 N has μs = 0.40 and μk = 0.30. Compare friction for an 18 N pull from rest and a 22 N pull once sliding.",
+    "guide": "Static limit 20 N. First friction is 18 N opposite the pull. While sliding it is 15 N opposite motion, leaving 7 N forward for motion along the pull.",
+    "narrativePrompt": "Why would applying the sliding-crate friction model to an asteroid in empty space be a source error? Distinguish sliding friction from atmospheric drag.",
+    "narrativeGuide": "Contact friction requires a surface. Atmospheric drag comes from surrounding gas and is a distinct interaction; in empty space gravity can act without either."
+  },
+  {
+    "edition": "honors",
+    "day": 18,
+    "diagramPrompt": "Trace the vertical components in Section C. What happens to the necessary tension if the ropes become more horizontal?",
+    "transferPrompt": "A 60 N sign rests on two symmetric ropes, each 30° above horizontal. Find each tension and compare with the value for two vertical ropes.",
+    "guide": "2T sin 30° = 60 gives 60 N per angled rope. Vertical ropes need only 30 N each because their entire tensions support the load.",
+    "narrativePrompt": "Why does the reading require checking every axis before declaring equilibrium? Explain why observing a single instant of rest is insufficient.",
+    "narrativeGuide": "A leftover component on any axis produces acceleration. A turning point can have zero instantaneous velocity while an unbalanced force still acts."
+  },
+  {
+    "edition": "honors",
+    "day": 19,
+    "diagramPrompt": "From the slope and vertical position of the Section C graph, decide whether the object speeds up. Which sign error would reverse that conclusion?",
+    "transferPrompt": "Velocity changes from −3 to −9 m/s in 3 s. A student reports +4 m/s². Repair the subtraction and explain the speed trend.",
+    "guide": "Δv = −9 − (−3) = −6 m/s, so a = −2 m/s². Speed increases from 3 to 9 m/s.",
+    "narrativePrompt": "Why is it more informative to identify the first inconsistent sign or coordinate than to change only the final forecast?",
+    "narrativeGuide": "A bad sign, coordinate or force sum can corrupt every later step. Repair the first inconsistency, recompute the downstream quantities and check against the evidence."
+  },
+  {
+    "edition": "honors",
+    "day": 20,
+    "diagramPrompt": "Why does Section C subtract one triangular area when finding displacement, but add its magnitude for distance?",
+    "transferPrompt": "A cart starts at 0 m with v = −3 m/s and a = +1 m/s² for 5 s. Find its final position and total distance using the reversal.",
+    "guide": "It reverses at 3 s after moving −4.5 m, then goes +2 m. Final x = −2.5 m and distance = 6.5 m.",
+    "narrativePrompt": "According to the reading, what two initial conditions are missing from a forecast that begins and ends with net force? Explain why each matters.",
+    "narrativeGuide": "Initial velocity and initial position are both needed. The same acceleration can start with different velocities and the same displacement can start at different coordinates."
+  },
+  {
+    "edition": "honors",
+    "day": 21,
+    "diagramPrompt": "In Section C, which numbers describe the starting point and which give the velocity? Explain how to combine them along each axis.",
+    "transferPrompt": "A probe starts at (−3, 4) m with steady velocity (2, −1) m/s. Find its position after 3 s and name one condition that could spoil this forecast.",
+    "guide": "Displacement (6, −3) m gives final (3, 1) m. A net force that changes velocity, or changed reference coordinates without a conversion, invalidates the stated calculation.",
+    "narrativePrompt": "Which assumptions in the probe calculation make it a classroom forecast? Explain one reason they could fail for the actual Earth–asteroid system.",
+    "narrativeGuide": "The classroom model holds the chosen reference fixed and velocity steady. Earth moves and gravity can change the probe’s velocity, affecting the extrapolation."
+  },
+  {
+    "edition": "honors",
+    "day": 22,
+    "diagramPrompt": "Which interval in Section C represents a measurement? Explain what its overlap with the revised forecast lets you claim.",
+    "transferPrompt": "A forecast spans 2.0–3.0 m. A new observation spans 3.2–3.4 m. A revised prediction spans 3.1–3.6 m. Compare them and explain why agreement does not establish a unique model.",
+    "guide": "Original and observation do not overlap. The revised interval contains the measurement and is consistent with it. Another model could also fit; test a fresh prediction with new observations.",
+    "narrativePrompt": "The reading distinguishes a physics forecast from a decision about a response. What can comparing the ranges establish, and what additional evidence would a response decision need?",
+    "narrativeGuide": "Range overlap tests consistency with the observation, not uniqueness or certainty. A response decision needs other evidence such as feasibility, cost or risk."
+  }
+]

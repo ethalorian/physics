@@ -1,0 +1,87 @@
+{
+  "day": 4,
+  "title": "Read the axes before you read the line",
+  "subtitle": "Velocity-time graphs, signed area, and components",
+  "paragraphs": [
+    "A flat line does not always mean an object is stopped. On yesterday's position-time graph, a flat line meant position stayed the same. On today's velocity-time graph, it means velocity stays the same. I want the axis labels to be the first thing you read. They tell you what the line's height actually represents.",
+    "If the line stays at <b>+2 m/s</b>, the object keeps moving in the positive direction at two meters per second. If it stays at <b>−1 m/s</b>, the object keeps moving in the negative direction at one meter per second. Only a line at zero velocity describes an object remaining stopped. A negative velocity is a direction, not automatically slowing motion.",
+    "The area between a velocity line and the time axis gives displacement. For a constant velocity, that area is a rectangle. Its height is velocity and its width is elapsed time, so <eq>Δ<var>x</var> = <var>v</var> × <var>t</var></eq>. Multiplying meters per second by seconds leaves meters, the unit for a change in position.",
+    "Find the time axis on both graphs in <b>Section C</b>. The first graph shows <b>+2 m/s for 4 s</b>. Its area gives <eq>Δ<var>x</var> = (2 m/s)(4 s) = +8 m</eq>. The second shows <b>−1 m/s for 4 s</b>, giving <eq>Δ<var>x</var> = (−1 m/s)(4 s) = −4 m</eq>. Area above zero adds positive displacement. Area below zero adds negative displacement. The blue regions represent those position changes, while the velocity lines are purple.",
+    "The example in <b>Section D</b> uses <b>+3 m/s for 2 s</b>. Apply the same rule: <eq>Δ<var>x</var> = (3 m/s)(2 s) = +6 m</eq>. With right chosen as positive, the cart ends six meters right of where it began. This is displacement, not its final coordinate. To find the final coordinate, we would also need the starting position.",
+    "A velocity arrow can point diagonally rather than along one axis. We then describe it with two components: a horizontal part and a vertical part. For an angle θ measured from the positive horizontal axis, <eq><var>v</var><sub>x</sub> = <var>v</var> cos <var>θ</var></eq> and <eq><var>v</var><sub>y</sub> = <var>v</var> sin <var>θ</var></eq>. Cosine finds the part next to that angle; sine finds the opposite part. Both components describe the same motion happening at the same time.",
+    "For example, a 10 m/s velocity at 30° above that axis has components <eq><var>v</var><sub>x</sub> = 10 cos 30° ≈ 8.66 m/s</eq> and <eq><var>v</var><sub>y</sub> = 10 sin 30° = 5 m/s</eq>. Use degree mode and check the arrow's direction before assigning signs.",
+    "For our fictional asteroid, 2026-XJ, the velocity graph shows how motion changes with time. Components show how much motion is toward Earth and how much is sideways. We need both pieces to predict a path, rather than assuming that all of its speed carries it directly toward us."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Velocity–time graph The vertical axis shows velocity , not position. Read the label first. Flat v–t line Steady velocity — not necessarily stopped. Area under the line Height × width = displacement. Area below zero is negative displacement. Components The separate east and north changes that make up one diagonal displacement.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        170.25
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS Δx = v × t (area) v x = v cos θ v y = v sin θ θ measured from the +x axis cos / sin part next to / opposite θ",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        170.25
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · AREA COUNTS THE CHANGE",
+      "text": "SECTION C COLOR IT · AREA COUNTS THE CHANGE Two velocity graphs. Right is +. 0 1 2 3 4 −2 −1 0 1 2 3 time (s) velocity (m/s) 0 1 2 3 4 −2 −1 0 1 2 3 time (s) velocity (m/s) 2 × 4 = +8 m −1 × 4 = −4 m 1 2 3 1 · PURPLE Velocity lines 2 · BLUE Area above zero: + displacement 3 · BLUE Area below zero: stripes, − displacement",
+      "box": [
+        75.75,
+        286.5,
+        515.25,
+        233.25
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE Velocity is +3 m/s for 2 s. Find the displacement and name its direction. GIVEN v = +3 m/s t = 2 s EQUATION Δx = v × t WORK Δx = (3 m/s)(2 s) ANSWER +6 m 6 m to the right",
+      "box": [
+        75.75,
+        519.75,
+        515.25,
+        109.5
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 4 OF 22 · NEW TOOL: V–T GRAPHS + COMPONENTS A velocity–time graph shows whether XJ’s speed is holding steady. Splitting its velocity arrow into parts shows how much is aimed at Earth and how much carries it sideways. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Velocity–time graph",
+      "definition": "The vertical axis shows velocity , not position. Read the label first."
+    },
+    {
+      "term": "Constant velocity",
+      "definition": "Steady velocity — not necessarily stopped."
+    },
+    {
+      "term": "Signed area",
+      "definition": "Height × width = displacement. Area below zero is negative displacement."
+    },
+    {
+      "term": "Components",
+      "definition": "The separate east and north changes that make up one diagonal displacement."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-04-cpa-notes-and-reading.pdf"
+}

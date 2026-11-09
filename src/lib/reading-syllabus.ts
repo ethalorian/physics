@@ -1,3 +1,4 @@
+import { binderSource } from './binder-reading'
 import { readingEvaluationPrompt, readingTransferPrompt, misconceptionPrompt, vocabularyTransferPrompt } from '@/lib/assignment-directions'
 import {demand} from '@/lib/assessment-demand'
 import { HONORS_READING_MAP, type HonorsReading } from './openstax-physics'
@@ -11,7 +12,8 @@ export interface SyllabusStep {
   id: string; unit: string; title: string; focus: string; chapter: number; sections: string[];
   prerequisites: string[]; words: SyllabusWord[]; vocabularyTarget: string;
   readingCheck: SyllabusCheck; quizCheck: SyllabusCheck; honors: SyllabusCheck;
-  passage?: string; honorsReading?: HonorsReading; sourceBook?: 'hewitt' | 'openstax'; selectionRequired?: boolean;
+  narrativeCheck?: SyllabusCheck;
+  passage?: string; honorsReading?: HonorsReading; sourceBook?: 'hewitt' | 'openstax' | 'binder'; selectionRequired?: boolean;
 }
 export interface SyllabusBundle {
   course_id: string; step_id: string; reading_id: string; practice_id: string;
@@ -50,14 +52,19 @@ export function buildSyllabusReading(step: SyllabusStep, steps: SyllabusStep[], 
   if (course.program !== 'physics') throw Error('Choose a Physics class for this syllabus.')
   const honorsReading = step.sourceBook === 'hewitt' ? null : step.honorsReading ?? HONORS_READING_MAP[step.id] ?? null
   const prior = step.prerequisites.map(id => steps.find(s => s.id === id)).filter((s): s is SyllabusStep => !!s)
-  const practiceChecks = [
+  const binder = binderSource(step.passage)
+  if (binder && binder.edition !== (course.track === 'honors' ? 'honors' : 'cpa')) throw Error('Choose the binder reading for this class edition.')
+  const practiceChecks = binder ? [
+    {...step.readingCheck, prompt:'Open Section C on the note front. Describe one labeled feature, then explain what it shows using a sentence from the reading as evidence.', demand:demand('Analyze',2,'Interpret evidence from the original note diagram.')},
+    {target:step.readingCheck.target,reference:'Section D · Reasoning',prompt:`Read the worked example on the note front: ${step.honors.prompt} Explain the first physics decision you would make and use one detail from the reading to justify it.`,demand:demand('Apply',2,'Connect a step in the worked example to the daily reading.')},
+  ] : [
     {...step.readingCheck,demand:demand('Understand',2,'Explain the reading’s idea using its evidence and representations.')},
     {...step.quizCheck,reference:'Apply the idea',demand:demand('Apply',2,'Apply the reading’s model to the supplied situation.')},
     {target:step.readingCheck.target,reference:'Check an explanation',prompt:readingEvaluationPrompt(step.title.toLowerCase()),demand:demand('Evaluate',3,'Judge a claim using source evidence, assumptions and a disconfirming condition.')},
     {target:step.readingCheck.target,reference:'Create & transfer',prompt:readingTransferPrompt(step.title.toLowerCase()),demand:demand('Create',3,'Construct and test a new application under an explicit change in conditions.')},
   ]
   return { id: newId(), course_id: course.id, title: step.title, chapter: step.chapter, section_ids: step.sections,
-      reading: course.track === 'honors' && honorsReading ? `OpenStax AP Physics 2e · §${honorsReading.sections.join(', ')} · pp. ${honorsReading.from}–${honorsReading.to}` : step.passage ? 'Course reading · ' + step.title : `Hewitt · Sections ${step.sections.join(', ')}`,
+      reading: binder ? `Student Choice Binder · Unit 1 · ${binder.edition.toUpperCase()} · Day ${binder.day}` : course.track === 'honors' && honorsReading ? `OpenStax AP Physics 2e · §${honorsReading.sections.join(', ')} · pp. ${honorsReading.from}–${honorsReading.to}` : step.passage ? 'Course reading · ' + step.title : `Hewitt · Sections ${step.sections.join(', ')}`,
       honors_reading: course.track === 'honors' ? honorsReading : null, passage: step.passage ?? null, instructions: `${step.focus}\n\nBefore reading: preview ${step.words.map(w => w.term).join(', ')}.\nAfter reading: explain the idea in your own words, then practice the vocabulary.${prior.length ? '\nBring back: ' + prior.map(s => s.title).join('; ') + '.' : ''}`,
       questions: practiceChecks.map(q => ({ id: newId(), reference: q.reference ?? 'Read & explain', prompt: q.prompt, target_id: target(q.target), demand:q.demand })),
       due_at: null, status: 'draft', version: 0, created_at: new Date().toISOString() }
@@ -72,19 +79,21 @@ export function buildSyllabusDrafts(step: SyllabusStep, steps: SyllabusStep[], c
     return match.id
   }
   const prior = step.prerequisites.map(id => steps.find(s => s.id === id)).filter((s): s is SyllabusStep => !!s)
-  const checks = [step.quizCheck, ...(prior.length ? [prior[0].quizCheck] : [])]
-  if (course.track === 'honors') checks.push(step.honors)
-  const question = (q: SyllabusCheck): QuizQuestion => ({ id: newId(), kind: 'written', prompt: q.prompt, guide: q.guide, points: 3, target_id: target(q.target) })
+  const binder = binderSource(step.passage)
+  if (binder && !step.narrativeCheck) throw Error('The daily reading needs an authored comprehension check.')
+  const checks = binder && step.narrativeCheck ? [step.narrativeCheck, step.readingCheck, step.quizCheck] : [step.quizCheck, ...(prior.length ? [prior[0].quizCheck] : [])]
+  if (course.track === 'honors' && !binder) checks.push(step.honors)
+  const question = (q: SyllabusCheck): QuizQuestion => ({ id: newId(), kind: 'written', prompt: binder && q.reference ? q.reference + ' — ' + q.prompt : q.prompt, guide: q.guide, points: 3, target_id: target(q.target) })
   const base = { course_id: course.id, instructions: 'Explain your thinking. Words, labeled sketches, and equations may support your explanation. Your teacher reviews your work.', grade_mode: 'credit' as const, status: 'draft' as const, version: 0, due_at: null, student_ids: null, source_quiz_id: null, language_level: course.track === 'honors' ? 'honors' as const : 'cpa' as const }
   const vocabularyTarget = target(step.vocabularyTarget)
   if (targets.find(t => t.id === vocabularyTarget)?.domain !== 'knowledge') throw Error('Vocabulary needs a Knowledge target.')
   return {
     step_id: step.id, unit: step.unit, words: step.words, vocabularyTarget,
     reading: buildSyllabusReading(step, steps, course, target, newId),
-    readingQuiz: { ...base, id: newId(), title: `${step.title} · Reading check`, kind: 'understanding', questions: [...checks.map(question),{id:newId(),kind:'written',points:4,target_id:target(step.readingCheck.target),prompt:misconceptionPrompt(step.title.toLowerCase()),guide:'One point each: specific new example; accurate physical reasoning; plausible substantive misconception; evidence that discriminates between the explanations.',demand:demand('Evaluate',3,'Create and evaluate a counterexample using evidence, not a remembered statement.')}] },
-    vocabularyQuiz: { ...base, id: newId(), title: `${step.title} · Vocabulary check`, kind: 'vocabulary',
+    readingQuiz: { ...base, id: newId(), title: `${step.title} · Reading check`, kind: 'understanding', questions: binder ? checks.map(question) : [...checks.map(question),{id:newId(),kind:'written',points:4,target_id:target(step.readingCheck.target),prompt:misconceptionPrompt(step.title.toLowerCase()),guide:'One point each: specific new example; accurate physical reasoning; plausible substantive misconception; evidence that discriminates between the explanations.',demand:demand('Evaluate',3,'Create and evaluate a counterexample using evidence, not a remembered statement.')}] },
+    vocabularyQuiz: { ...base, ...(binder ? {instructions:`Use the vocabulary from Section A of your Day ${binder.day} notes. Connect each meaning to a detail from the diagram, the worked example, or the narrative. The worked example begins: ${step.honors.prompt}`}:{}), id: newId(), title: `${step.title} · Vocabulary check`, kind: 'vocabulary',
       questions: [...step.words.map((word):QuizQuestion => ({ id: newId(), kind: 'written', points: 2, target_id: vocabularyTarget,
-        prompt: `Explain “${word.term}” in your own words. Use it in a specific example connected to ${step.title.toLowerCase()}.`,
+        prompt: binder ? `Explain “${word.term}” in your own words. Choose a detail from today's reading or note page and explain how it illustrates the term.` : `Explain “${word.term}” in your own words. Use it in a specific example connected to ${step.title.toLowerCase()}.`,
         guide: `Meaning (1 point): ${word.definition} Use (1 point): a physically correct, specific example that uses the word consistently with this meaning. Accept equivalent wording and labeled sketches; do not deduct for language errors.`, vocabulary: [word.term], demand:demand('Understand',2,'Explain a meaning and connect it to a concrete example.') })),{id:newId(),kind:'written',points:4,target_id:vocabularyTarget,prompt:vocabularyTransferPrompt(step.words.map(w => w.term)),guide:'One point each: coherent situation; accurate word use; justified prediction; relevant test. Use the supplied vocabulary meanings to judge content.',vocabulary:step.words.map(w=>w.term),demand:demand('Create',3,'Connect technical meanings in a new model, prediction and test.')}] },
   }
 }

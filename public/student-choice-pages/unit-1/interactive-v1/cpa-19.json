@@ -1,0 +1,87 @@
+{
+  "day": 19,
+  "title": "Repair the reasoning, not just the answer",
+  "subtitle": "Finding the first mistake and checking the correction",
+  "paragraphs": [
+    "When an answer is wrong, changing the final number does not explain what happened. I want us to find the first step where the reasoning stopped matching the situation. Then we can repair that step and follow the correction through the rest of the work. The pictures on today's notes page make four common mistakes visible.",
+    "Check the first strip in <b>Section C</b>. The claim confuses distance and displacement. A trip goes <b>3 m right and 3 m back</b>. The total distance is <eq>3 m + 3 m = 6 m</eq>. Displacement is <b>0 m</b> because the starting and finishing positions match. A route sketch shows both facts: tracing the full path gives distance, while joining the endpoints gives displacement.",
+    "The second claim uses an applied force as if it were the net force. An <b>8 N pull</b> acts on a <b>2 kg cart</b>, with <b>2 N opposing it</b>. Before dividing by mass, find <eq><var>F</var><sub>net</sub> = 8 N − 2 N = 6 N</eq>. Then <eq><var>a</var> = 6 N ÷ 2 kg = 3 m/s²</eq>. The missing subtraction was the first wrong step.",
+    "The third claim calls a change from <b>−2 m/s to −6 m/s</b> slowing down. The minus sign indicates direction. Speed is the size of velocity, so it grows from 2 m/s to 6 m/s. The object is speeding up in the negative direction. A velocity-time graph would move farther below zero; that does not mean its speed is getting smaller.",
+    "The fourth claim says a third-law pair cancels so nothing moves. Each member acts on a different object. Draw one force on each object's separate force diagram. They cannot cancel in the force sum for one receiver. If we combine both objects into one system, the pair is internal, but the objects can still change their motion relative to each other.",
+    "The example in <b>Section D</b> gives another force-sum repair. A <b>3 kg cart</b> has <b>9 N right</b> and <b>3 N left</b>. Dividing the 9 N pull by mass ignores the other force. The correction is <eq><var>F</var><sub>net</sub> = 9 N − 3 N = 6 N</eq> right, followed by <eq><var>a</var> = 6 N ÷ 3 kg = 2 m/s²</eq> right. Check backward: <eq>(3 kg)(2 m/s²) = 6 N</eq>, which matches the net force.",
+    "A useful explanation points to evidence and names a rule. The drawing can show a missing force, a return trip, or the receiver of an interaction. The equation then shows the correction. Keep units with the numbers and check whether the sign describes the chosen positive direction. Repeating the same mistaken substitution in another formula is not an independent check.",
+    "For our fictional asteroid, 2026-XJ, one missed starting position or incorrect sign can affect every later prediction. Before trusting the forecast, trace it back through its evidence and model. Showing the first repaired step makes a revision understandable instead of leaving someone to guess why the final answer changed."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Distance vs. displacement Trace the whole path vs. join start to finish. Net force first Combine all forces before dividing by mass. Sign = direction A minus sign is not “slow.” Compare sizes for speed. Pair forces Act on different objects, so they never cancel.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        163.5
+      ]
+    },
+    "B": {
+      "title": "KEY ROUTINE",
+      "text": "SECTION B KEY ROUTINE 1. Identify the first mistake 2. Repair it with a drawing + rule 3. Recheck on a new problem evidence point to a graph or diagram reason name the physics rule",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        163.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · FOUR COMMON MISTAKES",
+      "text": "SECTION C COLOR IT · FOUR COMMON MISTAKES Lightly shade each strip. 1 CLAIM ✗ “3 m right then 3 m back — the distance is zero.” 2 FIX ✓ Distance = 3 + 3 = 6 m. Displacement is 0 m: the endpoints match. 1 CLAIM ✗ “8 N pull on a 2 kg cart: 8 ÷ 2 = 4 m/s².” 2 FIX ✓ Net force first: 8 − 2 = 6 N. Then 6 ÷ 2 = 3 m/s². 1 CLAIM ✗ “−2 → −6 m/s is slowing, because it’s negative.” 2 FIX ✓ Speed grows from 2 to 6 m/s: speeding up. The minus sign is direction. 1 CLAIM ✗ “The force pair cancels, so nothing moves.” 2 FIX ✓ Each pair force acts on a different cart. Draw one on each diagram. 1 · PENCIL Mistaken claims: cross out 2 · CODE COLOR The fixes: color by quantity",
+      "box": [
+        75.75,
+        279.75,
+        515.25,
+        201.75
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 3 kg cart has 9 N right and 3 N left. A student writes 9 ÷ 3 = 3 m/s². Correct it. GIVEN m = 3 kg 9 N right 3 N left EQUATION a = F net ÷ m WORK F net = 9 − 3 = 6 N right a = 6 ÷ 3 ANSWER 2 m/s² right missed: net force first",
+      "box": [
+        75.75,
+        481.5,
+        515.25,
+        147.75
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 19 OF 22 · NEW TOOL: CHECKING REASONING A forecast is only as good as its reasoning. Before the desk signs off on XJ, every step is checked: signs, starting position, units, and the right model. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Distance vs. displacement",
+      "definition": "Trace the whole path vs. join start to finish."
+    },
+    {
+      "term": "Net force",
+      "definition": "Combine all forces before dividing by mass."
+    },
+    {
+      "term": "Coordinate sign",
+      "definition": "A minus sign is not “slow.” Compare sizes for speed."
+    },
+    {
+      "term": "Interaction pair",
+      "definition": "Act on different objects, so they never cancel."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-19-cpa-notes-and-reading.pdf"
+}

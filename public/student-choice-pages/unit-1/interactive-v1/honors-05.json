@@ -1,0 +1,87 @@
+{
+  "day": 5,
+  "title": "A prediction should carry its uncertainty",
+  "subtitle": "Constant velocity, bounds, and a range of possible positions",
+  "paragraphs": [
+    "A prediction written as one number can look more certain than the measurements supporting it. If our starting position is only known within a range, the predicted position should reflect that range. Today I want us to make both parts of a prediction visible: the central value and how far the allowed values could extend around it.",
+    "For steady velocity, <eq><var>x</var><sub>f</sub> = <var>x</var><sub>0</sub> + <var>v</var><var>t</var></eq>, where time is measured from the starting position. Suppose <eq><var>x</var><sub>0</sub> = 8.0 ± 0.5 m</eq>, <eq><var>v</var> = −2.0 ± 0.1 m/s</eq>, and the elapsed time is exactly <b>3 s</b> in our model. The central prediction is <eq><var>x</var><sub>f</sub> = 8.0 m + (−2.0 m/s)(3 s) = 2.0 m</eq>. Position decreases because the velocity is negative.",
+    "Here the plus-or-minus amounts are bounds: limits on the values we allow. The starting position could lie anywhere from <b>7.5 m to 8.5 m</b>, and the velocity from <b>−2.1 m/s to −1.9 m/s</b>. A more negative velocity produces a larger decrease in position during those three seconds. This is why keeping the signs matters when we find the endpoints.",
+    "Locate the two ends of the prediction interval in <b>Section C</b>. The lowest final position combines the lowest starting position with the most negative velocity: <eq>7.5 m + (−2.1 m/s)(3 s) = 1.2 m</eq>. The highest combines the highest starting position with the least negative velocity: <eq>8.5 m + (−1.9 m/s)(3 s) = 2.8 m</eq>. Every allowed combination falls between those limits, provided constant velocity and exact elapsed time remain valid assumptions.",
+    "Use the bound equation in <b>Section B</b> to check the width of that interval. Let δ mean the uncertainty bound on a quantity. For this model, <eq>δ<var>x</var><sub>f</sub> = δ<var>x</var><sub>0</sub> + <var>t</var>δ<var>v</var></eq>. Thus <eq>δ<var>x</var><sub>f</sub> = 0.5 m + (3 s)(0.1 m/s) = 0.8 m</eq>. We report <eq><var>x</var><sub>f</sub> = 2.0 ± 0.8 m</eq>. The 0.8 m is the distance from the center to either limit. The full interval is <b>1.6 m wide</b>.",
+    "Notice how velocity uncertainty grows into position uncertainty as time passes. An error of one tenth of a meter each second becomes three tenths of a meter after three seconds. The initial-position bound remains part of the result too. On the notes page, the central marker and surrounding blue interval show these two ideas without pretending that the center is an exact location.",
+    "These bounds are not a probability distribution or a statement that a certain percentage of results must fall inside the interval. We have added the largest allowed contributions. If time also had uncertainty, this expression would need revision. If the object accelerates, the constant-velocity model itself may fail, even when our arithmetic is correct.",
+    "For our fictional asteroid, 2026-XJ, a useful forecast includes the reference frame, future time, predicted range, and assumptions. New observations can narrow that range or reveal that the motion changed. Reporting uncertainty makes the claim more informative and gives us something specific to compare with the next measurement."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Start x 0 Position when the chosen interval begins. Bound An allowed range, not a standard deviation. Half-width The ± value; full width is twice as large. Assumption A condition treated as true, such as steady v .",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS x f = x 0 + vt δ x f = δ x 0 + t δ v t exact time, s δ x bound, m",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · A BOUNDED FORECAST",
+      "text": "SECTION C COLOR IT · A BOUNDED FORECAST Center plus range. x 0 = 8 ± 0.5 m v = −2.0 ± 0.1 m/s; t = 3 s 0 2 4 6 8 10 Δ x = −6 m center 2 m position x (m) 1.2 to 2.8 m 1 2 3 1 · BLUE Start and end positions 2 · BLUE Displacement 3 · BLUE Prediction interval",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        254.25
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart starts at 8 ± 0.5 m and moves at −2.0 ± 0.1 m/s for an exact 3 s . Find its predicted position interval. GIVEN x 0 = 8 ± 0.5 m v = −2.0 ± 0.1 m/s t = 3 s ; steady v EQUATION Steady v : x f = x 0 + vt . Add input bounds. WORK x f = 8 − 2(3) δ x = .5 + 3(.1) = 0.8 m ANSWER 1.2 to 2.8 m 2.0 ± 0.8 m ; full width 1.6 m .",
+      "box": [
+        75.75,
+        476.25,
+        515.25,
+        152.25
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 5 OF 22 · NEW TOOL: BOUNDED FORECAST XJ's position and velocity readings have limits. A forecast should show both the central result and the interval allowed by those limits; the interval does not give an impact probability. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Initial position",
+      "definition": "Position when the chosen interval begins."
+    },
+    {
+      "term": "Bound",
+      "definition": "An allowed range, not a standard deviation."
+    },
+    {
+      "term": "Half-width",
+      "definition": "The ± value; full width is twice as large."
+    },
+    {
+      "term": "Assumption",
+      "definition": "A condition treated as true, such as steady v ."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-05-honors-notes-and-reading.pdf"
+}

@@ -1,0 +1,87 @@
+{
+  "day": 20,
+  "title": "Connect the forces to the final position",
+  "subtitle": "The complete chain from net force to a motion prediction",
+  "paragraphs": [
+    "We have learned how forces change velocity and how velocity changes position. Today we connect those ideas in one calculation. I want you to keep the same object, positive direction, and time interval throughout the chain. Each result supplies information needed for the next step.",
+    "Follow the four links in <b>Section C</b>. The chain begins with a <b>2 kg cart</b> at rest at <b>1 m</b>. A <b>6 N pull</b> acts right while <b>2 N of friction</b> acts left. These forces stay constant for <b>2 s</b>. Choose right as positive. First find <eq><var>F</var><sub>net</sub> = 6 N − 2 N = +4 N</eq>. Then <eq><var>a</var> = <var>F</var><sub>net</sub> ÷ <var>m</var> = 4 N ÷ 2 kg = 2 m/s²</eq>.",
+    "The cart gains 2 m/s of velocity each second. Use <eq><var>v</var><sub>f</sub> = <var>v</var><sub>i</sub> + <var>a</var><var>t</var></eq> to find <eq><var>v</var><sub>f</sub> = 0 m/s + (2 m/s²)(2 s) = +4 m/s</eq>. Constant net force on a fixed mass gives constant acceleration, so its velocity-time graph would be a straight rising line.",
+    "Because the acceleration is constant, average velocity is <eq>(0 + 4) m/s ÷ 2 = 2 m/s</eq>. Multiply by the two seconds to find <eq>Δ<var>x</var> = (2 m/s)(2 s) = +4 m</eq>. Now include the starting position: <eq><var>x</var><sub>f</sub> = 1 m + 4 m = 5 m</eq>. The cart's displacement is four meters, while its final position is the five-meter mark.",
+    "The diagram reports an illustrative bound of <b>5 ± 1 m</b>, meaning a range from <b>4 m to 6 m</b>. That one-meter bound is supplied for the example; it does not come from the force calculation alone. The center is not guaranteed to be the exact measured result, and the range is not a probability statement.",
+    "<b>Section D</b> tests a different case: a cart already moving at <b>+2 m/s</b> has <b>zero net force</b> for <b>3 s</b>. Zero net force gives zero acceleration, so the velocity stays at +2 m/s. Its displacement is <eq>Δ<var>x</var> = (2 m/s)(3 s) = +6 m</eq>. The cart keeps moving even though no unbalanced force acts on it.",
+    "Notice what information each step needs. Force and mass give acceleration. Starting velocity and time are needed to find final velocity. Starting position is needed to find final position. Orange identifies the force step, purple identifies velocity, and blue identifies position. Green in this particular diagram marks speeding up; acceleration itself does not always mean increasing speed.",
+    "For our fictional asteroid, 2026-XJ, this chain connects the observations and interactions to a forecast. A force calculation alone is not the whole prediction. We also need the existing motion and starting location, along with a model that fits the interval being studied."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY The chain Net force → acceleration → velocity → position. Constant net force Gives constant acceleration: a straight v–t line. Zero net force Velocity stays the same; position still changes. Range A central value with limits. Not a guarantee.",
+      "box": [
+        75.75,
+        99.0,
+        295.5,
+        156.0
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS",
+      "text": "SECTION B KEY EQUATIONS a = F net ÷ m v f = v i + a × t Δx = ½(v i + v f ) × t x f = x i + Δx N, kg force, mass m/s², m/s, m a, v, x",
+      "box": [
+        373.25,
+        99.0,
+        217.75,
+        156.0
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · ONE CHAIN, FOUR LINKS",
+      "text": "SECTION C COLOR IT · ONE CHAIN, FOUR LINKS 2 kg cart, from rest at 1 m, for 2 s. 1 NET FORCE 6 − 2 = 4 N pull minus friction → 2 ACCEL. 4 ÷ 2 = 2 m/s² F net ÷ m → 3 VELOCITY 0 + 2×2 = 4 m/s gain 2 m/s each second → 4 POSITION 1 + 4 = 5 m Δx = 2 m/s avg × 2 s Report the range: 5 ± 1 m → 4 to 6 m — the central value is not guaranteed. 1 · ORANGE Force 2 · GREEN Acceleration (speeding up) 3 · PURPLE Velocity 4 · BLUE Position",
+      "box": [
+        75.75,
+        255.0,
+        515.25,
+        153.75
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart has zero net force and already moves at +2 m/s. After 3 s, find its velocity and displacement. GIVEN F net = 0 N v = +2 m/s t = 3 s EQUATION a = 0 → v constant Δx = v × t WORK v stays +2 m/s Δx = 2 × 3 ANSWER +2 m/s, +6 m",
+      "box": [
+        75.75,
+        408.75,
+        515.25,
+        220.5
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 20 OF 22 · NEW TOOL: THE FULL CHAIN The chain is complete: net force → acceleration → velocity → position. That is the whole route from the data on XJ to a forecast of where it will arrive. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Force and motion",
+      "definition": "Net force → acceleration → velocity → position."
+    },
+    {
+      "term": "Constant net force",
+      "definition": "Gives constant acceleration: a straight v–t line."
+    },
+    {
+      "term": "Zero net force",
+      "definition": "Velocity stays the same; position still changes."
+    },
+    {
+      "term": "Range",
+      "definition": "A central value with limits. Not a guarantee."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-20-cpa-notes-and-reading.pdf"
+}

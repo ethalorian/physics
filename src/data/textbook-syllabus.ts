@@ -1,3 +1,4 @@
+import { BINDER_READINGS } from './binder-reading-syllabus'
 import 'server-only'
 import { CONNECTED_CHAPTERS } from '@/components/readings/interactive/connected-chapter-catalog'
 import { chapterTwoDefinition } from '@/components/readings/interactive/chapter-two-definition'
@@ -25,6 +26,7 @@ function templates(d:InteractiveChapterDefinition,words:SyllabusWord[][],situati
 }
 /** Original lesson content supplies the vocabulary and prompts; teachers explicitly map curriculum targets. */
 export const TEXTBOOK_SYLLABUS:SyllabusStep[]=[
+ ...BINDER_READINGS,
  ...templates(chapterTwoDefinition,pilotWords,chapterTwoDefinition.sections.map(s=>({prompt:s.check.prompt,reasoning:s.check.teacher}))),
  ...CONNECTED_CHAPTERS.flatMap(({definition,lessons})=>templates(definition,lessons.map(s=>s.terms.map(([term,definition])=>({term,definition}))),lessons.map(s=>s.worked))),
 ]

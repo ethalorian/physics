@@ -1,0 +1,87 @@
+{
+  "day": 6,
+  "title": "Keep direction attached to every arrow",
+  "subtitle": "Tip-to-tail addition and splitting vectors into parts",
+  "paragraphs": [
+    "An arrow gives us two pieces of information: size and direction. Together they describe a vector. Displacement, velocity, and force are vectors, so their directions must stay attached when we combine them. Adding only the arrow lengths can give the wrong result when the arrows point different ways.",
+    "Follow the arrows tip to tail in <b>Section C</b>. They show displacement A going <b>4 m east and 1 m north</b>, followed by displacement B going <b>2 m west and 2 m north</b>. To add them visually, place the tail of B at the tip of A. Keep each arrow's length and direction unchanged. The resultant is the arrow from the first starting point to the final endpoint.",
+    "We can check that picture by adding components. Take east and north as positive. Horizontally, <eq><var>R</var><sub>x</sub> = 4 m − 2 m = 2 m</eq> east. Vertically, <eq><var>R</var><sub>y</sub> = 1 m + 2 m = 3 m</eq> north. In symbols, <eq><var>R</var><sub>x</sub> = <var>A</var><sub>x</sub> + <var>B</var><sub>x</sub></eq> and <eq><var>R</var><sub>y</sub> = <var>A</var><sub>y</sub> + <var>B</var><sub>y</sub></eq>. Add horizontal parts together and vertical parts together.",
+    "Those perpendicular parts form a right triangle. The resultant's size is <eq>|<var>R</var>| = √[(2 m)² + (3 m)²] ≈ 3.61 m</eq>. Its angle from the positive horizontal direction is <eq><var>θ</var> = tan⁻¹(3 ÷ 2) ≈ 56.3°</eq>, toward north from east. Check both signs before interpreting an angle. The arrow here must point right and up because both components are positive.",
+    "We can also work backward, splitting one diagonal arrow into its parts. The force example in <b>Section D</b> gives a <b>20 N force at 30° above the positive horizontal axis</b>. The horizontal part is next to the angle, so use cosine: <eq><var>F</var><sub>x</sub> = <var>F</var> cos <var>θ</var> = (20 N) cos 30° ≈ 17.3 N</eq>. The vertical part is opposite, so <eq><var>F</var><sub>y</sub> = <var>F</var> sin <var>θ</var> = (20 N) sin 30° = 10.0 N</eq>.",
+    "Both force components are positive in this example. Use degree mode, and name the axis from which the angle is measured. If the angle begins at another axis, identify the adjacent and opposite parts again. I want the sketch to guide the sine-or-cosine choice.",
+    "The 17.3 N and 10.0 N values describe parts of one 20 N force. They are not two new forces to add on top of it. Similarly, the blue displacement components describe one overall change in position. Components organize the calculation without creating extra motion or extra interactions.",
+    "For our fictional asteroid, 2026-XJ, motion has parts in more than one direction. Adding vectors keeps those directions in the prediction. Splitting a velocity arrow helps us distinguish motion toward Earth from motion across our line of sight."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Vector A quantity with size and direction, drawn as an arrow. Tip-to-tail Start each arrow where the last one ends. Do not turn or stretch it. Component The east–west or north–south part of a vector. Resultant The overall arrow from the first start to the final finish.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        164.25
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + SIGNS",
+      "text": "SECTION B KEY EQUATIONS + SIGNS R x = A x + B x · R y = A y + B y |R| = √(R x ² + R y ²) θ = tan⁻¹(R y ÷ R x ) parts: V cos θ (next to θ) · V sin θ (opposite) + east, north − west, south",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        164.25
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · TIP TO TAIL",
+      "text": "SECTION C COLOR IT · TIP TO TAIL Each square = 1 m. No trig needed. start 1 2 3 N A: 4 E, 1 N B: 2 W, 2 N sum: 2 E, 3 N E–W: 4 − 2 = 2 E N–S: 1 + 2 = 3 N 1 · BLUE Arrow A 2 · BLUE Arrow B 3 · BLUE Resultant (dashed)",
+      "box": [
+        75.75,
+        280.5,
+        515.25,
+        217.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 20 N pull points 30° above the +x axis. Split it into its x and y parts. GIVEN F = 20 N θ = 30° from +x EQUATION F x = F cos θ F y = F sin θ WORK 20 cos 30° 20 sin 30° ANSWER 17.3 N, 10.0 N parts of one force, not two new forces",
+      "box": [
+        75.75,
+        498.0,
+        515.25,
+        131.25
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 6 OF 22 · NEW TOOL: VECTOR ADDITION XJ’s motion has parts in more than one direction. Adding them tip to tail gives its true path; splitting them shows the part that actually closes on Earth. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Vector",
+      "definition": "A quantity with size and direction, drawn as an arrow."
+    },
+    {
+      "term": "Tip-to-tail",
+      "definition": "Start each arrow where the last one ends. Do not turn or stretch it."
+    },
+    {
+      "term": "Component",
+      "definition": "The east–west or north–south part of a vector."
+    },
+    {
+      "term": "Resultant",
+      "definition": "The overall arrow from the first start to the final finish."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-06-cpa-notes-and-reading.pdf"
+}

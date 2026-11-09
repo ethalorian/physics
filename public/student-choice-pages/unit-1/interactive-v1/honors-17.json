@@ -1,0 +1,87 @@
+{
+  "day": 17,
+  "title": "Friction changes when slipping begins",
+  "subtitle": "Adjustable static friction and the kinetic-friction model",
+  "paragraphs": [
+    "If I push gently on a heavy box and it stays still, friction has matched my push. Pushing a little harder can make friction grow while the box remains at rest. That behavior shows why we cannot assign one fixed friction force to every situation. We first need to decide whether the surfaces are slipping relative to each other.",
+    "Static friction prevents relative slipping when it can. Its magnitude adjusts from zero up to a limit: <eq>0 ≤ <var>f</var><sub>s</sub> ≤ <var>μ</var><sub>s</sub><var>N</var></eq>. The coefficient μ is dimensionless, and the subscript s identifies the static case. The product of the coefficient and normal force gives the maximum available static friction, not necessarily the friction currently acting.",
+    "Our box has mass <b>2 kg</b> on a level surface, with a horizontal pull and no vertical acceleration. Therefore <eq><var>N</var> = <var>m</var><var>g</var> = (2 kg)(9.8 m/s²) = 19.6 N</eq>. With <eq><var>μ</var><sub>s</sub> = 0.40</eq>, the static limit is <eq><var>f</var><sub>s,max</sub> = (0.40)(19.6 N) = 7.84 N</eq>. We find the normal force first because another vertical force would change this limit.",
+    "Use the static-friction limit in <b>Section B</b> to check this case. Pull horizontally with <b>6 N</b> while the box is at rest. Static friction can supply 6 N in the opposite direction because that is below its 7.84 N limit. The net force is <eq>6 N − 6 N = 0 N</eq>, so acceleration is zero. Using 7.84 N as the actual friction here would falsely predict a backward acceleration from a gentle forward push.",
+    "Once the box slides, we use the kinetic-friction model <eq><var>f</var><sub>k</sub> = <var>μ</var><sub>k</sub><var>N</var></eq>. With <eq><var>μ</var><sub>k</sub> = 0.25</eq>, its magnitude is <eq><var>f</var><sub>k</sub> = (0.25)(19.6 N) = 4.90 N</eq>. For a <b>10 N</b> pull in the direction of sliding, <eq><var>F</var><sub>net</sub> = 10 N − 4.90 N = 5.10 N</eq>, giving <eq><var>a</var> = 5.10 N ÷ 2 kg = 2.55 m/s²</eq> forward.",
+    "Trace the rising segment in <b>Section C</b> up to the slip threshold. It shows static friction rising with the pull until the limit, followed by a lower kinetic-friction level once sliding occurs. That level is constant in our simplified model because the normal force and kinetic coefficient stay constant. Real surfaces can behave more complicatedly, but this distinction between adjusting static friction and modeled sliding friction is the starting point.",
+    "Friction opposes relative slipping, or the tendency to slip, at the contact. It does not always oppose an object's overall motion in every situation. A shoe pushing backward on the ground can receive forward static friction that helps a person walk. I want the contact and its slipping tendency identified before we choose the arrow's direction.",
+    "For our fictional asteroid, 2026-XJ, empty space does not provide a surface that continually applies sliding friction. Gravity can still change its velocity, and atmospheric drag would matter inside an atmosphere. Naming the actual interaction keeps our forecast from including a familiar force where its physical source is absent."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Static f s Adjusts to prevent slip, up to a limit. Limit f s ,max = μ s N ; f s can be smaller. Kinetic f k Opposes sliding; model size μ k N . Normal N Find the perpendicular force balance first.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS 0 ≤ f s ≤ μ s N f k = μ k N μ no units N mg here: level floor",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · BEFORE AND AFTER SLIP",
+      "text": "SECTION C COLOR IT · BEFORE AND AFTER SLIP 2 kg ; μ s = .40; μ k = .25. 0 3 6 9 12 0 3 6 9 friction magnitude (N) horizontal pulling force (N) limit 7.84 N 4.90 N 1 2 3 1 · ORANGE Static friction 2 · ORANGE Static limit: 7.84 N 3 · ORANGE Sliding level: 4.90 N",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE For this box, compare a 6 N pull while at rest with a 10 N pull after sliding starts. Use g = 9.8 m/s² ; pulls are horizontal. GIVEN N = 2(9.8) = 19.6 N μ s = 0.40 μ k = 0.25 EQUATION Check μ s N . Sliding: use μ k N , then net force. WORK f s ,max = 7.84 N at rest: f s = 6 N a = (10 − 4.9)/2 ANSWER 0; 2.55 m/s² At rest, then sliding.",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 17 OF 22 · NEW TOOL: FRICTION STATES Surface friction is not a force that continually brakes XJ in empty space. Gravitational forces can still change its velocity, and atmospheric drag would matter in an atmosphere. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Static friction",
+      "definition": "Adjusts to prevent slip, up to a limit."
+    },
+    {
+      "term": "Limit",
+      "definition": "f s ,max = μ s N ; f s can be smaller."
+    },
+    {
+      "term": "Kinetic friction",
+      "definition": "Opposes sliding; model size μ k N ."
+    },
+    {
+      "term": "Normal force",
+      "definition": "Find the perpendicular force balance first."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-17-honors-notes-and-reading.pdf"
+}

@@ -1,0 +1,87 @@
+{
+  "day": 22,
+  "title": "Explain what the forecast means and what limits it",
+  "subtitle": "Claim, evidence, reasoning, and a visible revision",
+  "paragraphs": [
+    "A correct-looking number is not the same as shown reasoning. Someone reading a forecast needs to know what was predicted, which evidence supports it, and what assumptions connect the two. Today I want the explanation to be clear enough that another person could follow the calculation and understand its limits.",
+    "Follow the parts of the defense in <b>Section C</b>. A claim states the result. Evidence is the visible work supporting it: measurements, a graph, a sketch, or a calculation. Reasoning explains why the physics model connects that evidence to the claim. A limitation identifies something uncertain, assumed, or left out. These four parts work together rather than replacing one another.",
+    "The forecast in <b>Section D</b> uses a <b>2 kg cart</b> under a constant <b>4 N net force</b>. It starts at rest at <b>1 m</b>, and we predict its position after <b>2 s</b>. First find <eq><var>a</var> = 4 N ÷ 2 kg = 2 m/s²</eq>. Then <eq><var>v</var><sub>f</sub> = 0 m/s + (2 m/s²)(2 s) = 4 m/s</eq>. The constant net force and fixed mass justify constant acceleration.",
+    "Average velocity is <eq>(0 + 4) m/s ÷ 2 = 2 m/s</eq>, so <eq>Δ<var>x</var> = (2 m/s)(2 s) = 4 m</eq>. Add the starting coordinate: <eq><var>x</var><sub>f</sub> = 1 m + 4 m = 5 m</eq>. The example supplies a model bound of <b>±1 m</b>, so the reported position interval is <b>4 m to 6 m</b>. The bound is part of the supplied information, not something this arithmetic creates by itself.",
+    "A defense can now connect the pieces: we predict a central position of 5 m after two seconds, with the given range from 4 m to 6 m. The evidence is the force, mass, starting conditions, and time. The reasoning uses Newton's second law and constant-acceleration motion. The result is limited by the supplied bound and the assumption that the forces stay constant throughout the interval.",
+    "A range is not a probability. This example does not tell us that some percentage of outcomes must occur inside it. Also, a model can miss a changing force even when its arithmetic is correct. I want uncertainty in the inputs and limits of the model named honestly, rather than hidden behind extra decimal places.",
+    "A revision should show the corrected step and its effect on later results. For example, if the starting coordinate were corrected from 1 m to 2 m, with everything else unchanged, the displacement would still be 4 m but the central final position would become <eq>2 m + 4 m = 6 m</eq>. We can explain exactly why that result changed instead of simply replacing the old answer.",
+    "For our fictional asteroid, 2026-XJ, a useful forecast includes a location, future time, reference frame, supporting work, and limits. Decisions about a response also involve cost, feasibility, and priorities. Physics supplies evidence for those decisions. A clear defense shows what the model supports and what additional information people still need."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Claim Your prediction, stated clearly. Evidence Visible work: a graph, sketch, or calculation. Limitation What the model leaves out or assumes. Revision A corrected step, shown — and how it changes later results.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        147.75
+      ]
+    },
+    "B": {
+      "title": "KEY HABIT",
+      "text": "SECTION B KEY HABIT a correct-looking number ≠ shown reasoning physics predicts; people decide central value + its range revision show the fixed step",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        147.75
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · BUILD A DEFENSE",
+      "text": "SECTION C COLOR IT · BUILD A DEFENSE Point to your own work as you speak. 1 CLAIM I predict ___ . 2 EVIDENCE based on ___ (point to the graph, sketch, or calculation). 3 REASONING because my model assumes ___ . 4 LIMITATION The result is limited by ___ . A range is not a probability, and a recommendation also involves cost, feasibility, and priorities. 1 · BLUE Claim: your predicted position 2 · CODE COLOR Evidence: color by quantity 3 · PENCIL Reasoning 4 · PENCIL Limitation",
+      "box": [
+        75.75,
+        264.0,
+        515.25,
+        186.75
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE Defend a prediction: a 2 kg cart under 4 N net force, from rest at 1 m, for 2 s; model bound ± 1 m. GIVEN F net = 4 N, m = 2 kg x i = 1 m, t = 2 s bound ± 1 m EQUATION force → a → v → x WORK a = 2 m/s², v = 4 m/s Δx = 4 m, x f = 5 m ANSWER 4 to 6 m assumes constant forces",
+      "box": [
+        75.75,
+        450.75,
+        515.25,
+        178.5
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 22 OF 22 · NEW TOOL: YOUR DEFENSE The desk wants a claim it can defend: where XJ will be, how sure you are, and what your model leaves out. That is what makes a prediction trustworthy. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Claim",
+      "definition": "Your prediction, stated clearly."
+    },
+    {
+      "term": "Evidence",
+      "definition": "Visible work: a graph, sketch, or calculation."
+    },
+    {
+      "term": "Limitation",
+      "definition": "What the model leaves out or assumes."
+    },
+    {
+      "term": "Revision",
+      "definition": "A corrected step, shown — and how it changes later results."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-22-cpa-notes-and-reading.pdf"
+}

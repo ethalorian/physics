@@ -1,0 +1,87 @@
+{
+  "day": 16,
+  "title": "Use the force diagram to find acceleration",
+  "subtitle": "Ramp directions, weight components, and net force",
+  "paragraphs": [
+    "On a level table, normal force points up and weight points down. On a ramp, the normal force tilts with the surface, but weight still points straight down toward Earth. I want us to keep the physical force directions clear before choosing axes for the calculation.",
+    "A useful choice is a positive axis downhill along the ramp and a second positive axis straight out from the surface. These axes match the block's allowed motion and the direction of the normal force. Choosing tilted axes does not tilt gravity. It changes how we describe the parts of that same downward force.",
+    "Weight has a component along the ramp and a component into the ramp. If the ramp is at angle θ above horizontal, the downhill component has size <eq><var>m</var><var>g</var> sin <var>θ</var></eq>, and the inward component has size <eq><var>m</var><var>g</var> cos <var>θ</var></eq>. These are parts of weight, not additional interactions. We can use the parts instead of the full weight when adding forces along the tilted axes.",
+    "Follow the arrows in <b>Section C</b>. They show weight downward, normal force outward from the ramp, and friction uphill. It also shows the downhill part of weight with a dashed arrow. That dashed arrow helps with the calculation. Do not count both the full weight and its components as separate forces, or weight would be included twice.",
+    "In <b>Section D</b>, the downhill weight component is already given as <b>7 N</b>. Friction acts uphill with <b>3 N</b>, and the block has mass <b>2 kg</b>. Because the component is supplied, no trigonometry is needed to solve this example. With downhill positive, <eq><var>F</var><sub>net</sub> = 7 N − 3 N = +4 N</eq> along the ramp.",
+    "Now apply Newton's second law: <eq><var>a</var> = <var>F</var><sub>net</sub> ÷ <var>m</var> = 4 N ÷ 2 kg = 2 m/s²</eq> downhill. The direction matches the net force. If the block is already moving downhill, it speeds up. If it is moving uphill, the same downhill acceleration would initially slow that motion. Acceleration direction and current velocity direction are different pieces of information.",
+    "We also check the direction perpendicular to the ramp. For a block staying in contact with a straight ramp, there is no acceleration through the surface. If weight and normal force are the only forces with perpendicular components, the normal force balances the inward part of weight. It does not have to equal the whole weight. In general, we use <eq>Σ<var>F</var><sub>x</sub> = <var>m</var><var>a</var><sub>x</sub></eq> and <eq>Σ<var>F</var><sub>y</sub> = <var>m</var><var>a</var><sub>y</sub></eq> for the two chosen axes.",
+    "For our fictional asteroid, 2026-XJ, a force diagram likewise gives the net force and acceleration direction. The existing velocity still matters when describing the resulting path. Useful axes simplify the calculation, while a clear distinction between actual forces and components keeps the model consistent."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Normal force Points perpendicular to (straight away from) the surface — on a ramp, it is tilted. Weight Always points straight down, toward Earth. Component The downhill part of weight. A way to calculate — not an extra force. Accel. direction Same direction as the net force.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        141.75
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS ΣF x = m a x · ΣF y = m a y down ramp: mg sin θ into ramp: mg cos θ +x down the ramp +y out of the surface",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        141.75
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · FORCES ON A RAMP",
+      "text": "SECTION C COLOR IT · FORCES ON A RAMP Don’t double count weight. normal 2 friction (uphill) 3 downhill part of weight 4 weight 1 1 · ORANGE Weight (W) 2 · ORANGE Normal force (N) 3 · ORANGE Friction (f) 4 · ORANGE Downhill part (dashed)",
+      "box": [
+        75.75,
+        258.0,
+        515.25,
+        243.75
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 2 kg block has a 7 N downhill weight component and 3 N of friction uphill. Find its acceleration. GIVEN m = 2 kg 7 N downhill 3 N uphill EQUATION a = F net ÷ m WORK F net = 7 − 3 = 4 N downhill a = 4 ÷ 2 ANSWER 2 m/s² downhill",
+      "box": [
+        75.75,
+        501.75,
+        515.25,
+        127.5
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 16 OF 22 · NEW TOOL: FBD → ACCELERATION From the diagram, the net force gives XJ’s acceleration and its direction. Get the net force’s direction right and you know which way its path will bend. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Normal force",
+      "definition": "Points perpendicular to (straight away from) the surface — on a ramp, it is tilted."
+    },
+    {
+      "term": "Weight",
+      "definition": "Always points straight down, toward Earth."
+    },
+    {
+      "term": "Component",
+      "definition": "The downhill part of weight. A way to calculate — not an extra force."
+    },
+    {
+      "term": "Acceleration direction",
+      "definition": "Same direction as the net force."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-16-cpa-notes-and-reading.pdf"
+}

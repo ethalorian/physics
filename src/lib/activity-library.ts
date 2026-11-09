@@ -1,9 +1,11 @@
+import { binderSource } from './binder-reading'
 import type { ChoiceStep } from './choice-calendar'
 
-export const readingTags = ['CPA', 'OpenStax', 'ETF'] as const
+export const readingTags = ['CPA', 'OpenStax', 'ETF', 'Daily binder'] as const
 export type ReadingTag = typeof readingTags[number]
 /** Class placement does not change the source of an existing reading. */
-export function readingTagForSource(source: { honors_reading?: unknown; section_ids?: string[] }): ReadingTag {
+export function readingTagForSource(source: { honors_reading?: unknown; section_ids?: string[]; passage?: string | null }): ReadingTag {
+  if (binderSource(source.passage)) return 'Daily binder'
   if (source.section_ids?.some(id=>id.startsWith('etf-'))) return 'ETF'
   return source.honors_reading ? 'OpenStax' : 'CPA'
 }

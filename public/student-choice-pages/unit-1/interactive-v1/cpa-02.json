@@ -1,0 +1,87 @@
+{
+  "day": 2,
+  "title": "Where you finish is not the whole trip",
+  "subtitle": "Position, distance, and displacement",
+  "paragraphs": [
+    "If I say a cart is at two meters, you need to know where we started measuring. Position needs a chosen zero, called the origin. We also choose a positive direction. On today's notes page, right is positive. Once those choices are clear, a position tells us where the cart is along the line.",
+    "Position is a location. Distance counts how much travel occurred. Displacement describes the change from starting position to final position. Those are three different questions, so one trip can have three different descriptions. I want you to decide which question is being asked before calculating anything.",
+    "Trace both legs in <b>Section C</b>. It shows a trip from <b>0 m to 4 m, then back to 1 m</b>. The outward leg is four meters long. The return leg is three meters long. Total distance is <eq>distance = 4 m + 3 m = 7 m</eq>. Coming back does not erase the first leg. Distance counts every part of the route and is never negative.",
+    "Displacement uses only the starting and finishing positions. The symbol Δ means “change in,” so Δ<var>x</var> means change in position. The rule is <eq>Δ<var>x</var> = <var>x</var><sub>f</sub> − <var>x</var><sub>i</sub></eq>: finish minus start. For the diagram, <eq>Δ<var>x</var> = 1 m − 0 m = +1 m</eq>. The cart finishes one meter right of where it began, even though it traveled seven meters.",
+    "Now find the starting and turning positions in <b>Section D</b>. The cart starts at <b>2 m</b>, travels to <b>6 m</b>, and returns to <b>4 m</b>. Its first leg is <eq>6 m − 2 m = 4 m</eq>. The return leg has length <eq>6 m − 4 m = 2 m</eq>. Add the lengths to find <eq>distance = 4 m + 2 m = 6 m</eq>. The direction of a leg does not make its length negative.",
+    "For displacement, use the endpoints instead: <eq>Δ<var>x</var> = 4 m − 2 m = +2 m</eq>. The final position is 4 m from our chosen zero, while the displacement is 2 m right of the starting point. Those answers differ because the cart did not start at zero. This is a common place to lose track of what a number means.",
+    "Distance is a scalar: it has size and units. Displacement is a vector: it also has direction. Along one axis, the sign gives that direction. A negative displacement would mean a finish left of the start. In the diagram, the traveled route stays in pencil; the positions and displacement arrow are blue.",
+    "For our fictional asteroid, 2026-XJ, we need the same clear reference frame. Measuring from Earth gives our classroom model a zero, but we must still name the positive direction. Total distance describes the route traveled. Starting position and displacement tell us where the asteroid ends up. That is the information a position forecast needs."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Position Where are you? Measured from a chosen zero, with a chosen + direction. Distance How much travel? Counts every part of the path. Never negative. Displacement What changed from start to finish? The sign gives the direction. Scalar / vector Distance has size only (scalar). Displacement has size and direction (vector).",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        171.0
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS Δx = x f − x i distance = leg 1 + leg 2 + … Δ “change in” (finish − start) x position, meters (m)",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        171.0
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · ONE TRIP, THREE QUESTIONS",
+      "text": "SECTION C COLOR IT · ONE TRIP, THREE QUESTIONS 0 m → 4 m → 1 m. Right is +. out: 4 m back: 3 m displacement: +1 m 0 1 2 3 4 5 m 1 1 2 3 4 1 · PENCIL Distance: trace both legs 2 · BLUE Displacement arrow 3 · BLUE Start position 4 · BLUE Finish position",
+      "box": [
+        75.75,
+        287.25,
+        515.25,
+        210.0
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart goes from 2 m to 6 m, then back to 4 m. Right is positive. Find the distance and the displacement. GIVEN x i = 2 m turn at 6 m x f = 4 m EQUATION distance = leg 1 + leg 2 Δx = x f − x i WORK 4 m + 2 m 4 m − 2 m ANSWER distance 6 m displacement +2 m",
+      "box": [
+        75.75,
+        497.25,
+        515.25,
+        132.75
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 2 OF 22 · NEW TOOL: A REFERENCE FRAME Before we can say where XJ is, we need a zero and a + direction. Analysts measure its position from Earth and track its displacement, not the winding path it travels. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        630.0,
+        515.25,
+        85.54
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Position",
+      "definition": "Where are you? Measured from a chosen zero, with a chosen + direction."
+    },
+    {
+      "term": "Distance",
+      "definition": "How much travel? Counts every part of the path. Never negative."
+    },
+    {
+      "term": "Displacement",
+      "definition": "What changed from start to finish? The sign gives the direction."
+    },
+    {
+      "term": "Scalar / vector",
+      "definition": "Distance has size only (scalar). Displacement has size and direction (vector)."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-02-cpa-notes-and-reading.pdf"
+}

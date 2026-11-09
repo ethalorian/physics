@@ -1,0 +1,87 @@
+{
+  "day": 4,
+  "title": "Velocity tells us more than speed",
+  "subtitle": "Signed area, displacement, and velocity components",
+  "paragraphs": [
+    "A velocity-time graph lets us recover a trip even when no positions are listed. The height tells us velocity at a particular time. To find displacement, we need to combine that velocity with how long it lasts. I want you to keep those two jobs separate: reading a height gives meters per second; finding an area gives meters.",
+    "For constant velocity, <eq>Δ<var>x</var> = <var>v</var>Δ<var>t</var></eq>. On the graph, that multiplication is the area of a rectangle: height times width. Above the time axis, velocity is positive and the area adds positive displacement. Below it, velocity is negative and the area adds negative displacement. This is signed area. The blue areas on your notes page represent changes in position, even though the vertical axis describes velocity.",
+    "Trace the two signed areas on the left of <b>Section C</b>. The cart travels at <b>+3 m/s for 2 s</b>, then <b>−1 m/s for 2 s</b>. Its first displacement is <eq>(+3 m/s)(2 s) = +6 m</eq>. Its second is <eq>(−1 m/s)(2 s) = −2 m</eq>. Combining them gives <eq>Δ<var>x</var> = +6 m − 2 m = +4 m</eq>. The cart finishes four meters in the positive direction from where it started. That does not mean it traveled only four meters.",
+    "Check the two answers in <b>Section D</b>. Distance counts both legs by their lengths, so <eq>distance = 6 m + 2 m = 8 m</eq>. When a velocity graph crosses zero, split the areas there before adding their sizes for distance. A negative region does not undo travel already completed. A horizontal segment below zero also describes steady motion, not an object slowing down. Its velocity stays negative and its speed stays constant.",
+    "Velocity can also point at an angle. Then we describe the same motion using two perpendicular components, one along each axis. A component is a signed part of a vector. The object is not making two separate trips. Both components happen during the same interval and together describe the single velocity arrow.",
+    "On the right of <b>Section C</b>, the velocity has magnitude <b>10 m/s</b> and points <b>30° from the positive horizontal axis toward the positive vertical axis</b>. With that angle measured from the horizontal, <eq><var>v</var><sub>x</sub> = <var>v</var> cos <var>θ</var></eq> and <eq><var>v</var><sub>y</sub> = <var>v</var> sin <var>θ</var></eq>. Therefore <eq><var>v</var><sub>x</sub> = (10 m/s) cos 30° ≈ 8.66 m/s</eq> and <eq><var>v</var><sub>y</sub> = (10 m/s) sin 30° = 5.00 m/s</eq>. Both signs are positive because the arrow points toward increasing coordinates on both axes.",
+    "The angle's reference axis matters. Before choosing sine or cosine, identify which component is adjacent to that angle and which is opposite. Check the sketch as well as the calculator. Neither component should exceed the magnitude of the original vector. Purple identifies all three velocity arrows; the components explain the direction of the original arrow.",
+    "For our fictional asteroid, 2026-XJ, motion toward Earth and motion across our line of sight both matter. One component alone cannot describe the entire path. Components let us predict each coordinate, while signed area keeps track of how motion along each axis changes position."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Signed area Above zero adds displacement; below zero subtracts it. Distance Add area sizes, including the return trip. Component A vector’s signed part along one axis. Angle θ Name the starting axis and turn direction.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS Δ x = signed area Split v along fixed axes v x v cos θ v y v sin θ ; θ from + x",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · AREA AND COMPONENTS",
+      "text": "SECTION C COLOR IT · AREA AND COMPONENTS Two views of motion. 0 1 2 3 4 -2 0 2 4 velocity (m/s) time (s) +6 m −2 m 1 2 10 m/s at 30° v x = 8.66 m/s 5 m/s 30° + x v 3 1 · PURPLE Velocity and its parts 2 · BLUE Signed area: displacement 3 · PENCIL Axes and angle",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart moves at +3 m/s for 2 s , then −1 m/s for 2 s . Find its displacement and total distance. GIVEN v 1 = +3 m/s v 2 = −1 m/s 2 s per interval EQUATION Use areas because each interval has steady v . WORK Δ x = 3(2) − 1(2) distance = 6 + 2 ANSWER +4 m ; 8 m Return travel reduces Δ x , not distance.",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 4 OF 22 · NEW TOOL: SIGNED AREA For fictional XJ, the area of a velocity–time graph gives a change in position. Components separate motion toward Earth from motion across its line of sight. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Signed area",
+      "definition": "Above zero adds displacement; below zero subtracts it."
+    },
+    {
+      "term": "Distance",
+      "definition": "Add area sizes, including the return trip."
+    },
+    {
+      "term": "Component",
+      "definition": "A vector’s signed part along one axis."
+    },
+    {
+      "term": "Angle θ",
+      "definition": "Name the starting axis and turn direction."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-04-honors-notes-and-reading.pdf"
+}

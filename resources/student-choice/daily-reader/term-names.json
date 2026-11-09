@@ -1,0 +1,8 @@
+{
+  "cpa": {
+    "Flat v–t line": "Constant velocity", "Area under the line": "Signed area", "Change": "Displacement", "Method": "Model selection", "F = ma": "Newton’s second law", "The dot / box": "Selected object", "No “motion force”": "Force source", "Source": "Interacting object", "Accel. direction": "Acceleration direction", "Maximum static": "Maximum static friction", "Two kinds": "Static and dynamic equilibrium", "Careful": "Instantaneous rest", "Net force first": "Net force", "Sign = direction": "Coordinate sign", "Pair forces": "Interaction pair", "The chain": "Force and motion", "Given": "Known quantity", "Effects differ": "Mass and acceleration", "Different receivers": "Force receiver"
+  },
+  "honors": {
+    "Start x 0": "Initial position", "Average a": "Average acceleration", "Turn": "Reversal", "Steady a": "Constant acceleration", "Knowns": "Known quantities", "Weight W": "Weight", "Normal N": "Normal force", "Tension T": "Tension", "Mass M": "System mass", "Inverse": "Inverse relationship", "External": "External force", "Length": "Force-arrow scale", "Parallel ∥": "Parallel axis", "Normal axis ⊥": "Perpendicular axis", "Weight parts": "Weight components", "Static f s": "Static friction", "Kinetic f k": "Kinetic friction", "Offset": "Friction offset", "Chain": "Force and motion", "Frame": "Reference frame", "Force sum": "Net force"
+  }
+}

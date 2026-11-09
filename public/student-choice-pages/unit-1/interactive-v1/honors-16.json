@@ -1,0 +1,87 @@
+{
+  "day": 16,
+  "title": "Choose axes that help explain the ramp",
+  "subtitle": "Inclined surfaces, weight components, and normal force",
+  "paragraphs": [
+    "A block on a ramp still has weight acting straight down, but its motion follows the slope. We can choose axes that make that motion easier to describe. Let the parallel axis point downhill and the perpendicular axis point outward from the surface. Rotating our axes does not change any physical force. It changes how we describe the force's components.",
+    "Our <b>2 kg block</b> slides down a ramp inclined <b>30° above horizontal</b>. Friction acts uphill with magnitude <b>2 N</b>. The actual forces are weight downward, normal force perpendicular away from the ramp, and friction along the ramp. With <eq><var>g</var> = 9.8 m/s²</eq>, the weight magnitude is <eq><var>W</var> = <var>m</var><var>g</var> = 19.6 N</eq>.",
+    "Match each component in <b>Section B</b> to an axis along or perpendicular to the ramp. Its downhill component has magnitude <eq><var>W</var><sub>parallel</sub> = <var>m</var><var>g</var> sin <var>θ</var></eq>, while its component into the surface has magnitude <eq><var>W</var><sub>into</sub> = <var>m</var><var>g</var> cos <var>θ</var></eq>. The ramp angle determines this component triangle. A useful check is a nearly level ramp: the downhill component should approach zero, while nearly all the weight points into the surface.",
+    "For our angle, the downhill part is <eq>(19.6 N) sin 30° = 9.8 N</eq>. Friction opposes it, so <eq>Σ<var>F</var><sub>parallel</sub> = 9.8 N − 2.0 N = 7.8 N</eq>. Newton's second law then gives <eq><var>a</var><sub>parallel</sub> = 7.8 N ÷ 2 kg = 3.9 m/s²</eq> downhill. Because the block is already sliding downhill, this acceleration makes it speed up.",
+    "The block does not accelerate through the solid ramp or away from it in this model. Its perpendicular acceleration is zero. Taking outward as positive gives <eq><var>N</var> − <var>m</var><var>g</var> cos <var>θ</var> = 0</eq>, so <eq><var>N</var> = (19.6 N) cos 30° ≈ 17.0 N</eq>. This normal force is smaller than the total weight. It balances only the component pressing into the ramp.",
+    "That normal-force equation depends on the situation. It works because there are no other perpendicular forces and no perpendicular acceleration. An angled pull or a curved surface could change the calculation. I want you to begin with the force balance instead of assuming normal force always equals either weight or one memorized expression.",
+    "Compare the two views in <b>Section C</b>. The drawing separates the actual-force diagram from the weight-component triangle. This distinction prevents a common mistake: adding weight and then adding both of its components as if three separate interactions existed. The components replace weight in the calculation; they do not supplement it. Orange marks force information in both views, while the ramp and axes remain in pencil.",
+    "For our fictional asteroid, 2026-XJ, useful axes might follow a proposed path or point toward a gravitational source. Whatever axes we choose, the resulting prediction should describe the same physical motion. Components make the mathematics manageable, but the real interactions and the chosen system must remain consistent throughout the calculation."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Parallel ∥ Along the ramp; choose downhill as +. Normal axis ⊥ Straight out of the ramp, usually not vertical. Weight parts mg sin θ along; mg cos θ into the ramp. Constraint No motion through the surface: a ⊥ = 0.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS ma ∥ = mg sin θ − f N = mg cos θ θ ramp angle N rule no other ⊥ forces",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · FORCES AND COMPONENTS",
+      "text": "SECTION C COLOR IT · FORCES AND COMPONENTS Keep the two views separate. 30° W N f actual forces resolve W separately mg sin θ mg cos θ mg 1 2 3 1 · ORANGE Actual forces 2 · ORANGE Weight’s components 3 · PENCIL Ramp and angle",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 2 kg block slides down a 30° ramp with 2 N friction uphill. Find its acceleration and normal force. Use g = 9.8 m/s² . GIVEN m = 2 kg ; θ = 30° f = 2 N uphill a ⊥ = 0 EQUATION mg sin θ − f = ma ∥ N = mg cos θ WORK a ∥ = [19.6(0.5) − 2]/2 N = 19.6 cos 30° ANSWER 3.9 m/s² Downhill; N ≈ 17.0 N .",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 16 OF 22 · NEW TOOL: CHOSEN AXES A suitable set of axes can simplify the forces changing XJ's path. Components are calculation tools; they must not be counted again as extra forces. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Parallel axis",
+      "definition": "Along the ramp; choose downhill as +."
+    },
+    {
+      "term": "Perpendicular axis",
+      "definition": "Straight out of the ramp, usually not vertical."
+    },
+    {
+      "term": "Weight components",
+      "definition": "mg sin θ along; mg cos θ into the ramp."
+    },
+    {
+      "term": "Constraint",
+      "definition": "No motion through the surface: a ⊥ = 0."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-16-honors-notes-and-reading.pdf"
+}

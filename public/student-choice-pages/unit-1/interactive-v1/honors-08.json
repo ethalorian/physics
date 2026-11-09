@@ -1,0 +1,87 @@
+{
+  "day": 8,
+  "title": "Choose the equation that fits the information",
+  "subtitle": "Constant acceleration, stopping distance, and independent checks",
+  "paragraphs": [
+    "When a problem gives several numbers, it is tempting to search for an equation and start substituting. I want you to pause first. Name the starting and ending conditions, choose a positive direction, and identify the quantity you need. An equation is a statement about a model. Choosing one should follow from the information and assumptions in the situation.",
+    "Our car begins moving in the positive direction at <b>20 m/s</b> and brakes with constant acceleration <b>−4 m/s²</b> until it stops. The final velocity is <b>0 m/s</b>. We need stopping displacement, and time has not been given. Find the row marked “time” in the Omits column of <b>Section B</b>. The relation <eq><var>v</var><sub>f</sub>² = <var>v</var><sub>i</sub>² + 2<var>a</var>Δ<var>x</var></eq> connects exactly those quantities without requiring time.",
+    "Substitute the signed values: <eq>(0 m/s)² = (20 m/s)² + 2(−4 m/s²)Δ<var>x</var></eq>. Rearranging gives <eq>Δ<var>x</var> = [(0 m/s)² − (20 m/s)²] ÷ [2(−4 m/s²)] = 50 m</eq>. Both numerator and denominator are negative, so displacement is positive. The units reduce to meters. Those signs tell a consistent story: the car moves forward while its forward velocity decreases.",
+    "Now find the time using <eq><var>v</var><sub>f</sub> = <var>v</var><sub>i</sub> + <var>a</var><var>t</var></eq>. Rearranging gives <eq><var>t</var> = (0 − 20) m/s ÷ (−4 m/s²) = 5 s</eq>. Negative acceleration does not require negative time or displacement. It describes the change in velocity. We stop the model at five seconds because the question asks for the first stop, not continued motion in reverse.",
+    "Trace the triangle in <b>Section C</b> to check the stopping distance from <b>Section D</b>. Constant acceleration makes velocity fall along a straight line from 20 m/s to zero. The area between that line and the time axis is a triangle: <eq>Δ<var>x</var> = ½(5 s)(20 m/s) = 50 m</eq>. The entire area is above zero, so displacement is positive. Because the car never reverses during this interval, its distance traveled is also 50 m.",
+    "The average of the endpoint velocities works here because acceleration is constant: <eq><var>v</var><sub>avg</sub> = (20 + 0) m/s ÷ 2 = 10 m/s</eq>. Multiplying that average by five seconds gives the same displacement. Equivalently, <eq>Δ<var>x</var> = ½(<var>v</var><sub>i</sub> + <var>v</var><sub>f</sub>)<var>t</var></eq>. If initial velocity, acceleration, and time were given instead, <eq>Δ<var>x</var> = <var>v</var><sub>i</sub><var>t</var> + ½<var>a</var><var>t</var>²</eq> would be convenient.",
+    "These equations describe the same constant-acceleration model from different sets of information. They are not permission to assume constant acceleration whenever numbers are available. If braking changes during the stop, we would need more information, a graph, or a model divided into appropriate intervals.",
+    "For our fictional asteroid, 2026-XJ, we must make the same decision before predicting a new position. Can velocity reasonably stay constant, or must its change be included? I want the chosen equation, signed calculation, units, and graph to support one physical story, with the model's limits stated alongside it."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Steady a Equal velocity changes in equal times. Knowns List supplied values before choosing. Displacement Signed change in position, not distance. Cross-check Test with units, a graph or another equation.",
+      "box": [
+        75.75,
+        94.5,
+        295.5,
+        164.25
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS Equation Omits v f = v i + a t displacement Δ x = v i t + ½ a t 2 final velocity v f 2 = v i 2 + 2 a Δ x time Δ x = ½( v i + v f ) t acceleration Use for motion along one axis with constant acceleration.",
+      "box": [
+        373.25,
+        94.5,
+        217.75,
+        164.25
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · CHECK WITH AREA",
+      "text": "SECTION C COLOR IT · CHECK WITH AREA Straight line: steady a . 0 1 2 3 4 5 0 5 10 15 20 velocity (m/s) time (s) ½ × 5 s × 20 m/s = +50 m speed 20 → 0 1 2 3 1 · PURPLE Velocity line 2 · BLUE Displacement area 3 · RED Decreasing speed",
+      "box": [
+        75.75,
+        258.75,
+        515.25,
+        239.25
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A car moving at +20 m/s brakes at −4 m/s² until it stops. Find its stopping distance, then check the result. GIVEN v i = +20 m/s v f = 0 m/s a = −4 m/s² EQUATION No time given: v f ² = v i ² + 2 a Δ x . WORK 0 = 400 − 8 Δ x t = (0 − 20)/(−4) area = ½(20)(5) ANSWER Δ x = +50 m 5 s to stop; area also gives 50 m .",
+      "box": [
+        75.75,
+        498.0,
+        515.25,
+        135.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 8 OF 22 · NEW TOOL: EQUATION CHOICE For XJ, choose a relationship that fits both the known values and the motion being assumed. A graph provides a second check before a forecast is reported. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        633.0,
+        515.25,
+        80.22
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Constant acceleration",
+      "definition": "Equal velocity changes in equal times."
+    },
+    {
+      "term": "Known quantities",
+      "definition": "List supplied values before choosing."
+    },
+    {
+      "term": "Displacement",
+      "definition": "Signed change in position, not distance."
+    },
+    {
+      "term": "Cross-check",
+      "definition": "Test with units, a graph or another equation."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-08-honors-notes-and-reading.pdf"
+}

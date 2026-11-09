@@ -1,0 +1,87 @@
+{
+  "day": 7,
+  "title": "Negative acceleration does not always mean slowing",
+  "subtitle": "Velocity changes, graph slopes, and a turning point",
+  "paragraphs": [
+    "Imagine a cart moving right while a steady influence changes its velocity toward the left. At first the cart slows down. Later it may stop and begin moving left faster and faster. The acceleration can remain the same through that entire story. I want us to describe what changes without letting a negative sign stand in for an explanation.",
+    "Acceleration measures the rate of change of velocity: <eq><var>a</var><sub>avg</sub> = Δ<var>v</var> ÷ Δ<var>t</var></eq>. Its units are meters per second each second, written m/s². A negative acceleration means the velocity changes in the negative direction on our chosen axis. Whether speed increases or decreases depends on the velocity the object already has.",
+    "Take right as positive. In <b>Section D</b>, velocity changes from <b>+6 m/s to −2 m/s in 4 s</b>. The change is <eq>Δ<var>v</var> = −2 m/s − (+6 m/s) = −8 m/s</eq>. Therefore <eq><var>a</var><sub>avg</sub> = −8 m/s ÷ 4 s = −2 m/s²</eq>. We are told the acceleration is constant, so this average also describes the acceleration at each moment in the interval.",
+    "Constant acceleration gives <eq><var>v</var><sub>f</sub> = <var>v</var><sub>i</sub> + <var>a</var><var>t</var></eq>. Each second, the cart's velocity decreases by 2 m/s. Starting at +6 m/s, it reaches +4, then +2, then 0, then −2 m/s at successive whole seconds. On the velocity-time graph, these values lie on a straight line. Its slope is negative because velocity decreases as time increases.",
+    "Find where the line in <b>Section C</b> crosses the time axis. That is the turning point. Setting <eq>0 m/s = 6 m/s + (−2 m/s²)<var>t</var></eq> gives <eq><var>t</var> = 3 s</eq>. During those first three seconds, velocity is positive and acceleration is negative, so speed decreases. During the next second, both are negative, so the cart speeds up in the negative direction. The red and green regions on the notes page mark that change in speed behavior.",
+    "At the exact turning instant, the cart's velocity is zero, but its acceleration is still −2 m/s². An object can be momentarily stopped while its velocity is changing. If acceleration also vanished and stayed zero at that moment, it would remain stopped. That is a different physical situation, and we should not assume it just because the velocity passes through zero.",
+    "This gives us a useful one-dimensional check. When nonzero velocity and acceleration have the same sign, speed increases. When they have opposite signs, speed decreases. The graph's slope tells us acceleration; the graph's height tells us velocity. A downward-sloping line may describe slowing on one part of the graph and speeding up on another.",
+    "For our fictional asteroid, 2026-XJ, gravity can change velocity rather than simply maintain it. The direction of that change matters. Before deciding whether the asteroid is speeding up, slowing down, or changing its path, we need both its existing velocity and its acceleration. A signed answer is useful only when we can explain the motion it describes."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Average a Change in velocity divided by elapsed time. Speeding up v and a have the same direction in 1D. Slowing down v and a oppose each other before the turn. Turn v = 0 for an instant; a can be nonzero.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS ā = Δ v ÷ Δ t v f = v i + at a m/s² v rule constant a only",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · SLOW, THEN SPEED UP",
+      "text": "SECTION C COLOR IT · SLOW, THEN SPEED UP Right is +; constant a . 0 1 2 3 4 -2 0 2 4 6 velocity (m/s) time (s) turn at 3 s speed 6 → 0 speed 0 → 2 1 2 3 1 · PURPLE Signed velocity 2 · RED Before turn: slowing 3 · GREEN After turn: speeding up",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart's velocity changes uniformly from +6 m/s to −2 m/s in 4 s . Find its acceleration and the time it reverses. GIVEN v i = +6 m/s v f = −2 m/s Δ t = 4 s EQUATION a = Δ v / Δ t . Turn: 0 = v i + at . WORK a = (−2 − 6)/4 0 = 6 − 2 t t = 3 s ANSWER a = −2 m/s² Slows for 3 s , then speeds up to the left.",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 7 OF 22 · NEW TOOL: SIGNED CHANGE A change in XJ's velocity requires an acceleration term in the forecast. Its sign alone does not show whether the asteroid is speeding up; compare the directions of velocity and acceleration. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Average acceleration",
+      "definition": "Change in velocity divided by elapsed time."
+    },
+    {
+      "term": "Speeding up",
+      "definition": "v and a have the same direction in 1D."
+    },
+    {
+      "term": "Slowing down",
+      "definition": "v and a oppose each other before the turn."
+    },
+    {
+      "term": "Reversal",
+      "definition": "v = 0 for an instant; a can be nonzero."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-07-honors-notes-and-reading.pdf"
+}

@@ -1,0 +1,87 @@
+{
+  "day": 12,
+  "title": "An applied pull is not always the net force",
+  "subtitle": "Fixed mass, friction, and force-acceleration graphs",
+  "paragraphs": [
+    "If we double a pulling force, will acceleration double? It can, but only when the net force doubles and the mass stays fixed. The force we apply may have to overcome another force acting in the opposite direction. Today I want us to keep the applied force and the sum of all forces separate from the start.",
+    "Our model is a <b>2 kg</b> object sliding in the positive horizontal direction. Friction acts backward with a constant magnitude of <b>0.4 N</b>. The vertical forces balance. Horizontally, <eq><var>F</var><sub>net</sub> = <var>F</var><sub>drive</sub> − <var>f</var></eq>, and Newton's second law gives <eq><var>a</var> = <var>F</var><sub>net</sub> ÷ <var>M</var></eq>. The signs describe the forces along our chosen axis.",
+    "Start with the first driving force in <b>Section D</b>. With a <b>2 N</b> driving force, the net force is <eq><var>F</var><sub>net</sub> = 2.0 N − 0.4 N = 1.6 N</eq>. Therefore <eq><var>a</var> = 1.6 N ÷ 2 kg = 0.8 m/s²</eq>. The backward friction force reduces the velocity change produced each second, but the net force is still forward, so acceleration is positive.",
+    "Now increase the drive to <b>4 N</b> while keeping the mass and sliding-friction model unchanged. The net force becomes <eq><var>F</var><sub>net</sub> = 4.0 N − 0.4 N = 3.6 N</eq>, and <eq><var>a</var> = 3.6 N ÷ 2 kg = 1.8 m/s²</eq>. The drive doubled, but acceleration changed from 0.8 to 1.8 m/s². It did not merely double to 1.6 m/s² because the net force did not merely double.",
+    "Plotting acceleration against net force produces a straight line through the origin for fixed mass. Its slope is <eq>1/<var>M</var> = 1/(2 kg) = 0.5 kg⁻¹</eq>. Each extra newton of net force adds 0.5 m/s² of acceleration. The graph gives another way to estimate mass: a larger mass produces a shallower acceleration-versus-net-force slope.",
+    "Compare the solid and dashed lines in <b>Section C</b>. Plotting against the driving force still gives a straight line in this sliding model, but it is shifted by friction. The equation is <eq><var>a</var> = (<var>F</var><sub>drive</sub> − <var>f</var>)/<var>M</var></eq>. Its mathematical acceleration intercept is negative because friction is being subtracted. We should not extend that line blindly to an object resting on the table: static friction behaves differently, and the direction of sliding matters too.",
+    "The experimental question is whether mass and opposing forces stayed consistent across trials. If we change the hanger, load, or surface, we may change more than the intended driving force. In the notes diagram, compare the orange force arrows before interpreting the acceleration values. The difference between the forward and backward arrows is what enters Newton's second law.",
+    "For our fictional asteroid, 2026-XJ, a proposed engine or push would be one interaction in a larger force picture. We would add it to gravity and any other relevant forces to find the net change. I want our prediction to follow from that complete sum, with the mass and model assumptions stated clearly."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Driving force The pull before resistance is subtracted. Net force Driving force minus opposing resistance. Slope On an a -versus-net-force graph: 1/ M . Offset Fixed friction shifts the driving-force line down.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS a = F net / M F net = F drive − f M total mass, kg N/kg equals m/s²",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · DRIVING VS. NET FORCE",
+      "text": "SECTION C COLOR IT · DRIVING VS. NET FORCE Moving +; M = 2 kg . 0 1 2 3 4 5 0 0.5 1 1.5 2 2.5 a (m/s²) driving force (N) dashed: no friction solid: f = 0.4 N 1 2 3 1 · PENCIL Axes and data 2 · GREEN Speeding up here 3 · ORANGE Force labels",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 2 kg system slides with 0.4 N of opposing friction. Compare acceleration with driving forces of 2 N and 4 N . GIVEN M = 2 kg f = 0.4 N F drive = 2 N , then 4 N EQUATION Subtract friction. Then a = F net / M . WORK a 1 = (2 − 0.4)/2 = 0.8 a 2 = (4 − 0.4)/2 = 1.8 ANSWER 0.8; 1.8 m/s² Driving force doubles; a does not.",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 12 OF 22 · NEW TOOL: NET-FORCE TEST A proposed push on XJ must be added to every other external force. Only the net force belongs in the calculation of acceleration. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Driving force",
+      "definition": "The pull before resistance is subtracted."
+    },
+    {
+      "term": "Net force",
+      "definition": "Driving force minus opposing resistance."
+    },
+    {
+      "term": "Slope",
+      "definition": "On an a -versus-net-force graph: 1/ M ."
+    },
+    {
+      "term": "Friction offset",
+      "definition": "Fixed friction shifts the driving-force line down."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-12-honors-notes-and-reading.pdf"
+}

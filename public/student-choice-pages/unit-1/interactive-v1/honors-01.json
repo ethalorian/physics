@@ -1,0 +1,86 @@
+{
+  "day": 1,
+  "title": "What does the evidence let us say?",
+  "subtitle": "Evidence, inference, models, and prediction",
+  "paragraphs": [
+    "Suppose I tell you that an object in space is approaching Earth. It is tempting to jump straight to a collision. But approaching Earth and hitting Earth are different claims. Before we predict what will happen, we need to separate what we know from what we think it means. That is where our work in physics begins.",
+    "Use evidence and inference in <b>Section A</b> to separate two claims. Evidence is what was observed, measured, or stated in the information we were given. An inference is a conclusion we draw from that evidence. An inference can be reasonable and still need testing. If we have a series of measured positions, those positions are evidence. Saying the object will continue along the same path is an inference that depends on an assumption about its motion.",
+    "A model makes that assumption clear. It is a simplified description that helps us explain a pattern and make a prediction we can test. Imagine a cart at <b>0 m</b>, then <b>2 m</b>, then <b>4 m</b>, with one second between measurements. Its position increases by <b>2 m each second</b>. If that pattern continues, we predict <b>6 m at 3 s</b>. The prediction is not another measurement. In <b>Section C</b>, compare the dashed prediction with the measured dots. Blue identifies position; purple identifies the velocity pattern connecting the positions.",
+    "To predict a later position, we need a known starting position, a velocity with direction, and the time elapsed from that starting measurement. We also need to decide whether treating the velocity as constant is reasonable. With constant velocity, the model is <eq><var>x</var><sub>f</sub> = <var>x</var><sub>i</sub> + <var>v</var>Δ<var>t</var></eq>: final position equals initial position plus velocity times elapsed time. The velocity tells us how much position changes each second. Multiplying meters per second by seconds gives a change in meters.",
+    "Now test the pattern with the cart in <b>Section D</b>. Its positions are <b>10 m, 8 m, and 6 m</b> at <b>0 s, 1 s, and 2 s</b>. Position decreases by <b>2 m each second</b>, so its velocity is <b>−2 m/s</b>. From the last measurement at 2 s to the requested time of 4 s, another 2 s pass. The predicted position is <eq>6 m + (−2 m/s)(2 s) = 2 m</eq>. The negative sign tells us that position is decreasing along our chosen axis.",
+    "I want the reasoning and its limit to travel with that answer. Our claim is 2 m at 4 s. Our evidence is the measured pattern. Our reasoning extends that pattern for two more seconds. Our limit is the assumption that the velocity stays constant. A new reading of 3 m at 4 s would make us check the measurements and the model, including whether measurement uncertainty explains the difference or the motion changed.",
+    "This is how we will investigate our fictional asteroid, 2026-XJ. A useful question is whether its predicted path reaches Earth's position at the same time Earth is there. We will build that prediction from measurements, explain our assumptions, and revise our conclusion when the evidence calls for it."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Evidence What was actually stated or measured. “An object is approaching.” Inference A conclusion that still needs testing. “It will hit Earth.” Model A simplified description with stated assumptions that makes a testable prediction. Testable question “Is it bad?” → “Will its predicted path intersect Earth’s position at the same time?”",
+      "box": [
+        75.75,
+        112.5,
+        295.5,
+        186.75
+      ]
+    },
+    "B": {
+      "title": "MODEL + WHAT A PREDICTION NEEDS",
+      "text": "SECTION B MODEL + WHAT A PREDICTION NEEDS new position = starting position + change × elapsed time needs current position velocity with direction elapsed time + does v change? CLAIM · EVIDENCE · REASONING · LIMIT",
+      "box": [
+        373.25,
+        117.0,
+        217.75,
+        182.25
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · WATCH A PATTERN FORM",
+      "text": "SECTION C COLOR IT · WATCH A PATTERN FORM One dot marks the cart’s position each second. +2 m +2 m +2 m ? 0 1 2 3 4 5 6 7 8 m 0 s 1 s 2 s 3 s ? t = 1 2 3 1 · BLUE Observations: measured positions 2 · BLUE Prediction: dashed outline 3 · PURPLE The pattern: +2 m each second",
+      "box": [
+        75.75,
+        299.25,
+        515.25,
+        180.75
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart is at 10 m, 8 m, and 6 m at 0, 1, and 2 s. Predict its position at 4 s, and name an observation that would challenge the model. GIVEN x = 10, 8, 6 m t = 0, 1, 2 s EQUATION new x = start + change × time WORK change = −2 m each second x (4 s) = 6 + (−2)(2) ANSWER 2 m limit: a 3 m reading would challenge it",
+      "box": [
+        75.75,
+        480.0,
+        515.25,
+        149.25
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 1 OF 22 · NEW TOOL: EVIDENCE VS. INFERENCE The desk holds evidence (what was measured) and inference (what it suggests). A forecast for 2026-XJ must rest on the evidence: positions, times, and their uncertainty. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Evidence",
+      "definition": "What was actually stated or measured. “An object is approaching.”"
+    },
+    {
+      "term": "Inference",
+      "definition": "A conclusion that still needs testing. “It will hit Earth.”"
+    },
+    {
+      "term": "Model",
+      "definition": "A simplified description with stated assumptions that makes a testable prediction."
+    },
+    {
+      "term": "Testable question",
+      "definition": "“Is it bad?” → “Will its predicted path intersect Earth’s position at the same time?”"
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-01-honors-notes-and-reading.pdf"
+}

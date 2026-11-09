@@ -1,0 +1,87 @@
+{
+  "day": 11,
+  "title": "The same force can produce different accelerations",
+  "subtitle": "Total moving mass, inverse relationships, and experimental controls",
+  "paragraphs": [
+    "Suppose I use the same net force to accelerate two carts, but one carries more mass. The heavier system changes velocity more slowly. That comparison is useful only if the net force really stays the same. Today we are looking at how acceleration depends on mass while holding the force constant, and how a graph can make that relationship visible.",
+    "Newton's second law connects the quantities: <eq><var>F</var><sub>net</sub> = <var>M</var><var>a</var></eq>, or <eq><var>a</var> = <var>F</var><sub>net</sub> ÷ <var>M</var></eq>. Here the capital M means the total mass of the system we are accelerating. In a cart-and-hanger arrangement, the hanger's mass belongs in that total if it moves as part of our chosen system. Counting only the cart would make our model incomplete.",
+    "Compare the mass and acceleration columns in <b>Section C</b>. They show <b>1 kg accelerating at 4 m/s²</b> and <b>2 kg accelerating at 2 m/s²</b>. Each trial gives the same product: <eq>(1 kg)(4 m/s²) = (2 kg)(2 m/s²) = 4 N</eq>. That common product is the net force. Doubling mass halves acceleration when the net force is unchanged.",
+    "Use the mass in <b>Section D</b> for the next prediction. For a <b>3 kg</b> system under that same net force, <eq><var>a</var> = 4 N ÷ 3 kg ≈ 1.33 m/s²</eq>. For 4 kg, the acceleration would be 1 m/s². These values form an inverse relationship. Equal additions of mass do not produce equal decreases in acceleration. The graph of acceleration against mass therefore bends instead of forming a straight line.",
+    "We can reveal the pattern by plotting acceleration against reciprocal mass, meaning one divided by mass. The equation becomes <eq><var>a</var> = <var>F</var><sub>net</sub>(1/<var>M</var>)</eq>. This graph is a straight line through the origin for the ideal model. Its slope is the fixed net force. The horizontal units are inverse kilograms, and dividing m/s² by inverse kilograms gives kg·m/s², or newtons.",
+    "That graph is more than a way to make the data look tidy. It tests a specific prediction: acceleration should be proportional to reciprocal mass under constant net force. If the data do not follow the predicted line within measurement uncertainty, we should examine the setup and assumptions. Friction, a changing pull, or an incorrectly counted moving mass can change the relationship we actually measured.",
+    "I want us to distinguish a controlled variable from something we merely hope stayed constant. Adding mass may also change friction. Moving mass between a cart and a hanger may preserve total mass while changing the driving force. The force diagram and system boundary help us decide whether two trials truly test the same relationship. Orange represents the applied forces; the measured change in velocity supplies acceleration.",
+    "For our fictional asteroid, 2026-XJ, a fixed proposed push would produce less acceleration for a larger mass. But this does not mean more massive objects automatically fall more slowly under gravity. Gravitational force also depends on mass. We must check what is held constant before carrying a relationship from one physical situation into another."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Mass M All moving mass, including any hanger. Control A value held fixed for a fair comparison. Inverse Double M halves a at fixed net force. Slope Plot a against 1/ M to get an ideal line.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        125.25
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS a = F net ÷ M M × a = F net 1/ M inverse mass, kg⁻¹ slope units: N",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        125.25
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · CHANGE ONLY MASS",
+      "text": "SECTION C COLOR IT · CHANGE ONLY MASS Ideal data; net force 4 N . 0 0.25 0.5 0.75 1 0 1 2 3 4 a (m/s²) 1/ M (kg⁻¹) M (kg) a (m/s²) 1 4 2 2 4 1 F net = 4 N 1 2 3 1 · PENCIL Mass and data points 2 · GREEN Speeding up: moving + 3 · ORANGE Fixed net force",
+      "box": [
+        75.75,
+        222.75,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE Under the same net force, a 1 kg system accelerates at 4 m/s² and a 2 kg system at 2 m/s² . Predict a for a 3 kg system. GIVEN M 1 = 1 kg ; a 1 = 4 m/s² M 2 = 2 kg ; a 2 = 2 m/s² same net force EQUATION Check M × a . Then a = F net / M . WORK 1(4) = 2(2) = 4 N a 3 = 4 N ÷ 3 kg ANSWER 1.33 m/s² Assumes net force stays 4 N .",
+      "box": [
+        75.75,
+        467.25,
+        515.25,
+        161.25
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 11 OF 22 · NEW TOOL: MASS COMPARISON For the same force, a more massive XJ changes velocity less quickly. The comparison needs the same net force; a larger gravitational force can change that result. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "System mass",
+      "definition": "All moving mass, including any hanger."
+    },
+    {
+      "term": "Control",
+      "definition": "A value held fixed for a fair comparison."
+    },
+    {
+      "term": "Inverse relationship",
+      "definition": "Double M halves a at fixed net force."
+    },
+    {
+      "term": "Slope",
+      "definition": "Plot a against 1/ M to get an ideal line."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-11-honors-notes-and-reading.pdf"
+}

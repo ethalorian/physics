@@ -1,0 +1,87 @@
+{
+  "day": 22,
+  "title": "A good forecast can change with the evidence",
+  "subtitle": "Defending a claim, comparing ranges, and explaining revision",
+  "paragraphs": [
+    "A forecast is useful when someone else can follow the reasoning behind it. Giving a location without a time, reference frame, or uncertainty leaves too much unsaid. Today we bring those pieces together and examine what happens when a new measurement changes the result. Revising a prediction is part of using evidence responsibly.",
+    "Begin with the earlier constant-velocity model: <eq><var>x</var><sub>f</sub> = <var>x</var><sub>0</sub> + <var>v</var><var>t</var></eq>. The starting position was <b>8.0 ± 0.5 m</b>, velocity was <b>−2.0 ± 0.1 m/s</b>, and elapsed time was exactly <b>3 s</b> in the model. The central prediction was <eq>8.0 m + (−2.0 m/s)(3 s) = 2.0 m</eq>. Its conservative uncertainty bound was <eq>0.5 m + (3 s)(0.1 m/s) = 0.8 m</eq>, giving an interval from <b>1.2 m to 2.8 m</b>.",
+    "Follow the revised forecast in <b>Section D</b>. A new measurement changes the velocity estimate to <b>−1.5 ± 0.1 m/s</b>. Keep the same starting-position estimate and exact elapsed time. The revised center is <eq><var>x</var><sub>f</sub> = 8.0 m + (−1.5 m/s)(3 s) = 3.5 m</eq>. The new velocity is less negative, so the predicted decrease in position is smaller. That sign check explains why the final position moves upward on the number line.",
+    "The center shifts by <eq>(0.5 m/s)(3 s) = +1.5 m</eq>. The uncertainty bound stays <eq>δ<var>x</var><sub>f</sub> = δ<var>x</var><sub>0</sub> + <var>t</var>δ<var>v</var> = 0.8 m</eq>, because the input bounds did not change. We now report <eq><var>x</var><sub>f</sub> = 3.5 ± 0.8 m</eq>, or <b>2.7 m to 4.3 m</b>. The full interval is still 1.6 m wide. A changed center does not automatically mean a changed uncertainty.",
+    "Compare the three ranges on the same axis in <b>Section C</b>. The middle range shows an illustrative observed position of <b>3.5 ± 0.1 m</b>, an interval from 3.4 m to 3.6 m. That observed interval does not overlap the earlier forecast, but lies within the revised forecast. The new prediction is consistent with this observation under the stated bounds. Agreement supports the model for this comparison; it does not prove that every assumption will remain valid at later times.",
+    "Keep the symbols distinct. Capital delta, Δ, means a change in a quantity. Lowercase delta, δ, labels an uncertainty bound here. We are adding the largest allowed contributions, not calculating a standard deviation or an impact probability. The range also does not automatically cover an omitted effect such as acceleration. A model error and an uncertain measurement are different reasons a prediction may need revision.",
+    "I want a defense of the forecast to connect four things: the claim, the evidence, the reasoning, and the limits. State the predicted position and time in a named frame; identify the measurements; explain the equation and assumptions; and show the allowed range. When revising, identify which input or assumption changed and trace its effect through the calculation.",
+    "For our fictional asteroid, 2026-XJ, this is the standard for reporting our conclusion. We can compare forecasts with observations and update them openly. The physics tells us what motion the model predicts; decisions about cost, feasibility, or a response require additional information. A clear forecast makes that later discussion better informed without claiming more certainty than the evidence provides."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Prediction Result, units, time, direction and range. Evidence A measurement or calculation supporting a step. Limit An uncertain input or missing effect. Revision Name the change and show its effect.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS x f = x 0 + vt δ x f = δ x 0 + t δ v t exact time bounds not probabilities",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · COMPARE THE RANGES",
+      "text": "SECTION C COLOR IT · COMPARE THE RANGES Illustrative data; same axis. 0 1 2 3 4 earlier: 2.0 ± 0.8 m 1 observed: 3.5 ± 0.1 m 2 revised: 3.5 ± 0.8 m 3 x (m) 1 · BLUE Earlier forecast 2 · BLUE Observed range 3 · BLUE Revised forecast",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE Keep x 0 = 8 ± 0.5 m and exact t = 3 s . A new measurement changes v from −2.0 to −1.5 ± 0.1 m/s . Update the forecast. GIVEN x 0 = 8 ± 0.5 m v = −1.5 ± 0.1 m/s exact t = 3 s EQUATION Update center and conservative bound. WORK x f = 8 − 1.5(3) δ x = .5 + 3(.1) = 0.8 m ANSWER 2.7 to 4.3 m Center shifts +1.5 m .",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 22 OF 22 · NEW TOOL: A REVISED FORECAST Show the evidence behind XJ’s forecast and what changed after review. Separate the physics from cost and feasibility decisions. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Prediction",
+      "definition": "Result, units, time, direction and range."
+    },
+    {
+      "term": "Evidence",
+      "definition": "A measurement or calculation supporting a step."
+    },
+    {
+      "term": "Limit",
+      "definition": "An uncertain input or missing effect."
+    },
+    {
+      "term": "Revision",
+      "definition": "Name the change and show its effect."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-22-honors-notes-and-reading.pdf"
+}

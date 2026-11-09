@@ -1,0 +1,87 @@
+{
+  "day": 2,
+  "title": "One trip can have several correct descriptions",
+  "subtitle": "Position, distance, displacement, and reference frames",
+  "paragraphs": [
+    "If I ask where you are, an answer like “two meters” leaves out something important: two meters from where? A position needs a reference frame. For motion along a straight line, we choose an origin, label it zero, and choose a positive direction. Once we agree on those choices, a position gives us a location we can interpret.",
+    "Suppose right is positive. A position of <eq><var>x</var> = −2 m</eq> means the object is two meters left of the origin. That sign describes location. It does not tell us which way the object is moving. An object at −2 m could move right, move left, or remain there. Keep location and motion separate as you read a situation.",
+    "Trace the two legs in <b>Section C</b>, starting at <b>0 m</b>, traveling right to <b>4 m</b>, and returning to <b>1 m</b>. The distance traveled counts the entire route. The outward leg is 4 m and the return leg is 3 m, giving <b>7 m</b> altogether. Returning does not erase distance already traveled. Distance is never negative because each leg contributes its length.",
+    "Use the displacement equation in <b>Section B</b> to ask a different question: how did position change from the start to the finish? The symbol Δ means “change in,” so Δ<var>x</var> means change in position. We calculate final minus initial: <eq>Δ<var>x</var> = <var>x</var><sub>f</sub> − <var>x</var><sub>i</sub></eq>. For this trip, that is <eq>1 m − 0 m = +1 m</eq>. The object finishes one meter to the right of where it began. The 7 m distance and +1 m displacement both describe this same trip.",
+    "This is also the difference between a scalar and a vector. A scalar has a magnitude and units; distance and elapsed time are examples. A vector also has direction. Displacement is a vector, and on our one-dimensional axis its sign communicates direction. In the diagram, the traveled path stays in pencil. The starting and finishing positions and the displacement arrow are blue because they describe position and its change.",
+    "The trip in <b>Section D</b> begins at <b>−3 m</b>, turns at <b>+2 m</b>, and finishes at <b>−1 m</b>. The first leg has length <eq>|2 − (−3)| = 5 m</eq>. The second has length <eq>|−1 − 2| = 3 m</eq>. The bars mean absolute value: we use the size of each position change when adding distance. Total distance is therefore <b>8 m</b>. Displacement uses only the endpoints: <eq>−1 m − (−3 m) = +2 m</eq>.",
+    "Notice that the final position is negative while the displacement is positive. The object finishes left of the origin, but right of its starting position. If we reversed which direction we called positive, the coordinate signs would reverse. The physical trip and its distance would stay the same. I want your signs to communicate the reference frame you chose.",
+    "For our fictional asteroid, 2026-XJ, we will need a clear origin, axes, and sign convention before a predicted position has meaning. Its total distance traveled tells us about the route. Its starting position and displacement tell us where it finishes. That distinction matters when we compare its predicted location with Earth's."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Position A signed coordinate in a reference frame: choose an origin and a + direction. x = −2 m is 2 m left of the origin. Distance Sum of the length of every leg: | x 2 − x 1 | + | x 3 − x 2 | + … Never negative. Displacement Δ x = x f − x i . Its sign depends on the axis you chose; the physical motion does not. Scalar / vector A scalar has magnitude + units (distance, time). A vector also has direction (displacement).",
+      "box": [
+        75.75,
+        112.5,
+        295.5,
+        161.25
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS Δ x = x f − x i distance = Σ |each leg| Δ “change in” (final − initial) x signed position, meters (m)",
+      "box": [
+        373.25,
+        112.5,
+        217.75,
+        161.25
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · ONE TRIP, THREE QUESTIONS",
+      "text": "SECTION C COLOR IT · ONE TRIP, THREE QUESTIONS 0 → 4 → 1 m: |4 − 0| + |1 − 4| = 7 m; Δ x = +1 m out: 4 m back: 3 m displacement: +1 m 0 1 2 3 4 5 m 1 1 2 3 4 1 · PENCIL Distance: trace both legs 2 · BLUE Displacement arrow 3 · BLUE Start position 4 · BLUE Finish position",
+      "box": [
+        75.75,
+        273.75,
+        515.25,
+        217.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE Start at −3 m, move to +2 m, then finish at −1 m. Find the distance and the displacement, with units. GIVEN x i = −3 m turn at +2 m x f = −1 m EQUATION distance = Σ |leg| Δ x = x f − x i WORK |2 − (−3)| + |−1 − 2| = 5 + 3 −1 − (−3) ANSWER distance 8 m displacement +2 m",
+      "box": [
+        75.75,
+        491.25,
+        515.25,
+        138.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 2 OF 22 · NEW TOOL: A REFERENCE FRAME XJ’s position only means something in a reference frame: an origin, axes, and a sign convention. Its displacement, not its path length, decides where it ends up. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Position",
+      "definition": "A signed coordinate in a reference frame: choose an origin and a + direction. x = −2 m is 2 m left of the origin."
+    },
+    {
+      "term": "Distance",
+      "definition": "Sum of the length of every leg: | x 2 − x 1 | + | x 3 − x 2 | + … Never negative."
+    },
+    {
+      "term": "Displacement",
+      "definition": "Δ x = x f − x i . Its sign depends on the axis you chose; the physical motion does not."
+    },
+    {
+      "term": "Scalar / vector",
+      "definition": "A scalar has magnitude + units (distance, time). A vector also has direction (displacement)."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-02-honors-notes-and-reading.pdf"
+}

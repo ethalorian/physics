@@ -1,0 +1,87 @@
+{
+  "day": 8,
+  "title": "Choose a motion model before an equation",
+  "subtitle": "Steady acceleration and displacement from average velocity",
+  "paragraphs": [
+    "A cart traveling steadily at 8 m/s for four seconds covers a different distance from a cart that starts at rest and only reaches 8 m/s at the end. Using the final velocity for the whole interval would pretend the second cart was already moving that fast at the start. Today I want the equation to match the actual motion.",
+    "Steady velocity means velocity does not change. In that case, <eq>Δ<var>x</var> = <var>v</var><var>t</var></eq>. Constant acceleration means velocity changes by the same amount each second. For constant acceleration, the average velocity is <eq><var>v</var><sub>avg</sub> = (<var>v</var><sub>i</sub> + <var>v</var><sub>f</sub>) ÷ 2</eq>. Averaging only the starting and ending velocities works because the change between them is steady.",
+    "The cart in <b>Section D</b> speeds up steadily from <b>0 m/s to 8 m/s in 4 s</b>. First find the average: <eq><var>v</var><sub>avg</sub> = (0 + 8) m/s ÷ 2 = 4 m/s</eq>. Then multiply by elapsed time: <eq>Δ<var>x</var> = (4 m/s)(4 s) = +16 m</eq>. The cart's position changes sixteen meters in the positive direction.",
+    "We can combine those steps into <eq>Δ<var>x</var> = ½(<var>v</var><sub>i</sub> + <var>v</var><sub>f</sub>)<var>t</var></eq>. The one-half simply tells us to divide the sum of the endpoint velocities by two. The result is displacement. If the object reversed direction during another problem, we would need to distinguish that signed change from the total distance traveled.",
+    "Trace the triangle and the dashed rectangle in <b>Section C</b>. This graph uses a smaller final velocity: <b>0 to 4 m/s in 4 s</b>. The straight rising line shows constant acceleration. Its triangular area is <eq>½(4 s)(4 m/s) = 8 m</eq>. The average-velocity rectangle has height 2 m/s and the same width, giving <eq>(2 m/s)(4 s) = 8 m</eq>. Different shapes give the same area and therefore the same displacement.",
+    "The constant-acceleration equations in <b>Section B</b> connect other sets of known values. <eq><var>v</var> = <var>v</var><sub>0</sub> + <var>a</var><var>t</var></eq> finds velocity from its starting value, acceleration, and time. <eq>Δ<var>x</var> = <var>v</var><sub>0</sub><var>t</var> + ½<var>a</var><var>t</var>²</eq> finds displacement from those quantities. <eq><var>v</var>² = <var>v</var><sub>0</sub>² + 2<var>a</var>Δ<var>x</var></eq> is useful when time is not given or needed.",
+    "Start by listing the given values with units and naming what is asked. Then choose a relationship that uses that information and fits the model. Finish by checking the units and signs. A calculation for displacement should end in meters, and its sign should agree with the motion. Do not assume constant acceleration just because an equation is available.",
+    "For our fictional asteroid, 2026-XJ, choosing steady velocity or steady acceleration is a decision about the evidence. I want the reason for that choice to travel with the predicted position. A correct substitution cannot rescue a model that does not fit the motion."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Steady velocity Equal gaps; velocity does not change. Use v × t. Constant acceleration Velocity changes by the same amount each second. Average velocity (start + final) ÷ 2 — only when acceleration is constant. Method A choice with a reason: “I chose ___ because the velocity ___.”",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        156.75
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS v = v 0 + a t Δx = v 0 t + ½at² v² = v 0 ² + 2aΔx (no t) 1 · 2 list given · list asked 3 · 4 choose · check units + sign",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        156.75
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · TRIANGLE OR AVERAGE: SAME AREA",
+      "text": "SECTION C COLOR IT · TRIANGLE OR AVERAGE: SAME AREA 0 → 4 m/s in 4 s, constant a. 0 1 2 3 4 0 1 2 3 4 time (s) velocity (m/s) average = 2 m/s area = 8 m ½ × 4 s × 4 m/s 1 2 3 1 · BLUE Triangle area = displacement 2 · PURPLE Average-velocity box (dashed) 3 · PURPLE Velocity line",
+      "box": [
+        75.75,
+        273.0,
+        515.25,
+        240.75
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart speeds up steadily from 0 to 8 m/s in 4 s. Find its displacement. GIVEN v i = 0, v f = 8 m/s t = 4 s constant a EQUATION Δx = ½(v i + v f ) × t WORK average = (0 + 8) ÷ 2 = 4 m/s Δx = 4 × 4 ANSWER +16 m average works: a is constant",
+      "box": [
+        75.75,
+        513.75,
+        515.25,
+        116.25
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 8 OF 22 · NEW TOOL: CHOOSING A MODEL Steady velocity or steady acceleration? Choosing the right model for XJ is the difference between a forecast that holds and one that drifts. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        630.0,
+        515.25,
+        85.54
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Steady velocity",
+      "definition": "Equal gaps; velocity does not change. Use v × t."
+    },
+    {
+      "term": "Constant acceleration",
+      "definition": "Velocity changes by the same amount each second."
+    },
+    {
+      "term": "Average velocity",
+      "definition": "(start + final) ÷ 2 — only when acceleration is constant."
+    },
+    {
+      "term": "Model selection",
+      "definition": "A choice with a reason: “I chose ___ because the velocity ___.”"
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-08-cpa-notes-and-reading.pdf"
+}

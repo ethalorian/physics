@@ -1,0 +1,87 @@
+{
+  "day": 15,
+  "title": "Draw only the forces on your chosen object",
+  "subtitle": "A clear free-body diagram and balanced lamp forces",
+  "paragraphs": [
+    "A free-body diagram is a simple picture of the forces acting on one chosen object. It does not need to show every detail of the scene. In fact, leaving out extra detail helps us see the interactions. Begin by deciding which object is receiving all the forces you will draw.",
+    "Use the six drawing rules in <b>Section B</b>. Replace that object with a dot or simple box. List its interactions, then draw one arrow for each force. Each arrow points in the force's direction. Its length shows the force's relative strength, using one consistent scale. Label the arrow with the force name or symbol and be able to name its source. That is the choose, list, draw routine on your notes page.",
+    "The box in <b>Section C</b> is pulled right by a rope across a rough level floor. The rope supplies rightward tension. The floor supplies leftward friction and upward normal force. Earth supplies downward weight. All four forces act on the box. The floor can supply two different contact forces because normal force and friction describe different parts of the interaction.",
+    "There is no separate “motion force.” Motion describes what the box is doing; it is not another object pushing or pulling it. Today's force diagram therefore leaves velocity off. A velocity arrow can be shown in a separate motion sketch when useful, but it must not be mistaken for an extra force. The orange arrows are reserved for the interactions.",
+    "In <b>Section D</b>, a lamp with <b>20 N of weight</b> hangs at rest from one vertical rope. Choose the lamp as the object. Earth pulls down with 20 N, and the rope pulls up with tension. There are two forces on the lamp in this model. Its being at rest does not mean no forces act.",
+    "Because the lamp remains at rest, vertical acceleration is zero and the forces balance. Choose up as positive. Then <eq><var>T</var> − 20 N = 0</eq>, so <eq><var>T</var> = 20 N</eq>. Draw equal-length arrows: 20 N down for weight and 20 N up for tension. Their sum is zero, matching the unchanged motion.",
+    "Those balanced forces are not a third-law pair. Both act on the lamp, while the partners act on different receivers: the lamp pulls on Earth and on the rope. Those partner forces belong on diagrams for Earth and the rope. Also, the net force is the sum of the two arrows, not a third arrow representing a new interaction.",
+    "For our fictional asteroid, 2026-XJ, we use the same method: choose the asteroid, identify the bodies interacting with it, and draw the forces on it. A clear diagram makes it easier to spot a missing force or an arrow that belongs to another object. That is how a simple sketch supports a reliable calculation."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Free-body diagram Only the forces acting on one chosen object. The dot / box Replace the object with a simple shape; draw arrows from it. Source Every arrow needs one: rope, floor, table, Earth. No “motion force” Motion is not an interaction. Leave velocity off the diagram.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        156.0
+      ]
+    },
+    "B": {
+      "title": "SIX FBD RULES",
+      "text": "SECTION B SIX FBD RULES 1 just the object (a dot) 2 one arrow per force 3 arrow points the force’s way 4 length ∝ strength 5 label each: F g , F N , F f … 6 only forces ON the object routine choose · list · draw",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        156.0
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · A BOX PULLED RIGHT",
+      "text": "SECTION C COLOR IT · A BOX PULLED RIGHT Rough level floor, rope pulls right. box tension · rope 1 friction · floor 2 normal · floor 3 weight · Earth 4 1 · ORANGE Tension (T) 2 · ORANGE Friction (f) 3 · ORANGE Normal force (N) 4 · ORANGE Weight (W)",
+      "box": [
+        75.75,
+        272.25,
+        515.25,
+        222.0
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 20 N lamp hangs at rest from one vertical rope. Draw and label its forces. GIVEN weight = 20 N at rest one rope EQUATION sources: Earth, rope WORK weight 20 N down tension up, balances it ANSWER Tension 20 N up equal-length arrows",
+      "box": [
+        75.75,
+        494.25,
+        515.25,
+        135.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 15 OF 22 · NEW TOOL: FREE-BODY DIAGRAMS A free-body diagram puts XJ on a dot and shows every force acting on it. For an object in space the list is short, which is what makes it predictable. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Free-body diagram",
+      "definition": "Only the forces acting on one chosen object."
+    },
+    {
+      "term": "Selected object",
+      "definition": "Replace the object with a simple shape; draw arrows from it."
+    },
+    {
+      "term": "Interacting object",
+      "definition": "Every arrow needs one: rope, floor, table, Earth."
+    },
+    {
+      "term": "Force source",
+      "definition": "Motion is not an interaction. Leave velocity off the diagram."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-15-cpa-notes-and-reading.pdf"
+}

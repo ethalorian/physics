@@ -1,0 +1,87 @@
+{
+  "day": 12,
+  "title": "Keep the mass fixed and change the force",
+  "subtitle": "A proportional relationship and Newton's second law",
+  "paragraphs": [
+    "Yesterday we changed mass while trying to keep the net force fixed. Today we reverse that comparison. We keep the total moving mass the same and change the force that drives the motion. Looking at both tests helps us see how force, mass, and acceleration fit together.",
+    "In the cart-and-hanger setup, moving masses from the cart to the hanger can increase the hanging weight while keeping total moving mass unchanged. We do not add new masses to the whole system during this comparison. The cart and hanger are both included in the total. That system boundary is what makes “same mass” a meaningful claim.",
+    "For a fixed mass, acceleration is proportional to net force. Proportional means that multiplying the net force by a factor multiplies acceleration by that same factor. Doubling the net force doubles acceleration. Tripling it triples acceleration. This comparison assumes that mass stays fixed and that we have correctly included opposing forces.",
+    "The ideal <b>2 kg system</b> in <b>Section C</b> accelerates at <b>1 m/s² under 2 N</b>, at <b>2 m/s² under 4 N</b>, and at <b>3 m/s² under 6 N</b>. These points form a straight line through zero on an acceleration-versus-net-force graph. Zero net force gives zero acceleration. It does not necessarily mean zero velocity.",
+    "The example in <b>Section D</b> begins with 2 N producing 1 m/s² and asks what happens at 4 N. Compare the forces: <eq>4 N ÷ 2 N = 2</eq>. The force doubled, so <eq>new acceleration = 2 × 1 m/s² = 2 m/s²</eq>. We can check with <eq><var>a</var> = <var>F</var><sub>net</sub> ÷ <var>m</var> = 4 N ÷ 2 kg = 2 m/s²</eq>.",
+    "This combines the two lab patterns into Newton's second law: <eq><var>F</var><sub>net</sub> = <var>m</var><var>a</var></eq>. Acceleration increases with net force and decreases with mass when the other quantity is fixed. On the graph of acceleration against net force, slope is <eq>slope = 1/<var>m</var></eq>. For 2 kg, that slope is <b>0.5 m/s² per newton</b>: every additional newton adds half a meter per second of velocity change each second.",
+    "Real data may sit below the ideal line when plotted against the driving pull because friction reduces the net force. A bigger hanging weight is not automatically the same as a bigger net force by the same ratio. I want us to distinguish the pull we supply from the combined effect of all external forces. Use measured graph slopes for acceleration and describe the limits of the experiment.",
+    "For our fictional asteroid, 2026-XJ, this relationship lets us connect a proposed net push with a predicted acceleration. Knowing the mass and net force gives us a reasoned estimate of how its velocity would change. The prediction is only as sound as the force information and assumptions going into it."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Driving force The hanging weight that pulls the cart system. Total moving mass Held constant: move masses from cart to hanger; never add new ones. Proportional Double the net force → double the acceleration. Friction offset Friction lowers the net force, so real data can sit below the ideal line.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        156.0
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS a ∝ F and a ∝ 1/m → a = F ÷ m slope of a vs. F = 1/m force newtons (N) a m/s²",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        156.0
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · PLOT THE PATTERN",
+      "text": "SECTION C COLOR IT · PLOT THE PATTERN Ideal 2 kg system, illustrative. 0 2 4 6 8 0 1 2 3 4 net driving force (N) acceleration (m/s²) 2 N → 1 m/s² 4 N → 2 m/s² 6 N → 3 m/s² 1 2 1 · PENCIL Data points 2 · GREEN Trend line through zero",
+      "box": [
+        75.75,
+        272.25,
+        515.25,
+        228.75
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE In an ideal 2 kg system, 2 N gives 1 m/s². Predict the acceleration at 4 N with the same mass. GIVEN F = 2 N → a = 1 m/s² new F = 4 N same mass EQUATION a ∝ F (same mass) WORK 4 N ÷ 2 N = 2× the force a = 2 × 1 m/s² ANSWER 2 m/s² acceleration doubles",
+      "box": [
+        75.75,
+        501.0,
+        515.25,
+        128.25
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 12 OF 22 · NEW TOOL: NET FORCE A bigger net force gives a bigger acceleration, in proportion. That’s the rule analysts use to ask how hard XJ would have to be pushed to change course. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Driving force",
+      "definition": "The hanging weight that pulls the cart system."
+    },
+    {
+      "term": "Total moving mass",
+      "definition": "Held constant: move masses from cart to hanger; never add new ones."
+    },
+    {
+      "term": "Proportional",
+      "definition": "Double the net force → double the acceleration."
+    },
+    {
+      "term": "Friction offset",
+      "definition": "Friction lowers the net force, so real data can sit below the ideal line."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-12-cpa-notes-and-reading.pdf"
+}

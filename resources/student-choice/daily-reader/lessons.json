@@ -1,0 +1,1190 @@
+[
+  {
+    "edition": "cpa",
+    "day": 1,
+    "title": "Start with what we can observe",
+    "focus": "Observations, models, and a prediction we can test",
+    "figure": "COLOR IT · WATCH A PATTERN FORM",
+    "example": "A cart is at 2 m, 3 m, then 4 m, one second apart. Predict its position one second later.",
+    "solution": "GIVEN x = 2, 3, 4 m 1 s between readings EQUATION next = last + change each second WORK change = 3 − 2 = +1 m next = 4 m + 1 m ANSWER 5 m if the motion continues the same way",
+    "words": [
+      {
+        "term": "Observation",
+        "definition": "Something we record or measure, like a position at a time."
+      },
+      {
+        "term": "Model",
+        "definition": "A useful “if”: if the motion keeps going the same way, we can continue the pattern."
+      },
+      {
+        "term": "Prediction",
+        "definition": "An estimate of what comes next, made by continuing the pattern."
+      },
+      {
+        "term": "Testable question",
+        "definition": "One that measurements can answer. “Where will it be tomorrow?” — yes. “Who should pay for a mission?” — no; that also needs human decisions."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 2,
+    "title": "Where you finish is not the whole trip",
+    "focus": "Position, distance, and displacement",
+    "figure": "COLOR IT · ONE TRIP, THREE QUESTIONS",
+    "example": "A cart goes from 2 m to 6 m, then back to 4 m. Right is positive. Find the distance and the displacement.",
+    "solution": "GIVEN x i = 2 m turn at 6 m x f = 4 m EQUATION distance = leg 1 + leg 2 Δx = x f − x i WORK 4 m + 2 m 4 m − 2 m ANSWER distance 6 m displacement +2 m",
+    "words": [
+      {
+        "term": "Position",
+        "definition": "Where are you? Measured from a chosen zero, with a chosen + direction."
+      },
+      {
+        "term": "Distance",
+        "definition": "How much travel? Counts every part of the path. Never negative."
+      },
+      {
+        "term": "Displacement",
+        "definition": "What changed from start to finish? The sign gives the direction."
+      },
+      {
+        "term": "Scalar / vector",
+        "definition": "Distance has size only (scalar). Displacement has size and direction (vector)."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 3,
+    "title": "Read motion from the slope",
+    "focus": "Velocity, speed, and position-time graphs",
+    "figure": "COLOR IT · READ A GRAPH AS A MOTION STORY",
+    "example": "A cart goes from 8 m to 2 m in 3 s. Right is positive. Find its velocity.",
+    "solution": "GIVEN x i = 8 m x f = 2 m Δt = 3 s EQUATION v = Δx ÷ Δt WORK Δx = 2 − 8 = −6 m v = −6 m ÷ 3 s ANSWER −2 m/s 2 m/s to the left",
+    "words": [
+      {
+        "term": "Velocity",
+        "definition": "How fast and which way. The rate position changes."
+      },
+      {
+        "term": "Speed",
+        "definition": "How fast only. The size of the velocity, with no direction."
+      },
+      {
+        "term": "Slope",
+        "definition": "Steepness of a line: rise ÷ run. On a position–time graph, slope = velocity."
+      },
+      {
+        "term": "Average speed",
+        "definition": "Total distance ÷ time. A scalar — no direction. Velocity adds the sign."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 4,
+    "title": "Read the axes before you read the line",
+    "focus": "Velocity-time graphs, signed area, and components",
+    "figure": "COLOR IT · AREA COUNTS THE CHANGE",
+    "example": "Velocity is +3 m/s for 2 s. Find the displacement and name its direction.",
+    "solution": "GIVEN v = +3 m/s t = 2 s EQUATION Δx = v × t WORK Δx = (3 m/s)(2 s) ANSWER +6 m 6 m to the right",
+    "words": [
+      {
+        "term": "Velocity–time graph",
+        "definition": "The vertical axis shows velocity , not position. Read the label first."
+      },
+      {
+        "term": "Constant velocity",
+        "definition": "Steady velocity — not necessarily stopped."
+      },
+      {
+        "term": "Signed area",
+        "definition": "Height × width = displacement. Area below zero is negative displacement."
+      },
+      {
+        "term": "Components",
+        "definition": "The separate east and north changes that make up one diagonal displacement."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 5,
+    "title": "Start with the starting position",
+    "focus": "Steady-velocity predictions and their possible range",
+    "figure": "COLOR IT · START, CHANGE, RANGE",
+    "example": "A cart starts at 8 m and moves at −2 m/s for 3 s. Where is it at the end?",
+    "solution": "GIVEN x i = 8 m v = −2 m/s t = 3 s EQUATION x f = x i + v × t WORK change = (−2)(3) = −6 m x f = 8 − 6 ANSWER 2 m moved 6 m left",
+    "words": [
+      {
+        "term": "Starting position",
+        "definition": "Where the object is at t = 0. It is often not zero."
+      },
+      {
+        "term": "Displacement",
+        "definition": "Velocity × time: how far the position shifts."
+      },
+      {
+        "term": "Final position",
+        "definition": "Start + change."
+      },
+      {
+        "term": "Prediction range",
+        "definition": "A ± bound. “10 ± 2 m” means 8 m to 12 m. More time usually means a wider range."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 6,
+    "title": "Keep direction attached to every arrow",
+    "focus": "Tip-to-tail addition and splitting vectors into parts",
+    "figure": "COLOR IT · TIP TO TAIL",
+    "example": "A 20 N pull points 30° above the +x axis. Split it into its x and y parts.",
+    "solution": "GIVEN F = 20 N θ = 30° from +x EQUATION F x = F cos θ F y = F sin θ WORK 20 cos 30° 20 sin 30° ANSWER 17.3 N, 10.0 N parts of one force, not two new forces",
+    "words": [
+      {
+        "term": "Vector",
+        "definition": "A quantity with size and direction, drawn as an arrow."
+      },
+      {
+        "term": "Tip-to-tail",
+        "definition": "Start each arrow where the last one ends. Do not turn or stretch it."
+      },
+      {
+        "term": "Component",
+        "definition": "The east–west or north–south part of a vector."
+      },
+      {
+        "term": "Resultant",
+        "definition": "The overall arrow from the first start to the final finish."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 7,
+    "title": "Acceleration means velocity is changing",
+    "focus": "Reading dot patterns and calculating change each second",
+    "figure": "COLOR IT · READ THE GAPS",
+    "example": "A cart’s velocity changes from 0 to 8 m/s in 4 s. Find its acceleration.",
+    "solution": "GIVEN v i = 0 m/s v f = 8 m/s Δt = 4 s EQUATION a = Δv ÷ Δt WORK Δv = 8 − 0 = 8 m/s a = 8 ÷ 4 ANSWER 2 m/s² gains 2 m/s each second",
+    "words": [
+      {
+        "term": "Acceleration",
+        "definition": "The rate velocity changes: how much velocity is gained or lost each second."
+      },
+      {
+        "term": "Speeding up",
+        "definition": "v and a have the same sign. Gaps between equal-time dots grow."
+      },
+      {
+        "term": "Slowing down",
+        "definition": "v and a have opposite signs. Braking is acceleration too."
+      },
+      {
+        "term": "Turning",
+        "definition": "A direction change is a velocity change, even at steady speed."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 8,
+    "title": "Choose a motion model before an equation",
+    "focus": "Steady acceleration and displacement from average velocity",
+    "figure": "COLOR IT · TRIANGLE OR AVERAGE: SAME AREA",
+    "example": "A cart speeds up steadily from 0 to 8 m/s in 4 s. Find its displacement.",
+    "solution": "GIVEN v i = 0, v f = 8 m/s t = 4 s constant a EQUATION Δx = ½(v i + v f ) × t WORK average = (0 + 8) ÷ 2 = 4 m/s Δx = 4 × 4 ANSWER +16 m average works: a is constant",
+    "words": [
+      {
+        "term": "Steady velocity",
+        "definition": "Equal gaps; velocity does not change. Use v × t."
+      },
+      {
+        "term": "Constant acceleration",
+        "definition": "Velocity changes by the same amount each second."
+      },
+      {
+        "term": "Average velocity",
+        "definition": "(start + final) ÷ 2 — only when acceleration is constant."
+      },
+      {
+        "term": "Model selection",
+        "definition": "A choice with a reason: “I chose ___ because the velocity ___.”"
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 9,
+    "title": "Moving does not require an unbalanced force",
+    "focus": "Newton's first law, balanced forces, and inertia",
+    "figure": "COLOR IT · BALANCED, STILL MOVING",
+    "example": "A cart rolls right, then slows down. What does that tell you about its net horizontal force?",
+    "solution": "GIVEN moving right speed decreasing EQUATION a ≠ 0 → net force ≠ 0 WORK velocity changes → there is a net force; it opposes the motion ANSWER Net force left opposite the motion",
+    "words": [
+      {
+        "term": "Force",
+        "definition": "A push or pull from an interaction with another object."
+      },
+      {
+        "term": "Net force",
+        "definition": "The combined effect of all forces on one object."
+      },
+      {
+        "term": "Newton’s 1st law",
+        "definition": "1st law: at rest stays at rest; moving keeps its velocity — unless ΣF ≠ 0."
+      },
+      {
+        "term": "Inertia",
+        "definition": "An object keeps its velocity unless a net force changes it. More mass, more inertia."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 10,
+    "title": "Name what is doing the pushing or pulling",
+    "focus": "Force sources, contact forces, mass, and weight",
+    "figure": "COLOR IT · NAME EVERY SOURCE",
+    "example": "A 3 kg object rests on a level table. Find its weight and name the force that supports it.",
+    "solution": "GIVEN m = 3 kg g ≈ 10 N/kg EQUATION W = m × g WORK W = 3 × 10 = 30 N down table pushes up equally ANSWER 30 N normal force 30 N up",
+    "words": [
+      {
+        "term": "Interaction",
+        "definition": "Every force has a source (what pushes or pulls) and a receiver."
+      },
+      {
+        "term": "Contact force",
+        "definition": "Normal (surface, ⟂), friction (along surface, opposes slip), tension (rope), applied (a push)."
+      },
+      {
+        "term": "Non-contact force",
+        "definition": "Gravity acts without touching."
+      },
+      {
+        "term": "Mass vs. weight",
+        "definition": "Mass is amount of matter (kg). Weight is Earth’s gravitational pull (N)."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 11,
+    "title": "Change the mass and watch the acceleration",
+    "focus": "A fair test with the same net force",
+    "figure": "COLOR IT · DOUBLE THE MASS",
+    "example": "In one trial, velocity rises from 0 to 4 m/s in 2 s. Find the acceleration.",
+    "solution": "GIVEN v i = 0 m/s v f = 4 m/s Δt = 2 s EQUATION a = Δv ÷ Δt WORK Δv = 4 − 0 = 4 m/s a = 4 ÷ 2 ANSWER 2 m/s² use your own measured graph",
+    "words": [
+      {
+        "term": "Fair test",
+        "definition": "Change one thing at a time."
+      },
+      {
+        "term": "Changed variable",
+        "definition": "Total system mass: cart + added masses + hanger."
+      },
+      {
+        "term": "Controls",
+        "definition": "Hanging mass, track, start point, release (no push)."
+      },
+      {
+        "term": "Evidence",
+        "definition": "The slope of each velocity–time graph is the acceleration."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 12,
+    "title": "Keep the mass fixed and change the force",
+    "focus": "A proportional relationship and Newton's second law",
+    "figure": "COLOR IT · PLOT THE PATTERN",
+    "example": "In an ideal 2 kg system, 2 N gives 1 m/s². Predict the acceleration at 4 N with the same mass.",
+    "solution": "GIVEN F = 2 N → a = 1 m/s² new F = 4 N same mass EQUATION a ∝ F (same mass) WORK 4 N ÷ 2 N = 2× the force a = 2 × 1 m/s² ANSWER 2 m/s² acceleration doubles",
+    "words": [
+      {
+        "term": "Driving force",
+        "definition": "The hanging weight that pulls the cart system."
+      },
+      {
+        "term": "Total moving mass",
+        "definition": "Held constant: move masses from cart to hanger; never add new ones."
+      },
+      {
+        "term": "Proportional",
+        "definition": "Double the net force → double the acceleration."
+      },
+      {
+        "term": "Friction offset",
+        "definition": "Friction lowers the net force, so real data can sit below the ideal line."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 13,
+    "title": "Find the net force before dividing by mass",
+    "focus": "Using Newton's second law with opposing forces",
+    "figure": "COLOR IT · THE ARROWS COMPETE",
+    "example": "A 4 kg cart has 12 N pulling right and 4 N of friction left. Find the acceleration.",
+    "solution": "GIVEN m = 4 kg 12 N right 4 N left EQUATION a = F net ÷ m WORK F net = 12 − 4 = 8 N right a = 8 ÷ 4 ANSWER 2 m/s² right with the net force",
+    "words": [
+      {
+        "term": "Net force",
+        "definition": "Combine opposite forces: subtract and keep the direction of the larger one."
+      },
+      {
+        "term": "Newton’s second law",
+        "definition": "Uses the net force, never just one pull."
+      },
+      {
+        "term": "Direction",
+        "definition": "Acceleration points the same way as the net force."
+      },
+      {
+        "term": "Balanced",
+        "definition": "Net force 0 N → a = 0 m/s² (still or constant velocity)."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 14,
+    "title": "A force pair belongs to two different objects",
+    "focus": "Newton's third law and the receiver of each force",
+    "figure": "COLOR IT · ONE INTERACTION, TWO FORCES",
+    "example": "Earth pulls an apple downward. Name the third-law partner force and the object that receives it.",
+    "solution": "GIVEN Earth → apple gravity, down EQUATION swap the object names WORK apple → Earth gravity, up ANSWER Apple pulls Earth up Earth receives it",
+    "words": [
+      {
+        "term": "Interaction pair",
+        "definition": "When A pushes B, B pushes A at the same time."
+      },
+      {
+        "term": "Equal and opposite",
+        "definition": "Same size, same type of force, opposite directions."
+      },
+      {
+        "term": "Force receiver",
+        "definition": "One force acts on A, its partner acts on B — so they never cancel."
+      },
+      {
+        "term": "Mass and acceleration",
+        "definition": "Equal forces, different masses → different accelerations."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 15,
+    "title": "Draw only the forces on your chosen object",
+    "focus": "A clear free-body diagram and balanced lamp forces",
+    "figure": "COLOR IT · A BOX PULLED RIGHT",
+    "example": "A 20 N lamp hangs at rest from one vertical rope. Draw and label its forces.",
+    "solution": "GIVEN weight = 20 N at rest one rope EQUATION sources: Earth, rope WORK weight 20 N down tension up, balances it ANSWER Tension 20 N up equal-length arrows",
+    "words": [
+      {
+        "term": "Free-body diagram",
+        "definition": "Only the forces acting on one chosen object."
+      },
+      {
+        "term": "Selected object",
+        "definition": "Replace the object with a simple shape; draw arrows from it."
+      },
+      {
+        "term": "Interacting object",
+        "definition": "Every arrow needs one: rope, floor, table, Earth."
+      },
+      {
+        "term": "Force source",
+        "definition": "Motion is not an interaction. Leave velocity off the diagram."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 16,
+    "title": "Use the force diagram to find acceleration",
+    "focus": "Ramp directions, weight components, and net force",
+    "figure": "COLOR IT · FORCES ON A RAMP",
+    "example": "A 2 kg block has a 7 N downhill weight component and 3 N of friction uphill. Find its acceleration.",
+    "solution": "GIVEN m = 2 kg 7 N downhill 3 N uphill EQUATION a = F net ÷ m WORK F net = 7 − 3 = 4 N downhill a = 4 ÷ 2 ANSWER 2 m/s² downhill",
+    "words": [
+      {
+        "term": "Normal force",
+        "definition": "Points perpendicular to (straight away from) the surface — on a ramp, it is tilted."
+      },
+      {
+        "term": "Weight",
+        "definition": "Always points straight down, toward Earth."
+      },
+      {
+        "term": "Component",
+        "definition": "The downhill part of weight. A way to calculate — not an extra force."
+      },
+      {
+        "term": "Acceleration direction",
+        "definition": "Same direction as the net force."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 17,
+    "title": "Friction adjusts before sliding begins",
+    "focus": "Static friction, its limit, and kinetic friction",
+    "figure": "COLOR IT · BEFORE AND DURING SLIDING",
+    "example": "A 2 kg crate slides right. Pull = 10 N right; kinetic friction = 4 N left. Find its acceleration.",
+    "solution": "GIVEN m = 2 kg pull 10 N right f k 4 N left EQUATION a = F net ÷ m WORK F net = 10 − 4 = 6 N right a = 6 ÷ 2 ANSWER 3 m/s² right",
+    "words": [
+      {
+        "term": "Static friction",
+        "definition": "Before sliding. Adjusts to match the pull, up to a limit."
+      },
+      {
+        "term": "Maximum static friction",
+        "definition": "The greatest static friction possible. Pull past it and sliding starts."
+      },
+      {
+        "term": "Kinetic friction",
+        "definition": "During sliding. Use the supplied value."
+      },
+      {
+        "term": "Coefficient (μ)",
+        "definition": "When given: kinetic friction = μ × normal force."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 18,
+    "title": "Find what is needed to make the forces balance",
+    "focus": "Equilibrium and missing support forces",
+    "figure": "COLOR IT · SUPPORTS MUST TOTAL THE WEIGHT",
+    "example": "A 40 N sign hangs at rest from two vertical ropes. One tension is 15 N. Find the other.",
+    "solution": "GIVEN weight 40 N rope 1 = 15 N at rest EQUATION up = down WORK 15 + T 2 = 40 T 2 = 40 − 15 ANSWER 25 N up",
+    "words": [
+      {
+        "term": "Equilibrium",
+        "definition": "Acceleration is zero. The forces sum to zero in every direction."
+      },
+      {
+        "term": "Static and dynamic equilibrium",
+        "definition": "At rest or moving at constant velocity."
+      },
+      {
+        "term": "Missing force",
+        "definition": "Whatever is needed to make each direction balance."
+      },
+      {
+        "term": "Instantaneous rest",
+        "definition": "Zero velocity for an instant does not guarantee equilibrium."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 19,
+    "title": "Repair the reasoning, not just the answer",
+    "focus": "Finding the first mistake and checking the correction",
+    "figure": "COLOR IT · FOUR COMMON MISTAKES",
+    "example": "A 3 kg cart has 9 N right and 3 N left. A student writes 9 ÷ 3 = 3 m/s². Correct it.",
+    "solution": "GIVEN m = 3 kg 9 N right 3 N left EQUATION a = F net ÷ m WORK F net = 9 − 3 = 6 N right a = 6 ÷ 3 ANSWER 2 m/s² right missed: net force first",
+    "words": [
+      {
+        "term": "Distance vs. displacement",
+        "definition": "Trace the whole path vs. join start to finish."
+      },
+      {
+        "term": "Net force",
+        "definition": "Combine all forces before dividing by mass."
+      },
+      {
+        "term": "Coordinate sign",
+        "definition": "A minus sign is not “slow.” Compare sizes for speed."
+      },
+      {
+        "term": "Interaction pair",
+        "definition": "Act on different objects, so they never cancel."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 20,
+    "title": "Connect the forces to the final position",
+    "focus": "The complete chain from net force to a motion prediction",
+    "figure": "COLOR IT · ONE CHAIN, FOUR LINKS",
+    "example": "A cart has zero net force and already moves at +2 m/s. After 3 s, find its velocity and displacement.",
+    "solution": "GIVEN F net = 0 N v = +2 m/s t = 3 s EQUATION a = 0 → v constant Δx = v × t WORK v stays +2 m/s Δx = 2 × 3 ANSWER +2 m/s, +6 m",
+    "words": [
+      {
+        "term": "Force and motion",
+        "definition": "Net force → acceleration → velocity → position."
+      },
+      {
+        "term": "Constant net force",
+        "definition": "Gives constant acceleration: a straight v–t line."
+      },
+      {
+        "term": "Zero net force",
+        "definition": "Velocity stays the same; position still changes."
+      },
+      {
+        "term": "Range",
+        "definition": "A central value with limits. Not a guarantee."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 21,
+    "title": "Make the situation clear before calculating",
+    "focus": "A reference frame, useful evidence, and a prediction plan",
+    "figure": "COLOR IT · MAKE THE SITUATION VISIBLE",
+    "example": "Check a prediction: an object starts at 2 m and moves at a steady +3 m/s for 4 s.",
+    "solution": "GIVEN x i = 2 m v = +3 m/s t = 4 s · steady v EQUATION x f = x i + v × t WORK change = 3 × 4 = +12 m x f = 2 + 12 ANSWER 14 m check: direction + size + start",
+    "words": [
+      {
+        "term": "Reference point",
+        "definition": "The zero everything is measured from. Mark it on your sketch."
+      },
+      {
+        "term": "Known quantity",
+        "definition": "Every value copied with its unit."
+      },
+      {
+        "term": "Model assumption",
+        "definition": "State it: steady velocity or constant acceleration."
+      },
+      {
+        "term": "Range",
+        "definition": "Read the lower and upper values before making a claim."
+      }
+    ]
+  },
+  {
+    "edition": "cpa",
+    "day": 22,
+    "title": "Explain what the forecast means and what limits it",
+    "focus": "Claim, evidence, reasoning, and a visible revision",
+    "figure": "COLOR IT · BUILD A DEFENSE",
+    "example": "Defend a prediction: a 2 kg cart under 4 N net force, from rest at 1 m, for 2 s; model bound ± 1 m.",
+    "solution": "GIVEN F net = 4 N, m = 2 kg x i = 1 m, t = 2 s bound ± 1 m EQUATION force → a → v → x WORK a = 2 m/s², v = 4 m/s Δx = 4 m, x f = 5 m ANSWER 4 to 6 m assumes constant forces",
+    "words": [
+      {
+        "term": "Claim",
+        "definition": "Your prediction, stated clearly."
+      },
+      {
+        "term": "Evidence",
+        "definition": "Visible work: a graph, sketch, or calculation."
+      },
+      {
+        "term": "Limitation",
+        "definition": "What the model leaves out or assumes."
+      },
+      {
+        "term": "Revision",
+        "definition": "A corrected step, shown — and how it changes later results."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 1,
+    "title": "What does the evidence let us say?",
+    "focus": "Evidence, inference, models, and prediction",
+    "figure": "COLOR IT · WATCH A PATTERN FORM",
+    "example": "A cart is at 10 m, 8 m, and 6 m at 0, 1, and 2 s. Predict its position at 4 s, and name an observation that would challenge the model.",
+    "solution": "GIVEN x = 10, 8, 6 m t = 0, 1, 2 s EQUATION new x = start + change × time WORK change = −2 m each second x (4 s) = 6 + (−2)(2) ANSWER 2 m limit: a 3 m reading would challenge it",
+    "words": [
+      {
+        "term": "Evidence",
+        "definition": "What was actually stated or measured. “An object is approaching.”"
+      },
+      {
+        "term": "Inference",
+        "definition": "A conclusion that still needs testing. “It will hit Earth.”"
+      },
+      {
+        "term": "Model",
+        "definition": "A simplified description with stated assumptions that makes a testable prediction."
+      },
+      {
+        "term": "Testable question",
+        "definition": "“Is it bad?” → “Will its predicted path intersect Earth’s position at the same time?”"
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 2,
+    "title": "One trip can have several correct descriptions",
+    "focus": "Position, distance, displacement, and reference frames",
+    "figure": "COLOR IT · ONE TRIP, THREE QUESTIONS",
+    "example": "Start at −3 m, move to +2 m, then finish at −1 m. Find the distance and the displacement, with units.",
+    "solution": "GIVEN x i = −3 m turn at +2 m x f = −1 m EQUATION distance = Σ |leg| Δ x = x f − x i WORK |2 − (−3)| + |−1 − 2| = 5 + 3 −1 − (−3) ANSWER distance 8 m displacement +2 m",
+    "words": [
+      {
+        "term": "Position",
+        "definition": "A signed coordinate in a reference frame: choose an origin and a + direction. x = −2 m is 2 m left of the origin."
+      },
+      {
+        "term": "Distance",
+        "definition": "Sum of the length of every leg: | x 2 − x 1 | + | x 3 − x 2 | + … Never negative."
+      },
+      {
+        "term": "Displacement",
+        "definition": "Δ x = x f − x i . Its sign depends on the axis you chose; the physical motion does not."
+      },
+      {
+        "term": "Scalar / vector",
+        "definition": "A scalar has magnitude + units (distance, time). A vector also has direction (displacement)."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 3,
+    "title": "A graph can tell the story of motion",
+    "focus": "Average velocity, speed, and position-time graphs",
+    "figure": "COLOR IT · READ A GRAPH AS A MOTION STORY",
+    "example": "A straight x – t line passes through (2 s, 14 m) and (6 s, 6 m). Find the velocity, then predict x at 8 s.",
+    "solution": "GIVEN (2 s, 14 m) (6 s, 6 m) predict at 8 s EQUATION v = Δ x ÷ Δ t x = x i + v t WORK v = (6 − 14) ÷ (6 − 2) x (8) = 6 + (−2)(2) ANSWER −2 m/s; 2 m if the line continues",
+    "words": [
+      {
+        "term": "Average velocity",
+        "definition": "v̄ = Δ x ÷ Δ t . Carries direction; summarizes a whole interval."
+      },
+      {
+        "term": "Average speed",
+        "definition": "Total distance ÷ elapsed time. No direction."
+      },
+      {
+        "term": "Slope",
+        "definition": "On an x – t graph, slope = velocity (units m/s). Height = position, not velocity."
+      },
+      {
+        "term": "Instantaneous velocity",
+        "definition": "Velocity at one moment: the tangent slope on a curved x – t graph."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 4,
+    "title": "Velocity tells us more than speed",
+    "focus": "Signed area, displacement, and velocity components",
+    "figure": "COLOR IT · AREA AND COMPONENTS",
+    "example": "A cart moves at +3 m/s for 2 s , then −1 m/s for 2 s . Find its displacement and total distance.",
+    "solution": "GIVEN v 1 = +3 m/s v 2 = −1 m/s 2 s per interval EQUATION Use areas because each interval has steady v . WORK Δ x = 3(2) − 1(2) distance = 6 + 2 ANSWER +4 m ; 8 m Return travel reduces Δ x , not distance.",
+    "words": [
+      {
+        "term": "Signed area",
+        "definition": "Above zero adds displacement; below zero subtracts it."
+      },
+      {
+        "term": "Distance",
+        "definition": "Add area sizes, including the return trip."
+      },
+      {
+        "term": "Component",
+        "definition": "A vector’s signed part along one axis."
+      },
+      {
+        "term": "Angle θ",
+        "definition": "Name the starting axis and turn direction."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 5,
+    "title": "A prediction should carry its uncertainty",
+    "focus": "Constant velocity, bounds, and a range of possible positions",
+    "figure": "COLOR IT · A BOUNDED FORECAST",
+    "example": "A cart starts at 8 ± 0.5 m and moves at −2.0 ± 0.1 m/s for an exact 3 s . Find its predicted position interval.",
+    "solution": "GIVEN x 0 = 8 ± 0.5 m v = −2.0 ± 0.1 m/s t = 3 s ; steady v EQUATION Steady v : x f = x 0 + vt . Add input bounds. WORK x f = 8 − 2(3) δ x = .5 + 3(.1) = 0.8 m ANSWER 1.2 to 2.8 m 2.0 ± 0.8 m ; full width 1.6 m .",
+    "words": [
+      {
+        "term": "Initial position",
+        "definition": "Position when the chosen interval begins."
+      },
+      {
+        "term": "Bound",
+        "definition": "An allowed range, not a standard deviation."
+      },
+      {
+        "term": "Half-width",
+        "definition": "The ± value; full width is twice as large."
+      },
+      {
+        "term": "Assumption",
+        "definition": "A condition treated as true, such as steady v ."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 6,
+    "title": "Add the directions before the lengths",
+    "focus": "Vector components, resultants, and direction angles",
+    "figure": "COLOR IT · ADD SIGNED PARTS",
+    "example": "Two displacements are A = (6, −4) m and B = (−4, 8) m. Find their sum's magnitude and direction.",
+    "solution": "GIVEN + x is east + y is north A and B use these axes. EQUATION Add x and y . Use the right triangle. WORK R = (2, 4) m | R | = √ 20 m θ = tan⁻¹(4/2) ANSWER 4.47 m 63.4° north of east .",
+    "words": [
+      {
+        "term": "Component",
+        "definition": "Signed part along an axis; keep axes fixed."
+      },
+      {
+        "term": "Resultant",
+        "definition": "Sum: first tail to final tip."
+      },
+      {
+        "term": "Magnitude",
+        "definition": "Nonnegative size from perpendicular parts."
+      },
+      {
+        "term": "Quadrant",
+        "definition": "Both component signs locate the direction."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 7,
+    "title": "Negative acceleration does not always mean slowing",
+    "focus": "Velocity changes, graph slopes, and a turning point",
+    "figure": "COLOR IT · SLOW, THEN SPEED UP",
+    "example": "A cart's velocity changes uniformly from +6 m/s to −2 m/s in 4 s . Find its acceleration and the time it reverses.",
+    "solution": "GIVEN v i = +6 m/s v f = −2 m/s Δ t = 4 s EQUATION a = Δ v / Δ t . Turn: 0 = v i + at . WORK a = (−2 − 6)/4 0 = 6 − 2 t t = 3 s ANSWER a = −2 m/s² Slows for 3 s , then speeds up to the left.",
+    "words": [
+      {
+        "term": "Average acceleration",
+        "definition": "Change in velocity divided by elapsed time."
+      },
+      {
+        "term": "Speeding up",
+        "definition": "v and a have the same direction in 1D."
+      },
+      {
+        "term": "Slowing down",
+        "definition": "v and a oppose each other before the turn."
+      },
+      {
+        "term": "Reversal",
+        "definition": "v = 0 for an instant; a can be nonzero."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 8,
+    "title": "Choose the equation that fits the information",
+    "focus": "Constant acceleration, stopping distance, and independent checks",
+    "figure": "COLOR IT · CHECK WITH AREA",
+    "example": "A car moving at +20 m/s brakes at −4 m/s² until it stops. Find its stopping distance, then check the result.",
+    "solution": "GIVEN v i = +20 m/s v f = 0 m/s a = −4 m/s² EQUATION No time given: v f ² = v i ² + 2 a Δ x . WORK 0 = 400 − 8 Δ x t = (0 − 20)/(−4) area = ½(20)(5) ANSWER Δ x = +50 m 5 s to stop; area also gives 50 m .",
+    "words": [
+      {
+        "term": "Constant acceleration",
+        "definition": "Equal velocity changes in equal times."
+      },
+      {
+        "term": "Known quantities",
+        "definition": "List supplied values before choosing."
+      },
+      {
+        "term": "Displacement",
+        "definition": "Signed change in position, not distance."
+      },
+      {
+        "term": "Cross-check",
+        "definition": "Test with units, a graph or another equation."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 9,
+    "title": "Balanced forces can go with steady motion",
+    "focus": "Newton's first law, inertia, and equilibrium",
+    "figure": "COLOR IT · BALANCED AND MOVING",
+    "example": "A cart is at −2 m , moving at +3 m/s . Its external forces balance for the next 4 s . Find its final position.",
+    "solution": "GIVEN x 0 = −2 m v i = +3 m/s Σ F = 0; t = 4 s EQUATION First law: constant v . x f = x 0 + vt . WORK a = 0 m/s² x f = −2 + 3(4) ANSWER +10 m Net force zero; motion continues.",
+    "words": [
+      {
+        "term": "Inertial frame",
+        "definition": "An unforced object keeps its velocity."
+      },
+      {
+        "term": "Net force",
+        "definition": "Vector sum of external forces on a system."
+      },
+      {
+        "term": "Inertia",
+        "definition": "More mass resists velocity change more."
+      },
+      {
+        "term": "Equilibrium",
+        "definition": "Net force zero; v constant, not always zero."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 10,
+    "title": "Every force has a source and a receiver",
+    "focus": "Weight, normal force, tension, and supported objects",
+    "figure": "COLOR IT · ONE CRATE, THREE FORCES",
+    "example": "A 3 kg crate rests on a table. A vertical rope pulls up with 10 N . Find the table's normal force. Use g = 9.8 N/kg .",
+    "solution": "GIVEN m = 3 kg T = 10 N up a y = 0 EQUATION W = mg . N + T − W = 0. WORK W = 3(9.8) = 29.4 N N = 29.4 − 10 ANSWER N = 19.4 N The rope shares the support.",
+    "words": [
+      {
+        "term": "Weight",
+        "definition": "Earth’s downward pull: mg ."
+      },
+      {
+        "term": "Normal force",
+        "definition": "Surface push, perpendicular to contact."
+      },
+      {
+        "term": "Tension",
+        "definition": "Rope’s pull along itself, away from the object."
+      },
+      {
+        "term": "Receiver",
+        "definition": "The object a force acts on; also name its source."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 11,
+    "title": "The same force can produce different accelerations",
+    "focus": "Total moving mass, inverse relationships, and experimental controls",
+    "figure": "COLOR IT · CHANGE ONLY MASS",
+    "example": "Under the same net force, a 1 kg system accelerates at 4 m/s² and a 2 kg system at 2 m/s² . Predict a for a 3 kg system.",
+    "solution": "GIVEN M 1 = 1 kg ; a 1 = 4 m/s² M 2 = 2 kg ; a 2 = 2 m/s² same net force EQUATION Check M × a . Then a = F net / M . WORK 1(4) = 2(2) = 4 N a 3 = 4 N ÷ 3 kg ANSWER 1.33 m/s² Assumes net force stays 4 N .",
+    "words": [
+      {
+        "term": "System mass",
+        "definition": "All moving mass, including any hanger."
+      },
+      {
+        "term": "Control",
+        "definition": "A value held fixed for a fair comparison."
+      },
+      {
+        "term": "Inverse relationship",
+        "definition": "Double M halves a at fixed net force."
+      },
+      {
+        "term": "Slope",
+        "definition": "Plot a against 1/ M to get an ideal line."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 12,
+    "title": "An applied pull is not always the net force",
+    "focus": "Fixed mass, friction, and force-acceleration graphs",
+    "figure": "COLOR IT · DRIVING VS. NET FORCE",
+    "example": "A 2 kg system slides with 0.4 N of opposing friction. Compare acceleration with driving forces of 2 N and 4 N .",
+    "solution": "GIVEN M = 2 kg f = 0.4 N F drive = 2 N , then 4 N EQUATION Subtract friction. Then a = F net / M . WORK a 1 = (2 − 0.4)/2 = 0.8 a 2 = (4 − 0.4)/2 = 1.8 ANSWER 0.8; 1.8 m/s² Driving force doubles; a does not.",
+    "words": [
+      {
+        "term": "Driving force",
+        "definition": "The pull before resistance is subtracted."
+      },
+      {
+        "term": "Net force",
+        "definition": "Driving force minus opposing resistance."
+      },
+      {
+        "term": "Slope",
+        "definition": "On an a -versus-net-force graph: 1/ M ."
+      },
+      {
+        "term": "Friction offset",
+        "definition": "Fixed friction shifts the driving-force line down."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 13,
+    "title": "The force tells us how motion changes",
+    "focus": "Net force, acceleration, and a cart moving the other way",
+    "figure": "COLOR IT · FORCE OPPOSES MOTION",
+    "example": "A 4 kg cart has forces of 12 N right and 4 N left. Its initial velocity is −3 m/s . Find a and v after 1 s .",
+    "solution": "GIVEN m = 4 kg F right = 12 N ; F left = 4 N v i = −3 m/s EQUATION Sum forces first. Σ F x = ma x . v = v i + a x t . WORK Σ F x = 12 − 4 = +8 N a x = 8/4 = +2 m/s² v = −3 + 2(1) ANSWER v = −1 m/s Still leftward; speed is now 1 m/s .",
+    "words": [
+      {
+        "term": "Net force",
+        "definition": "Add signed forces along the same axis."
+      },
+      {
+        "term": "Acceleration",
+        "definition": "Velocity change from net force per mass."
+      },
+      {
+        "term": "Velocity",
+        "definition": "Current motion; it can oppose a ."
+      },
+      {
+        "term": "Speed trend",
+        "definition": "Opposite v and a : slows before reversal."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 14,
+    "title": "Equal forces can have unequal effects",
+    "focus": "Newton's third law, separate objects, and system boundaries",
+    "figure": "COLOR IT · TWO RECEIVERS",
+    "example": "Cart A has mass 1 kg ; cart B has mass 3 kg . Their interaction pushes A left and B right with 6 N each. Find both accelerations.",
+    "solution": "GIVEN m A = 1 kg m B = 3 kg right is + EQUATION F = ma on each cart. No other horizontal forces. WORK a A = −6/1 = −6 m/s² a B = +6/3 = +2 m/s² ANSWER −6; +2 m/s² A has 3 times B’s acceleration size.",
+    "words": [
+      {
+        "term": "Force pair",
+        "definition": "A-on-B and B-on-A: equal and opposite."
+      },
+      {
+        "term": "Receivers",
+        "definition": "Two objects; use separate force diagrams."
+      },
+      {
+        "term": "Mass effect",
+        "definition": "Same force size: smaller mass, larger a ."
+      },
+      {
+        "term": "System",
+        "definition": "Pair forces cancel internally for combined A+B."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 15,
+    "title": "A force diagram begins with one chosen object",
+    "focus": "External interactions, scaled arrows, and an accelerating lamp",
+    "figure": "COLOR IT · LAMP ACCELERATES UP",
+    "example": "A rope lifts a 2 kg lamp with upward acceleration 1.5 m/s² . Find the tension. Use g = 9.8 m/s² .",
+    "solution": "GIVEN m = 2 kg a y = +1.5 m/s² g = 9.8 m/s² EQUATION Up is +. T − mg = ma y . WORK W = 2(9.8) = 19.6 N T = 19.6 + 2(1.5) ANSWER T = 22.6 N T and W are not a third-law pair.",
+    "words": [
+      {
+        "term": "Object",
+        "definition": "The receiver of every force in the diagram."
+      },
+      {
+        "term": "External force",
+        "definition": "A force from outside the chosen boundary."
+      },
+      {
+        "term": "Force-arrow scale",
+        "definition": "Use one scale to show each force’s size."
+      },
+      {
+        "term": "Net force",
+        "definition": "Sum of forces, not another interaction."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 16,
+    "title": "Choose axes that help explain the ramp",
+    "focus": "Inclined surfaces, weight components, and normal force",
+    "figure": "COLOR IT · FORCES AND COMPONENTS",
+    "example": "A 2 kg block slides down a 30° ramp with 2 N friction uphill. Find its acceleration and normal force. Use g = 9.8 m/s² .",
+    "solution": "GIVEN m = 2 kg ; θ = 30° f = 2 N uphill a ⊥ = 0 EQUATION mg sin θ − f = ma ∥ N = mg cos θ WORK a ∥ = [19.6(0.5) − 2]/2 N = 19.6 cos 30° ANSWER 3.9 m/s² Downhill; N ≈ 17.0 N .",
+    "words": [
+      {
+        "term": "Parallel axis",
+        "definition": "Along the ramp; choose downhill as +."
+      },
+      {
+        "term": "Perpendicular axis",
+        "definition": "Straight out of the ramp, usually not vertical."
+      },
+      {
+        "term": "Weight components",
+        "definition": "mg sin θ along; mg cos θ into the ramp."
+      },
+      {
+        "term": "Constraint",
+        "definition": "No motion through the surface: a ⊥ = 0."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 17,
+    "title": "Friction changes when slipping begins",
+    "focus": "Adjustable static friction and the kinetic-friction model",
+    "figure": "COLOR IT · BEFORE AND AFTER SLIP",
+    "example": "For this box, compare a 6 N pull while at rest with a 10 N pull after sliding starts. Use g = 9.8 m/s² ; pulls are horizontal.",
+    "solution": "GIVEN N = 2(9.8) = 19.6 N μ s = 0.40 μ k = 0.25 EQUATION Check μ s N . Sliding: use μ k N , then net force. WORK f s ,max = 7.84 N at rest: f s = 6 N a = (10 − 4.9)/2 ANSWER 0; 2.55 m/s² At rest, then sliding.",
+    "words": [
+      {
+        "term": "Static friction",
+        "definition": "Adjusts to prevent slip, up to a limit."
+      },
+      {
+        "term": "Limit",
+        "definition": "f s ,max = μ s N ; f s can be smaller."
+      },
+      {
+        "term": "Kinetic friction",
+        "definition": "Opposes sliding; model size μ k N ."
+      },
+      {
+        "term": "Normal force",
+        "definition": "Find the perpendicular force balance first."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 18,
+    "title": "Balance each direction, not just the force sizes",
+    "focus": "Equilibrium, angled ropes, and component sums",
+    "figure": "COLOR IT · VERTICAL PARTS ADD",
+    "example": "A 40 N sign hangs at rest from two equal ropes, each 30° above horizontal. Find the tension in each rope.",
+    "solution": "GIVEN W = 40 N ; θ = 30° equal tensions a = 0 EQUATION x parts cancel. 2 T sin 30° = 40 N . WORK 2 T (0.5) = 40 N T = 40 N ANSWER 40 N per rope Each rope gives 20 N upward.",
+    "words": [
+      {
+        "term": "Equilibrium",
+        "definition": "Zero a : forces sum to zero on each axis."
+      },
+      {
+        "term": "Balance",
+        "definition": "Vertical parts support the weight."
+      },
+      {
+        "term": "Symmetry",
+        "definition": "Equal angles and loading: equal tensions."
+      },
+      {
+        "term": "Rest",
+        "definition": "v = 0 alone does not prove balance."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 19,
+    "title": "Find the first step that changes the story",
+    "focus": "Repairing force sums, signs, and interpretations",
+    "figure": "COLOR IT · CHECK THE CHANGE IN v",
+    "example": "A 3 kg cart has 9 N right and 3 N left. Someone writes a = 9/3 = 3 m/s² . Explain and repair the first wrong step.",
+    "solution": "GIVEN m = 3 kg right is + forces: +9 N and −3 N EQUATION Use net force, not the largest force. WORK Σ F x = 9 − 3 = +6 N a x = 6/3 = +2 m/s² ANSWER +2 m/s² Check: ma = 6 N .",
+    "words": [
+      {
+        "term": "Quantity",
+        "definition": "Name what is found: position, speed, etc."
+      },
+      {
+        "term": "Sign",
+        "definition": "Direction uses signs; speed is a size."
+      },
+      {
+        "term": "Force",
+        "definition": "Sum all forces on the same object."
+      },
+      {
+        "term": "Check",
+        "definition": "Use a graph or another equation."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 20,
+    "title": "Follow the chain from force to position",
+    "focus": "Constant net force, velocity reversal, and signed displacement",
+    "figure": "COLOR IT · FORCE TO POSITION",
+    "example": "A 2 kg cart starts at 1 m with velocity −2 m/s . A constant +4 N net force acts for 3 s . Find final velocity and position.",
+    "solution": "GIVEN m = 2 kg ; Σ F = +4 N x 0 = 1 m ; v i = −2 m/s t = 3 s EQUATION Find a from force. Then steady-a equations. WORK a = 4/2 = +2 m/s² v f = −2 + 2(3) x f = 1 − 6 + 9 ANSWER +4 m/s ; +4 m Δ x = +3 m ; distance = 5 m .",
+    "words": [
+      {
+        "term": "Force and motion",
+        "definition": "Net force → a → velocity and position."
+      },
+      {
+        "term": "Interval",
+        "definition": "Keep one start and end time throughout."
+      },
+      {
+        "term": "Reversal",
+        "definition": "v can cross zero while a keeps its sign."
+      },
+      {
+        "term": "Area",
+        "definition": "Add positive and negative pieces of Δ x ."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 21,
+    "title": "Build a prediction one coordinate at a time",
+    "focus": "A two-dimensional plan with fixed axes and clear assumptions",
+    "figure": "COLOR IT · START + CHANGE",
+    "example": "A probe starts at (−20, 5) m and moves at 10 m/s , 30° from + x toward + y , for 2 s . Find its new coordinates.",
+    "solution": "GIVEN x 0 = −20 m ; y 0 = 5 m v = 10 m/s ; θ = 30° t = 2 s ; steady v EQUATION Resolve v : v x = 8.66 m/s v y = 5 m/s WORK x f = −20 + 8.66(2) y f = 5 + 5(2) ANSWER (−2.68, 15) m Final x is still negative.",
+    "words": [
+      {
+        "term": "Reference frame",
+        "definition": "Keep the origin and axes fixed."
+      },
+      {
+        "term": "Components",
+        "definition": "Signed x and y parts; calculate separately."
+      },
+      {
+        "term": "Units",
+        "definition": "Make all units match before substituting."
+      },
+      {
+        "term": "Limit",
+        "definition": "State assumptions, such as steady velocity."
+      }
+    ]
+  },
+  {
+    "edition": "honors",
+    "day": 22,
+    "title": "A good forecast can change with the evidence",
+    "focus": "Defending a claim, comparing ranges, and explaining revision",
+    "figure": "COLOR IT · COMPARE THE RANGES",
+    "example": "Keep x 0 = 8 ± 0.5 m and exact t = 3 s . A new measurement changes v from −2.0 to −1.5 ± 0.1 m/s . Update the forecast.",
+    "solution": "GIVEN x 0 = 8 ± 0.5 m v = −1.5 ± 0.1 m/s exact t = 3 s EQUATION Update center and conservative bound. WORK x f = 8 − 1.5(3) δ x = .5 + 3(.1) = 0.8 m ANSWER 2.7 to 4.3 m Center shifts +1.5 m .",
+    "words": [
+      {
+        "term": "Prediction",
+        "definition": "Result, units, time, direction and range."
+      },
+      {
+        "term": "Evidence",
+        "definition": "A measurement or calculation supporting a step."
+      },
+      {
+        "term": "Limit",
+        "definition": "An uncertain input or missing effect."
+      },
+      {
+        "term": "Revision",
+        "definition": "Name the change and show its effect."
+      }
+    ]
+  }
+]

@@ -1,0 +1,87 @@
+{
+  "day": 3,
+  "title": "Read motion from the slope",
+  "subtitle": "Velocity, speed, and position-time graphs",
+  "paragraphs": [
+    "A position tells us where an object is. To describe its motion, we need to know how that position changes over time. Moving six meters in three seconds and moving six meters in thirty seconds are different motions. Velocity combines the position change, the elapsed time, and the direction.",
+    "Use the average-velocity equation in <b>Section B</b>: <eq><var>v</var> = Δ<var>x</var> ÷ Δ<var>t</var></eq>. The units are meters per second, or m/s. Average speed uses total distance divided by elapsed time. Speed has no direction and cannot be negative. When a trip includes a return, average speed and the size of average velocity can be different because distance and displacement are different.",
+    "A position-time graph places time on the horizontal axis and position on the vertical axis. Its height tells us position. Its slope tells us velocity. Slope means rise divided by run: the change in position divided by the change in time. A rising line means motion in the positive direction. A falling line means motion in the negative direction.",
+    "Follow the rising, flat, and falling parts of the graph in <b>Section C</b>. From <b>0 s to 2 s</b>, position rises from <b>0 m to 4 m</b>. The slope is <eq>4 m ÷ 2 s = +2 m/s</eq>. From 2 s to 4 s, position stays at 4 m. The flat line has zero slope, so the object is stopped. From 4 s to 6 s, it returns to 0 m, giving <eq>−4 m ÷ 2 s = −2 m/s</eq>.",
+    "The return slope is negative, but its size matches the first slope. The object moves at the same speed in the opposite direction. A steeper position-time line would mean a greater speed. The graph is not a picture of a hill or road. Its shape records how position changes as time passes. The purple marks connect those slopes with velocity.",
+    "In <b>Section D</b>, the cart goes from <b>8 m to 2 m in 3 s</b>. Right is positive. First find displacement: <eq>Δ<var>x</var> = 2 m − 8 m = −6 m</eq>. Then divide by time: <eq><var>v</var> = −6 m ÷ 3 s = −2 m/s</eq>. That means an average velocity of two meters per second to the left. The minus sign gives direction, not a negative speed.",
+    "The notes also give a useful unit conversion: <eq>1 m/s = 3.6 km/h</eq>. A speed of 2 m/s is therefore <eq>(2)(3.6) = 7.2 km/h</eq>. Changing units changes the number used to describe the motion, not the motion itself.",
+    "For our fictional asteroid, 2026-XJ, measured positions and their times let us estimate velocity. In the lab, the same idea applies to your cart: use the actual graph and its labeled axes. I want the slope calculation and your description of direction to tell the same story."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Velocity How fast and which way. The rate position changes. Speed How fast only. The size of the velocity, with no direction. Slope Steepness of a line: rise ÷ run. On a position–time graph, slope = velocity. Average speed Total distance ÷ time. A scalar — no direction. Velocity adds the sign.",
+      "box": [
+        75.75,
+        96.0,
+        295.5,
+        157.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS v = Δx ÷ Δt speed = distance ÷ time v m/s (vector: has a sign) convert 1 m/s = 3.6 km/h",
+      "box": [
+        373.25,
+        96.0,
+        217.75,
+        157.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · READ A GRAPH AS A MOTION STORY",
+      "text": "SECTION C COLOR IT · READ A GRAPH AS A MOTION STORY Height = position. Slope = velocity. 0 1 2 3 4 5 6 0 1 2 3 4 time (s) position (m) run 1 s rise 2 m slope = +2 m/s 1 2 3 1 · PURPLE Rising: moving +, v > 0 2 · PURPLE Flat: stopped, v = 0 3 · PURPLE Falling: moving −, v < 0",
+      "box": [
+        75.75,
+        253.5,
+        515.25,
+        257.25
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart goes from 8 m to 2 m in 3 s. Right is positive. Find its velocity. GIVEN x i = 8 m x f = 2 m Δt = 3 s EQUATION v = Δx ÷ Δt WORK Δx = 2 − 8 = −6 m v = −6 m ÷ 3 s ANSWER −2 m/s 2 m/s to the left",
+      "box": [
+        75.75,
+        510.75,
+        515.25,
+        123.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 3 OF 22 · NEW TOOL: VELOCITY Two position readings and the time between them give XJ’s velocity: the slope of its position–time graph. That tells us how fast it closes in, and from which side. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        633.75,
+        515.25,
+        81.79
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Velocity",
+      "definition": "How fast and which way. The rate position changes."
+    },
+    {
+      "term": "Speed",
+      "definition": "How fast only. The size of the velocity, with no direction."
+    },
+    {
+      "term": "Slope",
+      "definition": "Steepness of a line: rise ÷ run. On a position–time graph, slope = velocity."
+    },
+    {
+      "term": "Average speed",
+      "definition": "Total distance ÷ time. A scalar — no direction. Velocity adds the sign."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-03-cpa-notes-and-reading.pdf"
+}

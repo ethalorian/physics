@@ -1,0 +1,87 @@
+{
+  "day": 5,
+  "title": "Start with the starting position",
+  "subtitle": "Steady-velocity predictions and their possible range",
+  "paragraphs": [
+    "Imagine a cart already sitting at the eight-meter mark. If it moves six meters left, it does not finish at negative six meters. Negative six meters describes its change in position. We still have to combine that change with where the cart started. Today I want you to keep those two steps visible.",
+    "For steady velocity, the position change is velocity times elapsed time. Final position is starting position plus that change: <eq><var>x</var><sub>f</sub> = <var>x</var><sub>0</sub> + <var>v</var><var>t</var></eq>. The subscript zero identifies the position when our chosen time interval begins. The starting position can be positive, negative, or zero. We should copy it from the situation, not assume it.",
+    "Find the starting dot and the displacement arrow in <b>Section C</b>. The trip begins at <b>2 m</b> and shows motion at <b>+2 m/s for 3 s</b>. First calculate <eq>change = (2 m/s)(3 s) = +6 m</eq>. Then <eq><var>x</var><sub>f</sub> = 2 m + 6 m = 8 m</eq>. The dot marks the starting position, and the blue arrow marks the change. The answer is a coordinate measured from the same zero used at the start.",
+    "In <b>Section D</b>, the cart starts at <b>8 m</b> and moves at <b>−2 m/s for 3 s</b>. The negative velocity means motion left when right is positive. Its change is <eq>(−2 m/s)(3 s) = −6 m</eq>. Add that signed change to the start: <eq><var>x</var><sub>f</sub> = 8 m + (−6 m) = 2 m</eq>. The final position remains positive even though the cart moved in the negative direction.",
+    "Measurements also have limits. A prediction written as <b>8 ± 1 m</b> means a central value of 8 m with an allowed range from <b>7 m to 9 m</b>. The plus-or-minus amount extends to each side of the center. It is not the full width. Here the full interval is two meters wide, as the shaded region shows.",
+    "For steady velocity and an exact elapsed time, we can use a conservative bound: <eq>largest position error = start error + velocity error × time</eq>. If the starting error is 0.5 m and velocity error is 0.1 m/s, after three seconds the bound is <eq>0.5 m + (0.1 m/s)(3 s) = 0.8 m</eq>. More elapsed time lets the velocity uncertainty build into more position uncertainty. This range does not state an impact probability.",
+    "Check units before multiplying. If velocity is in meters per second, time needs to be in seconds: <eq>2 h = 7,200 s</eq>. In two dimensions, apply the same start-plus-change idea separately to the vertical coordinate: <eq><var>y</var><sub>f</sub> = <var>y</var><sub>0</sub> + <var>v</var><sub>y</sub><var>t</var></eq>.",
+    "For our fictional asteroid, 2026-XJ, a responsible forecast includes the future time, predicted location, range, and steady-motion assumption. If its velocity changes, we need to revise the model rather than trust a precise-looking answer from the wrong equation."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Starting position Where the object is at t = 0. It is often not zero. Change Velocity × time: how far the position shifts. Final position Start + change. Prediction range A ± bound. “10 ± 2 m” means 8 m to 12 m. More time usually means a wider range.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        156.0
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS x f = x 0 + v t largest error = start error + (velocity error × time) units first 2 h = 7,200 s 2-D also y f = y 0 + v y t",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        156.0
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · START, CHANGE, RANGE",
+      "text": "SECTION C COLOR IT · START, CHANGE, RANGE Start 2 m, +2 m/s for 3 s. 0 1 2 3 4 5 6 7 8 9 10 11 12 m +2 m/s × 3 s = +6 m 8 ± 1 m → 7 to 9 m 1 2 3 1 · BLUE Starting position (dot) 2 · BLUE The change, +6 m (arrow) 3 · BLUE The range, 7 to 9 m (light shade)",
+      "box": [
+        75.75,
+        272.25,
+        515.25,
+        168.0
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart starts at 8 m and moves at −2 m/s for 3 s. Where is it at the end? GIVEN x i = 8 m v = −2 m/s t = 3 s EQUATION x f = x i + v × t WORK change = (−2)(3) = −6 m x f = 8 − 6 ANSWER 2 m moved 6 m left",
+      "box": [
+        75.75,
+        440.25,
+        515.25,
+        189.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 5 OF 22 · NEW TOOL: FORECAST + UNCERTAINTY With a starting position and a velocity, we can forecast where XJ will be. But every measurement has error, so a responsible forecast is a range, not a single point. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Starting position",
+      "definition": "Where the object is at t = 0. It is often not zero."
+    },
+    {
+      "term": "Displacement",
+      "definition": "Velocity × time: how far the position shifts."
+    },
+    {
+      "term": "Final position",
+      "definition": "Start + change."
+    },
+    {
+      "term": "Prediction range",
+      "definition": "A ± bound. “10 ± 2 m” means 8 m to 12 m. More time usually means a wider range."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-05-cpa-notes-and-reading.pdf"
+}

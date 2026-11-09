@@ -1,0 +1,87 @@
+{
+  "day": 19,
+  "title": "Find the first step that changes the story",
+  "subtitle": "Repairing force sums, signs, and interpretations",
+  "paragraphs": [
+    "When two solutions disagree, finding a different final number is not enough. We need to locate the first step where the reasoning stops matching the physical situation. A later calculation can be perfectly executed and still carry forward an earlier mistake. Today I want us to explain the repair, not just replace an answer.",
+    "Start by naming the quantity being found and the reference frame. Position, displacement, velocity, speed, and acceleration answer different questions. Their units also differ. A number can have the right sign for position and the wrong interpretation for velocity. Keeping the quantity's name beside the number is a simple way to make the reasoning visible.",
+    "In the force example in <b>Section D</b>, a <b>3 kg cart</b> experiences <b>9 N right</b> and <b>3 N left</b>. Someone divides the larger force by mass and reports 3 m/s². The first error is selecting the force, not performing the division. Newton's second law uses the net force on the object. With right positive, <eq>Σ<var>F</var><sub>x</sub> = 9 N − 3 N = +6 N</eq>.",
+    "The corrected acceleration is <eq><var>a</var><sub>x</sub> = +6 N ÷ 3 kg = +2 m/s²</eq>. Check it by multiplying mass and acceleration: <eq>(3 kg)(2 m/s²) = 6 N</eq>, which matches the force sum. The unit check works because a newton is a kilogram-meter per second squared, so newtons divided by kilograms give m/s². The force diagram also shows a rightward imbalance, matching the acceleration sign.",
+    "Trace the line from left to right in <b>Section C</b>. Decide whether its change in height is positive or negative. Velocity changes from <b>−2 m/s to −6 m/s in 2 s</b>. Final minus initial gives <eq>Δ<var>v</var> = −6 m/s − (−2 m/s) = −4 m/s</eq>. Subtracting a negative adds its positive counterpart; it does not make the final result automatically positive. Therefore <eq><var>a</var><sub>avg</sub> = −4 m/s ÷ 2 s = −2 m/s²</eq>.",
+    "That negative acceleration goes with increasing speed in this interval. The object moves in the negative direction throughout, while speed grows from 2 m/s to 6 m/s. The downward slope of the velocity graph means velocity becomes more negative. It does not mean the object is slowing. Purple identifies signed velocity, and green marks the increasing speed.",
+    "A useful check should examine the reasoning from another angle. Compare a calculation with a graph, inspect whether all forces were included, or test whether the units and limiting behavior make sense. Repeating the same mistaken substitution in another equation may reproduce the same error. If one step changes, follow that correction through every result that depends on it.",
+    "For our fictional asteroid, 2026-XJ, an incorrect starting coordinate, force sum, or sign can shift an entire forecast. Before sharing a prediction, we should trace it back through the measurements, chosen frame, and assumptions. An explanation of the first wrong step makes the correction understandable and shows why the revised conclusion deserves more confidence."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Quantity Name what is found: position, speed, etc. Sign Direction uses signs; speed is a size. Force Sum all forces on the same object. Check Use a graph or another equation.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS Σ F = ma Δ v = v f − v i units N/kg = m/s² repair first wrong step",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · CHECK THE CHANGE IN v",
+      "text": "SECTION C COLOR IT · CHECK THE CHANGE IN v −2 to −6 m/s in 2 s . 0 1 2 -6 -4 -2 0 velocity (m/s) time (s) Wrong: Δ v = +4 Δ v = −6 − (−2) = −4 m/s speed: 2 → 6 m/s 1 2 3 1 · PURPLE Velocity line 2 · GREEN Increasing speed 3 · PENCIL Incorrect Δ v",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 3 kg cart has 9 N right and 3 N left. Someone writes a = 9/3 = 3 m/s² . Explain and repair the first wrong step. GIVEN m = 3 kg right is + forces: +9 N and −3 N EQUATION Use net force, not the largest force. WORK Σ F x = 9 − 3 = +6 N a x = 6/3 = +2 m/s² ANSWER +2 m/s² Check: ma = 6 N .",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 19 OF 22 · NEW TOOL: REASONING CHECKS Before the fictional XJ forecast is shared, check its signs, units, starting coordinates and force sums. Repairing the first wrong step can change every later result. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Quantity",
+      "definition": "Name what is found: position, speed, etc."
+    },
+    {
+      "term": "Sign",
+      "definition": "Direction uses signs; speed is a size."
+    },
+    {
+      "term": "Force",
+      "definition": "Sum all forces on the same object."
+    },
+    {
+      "term": "Check",
+      "definition": "Use a graph or another equation."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-19-honors-notes-and-reading.pdf"
+}

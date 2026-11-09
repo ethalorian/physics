@@ -31,7 +31,7 @@ test('both planning libraries offer only the interactive reader, including every
 })
 
 test('reading templates label the actual CPA or OpenStax source in every track', () => {
-  assert(readingLibrary('cpa', []).every(s => s.readingTag === 'CPA'))
+  assert(readingLibrary('cpa', []).every(s => s.readingTag === (s.id.startsWith('binder-u1-') ? 'Daily binder' : 'CPA')))
   const honors = readingLibrary('honors', [])
   assert.equal(honors.find(s => s.id === 'quantities')?.readingTag, 'OpenStax')
   assert.equal(honors.find(s => s.id === 'textbook-hewitt-4-4')?.readingTag, 'CPA')

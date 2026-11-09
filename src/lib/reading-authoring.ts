@@ -9,6 +9,7 @@ export function initialReadingStep(data: SyllabusCatalog, options: { courseId?: 
   const requested = available.find(step => step.id === options.stepId)
   if (requested) return requested
   if (!options.creating) return available.find(step => !step.sourceBook) ?? available[0]
+  if (options.book === 'binder') return available.find(step => step.sourceBook === 'binder')
   const book = options.book === 'hewitt' || options.book === 'openstax' ? options.book : track === 'honors' ? 'openstax' : 'hewitt'
   const choices = available.filter(step => step.sourceBook === book)
   return choices.find(step => textbookStepChapter(step) === options.chapter) ?? choices[0]
@@ -32,7 +33,7 @@ function syllabusChapterHref(step: SyllabusStep, track?: string | null) {
 /** Saved readings must use their current assignment, including teacher edits.
  * Unprepared steps get a read-only preview of the same reading factory. */
 export function syllabusInteractiveHref(step: SyllabusStep, course: ReadingCourse, readingId?: string) {
-  if (!isInteractiveSyllabusStep(step, course.track) || !syllabusChapterHref(step, course.track)) return null
+  if (!isInteractiveSyllabusStep(step, course.track) || (step.sourceBook !== 'binder' && !syllabusChapterHref(step, course.track))) return null
   if (readingId) return '/readings/' + encodeURIComponent(readingId) + '?reader=interactive'
   return '/readings/preview?' + new URLSearchParams({ course_id: course.id, step_id: step.id })
 }

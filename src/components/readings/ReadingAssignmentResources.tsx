@@ -1,4 +1,6 @@
 'use client'
+import BinderDailyReader from './BinderDailyReader'
+import { binderSource } from '@/lib/binder-reading'
 import { etfChapter, etfPages, etfPdf } from '@/data/etf-original/source'
 import { interactiveChapterForAssignment } from './interactive/registry'
 import OpenStaxReading from './OpenStaxReading'
@@ -43,6 +45,8 @@ export default function ReadingAssignmentResources({ assignment, showQuestions =
     return source ? [{ question: q, source }] : []
   })
   const etf=etfChapter(assignment.chapter, assignment.section_ids)
+  const binder = binderSource(assignment.passage)
+  if (binder) return <><BinderDailyReader key={assignment.passage} source={binder} heading={false}/>{showQuestions && assignment.questions.map(q=><p key={q.id}>{q.prompt}</p>)}</>
   if (etf) return <section className={styles.stack}><h2>Engineering the Future · {etf.title}</h2><p>{etf.read}</p><a className="underline" href={etfPdf(etf)} target="_blank" rel="noopener noreferrer">Original case · printed pp. {etfPages(etf)}</a><a className="underline" href={showInteractiveLink && assignment.status==='published' ? '/readings/'+assignment.id+'?reader=interactive' : '/textbook/interactive/etf/'+etf.number}>Open interactive reader</a>{showQuestions&&assignment.questions.map(q=><p key={q.id}>{q.prompt}</p>)}</section>
   if (assignment.honors_reading) return <div className={styles.stack}><OpenStaxReading key={`${assignment.honors_reading.from}:${assignment.honors_reading.to}`} reading={assignment.honors_reading} /><details className={styles.question}><summary className="cursor-pointer font-semibold py-3">Shared foundation · {assignment.passage ? "Course reading" : "Hewitt support"}</summary><ReadingAssignmentResources assignment={{...assignment,honors_reading:null}} showInteractiveLink={false} /></details>{showQuestions && assignment.questions.map((q,i)=><div key={q.id} className={styles.question}><h3 className="font-semibold">{i+1}. {q.reference}</h3><ReadingQuestionText chapter={assignment.chapter} question={q}/></div>)}</div>
   if (assignment.passage) return <section className={styles.question} aria-label="Assigned course reading"><h2 className="text-title-3">{assignment.title}</h2><p className={styles.muted}>Course reading</p><QuizContent content={assignment.passage} allowFigures/>{showQuestions && assignment.questions.map((q, i) => <div key={q.id} className={styles.question}><h3 className="font-semibold">{i + 1}. {q.reference}</h3><ReadingQuestionText chapter={assignment.chapter} question={q} /></div>)}</section>

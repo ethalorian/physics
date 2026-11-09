@@ -1,0 +1,87 @@
+{
+  "day": 14,
+  "title": "Equal forces can have unequal effects",
+  "subtitle": "Newton's third law, separate objects, and system boundaries",
+  "paragraphs": [
+    "When two objects interact, each exerts a force on the other. That statement applies even when one object is much larger or appears to do most of the moving. Newton's third law describes the two forces in a single interaction: they have equal magnitudes and opposite directions, and they act at the same time on different objects.",
+    "Read the object names on either side of the equation in <b>Section B</b>: <eq><var>F</var><sub>A on B</sub> = −<var>F</var><sub>B on A</sub></eq>. The labels matter as much as the minus sign. One force is received by B; the other is received by A. The force on B does not belong in A's individual force sum. I want us to identify the receivers before deciding whether two arrows can cancel in a calculation.",
+    "Our example has cart A with mass <b>1 kg</b> and cart B with mass <b>3 kg</b>. Their interaction pushes A left with <b>6 N</b> and B right with <b>6 N</b>. Take right as positive and assume no other horizontal forces. For A, <eq><var>a</var><sub>A</sub> = −6 N ÷ 1 kg = −6 m/s²</eq>. For B, <eq><var>a</var><sub>B</sub> = +6 N ÷ 3 kg = +2 m/s²</eq>.",
+    "The forces are equal in magnitude, but A's acceleration has three times B's magnitude. The smaller mass undergoes a larger velocity change each second under the same force size. That difference does not violate the third law. The third law compares the interaction forces; the second law explains how each object's mass responds to its own net force.",
+    "Find the receiver of each force in <b>Section C</b>. The diagram uses two equal-length orange arrows pointing opposite ways. A separate force diagram for A includes the leftward force on A. A separate diagram for B includes the rightward force on B. If we put both arrows on one cart merely because they form a pair, we would incorrectly predict no acceleration for that cart.",
+    "We can instead choose the combined A-and-B system. Then this interaction is internal: both members of the pair act between parts inside our chosen boundary. Their contributions cancel in the combined system's net external-force calculation. The carts can still accelerate relative to one another. With no external horizontal force, the combined system's center-of-mass velocity stays constant.",
+    "A third-law pair is not just any two opposite forces of equal size. Weight and a table's normal force on a resting book both act on the book, so they are not partners. The partner of Earth's pull on the book is the book's pull on Earth. The partner of the table's push on the book is the book's push on the table. Naming sources and receivers makes the distinction clear.",
+    "For our fictional asteroid, 2026-XJ, Earth pulls on the asteroid and the asteroid pulls on Earth with equal force magnitudes at the same instant. Their very different masses produce very different accelerations. Earth's pull belongs in the asteroid's force diagram; the asteroid's pull on Earth does not cancel it there. Our system boundary determines which forces enter each prediction."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Force pair A-on-B and B-on-A: equal and opposite. Receivers Two objects; use separate force diagrams. Mass effect Same force size: smaller mass, larger a . System Pair forces cancel internally for combined A+B.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS F A→B = − F B→A equal and opposite a A F A / m A a B F B / m B",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · TWO RECEIVERS",
+      "text": "SECTION C COLOR IT · TWO RECEIVERS Same 6 N force size. A 1 kg B 3 kg 6 N 6 N a A = −6 m/s² a B = +2 m/s² Equal force sizes on different receivers 1 2 3 1 · ORANGE Force on A: left 2 · ORANGE Force on B: right 3 · PENCIL Objects and masses",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE Cart A has mass 1 kg ; cart B has mass 3 kg . Their interaction pushes A left and B right with 6 N each. Find both accelerations. GIVEN m A = 1 kg m B = 3 kg right is + EQUATION F = ma on each cart. No other horizontal forces. WORK a A = −6/1 = −6 m/s² a B = +6/3 = +2 m/s² ANSWER −6; +2 m/s² A has 3 times B’s acceleration size.",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 14 OF 22 · NEW TOOL: INTERACTION PAIRS Earth and fictional XJ pull on each other equally at the same instant. Their very different masses give different accelerations; the pair does not cancel in XJ's own force diagram. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Force pair",
+      "definition": "A-on-B and B-on-A: equal and opposite."
+    },
+    {
+      "term": "Receivers",
+      "definition": "Two objects; use separate force diagrams."
+    },
+    {
+      "term": "Mass effect",
+      "definition": "Same force size: smaller mass, larger a ."
+    },
+    {
+      "term": "System",
+      "definition": "Pair forces cancel internally for combined A+B."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-14-honors-notes-and-reading.pdf"
+}

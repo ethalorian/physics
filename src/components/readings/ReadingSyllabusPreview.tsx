@@ -1,5 +1,7 @@
 'use client'
 
+import BinderDailyReader from './BinderDailyReader'
+import { binderSource } from '@/lib/binder-reading'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -42,6 +44,8 @@ export default function ReadingSyllabusPreview({ courseId, stepId }: { courseId:
   if (step.sourceBook === 'openstax' && course.track !== 'honors') return unavailable('Choose an Honors class to preview this OpenStax reading.')
   let sequence = 0
   const assignment = buildSyllabusReading(step, steps, course, slug => data.targets.find(target => target.slug === slug)?.id ?? '', () => `preview-${step.id}-${sequence++}`)
+  const binder = binderSource(assignment.passage)
+  if (binder) return <div className={styles.page}><Link href={backHref}>← Back to reading plan</Link><BinderDailyReader source={binder}/><h2>Assigned responses</h2>{assignment.questions.map(q=><article key={q.id} className={styles.question}><h3>{q.reference}</h3><p>{q.prompt}</p></article>)}</div>
   const definition = interactiveChapterForAssignment(assignment)
   if (!definition) return unavailable('This reading does not fit a single interactive chapter. Open its source reading from the syllabus.')
   return <AssignmentChapterReader definition={definition} teacher assignment={assignment}

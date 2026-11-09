@@ -1,0 +1,87 @@
+{
+  "day": 9,
+  "title": "Balanced forces can go with steady motion",
+  "subtitle": "Newton's first law, inertia, and equilibrium",
+  "paragraphs": [
+    "A book sliding across a table eventually stops. That everyday observation can make it seem as if motion needs a continuing forward force. But the book is also interacting with the table and the air. To understand why its motion changes, we need to identify those interactions rather than assume stopping is what all moving objects naturally do.",
+    "Newton's first law says that an object remains at rest or moves with constant velocity when the net external force on it is zero, viewed from an inertial frame. An inertial frame is a nonaccelerating reference frame in which this law holds. For our classroom examples, we treat the room as such a frame. Constant velocity means both speed and direction stay unchanged.",
+    "The net force is the vector sum of all forces acting on the chosen object. Individual forces can be present while their sum is zero. Compare the horizontal arrows on the cart in <b>Section C</b>. Here <b>8 N right</b> balances <b>8 N left</b>. The upward and downward forces balance too. Thus <eq>Σ<var>F</var> = 0</eq> and <eq><var>a</var> = 0</eq>. The symbol Σ means add all the relevant forces, including their directions.",
+    "Zero acceleration tells us velocity does not change. It does not tell us that velocity is zero. Suppose the cart is already moving at <b>+3 m/s</b>. With balanced forces, it continues at +3 m/s. If that same balanced-force situation began with the cart at rest, it would remain at rest. We need the initial velocity to distinguish those two cases.",
+    "The example in <b>Section D</b> starts the cart at <b>−2 m</b> and keeps the forces balanced for <b>4 s</b>. Its displacement is <eq>Δ<var>x</var> = (3 m/s)(4 s) = +12 m</eq>. Using <eq><var>x</var><sub>f</sub> = <var>x</var><sub>0</sub> + <var>v</var><var>t</var></eq>, we obtain <eq><var>x</var><sub>f</sub> = −2 m + 12 m = 10 m</eq>. The cart changes position even though its acceleration and net force are zero.",
+    "We call the resistance to a change in velocity inertia. It is a property of matter, not an extra force that should be drawn pushing the cart forward. Mass measures inertia: a larger mass requires a larger net force to produce the same acceleration. In the balanced situation, however, neither a small nor a large mass accelerates just because it is moving.",
+    "The vocabulary in <b>Section A</b> calls this balance equilibrium. It can describe rest or steady straight-line motion. The yellow code on the notes page marks that balance; purple identifies velocity. Keeping those ideas separate also explains the sliding book. Friction supplies a force opposing its sliding motion, so the horizontal forces do not balance and its velocity changes. A continuing push can maintain steady motion when it balances that friction.",
+    "For our fictional asteroid, 2026-XJ, motion through space does not require a forward force to keep it going. Gravity can still provide a net force and change its velocity, including its direction. I want us to ask what forces change the motion, then use the existing velocity to explain what the object actually does."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Inertial frame An unforced object keeps its velocity. Net force Vector sum of external forces on a system. Inertia More mass resists velocity change more. Equilibrium Net force zero; v constant, not always zero.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS Σ F = 0 ⇒ a = 0 x f = x 0 + v Δ t Σ sum on one object v stays constant",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · BALANCED AND MOVING",
+      "text": "SECTION C COLOR IT · BALANCED AND MOVING Right is +. 8 N 8 N cart v = +3 m/s Σ F = 0; a = 0 1 2 3 1 · ORANGE Opposing forces 2 · PURPLE Rightward velocity 3 · YELLOW Net force zero",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart is at −2 m , moving at +3 m/s . Its external forces balance for the next 4 s . Find its final position. GIVEN x 0 = −2 m v i = +3 m/s Σ F = 0; t = 4 s EQUATION First law: constant v . x f = x 0 + vt . WORK a = 0 m/s² x f = −2 + 3(4) ANSWER +10 m Net force zero; motion continues.",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 9 OF 22 · NEW TOOL: INERTIA XJ needs no forward force simply to keep moving. Gravity can still change its velocity, so treating a short interval as steady motion is an approximation to be tested. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Inertial frame",
+      "definition": "An unforced object keeps its velocity."
+    },
+    {
+      "term": "Net force",
+      "definition": "Vector sum of external forces on a system."
+    },
+    {
+      "term": "Inertia",
+      "definition": "More mass resists velocity change more."
+    },
+    {
+      "term": "Equilibrium",
+      "definition": "Net force zero; v constant, not always zero."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-09-honors-notes-and-reading.pdf"
+}

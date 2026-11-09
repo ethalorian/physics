@@ -1,0 +1,87 @@
+{
+  "day": 18,
+  "title": "Balance each direction, not just the force sizes",
+  "subtitle": "Equilibrium, angled ropes, and component sums",
+  "paragraphs": [
+    "A hanging sign can be supported by two ropes, yet each rope may need more tension than half the sign's weight. The reason is direction. An angled rope supplies both a horizontal and a vertical force component. Only its vertical part supports the weight. Today I want us to make that geometry part of the force balance.",
+    "Equilibrium means acceleration is zero. In two dimensions, both component sums must vanish: <eq>Σ<var>F</var><sub>x</sub> = 0</eq> and <eq>Σ<var>F</var><sub>y</sub> = 0</eq>. This can describe an object remaining at rest or moving with constant velocity. Merely observing zero velocity at one instant is not enough; an object at a turning point can be stopped momentarily while accelerating.",
+    "Our sign weighs <b>40 N</b> and remains at rest. It hangs from two ropes arranged symmetrically, each <b>30° above horizontal</b>. Equal angles and symmetric loading give equal tension magnitudes. The left rope pulls upward and left; the right rope pulls upward and right. Both are actual forces on the sign, along with Earth's downward gravitational force.",
+    "Use the angle marked in <b>Section C</b>. For each rope, the horizontal component has magnitude <eq><var>T</var><sub>x</sub> = <var>T</var> cos 30°</eq>. Those components point opposite ways and cancel. The vertical component of each rope is <eq><var>T</var><sub>y</sub> = <var>T</var> sin 30°</eq>. Both point upward, so they add. The vertical balance becomes <eq>2<var>T</var> sin 30° − 40 N = 0</eq>.",
+    "Since the sine of 30° is one half, <eq>2<var>T</var>(0.5) = 40 N</eq>, giving <eq><var>T</var> = 40 N</eq> in each rope. Each rope contributes <eq>(40 N) sin 30° = 20 N</eq> upward. The two upward components support the 40 N weight. A claim of 20 N tension per rope would confuse the vertical component with the full tension along the rope.",
+    "Check the vertical sum in <b>Section B</b> against the two vertical arrows in <b>Section C</b>. The orange diagonal arrows show the full tensions; the vertical parts show their contributions to support. We must not add each full tension and then add its components again. The component picture is another description of the same force. As with the ramp, it is a calculation tool rather than a set of extra interactions.",
+    "The angle is measured above horizontal, which is why sine gives the vertical part. If the angle were measured from vertical, cosine would give that part instead. The physical result cannot depend on how we label the angle. More nearly horizontal ropes need greater tension to supply the same vertical support, because each newton along the rope contributes less upward force. Perfectly horizontal ropes could not support this weight with any finite tension in this ideal model.",
+    "For our fictional asteroid, 2026-XJ, zero net force would mean its velocity stays constant, not that it necessarily stops. We would need to check every coordinate direction before making that claim. I want a balance calculation to include the components, their signs, and the reason equilibrium is justified, rather than relying on equal-looking arrows alone."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Equilibrium Zero a : forces sum to zero on each axis. Balance Vertical parts support the weight. Symmetry Equal angles and loading: equal tensions. Rest v = 0 alone does not prove balance.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS Σ F x = Σ F y = 0 2 T sin θ = W T force per rope, N θ above horizontal",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · VERTICAL PARTS ADD",
+      "text": "SECTION C COLOR IT · VERTICAL PARTS ADD 40 N sign; equal 30° ropes. sign T = 40 N T = 40 N W = 40 N 30° 30° 20 N 20 N 1 2 3 1 · ORANGE Rope tensions 2 · ORANGE Vertical parts: 20 N 3 · ORANGE Weight: 40 N",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 40 N sign hangs at rest from two equal ropes, each 30° above horizontal. Find the tension in each rope. GIVEN W = 40 N ; θ = 30° equal tensions a = 0 EQUATION x parts cancel. 2 T sin 30° = 40 N . WORK 2 T (0.5) = 40 N T = 40 N ANSWER 40 N per rope Each rope gives 20 N upward.",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 18 OF 22 · NEW TOOL: COMPONENT BALANCE Zero net force would give XJ a constant velocity, not a guaranteed stop. Analysts must check each coordinate direction before treating its motion as steady. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Equilibrium",
+      "definition": "Zero a : forces sum to zero on each axis."
+    },
+    {
+      "term": "Balance",
+      "definition": "Vertical parts support the weight."
+    },
+    {
+      "term": "Symmetry",
+      "definition": "Equal angles and loading: equal tensions."
+    },
+    {
+      "term": "Rest",
+      "definition": "v = 0 alone does not prove balance."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-18-honors-notes-and-reading.pdf"
+}

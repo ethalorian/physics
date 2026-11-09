@@ -1,0 +1,87 @@
+{
+  "day": 14,
+  "title": "A force pair belongs to two different objects",
+  "subtitle": "Newton's third law and the receiver of each force",
+  "paragraphs": [
+    "When you push on a wall, the wall pushes on you at the same time. These two forces come from one interaction. Newton's third law says the forces have equal sizes and opposite directions. The detail I want you to notice is where they act: your push acts on the wall, and the wall's push acts on you.",
+    "We can name a pair by swapping the two objects. If A pushes B, B pushes A. The relationship is <eq><var>F</var><sub>A on B</sub> = −<var>F</var><sub>B on A</sub></eq>. The minus sign means opposite directions. The force type is the same for both members of a pair. This is not a delay in which one force happens first and the partner follows later.",
+    "Find which cart receives each arrow in <b>Section C</b>. There, cart A has mass <b>1 kg</b> and cart B has mass <b>3 kg</b>. Their interaction pushes A left with <b>6 N</b> and B right with <b>6 N</b>. The equal-length orange arrows show equal force sizes. One arrow belongs to A and the other belongs to B. Putting both on A's diagram would describe the wrong receivers.",
+    "Equal force sizes do not mean equal accelerations. If these are the only horizontal forces, A has an acceleration of <eq>6 N ÷ 1 kg = 6 m/s²</eq> left. B has <eq>6 N ÷ 3 kg = 2 m/s²</eq> right. The smaller mass changes velocity more quickly under the same force size. The different effects do not change the equality of the interaction forces.",
+    "The apple example in <b>Section D</b> asks for the partner of Earth's downward gravitational pull on an apple. Swap the names: the apple pulls gravitationally on Earth. Earth receives that partner force, directed toward the apple. Near the apple, that is upward. Earth's much larger mass means its acceleration from this interaction is extremely small compared with the apple's.",
+    "The pair does not cancel in the force sum for the apple, because only one member acts on the apple. That is the meaning of the notes' reminder that pair forces never cancel on one object. If we choose a combined system containing both objects, the pair is internal and cancels in the combined force sum. The individual objects can still accelerate relative to each other.",
+    "Also, two balanced forces on one object are not automatically a third-law pair. Weight downward and table support upward both act on a resting book. Their partners are the book's pull on Earth and the book's push on the table. Naming the source and receiver separates an interaction pair from forces that happen to balance.",
+    "For our fictional asteroid, 2026-XJ, Earth and the asteroid pull on each other equally. Their masses differ, so their accelerations differ. I want each force placed on the correct object's diagram before we use it to explain a change in motion."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Interaction pair When A pushes B, B pushes A at the same time. Equal and opposite Same size, same type of force, opposite directions. Different receivers One force acts on A, its partner acts on B — so they never cancel. Effects differ Equal forces, different masses → different accelerations.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        160.5
+      ]
+    },
+    "B": {
+      "title": "KEY RULE",
+      "text": "SECTION B KEY RULE F A on B = − F B on A swap the two object names force newtons (N) − opposite direction",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        160.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · ONE INTERACTION, TWO FORCES",
+      "text": "SECTION C COLOR IT · ONE INTERACTION, TWO FORCES Each arrow belongs to a different cart. A · 1 kg B · 3 kg B pushes A: 6 N A pushes B: 6 N 1 3 4 2 1 · ORANGE Force on A 2 · ORANGE Force on B 3 · PENCIL Cart A: label it 4 · PENCIL Cart B: label it",
+      "box": [
+        75.75,
+        276.75,
+        515.25,
+        183.75
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE Earth pulls an apple downward. Name the third-law partner force and the object that receives it. GIVEN Earth → apple gravity, down EQUATION swap the object names WORK apple → Earth gravity, up ANSWER Apple pulls Earth up Earth receives it",
+      "box": [
+        75.75,
+        460.5,
+        515.25,
+        168.75
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 14 OF 22 · NEW TOOL: INTERACTION PAIRS When Earth pulls on XJ, XJ pulls on Earth just as hard. The forces are equal, but XJ’s far smaller mass means its motion is the one that changes noticeably. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Interaction pair",
+      "definition": "When A pushes B, B pushes A at the same time."
+    },
+    {
+      "term": "Equal and opposite",
+      "definition": "Same size, same type of force, opposite directions."
+    },
+    {
+      "term": "Force receiver",
+      "definition": "One force acts on A, its partner acts on B — so they never cancel."
+    },
+    {
+      "term": "Mass and acceleration",
+      "definition": "Equal forces, different masses → different accelerations."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-14-cpa-notes-and-reading.pdf"
+}

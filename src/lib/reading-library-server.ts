@@ -9,7 +9,7 @@ export function readingLibrary(track: string | null | undefined, targets: {id:st
   return [...READING_SYLLABUS,...TEXTBOOK_SYLLABUS].filter(s=>isInteractiveSyllabusStep(s,track)).map(s=>({
     id:s.id,title:s.title,description:s.focus,format:'interactive-reading',unitIds:s.unit?[s.unit]:[],
     targetIds:targets.filter(t=>[s.readingCheck.target,s.vocabularyTarget].includes(t.slug)).map(t=>t.id),
-    selectionRequired:!!s.selectionRequired,book:s.passage?'Course reading':s.sourceBook==='openstax'||track==='honors'&&s.sourceBook!=='hewitt'&&HONORS_READING_MAP[s.id]?'OpenStax':'Hewitt',chapter:s.chapter,availability:'Needs setup',
-    readingTag:readingTagForSource({honors_reading:s.sourceBook!=='hewitt'&&(s.sourceBook==='openstax'||track==='honors')?(s.honorsReading??HONORS_READING_MAP[s.id]):null}),
+    selectionRequired:!!s.selectionRequired,book:s.sourceBook==='binder'?`Daily binder · ${track==='honors'?'Honors':'CPA'}`:s.passage?'Course reading':s.sourceBook==='openstax'||track==='honors'&&s.sourceBook!=='hewitt'&&HONORS_READING_MAP[s.id]?'OpenStax':'Hewitt',chapter:s.sourceBook==='binder'?undefined:s.chapter,availability:s.sourceBook==='binder'?'Ready to assign':'Needs setup',
+    readingTag:readingTagForSource({passage:s.passage,honors_reading:s.sourceBook!=='hewitt'&&(s.sourceBook==='openstax'||track==='honors')?(s.honorsReading??HONORS_READING_MAP[s.id]):null}),
   }))
 }

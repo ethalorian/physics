@@ -1,0 +1,87 @@
+{
+  "day": 9,
+  "title": "Moving does not require an unbalanced force",
+  "subtitle": "Newton's first law, balanced forces, and inertia",
+  "paragraphs": [
+    "A cart moving across a rough floor slows down after we stop pushing. It is easy to conclude that every moving object needs a forward force to keep going. But the cart is still interacting with the floor and air. We need to identify those forces before deciding what motion would look like without them.",
+    "A force is a push or pull from an interaction. The net force is the combined effect of all the forces on one object. Newton's first law says an object keeps its velocity unless a nonzero net force changes it. If the object is at rest, it stays at rest. If it is already moving, it continues at constant speed in a straight line.",
+    "This rule applies in an inertial frame: a reference frame that is not itself accelerating or turning. We treat the classroom as such a frame for these examples. The key relationship is <eq>Σ<var>F</var> = 0</eq>, which gives <eq><var>a</var> = 0</eq> and unchanged velocity. The symbol Σ means add the forces, including their directions.",
+    "Compare the two horizontal arrows on the moving cart in <b>Section C</b>. A <b>4 N pull right</b> balances <b>4 N of friction left</b>. A <b>10 N normal force up</b> balances <b>10 N of weight down</b>. Each direction balances, so the cart has zero acceleration. It can still keep rolling right. The purple velocity arrow describes that motion and is not another force to add to the orange force arrows.",
+    "Inertia is an object's resistance to a change in velocity. More mass means more inertia. It is not a hidden forward force. A moving object does not need an additional “inertia arrow” in its force diagram. We use forces to explain changes in motion, rather than inventing a force merely because something is moving.",
+    "Now compare that cart with the one in <b>Section D</b>: a cart rolls right and slows down. Its velocity is changing, so its acceleration is not zero. The change points left, opposite the rightward motion. Therefore its net horizontal force must point left. Friction could cause that imbalance, but the observed motion alone tells us the net direction, not the exact size of each individual force.",
+    "If someone keeps pulling the cart right with a force equal to the backward friction, the forces balance and the cart can move steadily. If the pull becomes smaller than friction, the cart slows while moving right. This is why “there is a force” and “there is a net force” are different statements. Several forces can act and still add to zero.",
+    "For our fictional asteroid, 2026-XJ, there is no need for a forward push simply to maintain its motion. Gravity can still change its velocity and bend its path. I want us to distinguish motion that continues because of inertia from motion that changes because of a net external force."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Force A push or pull from an interaction with another object. Net force The combined effect of all forces on one object. Newton’s 1st law 1st law: at rest stays at rest; moving keeps its velocity — unless ΣF ≠ 0. Inertia An object keeps its velocity unless a net force changes it. More mass, more inertia.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        170.25
+      ]
+    },
+    "B": {
+      "title": "KEY IDEA + UNITS",
+      "text": "SECTION B KEY IDEA + UNITS ΣF = 0 → a = 0 → velocity stays the same in an inertial frame (not speeding up or turning) force newtons (N) mass kilograms (kg)",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        170.25
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · BALANCED, STILL MOVING",
+      "text": "SECTION C COLOR IT · BALANCED, STILL MOVING A cart rolls right; forces balance. cart pull 4 N 1 friction 4 N 1 normal 10 N 2 weight 10 N 2 velocity → not a force! 3 1 · ORANGE Horizontal forces (balanced) 2 · ORANGE Vertical forces (balanced) 3 · PURPLE Velocity arrow (not a force)",
+      "box": [
+        75.75,
+        286.5,
+        515.25,
+        234.0
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart rolls right, then slows down. What does that tell you about its net horizontal force? GIVEN moving right speed decreasing EQUATION a ≠ 0 → net force ≠ 0 WORK velocity changes → there is a net force; it opposes the motion ANSWER Net force left opposite the motion",
+      "box": [
+        75.75,
+        520.5,
+        515.25,
+        114.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 9 OF 22 · NEW TOOL: INERTIA Out in space, nothing pushes XJ along. It keeps moving because of inertia, so no force is needed to explain its motion — only to explain a change in it. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        634.5,
+        515.25,
+        81.04
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Force",
+      "definition": "A push or pull from an interaction with another object."
+    },
+    {
+      "term": "Net force",
+      "definition": "The combined effect of all forces on one object."
+    },
+    {
+      "term": "Newton’s 1st law",
+      "definition": "1st law: at rest stays at rest; moving keeps its velocity — unless ΣF ≠ 0."
+    },
+    {
+      "term": "Inertia",
+      "definition": "An object keeps its velocity unless a net force changes it. More mass, more inertia."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-09-cpa-notes-and-reading.pdf"
+}

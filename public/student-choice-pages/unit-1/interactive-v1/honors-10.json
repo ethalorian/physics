@@ -1,0 +1,87 @@
+{
+  "day": 10,
+  "title": "Every force has a source and a receiver",
+  "subtitle": "Weight, normal force, tension, and supported objects",
+  "paragraphs": [
+    "Before we add forces, we need to know which forces belong in the calculation. A useful habit is to name both the object receiving a force and the object exerting it. “The rope pulls on the crate” identifies an interaction. “The crate is moving” describes its motion, but does not identify a new force. I want each arrow to have a physical source.",
+    "Weight is the gravitational force Earth exerts on an object. Near Earth's surface, its magnitude is <eq><var>W</var> = <var>m</var><var>g</var></eq>. Mass is measured in kilograms; weight is measured in newtons. We use <eq><var>g</var> = 9.8 N/kg</eq>, meaning each kilogram has 9.8 N of gravitational force acting on it in this model. The same value can be expressed as 9.8 m/s² when describing free-fall acceleration.",
+    "The normal force comes from contact with a surface and acts perpendicular to that surface. Tension comes from a taut rope and pulls along the rope, away from the object. Neither force is automatically equal to weight. Its magnitude depends on the other forces and on the object's acceleration. A surface and a rope can share the job of supporting an object.",
+    "Follow the given values in <b>Section D</b> for the <b>3 kg crate</b> resting on a level table while a vertical rope pulls upward with <b>10 N</b>. Earth's downward pull is <eq><var>W</var> = (3 kg)(9.8 N/kg) = 29.4 N</eq>. The table pushes upward with a normal force whose magnitude we have not yet found. There are three forces on the crate: weight, tension, and the normal force.",
+    "The crate stays at rest, so its vertical acceleration is zero. Choose upward as positive. The force equation is <eq><var>N</var> + <var>T</var> − <var>W</var> = 0</eq>. Substituting gives <eq><var>N</var> + 10 N − 29.4 N = 0</eq>, so <eq><var>N</var> = 19.4 N</eq>. Here italic N represents the normal-force magnitude; upright N after a number is the unit newton. The rope supplies part of the upward support, leaving the table to supply the rest.",
+    "Trace each of the three arrows in <b>Section C</b> back to its named source. The crate receives all three forces. Orange identifies force. If the arrows use one consistent scale, the two upward lengths together should match the downward length. The normal arrow should be longer than the tension arrow, but shorter than the weight arrow. That picture is a useful check on the numbers and the balance equation.",
+    "If the rope were absent and the crate remained at rest, the normal force would equal the weight. That equality follows from the particular situation; it is not the definition of a normal force. An inclined surface or an additional vertical force changes the calculation. Likewise, mass remains the same when support changes, even though a scale's reading can change.",
+    "For our fictional asteroid, 2026-XJ, we will name the source of every proposed force before using it. Gravity can act without contact. A rope, supporting surface, or engine force belongs only when that interaction exists. A clear list of sources and receivers prevents us from inventing forces simply to match the motion we expect."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Weight W Earth’s downward pull: mg . Normal N Surface push, perpendicular to contact. Tension T Rope’s pull along itself, away from the object. Receiver The object a force acts on; also name its source.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS W = mg N + T − W = 0 g 9.8 N/kg balance vertical a = 0",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · ONE CRATE, THREE FORCES",
+      "text": "SECTION C COLOR IT · ONE CRATE, THREE FORCES A rope helps a table. rope on crate T = 10 N 1 table on crate N = 19.4 N 2 Earth on crate W = 29.4 N 3 Three forces; one receiver. The crate stays at rest. 1 · ORANGE Rope’s tension T 2 · ORANGE Table’s normal N 3 · ORANGE Earth’s weight W",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 3 kg crate rests on a table. A vertical rope pulls up with 10 N . Find the table's normal force. Use g = 9.8 N/kg . GIVEN m = 3 kg T = 10 N up a y = 0 EQUATION W = mg . N + T − W = 0. WORK W = 3(9.8) = 29.4 N N = 29.4 − 10 ANSWER N = 19.4 N The rope shares the support.",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 10 OF 22 · NEW TOOL: FORCE SOURCES A forecast of XJ's changing motion needs real interactions, not a made-up motion force. Name the attracting body for each gravitational force before adding the forces. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Weight",
+      "definition": "Earth’s downward pull: mg ."
+    },
+    {
+      "term": "Normal force",
+      "definition": "Surface push, perpendicular to contact."
+    },
+    {
+      "term": "Tension",
+      "definition": "Rope’s pull along itself, away from the object."
+    },
+    {
+      "term": "Receiver",
+      "definition": "The object a force acts on; also name its source."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-10-honors-notes-and-reading.pdf"
+}

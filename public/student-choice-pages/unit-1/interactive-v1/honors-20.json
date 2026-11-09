@@ -1,0 +1,87 @@
+{
+  "day": 20,
+  "title": "Follow the chain from force to position",
+  "subtitle": "Constant net force, velocity reversal, and signed displacement",
+  "paragraphs": [
+    "We now have the pieces needed to predict motion from forces. The net force gives acceleration. Acceleration changes velocity. Velocity over time changes position. I want each link to use the same object, reference frame, and time interval. That consistency matters especially when an object reverses direction during the calculation.",
+    "Start with the given values in <b>Section D</b>. Our <b>2 kg cart</b> starts at <b>1 m</b> with velocity <b>−2 m/s</b>. A constant net force of <b>+4 N</b> acts for <b>3 s</b>. Take right as positive. The first step is <eq><var>a</var> = Σ<var>F</var> ÷ <var>m</var> = 4 N ÷ 2 kg = +2 m/s²</eq>. Because force and mass stay constant, acceleration stays constant over the interval.",
+    "Next find final velocity: <eq><var>v</var><sub>f</sub> = <var>v</var><sub>i</sub> + <var>a</var><var>t</var> = −2 m/s + (2 m/s²)(3 s) = +4 m/s</eq>. The cart began moving left and finishes moving right. Its velocity passes through zero at <eq><var>t</var> = (0 − (−2)) m/s ÷ (2 m/s²) = 1 s</eq>. Positive acceleration first slows the negative motion, then builds positive motion.",
+    "The displacement equation covers the entire constant-acceleration interval, including the turn: <eq>Δ<var>x</var> = <var>v</var><sub>i</sub><var>t</var> + ½<var>a</var><var>t</var>²</eq>. Substitution gives <eq>Δ<var>x</var> = (−2 m/s)(3 s) + ½(2 m/s²)(3 s)² = −6 m + 9 m = +3 m</eq>. Finally add the starting coordinate: <eq><var>x</var><sub>f</sub> = 1 m + 3 m = 4 m</eq>. Displacement and final position are different quantities.",
+    "Compare the areas below and above the time axis in <b>Section C</b>. Their signed sum explains why displacement is only 3 m. During the first second, the velocity line lies below zero. Its triangular area is <eq>−½(1 s)(2 m/s) = −1 m</eq>. During the next two seconds, the line lies above zero, giving <eq>+½(2 s)(4 m/s) = +4 m</eq>. Adding the signed areas gives the same +3 m displacement. The blue regions track position change; the purple line tracks velocity.",
+    "Distance uses the sizes of those two regions instead: <eq>distance = 1 m + 4 m = 5 m</eq>. The cart travels from its starting coordinate of 1 m leftward to 0 m, then rightward to 4 m. That route makes the distinction concrete. A positive final displacement does not mean every part of the trip was in the positive direction.",
+    "We can check the chain in several ways. The net force and acceleration point the same way. Velocity changes by 6 m/s over three seconds at 2 m/s². The graph's signed areas agree with the displacement equation. Adding the initial position gives the correct final coordinate. If the force changed during the trip, this single constant-acceleration calculation would need to be divided into suitable intervals or replaced with a more detailed model.",
+    "For our fictional asteroid, 2026-XJ, a forecast needs both its present motion and the forces changing that motion. Starting with force alone leaves out initial velocity and position. Connecting all three ideas gives us a prediction we can explain, check, and revise when new evidence arrives."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Chain Net force → a → velocity and position. Interval Keep one start and end time throughout. Reversal v can cross zero while a keeps its sign. Area Add positive and negative pieces of Δ x .",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        124.5
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS a = Σ F ÷ m v f = v i + at x f x 0 + v i t + ½ at ² model constant a",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        124.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · FORCE TO POSITION",
+      "text": "SECTION C COLOR IT · FORCE TO POSITION Velocity crosses zero at 1 s . 0 1 2 3 -2 0 2 4 velocity (m/s) time (s) −1 m +4 m 2 kg cart Σ F = +4 N a = +2 m/s² 1 2 3 1 · PURPLE Velocity line 2 · BLUE Signed areas 3 · ORANGE Net force: +4 N",
+      "box": [
+        75.75,
+        222.0,
+        515.25,
+        244.5
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 2 kg cart starts at 1 m with velocity −2 m/s . A constant +4 N net force acts for 3 s . Find final velocity and position. GIVEN m = 2 kg ; Σ F = +4 N x 0 = 1 m ; v i = −2 m/s t = 3 s EQUATION Find a from force. Then steady-a equations. WORK a = 4/2 = +2 m/s² v f = −2 + 2(3) x f = 1 − 6 + 9 ANSWER +4 m/s ; +4 m Δ x = +3 m ; distance = 5 m .",
+      "box": [
+        75.75,
+        466.5,
+        515.25,
+        162.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 20 OF 22 · NEW TOOL: THE FULL CHAIN XJ’s forecast needs its present motion and the forces changing it. Use one reference frame through the entire calculation. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        628.5,
+        515.25,
+        84.72
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Force and motion",
+      "definition": "Net force → a → velocity and position."
+    },
+    {
+      "term": "Interval",
+      "definition": "Keep one start and end time throughout."
+    },
+    {
+      "term": "Reversal",
+      "definition": "v can cross zero while a keeps its sign."
+    },
+    {
+      "term": "Area",
+      "definition": "Add positive and negative pieces of Δ x ."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-20-honors-notes-and-reading.pdf"
+}

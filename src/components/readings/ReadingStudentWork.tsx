@@ -1,4 +1,6 @@
 'use client'
+import BinderDailyReader from './BinderDailyReader'
+import { binderSource } from '@/lib/binder-reading'
 import RevisionCycle from '@/components/review-desk/RevisionCycle'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
@@ -29,6 +31,8 @@ export default function ReadingStudentWork({ id, initialInteractive = true }: { 
   if (error) return <div className={styles.page}><p className={styles.error} role="alert">{error}</p><Button className="mt-4" onClick={() => void load()}>Retry</Button><Button asChild variant="ghost"><Link href="/readings">All readings</Link></Button></div>
   if (!data) return <div className={styles.page}><Spinner /></div>
   const chapter = interactiveChapterForAssignment(data.assignment, language)
+  const binder = binderSource(data.assignment.passage)
+  if (data.staff && binder) return <div className={styles.page}><Link href={`/admin/readings?id=${id}`}>← Class review</Link><BinderDailyReader source={binder}/><h2>Assigned responses</h2>{data.assignment.questions.map(q=><div className={styles.question} key={q.id}><h3>{q.reference}</h3><p>{q.prompt}</p></div>)}</div>
   if (data.staff && initialInteractive && chapter && session?.user?.id) return <AssignmentChapterReader definition={chapter} teacher assignment={data.assignment} assignmentNotice={<ReadingXpReceipt teacher />} storageKey={`antocci:reader:${session.user.id}:${chapter.book}:${chapter.chapter}:${chapter.language}:${chapter.contentVersion}`} backLink={<Link href={`/admin/readings?id=${id}`}>← Class review</Link>} renderQuestion={(q, i) => <article className={styles.question}><h3>Response {i + 1} · {q.reference}</h3><ReadingQuestionText chapter={data.assignment.chapter} question={q} /><p>{data.targets.find(t => t.id === q.target_id)?.statement}</p></article>} assignmentFooter={<Button asChild><Link href={`/admin/readings?id=${id}`}>Open class roster & review</Link></Button>} />
   if (data.staff) return <div className={styles.page}><Button asChild><Link href={`/admin/readings?id=${id}`}>Open class roster & review</Link></Button></div>
   return <AnswerWorkspace key={id} detail={data} initialInteractive={initialInteractive} userId={session?.user?.id} />
@@ -114,7 +118,7 @@ function AnswerWorkspace({ detail, initialInteractive, userId }: { detail: Readi
     {backButton}
     {learningPath}
     {xpReceipt}
-    <header className={styles.hero}><div className={`${styles.row} ${styles.spread}`}><p className="text-overline text-primary">{a.honors_reading?'OpenStax AP Physics 2e':a.passage?'Course reading':`Hewitt · Chapter ${a.chapter}`} · Reading assignment</p><ReadingStatus work={work} /></div><h1 className="text-display mt-3">{a.title}</h1><p className="mt-3 text-title-3">{a.reading}</p><p className={`mt-3 ${readingOverdue(a, work) ? 'text-sm text-destructive' : styles.muted}`}>{dueLabel(a.due_at)}{readingOverdue(a, work) ? ' · Overdue; you can still submit.' : ''}</p>{a.instructions && <p className="mt-4 whitespace-pre-wrap">{a.instructions}</p>}</header>
+    <header className={styles.hero}><div className={`${styles.row} ${styles.spread}`}><p className="text-overline text-primary">{binderSource(a.passage)?'Daily binder':a.honors_reading?'OpenStax AP Physics 2e':a.passage?'Course reading':`Hewitt · Chapter ${a.chapter}`} · Reading assignment</p><ReadingStatus work={work} /></div><h1 className="text-display mt-3">{a.title}</h1><p className="mt-3 text-title-3">{a.reading}</p><p className={`mt-3 ${readingOverdue(a, work) ? 'text-sm text-destructive' : styles.muted}`}>{dueLabel(a.due_at)}{readingOverdue(a, work) ? ' · Overdue; you can still submit.' : ''}</p>{a.instructions && <p className="mt-4 whitespace-pre-wrap">{a.instructions}</p>}</header>
     <div className={styles.stack}>
       {chapter && userId ? <Button variant="outline" onClick={() => setInteractive(true)}>Open interactive chapter · read & answer together</Button> : null}
       <ReadingCompanion title={a.title} focus={a.questions.find(q=>!answers[q.id]?.trim())?.prompt??a.questions[0]?.prompt??a.reading}><ReadingAssignmentResources assignment={a} showInteractiveLink={false} /></ReadingCompanion>

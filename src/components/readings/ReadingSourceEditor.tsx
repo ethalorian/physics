@@ -1,4 +1,5 @@
 'use client'
+import { binderSource } from '@/lib/binder-reading'
 import { isInteractiveReading, INTERACTIVE_READING_ONLY } from '@/lib/reading-availability'
 import { HONORS_READING_MAP, OPENSTAX_PHYSICS, type HonorsReading } from '@/lib/openstax-physics'
 import type { ReadingAssignment } from '@/lib/textbook-assignments'
@@ -6,6 +7,8 @@ import { Button } from '@/components/ui/button'
 import styles from './readings.module.css'
 
 export default function ReadingSourceEditor({draft,honors,onChange}:{draft:ReadingAssignment;honors:boolean;onChange:(patch:Partial<ReadingAssignment>)=>void}){
+  const binder=binderSource(draft.passage)
+  if(binder)return <p>Daily binder · {binder.edition.toUpperCase()} · Unit 1 · Day {binder.day}</p>
   const source=draft.honors_reading?'openstax':draft.passage!=null?'note':'hewitt'
   const patchHonors=(patch:Partial<HonorsReading>)=>{if(!draft.honors_reading)return;const r={...draft.honors_reading,...patch};onChange({honors_reading:r,reading:`${OPENSTAX_PHYSICS.shortTitle} · §${r.sections.join(', ')} · pp. ${r.from}–${r.to}`})}
   return <div className="space-y-4"><label className={styles.field}>Reading source<select aria-label="Reading source" value={source} onChange={e=>{if(e.target.value==='openstax')onChange({honors_reading:HONORS_READING_MAP.quantities,passage:null,reading:`${OPENSTAX_PHYSICS.shortTitle} · §1.2 · pp. 20–21`});else onChange({honors_reading:null,passage:null,reading:`Chapter ${draft.chapter}`})}}>{source==='note'&&<option value="note" disabled>Choose an interactive reader…</option>}<option value="hewitt">Hewitt · Interactive reader</option>{honors&&<option value="openstax">OpenStax · Interactive reader</option>}</select></label>

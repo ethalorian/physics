@@ -1,0 +1,87 @@
+{
+  "day": 18,
+  "title": "Find what is needed to make the forces balance",
+  "subtitle": "Equilibrium and missing support forces",
+  "paragraphs": [
+    "A sign hanging at rest has forces acting on it. The reason it stays at rest is that those forces balance. Equilibrium means zero acceleration, so the force sum is zero in every direction. Today we will use that condition to find a missing force rather than assume every support carries an equal share.",
+    "The shorthand is <eq>Σ<var>F</var> = 0</eq>. Along a vertical axis, that means the upward forces total the downward forces. Along a horizontal axis, rightward and leftward totals must match. Balance in one direction does not automatically prove balance in another. We check each direction that has forces acting along it.",
+    "Compare the upward arrows in <b>Section C</b>. The diagram shows a <b>20 N sign</b> supported by two vertical ropes. One pulls up with <b>8 N</b>, and the other pulls up with <b>12 N</b>. Their combined support is <eq>8 N + 12 N = 20 N</eq>, matching the downward weight. The two ropes do not need equal tensions. Their sum needs to provide the required upward force.",
+    "The example in <b>Section D</b> uses a <b>40 N sign</b>. It remains at rest, and one vertical rope has a tension of <b>15 N</b>. Call the other tension <var>T</var><sub>2</sub>. Because up equals down, <eq>15 N + <var>T</var><sub>2</sub> = 40 N</eq>. Subtract the known support from the weight: <eq><var>T</var><sub>2</sub> = 40 N − 15 N = 25 N</eq> upward.",
+    "Check the result by adding it back: <eq>15 N + 25 N − 40 N = 0 N</eq>. That agrees with zero acceleration. Dividing the weight equally between the ropes would have given 20 N each, but that would ignore the supplied 15 N tension. I want the given evidence, not a picture that merely looks symmetrical, to determine the calculation.",
+    "These ropes are vertical, so their entire tension acts upward. If the ropes were angled, only their vertical components would support the weight and we would need another step. Naming the directions keeps a simple balance rule from being used in a situation where it no longer applies directly.",
+    "Equilibrium can also describe an object moving with constant velocity. Zero net force means velocity does not change; it does not require the velocity to be zero. On the other hand, zero velocity at one instant does not prove equilibrium. A tossed object can be momentarily stopped at its highest point while gravity still gives it downward acceleration.",
+    "For our fictional asteroid, 2026-XJ, balanced forces would mean constant velocity. They would not automatically bring the asteroid to a stop. Before assuming steady motion, we need a reason to believe the net force is zero or small enough for our chosen approximation. The force balance and the motion model should support the same explanation."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Equilibrium Acceleration is zero. The forces sum to zero in every direction. Two kinds At rest or moving at constant velocity. Missing force Whatever is needed to make each direction balance. Careful Zero velocity for an instant does not guarantee equilibrium.",
+      "box": [
+        75.75,
+        99.0,
+        295.5,
+        141.75
+      ]
+    },
+    "B": {
+      "title": "KEY CONDITION",
+      "text": "SECTION B KEY CONDITION ΣF = 0 up = down right = left Σ “sum of” force newtons (N)",
+      "box": [
+        373.25,
+        99.0,
+        217.75,
+        141.75
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · SUPPORTS MUST TOTAL THE WEIGHT",
+      "text": "SECTION C COLOR IT · SUPPORTS MUST TOTAL THE WEIGHT 8 N + 12 N = 20 N. SIGN · 20 N rope 1: 8 N rope 2: 12 N weight 20 N 1 2 3 1 · ORANGE Rope 1 tension 2 · ORANGE Rope 2 tension 3 · ORANGE Weight (W)",
+      "box": [
+        75.75,
+        240.75,
+        515.25,
+        237.0
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A 40 N sign hangs at rest from two vertical ropes. One tension is 15 N. Find the other. GIVEN weight 40 N rope 1 = 15 N at rest EQUATION up = down WORK 15 + T 2 = 40 T 2 = 40 − 15 ANSWER 25 N up",
+      "box": [
+        75.75,
+        477.75,
+        515.25,
+        151.5
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 18 OF 22 · NEW TOOL: EQUILIBRIUM If the forces on XJ balanced, its acceleration would be zero and its velocity would stay constant. Analysts check for balance before assuming steady motion. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Equilibrium",
+      "definition": "Acceleration is zero. The forces sum to zero in every direction."
+    },
+    {
+      "term": "Static and dynamic equilibrium",
+      "definition": "At rest or moving at constant velocity."
+    },
+    {
+      "term": "Missing force",
+      "definition": "Whatever is needed to make each direction balance."
+    },
+    {
+      "term": "Instantaneous rest",
+      "definition": "Zero velocity for an instant does not guarantee equilibrium."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-18-cpa-notes-and-reading.pdf"
+}

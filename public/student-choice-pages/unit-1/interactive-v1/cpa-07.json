@@ -1,0 +1,87 @@
+{
+  "day": 7,
+  "title": "Acceleration means velocity is changing",
+  "subtitle": "Reading dot patterns and calculating change each second",
+  "paragraphs": [
+    "We often use the word accelerate to mean speed up, but in physics it has a wider meaning. Acceleration is a change in velocity over time. Speeding up is one example. Slowing down and turning are examples too, because velocity includes both speed and direction. I want us to describe the change before deciding what the acceleration means.",
+    "The calculation is <eq><var>a</var> = Δ<var>v</var> ÷ Δ<var>t</var></eq>. First subtract starting velocity from final velocity. Then divide by elapsed time. The unit m/s² means meters per second, each second. An acceleration of 2 m/s² means velocity changes by two meters per second during each second if the acceleration stays constant.",
+    "The cart in <b>Section D</b> starts at <b>0 m/s</b> and reaches <b>8 m/s in 4 s</b>. The velocity change is <eq>Δ<var>v</var> = 8 m/s − 0 m/s = 8 m/s</eq>. Divide by the time: <eq><var>a</var> = 8 m/s ÷ 4 s = 2 m/s²</eq>. That is the average acceleration over the interval. With steady acceleration, the velocities at successive whole seconds would be 0, 2, 4, 6, and 8 m/s.",
+    "The second equation in <b>Section B</b> gives <eq><var>v</var> = <var>v</var><sub>0</sub> + <var>a</var><var>t</var></eq>. This says final velocity equals starting velocity plus the change built up over time. For our steady-acceleration example, <eq><var>v</var> = 0 m/s + (2 m/s²)(4 s) = 8 m/s</eq>. The two equations describe the same change from different starting information.",
+    "Compare the gaps between dots in the three rows of <b>Section C</b>. They mark position at equal time intervals. Growing gaps mean the object travels farther during each interval, so it speeds up. Shrinking gaps mean it travels less during each interval, so it slows down. Equal gaps along a straight path mean steady velocity and zero acceleration. Green, red, and yellow mark those three patterns on the notes page.",
+    "A negative acceleration does not always mean slowing down. Along a straight line, compare the signs of velocity and acceleration. When they have the same sign, speed grows. When they have opposite signs, speed decreases until a possible turn. A cart moving right can slow under leftward acceleration; a cart already moving left can speed up under that same acceleration.",
+    "Turning matters too. An object going around a curve at steady speed still changes its direction, so its velocity changes and it accelerates. Near Earth's surface, free fall is another example: ignoring air resistance, gravity produces about <b>9.8 m/s² downward</b>. The sign depends on which direction we choose as positive.",
+    "For our fictional asteroid, 2026-XJ, changing velocity readings tell us that a steady-velocity forecast may need revision. The important question is how much velocity changes, over what time, and in which direction. That information lets us begin explaining a changing path instead of simply extending an old pattern."
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Acceleration The rate velocity changes: how much velocity is gained or lost each second. Speeding up v and a have the same sign. Gaps between equal-time dots grow. Slowing down v and a have opposite signs. Braking is acceleration too. Turning A direction change is a velocity change, even at steady speed.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        156.0
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS a = Δv ÷ Δt v = v 0 + a t a m/s² (“m/s, every second”) g ≈ 9.8 m/s² (free fall)",
+      "box": [
+        373.25,
+        116.25,
+        217.75,
+        156.0
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · READ THE GAPS",
+      "text": "SECTION C COLOR IT · READ THE GAPS Equal time between dots. 1 2 3 motion one dot every 1 s 1 · GREEN Speeding up: gaps grow 2 · RED Slowing down: gaps shrink 3 · YELLOW Steady: a = 0",
+      "box": [
+        75.75,
+        272.25,
+        515.25,
+        198.75
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart’s velocity changes from 0 to 8 m/s in 4 s. Find its acceleration. GIVEN v i = 0 m/s v f = 8 m/s Δt = 4 s EQUATION a = Δv ÷ Δt WORK Δv = 8 − 0 = 8 m/s a = 8 ÷ 4 ANSWER 2 m/s² gains 2 m/s each second",
+      "box": [
+        75.75,
+        471.0,
+        515.25,
+        158.25
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 7 OF 22 · NEW TOOL: ACCELERATION If XJ’s velocity readings change from one night to the next, it is accelerating, and a forecast that assumes steady velocity will miss. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Acceleration",
+      "definition": "The rate velocity changes: how much velocity is gained or lost each second."
+    },
+    {
+      "term": "Speeding up",
+      "definition": "v and a have the same sign. Gaps between equal-time dots grow."
+    },
+    {
+      "term": "Slowing down",
+      "definition": "v and a have opposite signs. Braking is acceleration too."
+    },
+    {
+      "term": "Turning",
+      "definition": "A direction change is a velocity change, even at steady speed."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-07-cpa-notes-and-reading.pdf"
+}

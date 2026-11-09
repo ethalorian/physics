@@ -1,0 +1,87 @@
+{
+  "day": 1,
+  "title": "Start with what we can observe",
+  "subtitle": "Observations, models, and a prediction we can test",
+  "paragraphs": [
+    "Suppose we learn that an object in space is approaching Earth. That gives us something to investigate, but it does not tell us where the object will arrive. Approaching Earth and hitting Earth are different claims. Our job is to use observations to build a prediction we can explain. In this unit, we will do that with our fictional asteroid, 2026-XJ.",
+    "Find observation in <b>Section A</b>. An observation is something we record or measure. A position at a particular time is an observation. A prediction is an estimate of what comes next. To connect the two, we use a model: a useful description with an assumption. We might say, “If the motion keeps going the same way, this pattern will continue.” The word if matters because the next observation can test that assumption.",
+    "Look at the position dots in <b>Section C</b>. A cart is at <b>0 m, 2 m, and 4 m</b>, with one second between measurements. Each second its position increases by 2 m. If the pattern continues, we predict <b>6 m at 3 s</b>. The dashed outline marks a prediction, not another measurement. Blue identifies position. Purple identifies the motion pattern connecting those positions.",
+    "<b>Section D</b> uses a different cart. Its measured positions are <b>2 m, 3 m, and 4 m</b>, again one second apart. First find what changes between readings: <eq>3 m − 2 m = +1 m</eq>, and <eq>4 m − 3 m = +1 m</eq>. The two changes agree. That gives us a reason to extend the pattern by one more second.",
+    "Our rule is <eq>next position = last position + change during the next second</eq>. Applying it gives <eq>4 m + 1 m = 5 m</eq>. I want the condition to stay with the answer: the prediction is 5 m if the motion continues the same way. If a new reading gives a different position, we should check the measurement and whether the cart changed its motion.",
+    "Three symbols will help us describe motion throughout the unit. Position, <var>x</var>, tells us where an object is relative to a chosen zero. Velocity, <var>v</var>, tells us how fast position changes and which way the object moves. Acceleration, <var>a</var>, tells us how velocity changes. These quantities answer different questions. We will learn how to connect them instead of treating every number as just “how fast.”",
+    "A testable question is one that measurements can help answer. “Where will it be tomorrow?” is testable once we have enough information and a model. “Who should pay for a mission?” also involves human priorities and decisions. Physics can inform those decisions, but a calculation alone cannot make them.",
+    "For 2026-XJ, we will need positions, times, directions, and information about how reliable the measurements are. Later, forces will help us explain changes in its motion. The question tying that work together is the one on your notes page: how fast is it moving, and where will it arrive?"
+  ],
+  "edition": "cpa",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Observation Something we record or measure, like a position at a time. Model A useful “if”: if the motion keeps going the same way, we can continue the pattern. Prediction An estimate of what comes next, made by continuing the pattern. Testable question One that measurements can answer. “Where will it be tomorrow?” — yes. “Who should pay for a mission?” — no; that also needs human decisions.",
+      "box": [
+        75.75,
+        116.25,
+        295.5,
+        198.0
+      ]
+    },
+    "B": {
+      "title": "UNIT 1 ANCHOR + LANGUAGE OF MOTION",
+      "text": "SECTION B UNIT 1 ANCHOR + LANGUAGE OF MOTION How fast, and where will it arrive? x position: where it is v velocity: how fast + which way a acceleration: how v changes how fast · where · when · how big · made of · stop it?",
+      "box": [
+        373.25,
+        120.75,
+        217.75,
+        193.5
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · WATCH A PATTERN FORM",
+      "text": "SECTION C COLOR IT · WATCH A PATTERN FORM One dot marks the cart’s position each second. +2 m +2 m +2 m ? 0 1 2 3 4 5 6 7 8 m 0 s 1 s 2 s 3 s ? t = 1 2 3 1 · BLUE Observations: measured positions 2 · BLUE Prediction: dashed outline 3 · PURPLE The pattern: +2 m each second",
+      "box": [
+        75.75,
+        314.25,
+        515.25,
+        180.75
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A cart is at 2 m, 3 m, then 4 m, one second apart. Predict its position one second later. GIVEN x = 2, 3, 4 m 1 s between readings EQUATION next = last + change each second WORK change = 3 − 2 = +1 m next = 4 m + 1 m ANSWER 5 m if the motion continues the same way",
+      "box": [
+        75.75,
+        495.0,
+        515.25,
+        134.25
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 1 OF 22 · NEW TOOL: THE UNIT QUESTION The desk has a sighting, not a forecast. Everything we learn in Unit 1 serves one question: how fast is 2026-XJ moving, and where will it arrive? Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        629.25,
+        515.25,
+        86.29
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Observation",
+      "definition": "Something we record or measure, like a position at a time."
+    },
+    {
+      "term": "Model",
+      "definition": "A useful “if”: if the motion keeps going the same way, we can continue the pattern."
+    },
+    {
+      "term": "Prediction",
+      "definition": "An estimate of what comes next, made by continuing the pattern."
+    },
+    {
+      "term": "Testable question",
+      "definition": "One that measurements can answer. “Where will it be tomorrow?” — yes. “Who should pay for a mission?” — no; that also needs human decisions."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-01-cpa-notes-and-reading.pdf"
+}

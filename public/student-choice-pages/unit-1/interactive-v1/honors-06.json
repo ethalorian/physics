@@ -1,0 +1,87 @@
+{
+  "day": 6,
+  "title": "Add the directions before the lengths",
+  "subtitle": "Vector components, resultants, and direction angles",
+  "paragraphs": [
+    "Two trips do not combine the same way just because their lengths match. Walking four meters right and four meters left brings you back; walking both legs right does not. Direction must stay attached to displacement. Today we will use components to add vectors without losing that information.",
+    "Choose the positive horizontal axis toward east and the positive vertical axis toward north. A vector written as <b>(6, −4) m</b> means six meters in the positive horizontal direction and four meters in the negative vertical direction. These are signed components, not the vector's total length. Once the axes are chosen, every vector in the problem must use that same frame.",
+    "Keep the horizontal and vertical sums in <b>Section B</b> separate. Our first displacement is <eq><var>A</var> = (6, −4) m</eq>, and the second is <eq><var>B</var> = (−4, 8) m</eq>. Add matching components: <eq><var>R</var><sub>x</sub> = <var>A</var><sub>x</sub> + <var>B</var><sub>x</sub> = 6 m − 4 m = 2 m</eq> and <eq><var>R</var><sub>y</sub> = <var>A</var><sub>y</sub> + <var>B</var><sub>y</sub> = −4 m + 8 m = 4 m</eq>. The resultant is therefore <eq><var>R</var> = (2, 4) m</eq>. It describes the overall displacement from the initial point to the final point.",
+    "Trace the tip-to-tail arrows in <b>Section C</b>, then trace the dashed resultant. The second arrow starts where the first ends. A single resultant arrow connects the original starting point to the final endpoint. Moving an arrow to build this diagram does not change its length or direction. Reversing the order of the two displacements changes the intermediate point, but their final vector sum stays the same.",
+    "To find the resultant's magnitude, use the right triangle formed by its perpendicular components: <eq><var>R</var> = √(<var>R</var><sub>x</sub>² + <var>R</var><sub>y</sub>²)</eq>. Here <eq><var>R</var> = √[(2 m)² + (4 m)²] = √20 m ≈ 4.47 m</eq>. Magnitude is nonnegative. Adding the individual vector magnitudes instead would describe the total length of the two-leg route, not the size of the resultant displacement.",
+    "The direction needs an angle and a reference axis. Both resultant components are positive, so the arrow lies in the upper-right quadrant. From the positive horizontal axis, <eq>tan <var>θ</var> = <var>R</var><sub>y</sub> ÷ <var>R</var><sub>x</sub> = 4 ÷ 2 = 2</eq>, giving <eq><var>θ</var> ≈ 63.4°</eq>. That is 63.4° toward north from east. Saying only “63.4 degrees” would leave the direction incomplete.",
+    "I want you to check the quadrant before trusting an inverse-tangent answer. The same ratio can occur when both components are negative, even though that arrow points the opposite way. A sketch and signed components resolve the ambiguity. The resultant here should lean more upward than rightward because its vertical component is larger.",
+    "For our fictional asteroid, 2026-XJ, component addition lets us combine changes in motion while preserving direction. A large sideways component can matter as much as a component toward Earth. The calculation and the arrow diagram should identify the same final direction, not just produce a plausible-looking number."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Component Signed part along an axis; keep axes fixed. Resultant Sum: first tail to final tip. Magnitude Nonnegative size from perpendicular parts. Quadrant Both component signs locate the direction.",
+      "box": [
+        75.75,
+        97.5,
+        295.5,
+        125.25
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATIONS + UNITS",
+      "text": "SECTION B KEY EQUATIONS + UNITS R x = A x + B x R y = A y + B y | R | √( R x ² + R y ²) angle ratio plus signs",
+      "box": [
+        373.25,
+        97.5,
+        217.75,
+        125.25
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · ADD SIGNED PARTS",
+      "text": "SECTION C COLOR IT · ADD SIGNED PARTS Grid steps: 2 m . -2 0 2 4 6 8 -4 -2 0 2 4 y (m); north is + x (m); east is + A = (6, −4) m B = (−4, 8) m R = (2, 4) m | R | = 4.47 m 1 2 3 1 · BLUE Displacement A 2 · BLUE Displacement B 3 · BLUE Resultant R : dashed",
+      "box": [
+        75.75,
+        222.75,
+        515.25,
+        245.25
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE Two displacements are A = (6, −4) m and B = (−4, 8) m. Find their sum's magnitude and direction. GIVEN + x is east + y is north A and B use these axes. EQUATION Add x and y . Use the right triangle. WORK R = (2, 4) m | R | = √ 20 m θ = tan⁻¹(4/2) ANSWER 4.47 m 63.4° north of east .",
+      "box": [
+        75.75,
+        468.0,
+        515.25,
+        144.75
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 6 OF 22 · NEW TOOL: VECTOR SUMS XJ's motion must be tracked in more than one direction. Adding signed components keeps sideways motion in the forecast instead of treating every displacement as motion toward Earth. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        612.75,
+        515.25,
+        100.47
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Component",
+      "definition": "Signed part along an axis; keep axes fixed."
+    },
+    {
+      "term": "Resultant",
+      "definition": "Sum: first tail to final tip."
+    },
+    {
+      "term": "Magnitude",
+      "definition": "Nonnegative size from perpendicular parts."
+    },
+    {
+      "term": "Quadrant",
+      "definition": "Both component signs locate the direction."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-06-honors-notes-and-reading.pdf"
+}

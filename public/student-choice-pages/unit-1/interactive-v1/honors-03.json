@@ -1,0 +1,87 @@
+{
+  "day": 3,
+  "title": "A graph can tell the story of motion",
+  "subtitle": "Average velocity, speed, and position-time graphs",
+  "paragraphs": [
+    "We can now describe where an object starts and finishes. The next question is how quickly its position changes. Moving four meters in two seconds and moving four meters in twenty seconds produce the same displacement, but they describe different motion. Time lets us tell the difference.",
+    "Use the ratio in <b>Section B</b> for average velocity: <eq><var>v</var>̄ = Δ<var>x</var> ÷ Δ<var>t</var></eq>. The bar means average over an interval. We use final minus initial for both changes. Velocity includes direction, so its sign depends on the axis we chose. Average speed uses total distance divided by elapsed time. Speed is nonnegative. When an object changes direction, average speed and the magnitude of average velocity can be different.",
+    "A position-time graph puts time on the horizontal axis and position on the vertical axis. Every point identifies where the object is at a particular time. The graph's height gives position. Its slope, the vertical change divided by the horizontal change, gives velocity. The units show why: a change in meters divided by a change in seconds produces meters per second. This graph is a record of position over time, not a picture of the road's shape.",
+    "Trace the three segments of the position-time graph in <b>Section C</b>. From <b>0 s to 2 s</b>, position rises from <b>0 m to 4 m</b>. The slope is <eq>+4 m ÷ 2 s = +2 m/s</eq>. From 2 s to 4 s, position remains at 4 m. The horizontal line has zero slope, so the object is stopped. From 4 s to 6 s, it returns from 4 m to 0 m. The slope is <eq>−4 m ÷ 2 s = −2 m/s</eq>. It moves in the negative direction at a speed of 2 m/s. The purple marks connect each slope to its velocity.",
+    "Across that entire six-second trip, the object returns to its starting position. Its displacement is zero, so its average velocity is <b>0 m/s</b>. It still travels 4 m out and 4 m back. Its average speed is <eq>8 m ÷ 6 s ≈ 1.33 m/s</eq>. An average velocity of zero over the whole trip does not mean the object was stopped throughout it.",
+    "On a straight segment, the slope stays constant. A steeper segment means a larger speed because more position change occurs in the same time. A curved graph has a changing slope. Average velocity between two points uses the slope of the line joining them. Instantaneous velocity, the velocity at one moment, uses the slope of a tangent: a line that matches the curve's direction at that point.",
+    "In <b>Section D</b>, the straight line passes through <b>(2 s, 14 m)</b> and <b>(6 s, 6 m)</b>. Velocity is <eq>(6 − 14) m ÷ (6 − 2) s = −2 m/s</eq>. If that velocity continues, two more seconds bring another −4 m of displacement. At 8 s the predicted position is <eq>6 m + (−2 m/s)(2 s) = 2 m</eq>. Extending the straight line makes the same prediction.",
+    "For our fictional asteroid, 2026-XJ, tracked positions and times let us estimate velocity along a chosen axis. I want the graph and calculation to tell the same story. We can then judge whether continuing with a constant-velocity prediction is reasonable or whether changing slopes call for a different model."
+  ],
+  "edition": "honors",
+  "sections": {
+    "A": {
+      "title": "KEY VOCABULARY",
+      "text": "SECTION A KEY VOCABULARY Average velocity v̄ = Δ x ÷ Δ t . Carries direction; summarizes a whole interval. Average speed Total distance ÷ elapsed time. No direction. Slope On an x – t graph, slope = velocity (units m/s). Height = position, not velocity. Instantaneous velocity Velocity at one moment: the tangent slope on a curved x – t graph.",
+      "box": [
+        75.75,
+        109.5,
+        295.5,
+        158.25
+      ]
+    },
+    "B": {
+      "title": "KEY EQUATION + UNITS",
+      "text": "SECTION B KEY EQUATION + UNITS v̄ = Δ x ÷ Δ t Δ x = x f − x i v velocity, meters per second (m/s) speed total distance ÷ Δ t",
+      "box": [
+        373.25,
+        109.5,
+        217.75,
+        158.25
+      ]
+    },
+    "C": {
+      "title": "COLOR IT · READ A GRAPH AS A MOTION STORY",
+      "text": "SECTION C COLOR IT · READ A GRAPH AS A MOTION STORY Height = position. Slope = velocity. 0 1 2 3 4 5 6 0 1 2 3 4 time (s) position (m) run 1 s rise 2 m slope = +2 m/s 1 2 3 1 · PURPLE Rising: moving +, v > 0 2 · PURPLE Flat: stopped, v = 0 3 · PURPLE Falling: moving −, v < 0",
+      "box": [
+        75.75,
+        267.75,
+        515.25,
+        258.0
+      ]
+    },
+    "D": {
+      "title": "WORKED EXAMPLE",
+      "text": "SECTION D WORKED EXAMPLE A straight x – t line passes through (2 s, 14 m) and (6 s, 6 m). Find the velocity, then predict x at 8 s. GIVEN (2 s, 14 m) (6 s, 6 m) predict at 8 s EQUATION v = Δ x ÷ Δ t x = x i + v t WORK v = (6 − 14) ÷ (6 − 2) x (8) = 6 + (−2)(2) ANSWER −2 m/s; 2 m if the line continues",
+      "box": [
+        75.75,
+        525.75,
+        515.25,
+        108.0
+      ]
+    },
+    "E": {
+      "title": "THE 2026-XJ THREAD",
+      "text": "SECTION E THE 2026-XJ THREAD DAY 3 OF 22 · NEW TOOL: AVERAGE VELOCITY Average velocity, Δ x ÷ Δ t from two tracked positions, is the desk’s first estimate of how fast XJ closes in. The slope of its x – t graph shows whether that rate holds. Unit question: How fast is it moving, and where will it arrive?",
+      "box": [
+        75.75,
+        633.75,
+        515.25,
+        81.79
+      ]
+    }
+  },
+  "words": [
+    {
+      "term": "Average velocity",
+      "definition": "v̄ = Δ x ÷ Δ t . Carries direction; summarizes a whole interval."
+    },
+    {
+      "term": "Average speed",
+      "definition": "Total distance ÷ elapsed time. No direction."
+    },
+    {
+      "term": "Slope",
+      "definition": "On an x – t graph, slope = velocity (units m/s). Height = position, not velocity."
+    },
+    {
+      "term": "Instantaneous velocity",
+      "definition": "Velocity at one moment: the tangent slope on a curved x – t graph."
+    }
+  ],
+  "packet": "/student-choice-pages/unit-1/reading-references-98403bdc2cab/day-03-honors-notes-and-reading.pdf"
+}
