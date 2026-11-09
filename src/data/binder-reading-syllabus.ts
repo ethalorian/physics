@@ -24,6 +24,7 @@ export const BINDER_READINGS: SyllabusStep[] = lessons.map(lesson => {
     // The existing course-passage schema uses chapter 4 with no textbook sections.
     chapter:4, sections:[], prerequisites:[], passage:binderPassage(source),
     words:lesson.words, vocabularyTarget:topic.vocabularyTarget,
+    binderPractice:item.practice,
     narrativeCheck:{reference:'Daily reading',prompt:item.narrativePrompt,guide:item.narrativeGuide,target},
     readingCheck:{reference:'Section C · Diagram',prompt:item.diagramPrompt,guide:'Credit an accurate interpretation supported by a feature of the diagram. ' + plain(figure),target},
     quizCheck:{reference:'Apply the daily reading',prompt:item.transferPrompt,guide:item.guide,target},

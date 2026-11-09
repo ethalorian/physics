@@ -13,6 +13,8 @@ export interface SyllabusStep {
   prerequisites: string[]; words: SyllabusWord[]; vocabularyTarget: string;
   readingCheck: SyllabusCheck; quizCheck: SyllabusCheck; honors: SyllabusCheck;
   narrativeCheck?: SyllabusCheck;
+  // Each binder day asks about a specific feature of its diagram and a result from its worked example.
+  binderPractice?: { diagram: string; workedExample: string };
   passage?: string; honorsReading?: HonorsReading; sourceBook?: 'hewitt' | 'openstax' | 'binder'; selectionRequired?: boolean;
 }
 export interface SyllabusBundle {
@@ -54,9 +56,11 @@ export function buildSyllabusReading(step: SyllabusStep, steps: SyllabusStep[], 
   const prior = step.prerequisites.map(id => steps.find(s => s.id === id)).filter((s): s is SyllabusStep => !!s)
   const binder = binderSource(step.passage)
   if (binder && binder.edition !== (course.track === 'honors' ? 'honors' : 'cpa')) throw Error('Choose the binder reading for this class edition.')
-  const practiceChecks = binder ? [
-    {...step.readingCheck, prompt:'Open Section C on the note front. Describe one labeled feature, then explain what it shows using a sentence from the reading as evidence.', demand:demand('Analyze',2,'Interpret evidence from the original note diagram.')},
-    {target:step.readingCheck.target,reference:'Section D · Reasoning',prompt:`Read the worked example on the note front: ${step.honors.prompt} Explain the first physics decision you would make and use one detail from the reading to justify it.`,demand:demand('Apply',2,'Connect a step in the worked example to the daily reading.')},
+  const practice = binder ? step.binderPractice : undefined
+  if (binder && (!practice?.diagram.trim() || !practice.workedExample.trim())) throw Error('The binder day needs a diagram question and a worked-example question.')
+  const practiceChecks = practice ? [
+    {...step.readingCheck, prompt:practice.diagram, demand:demand('Analyze',2,'Interpret evidence from the original note diagram.')},
+    {target:step.readingCheck.target,reference:step.honors.reference,prompt:practice.workedExample,demand:demand('Apply',2,'Apply the model in the worked example to the given situation.')},
   ] : [
     {...step.readingCheck,demand:demand('Understand',2,'Explain the reading’s idea using its evidence and representations.')},
     {...step.quizCheck,reference:'Apply the idea',demand:demand('Apply',2,'Apply the reading’s model to the supplied situation.')},

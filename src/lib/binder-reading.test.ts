@@ -11,10 +11,12 @@ import { isInteractiveReading, isInteractiveSyllabusStep } from './reading-avail
 import targets from '../../scripts/fixtures/reading-syllabus-targets.json'
 import cpa from '../../resources/student-choice/unit-1-readings/cpa.json'
 import honors from '../../resources/student-choice/unit-1-readings/honors.json'
+import checks from '../../resources/student-choice/daily-reader/checks.json'
 
 test('every day prepares the correct source, two comprehension items, a new application, and its vocabulary quiz',()=>{
   assert.equal(BINDER_READINGS.length,44)
   const uniquePrompts=new Set<string>()
+  const practicePrompts=new Set<string>()
   for(const step of BINDER_READINGS) {
     const source=binderSource(step.passage)!
     const course={id:randomUUID(),name:'Test class',section:null,program:'physics',track:source.edition}
@@ -23,6 +25,17 @@ test('every day prepares the correct source, two comprehension items, a new appl
     const drafts=buildSyllabusDrafts(step,[],course,targets,randomUUID)
     assert(isInteractiveReading(validateReading(drafts.reading)))
     const reading=validateQuiz(drafts.readingQuiz), vocabulary=validateQuiz(drafts.vocabularyQuiz)
+    const authored=checks.find(item=>item.edition===source.edition && item.day===source.day)!.practice
+    assert.deepEqual(drafts.reading.questions.map(q=>[q.reference,q.prompt]),[
+      ['Section C · Diagram',authored.diagram],
+      ['Section D · Worked example',authored.workedExample],
+    ])
+    for(const {prompt} of drafts.reading.questions) {
+      assert.doesNotMatch(prompt,/first physics decision|describe one labeled feature/i)
+      assert(!practicePrompts.has(prompt))
+      assert(!reading.questions.some(q=>q.prompt.endsWith(prompt)))
+      practicePrompts.add(prompt)
+    }
     assert.deepEqual(reading.questions.map(q=>q.prompt.split(' — ')[0]),['Daily reading','Section C · Diagram','Apply the daily reading'])
     for(const q of reading.questions){assert(q.guide && q.guide.length>30);assert(!uniquePrompts.has(q.prompt));uniquePrompts.add(q.prompt)}
     assert.equal(vocabulary.questions.length,step.words.length+1)
@@ -41,4 +54,5 @@ test('every day prepares the correct source, two comprehension items, a new appl
     assert.equal(drafts.reading.status,'draft')
     for(const q of reading.questions){assert(q.guide);assert(!JSON.stringify(content).includes(q.guide))}
   }
+  assert.equal(practicePrompts.size,88)
 })
