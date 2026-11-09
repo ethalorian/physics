@@ -8,6 +8,7 @@ import type { Quiz, QuizQuestion } from './quizzes/types'
 
 export interface SyllabusWord { term: string; definition: string }
 export interface SyllabusCheck { prompt: string; guide: string; target: string; reference?: string }
+export interface BinderVocabularyQuestion { reference: string; terms: string[]; prompt: string; guide: string }
 export interface SyllabusStep {
   id: string; unit: string; title: string; focus: string; chapter: number; sections: string[];
   prerequisites: string[]; words: SyllabusWord[]; vocabularyTarget: string;
@@ -15,6 +16,7 @@ export interface SyllabusStep {
   narrativeCheck?: SyllabusCheck;
   // Each binder day asks about a specific feature of its diagram and a result from its worked example.
   binderPractice?: { diagram: string; workedExample: string };
+  binderVocabulary?: BinderVocabularyQuestion[];
   passage?: string; honorsReading?: HonorsReading; sourceBook?: 'hewitt' | 'openstax' | 'binder'; selectionRequired?: boolean;
 }
 export interface SyllabusBundle {
@@ -91,13 +93,27 @@ export function buildSyllabusDrafts(step: SyllabusStep, steps: SyllabusStep[], c
   const base = { course_id: course.id, instructions: 'Explain your thinking. Words, labeled sketches, and equations may support your explanation. Your teacher reviews your work.', grade_mode: 'credit' as const, status: 'draft' as const, version: 0, due_at: null, student_ids: null, source_quiz_id: null, language_level: course.track === 'honors' ? 'honors' as const : 'cpa' as const }
   const vocabularyTarget = target(step.vocabularyTarget)
   if (targets.find(t => t.id === vocabularyTarget)?.domain !== 'knowledge') throw Error('Vocabulary needs a Knowledge target.')
+  const binderVocabulary = binder ? step.binderVocabulary : undefined
+  if (binder && !binderVocabulary?.length) throw Error('The binder day needs its own vocabulary questions.')
   return {
     step_id: step.id, unit: step.unit, words: step.words, vocabularyTarget,
     reading: buildSyllabusReading(step, steps, course, target, newId),
     readingQuiz: { ...base, id: newId(), title: `${step.title} · Reading check`, kind: 'understanding', questions: binder ? checks.map(question) : [...checks.map(question),{id:newId(),kind:'written',points:4,target_id:target(step.readingCheck.target),prompt:misconceptionPrompt(step.title.toLowerCase()),guide:'One point each: specific new example; accurate physical reasoning; plausible substantive misconception; evidence that discriminates between the explanations.',demand:demand('Evaluate',3,'Create and evaluate a counterexample using evidence, not a remembered statement.')}] },
-    vocabularyQuiz: { ...base, ...(binder ? {instructions:`Use the vocabulary from Section A of your Day ${binder.day} notes. Connect each meaning to a detail from the diagram, the worked example, or the narrative. The worked example begins: ${step.honors.prompt}`}:{}), id: newId(), title: `${step.title} · Vocabulary check`, kind: 'vocabulary',
-      questions: [...step.words.map((word):QuizQuestion => ({ id: newId(), kind: 'written', points: 2, target_id: vocabularyTarget,
-        prompt: binder ? `Explain “${word.term}” in your own words. Choose a detail from today's reading or note page and explain how it illustrates the term.` : `Explain “${word.term}” in your own words. Use it in a specific example connected to ${step.title.toLowerCase()}.`,
+    vocabularyQuiz: { ...base, ...(binder ? {instructions:`Use the word or words named in each question to explain what happens. Refer to the marked section of your Day ${binder.day} notes or reading. Use both words in your final answer.`}:{}), id: newId(), title: `${step.title} · Vocabulary check`, kind: 'vocabulary',
+      questions: binderVocabulary ? binderVocabulary.map((item): QuizQuestion => {
+        const paired = item.terms.length === 2
+        return {
+          id: newId(), kind: 'written', target_id: vocabularyTarget, vocabulary: item.terms,
+          prompt: `${item.reference} · ${item.terms.join(' + ')}\n\n${item.prompt}`,
+          points: paired ? 4 : 2,
+          guide: (paired
+            ? 'Award one point for each term used correctly, one for the result and one for the supporting reasoning. '
+            : 'Award one point for accurate use of the vocabulary and one for explaining the specific case. ') + item.guide,
+          demand: paired ? demand('Analyze',2,'Connect the two terms to explain the result in the cited material.')
+            : demand('Apply',2,'Use the term to explain the specified observation, calculation or diagram.'),
+        }
+      }) : [...step.words.map((word):QuizQuestion => ({ id: newId(), kind: 'written', points: 2, target_id: vocabularyTarget,
+        prompt: `Explain “${word.term}” in your own words. Use it in a specific example connected to ${step.title.toLowerCase()}.`,
         guide: `Meaning (1 point): ${word.definition} Use (1 point): a physically correct, specific example that uses the word consistently with this meaning. Accept equivalent wording and labeled sketches; do not deduct for language errors.`, vocabulary: [word.term], demand:demand('Understand',2,'Explain a meaning and connect it to a concrete example.') })),{id:newId(),kind:'written',points:4,target_id:vocabularyTarget,prompt:vocabularyTransferPrompt(step.words.map(w => w.term)),guide:'One point each: coherent situation; accurate word use; justified prediction; relevant test. Use the supplied vocabulary meanings to judge content.',vocabulary:step.words.map(w=>w.term),demand:demand('Create',3,'Connect technical meanings in a new model, prediction and test.')}] },
   }
 }

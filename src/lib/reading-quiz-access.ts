@@ -7,7 +7,7 @@ import { binderSourceForStep } from './binder-reading'
 
 export async function binderForReadingQuiz(quizId: string, courseId: string) {
   const { data, error } = await supabaseAdmin.from('reading_syllabus_bundles').select('step_id')
-    .eq('course_id', courseId).eq('reading_quiz_id', quizId).maybeSingle()
+    .eq('course_id', courseId).or(`reading_quiz_id.eq.${quizId},vocabulary_quiz_id.eq.${quizId}`).maybeSingle()
   if (error) throw error
   return data ? binderSourceForStep(data.step_id) : null
 }

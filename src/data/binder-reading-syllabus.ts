@@ -3,6 +3,7 @@ import lessons from '../../resources/student-choice/daily-reader/lessons.json'
 import cpa from '../../resources/student-choice/unit-1-readings/cpa.json'
 import honors from '../../resources/student-choice/unit-1-readings/honors.json'
 import checks from '../../resources/student-choice/daily-reader/checks.json'
+import vocabularyChecks from '../../resources/student-choice/daily-reader/vocabulary-checks.json'
 import { binderDayLabel, binderPassage, binderStepId } from '@/lib/binder-reading'
 import type { SyllabusStep } from '@/lib/reading-syllabus'
 import { READING_SYLLABUS } from './reading-syllabus'
@@ -12,8 +13,9 @@ const topics = ['measurement-precision','distance-displacement','position-graphs
 export const BINDER_READINGS: SyllabusStep[] = lessons.map(lesson => {
   const source = { edition: lesson.edition === 'honors' ? 'honors' as const : 'cpa' as const, day: lesson.day }
   const item = checks.find(q => q.day === source.day && q.edition === source.edition)
+  const vocab = vocabularyChecks.find(q => q.day === source.day && q.edition === source.edition)
   const topic = READING_SYLLABUS.find(s => s.id === topics[source.day - 1])
-  if (!item || !topic) throw Error('Missing binder reading or target for ' + binderStepId(source))
+  if (!item || !topic || !vocab) throw Error('Missing binder reading, vocabulary quiz or target for ' + binderStepId(source))
   const reading = (source.edition === 'honors' ? honors : cpa)[source.day - 1]
   const plain = (text: string) => text.replace(/<[^>]*>/g, '')
   const figure = reading.paragraphs.find(p => p.includes('Section C'))
@@ -25,6 +27,7 @@ export const BINDER_READINGS: SyllabusStep[] = lessons.map(lesson => {
     chapter:4, sections:[], prerequisites:[], passage:binderPassage(source),
     words:lesson.words, vocabularyTarget:topic.vocabularyTarget,
     binderPractice:item.practice,
+    binderVocabulary:vocab.questions,
     narrativeCheck:{reference:'Daily reading',prompt:item.narrativePrompt,guide:item.narrativeGuide,target},
     readingCheck:{reference:'Section C · Diagram',prompt:item.diagramPrompt,guide:'Credit an accurate interpretation supported by a feature of the diagram. ' + plain(figure),target},
     quizCheck:{reference:'Apply the daily reading',prompt:item.transferPrompt,guide:item.guide,target},

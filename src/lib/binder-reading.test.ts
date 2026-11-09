@@ -6,6 +6,7 @@ import { BINDER_READINGS } from '@/data/binder-reading-syllabus'
 import { buildSyllabusDrafts } from './reading-syllabus'
 import { validateReading } from './textbook-assignments'
 import { validateQuiz } from './quizzes/validation'
+import { studentQuiz } from './quizzes/types'
 import { binderMaterials, binderSource, type BinderLesson } from './binder-reading'
 import { isInteractiveReading, isInteractiveSyllabusStep } from './reading-availability'
 import targets from '../../scripts/fixtures/reading-syllabus-targets.json'
@@ -17,6 +18,7 @@ test('every day prepares the correct source, two comprehension items, a new appl
   assert.equal(BINDER_READINGS.length,44)
   const uniquePrompts=new Set<string>()
   const practicePrompts=new Set<string>()
+  const vocabularyPrompts=new Set<string>()
   for(const step of BINDER_READINGS) {
     const source=binderSource(step.passage)!
     const course={id:randomUUID(),name:'Test class',section:null,program:'physics',track:source.edition}
@@ -40,6 +42,21 @@ test('every day prepares the correct source, two comprehension items, a new appl
     for(const q of reading.questions){assert(q.guide && q.guide.length>30);assert(!uniquePrompts.has(q.prompt));uniquePrompts.add(q.prompt)}
     assert.equal(vocabulary.questions.length,step.words.length+1)
     assert.deepEqual(vocabulary.questions.slice(0,-1).map(q=>q.vocabulary?.[0]),step.words.map(w=>w.term))
+    const authoredVocabulary=step.binderVocabulary!
+    for (const [i, item] of authoredVocabulary.entries()) {
+      assert.match(item.reference,/^(Section [A-E]|Daily reading)$/)
+      assert(!vocabularyPrompts.has(item.prompt))
+      vocabularyPrompts.add(item.prompt)
+      const pair=i===step.words.length
+      assert.equal(new Set(item.terms).size,pair?2:1)
+      assert(item.terms.every(term=>step.words.some(w=>w.term===term)))
+      const q=vocabulary.questions[i]
+      assert.deepEqual(q.vocabulary,item.terms)
+      assert.equal(q.prompt,`${item.reference} · ${item.terms.join(' + ')}\n\n${item.prompt}`)
+      assert(q.guide?.endsWith(item.guide) && item.guide.length>32)
+      assert.equal(q.points,pair?4:2)
+    }
+    assert(studentQuiz(vocabulary).questions.every(q=>q.guide===undefined))
     const path='public'+binderMaterials(source)
     const content:BinderLesson=JSON.parse(readFileSync(path+'.json','utf8'))
     const title = `Unit 1 Day ${source.day} · ${content.title}`
@@ -55,4 +72,5 @@ test('every day prepares the correct source, two comprehension items, a new appl
     for(const q of reading.questions){assert(q.guide);assert(!JSON.stringify(content).includes(q.guide))}
   }
   assert.equal(practicePrompts.size,88)
+  assert.equal(vocabularyPrompts.size,220)
 })

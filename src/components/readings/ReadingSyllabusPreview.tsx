@@ -18,7 +18,7 @@ import styles from './readings.module.css'
 
 /** This page only reads the staff-scoped catalog; previewing never prepares or
  * publishes work. Saved bundles always open the actual editable assignment. */
-export default function ReadingSyllabusPreview({ courseId, stepId, readingCheck = false }: { courseId: string; stepId: string; readingCheck?: boolean }) {
+export default function ReadingSyllabusPreview({ courseId, stepId, activity }: { courseId: string; stepId: string; activity: 'reading' | 'check' | 'vocabulary' }) {
   const { data: session } = useSession()
   const router = useRouter()
   const [data, setData] = useState<(SyllabusCatalog & { staff: boolean }) | null>(null)
@@ -32,8 +32,8 @@ export default function ReadingSyllabusPreview({ courseId, stepId, readingCheck 
     return () => controller.abort()
   }, [courseId, stepId])
   const bundle = data?.staff ? data.bundles.find(bundle => bundle.course_id === courseId && bundle.step_id === stepId) : undefined
-  const savedId = readingCheck ? bundle?.reading_quiz_id : bundle?.reading.id
-  useEffect(() => { if (savedId) router.replace(readingCheck ? '/quizzes/' + encodeURIComponent(savedId) : '/readings/' + encodeURIComponent(savedId) + '?reader=interactive') }, [savedId, readingCheck, router])
+  const savedId = bundle && { reading: bundle.reading.id, check: bundle.reading_quiz_id, vocabulary: bundle.vocabulary_quiz_id }[activity]
+  useEffect(() => { if (savedId) router.replace(activity === 'reading' ? '/readings/' + encodeURIComponent(savedId) + '?reader=interactive' : '/quizzes/' + encodeURIComponent(savedId)) }, [savedId, activity, router])
   const backHref = readingDashboardHref({ view: 'syllabus', courseId, stepId })
   const unavailable = (message: string) => <div className={styles.page}><h1 className="text-title-1">Reading preview</h1><p role="alert">{message}</p><Button asChild><Link href={data && !data.staff ? '/readings' : backHref}>Back to readings</Link></Button></div>
   if (error) return unavailable(error)
@@ -47,10 +47,11 @@ export default function ReadingSyllabusPreview({ courseId, stepId, readingCheck 
   let sequence = 0
   const assignment = buildSyllabusReading(step, steps, course, slug => data.targets.find(target => target.slug === slug)?.id ?? '', () => `preview-${step.id}-${sequence++}`)
   const binder = binderSource(assignment.passage)
-  if (binder && readingCheck) {
+  if (binder && activity !== 'reading') {
     try {
       const drafts = buildSyllabusDrafts(step, steps, course, data.targets, () => `preview-${step.id}-${sequence++}`)
-      return <QuizPreview key={step.id} quiz={drafts.readingQuiz} binderReading={binder} backHref={backHref}/>
+      const quiz = activity === 'vocabulary' ? drafts.vocabularyQuiz : drafts.readingQuiz
+      return <QuizPreview key={step.id + activity} quiz={quiz} binderReading={binder} backHref={backHref}/>
     } catch (error) { return unavailable((error as Error).message) }
   }
   if (binder) return <div className={styles.page}><Link href={backHref}>← Back to reading plan</Link>
