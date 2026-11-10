@@ -1,0 +1,25 @@
+.workspace { display: grid; min-width: 0; margin: 0; padding: 0; border: 0; gap: .7rem; }
+.workspace legend { padding: 0; font: 600 1.24rem/1.35 Georgia, serif; }
+.hint { color: var(--muted-foreground); font-size: .9rem; line-height: 1.5; margin: .25rem 0 0; }
+.steps { display: grid; gap: .7rem; margin: 0; padding: 0; list-style: none; }
+.steps li { min-width: 0; padding: .6rem .75rem .75rem; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--background); }
+.stepHeader, .tools, .add { display: flex; align-items: center; }
+.stepHeader { justify-content: space-between; min-height: 1.85rem; color: var(--muted-foreground); font-size: .82rem; font-weight: 650; }
+.entry, .fieldHost { min-width: 0; }
+.fieldHost math-field, .entry input { display: block; width: 100%; min-height: 3rem; padding: .35rem .5rem; box-sizing: border-box; background: var(--card); color: var(--foreground); border: 1px solid var(--input); border-radius: .45rem; font-size: 1.25rem; --caret-color: var(--primary); --selection-background-color: color-mix(in srgb, var(--primary) 25%, transparent); }
+.fieldHost math-field:focus-within, .workspace :is(button, select, textarea, input):focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.tools { flex-wrap: wrap; gap: .35rem; margin-top: .5rem; }
+.tools button, .tools select, .add, .remove { cursor: pointer; color: var(--foreground); }
+.tools button, .tools select { min-width: 2.35rem; min-height: 2.15rem; padding: .2rem .55rem; border: 1px solid var(--border); border-radius: .4rem; background: var(--card); font: 600 1rem Georgia, serif; }
+.add { width: fit-content; gap: .4rem; padding: .5rem .65rem; color: var(--primary); font-size: .9rem; font-weight: 650; }
+.remove { display: grid; place-items: center; width: 2rem; height: 2rem; }
+.tools button:hover, .remove:hover, .add:hover { background: var(--accent); }
+.workspace label { margin-top: .3rem; font-weight: 600; }
+.workspace textarea { width: 100%; resize: vertical; border: 1px solid var(--input); border-radius: var(--radius-md); padding: .75rem; line-height: 1.6; background: var(--background); color: var(--foreground); }
+.saved { white-space: normal; }
+.saved ol { padding-inline-start: 1.6rem; list-style: decimal; }
+.saved li { padding: .2rem .4rem; }
+.saved li > span { display: block; overflow-x: auto; }
+.saved :global(.katex-display) { margin: .25rem 0; }
+.saved :global(.katex-display > .katex) { text-align: start; }
+.saved p { white-space: pre-wrap; margin-top: .5rem; }

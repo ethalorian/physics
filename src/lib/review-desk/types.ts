@@ -6,7 +6,7 @@ export type Evidence = {
   id: string; prompt: string; response: unknown; previous?: unknown; guide?: string;
   targetIds: string[]; context?: string; suggestion?: Suggestion; teacherFeedback?: string;
   /** Native renderer data for diagrams, mathematical responses and group context. */
-  rendering?: 'problem' | 'math' | 'force' | 'simulation' | 'artifact';
+  rendering?: 'worked-example' | 'problem' | 'math' | 'force' | 'simulation' | 'artifact';
 }
 export type ScoreItem = { id: string; label: string; possible: number; step: number; automatic?: number; suggested?: number; feedback?: string }
 export type ReviewDecision = {

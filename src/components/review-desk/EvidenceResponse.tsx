@@ -1,5 +1,6 @@
 'use client'
 import dynamic from 'next/dynamic'
+import WorkedAnswer from '@/components/readings/WorkedAnswer'
 import { ProblemStageDisplay } from '@/components/blocks/ProblemStageInput'
 import { PROBLEM_STAGES, type ProblemAnswer } from '@/lib/problem-response'
 import type { MathResponse } from '@/lib/math-response'
@@ -9,6 +10,7 @@ const MathWorkReview=dynamic(()=>import('@/components/math-spine/MathWorkReview'
 const ForceDiagram=dynamic(()=>import('@/components/interactive-assignments/LessonActivity').then(m=>m.ForceDiagram))
 export default function EvidenceResponse({value,rendering,depth=0}:{value:unknown;rendering?:Evidence['rendering'];depth?:number}){
  if(value===undefined||value===null||value==='')return <p>No response recorded.</p>
+ if(rendering==='worked-example' && typeof value==='string')return <WorkedAnswer value={value}/>
  if(rendering==='simulation'&&typeof value==='object'){const v=value as {state:import('@/lib/interactive-assignments/velocity').VelocityState;simulation:string};return <SimulationTrialEvidence state={v.state} simulation={v.simulation}/>}
  if(rendering==='artifact'&&typeof value==='object'){const v=value as {text?:string;fileId?:string;fileName?:string};return <><p>{v.text}</p>{v.fileId&&<a href={'/api/choice-calendar/artifacts?id='+encodeURIComponent(v.fileId)} target="_blank" rel="noopener noreferrer">Open {v.fileName||'submitted attachment'}</a>}</>}
  if(rendering==='math'&&typeof value==='object')return <MathWorkReview value={value as MathResponse}/>

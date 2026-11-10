@@ -3,8 +3,9 @@
 import { useState } from 'react'
 import type { BinderSource } from '@/lib/binder-reading'
 import type { ReadingAssignment } from '@/lib/textbook-assignments'
-import { QuestionPrompt, WrittenResponse } from '@/components/interactive-assignments/QuestionResponse'
+import { QuestionPrompt } from '@/components/interactive-assignments/QuestionResponse'
 import BinderWorkLayout from './BinderWorkLayout'
+import ReadingResponseInput from './ReadingResponseInput'
 import styles from './readings.module.css'
 
 export default function BinderResponsePreview({ source, assignment }: { source: BinderSource; assignment: ReadingAssignment }) {
@@ -18,7 +19,7 @@ export default function BinderResponsePreview({ source, assignment }: { source: 
       {assignment.questions.map((q, i) => <article key={q.id} className={styles.question}>
         <h3 className="text-title-3">{i + 1}. {q.reference}</h3>
         <QuestionPrompt>{q.prompt}</QuestionPrompt>
-        <WrittenResponse label={`Your reasoning · question ${i + 1}`} value={answers[q.id] ?? ''} maxLength={10000}
+        <ReadingResponseInput binder reference={q.reference} label={`Your reasoning · question ${i + 1}`} value={answers[q.id] ?? ''}
           onChange={value => setAnswers(previous => ({ ...previous, [q.id]: value }))}/>
       </article>)}
     </BinderWorkLayout>

@@ -1,4 +1,5 @@
 'use client'
+import WorkedAnswer from './WorkedAnswer'
 import QuizContent from '@/components/quizzes/QuizContent'
 import { ASSESSMENT_SCOPE_CHANGE } from '@/components/admin/useAssessmentReviewGuard'
 import { useEffect, useRef, useState } from 'react'
@@ -57,7 +58,7 @@ export default function ReadingReview({ detail, onRefresh, initialStudent }: { d
   </div>
 }
 export function SubmittedAnswers({ submission }: { submission: ReadingSubmission }) {
-  return <div className={styles.stack}>{submission.snapshot.questions.map((q, i) => <article className={styles.question} key={q.id}><div className={styles.row}><span className={styles.number}>{i + 1}</span><h3 className="font-semibold">{q.reference || `Question ${i + 1}`}</h3></div>{q.prompt && <QuizContent questionEmphasis content={q.prompt} allowFigures/>}<div className={styles.answer}>{submission.answers[q.id] || 'No response'}</div></article>)}</div>
+  return <div className={styles.stack}>{submission.snapshot.questions.map((q, i) => <article className={styles.question} key={q.id}><div className={styles.row}><span className={styles.number}>{i + 1}</span><h3 className="font-semibold">{q.reference || `Question ${i + 1}`}</h3></div>{q.prompt && <QuizContent questionEmphasis content={q.prompt} allowFigures/>}<div className={styles.answer}><WorkedAnswer value={submission.answers[q.id] || 'No response'}/></div></article>)}</div>
 }
 function ReviewForm({ detail, submission, onSaved }: { detail: ReadingDetail; submission: ReadingSubmission; onSaved: () => Promise<void> }) {
   const [ratings, setRatings] = useState<Record<string, number>>({}), [note, setNote] = useState(''), [busy, setBusy] = useState(false), [error, setError] = useState('')

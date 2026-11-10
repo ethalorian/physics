@@ -1,3 +1,4 @@
+import { isWorkedExample } from '@/lib/worked-example-answer'
 import {DAY_SEVEN_RECOVERY_NOTICE} from '@/lib/interactive-assignments/foundations/recovery'
 import {foundationEdition} from '@/lib/interactive-assignments/foundations/core-questions'
 import 'server-only'
@@ -55,7 +56,7 @@ export async function loadReview(ctx:AuthContext, courseId:string, key:string, u
     const saved=native.draft?.payload??review;if(saved)doc.initialDecision={...emptyDecision(),scores:saved.scores??{},ratings:saved.ratings??{},feedback:saved.question_notes??{},note:saved.note??'',gradeValue:saved.grade_value??null}
     doc.state=work.state==='submitted'?'submitted':work.state==='returned'?'returned':'released';doc.canRelease=doc.state==='submitted';doc.canReturn=doc.canRelease;doc.attempt=history.length;doc.version=sub.id;doc.submittedAt=sub.submitted_at
     doc.targets=doc.targets.filter(t=>sub.snapshot.questions.some((q:SourceRow)=>q.target_id===t.id)).map(t=>({...t,allowSkip:quiz}))
-    doc.evidence=sub.snapshot.questions.map((q:SourceRow,i:number)=>({id:q.id,prompt:q.reference?`${q.reference}\n${q.prompt}`:q.prompt,response:q.kind==='choice'?q.options?.[Number(sub.answers[q.id])]??'No response':sub.answers[q.id],previous:prior?.answers[q.id],guide:q.guide,targetIds:[q.target_id],...(q.kind==='problem'?{rendering:'problem'}:{}),context:`Question ${i+1}`}))
+    doc.evidence=sub.snapshot.questions.map((q:SourceRow,i:number)=>({id:q.id,prompt:q.reference?`${q.reference}\n${q.prompt}`:q.prompt,response:q.kind==='choice'?q.options?.[Number(sub.answers[q.id])]??'No response':sub.answers[q.id],previous:prior?.answers[q.id],guide:q.guide,targetIds:[q.target_id],...(q.kind==='problem'?{rendering:'problem'}:!quiz&&isWorkedExample(q.reference??'')?{rendering:'worked-example'}:{}),context:`Question ${i+1}`}))
     if(quiz){doc.gradeMode='points';doc.gradeFormat=sub.snapshot.grade_mode;doc.scoreItems=sub.snapshot.questions.map((q:SourceRow,i:number)=>({id:q.id,label:`Question ${i+1}`,possible:q.points,step:.5,...(q.kind==='choice'?{automatic:sub.answers[q.id]===String(q.correct_index)?q.points:0}:{})}));const ai=await row('quiz_ai_reviews',{submission_id:sub.id});if(ai?.status==='ready'){doc.suggestedFeedback=[ai.result?.summary,ai.result?.next_step].filter(Boolean).join('\n\n');for(const item of doc.scoreItems){const match=ai.result?.items?.find((x:SourceRow)=>x.id===item.id);if(match){item.suggested=match.score;item.feedback=match.feedback}}}}
   } else if(activity.kind==='interactive'||activity.kind==='simulation') {
     const assignment=await row('interactive_assignments',{id:key.slice('interactive:'.length)}),original=assignmentBySlug(activity.sourceId)
