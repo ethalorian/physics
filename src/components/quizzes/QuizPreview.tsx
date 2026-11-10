@@ -10,6 +10,7 @@ import QuizHeader from './QuizHeader'
 import CognitiveProfile from '@/components/admin/CognitiveProfile'
 import BinderWorkLayout from '@/components/readings/BinderWorkLayout'
 import BinderQuizQuestions from './BinderQuizQuestions'
+import BinderQuizPrint from './BinderQuizPrint'
 import s from './Quiz.module.css'
 
 type Props = {
@@ -30,7 +31,7 @@ export default function QuizPreview({ quiz, targets, onClose, backHref, binderRe
       {onClose ? <button className={s.secondary} onClick={onClose}>Back to quiz editor</button>
         : <Link href={backHref} className={s.secondary}>Back to assignment</Link>}
     </div>
-    <QuizHeader quiz={q} targets={targets} eyebrow="STUDENT VIEW"><QuizContent content={q.instructions} questionEmphasis/></QuizHeader>
+    <QuizHeader quiz={q} targets={targets} eyebrow="STUDENT VIEW"><QuizContent content={q.instructions} questionEmphasis/>{binderReading && <BinderQuizPrint source={binderReading} quiz={q}/>}</QuizHeader>
     <CognitiveProfile demands={quiz.questions.map(q => q.demand)}/>
     <BinderWorkLayout source={binderReading}>
       {binderReading ? <BinderQuizQuestions questions={q.questions} answers={answers} onChange={change}/> : <>

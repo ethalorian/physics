@@ -11,6 +11,7 @@ import QuizContent from './QuizContent'
 import QuizHeader from './QuizHeader'
 import BinderWorkLayout from '@/components/readings/BinderWorkLayout'
 import BinderQuizQuestions from './BinderQuizQuestions'
+import BinderQuizPrint from './BinderQuizPrint'
 import QuizPreview from './QuizPreview'
 export default function QuizStudentWork({id}:{id:string}) {
  const {data,error,loading,load}=useQuizData<QuizDetail>(`/api/quizzes/${id}`)
@@ -59,7 +60,7 @@ export function QuizSession({data,reload}:{data:QuizDetail;reload:()=>Promise<vo
  async function leave(){setBusy(true);try{await flush();router.push('/quizzes')}catch{}finally{setBusy(false)}}
  const completed=quiz.questions.filter(q=>answerComplete(q,answers)).length,question=quiz.questions[index]
  return <><RevisionCycle sourceKey={'quiz:'+quiz.id} submitted={initial?.state==='submitted'||initial?.state==='graded'}/><div className={`${s.row} ${s.toolbar}`}><button className={s.secondary} disabled={busy} onClick={()=>void leave()}>← All quizzes</button><span className={s.muted} role="status">{locked?(initial?.state==='graded'?'Grade returned':initial?.state==='submitted'?'Submitted · waiting for your teacher':'Quiz closed'):status}</span></div>
- <QuizHeader quiz={quiz} targets={targets} eyebrow="SHOW WHAT YOU UNDERSTAND"><QuizContent content={quiz.instructions} questionEmphasis/><div className="mt-4"><span>{quiz.questions.length} questions · {quiz.questions.reduce((n,q)=>n+q.points,0)} points · {dueLabel(quiz.due_at)}</span></div></QuizHeader>
+ <QuizHeader quiz={quiz} targets={targets} eyebrow="SHOW WHAT YOU UNDERSTAND"><QuizContent content={quiz.instructions} questionEmphasis/><div className="mt-4"><span>{quiz.questions.length} questions · {quiz.questions.reduce((n,q)=>n+q.points,0)} points · {dueLabel(quiz.due_at)}</span></div>{data.binderReading && <BinderQuizPrint source={data.binderReading} quiz={quiz}/>}</QuizHeader>
  {data.worksheet&&<p className={`${s.notice} mb-4`}>Paired paper worksheet: <Link className={s.link} href={'/worksheet-assignments/'+data.worksheet.id}>{data.worksheet.title} →</Link> · {dueLabel(data.worksheet.due_at)}</p>}
  <details className={`${s.card} mb-4`}><summary>Learning targets for this quiz</summary>{targets.map(t=><div key={t.id} className={s.foot}><QuizContent content={t.statement}/></div>)}<p className={s.muted}>Your quiz grade and mastery ratings are separate. Your teacher decides what this evidence demonstrates.</p></details>
  {error&&<div role="alert" className={s.error}>{error}<button className={s.secondary} disabled={busy} onClick={()=>void flush().catch(()=>{})}>Retry saving</button></div>}

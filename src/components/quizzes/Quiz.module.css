@@ -60,3 +60,6 @@
 .figureLink { display: block; margin: 1rem 0; }
 .figureLink .assignmentFigure { margin-bottom: .4rem; }
 .figureLink span { display: inline-block; font-size: 1rem; }
+
+.paperQuiz { display: flex; flex-wrap: wrap; align-items: center; gap: .85rem; margin-top: 1rem; }
+.paperQuiz a { text-decoration: underline; }

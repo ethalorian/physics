@@ -53,6 +53,7 @@
     "verify:foundation-cpa": "node scripts/foundation-cpa/verify-content.cjs"
   },
   "dependencies": {
+    "@pdf-lib/fontkit": "1.1.1",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-dialog": "^1.1.1",
