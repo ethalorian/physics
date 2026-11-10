@@ -37,7 +37,7 @@ test('each single-option print link serves the matching PDF sheet for all 22 day
       const href = choicePracticePrintPath(packet, [option])
       const response = await GET(new Request(new URL(href, 'http://fixture')))
       assert.equal(response.headers.get('Content-Type'), 'application/pdf')
-      assert.match(response.headers.get('Content-Disposition') ?? '', /\.pdf"$/)
+      assert.equal(response.headers.get('Content-Disposition'), `attachment; filename="${packet.key}-options-${option}.pdf"`)
       const pdf = await PDFDocument.load(await response.arrayBuffer())
       assert.equal(pdf.getPageCount(), 1)
       assert.deepEqual(pageContent(pdf.getPage(0)), pageContent(source.getPage(option - 1)))
@@ -73,6 +73,7 @@ test('teacher packets and student subsets contain the requested physical Letter 
   const request = (choices: string) => GET(new Request(url + choices))
   const full = await request('1,2,3,4,5,6')
   assert.equal(full.headers.get('Content-Type'), 'application/pdf')
+  assert.match(full.headers.get('Content-Disposition') ?? '', /^inline;/)
   const originals = (await PDFDocument.load(await full.arrayBuffer())).getPages()
   assert.equal(originals.length, 6)
   for (const choices of [[6], [5, 2], [6, 2, 4], [5, 4, 3, 2], [5, 4, 3, 2, 1]]) {

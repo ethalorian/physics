@@ -35,9 +35,10 @@ export async function GET(request: Request) {
     bytes = await selection.save()
   }
 
+  const disposition = query.get('download') === '1' ? 'attachment' : 'inline'
   return new Response(new Uint8Array(bytes).buffer, { headers: {
     'Content-Type': 'application/pdf',
-    'Content-Disposition': 'inline; filename="' + packet + '-options-' + options.join('-') + '.pdf"',
+    'Content-Disposition': disposition + '; filename="' + packet + '-options-' + options.join('-') + '.pdf"',
     'Cache-Control': 'public, max-age=3600',
     'X-Content-Type-Options': 'nosniff',
   } })

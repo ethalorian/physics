@@ -78,7 +78,7 @@ export default function BinderDailyReader({source,heading=true,initialSection}:{
     <nav aria-label="Daily note sections"><p>Open a tab to inspect the original note page.</p><div>{letters.map(letter=><button type="button" key={letter} className={s.tab} onClick={()=>setSection(letter)}>Section {letter}</button>)}</div></nav>
     <div className={s.prose}>{lesson.paragraphs.map((p,i)=><p key={i}>{paragraph(p,setSection)}</p>)}</div>
     {lesson.day===8&&<VelocityGraph honors={lesson.edition==='honors'}/>}
-    <WordPractice key={url} lesson={lesson}/><a href={lesson.packet} target="_blank" rel="noreferrer">Open printable notes and reading ↗</a>
+    <WordPractice key={url} lesson={lesson}/><a href={lesson.packet} download>Download notes and reading (PDF)</a>
     {section&&<SectionViewer lesson={lesson} section={section} onClose={()=>setSection(null)}/>}
   </article>
 }
