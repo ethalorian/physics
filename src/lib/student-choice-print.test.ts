@@ -6,6 +6,7 @@ import manifest from '@/data/student-choice-practice-pdfs.json'
 import catalog from '@/data/student-choice-binder.json'
 import { renderChoicePracticePrint } from './student-choice-print'
 import { GET } from '@/app/student-choice-print/route'
+import { choicePracticePrintPath } from './student-choice'
 
 test('all 63 subsets of every pinned edition contain only exact original sections in option order', () => {
   for (const packet of catalog) {
@@ -22,8 +23,45 @@ test('all 63 subsets of every pinned edition contain only exact original section
 function pageContent(page: PDFPage) {
   const contents = page.node.Contents()
   const streams = contents instanceof PDFArray ? contents.asArray() : [contents]
-  return streams.map(ref => page.doc.context.lookup(ref, PDFStream).getContents())
+  return streams.map(ref => Buffer.from(page.doc.context.lookup(ref, PDFStream).getContents()))
 }
+
+test('each single-option print link serves the matching PDF sheet for all 22 days', async () => {
+  const checked = new Set<string>()
+  for (const packet of catalog) {
+    const filename = (manifest as Record<string, string>)[packet.key + '@' + packet.version]
+    if (checked.has(filename)) continue
+    checked.add(filename)
+    const source = await PDFDocument.load(fs.readFileSync('public/student-choice-pages/practice-pdfs/' + filename))
+    for (let option = 1; option <= packet.options.length; option++) {
+      const href = choicePracticePrintPath(packet, [option])
+      const response = await GET(new Request(new URL(href, 'http://fixture')))
+      assert.equal(response.headers.get('Content-Type'), 'application/pdf')
+      assert.match(response.headers.get('Content-Disposition') ?? '', /\.pdf"$/)
+      const pdf = await PDFDocument.load(await response.arrayBuffer())
+      assert.equal(pdf.getPageCount(), 1)
+      assert.deepEqual(pageContent(pdf.getPage(0)), pageContent(source.getPage(option - 1)))
+    }
+  }
+})
+
+test('all binder notes, paired readings, full units and color keys are printable PDFs', async () => {
+  const files = new Map<string, number>()
+  for (const p of catalog) {
+    for (const note of Object.values(p.notes)) files.set(note.path, 1)
+    files.set(p.reference.path, 1)
+    for (const print of Object.values(p.printPackets ?? {})) {
+      files.set(print.day.path, 2)
+      files.set(print.unit.path, 44)
+    }
+  }
+  for (const [path, sheets] of files) {
+    assert(path.endsWith('.pdf'), path)
+    const document = await PDFDocument.load(fs.readFileSync('public' + path))
+    assert.equal(document.getPageCount(), sheets, path)
+    assert(document.getPages().every(page => page.getWidth() === 612 && page.getHeight() === 792), path)
+  }
+})
 
 test('teacher packets and student subsets contain the requested physical Letter pages', async () => {
   const files: Record<string, string> = manifest

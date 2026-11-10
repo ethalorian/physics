@@ -30,6 +30,21 @@ const nextConfig: NextConfig = {
     return [
       ...packetRedirects,
       {
+        source: '/student-choice-pages/unit-1/:edition(layout-1215defe2f22|original-1805385887d1)/day-:day(\\d{2})-option-:option([1-6]).html',
+        destination: '/student-choice-print?format=pdf&packet=unit-1-day-:day&edition=:edition&options=:option',
+        permanent: false,
+      },
+      {
+        source: '/student-choice-pages/unit-1/readings-f35334d84aee/day-:day(\\d{2})-practice-:first([1-6])-:second([1-6])-:third([1-6]).html',
+        destination: '/student-choice-print?format=pdf&packet=unit-1-day-:day&edition=readings-f35334d84aee&options=:first,:second,:third',
+        permanent: false,
+      },
+      {
+        source: '/student-choice-pages/unit-1/original-1805385887d1/color-code.html',
+        destination: '/student-choice-pages/unit-1/original-1805385887d1/color-code.pdf',
+        permanent: false,
+      },
+      {
         // Previously published all-six links also open the printable PDF.
         source: '/student-choice-pages/unit-1/:edition(layout-1215defe2f22|readings-f35334d84aee)/day-:day(\\d{2})-practice-all.html',
         destination: '/student-choice-print?format=pdf&packet=unit-1-day-:day&edition=:edition&options=1,2,3,4,5,6',

@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import type { BinderDay } from '@/lib/student-choice'
+import { choicePracticePrintPath, type BinderDay } from '@/lib/student-choice'
 import s from '@/components/quizzes/Quiz.module.css'
 import c from './StudentChoice.module.css'
 
@@ -28,7 +28,7 @@ export default function ChoiceCarousel({ packet, selected = [], onToggle, disabl
         <iframe key={page.path} title={`Visual preview of option ${index + 1}`} src={page.previewPath ?? page.path} tabIndex={-1} aria-hidden="true" loading="lazy" style={{ transform: `scale(${width / 816})` }} />
       </div>
       <div className={s.stack}><p className={s.eyebrow}>OPTION {index + 1}{page.sei ? ' · LANGUAGE SUPPORT' : ''}{chosen ? ' · SELECTED' : ''}</p><h3>{page.title}</h3>
-        <a className={s.link} href={page.path} target="_blank" rel="noopener noreferrer">Open full page / print option {index + 1}</a>
+        <a className={s.link} href={choicePracticePrintPath(packet, [index + 1])} target="_blank" rel="noopener noreferrer">Print option {index + 1} (PDF)</a>
         {onToggle && <button type="button" className={chosen ? s.secondary : s.button} aria-pressed={chosen} disabled={disabled || (!chosen && selected.length >= required)} onClick={() => onToggle(index + 1)}>{chosen ? `Remove option ${index + 1}` : `Choose option ${index + 1}`}</button>}
         {onToggle && selected.length >= required && !chosen && <p className={s.muted}>{selected.length} selected. Remove a page to choose this option.</p>}
         {!onToggle && <p className={s.muted}>Students choose {required} of these six pages.</p>}
