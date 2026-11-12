@@ -1,5 +1,6 @@
 "use client"
 
+import { StudentMathInput, StudentMathArea } from '@/components/student-math/StudentMathField'
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import {
   PHYSICS_FORMULAS, type FormulaCategory, PHYSICS_VARIABLES, GEWA_UNIT_OPTIONS, MCAS_UNIT_OPTIONS,
@@ -426,7 +427,7 @@ export default function GewaInteractive({
                 {PHYSICS_VARIABLES.map((v) => <option key={v.symbol} value={v.symbol}>{v.symbol} — {v.name}{v.unit ? ` (${v.unit})` : ''}</option>)}
               </select>
               <span style={{ color: 'var(--muted-foreground)', fontWeight: 700 }}>=</span>
-              <input aria-label={`Known ${i + 1} value`} value={c.val} onChange={(e) => setChip(i, { val: e.target.value })} placeholder="value" className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 96 }} />
+              <StudentMathInput mathFormat="number" aria-label={`Known ${i + 1} value`} value={c.val} onValueChange={nextValue => setChip(i, { val: nextValue })} placeholder="value" className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 96 }} />
               <select aria-label={`Known ${i + 1} unit`} value={c.unit} onChange={(e) => setChip(i, { unit: e.target.value })} className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 92 }}>
                 <option value="">unit</option>
                 {GEWA_UNIT_OPTIONS.map((u) => <option key={u} value={u}>{u}</option>)}
@@ -539,7 +540,7 @@ export default function GewaInteractive({
         <div>
           {stepHead('A', 'var(--success)', 'Answer — compute it and box it', 'white')}
           <div className="flex items-center gap-2 flex-wrap">
-            <input aria-label="Answer value" value={answerVal} onChange={(e) => { setAnswerVal(e.target.value); setSaved(false) }} inputMode="decimal" placeholder="your number" className="rounded-md border px-3 py-2 text-sm" style={{ ...fieldBg, width: 150 }} />
+            <StudentMathInput mathFormat="number" aria-label="Answer value" value={answerVal} onValueChange={nextValue => { setAnswerVal(nextValue); setSaved(false) }} inputMode="decimal" placeholder="your number" className="rounded-md border px-3 py-2 text-sm" style={{ ...fieldBg, width: 150 }} />
             <select aria-label="Answer unit" value={answerUnit} onChange={(e) => { setAnswerUnit(e.target.value); setSaved(false) }} className="rounded-md border px-2 py-2 text-sm" style={{ ...fieldBg, width: 110 }}>
               <option value="">unit</option>
               {answerUnitOptions.map((u) => <option key={u} value={u}>{u}</option>)}
@@ -549,7 +550,7 @@ export default function GewaInteractive({
       )}
 
       <label className="block text-sm">Work trail / keyboard alternative — show your substitutions, algebra, and reasoning.
-        <textarea aria-label="GEWA work trail" className="w-full rounded border p-2 bg-card mt-1" rows={3} value={workNotes} onChange={(e) => { setWorkNotes(e.target.value); setSaved(false) }} />
+        <StudentMathArea mathFormat="text" aria-label="GEWA work trail" className="w-full rounded border p-2 bg-card mt-1" rows={3} value={workNotes} onValueChange={nextValue => { setWorkNotes(nextValue); setSaved(false) }} />
       </label>
       {/* check + save */}
       <div className="flex items-center gap-2">

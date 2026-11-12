@@ -19,6 +19,7 @@
  * (plus "Needs a refresh"). Bonus points are reward, never evidence; the ladder
  * moves only on the teacher's rating.
  */
+import { StudentMathArea, StudentMathInput } from '@/components/student-math/StudentMathField'
 import type { MathXpStatus } from '@/lib/xp-policy'
 import ProblemReward from '@/components/math-spine/ProblemReward'
 import MathStudioHeader from '@/components/math-spine/MathStudioHeader'
@@ -277,13 +278,13 @@ function WarmupContent() {
 
               <label htmlFor="final-answer" className={LABEL} style={{ color: 'var(--foreground)' }}>{answerLabel}</label>
               {teacherOnly ? (
-                <textarea id="final-answer" rows={3} value={work.answer}
-                  onChange={(e) => setWork((w) => ({ ...w, answer: e.target.value }))}
+                <StudentMathArea id="final-answer" rows={3} value={work.answer}
+                  onValueChange={nextValue => setWork((w) => ({ ...w, answer: nextValue }))}
                   placeholder={answerPlaceholder}
                   className={styles.input} style={{ resize: 'vertical' }} />
               ) : (
-                <input id="final-answer" value={work.answer}
-                  onChange={(e) => setWork((w) => ({ ...w, answer: e.target.value }))}
+                <StudentMathInput id="final-answer" value={work.answer}
+                  onValueChange={nextValue => setWork((w) => ({ ...w, answer: nextValue }))}
                   onKeyDown={(e) => { if (e.key === 'Enter' && !e.nativeEvent.isComposing) submit() }}
                   placeholder={answerPlaceholder} inputMode="text" autoComplete="off"
                   className={[styles.input, 'text-lg'].filter(Boolean).join(' ')} style={{ height: 48 }} />

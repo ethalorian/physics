@@ -1,3 +1,4 @@
+import { StudentMathInput } from '@/components/student-math/StudentMathField'
 import {useFoundationLanguage} from './FoundationLanguage'
 import {ForceNotation} from './ForceNotation'
 
@@ -20,9 +21,9 @@ export function ForceLabelInput({label, caption, name, onChange, readOnly}:{
   return <div>
     <label>{caption}
       {symbol && <span>F<sub>…</sub> · {words.subscript}</span>}
-      <input aria-label={symbol ? name+' · '+words.subscript : name}
+      <StudentMathInput aria-label={symbol ? name+' · '+words.subscript : name}
         maxLength={symbol ? 98 : 100} value={symbol ? label.slice(2) : label}
-        onChange={e=>onChange(symbol ? 'F_'+e.target.value : e.target.value)}/>
+        onValueChange={nextValue => onChange(symbol ? 'F_'+nextValue : nextValue)}/>
     </label>
     <button type="button" disabled={!symbol && label.length>98}
       onClick={()=>onChange(symbol ? label.slice(2) : 'F_'+label)}>

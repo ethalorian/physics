@@ -1,0 +1,12 @@
+.trigger, .edits button { width: fit-content; min-height: 2rem; padding: .2rem .5rem; border-radius: .35rem; color: var(--primary); font: 600 .82rem/1.35 system-ui, sans-serif; cursor: pointer; }
+.trigger:hover, .edits button:hover { background: var(--accent); }
+.step { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; min-width: 0; margin-block: .25rem; }
+.step > :first-child { max-width: 100%; overflow-x: auto; padding: .2rem; }
+.edits, .actions { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
+.dialog { position: fixed; inset: 0; margin: auto; width: min(30rem, calc(100vw - 2rem)); max-height: 86dvh; overflow: auto; padding: 1.2rem; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--card); color: var(--foreground); box-shadow: 0 1rem 4rem #0003; }
+.dialog::backdrop { background: #0007; }
+.dialog h2 { font-size: 1.25rem; font-weight: 650; margin-bottom: .85rem; }
+.actions { display: flex; justify-content: flex-end; margin-top: 1rem; }
+.actions button { padding: .55rem .85rem; border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; }
+.actions button:last-child { background: var(--primary); color: var(--primary-foreground); }
+.dialog [role=alert] { color: var(--destructive); margin-top: .65rem; }

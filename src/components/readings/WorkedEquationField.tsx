@@ -36,6 +36,7 @@ export default function WorkedEquationField(props: Props) {
 
   useEffect(() => {
     let mounted = true
+    let releaseKeyboard: (() => void) | undefined
     const changed = () => {
       const element = field.current
       if (element && !latest.current.onChange(element.value)) {
@@ -56,6 +57,12 @@ export default function WorkedEquationField(props: Props) {
       element.addEventListener('change', changed)
       host.current.replaceChildren(element)
       element.menuItems = []
+      const dialog = host.current.closest('dialog')
+      if (dialog) {
+        const keyboard = window.mathVirtualKeyboard
+        keyboard.container = dialog
+        releaseKeyboard = () => { keyboard.hide(); keyboard.container = document.body }
+      }
       setState('ready')
       if (latest.current.focusOnMount) element.focus()
     }).catch(() => {
@@ -66,6 +73,7 @@ export default function WorkedEquationField(props: Props) {
     })
     return () => {
       mounted = false
+      releaseKeyboard?.()
       field.current?.removeEventListener('input', changed)
       field.current?.removeEventListener('change', changed)
       field.current?.remove()

@@ -1,4 +1,5 @@
 'use client'
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import { useId } from 'react'
 import ReasoningWorkspace from './ReasoningWorkspace'
 import styles from './StudentMathInput.module.css'
@@ -22,7 +23,7 @@ export default function WarmupAnswer({ needsGraph=false, needsEquationBuilder=fa
     <ReasoningWorkspace value={value} onChange={set} needsGraph={needsGraph} needsEquationBuilder={needsEquationBuilder} lang={lang} />
     <div className={styles.answer}>
     <label className="block font-semibold" htmlFor={id+'-answer'}>{t(checkMode==='teacher-only' ? 'Your answer and explanation' : 'Final answer')}</label>
-    <textarea id={id+'-answer'} rows={checkMode==='teacher-only' ? 3 : 1} className={styles.input} value={value.answer ?? ''} onChange={e => set({ answer:e.target.value })} placeholder={t('Include all requested parts and units where needed.')} />
+    <StudentMathArea mathFormat={checkMode === "teacher-only" ? "steps" : "text"} id={id+'-answer'} rows={checkMode==='teacher-only' ? 3 : 1} className={styles.input} value={value.answer ?? ''} onValueChange={nextValue => set({ answer:nextValue })} placeholder={t('Include all requested parts and units where needed.')} />
     </div>
   </div>
 }

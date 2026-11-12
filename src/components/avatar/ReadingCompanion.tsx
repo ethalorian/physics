@@ -1,5 +1,6 @@
 'use client'
 
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import {useRef,useState,type ReactNode} from 'react'
 import {useAvatarPortrait} from '@/hooks/useAvatarPortrait'
 import AvatarCharacter from './AvatarCharacter'
@@ -25,7 +26,7 @@ export default function ReadingCompanion({title,focus,sample=false,children}:{ti
     {evidence?<><blockquote>{evidence}</blockquote><p><strong>Make the connection:</strong> What does this evidence show? Explain how it supports or challenges your answer. Include a page, figure, or video time when useful.</p></>:<p>Find a statement, observation, or worked example that helps you answer the question. Bring it to your avatar’s notebook, then explain the connection in your response.</p>}
     <button type="button" onClick={findEvidence}>{evidence?'Choose different evidence':'Find evidence in this step'}</button>
     {choosing&&<div className={s.choices}><h4>Choose the passage you want to use</h4>{passages.length>0&&<div className={s.passages}>{passages.map((passage,index)=><button type="button" key={index} onClick={()=>choose(passage)}>{passage}</button>)}</div>}
-     <label>Or note evidence from the PDF, video, or diagram<textarea maxLength={1500} value={draft} onChange={event=>setDraft(event.target.value)} placeholder="Include the page, figure, or video time."/></label><button type="button" disabled={!draft.trim()} onClick={()=>choose(draft.trim())}>Use this evidence</button><button type="button" onClick={()=>setChoosing(false)}>Close</button>
+     <label>Or note evidence from the PDF, video, or diagram<StudentMathArea mathFormat="text" maxLength={1500} value={draft} onValueChange={nextValue => setDraft(nextValue)} placeholder="Include the page, figure, or video time."/></label><button type="button" disabled={!draft.trim()} onClick={()=>choose(draft.trim())}>Use this evidence</button><button type="button" onClick={()=>setChoosing(false)}>Close</button>
     </div>}
     <small>This is a practice notebook for this step. Put your evidence and reasoning in the answer field to save it with your assignment.</small>
    </div>

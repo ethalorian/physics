@@ -1,4 +1,6 @@
 'use client'
+import WorkedAnswer from '@/components/readings/WorkedAnswer'
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import RevisionCycle from '@/components/review-desk/RevisionCycle'
 import { useRef, useState } from 'react'
 import type { ChoiceOption, ChoiceSelection } from '@/lib/choice-calendar'
@@ -7,7 +9,7 @@ import type { ChoiceAction } from './ChoiceTeacher'
 
 export function LabArtifactReview({ selection }: { selection?: ChoiceSelection }) {
   return <details className="mt-2 text-sm"><summary className="cursor-pointer py-2">{selection?.artifact_submitted_at ? 'View submitted lab work' : selection?.artifact_version ? 'View lab draft' : 'Lab artifact not submitted'}</summary>
-    {selection?.artifact_response?.text && <p className="max-w-lg whitespace-pre-wrap break-words py-2">{selection.artifact_response.text}</p>}
+    {selection?.artifact_response?.text && <div className="max-w-lg whitespace-pre-wrap break-words py-2"><WorkedAnswer value={selection.artifact_response.text}/></div>}
     {selection?.artifact_response?.fileId && <a className="inline-flex min-h-11 items-center underline" target="_blank" rel="noopener noreferrer" href={'/api/choice-calendar/artifacts?id=' + selection.artifact_response.fileId}>Open {selection.artifact_response.fileName ?? 'lab file'}</a>}
   </details>
 }
@@ -36,7 +38,7 @@ export default function ChoiceLabArtifact({ sectionId, option, selection, userId
     <h4 className="font-semibold">Turn in</h4><p>{option.artifactInstructions}</p>
     <p className="text-sm text-muted-foreground">{submitted ? 'Submitted. Your teacher will review your work.' : 'Submit your own work. Type a response or upload a photo/PDF.'}</p>
     {!selection?.selected && <p className="text-sm">Choose this lab to begin.</p>}
-    <label className="block text-sm">Your response<textarea className="mt-2 block w-full rounded-lg border bg-background p-3" rows={5} maxLength={30000} disabled={locked} value={text} onChange={e => setText(e.target.value)}/></label>
+    <label className="block text-sm">Your response<StudentMathArea className="mt-2 block w-full rounded-lg border bg-background p-3" rows={5} maxLength={30000} disabled={locked} value={text} onValueChange={nextValue => setText(nextValue)}/></label>
     {file && <a className="inline-flex min-h-11 items-center underline" target="_blank" rel="noopener noreferrer" href={'/api/choice-calendar/artifacts?id=' + file.id}>Open {file.name}</a>}
     {!submitted && <><label className="block text-sm">{file ? 'Replace file' : 'Upload file'}<input className="mt-2 block w-full rounded-lg border p-2" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" disabled={locked} onChange={e => { void upload(e.target.files?.[0]); e.target.value = '' }}/><span className="text-muted-foreground">Photo or PDF · up to 4 MB</span></label><div className="flex flex-wrap gap-3"><button className="min-h-11 rounded-lg border px-4 disabled:opacity-50" disabled={locked || !text.trim() && !file} onClick={() => void persist(false)}>Save draft</button><button className="min-h-11 rounded-lg bg-primary px-4 text-primary-foreground disabled:opacity-50" disabled={locked || !text.trim() && !file} onClick={() => void persist(true)}>Submit lab work</button></div></>}
     {selection?.lab_completed_at && !submitted && <p className="text-sm">Lab session complete. Submit your artifact to finish this choice.</p>}

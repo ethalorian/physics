@@ -1,5 +1,6 @@
 'use client'
 
+import { StudentMathInput } from '@/components/student-math/StudentMathField'
 import { Pen, Slash, MoveUpRight, Square, Circle, Eraser, Undo2, Redo2, Trash2, Type, SlidersHorizontal, Grid2X2, Magnet } from 'lucide-react'
 import type { PaintToolbarProps } from '@/components/draw/PaintToolbar'
 import { WORKSHOP_INKS } from '@/lib/palette'
@@ -42,6 +43,6 @@ export default function WorkshopDrawingToolbar(p: Props) {
         <button type="button" onClick={p.onClear} disabled={!(p.canClear??p.canUndo)}><Trash2 size={17} aria-hidden/>Clear drawing</button><small>Undo restores a cleared drawing.</small>
       </div></details>
     </div>
-    {p.tool==='text' && <div className={styles.labelComposer}><label>Label text<input aria-label="Drawing label" placeholder="e.g. 8 3/8 in · starting edge" maxLength={48} value={p.label??''} onChange={e=>p.onLabel?.(e.target.value)}/></label><button type="button" disabled={!p.label?.trim()} onClick={p.onPlaceLabel}>Place in center</button><small>Tap the drawing to place your label, or place it in the center.</small></div>}
+    {p.tool==='text' && <div className={styles.labelComposer}><label>Label text<StudentMathInput aria-label="Drawing label" placeholder="e.g. 8 3/8 in · starting edge" maxLength={48} value={p.label??''} onValueChange={nextValue => p.onLabel?.(nextValue)}/></label><button type="button" disabled={!p.label?.trim()} onClick={p.onPlaceLabel}>Place in center</button><small>Tap the drawing to place your label, or place it in the center.</small></div>}
   </div>
 }

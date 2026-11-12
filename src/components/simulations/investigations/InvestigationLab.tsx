@@ -1,8 +1,9 @@
 'use client'
+import { StudentMathInput } from '@/components/student-math/StudentMathField'
 import SimulationAvatar from '@/components/avatar/SimulationAvatar'
 import {useInvestigationParticipation} from '@/components/avatar/InvestigationParticipation'
 import AvatarCharacter from '@/components/avatar/AvatarCharacter'
-import {useEffect,useMemo,useRef,useState,type ChangeEvent} from 'react'
+import {useEffect,useMemo,useRef,useState} from 'react'
 import Link from 'next/link'
 import {useSession} from 'next-auth/react'
 import {Play,Pause,RotateCcw,Flag,Check,Download,FlaskConical,NotebookPen} from 'lucide-react'
@@ -16,8 +17,8 @@ type Props={id:string;savedTrials?:LabTrial[];onTrialsChange?:(trials:LabTrial[]
 export default function InvestigationLab(props:Props){const lab=investigationById(props.id);return lab?<SimulationAvatar id={lab.id} title={lab.title} question={lab.question} actorInModel><Lab key={lab.id} {...props} lab={lab}/></SimulationAvatar>:<p role="alert">This investigation is unavailable.</p>}
 function NumericControl({control:c,value,onChange}:{control:LabControl;value:number;onChange:(value:number)=>void}){
  const [draft,setDraft]=useState(String(value));useEffect(()=>setDraft(String(value)),[value])
- function commit(event:ChangeEvent<HTMLInputElement>){setDraft(event.target.value);const n=Number(event.target.value);if(event.target.value!==''&&Number.isFinite(n)&&n>=c.min&&n<=c.max&&Math.abs((n-c.min)/c.step-Math.round((n-c.min)/c.step))<1e-7)onChange(n)}
- return <div className={s.numberControl}><label><span>{c.label}{c.unit&&<small>{c.unit}</small>}</span><input aria-label={c.label} type="number" min={c.min} max={c.max} step={c.step} value={draft} onChange={commit} onBlur={()=>setDraft(String(value))}/></label><input type="range" aria-label={`${c.label} slider`} min={c.min} max={c.max} step={c.step} value={value} onChange={e=>onChange(Number(e.target.value))}/></div>
+ function commit(next: string){setDraft(next);const n=Number(next);if(next!==''&&Number.isFinite(n)&&n>=c.min&&n<=c.max&&Math.abs((n-c.min)/c.step-Math.round((n-c.min)/c.step))<1e-7)onChange(n)}
+ return <div className={s.numberControl}><label><span>{c.label}{c.unit&&<small>{c.unit}</small>}</span><StudentMathInput mathFormat="number" aria-label={c.label} type="number" min={c.min} max={c.max} step={c.step} value={draft} onValueChange={commit} onBlur={()=>setDraft(String(value))}/></label><input type="range" aria-label={`${c.label} slider`} min={c.min} max={c.max} step={c.step} value={value} onChange={e=>onChange(Number(e.target.value))}/></div>
 }
 function Lab({lab,savedTrials,onTrialsChange,readOnly=false,visible=true}:Props&{lab:LabDefinition}){
  const participation=useInvestigationParticipation()

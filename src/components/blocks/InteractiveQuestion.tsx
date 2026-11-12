@@ -1,5 +1,6 @@
 'use client'
 
+import { StudentMathInput } from '@/components/student-math/StudentMathField'
 import QuizContent from '@/components/quizzes/QuizContent'
 import { useId, useState } from 'react'
 import { Check, ChevronRight, Lightbulb } from 'lucide-react'
@@ -36,7 +37,7 @@ export default function InteractiveQuestion({ task, value, readOnly, onDraft, on
     {task.parts.filter((_, i) => review || i === active).map(part => <section key={part.id} className={s.part}>
       <h3>{part.label}</h3>
       {part.kind === 'choice' ? <><ChoiceResponse label={part.prompt} options={part.options.map(o => ({ id: o.id, content: <QuizContent content={o.text} inline questionEmphasis/> }))} value={String(answer.answers[part.id] ?? '')} onChange={id => change(part.id, id)} disabled={readOnly || saving}/></>
-        : part.kind === 'number' ? <><QuestionPrompt>{part.prompt}</QuestionPrompt><label className={s.number} htmlFor={`${uid}-${part.id}`}><span>{part.label}</span><div><input id={`${uid}-${part.id}`} type="text" inputMode="decimal" autoComplete="off" value={String(answer.answers[part.id] ?? '')} onChange={e => change(part.id, e.target.value)} disabled={readOnly || saving}/><strong>{part.unit}</strong></div></label></>
+        : part.kind === 'number' ? <><QuestionPrompt>{part.prompt}</QuestionPrompt><label className={s.number} htmlFor={`${uid}-${part.id}`}><span>{part.label}</span><div><StudentMathInput mathFormat="number" id={`${uid}-${part.id}`} type="text" inputMode="decimal" autoComplete="off" value={String(answer.answers[part.id] ?? '')} onValueChange={nextValue => change(part.id, nextValue)} disabled={readOnly || saving}/><strong>{part.unit}</strong></div></label></>
         : readOnly ? <><QuestionPrompt>{part.prompt}</QuestionPrompt><ProblemStageDisplay label={part.label} value={answer.answers[part.id] as ProblemStageResponse}/></>
         : <ProblemStageInput label={part.label} help={part.prompt} value={answer.answers[part.id] as ProblemStageResponse} onChange={v => change(part.id, v)} disabled={saving}/>}
       {part.hint && <details className={s.hint}><summary><Lightbulb size={16}/> Get a hint</summary><QuizContent content={part.hint} questionEmphasis/></details>}

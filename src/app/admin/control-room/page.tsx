@@ -1,4 +1,5 @@
 "use client"
+import WorkedAnswer from '@/components/readings/WorkedAnswer'
 import ClassAssignedWork from "@/components/admin/ClassAssignedWork"
 import {ProblemStageDisplay} from '@/components/blocks/ProblemStageInput'
 import {PROBLEM_STAGES,lessonProblemAnswer} from '@/lib/problem-response'
@@ -123,7 +124,7 @@ function ResponseView({ response, prompt }: { response: unknown; prompt?: string
       return (
         <div className="text-sm">
           {o.optionId ? <div><b style={{ color: 'var(--secondary-foreground)' }}>Selected answer:</b> {option ?? `Option ${String(o.optionId)} (answer text unavailable)`}</div> : null}
-          {o.explain ? <div style={{ whiteSpace: 'pre-wrap' }}><b style={{ color: 'var(--secondary-foreground)' }}>Student’s explanation:</b> {String(o.explain)}</div> : null}
+          {o.explain ? <div style={{ whiteSpace: 'pre-wrap' }}><b style={{ color: 'var(--secondary-foreground)' }}>Student’s explanation:</b> <WorkedAnswer value={String(o.explain)}/></div> : null}
         </div>
       )
     }
@@ -256,7 +257,7 @@ function ResponseView({ response, prompt }: { response: unknown; prompt?: string
     }
     return <pre className="text-xs" style={{ whiteSpace: 'pre-wrap', color: 'var(--muted-foreground)' }}>{JSON.stringify(o, null, 2)}</pre>
   }
-  if (typeof response === 'string') return <p className="text-sm">{response}</p>
+  if (typeof response === 'string') return <div className="text-sm"><WorkedAnswer value={response}/></div>
   return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{String(response)}</p>
 }
 

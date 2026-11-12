@@ -1,5 +1,6 @@
 "use client"
 
+import { StudentMathArea, StudentMathInput } from '@/components/student-math/StudentMathField'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import MathMarkdown from '@/components/MathMarkdown'
@@ -264,7 +265,7 @@ function ItemView({ item, value, result, disabled, onAnswer }: {
             {item.type === 'true_false' && <TrueFalse n={item.n} value={value as string} disabled={disabled} onAnswer={onAnswer} />}
             {item.type === 'multiple_choice' && <Choice item={item} value={value} disabled={disabled} onAnswer={onAnswer} />}
             {item.type === 'short_answer' && (
-              <textarea aria-label={`Question ${item.n}`} value={(value as string) ?? ''} disabled={disabled} onChange={(e) => onAnswer(item.n, e.target.value)} rows={3}
+              <StudentMathArea mathFormat="text" aria-label={`Question ${item.n}`} value={(value as string) ?? ''} disabled={disabled} onValueChange={nextValue => onAnswer(item.n, nextValue)} rows={3}
                 className="w-full rounded-lg border p-2 text-sm" style={{ borderColor: C.hair, background: C.card, color: C.ink }} />
             )}
           </div>
@@ -280,8 +281,8 @@ function FillIn({ item, value, disabled, onAnswer }: { item: ExItem; value?: Ans
   return (
     <div className="flex flex-wrap gap-2">
       {Array.from({ length: n }, (_, i) => (
-        <input aria-label={`Answer blank ${i + 1}`} key={i} value={arr[i] ?? ''} disabled={disabled}
-          onChange={(e) => { const next = [...arr]; next[i] = e.target.value; onAnswer(item.n, next) }}
+        <StudentMathInput aria-label={`Answer blank ${i + 1}`} key={i} value={arr[i] ?? ''} disabled={disabled}
+          onValueChange={nextValue => { const next = [...arr]; next[i] = nextValue; onAnswer(item.n, next) }}
           placeholder={n > 1 ? `blank ${i + 1}` : 'your answer'}
           className="rounded-lg border px-2 py-1 text-sm" style={{ borderColor: C.hair, background: C.card, color: C.ink, minWidth: 120 }} />
       ))}

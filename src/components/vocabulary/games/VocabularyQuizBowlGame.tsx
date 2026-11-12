@@ -1,11 +1,11 @@
 "use client"
+import { StudentMathInput } from '@/components/student-math/StudentMathField'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { TermLabel, DefinitionLabel, useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
 import { Progress } from '@/components/ui/progress'
 import { VocabularyTerm } from '@/types/assignment'
 import {
@@ -454,10 +454,10 @@ export default function VocabularyQuizBowlGame({
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex gap-2">
-              <Input
-                ref={inputRef}
+              <StudentMathInput styled
+                inputRef={inputRef}
                 value={quizState.currentAnswer}
-                onChange={(e) => setQuizState(prev => ({ ...prev, currentAnswer: e.target.value }))}
+                onValueChange={nextValue => setQuizState(prev => ({ ...prev, currentAnswer: nextValue }))}
                 placeholder="Type your answer..."
                 className="text-lg"
                 disabled={showResult}

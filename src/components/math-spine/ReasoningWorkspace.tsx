@@ -1,5 +1,6 @@
 'use client'
 
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import { useId } from 'react'
 import EquationSandbox from '@/components/blocks/EquationSandbox'
 import MathCanvas from './MathCanvas'
@@ -24,7 +25,7 @@ export default function ReasoningWorkspace({ value, onChange, needsGraph = false
     <div>
       <label className={styles.label} htmlFor={fieldId}>{t('Show your reasoning')}</label>
       <p id={fieldId + '-hint'} className={styles.hint}>{t('Explain a step, write an equation, or use the drawing board below.')}</p>
-      <textarea id={fieldId} aria-describedby={fieldId + '-hint'} rows={4} className={styles.input} value={value.work ?? ''} onChange={event => set({ work: event.target.value })} placeholder={t('What did you do first? Show how you reached your answer.')} />
+      <StudentMathArea id={fieldId} aria-describedby={fieldId + '-hint'} rows={4} className={styles.input} value={value.work ?? ''} onValueChange={nextValue => set({ work: nextValue })} placeholder={t('What did you do first? Show how you reached your answer.')} />
     </div>
     {needsEquationBuilder && <div className={styles.tool}><p className={styles.label}>{t('Build your equation')}</p><EquationSandbox embedded value={value.sandbox ?? { lines: [] }} onChange={sandbox => set({ sandbox })} /></div>}
     <details className={styles.board} open={needsGraph || hasBoard || undefined}>

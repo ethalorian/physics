@@ -1,4 +1,5 @@
 "use client"
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import InteractiveQuestion from './InteractiveQuestion'
 import type { InteractiveAnswer } from '@/lib/interactive-question'
 import {ChoiceResponse, WrittenResponse, QuestionPrompt} from '@/components/interactive-assignments/QuestionResponse'
@@ -395,7 +396,7 @@ function LabNotebook({ b, saved, save, onDraft = NO_DRAFT, interactive = false, 
   return <div className="rounded-xl border p-3 space-y-3 bg-card">
     <p className="text-sm font-medium">{b.instruction}</p>
     <PaintPad value={strokes} onChange={setStrokes} background={b.backgroundDiagram ? <DiagramBackground scene={b.backgroundDiagram} /> : undefined} />
-    {fields.map((label) => <label key={label} className="block text-sm">{label}<textarea aria-label={label} className="mt-1 w-full rounded border p-2 bg-card" rows={2} value={text[label] ?? ''} onChange={(e) => setText((v) => ({ ...v, [label]: e.target.value }))} /></label>)}
+    {fields.map((label) => <label key={label} className="block text-sm">{label}<StudentMathArea mathFormat="text" aria-label={label} className="mt-1 w-full rounded border p-2 bg-card" rows={2} value={text[label] ?? ''} onValueChange={nextValue => setText((v) => ({ ...v, [label]: nextValue }))} /></label>)}
     <button className="rounded bg-primary text-primary-foreground px-3 py-2 disabled:opacity-50" disabled={b.requireAllFields ? !fields.every((f) => text[f]?.trim()) : !strokes.length && !Object.values(text).some((v) => v.trim())} onClick={() => save(b.id, 'lab_notebook', { strokes, fields: text })}>Save notebook</button>
     <p className="text-xs text-muted-foreground">Describe objects, labels, and directions in the reasoning boxes if you use a keyboard instead of drawing.</p>
   </div>
@@ -458,7 +459,7 @@ function SketchPad({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract<ContentB
       )}
       <PaintPad workshop={Boolean(b.workshop)} value={strokes} onChange={(s) => { setStrokes(s); setSavedFlag(false) }} background={background} />
       <details className={b.workshop ? responseStyles.notesDrawer : undefined} open={!b.workshop || Boolean(description)}><summary>Written labels / keyboard alternative</summary><label className="block text-sm mt-2">{b.workshop ? b.workshop.keyboardPrompt ?? 'Labels or keyboard alternative: name the piece, the starting edge, and the distance to your mark in inches.' : 'Describe your drawing with words (keyboard alternative). Include objects, labels, directions, and relationships.'}
-        <textarea className="w-full rounded border bg-card p-2 mt-1" placeholder={b.workshop ? "Name your piece, starting edge and measured distance…" : undefined} rows={3} value={description} onChange={(e) => { setDescription(e.target.value); setSavedFlag(false) }} />
+        <StudentMathArea mathFormat="text" className="w-full rounded border bg-card p-2 mt-1" placeholder={b.workshop ? "Name your piece, starting edge and measured distance…" : undefined} rows={3} value={description} onValueChange={nextValue => { setDescription(nextValue); setSavedFlag(false) }} />
       </label></details>
       <div data-response-footer className="flex items-center gap-2 mt-1">
         <button data-response-action
@@ -566,7 +567,7 @@ function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT, interactive = 
         <>
           <p className="text-sm mb-1" style={{ color: C.indigo }}>{q.explain ?? 'Explain your thinking.'}</p>
           <SeiFrameBox state={state} onUseFrame={(f) => { if (!explain.trim()) setExplain(f) }} />
-          {interactive ? <WrittenResponse label="Your reasoning" value={explain} onChange={value=>{setExplain(value);setSavedFlag(false)}}/> : <textarea aria-label={q.explain ?? 'Explain your thinking'} value={explain} onChange={(e) => { setExplain(e.target.value); setSavedFlag(false) }} rows={3}
+          {interactive ? <WrittenResponse label="Your reasoning" value={explain} onChange={value=>{setExplain(value);setSavedFlag(false)}}/> : <StudentMathArea aria-label={q.explain ?? 'Explain your thinking'} value={explain} onValueChange={nextValue => { setExplain(nextValue); setSavedFlag(false) }} rows={3}
             className="w-full rounded-md border p-2 text-sm" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }} />}
         </>
       )}
@@ -592,8 +593,8 @@ function ObservationCapture({ b, saved, save, onDraft }: { b: Extract<ContentBlo
   return <div className="space-y-3">
     <SeiVisual visual={b.sei?.visual} />
     <SeiFrameBox state={state} onUseFrame={(frame) => setValue((v) => ({ ...v, pattern: v.pattern || frame }))} />
-    <label className="block text-sm">{b.patternPrompt}<textarea aria-label={b.patternPrompt} className="mt-1 w-full rounded border p-2 bg-card" rows={3} value={value.pattern ?? ''} onChange={(e) => setValue((v) => ({ ...v, pattern: e.target.value }))} /></label>
-    <label className="block text-sm">{b.interpretPrompt}<textarea aria-label={b.interpretPrompt} className="mt-1 w-full rounded border p-2 bg-card" rows={3} value={value.interpret ?? ''} onChange={(e) => setValue((v) => ({ ...v, interpret: e.target.value }))} /></label>
+    <label className="block text-sm">{b.patternPrompt}<StudentMathArea mathFormat="text" aria-label={b.patternPrompt} className="mt-1 w-full rounded border p-2 bg-card" rows={3} value={value.pattern ?? ''} onValueChange={nextValue => setValue((v) => ({ ...v, pattern: nextValue }))} /></label>
+    <label className="block text-sm">{b.interpretPrompt}<StudentMathArea mathFormat="text" aria-label={b.interpretPrompt} className="mt-1 w-full rounded border p-2 bg-card" rows={3} value={value.interpret ?? ''} onValueChange={nextValue => setValue((v) => ({ ...v, interpret: nextValue }))} /></label>
     <button type="button" className="rounded bg-primary text-primary-foreground px-3 py-2 disabled:opacity-50" disabled={!value.pattern?.trim() || !value.interpret?.trim() || /_{2,}/.test(value.pattern ?? '')} onClick={() => save(b.id, b.type, value, { response_mode: 'text', scaffolds_used: state.scaffolds })}>Save observation and interpretation</button>
     <SeiFairnessNote />
   </div>;

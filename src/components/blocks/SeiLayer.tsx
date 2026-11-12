@@ -1,5 +1,6 @@
 "use client"
 
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import { ProjectionSeiContext } from '@/components/present/ProjectionSeiContext'
 import { useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useDraft } from './useDraft'
@@ -207,7 +208,7 @@ export function SeiTextCapture({ interactive = false, readOnly = false, sei, pro
       {interactive ? <ProblemStageInput label="Your reasoning" help="Use evidence from the question. Explain the physics in words, a labeled model, calculations, or a combination." disabled={readOnly || gated || saving} value={{text,strokes,mode:state.mode==='sketch'?'drawing':'text'}} onChange={value=>{const next=stageResponse(value);setText(next.text);setStrokes(next.strokes);state.setMode(next.mode==='drawing'?'sketch':'text');setTouched(true);setSaved(false)}}/> : state.mode === 'sketch' ? (
         <SeiSketchAnswer value={strokes} onChange={(s) => { setStrokes(s); setSaved(false); setTouched(true) }} labelBank={sei?.labelBank} />
       ) : (
-        <textarea aria-label={prompt} value={text} onChange={(e) => { setText(e.target.value); setSaved(false); setTouched(true) }} placeholder={placeholder} rows={4} disabled={gated}
+        <StudentMathArea mathFormat="text" aria-label={prompt} value={text} onValueChange={nextValue => { setText(nextValue); setSaved(false); setTouched(true) }} placeholder={placeholder} rows={4} disabled={gated}
           className="w-full rounded-md border p-2 text-sm disabled:opacity-60" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }} />
       )}
       <div className="flex items-center gap-2 mt-1">

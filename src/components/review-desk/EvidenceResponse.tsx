@@ -12,11 +12,12 @@ export default function EvidenceResponse({value,rendering,depth=0}:{value:unknow
  if(value===undefined||value===null||value==='')return <p>No response recorded.</p>
  if(rendering==='worked-example' && typeof value==='string')return <WorkedAnswer value={value}/>
  if(rendering==='simulation'&&typeof value==='object'){const v=value as {state:import('@/lib/interactive-assignments/velocity').VelocityState;simulation:string};return <SimulationTrialEvidence state={v.state} simulation={v.simulation}/>}
- if(rendering==='artifact'&&typeof value==='object'){const v=value as {text?:string;fileId?:string;fileName?:string};return <><p>{v.text}</p>{v.fileId&&<a href={'/api/choice-calendar/artifacts?id='+encodeURIComponent(v.fileId)} target="_blank" rel="noopener noreferrer">Open {v.fileName||'submitted attachment'}</a>}</>}
+ if(rendering==='artifact'&&typeof value==='object'){const v=value as {text?:string;fileId?:string;fileName?:string};return <><div><WorkedAnswer value={v.text ?? ''}/></div>{v.fileId&&<a href={'/api/choice-calendar/artifacts?id='+encodeURIComponent(v.fileId)} target="_blank" rel="noopener noreferrer">Open {v.fileName||'submitted attachment'}</a>}</>}
  if(rendering==='math'&&typeof value==='object')return <MathWorkReview value={value as MathResponse}/>
  if(rendering==='force'&&typeof value==='string')return <ForceDiagram value={value} onChange={()=>{}} readOnly/>
  if(rendering==='problem'&&typeof value==='object')return <div>{PROBLEM_STAGES.map(stage=><section key={stage}><strong>{stage.charAt(0).toUpperCase()+stage.slice(1)}</strong><ProblemStageDisplay value={(value as ProblemAnswer)[stage]} label={stage}/></section>)}</div>
- if(typeof value==='string'||typeof value==='number'||typeof value==='boolean')return <>{String(value)}</>
+ if(typeof value==='string')return <WorkedAnswer value={value}/>
+ if(typeof value==='number'||typeof value==='boolean')return <>{String(value)}</>
  if(depth>5)return <p>Open the original assignment to inspect this embedded artifact.</p>
  if(Array.isArray(value))return <ol>{value.map((v,i)=><li key={i}><EvidenceResponse value={v} depth={depth+1}/></li>)}</ol>
  const data=value as Record<string,unknown>

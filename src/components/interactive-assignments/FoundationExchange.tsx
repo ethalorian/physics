@@ -1,4 +1,6 @@
 'use client'
+import WorkedAnswer from '@/components/readings/WorkedAnswer'
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import FoundationNoteExample from './FoundationNoteExample'
 import {takeawayText,takeawayCopy,stopSteps} from '@/lib/interactive-assignments/foundations/takeaways'
 import {FOUNDATION_SUBMISSION_GATES_PAUSED,FOUNDATION_SUBMISSION_PAUSED_NOTICE} from '@/lib/interactive-assignments/foundations/recovery'
@@ -145,7 +147,7 @@ export function FoundationCollaboration({id,enabled,foundation='day-one',preview
 }
 function SavedWriting({title,text,authored=false}:{title:string;text:string;authored?:boolean}){
  const {t}=useFoundationLanguage()
- return <div className={s.peer}><strong>{t(title)}</strong>{authored?<QuizContent content={text} questionEmphasis/>:<p translate="no">{text}</p>}</div>
+ return <div className={s.peer}><strong>{t(title)}</strong>{authored?<QuizContent content={text} questionEmphasis/>:<div translate="no"><WorkedAnswer value={text}/></div>}</div>
 }
 function DraftRecovery({field}:{field?:string}){
  const context=useContext(Context)!,{t}=useFoundationLanguage()
@@ -163,7 +165,7 @@ function ResponseField({checkpoint,action,label,prompt,button}:{checkpoint:Check
  const key=checkpoint+'-'+action,value=context.drafts[key]??''
  const {locale}=useFoundationLanguage()
  const hint=locale==='es'?'Escribe al menos 10 caracteres para compartir. El borrador se guarda en privado.':locale==='pt-BR'?'Escreva pelo menos 10 caracteres para compartilhar. O rascunho é salvo em privado.':'Write at least 10 characters to share or save this step. Your draft autosaves privately.'
- return <><div className={s.responseField}><label htmlFor={key}>{t(label)}</label>{prompt&&<div id={key+"-prompt"} className={s.status}><QuizContent content={t(prompt)} questionEmphasis/></div>}<textarea translate="no" id={key} aria-describedby={[prompt?key+"-prompt":null,key+"-hint"].filter(Boolean).join(" ")} maxLength={4000} value={value} disabled={context.busy||context.readOnly||!context.draftReady} onChange={e=>context.draft(key,e.target.value)}/><small id={key+"-hint"}>{hint}</small><p role="status">{context.draftStatus}</p>{context.draftError&&<p role="alert" className={s.error}>{t(context.draftError)}</p>}<DraftRecovery field={key}/></div><button disabled={context.busy||context.readOnly||!context.draftReady||value.trim().length<10} onClick={()=>void context.act(action,value,checkpoint)}>{t(context.busy?t("Saving…"):button)}</button><small>{t("Save when ready. Your original writing stays recorded; develop it in the next response.")}</small></>
+ return <><div className={s.responseField}><label htmlFor={key}>{t(label)}</label>{prompt&&<div id={key+"-prompt"} className={s.status}><QuizContent content={t(prompt)} questionEmphasis/></div>}<StudentMathArea translate="no" id={key} aria-describedby={[prompt?key+"-prompt":null,key+"-hint"].filter(Boolean).join(" ")} maxLength={4000} value={value} disabled={context.busy||context.readOnly||!context.draftReady} onValueChange={nextValue => context.draft(key,nextValue)}/><small id={key+"-hint"}>{hint}</small><p role="status">{context.draftStatus}</p>{context.draftError&&<p role="alert" className={s.error}>{t(context.draftError)}</p>}<DraftRecovery field={key}/></div><button disabled={context.busy||context.readOnly||!context.draftReady||value.trim().length<10} onClick={()=>void context.act(action,value,checkpoint)}>{t(context.busy?t("Saving…"):button)}</button><small>{t("Save when ready. Your original writing stays recorded; develop it in the next response.")}</small></>
 }
 function GroupMembers({index}:{index:number}){
  const {t}=useFoundationLanguage()
@@ -240,7 +242,7 @@ function PacedStop({pair,index,definition}:{pair:FoundationPair;index:number;def
  return <>
   <div className={s.duty}><strong>{t(role.title)}</strong><p>{t(role.description)} {role.secondary&&t(role.secondary)}</p></div>
   <QuizContent content={definition.prompts[promptIndex]} questionEmphasis/><CpaDiscussionHelp index={index}/>
-  {index===0&&!stop.own.contribution&&context.setupIdeas.length>0&&<details><summary>{t(copy.oldIdeas[0])}</summary>{context.setupIdeas.map(idea=><div key={idea}><p translate="no">{idea}</p><button disabled={context.busy||context.readOnly||!!context.drafts[stop.id+'-share']} onClick={()=>context.draft(stop.id+'-share',idea)}>{t(copy.useDraft[0])}</button></div>)}</details>}
+  {index===0&&!stop.own.contribution&&context.setupIdeas.length>0&&<details><summary>{t(copy.oldIdeas[0])}</summary>{context.setupIdeas.map(idea=><div key={idea}><div translate="no"><WorkedAnswer value={idea}/></div><button disabled={context.busy||context.readOnly||!!context.drafts[stop.id+'-share']} onClick={()=>context.draft(stop.id+'-share',idea)}>{t(copy.useDraft[0])}</button></div>)}</details>}
   {stop.own.contribution?<SavedWriting title="Your shared idea" text={stop.own.contribution}/>:<ResponseField checkpoint={stop.id} action="share" label="Your idea before comparing" prompt={copy.first[0]} button="Share my idea"/>}
   {!pair.started&&<p>{t(copy.forming[0])}</p>}
   {pair.started&&stop.own.contribution&&!chosen&&!stop.exampleSelected&&<>
@@ -354,7 +356,7 @@ function TakeawayStop({index}:{index:number}){
    <div hidden={step!==2}>
    {stop?.own.reflection?<><p>{words.old}</p><SavedWriting title={words.label} text={stop.own.reflection}/></>:<>
     <div className={s.responseField}><label htmlFor={key}>{words.label}</label><p id={key+'-prompt'}>{words.prompt}</p><details><summary>{steps.starter}</summary><p>{words.starter}</p></details>
-     <textarea id={key} translate="no" aria-describedby={key+'-prompt'} maxLength={4000} value={text} disabled={context.busy||context.readOnly||!context.draftReady} onChange={e=>context.draft(key,e.target.value)}/>
+     <StudentMathArea id={key} translate="no" aria-describedby={key+'-prompt'} maxLength={4000} value={text} disabled={context.busy||context.readOnly||!context.draftReady} onValueChange={nextValue => context.draft(key,nextValue)}/>
      <p role="status">{t(context.draftStatus)}</p>{context.draftError&&<p role="alert" className={s.error}>{t(context.draftError)}</p>}<DraftRecovery field={key}/>
     </div>
     <button disabled={context.busy||context.readOnly||!context.draftReady} onClick={()=>void context.saveDrafts()}>{words.save}</button>

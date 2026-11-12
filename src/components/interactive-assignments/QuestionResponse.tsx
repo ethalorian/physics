@@ -1,5 +1,6 @@
 'use client'
 
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import {useFoundationLanguage} from './FoundationLanguage'
 import { useId, type ReactNode } from 'react'
 import QuizContent from '@/components/quizzes/QuizContent'
@@ -30,5 +31,5 @@ export function WrittenResponse({ label, value, onChange, disabled = false, maxL
 }) {
   const {t}=useFoundationLanguage()
   const uid = useId(), id = providedId ?? uid
-  return <div className={s.written}><label htmlFor={id}>{label}</label>{help && <div id={`${id}-help`} className={s.help}><MathMarkdown content={help} questionEmphasis/></div>}<textarea translate="no" id={id} aria-describedby={help ? `${id}-help` : undefined} value={value} maxLength={maxLength} rows={4} disabled={disabled} onChange={event => onChange(event.target.value)} placeholder={t("Explain your answer. Include the details requested above.")}/></div>
+  return <div className={s.written}><label htmlFor={id}>{label}</label>{help && <div id={`${id}-help`} className={s.help}><MathMarkdown content={help} questionEmphasis/></div>}<StudentMathArea translate="no" id={id} aria-describedby={help ? `${id}-help` : undefined} value={value} maxLength={maxLength} rows={4} disabled={disabled} onValueChange={nextValue => onChange(nextValue)} placeholder={t("Explain your answer. Include the details requested above.")}/></div>
 }

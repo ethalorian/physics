@@ -10,6 +10,7 @@
  * Value out: { strokes, texts } in a 640×360 coordinate space (matches the
  * teacher review renderer's viewBox, so both show up when graded).
  */
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import styles from './StudentMathInput.module.css'
 import { useEffect, useRef, useState } from 'react'
 import type { PointerEvent as RPointerEvent } from 'react'
@@ -280,12 +281,12 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
               boxShadow: '0 4px 14px color-mix(in oklch, var(--primary) 18%, transparent)',
             }}
           >
-            <textarea
+            <StudentMathArea mathFormat="text"
               aria-label={t('Board text')}
               autoFocus
               rows={Math.min(4, Math.max(1, editor.value.split('\n').length))}
               value={editor.value}
-              onChange={(e) => setEditor({ ...editor, value: e.target.value })}
+              onValueChange={nextValue => setEditor({ ...editor, value: nextValue })}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commitEditor() }
                 if (e.key === 'Escape') setEditor(null)

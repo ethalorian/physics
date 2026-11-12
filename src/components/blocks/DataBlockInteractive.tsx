@@ -1,5 +1,6 @@
 "use client"
 
+import { StudentMathInput, StudentMathArea } from '@/components/student-math/StudentMathField'
 import styles from '@/components/lessons/WorkshopResponses.module.css'
 import { useId, useState } from 'react'
 import { useDraft } from './useDraft'
@@ -120,7 +121,7 @@ export default function DataBlockInteractive({ workshop=false, analysisMode = 'p
                 <tr key={ri}>
                   {cols.map((_, ci) => (
                     <td key={ci} className="px-1 py-0.5" data-column={cols[ci]}>
-                      {ci === 0 && rowLabels?.[ri] ? <span className="block min-w-32 whitespace-normal text-sm">{row[ci]}</span> : <input aria-label={`Reading ${ri + 1}, ${cols[ci]}`} aria-invalid={showPlot && (ci === xi || ci === yi) && Boolean(row[ci]?.trim()) && numericCell(row[ci]) === null} value={row[ci] ?? ''} onChange={(e) => setCell(ri, ci, e.target.value)} className="w-full rounded-md border px-2 py-1.5 text-sm" style={fieldBg} />}
+                      {ci === 0 && rowLabels?.[ri] ? <span className="block min-w-32 whitespace-normal text-sm">{row[ci]}</span> : <StudentMathInput mathFormat={(ci === xi || ci === yi) && showPlot ? "number" : "text"} aria-label={`Reading ${ri + 1}, ${cols[ci]}`} aria-invalid={showPlot && (ci === xi || ci === yi) && Boolean(row[ci]?.trim()) && numericCell(row[ci]) === null} value={row[ci] ?? ''} onValueChange={nextValue => setCell(ri, ci, nextValue)} className="w-full rounded-md border px-2 py-1.5 text-sm" style={fieldBg} />}
                     </td>
                   ))}
                   <td className="px-1">
@@ -173,7 +174,7 @@ export default function DataBlockInteractive({ workshop=false, analysisMode = 'p
             )
           })}
         </div>
-        <textarea aria-label={patternPrompt ?? 'Interpret the measured pattern'} value={interpret} onChange={(e) => { setInterpret(e.target.value); setSaved(false) }} rows={3} placeholder="In your own words: what does this pattern tell you?" className="w-full rounded-lg border p-3 text-sm" style={fieldBg} />
+        <StudentMathArea mathFormat="text" aria-label={patternPrompt ?? 'Interpret the measured pattern'} value={interpret} onValueChange={nextValue => { setInterpret(nextValue); setSaved(false) }} rows={3} placeholder="In your own words: what does this pattern tell you?" className="w-full rounded-lg border p-3 text-sm" style={fieldBg} />
       </div>}
 
       {/* check + save */}

@@ -1,5 +1,6 @@
 "use client"
 
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { languageCode } from '@/lib/vocab-language'
 import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
@@ -213,9 +214,9 @@ export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomI
         <div className="text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>
           Write a fake definition convincing enough to fool your classmates. Sound like the textbook.
         </div>
-        <textarea
+        <StudentMathArea mathFormat="text"
           value={draft || r.myText || ''}
-          onChange={(e) => setDraft(e.target.value)}
+          onValueChange={nextValue => setDraft(nextValue)}
           maxLength={MAX_DEF_LEN}
           rows={3}
           placeholder="The measure of…"

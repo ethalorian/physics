@@ -1,4 +1,5 @@
 'use client'
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import { useId, useState } from 'react'
 import { MATH_TEACHING_GUIDES, type TeachingExample, type TeachingGuide } from '@/lib/math-teaching-guides'
 import { resolveMiniLessons } from '@/lib/math-spine-lessons'
@@ -21,6 +22,7 @@ function WorkedExample({ example, t }: { example: TeachingExample; t: (s: string
 }
 function TeachingCheck({ practice, t }: { practice: TeachingGuide['practice']; t: (s:string)=>string }) {
   const id=useId()
+  const [reason, setReason] = useState('')
   const [choice,setChoice]=useState<number | null>(null)
   const [checked,setChecked]=useState(false)
   return <fieldset className="space-y-3 rounded-lg border p-3 sm:p-4">
@@ -31,7 +33,7 @@ function TeachingCheck({ practice, t }: { practice: TeachingGuide['practice']; t
     <button type="button" className="min-h-11 rounded bg-primary px-4 text-sm text-primary-foreground disabled:opacity-50" disabled={choice===null} onClick={()=>setChecked(true)}>{t('Check this practice step')}</button>
     {checked && choice!==null && <div role="status" className="space-y-2 rounded bg-muted p-3 text-sm"><p><b>{t(choice===practice.correctIndex ? 'That reasoning fits.' : 'Let’s look at that step.')}</b> {t(practice.feedback[choice])}</p>{choice!==practice.correctIndex && <p>{t('You can change your choice and check again, or reopen the worked example.')}</p>}</div>}
     <label htmlFor={id+'-explain'} className="block text-sm font-medium">{t('Explain the choice in your own words (optional)')}</label>
-    <textarea id={id+'-explain'} rows={2} className="w-full rounded border bg-background p-3 text-sm" placeholder={t('I chose this because…')} />
+    <StudentMathArea mathFormat="text" value={reason} onValueChange={setReason} id={id+'-explain'} rows={2} className="w-full rounded border bg-background p-3 text-sm" placeholder={t('I chose this because…')} />
     <p className="text-xs text-muted-foreground">{t('This optional practice reflection is not saved or sent to your teacher.')}</p>
   </fieldset>
 }

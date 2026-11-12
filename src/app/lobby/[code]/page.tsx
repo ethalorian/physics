@@ -1,5 +1,6 @@
 "use client"
 
+import { StudentMathInput, StudentMathArea } from '@/components/student-math/StudentMathField'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { Hourglass, Lock, Unlock, CheckCircle2, Send, Target } from 'lucide-react'
@@ -270,9 +271,9 @@ export default function LobbyActivityPage() {
           ) : (
             <>
               <p className="text-sm mb-2">You were the <strong>{st.myRole.label}</strong>. Where did your role move the group? (optional)</p>
-              <input
+              <StudentMathInput
                 value={reflect.note}
-                onChange={(e) => setReflect((r) => ({ ...r, note: e.target.value }))}
+                onValueChange={nextValue => setReflect((r) => ({ ...r, note: nextValue }))}
                 placeholder="e.g. I asked for the number before we agreed"
                 className="w-full text-sm rounded-lg px-3 py-2 mb-2"
                 style={{ background: 'var(--background)', border: '1px solid var(--border)' }}
@@ -414,7 +415,7 @@ export default function LobbyActivityPage() {
             {collected.map((w) => <span key={w} className="text-xs px-2 py-0.5 rounded-full font-mono" style={{ background: 'var(--muted)' }}>{w}</span>)}
           </div>
           <div className="flex gap-2">
-            <input value={wordInput} onChange={(e) => setWordInput(e.target.value)}
+            <StudentMathInput value={wordInput} onValueChange={nextValue => setWordInput(nextValue)}
               onKeyDown={(e) => { if (e.key === 'Enter') addWord() }}
               placeholder="type a word you heard"
               className="flex-1 rounded-lg border p-2 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
@@ -434,7 +435,7 @@ export default function LobbyActivityPage() {
           {st.block ? <LanguageProfileProvider><BlockRenderer referenceBlocks={st.referenceBlocks} blocks={[st.block]} lessonId={st.lesson_id ?? ''} responses={st.sharedArtifact ? { [st.block.id]: { response: st.sharedArtifact.response, created_at: st.sharedArtifact.updated_at } } : {}} hydrated save={(_id, _type, artifact) => saveArtifact(artifact)} /></LanguageProfileProvider> : isDrawing ? (
             <PaintPad value={strokes} onChange={setStrokes} />
           ) : (
-            <textarea value={response} onChange={(e) => setResponse(e.target.value)} rows={5}
+            <StudentMathArea mathFormat="text" value={response} onValueChange={nextValue => setResponse(nextValue)} rows={5}
               placeholder="Type your response…"
               className="w-full rounded-lg border p-2 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
           )}
@@ -447,7 +448,7 @@ export default function LobbyActivityPage() {
               <option value="">Choose a groupmate…</option>
               {st.group?.filter((g) => !g.isMe).map((g) => <option key={g.idx} value={String(g.idx)}>{g.alias}</option>)}
             </select>
-            <textarea value={buildNote} onChange={(e) => setBuildNote(e.target.value)} rows={2}
+            <StudentMathArea mathFormat="text" value={buildNote} onValueChange={nextValue => setBuildNote(nextValue)} rows={2}
               placeholder="How did their thinking shape your answer?"
               className="w-full rounded-lg border p-2 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
           </div>

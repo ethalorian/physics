@@ -1,4 +1,5 @@
 'use client'
+import { StudentMathArea } from '@/components/student-math/StudentMathField'
 import RevisionCycle from '@/components/review-desk/RevisionCycle'
 import { useEffect, useId, useState } from 'react'
 import Link from 'next/link'
@@ -49,7 +50,7 @@ function ResponseForm({ sub, saved }: { sub: Submission; saved: () => void }) {
     <label className="flex min-h-11 items-center gap-2"><input type="checkbox" checked={draft.help} onChange={e=>update({help:e.target.checked})} /> I need help or have a question</label>
     {!draft.help && <WarmupAnswer value={draft.work} onChange={work=>update({work})} needsGraph={sub.response_json?.needsGraph} needsEquationBuilder={!!sub.response_json?.sandbox?.lines?.length} />}
     <label className="block font-medium" htmlFor={id}>{draft.help ? 'Which step or feedback would you like help understanding?' : 'What changed in your thinking?'}</label>
-    <textarea id={id} rows={3} maxLength={2000} value={draft.message} onChange={e=>update({message:e.target.value})} className="w-full rounded border bg-background p-3" />
+    <StudentMathArea mathFormat="text" id={id} rows={3} maxLength={2000} value={draft.message} onValueChange={nextValue => update({message:nextValue})} className="w-full rounded border bg-background p-3" />
     <p className="text-xs text-muted-foreground">Your draft is saved in this browser tab. You can send one response for this warm-up; your teacher will reply with a next step.</p>
     <button disabled={busy || !ready || !draft.message.trim()} onClick={send} className="min-h-11 rounded bg-primary px-4 text-primary-foreground disabled:opacity-50">{busy ? 'Sending…' : draft.help ? 'Send my question' : 'Send my correction'}</button>
     {error && <p role="alert">{error}</p>}

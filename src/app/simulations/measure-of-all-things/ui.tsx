@@ -4,6 +4,7 @@
 // Prose lives in string props (not JSX text) so apostrophes/quotes render
 // freely without tripping react/no-unescaped-entities.
 
+import { StudentMathInput } from '@/components/student-math/StudentMathField'
 import { ReactNode, useState } from 'react'
 
 /* ----------------------------- layout pieces ----------------------------- */
@@ -185,11 +186,11 @@ export function NumQ({ prompt, unit, answer, tolerance = 0.02, hint, onDone }: N
     <div className="space-y-3">
       <p className="font-medium">{prompt}</p>
       <div className="flex items-center gap-2">
-        <input
+        <StudentMathInput mathFormat="number"
           type="text"
           inputMode="decimal"
           value={value}
-          onChange={e => setValue(e.target.value)}
+          onValueChange={nextValue => setValue(nextValue)}
           onKeyDown={e => { if (e.key === 'Enter') check() }}
           disabled={solved}
           className="w-36 px-3 py-2 rounded-lg border border-border bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-60"

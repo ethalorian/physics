@@ -1,5 +1,6 @@
 "use client"
 
+import { StudentMathInput } from '@/components/student-math/StudentMathField'
 import { useState, type DragEvent as RDragEvent, type KeyboardEvent as RKeyboardEvent, type FocusEvent as RFocusEvent } from 'react'
 import { useDraft } from './useDraft'
 import { InlineMath } from '@/components/MathMarkdown'
@@ -138,7 +139,7 @@ export default function EquationSandbox({ prompt, variables, equationToken, valu
   }
   const collapseOnBlur = (e: RFocusEvent) => {
     const root = e.currentTarget.closest('[data-sandbox]')
-    setTimeout(() => { if (root && !root.contains(document.activeElement)) setFocus(-1) }, 0)
+    setTimeout(() => { if (root && !root.contains(document.activeElement) && !document.activeElement?.closest('dialog[data-equation-editor]')) setFocus(-1) }, 0)
   }
 
   const lastNonEmpty = [...lines].reverse().find((l) => l.trim()) || ''
@@ -185,7 +186,7 @@ export default function EquationSandbox({ prompt, variables, equationToken, valu
               className="flex items-center gap-3 py-1.5"
               style={{ borderBottom: i < lines.length - 1 ? '1px solid color-mix(in oklch, var(--border) 60%, transparent)' : 'none', cursor: 'text', minHeight: 34 }}>
               {focused ? (
-                <input autoFocus value={line} onChange={(e) => editLine(i, e.target.value)} onKeyDown={(e) => onKey(e, i)} onBlur={collapseOnBlur}
+                <StudentMathInput autoFocus value={line} onValueChange={nextValue => editLine(i, nextValue)} onKeyDown={(e) => onKey(e, i)} onBlur={collapseOnBlur}
                   placeholder="write a step…  v = d / t"
                   className="flex-1 bg-transparent outline-none text-base" style={{ color: 'var(--foreground)', fontFamily: 'ui-monospace, monospace' }} />
               ) : (
