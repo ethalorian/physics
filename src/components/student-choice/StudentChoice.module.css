@@ -13,7 +13,7 @@
 .carouselNav span { text-align: center; font-size: .9rem; }
 .slide { display: grid; grid-template-columns: minmax(0, 370px) minmax(0, 1fr); gap: 1.5rem; align-items: center; padding: 1rem; border: 1px solid var(--border); border-radius: .75rem; background: var(--muted); }
 .paperPreview { width: 100%; aspect-ratio: 816 / 1056; overflow: hidden; background: white; border: 1px solid var(--border); touch-action: pan-y; }
-.paperPreview iframe { display: block; width: 816px; height: 1056px; border: 0; transform-origin: top left; pointer-events: none; }
+.paperPreview img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .optionNav { display: flex; justify-content: center; flex-wrap: wrap; gap: .5rem; }
 .optionNav button { min-width: 44px; min-height: 44px; border: 1px solid var(--border); border-radius: .5rem; padding: .5rem; }
 .optionNav button[aria-current=true] { background: var(--primary); color: var(--primary-foreground); }
@@ -56,4 +56,4 @@
 .supportLinks { display:flex; flex-wrap:wrap; align-items:center; gap:.45rem; margin-bottom:.75rem; }
 .supportLinks strong { flex-basis:100%; font-size:.9rem; }
 .supportLinks button { min-height:44px; border:1px solid var(--border); border-radius:.5rem; padding:.4rem .7rem; }
-.supportLinks button[aria-pressed=true] { background:var(--primary); color:var(--primary-foreground); }
+.supportLinks button[aria-pressed=true] { background:var(--primary); color:var(--primary-foreground); border-color:var(--primary); box-shadow:inset 0 0 0 1px currentColor; }

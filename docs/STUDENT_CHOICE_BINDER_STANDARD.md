@@ -181,7 +181,7 @@ Craig approved all 22 Honors narratives and requested the matching CPA set. The 
 
 Practice print links deliver Letter PDFs with one approved option per physical page. After packaging a new edition, run `node scripts/student-choice/package-practice-print.cjs` followed by `node scripts/student-choice/package-practice-pdfs.cjs` with Playwright and Chromium available. The PDF packager checks the paper size and option footer on every sheet. Keep the generated PDFs and their edition manifest with the release.
 
-Use the same practice PDF for the carousel’s single-option link, a student's saved selection, and the teacher's full daily packet. HTML previews can stay in the carousel. Export each unit color key with `node scripts/student-choice/package-color-code.cjs` when importing or revising its source. Check that every print link returns a PDF and the expected physical pages.
+Use the same practice PDF for the carousel’s single-option link, a student's saved selection, and the teacher's full daily packet. Show a static preview rendered from the matching packaged PDF sheet. After packaging the PDFs, run `scripts/student-choice/package-practice-previews.py` for all current and pinned editions. Export each unit color key with `node scripts/student-choice/package-color-code.cjs` when importing or revising its source. Check that every print link returns a PDF and the expected physical pages.
 ## Visual language options · November 12, 2026
 
 - Doodle Notes: give a measured or observable case from the day, a cue drawing, two distinct student sketch tasks and room for labels. End with a sentence frame that connects a particular mark to its physical meaning.

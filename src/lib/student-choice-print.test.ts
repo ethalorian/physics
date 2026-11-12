@@ -107,3 +107,16 @@ test('each current day has exactly one of each visual scaffold and prints its en
     assert.equal(bad.status,400)
   }
 })
+
+
+test('every paper option has a packaged Letter-proportioned WebP for the carousel', () => {
+  const ids = new Set(catalog.flatMap(p => p.options.map(o => o.sha256)))
+  for (const id of ids) {
+    const bytes = fs.readFileSync('public/student-choice-pages/practice-previews/' + id + '.webp')
+    assert.equal(bytes.toString('ascii', 8, 12), 'WEBP', id)
+    assert.equal(bytes.toString('ascii', 12, 16), 'VP8L', id)
+    const dimensions = bytes.readUInt32LE(21)
+    assert.equal((dimensions & 0x3fff) + 1, 918, id)
+    assert.equal(((dimensions >>> 14) & 0x3fff) + 1, 1188, id)
+  }
+})

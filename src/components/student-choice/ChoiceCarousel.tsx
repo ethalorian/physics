@@ -1,20 +1,14 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
+import { useRef, useState } from 'react'
 import { choicePracticePrintPath, type BinderDay } from '@/lib/student-choice'
 import s from '@/components/quizzes/Quiz.module.css'
 import c from './StudentChoice.module.css'
 
 /** A manual carousel: the original page is previewed without changing its print layout. */
 export default function ChoiceCarousel({ packet, selected = [], onToggle, disabled = false, required = 3 }: { packet: BinderDay; selected?: number[]; onToggle?: (option: number) => void; disabled?: boolean; required?: number }) {
-  const [index, setIndex] = useState(0), [width, setWidth] = useState(340)
-  const frame = useRef<HTMLDivElement>(null), swipe = useRef<number | null>(null)
-  useEffect(() => {
-    const node = frame.current
-    if (!node) return
-    const observer = new ResizeObserver(entries => setWidth(entries[0].contentRect.width))
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [])
+  const [index, setIndex] = useState(0)
+  const swipe = useRef<number | null>(null)
   const page = packet.options[index], chosen = selected.includes(index + 1)
   const supportLabels: Record<string, string> = { B: 'Doodle Notes', H: 'Frayer Model', K: 'Picture Dictionary' }
   const supports = packet.options.flatMap((opt,i) => supportLabels[opt.style ?? ''] ? [{ label: supportLabels[opt.style!], i }] : [])
@@ -27,8 +21,8 @@ export default function ChoiceCarousel({ packet, selected = [], onToggle, disabl
       <button type="button" className={s.secondary} aria-label="Next practice option" onClick={() => move(1)}>Next →</button>
     </div>
     <article className={c.slide} aria-roledescription="slide" aria-label={`Option ${index + 1}: ${page.title}`}>
-      <div className={c.paperPreview} ref={frame} onTouchStart={e => { swipe.current = e.touches[0].clientX }} onTouchEnd={e => { if (swipe.current !== null) { const distance = e.changedTouches[0].clientX - swipe.current; if (Math.abs(distance) > 50) move(distance < 0 ? 1 : -1) } swipe.current = null }}>
-        <iframe key={page.path} title={`Visual preview of option ${index + 1}`} src={page.previewPath ?? page.path} tabIndex={-1} aria-hidden="true" loading="lazy" style={{ transform: `scale(${width / 816})` }} />
+      <div className={c.paperPreview} onTouchStart={e => { swipe.current = e.touches[0].clientX }} onTouchEnd={e => { if (swipe.current !== null) { const distance = e.changedTouches[0].clientX - swipe.current; if (Math.abs(distance) > 50) move(distance < 0 ? 1 : -1) } swipe.current = null }}>
+        <Image key={page.sha256} src={`/student-choice-pages/practice-previews/${page.sha256}.webp`} alt={`Printed practice page ${index + 1}: ${page.title}`} width={918} height={1188} unoptimized />
       </div>
       <div className={s.stack}><p className={s.eyebrow}>OPTION {index + 1}{page.sei ? ' · LANGUAGE SUPPORT' : ''}{chosen ? ' · SELECTED' : ''}</p><h3>{page.title}</h3>
         <a className={s.link} href={choicePracticePrintPath(packet, [index + 1])} download>Download option {index + 1} (PDF)</a>
