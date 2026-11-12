@@ -118,7 +118,7 @@ function ResponseView({ response, prompt }: { response: unknown; prompt?: string
     const o = response as Record<string, unknown>
     if(o.format==='problem-workspace'){const responses=lessonProblemAnswer(o);return <div className="space-y-4">{PROBLEM_STAGES.map(k=><section key={k}><h4 className="font-semibold capitalize">{k}</h4><ProblemStageDisplay value={responses[k]} label={k.charAt(0).toUpperCase()+k.slice(1)}/></section>)}{Array.isArray(o.hintsUsed)&&o.hintsUsed.length>0&&<p className="text-xs text-muted-foreground">Hints used: {o.hintsUsed.map(String).join(', ')}. Support use is context, not a mastery penalty.</p>}</div>}
     // SEI captures: { text | strokes, mode } and the inline question { optionId, explain }.
-    if ('text' in o && typeof o.text === 'string' && !('given' in o)) return <div><p className="text-sm whitespace-pre-wrap">{o.text}</p>{Array.isArray(o.strokes) && o.strokes.length > 0 && <StrokesSvg strokes={o.strokes as StrokeShape[]} label="Student drawing" />}</div>
+    if ('text' in o && typeof o.text === 'string' && !('given' in o)) return <div><div className="text-sm whitespace-pre-wrap"><WorkedAnswer value={o.text}/></div>{Array.isArray(o.strokes) && o.strokes.length > 0 && <StrokesSvg strokes={o.strokes as StrokeShape[]} label="Student drawing" />}</div>
     if (('optionId' in o || 'explain' in o) && !('given' in o)) {
       const option = prompt?.split('\n').find(line => line.trim().startsWith(`${String(o.optionId)}: `))?.trim()
       return (
@@ -133,7 +133,7 @@ function ResponseView({ response, prompt }: { response: unknown; prompt?: string
       const field = (k: string, label: string) =>
         o[k] != null && String(o[k]).trim() !== '' ? (
           <div className="text-sm" style={{ marginBottom: 4 }}>
-            <b style={{ color: 'var(--secondary-foreground)' }}>{label}:</b> {String(o[k])}
+            <b style={{ color: 'var(--secondary-foreground)' }}>{label}:</b> <WorkedAnswer value={String(o[k])}/>
           </div>
         ) : null
       const ws = Array.isArray(o.workStrokes) ? (o.workStrokes as StrokeShape[]) : null
@@ -223,7 +223,7 @@ function ResponseView({ response, prompt }: { response: unknown; prompt?: string
               return (
                 <div key={n} className="flex items-baseline gap-2" style={{ borderBottom: '1px solid var(--border)', paddingBottom: 2 }}>
                   <span className="shrink-0" style={{ color: 'var(--muted-foreground)', minWidth: 22 }}>{n}.</span>
-                  <span className="flex-1" style={{ color: val.trim() ? 'var(--foreground)' : 'var(--muted-foreground)' }}>{val.trim() || '—'}</span>
+                  <div className="flex-1" style={{ color: val.trim() ? 'var(--foreground)' : 'var(--muted-foreground)' }}><WorkedAnswer value={val.trim() || '—'}/></div>
                   <span className="shrink-0 text-xs">{badge}</span>
                 </div>
               )
@@ -250,8 +250,8 @@ function ResponseView({ response, prompt }: { response: unknown; prompt?: string
     if ('pattern' in o || 'interpret' in o) {
       return (
         <div className="text-sm">
-          {o.pattern != null && <div style={{ marginBottom: 4 }}><b>Pattern:</b> {String(o.pattern)}</div>}
-          {o.interpret != null && <div><b>Interpretation:</b> {String(o.interpret)}</div>}
+          {o.pattern != null && <div style={{ marginBottom: 4 }}><b>Pattern:</b> <WorkedAnswer value={String(o.pattern)}/></div>}
+          {o.interpret != null && <div><b>Interpretation:</b> <WorkedAnswer value={String(o.interpret)}/></div>}
         </div>
       )
     }

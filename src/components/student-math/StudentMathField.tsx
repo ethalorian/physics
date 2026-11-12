@@ -43,7 +43,10 @@ function EquationTools({ field, value, onValueChange, format, disabled, maxLengt
       }
       result = number
     } else {
-      result = source.slice(0, edit.start) + linear + source.slice(edit.end)
+      if (!linear) return 'This equation cannot be written in this text field.'
+      // Keep simple fractions readable by short-answer and quantity checkers.
+      const text = linear.replace(/\(([-+]?\d*\.?\d+)\)\/\(([-+]?\d*\.?\d+)\)/g, '$1/$2')
+      result = source.slice(0, edit.start) + text + source.slice(edit.end)
     }
     if (maxLength !== undefined && maxLength >= 0 && result.length > maxLength)
       return 'This equation would put your answer over its character limit.'
@@ -57,7 +60,7 @@ function EquationTools({ field, value, onValueChange, format, disabled, maxLengt
     </span>)}
     {!disabled && <button type="button" className={s.trigger} onMouseDown={event => event.preventDefault()}
       onClick={() => open(equations.length)} aria-haspopup="dialog">Add math</button>}
-    {edit && !disabled && <EquationDialog initial={equations[edit.index] ?? ''} onInsert={insert} onClose={() => setEdit(null)}/>}
+    {edit && !disabled && <EquationDialog container={field.current?.closest('[role="dialog"], dialog') ?? document.body} initial={equations[edit.index] ?? ''} onInsert={insert} onClose={() => setEdit(null)}/>}
   </>
 }
 

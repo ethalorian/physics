@@ -6,8 +6,9 @@ import type { MathfieldElement } from 'mathlive'
 import WorkedEquationField from '@/components/readings/WorkedEquationField'
 import s from './StudentMath.module.css'
 
-export default function EquationDialog({ initial, onInsert, onClose }: {
+export default function EquationDialog({ initial, container, onInsert, onClose }: {
   initial: string
+  container: Element
   onInsert: (latex: string, linear: string) => string | undefined
   onClose: () => void
 }) {
@@ -36,5 +37,5 @@ export default function EquationDialog({ initial, onInsert, onClose }: {
     {error && <p role="alert">{error}</p>}
     <div className={s.actions}><button type="button" onClick={onClose}>Cancel</button>
       <button type="button" onClick={submit}>Use equation</button></div>
-  </dialog>, document.body)
+  </dialog>, container)
 }

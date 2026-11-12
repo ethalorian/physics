@@ -174,7 +174,7 @@ export default function DataBlockInteractive({ workshop=false, analysisMode = 'p
             )
           })}
         </div>
-        <StudentMathArea mathFormat="text" aria-label={patternPrompt ?? 'Interpret the measured pattern'} value={interpret} onValueChange={nextValue => { setInterpret(nextValue); setSaved(false) }} rows={3} placeholder="In your own words: what does this pattern tell you?" className="w-full rounded-lg border p-3 text-sm" style={fieldBg} />
+        <StudentMathArea aria-label={patternPrompt ?? 'Interpret the measured pattern'} value={interpret} onValueChange={nextValue => { setInterpret(nextValue); setSaved(false) }} rows={3} placeholder="In your own words: what does this pattern tell you?" className="w-full rounded-lg border p-3 text-sm" style={fieldBg} />
       </div>}
 
       {/* check + save */}

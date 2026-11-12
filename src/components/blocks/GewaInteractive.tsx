@@ -550,7 +550,7 @@ export default function GewaInteractive({
       )}
 
       <label className="block text-sm">Work trail / keyboard alternative — show your substitutions, algebra, and reasoning.
-        <StudentMathArea mathFormat="text" aria-label="GEWA work trail" className="w-full rounded border p-2 bg-card mt-1" rows={3} value={workNotes} onValueChange={nextValue => { setWorkNotes(nextValue); setSaved(false) }} />
+        <StudentMathArea aria-label="GEWA work trail" className="w-full rounded border p-2 bg-card mt-1" rows={3} value={workNotes} onValueChange={nextValue => { setWorkNotes(nextValue); setSaved(false) }} />
       </label>
       {/* check + save */}
       <div className="flex items-center gap-2">

@@ -265,7 +265,7 @@ function ItemView({ item, value, result, disabled, onAnswer }: {
             {item.type === 'true_false' && <TrueFalse n={item.n} value={value as string} disabled={disabled} onAnswer={onAnswer} />}
             {item.type === 'multiple_choice' && <Choice item={item} value={value} disabled={disabled} onAnswer={onAnswer} />}
             {item.type === 'short_answer' && (
-              <StudentMathArea mathFormat="text" aria-label={`Question ${item.n}`} value={(value as string) ?? ''} disabled={disabled} onValueChange={nextValue => onAnswer(item.n, nextValue)} rows={3}
+              <StudentMathArea aria-label={`Question ${item.n}`} value={(value as string) ?? ''} disabled={disabled} onValueChange={nextValue => onAnswer(item.n, nextValue)} rows={3}
                 className="w-full rounded-lg border p-2 text-sm" style={{ borderColor: C.hair, background: C.card, color: C.ink }} />
             )}
           </div>
