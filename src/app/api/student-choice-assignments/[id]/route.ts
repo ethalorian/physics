@@ -36,9 +36,9 @@ export const POST = withAuth(async (req, ctx) => {
   if (b?.action === 'select') {
     if (ctx.realRole !== 'student' || quizStaff(ctx)) return quizJson({ error: 'Only the assigned student can save their choices.' }, 403)
     const packet = binderPacket(access.assignment.packet_key, access.assignment.packet_version)
-    if (packet?.options.length !== 6) return quizJson({ error: 'This set of choices is temporarily unavailable.' }, 503)
+    if (!packet || packet.options.length !== (access.assignment.available_choices ?? 6)) return quizJson({ error: 'This set of choices is temporarily unavailable.' }, 503)
     let selection
-    try { selection = validateChoiceSelection(b, requiredChoiceCount(access.assignment)) } catch (e) { return quizJson({ error: (e as Error).message }, 400) }
+    try { selection = validateChoiceSelection(b, requiredChoiceCount(access.assignment), packet.options.length) } catch (e) { return quizJson({ error: (e as Error).message }, 400) }
     const { data, error } = await supabaseAdmin.rpc('save_student_choice_selection', { p_id: id, p_user: ctx.userId, p_options: selection.option_numbers, p_version: selection.version })
     return error ? quizRpcError(error) : quizJson({ selection: data })
   }
@@ -53,7 +53,7 @@ export const POST = withAuth(async (req, ctx) => {
   if (b?.action !== 'schedule' || !Number.isInteger(b.version) || b.version < 1 || !['published', 'archived'].includes(b.status) || !Number.isFinite(Date.parse(b.due_at))) return quizJson({ error: 'Choose a deadline and reload before saving.' }, 400)
   const a = access.assignment
   let required
-  try { required = validateRequiredChoices(b.required_choices === undefined ? requiredChoiceCount(a) : b.required_choices) } catch (e) { return quizJson({ error: (e as Error).message }, 400) }
+  try { required = validateRequiredChoices(b.required_choices === undefined ? requiredChoiceCount(a) : b.required_choices, a.available_choices ?? 6) } catch (e) { return quizJson({ error: (e as Error).message }, 400) }
   const { data, error } = await supabaseAdmin.rpc('save_student_choice_assignment', { p_id: id, p_course: a.course_id, p_packet: a.packet_key, p_packet_version: a.packet_version, p_unit: a.unit_id, p_day: a.day, p_edition: a.edition, p_title: a.title, p_due: b.due_at, p_status: b.status, p_version: b.version, p_actor: ctx.email, p_owner: access.course.teacher_email, p_required: required })
   return error ? quizRpcError(error) : quizJson({ assignment: data })
 })

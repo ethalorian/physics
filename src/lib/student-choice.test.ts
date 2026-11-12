@@ -50,23 +50,32 @@ test('teacher letter reaches student gradebook without points, quiz totals or pr
 
 test('students must save three distinct choices; printing always follows the sorted saved set', () => {
   assert.deepEqual(validateChoiceSelection({option_numbers: [6, 1, 3], version: 0}), {option_numbers: [1, 3, 6], version: 0})
-  for (const options of [[], [1], [1, 2], [1, 2, 3, 4], [1, 1, 2], [0, 1, 2], [1, 2, 7], [1, 2, 2.5], [1, 2, '3'], [1, 2, null], [1, 2, NaN], null]) assert.throws(() => validateChoiceSelection({option_numbers: options, version: 0}))
+  for (const options of [[], [1], [1, 2], [1, 2, 3, 4], [1, 1, 2], [0, 1, 2], [1, 2, 11], [1, 2, 2.5], [1, 2, '3'], [1, 2, null], [1, 2, NaN], null]) assert.throws(() => validateChoiceSelection({option_numbers: options, version: 0}))
   for (const version of [-1, 0.5, '1', null, undefined]) assert.throws(() => validateChoiceSelection({option_numbers: [1, 2, 3], version}))
-  const packet = {key: 'unit1-day02', version: 'reviewed', day: 2} as BinderDay
+  const packet = {key: 'unit1-day02', version: 'reviewed', day: 2, options: Array(6)} as BinderDay
   assert.equal(choicePracticePrintPath(packet, [6, 3, 1]), '/student-choice-print?format=pdf&download=1&packet=unit1-day02&edition=reviewed&options=1,3,6')
   assert.match(choicePracticePrintPath(packet, [1, 2]), /options=1,2$/)
   assert.throws(() => choicePracticePrintPath(packet, []))
 })
 
 
-test('required counts span 1–6, preserve the legacy default and reject incorrect selection sizes', () => {
+test('required counts span 1–10, preserve the legacy default and reject incorrect selection sizes', () => {
   assert.equal(requiredChoiceCount({}), 3)
-  for (const invalid of [0, 7, -1, 1.5, '2', null, undefined, NaN]) assert.throws(() => validateRequiredChoices(invalid))
-  for (let count = 1; count <= 6; count++) {
+  for (const invalid of [0, 11, -1, 1.5, '2', null, undefined, NaN]) assert.throws(() => validateRequiredChoices(invalid))
+  for (let count = 1; count <= 10; count++) {
     assert.equal(validateRequiredChoices(count), count)
-    const options = Array.from({length: count}, (_, i) => 6-i)
+    const options = Array.from({length: count}, (_, i) => 10-i)
     assert.equal(validateChoiceSelection({option_numbers: options, version: 2}, count).option_numbers.length, count)
     assert.throws(() => validateChoiceSelection({option_numbers: options.slice(1), version: 2}, count))
     assert.throws(() => validateChoiceSelection({option_numbers: [...options, 1], version: 2}, count))
+  }
+})
+
+test('selection and count limits follow the pinned day, including mixed 8-, 9-, and 10-option packets', () => {
+  for (const capacity of [6, 8, 9, 10]) {
+    assert.equal(validateRequiredChoices(capacity, capacity), capacity)
+    assert.throws(() => validateRequiredChoices(capacity + 1, capacity))
+    assert.deepEqual(validateChoiceSelection({option_numbers:[capacity,1],version:1},2,capacity).option_numbers,[1,capacity])
+    assert.throws(() => validateChoiceSelection({option_numbers:[1,capacity+1],version:1},2,capacity))
   }
 })

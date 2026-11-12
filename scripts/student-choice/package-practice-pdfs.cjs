@@ -48,12 +48,12 @@ async function build() {
             const sheet = await proof.getPage(number)
             assert.deepEqual(sheet.view, [0, 0, 612, 792], key)
             const words = (await sheet.getTextContent()).items.map(item => item.str).join(' ')
-            const option = [...words.matchAll(/OPTION\s+([1-6])\s*·\s*STYLE/gi)].map(match => Number(match[1]))
+            const option = [...words.matchAll(/OPTION\s+(10|[1-9])\s*·\s*STYLE/gi)].map(match => Number(match[1]))
             assert.deepEqual(option, [number], key + ' printed page ' + number)
           }
         } finally { await proof.destroy() }
         const pdf = await PDFDocument.load(bytes)
-        pdf.setTitle(packet.key + ' · All six Student Choice practice options')
+        pdf.setTitle(packet.key + ' · All '+packet.options.length+' Student Choice practice options')
         pdf.catalog.getOrCreateViewerPreferences().setPrintScaling(PrintScaling.None)
         const filename = packet.key + '-' + sourceHash.slice(0, 12) + '.pdf'
         await fs.writeFile(path.join(output, filename), await pdf.save())

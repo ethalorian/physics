@@ -52,3 +52,8 @@
   .mobileLabel { display: inline; }
 }
 @media (max-width: 640px) { .slide { grid-template-columns: minmax(0, 1fr); padding: .75rem; } .paperPreview { max-width: 370px; justify-self: center; } .carouselNav button { padding: .55rem; font-size: .8rem; } }
+
+.supportLinks { display:flex; flex-wrap:wrap; align-items:center; gap:.45rem; margin-bottom:.75rem; }
+.supportLinks strong { flex-basis:100%; font-size:.9rem; }
+.supportLinks button { min-height:44px; border:1px solid var(--border); border-radius:.5rem; padding:.4rem .7rem; }
+.supportLinks button[aria-pressed=true] { background:var(--primary); color:var(--primary-foreground); }

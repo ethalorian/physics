@@ -1,0 +1,268 @@
+{
+  "7": [
+    {
+      "en": "accelerate",
+      "translation": "acelerar · acelerar",
+      "meaning": "to change velocity",
+      "picture": "accelerate"
+    },
+    {
+      "en": "speed up",
+      "translation": "acelerar · acelerar",
+      "meaning": "go faster · gaps grow",
+      "picture": "speed up"
+    },
+    {
+      "en": "slow down",
+      "translation": "frenar · desacelerar",
+      "meaning": "go slower · gaps shrink",
+      "picture": "slow down"
+    },
+    {
+      "en": "change in",
+      "translation": "cambio de · variação de",
+      "meaning": "Δ = end − start",
+      "picture": "change in"
+    },
+    {
+      "en": "velocity",
+      "translation": "velocidad · velocidade",
+      "meaning": "how fast and in which direction",
+      "picture": "velocity"
+    },
+    {
+      "en": "direction",
+      "translation": "dirección · direção",
+      "meaning": "which way an object is moving",
+      "picture": "direction"
+    }
+  ],
+  "8": [
+    {
+      "en": "given",
+      "translation": "dato · dado",
+      "meaning": "a number the problem tells you",
+      "picture": "given"
+    },
+    {
+      "en": "unknown",
+      "translation": "incógnita · incógnita",
+      "meaning": "the value you must find",
+      "picture": "unknown"
+    },
+    {
+      "en": "equation",
+      "translation": "ecuación · equação",
+      "meaning": "a rule that links the values",
+      "picture": "equation"
+    },
+    {
+      "en": "constant acceleration",
+      "translation": "aceleración constante · aceleração constante",
+      "meaning": "v changes the same amount each second",
+      "picture": "constant acceleration"
+    },
+    {
+      "en": "velocity",
+      "translation": "velocidad · velocidade",
+      "meaning": "speed with its direction",
+      "picture": "velocity"
+    },
+    {
+      "en": "displacement",
+      "translation": "desplazamiento · deslocamento",
+      "meaning": "change from the start to the finish",
+      "picture": "displacement"
+    }
+  ],
+  "11": [
+    {
+      "en": "mass",
+      "translation": "masa · massa",
+      "meaning": "amount of matter (kg)",
+      "picture": "mass"
+    },
+    {
+      "en": "control",
+      "translation": "control · controle",
+      "meaning": "what stays the same",
+      "picture": "control"
+    },
+    {
+      "en": "trial",
+      "translation": "prueba · ensaio",
+      "meaning": "one run of the test",
+      "picture": "trial"
+    },
+    {
+      "en": "pattern",
+      "translation": "patrón · padrão",
+      "meaning": "what repeats in data",
+      "picture": "pattern"
+    },
+    {
+      "en": "net force",
+      "translation": "fuerza neta · força resultante",
+      "meaning": "all forces on the cart combined",
+      "picture": "net force"
+    },
+    {
+      "en": "acceleration",
+      "translation": "aceleración · aceleração",
+      "meaning": "change in velocity per second",
+      "picture": "acceleration"
+    }
+  ],
+  "12": [
+    {
+      "en": "driving force",
+      "translation": "fuerza impulsora · força motriz",
+      "meaning": "the hanging weight that pulls",
+      "picture": "driving force"
+    },
+    {
+      "en": "total mass",
+      "translation": "masa total · massa total",
+      "meaning": "cart + hanger + all masses",
+      "picture": "total mass"
+    },
+    {
+      "en": "proportional",
+      "translation": "proporcional · proporcional",
+      "meaning": "double one, double the other",
+      "picture": "proportional"
+    },
+    {
+      "en": "slope",
+      "translation": "pendiente · inclinação",
+      "meaning": "rise ÷ run of a graph line",
+      "picture": "slope"
+    },
+    {
+      "en": "acceleration",
+      "translation": "aceleración · aceleração",
+      "meaning": "change in velocity per second",
+      "picture": "acceleration"
+    },
+    {
+      "en": "friction",
+      "translation": "fricción · atrito",
+      "meaning": "contact force that opposes slipping or a tendency to slip",
+      "picture": "friction"
+    }
+  ],
+  "18": [
+    {
+      "en": "equilibrium",
+      "translation": "equilibrio · equilíbrio",
+      "meaning": "a = 0, forces balance",
+      "picture": "equilibrium"
+    },
+    {
+      "en": "balanced",
+      "translation": "equilibrado · equilibrado",
+      "meaning": "net force = 0",
+      "picture": "balanced"
+    },
+    {
+      "en": "support",
+      "translation": "soporte · apoio",
+      "meaning": "a rope or surface that holds it up",
+      "picture": "support"
+    },
+    {
+      "en": "missing force",
+      "translation": "fuerza faltante · força que falta",
+      "meaning": "the one you must find",
+      "picture": "missing force"
+    },
+    {
+      "en": "net force",
+      "translation": "fuerza neta · força resultante",
+      "meaning": "the combined force on one object",
+      "picture": "net force"
+    },
+    {
+      "en": "constant velocity",
+      "translation": "velocidad constante · velocidade constante",
+      "meaning": "speed and direction both stay the same",
+      "picture": "constant velocity"
+    }
+  ],
+  "19": [
+    {
+      "en": "mistake",
+      "translation": "error · erro",
+      "meaning": "a step that is wrong",
+      "picture": "mistake"
+    },
+    {
+      "en": "correct",
+      "translation": "corregir · corrigir",
+      "meaning": "to fix it",
+      "picture": "correct"
+    },
+    {
+      "en": "because",
+      "translation": "porque · porque",
+      "meaning": "gives the reason",
+      "picture": "because"
+    },
+    {
+      "en": "evidence",
+      "translation": "evidencia · evidência",
+      "meaning": "the picture or numbers",
+      "picture": "evidence"
+    },
+    {
+      "en": "net force",
+      "translation": "fuerza neta · força resultante",
+      "meaning": "all forces on one object combined",
+      "picture": "net force"
+    },
+    {
+      "en": "displacement",
+      "translation": "desplazamiento · deslocamento",
+      "meaning": "change from the start to the finish",
+      "picture": "displacement"
+    }
+  ],
+  "22": [
+    {
+      "en": "claim",
+      "translation": "afirmación · afirmação",
+      "meaning": "what I say is true",
+      "picture": "claim"
+    },
+    {
+      "en": "evidence",
+      "translation": "evidencia · evidência",
+      "meaning": "numbers, graphs, sketches",
+      "picture": "evidence"
+    },
+    {
+      "en": "limit",
+      "translation": "límite · limite",
+      "meaning": "what the model leaves out",
+      "picture": "j:limit"
+    },
+    {
+      "en": "revise",
+      "translation": "revisar · revisar",
+      "meaning": "fix and improve",
+      "picture": "revise"
+    },
+    {
+      "en": "assumption",
+      "translation": "supuesto · hipótese",
+      "meaning": "a condition you take as true in the model",
+      "picture": "assumption"
+    },
+    {
+      "en": "range",
+      "translation": "intervalo · intervalo",
+      "meaning": "the span of possible predictions",
+      "picture": "range"
+    }
+  ]
+}

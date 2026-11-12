@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html><head><base href="/student-choice-pages/unit-1/original-1805385887d1/"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@font-face{font-family:'IBM Plex Mono';font-weight:500;src:url('./fonts/mono500.ttf') format('truetype')}
+@font-face{font-family:'IBM Plex Mono';font-weight:600;src:url('./fonts/mono600.ttf') format('truetype')}
+@font-face{font-family:'Newsreader';font-weight:400;src:url('./fonts/news400.ttf') format('truetype')}
+@font-face{font-family:'Newsreader';font-weight:500;src:url('./fonts/news500.ttf') format('truetype')}
+@font-face{font-family:'Newsreader';font-weight:600;src:url('./fonts/news600.ttf') format('truetype')}
+body{margin:0}img{filter:grayscale(1)}a{color:#565656}a:hover{color:#252525}
+doc-page:not(:defined){visibility:hidden}
+</style>
+<script src="./doc-page.js"></script>
+<title>Frayer Model · force component</title>
+<style>.binder-tools{padding:12px 20px;display:flex;align-items:center;gap:16px;background:white;color:#171717;font:15px system-ui}.binder-tools button{font:inherit;padding:8px 18px;cursor:pointer}.binder-tools span{line-height:1.4}@media print{.binder-tools{display:none!important}*,*::before,*::after{print-color-adjust:exact;-webkit-print-color-adjust:exact}}</style>
+<style id="student-choice-print-layout">/* Letter pages: the lesson, color key, and footer each own a grid row. */
+.page[data-layout] > div {
+  box-sizing:border-box!important;
+  height:11in!important;
+  padding:.30in .30in .30in .90in!important;
+  display:grid!important;
+  grid-template-rows:minmax(0,1fr) auto 24px!important;
+  align-items:stretch!important;
+  gap:12px!important;
+}
+.page[data-layout] > div > div:first-child {
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  zoom:1!important;
+  box-sizing:border-box!important;
+}
+.page[data-layout="notes"] > div > div:first-child {
+  padding:6px 22px!important;
+  gap:4px!important;
+}
+.page[data-layout="notes"] > div > div:first-child > div:first-child { padding-bottom:5px!important; }
+.page[data-layout="notes"] > div > div:first-child > div:nth-child(2) { padding-top:5px!important; padding-bottom:5px!important; }
+.page[data-layout="notes"] > div > div:first-child > div:nth-child(4),
+.page[data-layout="notes"] > div > div:first-child > div:last-child { padding-top:5px!important; padding-bottom:6px!important; }
+.page[data-layout] > div > div:nth-child(2) { box-sizing:border-box!important; margin:0!important; }
+.page[data-layout] > div > div:last-child {
+  box-sizing:border-box!important;
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  font:500 9px/12px 'IBM Plex Mono',monospace!important;
+  letter-spacing:.04em!important;
+  color:#565656!important;
+  margin:0!important;
+}
+@media print {
+  @page { size:letter; margin:0; }
+  .page[data-layout] { break-inside:avoid; break-after:page; }
+  .page[data-layout]:last-child { break-after:auto; }
+}
+</style><style>.binder-tools{display:none!important}doc-page{padding:0!important;background:white!important}.page{margin:0!important;border-radius:0!important;box-shadow:none!important}</style></head><body>
+<nav class="binder-tools" aria-label="Page printing"><button type="button" onclick="window.print()">Print page</button><span>US Letter · 100% scale · Turn on background graphics</span></nav><doc-page size="letter">
+<section class="page sei-sheet" data-screen-label="Day 16 · Frayer Model"><style>.sei-sheet *{box-sizing:border-box}.sei-shell{box-sizing:border-box;width:8.5in;height:11in;padding:.34in .32in .30in .90in;display:grid;grid-template-rows:minmax(0,1fr) auto 24px;gap:12px;color:#222;background:white;font:17px/1.25 Newsreader,Georgia,serif}.sei-lesson{display:flex;flex-direction:column;gap:12px;min-height:0}.sei-top{border-top:5px solid #252525;border-bottom:1.5px solid #252525;padding:9px 0 8px}.sei-tag,.sei-code,.sei-foot,.sei-box h3,.sei-name{font:600 11px/1.3 'IBM Plex Mono',monospace;letter-spacing:.05em}.sei-top h1{font:600 31px/1.03 Newsreader,Georgia,serif;margin:7px 0 4px}.sei-top p,.sei-box p,.sei-case p,.sei-card p{margin:4px 0}.sei-name{display:flex;gap:14px;justify-content:space-between}.sei-case{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center;padding:8px 12px;border:1.5px solid #222}.sei-fig{width:116px;height:72px;padding:4px}.sei-grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(0,1fr);gap:12px;flex:1;min-height:0}.sei-box,.sei-card{min-width:0;border:1.5px solid #333;padding:11px;display:flex;flex-direction:column;gap:5px}.sei-box h3{background:#292929;color:white;align-self:flex-start;padding:4px 7px;margin:0}.sei-drawing{min-height:80px;flex:1;border-bottom:1px dashed #aaa}.sei-lines{min-height:48px;flex:1;background:repeating-linear-gradient(transparent 0 22px,#aaa 22px 23px)}.sei-bands{display:flex;gap:12px}.sei-band{flex:1;border:1px dashed #777;padding:7px 9px}.sei-small{font-size:15px}.sei-prompt{border-left:3px solid #333;padding:4px 10px}.sei-key{display:flex;flex-wrap:wrap;column-gap:14px;row-gap:4px;border:1.25px solid #333;padding:5px 8px;align-items:center;font:500 10.5px/1.3 'IBM Plex Mono',monospace}.sei-key span{white-space:nowrap}.sei-key i{display:inline-block;border:1px solid #333;width:15px;height:9px}.sei-foot{text-align:center;font-size:9px;color:#555;align-self:center}.sei-words{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,minmax(0,1fr));gap:9px;flex:1}.sei-card h3{font:600 22px/1.05 Newsreader,Georgia,serif;margin:0}.sei-card-top{display:grid;grid-template-columns:88px 1fr;gap:10px;align-items:center}.sei-card-top .sei-fig{width:86px;height:58px}.sei-trans{display:block;font:500 11px/1.3 'IBM Plex Mono',monospace;color:#494949}.sei-match{display:flex;gap:12px}.sei-match>div{flex:1;border:1px solid #777;padding:4px 7px}.sei-match .sei-fig{height:44px;width:85px;margin:auto}.sei-card .sei-small{margin-top:auto}.sei-share{padding:8px 11px;border:1px solid #444}.sei-share .sei-lines{min-height:48px}.sei-shell h2{font-size:20px;margin:0}
+</style><main class="sei-shell"><div class="sei-lesson"><header class="sei-top"><div class="sei-tag">UNIT 1 · DAY 16 · LANGUAGE SUPPORT · FRAYER MODEL</div><h1>Frayer Model · force component</h1><p>I can explain a term by comparing an example with a nonexample.</p></header><div class="sei-name"><span>Name: ___________________</span><span>My home language: ______________</span></div><div class="sei-small"><strong>Force component</strong> · componente de una fuerza (ES) · componente de uma força (PT)</div><div class="sei-bands"><div class="sei-band"><b>A</b> · Part of weight acts parallel to the ramp axis.</div><div class="sei-band"><b>B</b> · The two weight components are new forces in addition to weight.</div></div><div class="sei-grid"><div class="sei-box"><h3>01 · DEFINITION</h3><p>What does force component mean in your own words? Use the notes or start in your home language.</p><div class="sei-lines"></div></div><div class="sei-box"><h3>02 · CHARACTERISTICS</h3><p>What must be true? Label a small sketch to show one feature.</p><div class="sei-drawing"></div></div><div class="sei-box"><h3>03 · EXAMPLE</h3><p>Choose A or B as your example. Sketch it and explain which feature makes it fit.</p><div class="sei-drawing"></div></div><div class="sei-box"><h3>04 · NONEXAMPLE</h3><p>Explain why the other card does not fit. Change one detail so that it would.</p><div class="sei-lines"></div></div></div><div class="sei-share"><div class="sei-tag">SAY IT TO A PARTNER · THEN WRITE</div>I chose card ___ as my example because …<div class="sei-lines"></div></div></div><div class="sei-key"><b>UNIT 1 COLOR CODE</b><span><i></i> <b>green</b> speeding up</span><span><i></i> <b>red</b> slowing down</span><span><i></i> <b>yellow</b> steady · balanced</span><span><i></i> <b>blue</b> position · displacement</span><span><i></i> <b>purple</b> velocity</span><span><i></i> <b>orange</b> forces</span><span>pencil · everything else</span></div><footer class="sei-foot">STUDENT CHOICE BINDER · OPTION 9 · STYLE H · FRAYER MODEL · FILE WITH DAY 16 NOTES · 3-HOLE PUNCH LEFT</footer></main></section></doc-page></body></html>

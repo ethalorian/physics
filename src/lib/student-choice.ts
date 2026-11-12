@@ -9,26 +9,27 @@ export const CHOICE_PAPER_LABELS = { not_received: 'Awaiting paper', received: '
 export interface BinderPage { title: string; path: string; sha256: string; style?: string; sei?: boolean; target?: string; previewPath?: string }
 export interface BinderPrintPacket { day: BinderPage; unit: BinderPage }
 export interface BinderDay { key: string; unit: string; day: number; title: string; target: string; version: string; notes: Partial<Record<ChoiceEdition, BinderPage>>; options: BinderPage[]; reference?: BinderPage; printPackets?: Partial<Record<ChoiceEdition, BinderPrintPacket>>; practicePrintBase?: string }
-export interface StudentChoiceAssignment { id: string; course_id: string; unit_id: string; day: number; edition: ChoiceEdition; title: string; packet_key: string; packet_version: string; required_choices?: number; due_at: string; status: 'published' | 'archived'; version: number; created_at: string }
+export interface StudentChoiceAssignment { id: string; course_id: string; unit_id: string; day: number; edition: ChoiceEdition; title: string; packet_key: string; packet_version: string; required_choices?: number; available_choices?: number; due_at: string; status: 'published' | 'archived'; version: number; created_at: string }
 export interface StudentChoiceReview { assignment_id: string; user_id: string; state: ChoicePaperState; letter_grade: typeof LETTER_GRADES[number] | null; feedback: string; version: number; recorded_at: string }
 export interface StudentChoiceList { staff: boolean; readOnly: boolean; courses: QuizCourse[]; assignments: StudentChoiceAssignment[]; reviews: StudentChoiceReview[]; catalog: BinderDay[] }
 export interface StudentChoiceSelection { assignment_id: string; user_id: string; option_numbers: number[]; version: number; updated_at: string }
 export interface StudentChoiceDetail { staff: boolean; readOnly: boolean; assignment: StudentChoiceAssignment; packet: BinderDay; reviews: StudentChoiceReview[]; students: { id: string; name: string }[]; selections: StudentChoiceSelection[] }
 export const DEFAULT_CHOICE_COUNT = 3
-export function validateRequiredChoices(value: unknown): number {
-  if (typeof value !== 'number' || !Number.isInteger(value) || value < 1 || value > 6) throw Error('Choose a required practice count from 1 to 6.')
+export const MAX_CHOICE_COUNT = 10
+export function validateRequiredChoices(value: unknown, available = MAX_CHOICE_COUNT): number {
+  if (typeof value !== 'number' || !Number.isInteger(value) || value < 1 || value > available || !Number.isInteger(available) || available < 1 || available > MAX_CHOICE_COUNT) throw Error(`Choose a required practice count from 1 to ${available}.`)
   return value
 }
 export function requiredChoiceCount(assignment: Pick<StudentChoiceAssignment, 'required_choices'>) { return assignment.required_choices ?? DEFAULT_CHOICE_COUNT }
-export function validateChoiceSelection(value: unknown, required = DEFAULT_CHOICE_COUNT) {
-  validateRequiredChoices(required)
+export function validateChoiceSelection(value: unknown, required = DEFAULT_CHOICE_COUNT, available = MAX_CHOICE_COUNT) {
+  validateRequiredChoices(required, available)
   const b = value as { option_numbers?: unknown; version?: number } | null
   if (!b || !Number.isInteger(b.version) || b.version! < 0) throw Error('Reload your choices before saving.')
-  if (!Array.isArray(b.option_numbers) || b.option_numbers.length !== required || new Set(b.option_numbers).size !== required || b.option_numbers.some(n => !Number.isInteger(n) || n < 1 || n > 6)) throw Error(`Choose exactly ${required} different practice ${required === 1 ? 'page' : 'pages'} from the six available.`)
+  if (!Array.isArray(b.option_numbers) || b.option_numbers.length !== required || new Set(b.option_numbers).size !== required || b.option_numbers.some(n => !Number.isInteger(n) || n < 1 || n > available)) throw Error(`Choose exactly ${required} different practice ${required === 1 ? 'page' : 'pages'} from the ${available} available.`)
   return { option_numbers: [...b.option_numbers].sort((a: number, z: number) => a - z) as number[], version: b.version! }
 }
 export function choicePracticePrintPath(packet: BinderDay, choices: number[]) {
-  const { option_numbers } = validateChoiceSelection({ option_numbers: choices, version: 0 }, choices.length)
+  const { option_numbers } = validateChoiceSelection({ option_numbers: choices, version: 0 }, choices.length, packet.options.length)
   return `/student-choice-print?format=pdf&download=1&packet=${encodeURIComponent(packet.key)}&edition=${encodeURIComponent(packet.version)}&options=${option_numbers.join(',')}`
 }
 export function choiceReviewLabel(review?: StudentChoiceReview) { return review?.letter_grade ? `Reviewed · ${review.letter_grade}` : CHOICE_PAPER_LABELS[review?.state ?? 'not_received'] }

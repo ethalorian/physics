@@ -7,6 +7,6 @@ export function renderChoicePracticePrint(packet: string, edition: string, optio
   const key = packet + '@' + edition
   if (!Object.prototype.hasOwnProperty.call(data.packets, key)) return null
   const entry = data.packets[key]
-  const { option_numbers } = validateChoiceSelection({ option_numbers: options, version: 0 }, options.length)
+  const { option_numbers } = validateChoiceSelection({ option_numbers: options, version: 0 }, options.length, entry.paths.length)
   return entry.head + option_numbers.map(n => data.pages[entry.paths[n - 1]]).join('\n') + '</doc-page></body></html>'
 }

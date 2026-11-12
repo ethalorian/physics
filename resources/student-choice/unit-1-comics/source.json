@@ -1,0 +1,138 @@
+{
+  "artifact": "18e62b3a-7126-40f3-8ea3-7996d7bc4211",
+  "exported": "2026-11-12",
+  "files": [
+    {
+      "day": 1,
+      "file": "Unit 1 Day 01 Practice.dc.html",
+      "sourceSha256": "e904808e6da47a3edd6db9af2f80dbc6fca1950ce2e2a186697366c562b857b2",
+      "sectionSha256": "71d5957641bb650c0286b124d9759557d06dbd1bd749d2d46a04b51fea1a61a6"
+    },
+    {
+      "day": 2,
+      "file": "Unit 1 Day 02 Practice.dc.html",
+      "sourceSha256": "0fdfc422d3487c9148be721e87e1b75f0cecccb326e2569e746ce21765ebb466",
+      "sectionSha256": "24776520854725b7fd61cc7f912dfd3baa270fe870a9fd0bfdf57151901b7f1d"
+    },
+    {
+      "day": 3,
+      "file": "Unit 1 Day 03 Practice.dc.html",
+      "sourceSha256": "7c63ac3f973a23c12c34c0b7bf1e1d35d30a2c50a5b757f66f8e8eaa996d2427",
+      "sectionSha256": "f34d085e5f779b7cf1f3d9ee5ad6306840eb952fce801396461478cb66aca27b"
+    },
+    {
+      "day": 4,
+      "file": "Unit 1 Day 04 Practice.dc.html",
+      "sourceSha256": "96d6e8dacbd76cc2d0a866f2bea650c5b2bf6b26676790c5b80c6d3aa26e84be",
+      "sectionSha256": "c06890ddce68bad2e3d8eab06a2f0408962dc892e3001f471828d158c5e184b9"
+    },
+    {
+      "day": 5,
+      "file": "Unit 1 Day 05 Practice.dc.html",
+      "sourceSha256": "f018c4ab7145c174392e4f57cc6324e4d88a9a29bdb0bebdc60485f471d96802",
+      "sectionSha256": "cb19a2dd03fb33bbad0aa1ad5ed0b28c01a15efeb0180856a0dd9271c49e8808"
+    },
+    {
+      "day": 6,
+      "file": "Unit 1 Day 06 Practice.dc.html",
+      "sourceSha256": "885e050ee12fa8de185339642a7695766ebfff1f9234e4de40b0c336d9a99bd5",
+      "sectionSha256": "bbcbefd7cc618ceca7dceac0f6032a9d022e93230dd9965d08d62f434e7e5674"
+    },
+    {
+      "day": 7,
+      "file": "Unit 1 Day 07 Practice.dc.html",
+      "sourceSha256": "814f98d3e4dea3b57a9ab549b1dfa4e3d426e53d8f501b98a8f16ce2cf528e2e",
+      "sectionSha256": "1811fe0a6d11cdfaf0d66b5f10860b867ff099f8b668d2ae13fa39205833b41f"
+    },
+    {
+      "day": 8,
+      "file": "Unit 1 Day 08 Practice.dc.html",
+      "sourceSha256": "6ced8b9faf70e122d851d76df34f8fe8f6013bedaba3db4c41bf103c1fa26618",
+      "sectionSha256": "1513aa64b79130dba0b8c57b4c20e40b475cfda2d8c445c589e2b07ea7677cd8"
+    },
+    {
+      "day": 9,
+      "file": "Unit 1 Day 09 Practice.dc.html",
+      "sourceSha256": "a9e434fa66f42452a4eda5100071503ed2ed965266f883832a1cfd851b600527",
+      "sectionSha256": "f1da33ba63ea1eae2337f3e4cd717986eebe409dc5c3b74d74702f3a515ea0cc"
+    },
+    {
+      "day": 10,
+      "file": "Unit 1 Day 10 Practice.dc.html",
+      "sourceSha256": "e057616dfdc826067a744bb5a0fb17bad0cd2face579d92c2a42cf98318d7c6f",
+      "sectionSha256": "4284ce79fb273138383b3714ee8ed1f5300a1838b43bdc5f2f26783c924e244c"
+    },
+    {
+      "day": 11,
+      "file": "Unit 1 Day 11 Practice.dc.html",
+      "sourceSha256": "e85ab4fa9c03110251d92f4b63497d308b4c1629c0b539e3a949f21554774007",
+      "sectionSha256": "0c5dc482a1d8a0d6c4ba782f358b8ec124411e6ebb94153d8d8511772e374070"
+    },
+    {
+      "day": 12,
+      "file": "Unit 1 Day 12 Practice.dc.html",
+      "sourceSha256": "efcff09fa0998b5615241dacdc6e17f02a8ce69792a2b91883f2a36d0b6e6c23",
+      "sectionSha256": "4574ccc1e1cadffb1b1255d515b8dfb0460546e6a87c687d7e37c8d3aee5650a"
+    },
+    {
+      "day": 13,
+      "file": "Unit 1 Day 13 Practice.dc.html",
+      "sourceSha256": "4262511a9750a3d0301f15dfca6568eb7c4c124217a3aef0d32195f17512434b",
+      "sectionSha256": "493eb514ca6d16d9972899ed5b527709955498c9e8d6dc7fced4f86c67c51a35"
+    },
+    {
+      "day": 14,
+      "file": "Unit 1 Day 14 Practice.dc.html",
+      "sourceSha256": "40c5aa627e8a12dc07e8f2a0a0ba9884439a8fff323feffda7615ff005568a2b",
+      "sectionSha256": "5a6a30f8f55c3cff5c67c4a811c985a67dc7a88771b8a48ab2f37fe3d158e6a9"
+    },
+    {
+      "day": 15,
+      "file": "Unit 1 Day 15 Practice.dc.html",
+      "sourceSha256": "561c2fb97c3a05d67616c25b928518e241d6afa15a381fd1b0850edac7bfa7ad",
+      "sectionSha256": "ec6dc90135818efc715463b93ccab6608bd4326b0db24333f3352cf450bb5c1a"
+    },
+    {
+      "day": 16,
+      "file": "Unit 1 Day 16 Practice.dc.html",
+      "sourceSha256": "63967e3011dc0125e7bc90762cbd974f19de919626bff4c9181d0cb55d299215",
+      "sectionSha256": "0cb8075f7ddadd8a734325c1b8f11c016cd345a87b5cb494bb0221fe28cfa5e5"
+    },
+    {
+      "day": 17,
+      "file": "Unit 1 Day 17 Practice.dc.html",
+      "sourceSha256": "fb98d228a417ef82e5a4988a342836482163163025a974db340a7e0669cd5c15",
+      "sectionSha256": "dfc3d0462cc7ead7628b324b6d2036694d4d24f31b057ff27923803d966a7b62"
+    },
+    {
+      "day": 18,
+      "file": "Unit 1 Day 18 Practice.dc.html",
+      "sourceSha256": "4ac53a440cd67d42d15213e6965ba6efd34149236dda5381ce1fbec8b920acf5",
+      "sectionSha256": "034e26655c54407afbdd4137112a5697e2959aa9fb9555a4c69bb9eb0948030a"
+    },
+    {
+      "day": 19,
+      "file": "Unit 1 Day 19 Practice.dc.html",
+      "sourceSha256": "a67d3793787d6d1e313366cf3d5d5ae5567f5e25a77451b239ed6ca1619c6342",
+      "sectionSha256": "bfd128319bbafac05095d8616f9ddd830cc37d1d00553cf94916ac225ea7cd9a"
+    },
+    {
+      "day": 20,
+      "file": "Unit 1 Day 20 Practice.dc.html",
+      "sourceSha256": "3a8c47c5502c03e465e9b0861b00ef94bd50121606faf991733124330d8bda0b",
+      "sectionSha256": "30e32b615662951b1ed9062eea6b604e2d0db9098c9a2c9eea6bb32e0b6973a8"
+    },
+    {
+      "day": 21,
+      "file": "Unit 1 Day 21 Practice.dc.html",
+      "sourceSha256": "70869a7be86f90ced68935a2c8f7d6d601f177d3e83f3e09fa5f6041e61f59fe",
+      "sectionSha256": "afcc63781ccea927001f883fb0685f1109092b3fb21413e377f465fd6d1d357f"
+    },
+    {
+      "day": 22,
+      "file": "Unit 1 Day 22 Practice.dc.html",
+      "sourceSha256": "e7a417ccf99670b00db4ec7134f4aef4739ef2db464ef22654b1441fe2ad9958",
+      "sectionSha256": "4efe3cc742636b92df9b3e6b1866b446bd1b09d83feab3ebed9f0332055f0116"
+    }
+  ]
+}

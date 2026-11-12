@@ -16,8 +16,11 @@ export default function ChoiceCarousel({ packet, selected = [], onToggle, disabl
     return () => observer.disconnect()
   }, [])
   const page = packet.options[index], chosen = selected.includes(index + 1)
+  const supportLabels: Record<string, string> = { B: 'Doodle Notes', H: 'Frayer Model', K: 'Picture Dictionary' }
+  const supports = packet.options.flatMap((opt,i) => supportLabels[opt.style ?? ''] ? [{ label: supportLabels[opt.style!], i }] : [])
   const move = (offset: number) => setIndex(i => (i + offset + packet.options.length) % packet.options.length)
   return <section className={c.carousel} aria-label="Practice options" aria-roledescription="carousel">
+    {supports.length > 0 && <div className={c.supportLinks} aria-label="Visual and vocabulary supports"><strong>Visual and vocabulary supports</strong>{supports.map(({ label, i }) => <button key={i} type="button" aria-pressed={index === i} onClick={() => setIndex(i)}>{label} · {i + 1}</button>)}</div>}
     <div className={c.carouselNav} onKeyDown={e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); move(e.key === 'ArrowRight' ? 1 : -1) } }}>
       <button type="button" className={s.secondary} aria-label="Previous practice option" onClick={() => move(-1)}>← Previous</button>
       <span aria-live="polite">Option {index + 1} of {packet.options.length}</span>
@@ -31,7 +34,7 @@ export default function ChoiceCarousel({ packet, selected = [], onToggle, disabl
         <a className={s.link} href={choicePracticePrintPath(packet, [index + 1])} download>Download option {index + 1} (PDF)</a>
         {onToggle && <button type="button" className={chosen ? s.secondary : s.button} aria-pressed={chosen} disabled={disabled || (!chosen && selected.length >= required)} onClick={() => onToggle(index + 1)}>{chosen ? `Remove option ${index + 1}` : `Choose option ${index + 1}`}</button>}
         {onToggle && selected.length >= required && !chosen && <p className={s.muted}>{selected.length} selected. Remove a page to choose this option.</p>}
-        {!onToggle && <p className={s.muted}>Students choose {required} of these six pages.</p>}
+        {!onToggle && <p className={s.muted}>Students choose {required} of these {packet.options.length} pages.</p>}
       </div>
     </article>
     <div className={c.optionNav} aria-label="Go to a practice option">{packet.options.map((p, i) => <button type="button" key={p.path} aria-label={`Show option ${i + 1}${selected.includes(i + 1) ? ', selected' : ''}`} aria-current={i === index ? 'true' : undefined} onClick={() => setIndex(i)}>{i + 1}{selected.includes(i + 1) ? ' ✓' : ''}</button>)}</div>

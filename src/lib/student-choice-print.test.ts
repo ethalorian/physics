@@ -9,7 +9,7 @@ import { GET } from '@/app/student-choice-print/route'
 import { choicePracticePrintPath } from './student-choice'
 
 test('all 63 subsets of every pinned edition contain only exact original sections in option order', () => {
-  for (const packet of catalog) {
+  for (const packet of catalog.filter(p => !p.version.startsWith('visual-sei-'))) {
     const originals = packet.options.map(o => fs.readFileSync('public' + o.path, 'utf8').match(/<section\b[\s\S]*?<\/section>/)![0])
     for (let mask = 1; mask < 64; mask++) {
       const selected = originals.flatMap((_, i) => mask & (1 << i) ? [i + 1] : [])
@@ -68,7 +68,7 @@ test('teacher packets and student subsets contain the requested physical Letter 
   for (const packet of catalog) {
     assert.ok(fs.existsSync('public/student-choice-pages/practice-pdfs/' + files[packet.key + '@' + packet.version]))
   }
-  const packet = catalog.find(p => p.day === 12)!
+  const packet = catalog.find(p => p.day === 12 && p.options.length === 6)!
   const url = `http://fixture/student-choice-print?packet=${packet.key}&edition=${packet.version}&options=`
   const request = (choices: string) => GET(new Request(url + choices))
   const full = await request('1,2,3,4,5,6')
@@ -88,4 +88,22 @@ test('teacher packets and student subsets contain the requested physical Letter 
   }
   for (const options of ['', '0', '7', '1,1', '1.5', '1,2,3,4,5,6,1', '<script>']) assert.equal((await request(options)).status, 400)
   assert.equal((await GET(new Request('http://fixture/student-choice-print?packet=__proto__&edition=x&options=1'))).status, 404)
+})
+
+test('each current day has exactly one of each visual scaffold and prints its entire packet or a mixed subset', async () => {
+  const days = catalog.filter(p => p.version.startsWith('visual-sei-')).slice(0,22)
+  assert.equal(days.length,22)
+  for(const p of days) {
+    const n=p.options.length
+    assert(n>=8 && n<=10)
+    for(const style of ['B','H','K','CS']) assert.equal(p.options.filter(o=>o.style===style).length,1)
+    for(const o of p.options.filter(o=>['B','H','K'].includes(o.style))) assert(o.sei)
+    for(const chosen of [Array.from({length:n},(_,i)=>i+1),[1,6,n]]) {
+      const resp=await GET(new Request(new URL(choicePracticePrintPath(p,chosen),'http://fixture')))
+      assert.equal(resp.status,200)
+      assert.equal((await PDFDocument.load(await resp.arrayBuffer())).getPageCount(),chosen.length)
+    }
+    const bad=await GET(new Request('http://fixture/student-choice-print?packet='+p.key+'&edition='+p.version+'&options='+(n+1)))
+    assert.equal(bad.status,400)
+  }
 })
