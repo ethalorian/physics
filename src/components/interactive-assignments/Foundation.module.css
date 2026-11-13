@@ -90,3 +90,9 @@
 .stopTask details{margin:.8rem 0}
 .stopTask summary{cursor:pointer;color:var(--primary);font-weight:600}
 .stopTask [hidden]{display:none}
+
+.projectorActions {display:flex;align-items:center;flex-wrap:wrap;gap:.65rem;margin:0 0 .75rem}
+.projectorActions button {border:1px solid var(--border);border-radius:.5rem;padding:.5rem .8rem;font-weight:600}
+.projectorActions button[aria-pressed="true"] {background:var(--primary);color:var(--primary-foreground)}
+.projectorActions a {color:var(--foreground);text-decoration:underline;text-underline-offset:.18em}
+.binderProjector {display:block;width:100%;height:clamp(32rem,80svh,64rem);border:1px solid var(--border);border-radius:.7rem;background:var(--card)}

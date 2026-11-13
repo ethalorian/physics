@@ -3,6 +3,7 @@ import {useFoundationLanguage} from './FoundationLanguage'
 import QuizContent from '@/components/quizzes/QuizContent'
 
 import {useEffect, useRef, useState} from 'react'
+import {foundationBinderMaterials} from '@/lib/foundation-binder-materials'
 import {foundationSlides} from '@/lib/interactive-assignments/foundations/slides'
 import type {FoundationKey} from '@/lib/interactive-assignments/foundations/checkpoints'
 import FoundationReadingGuide from './FoundationReadingGuide'
@@ -13,7 +14,32 @@ import s from './Foundation.module.css'
 
 const guidesByLesson: Partial<Record<FoundationKey, Record<string, string>>> = readingGuides
 
-export default function FoundationSlides({foundation='day-one', sections}:{foundation?:FoundationKey; sections:LessonSection[]}) {
+type SlideProps = {foundation?: FoundationKey; sections: LessonSection[]}
+
+export default function FoundationSlides({foundation = 'day-one', sections}: SlideProps) {
+  const {edition, locale} = useFoundationLanguage()
+  const [showGuide, setShowGuide] = useState(false)
+  const day = foundationSlides[foundation].day
+  const materials = foundationBinderMaterials(day, edition ?? 'cpa')
+
+  if (locale !== 'en') return <AssignmentSlideGuide foundation={foundation} sections={sections} />
+
+  return <div id="assignment-teaching-tool">
+    <div className={s.projectorActions}>
+      <button type="button" aria-pressed={!showGuide} onClick={() => setShowGuide(false)}>Foundation lesson A–E</button>
+      <button type="button" aria-pressed={showGuide} onClick={() => setShowGuide(true)}>Assignment slide guide</button>
+      <a href={materials.projector} target="_blank" rel="noreferrer">Open projector in a new tab ↗</a>
+    </div>
+    <div hidden={showGuide}>
+      <iframe className={s.binderProjector} title={`Day ${day} Foundation lesson, sections A through E`}
+        key={materials.projector} src={materials.projector + '&embed=1'} allowFullScreen
+        sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" />
+    </div>
+    {showGuide && <AssignmentSlideGuide foundation={foundation} sections={sections} embedded />}
+  </div>
+}
+
+function AssignmentSlideGuide({foundation = 'day-one', sections, embedded = false}: SlideProps & {embedded?: boolean}) {
   const {t,locale,map}=useFoundationLanguage()
   const {slides,day,src,channel}=foundationSlides[foundation]
   const [index, setIndex] = useState(0)
@@ -96,7 +122,7 @@ export default function FoundationSlides({foundation='day-one', sections}:{found
     setAttempt(value => value + 1)
   }
 
-  return <section ref={panel} id="assignment-teaching-tool" className={s.viewer} data-guided={chapter ? true : undefined} aria-label={`Day ${day} slide viewer`}>
+  return <section ref={panel} id={embedded ? undefined : "assignment-teaching-tool"} className={s.viewer} data-guided={chapter ? true : undefined} aria-label={`Day ${day} slide viewer`}>
     <div className={s.slideHeader}>
       {chapter ? <h2>{t('Day')} {day} · {t(chapter.title)}</h2> : <div><p>{t('Day')} {day} · {t('Foundational slides')}</p><h2>{t(slide.title)}</h2></div>}
       <button ref={enlargeButton} type="button" onClick={toggleEnlarged}>{t(enlarged ? 'Close enlarged slides' : 'Enlarge')}</button>

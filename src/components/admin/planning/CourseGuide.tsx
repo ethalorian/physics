@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, CalendarRange, BookOpen, Download, FileText, GraduationCap, MonitorPlay } from 'lucide-react'
 import { planTeachHref } from '@/lib/course-plan-presentation'
+import { foundationBinderMaterials } from '@/lib/foundation-binder-materials'
 import { deckForDay } from '@/data/lesson-decks'
 import { classDayTool, classDayToolHref } from '@/lib/class-day-tools'
 import tradesResetUnits from '@/data/trades-reset-units.json'
@@ -119,6 +120,8 @@ export default function CourseGuide({ embedded = false }: { embedded?: boolean }
   // The day's classroom slide deck (self-contained HTML in /public/decks/…).
   // Present the same curriculum day through the shared iPad/projector session.
   const deck = current ? deckForDay(unit, current.day, presentationTrack) : null
+  const foundation = unit === 'unit-1' && current && current.day >= 1 && current.day <= 22
+    ? foundationBinderMaterials(current.day, presentationTrack === 'honors' ? 'honors' : 'cpa') : null
   const animation = current ? classDayTool(unit, current.day) : null
   const presentDeck = () => {
     if(current&&deck)window.location.assign(planTeachHref(unit,current.day,courseId))
@@ -228,6 +231,10 @@ export default function CourseGuide({ embedded = false }: { embedded?: boolean }
                   <BookOpen size={16} style={{ color: 'var(--primary)', marginTop: 3 }} />
                   <h2 className="text-lg font-semibold tracking-tight flex-1 min-w-0">{current.title}</h2>
                   <div className="flex w-full flex-wrap items-center gap-1.5">
+                    {foundation && <a href={foundation.projector} target="_blank" rel="noreferrer"
+                      className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold">
+                      <MonitorPlay size={13} /> Project Foundation slides
+                    </a>}
                     {(deck || current.lessons?.length || current.lesson) && (
                       <button
                         onClick={presentDeck}
