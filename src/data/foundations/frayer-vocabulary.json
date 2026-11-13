@@ -1,0 +1,4006 @@
+{
+  "1": {
+    "cpa": {
+      "Observation": [
+        [
+          "How would you explain observation to a friend?",
+          "Something you can see or measure and record.",
+          "In my words, this means ___."
+        ],
+        [
+          "The timer reads 2 s as the cart passes the 4 m mark. What did you actually see?",
+          "At 2 s the cart was at 4 m.",
+          "I can tell because ___."
+        ],
+        [
+          "What two labels would you put on a sketch of that moment?",
+          "I’d mark the cart at 4 m and label the instant 2 s.",
+          "My example shows ___."
+        ],
+        [
+          "Someone writes “It will reach 8 m.” Has the camera seen that yet?",
+          "No. That’s a prediction about a later position.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Model": [
+        [
+          "How would you explain model to a friend?",
+          "A simple way to describe a system and predict what it will do under stated conditions.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart moves 2 m each second. What are we assuming if we extend that pattern?",
+          "We assume it keeps the same velocity.",
+          "I can tell because ___."
+        ],
+        [
+          "Where would your model put the cart one second after it passes 6 m going right?",
+          "At 8 m if it keeps moving 2 m right each second.",
+          "My example shows ___."
+        ],
+        [
+          "The cart hits a cushion. Would you still extend the same pattern? Why?",
+          "The cushion can change the cart’s velocity, so I’d change the model.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Prediction": [
+        [
+          "How would you explain prediction to a friend?",
+          "A statement about what you expect to observe next.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which part of a forecast could we check with the next camera image?",
+          "The position we expect at the time of that image.",
+          "I can tell because ___."
+        ],
+        [
+          "A tracker reads 0, 2, then 4 km a minute apart. Where would you look a minute later?",
+          "At 6 km if the same motion continues.",
+          "My example shows ___."
+        ],
+        [
+          "Someone calls yesterday’s recorded position a prediction. What would you call it?",
+          "It’s an observation. A prediction comes before the new reading.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Testable question": [
+        [
+          "How would you explain testable question to a friend?",
+          "A question that observations or measurements can answer.",
+          "In my words, this means ___."
+        ],
+        [
+          "What would you measure to answer “Does this cart speed up on the ramp?”",
+          "Its speed at two or more points on the ramp.",
+          "I can tell because ___."
+        ],
+        [
+          "What question could two timed pictures of the same cart help you answer?",
+          "How far did the cart move between the pictures?",
+          "My example shows ___."
+        ],
+        [
+          "“Which cart looks coolest?” What would you change so the class can test it?",
+          "Ask which cart travels farther in the same time under the same conditions.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Evidence": [
+        [
+          "How would you explain evidence to a friend?",
+          "An observation or measurement that helps you judge a claim.",
+          "In my words, this means ___."
+        ],
+        [
+          "What reading supports the claim that the cart reached 4 m in 2 s?",
+          "A frame showing the cart beside the 4 m mark when the timer reads 2 s.",
+          "I can tell because ___."
+        ],
+        [
+          "How could two measurements support a claim that one cart accelerated more?",
+          "Show both speed changes over the same time. The bigger change means greater average acceleration.",
+          "My example shows ___."
+        ],
+        [
+          "“I expected our cart to win.” Does that tell us which cart crossed first?",
+          "We need the finish times or an image of the crossing. The expectation is a guess.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Inference": [
+        [
+          "How would you explain inference to a friend?",
+          "An explanation you work out from observations.",
+          "In my words, this means ___."
+        ],
+        [
+          "Wet tracks run from the door to a cart. Which part is your inference?",
+          "I can see the tracks. I infer the cart rolled in from outside.",
+          "I can tell because ___."
+        ],
+        [
+          "Two timed images show XJ closer to Earth. What can you reasonably infer?",
+          "Its separation from Earth decreased over that interval.",
+          "My example shows ___."
+        ],
+        [
+          "“The second image reads 4 km.” Is that your inference or your reading?",
+          "It’s the reading. An inference is something I conclude from it.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Model": [
+        [
+          "How would you explain model to a friend?",
+          "A simple way to describe a system and predict what it will do under stated conditions.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart moves 2 m each second. What are we assuming if we extend that pattern?",
+          "We assume it keeps the same velocity.",
+          "I can tell because ___."
+        ],
+        [
+          "Where would your model put the cart one second after it passes 6 m going right?",
+          "At 8 m if it keeps moving 2 m right each second.",
+          "My example shows ___."
+        ],
+        [
+          "The cart hits a cushion. Would you still extend the same pattern? Why?",
+          "The cushion can change the cart’s velocity, so I’d change the model.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Testable question": [
+        [
+          "How would you explain testable question to a friend?",
+          "A question that observations or measurements can answer.",
+          "In my words, this means ___."
+        ],
+        [
+          "What would you measure to answer “Does this cart speed up on the ramp?”",
+          "Its speed at two or more points on the ramp.",
+          "I can tell because ___."
+        ],
+        [
+          "What question could two timed pictures of the same cart help you answer?",
+          "How far did the cart move between the pictures?",
+          "My example shows ___."
+        ],
+        [
+          "“Which cart looks coolest?” What would you change so the class can test it?",
+          "Ask which cart travels farther in the same time under the same conditions.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "2": {
+    "cpa": {
+      "Position": [
+        [
+          "How would you explain position to a friend?",
+          "Where something is relative to an origin and a chosen direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "The doorway is zero and east is positive. Where is a cart at −3 m?",
+          "Three metres west of the doorway.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you mark a cart 2 m east of the doorway on a number line?",
+          "Mark the doorway 0, draw east as positive, and put a dot at +2 m.",
+          "My example shows ___."
+        ],
+        [
+          "“I walked 7 m.” Do we know your position now?",
+          "We also need the start and direction. The distance alone doesn’t locate me.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Distance": [
+        [
+          "How would you explain distance to a friend?",
+          "The total length of the path traveled.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart goes 3 m right and 2 m left. How much ground do its wheels cover?",
+          "5 m. Both parts of the trip count.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw a trip that covers 6 m and finishes at its starting point.",
+          "Draw 3 m out and 3 m back. The two lengths add to 6 m.",
+          "My example shows ___."
+        ],
+        [
+          "A partner writes −5 m for distance. What does the minus sign tell you?",
+          "They may mean displacement. The length of a path cannot be negative.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Displacement": [
+        [
+          "How would you explain displacement to a friend?",
+          "The change from the starting position to the final position, with direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which two marks tell you the displacement even if the cart turns around?",
+          "Its start and finish. I subtract the starting position from the final one.",
+          "I can tell because ___."
+        ],
+        [
+          "Go from 2 m to 6 m and back to 4 m. What single arrow shows the displacement?",
+          "Draw one arrow from 2 m to 4 m. It points 2 m right.",
+          "My example shows ___."
+        ],
+        [
+          "Someone adds both legs and gets 6 m. What did they find?",
+          "They found distance traveled, counting all 4 m out and 2 m back.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Scalar / vector": [
+        [
+          "How would you explain the difference between a scalar and a vector?",
+          "A scalar gives a size. A vector also gives a direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which tells you which way to draw an arrow: 5 m or 5 m west?",
+          "5 m west. The word west gives the direction.",
+          "I can tell because ___."
+        ],
+        [
+          "Give a scalar and a vector for a 4 m walk straight east.",
+          "Distance is 4 m. Displacement is 4 m east.",
+          "My example shows ___."
+        ],
+        [
+          "Two students each walk 4 m, one east and one west. Are their displacements equal?",
+          "They have equal magnitudes, but their displacement vectors point opposite ways.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Position": [
+        [
+          "How would you explain position to a friend?",
+          "Where something is relative to an origin and a chosen direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "The doorway is zero and east is positive. Where is a cart at −3 m?",
+          "Three metres west of the doorway.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you mark a cart 2 m east of the doorway on a number line?",
+          "Mark the doorway 0, draw east as positive, and put a dot at +2 m.",
+          "My example shows ___."
+        ],
+        [
+          "“I walked 7 m.” Do we know your position now?",
+          "We also need the start and direction. The distance alone doesn’t locate me.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Distance": [
+        [
+          "How would you explain distance to a friend?",
+          "The total length of the path traveled.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart goes 3 m right and 2 m left. How much ground do its wheels cover?",
+          "5 m. Both parts of the trip count.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw a trip that covers 6 m and finishes at its starting point.",
+          "Draw 3 m out and 3 m back. The two lengths add to 6 m.",
+          "My example shows ___."
+        ],
+        [
+          "A partner writes −5 m for distance. What does the minus sign tell you?",
+          "They may mean displacement. The length of a path cannot be negative.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Displacement": [
+        [
+          "How would you explain displacement to a friend?",
+          "The change from the starting position to the final position, with direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which two marks tell you the displacement even if the cart turns around?",
+          "Its start and finish. I subtract the starting position from the final one.",
+          "I can tell because ___."
+        ],
+        [
+          "Go from 2 m to 6 m and back to 4 m. What single arrow shows the displacement?",
+          "Draw one arrow from 2 m to 4 m. It points 2 m right.",
+          "My example shows ___."
+        ],
+        [
+          "Someone adds both legs and gets 6 m. What did they find?",
+          "They found distance traveled, counting all 4 m out and 2 m back.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Scalar / vector": [
+        [
+          "How would you explain the difference between a scalar and a vector?",
+          "A scalar gives a size. A vector also gives a direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which tells you which way to draw an arrow: 5 m or 5 m west?",
+          "5 m west. The word west gives the direction.",
+          "I can tell because ___."
+        ],
+        [
+          "Give a scalar and a vector for a 4 m walk straight east.",
+          "Distance is 4 m. Displacement is 4 m east.",
+          "My example shows ___."
+        ],
+        [
+          "Two students each walk 4 m, one east and one west. Are their displacements equal?",
+          "They have equal magnitudes, but their displacement vectors point opposite ways.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "3": {
+    "cpa": {
+      "Velocity": [
+        [
+          "How would you explain velocity to a friend?",
+          "How fast something moves and in which direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "Right is positive. What does a velocity of −2 m/s tell you?",
+          "The cart moves left at 2 m/s.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you show a cart going east at 3 m/s?",
+          "Draw a rightward arrow labeled 3 m/s east.",
+          "My example shows ___."
+        ],
+        [
+          "A speedometer reads 3 m/s. What would you still need for velocity?",
+          "The direction of travel.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Speed": [
+        [
+          "How would you explain speed to a friend?",
+          "How fast an object travels, regardless of direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two carts travel at 3 m/s in opposite directions. What do they share?",
+          "The same speed, 3 m/s.",
+          "I can tell because ___."
+        ],
+        [
+          "A cart goes 8 m in 4 s at a steady pace. What speed would you write?",
+          "2 m/s.",
+          "My example shows ___."
+        ],
+        [
+          "Right is positive and a bike moves left at 5 m/s. Is its speed −5 m/s?",
+          "Its velocity is −5 m/s. Its speed is 5 m/s.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Slope": [
+        [
+          "How would you explain slope to a friend?",
+          "The vertical change on a graph divided by the horizontal change.",
+          "In my words, this means ___."
+        ],
+        [
+          "On a position–time graph, what does a line falling to the right tell you?",
+          "Position decreases as time passes, so velocity is negative over that segment.",
+          "I can tell because ___."
+        ],
+        [
+          "A line goes from 2 m at 0 s to 8 m at 3 s. What slope would you label?",
+          "The rise is 6 m and the run is 3 s. The slope is +2 m/s.",
+          "My example shows ___."
+        ],
+        [
+          "The graph reaches 8 m. Does that make the slope 8 m/s?",
+          "8 m is one height. I need two points to find rise divided by run.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Average speed": [
+        [
+          "How would you explain average speed to a friend?",
+          "Total distance traveled divided by elapsed time.",
+          "In my words, this means ___."
+        ],
+        [
+          "On a trip out and back, which distance goes on top of the fraction?",
+          "Add the lengths of both legs.",
+          "I can tell because ___."
+        ],
+        [
+          "You walk 3 m out and 3 m back in 4 s. What is your average speed?",
+          "6 m divided by 4 s gives 1.5 m/s.",
+          "My example shows ___."
+        ],
+        [
+          "“I got back to the start, so my average speed was zero.” What would you say?",
+          "Average velocity was zero. The trip still covered distance in that time.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Average velocity": [
+        [
+          "How would you explain average velocity to a friend?",
+          "The change in position divided by the time between two readings.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart travels out and back. Which two points determine its average velocity?",
+          "The starting and final positions, along with the elapsed time.",
+          "I can tell because ___."
+        ],
+        [
+          "Right is positive. A cart goes from +8 m to +2 m in 3 s. What is its average velocity?",
+          "The displacement is −6 m. Dividing by 3 s gives −2 m/s.",
+          "My example shows ___."
+        ],
+        [
+          "“Average the two speeds, and you always get average velocity.” What is missing?",
+          "Direction and time spent moving each way matter. I’d use displacement divided by time.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Average speed": [
+        [
+          "How would you explain average speed to a friend?",
+          "Total distance traveled divided by elapsed time.",
+          "In my words, this means ___."
+        ],
+        [
+          "On a trip out and back, which distance goes on top of the fraction?",
+          "Add the lengths of both legs.",
+          "I can tell because ___."
+        ],
+        [
+          "You walk 3 m out and 3 m back in 4 s. What is your average speed?",
+          "6 m divided by 4 s gives 1.5 m/s.",
+          "My example shows ___."
+        ],
+        [
+          "“I got back to the start, so my average speed was zero.” What would you say?",
+          "Average velocity was zero. The trip still covered distance in that time.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Slope": [
+        [
+          "How would you explain slope to a friend?",
+          "The vertical change on a graph divided by the horizontal change.",
+          "In my words, this means ___."
+        ],
+        [
+          "On a position–time graph, what does a line falling to the right tell you?",
+          "Position decreases as time passes, so velocity is negative over that segment.",
+          "I can tell because ___."
+        ],
+        [
+          "A line goes from 2 m at 0 s to 8 m at 3 s. What slope would you label?",
+          "The rise is 6 m and the run is 3 s. The slope is +2 m/s.",
+          "My example shows ___."
+        ],
+        [
+          "The graph reaches 8 m. Does that make the slope 8 m/s?",
+          "8 m is one height. I need two points to find rise divided by run.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Instantaneous velocity": [
+        [
+          "How would you explain instantaneous velocity to a friend?",
+          "How fast and which way an object is moving at one instant.",
+          "In my words, this means ___."
+        ],
+        [
+          "On a curved position–time graph, what line would you draw at exactly 2 s?",
+          "A tangent that follows the curve’s direction at 2 s.",
+          "I can tell because ___."
+        ],
+        [
+          "What does a tangent slope of −3 m/s at 2 s tell the camera operator?",
+          "At that instant the cart moves toward smaller positions at 3 m/s.",
+          "My example shows ___."
+        ],
+        [
+          "A partner joins the first and last points of a curved trip. Which velocity does that slope give?",
+          "The average over the whole interval. The tangent gives the velocity at one instant.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "4": {
+    "cpa": {
+      "Velocity–time graph": [
+        [
+          "How would you explain velocity–time graph to a friend?",
+          "A graph that shows an object’s velocity at each time.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which axis helps you tell whether the cart is moving left or right?",
+          "Read the sign of the velocity on the vertical axis using our direction convention.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you show three seconds of steady motion at −2 m/s?",
+          "Draw a horizontal line at −2 m/s from 0 to 3 s.",
+          "My example shows ___."
+        ],
+        [
+          "A student says a flat line at +2 means the cart is parked. What does that height mean?",
+          "The cart moves at +2 m/s. A parked cart would lie on the zero line.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Constant velocity": [
+        [
+          "How would you explain constant velocity to a friend?",
+          "Motion whose speed and direction both stay the same.",
+          "In my words, this means ___."
+        ],
+        [
+          "Photographs are one second apart. What pattern would you look for?",
+          "Equal spacing along a straight line, with the object moving the same way.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw three positions for a cart moving 2 m right each second.",
+          "Put dots at 0, +2 and +4 m and label them 0, 1 and 2 s.",
+          "My example shows ___."
+        ],
+        [
+          "A bike circles a track at a steady speed. Is its velocity constant?",
+          "Its direction changes around the circle, so its velocity changes.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Signed area": [
+        [
+          "How would you explain signed area to a friend?",
+          "On a velocity–time graph, the area represents displacement and its sign gives direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "What do you do with the area below the time axis when you find displacement?",
+          "Count it as negative, then add it to the positive area.",
+          "I can tell because ___."
+        ],
+        [
+          "Sketch a rectangle at −2 m/s lasting 3 s. What displacement does it show?",
+          "Its signed area is −6 m.",
+          "My example shows ___."
+        ],
+        [
+          "Someone labels the area −2 m/s. Which graph reading did they use?",
+          "They read the height. Area also includes the time width and has units of metres.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Components": [
+        [
+          "What are the components of an arrow?",
+          "The signed parts of a vector along chosen axes.",
+          "In my words, this means ___."
+        ],
+        [
+          "If east and north are positive, which component is negative for a southeast trip?",
+          "The north–south component is negative; the eastward component is positive.",
+          "I can tell because ___."
+        ],
+        [
+          "What two arrows could you use to build a displacement of 3 m east and 4 m north?",
+          "A +3 m horizontal arrow followed by a +4 m vertical arrow.",
+          "My example shows ___."
+        ],
+        [
+          "A classmate counts the diagonal and both parts as three separate trips. What is counted twice?",
+          "The diagonal already represents the two component displacements together.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Signed area": [
+        [
+          "How would you explain signed area to a friend?",
+          "On a velocity–time graph, the area represents displacement and its sign gives direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "What do you do with the area below the time axis when you find displacement?",
+          "Count it as negative, then add it to the positive area.",
+          "I can tell because ___."
+        ],
+        [
+          "Sketch a rectangle at −2 m/s lasting 3 s. What displacement does it show?",
+          "Its signed area is −6 m.",
+          "My example shows ___."
+        ],
+        [
+          "Someone labels the area −2 m/s. Which graph reading did they use?",
+          "They read the height. Area also includes the time width and has units of metres.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Distance": [
+        [
+          "How would you explain distance to a friend?",
+          "The total length of the path traveled.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart goes 3 m right and 2 m left. How much ground do its wheels cover?",
+          "5 m. Both parts of the trip count.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw a trip that covers 6 m and finishes at its starting point.",
+          "Draw 3 m out and 3 m back. The two lengths add to 6 m.",
+          "My example shows ___."
+        ],
+        [
+          "A partner writes −5 m for distance. What does the minus sign tell you?",
+          "They may mean displacement. The length of a path cannot be negative.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Component": [
+        [
+          "How would you explain component to a friend?",
+          "The signed part of a vector along one chosen axis.",
+          "In my words, this means ___."
+        ],
+        [
+          "If east and north are positive, which component is negative for a southeast trip?",
+          "The north–south component is negative; the eastward component is positive.",
+          "I can tell because ___."
+        ],
+        [
+          "What two arrows could you use to build a displacement of 3 m east and 4 m north?",
+          "A +3 m horizontal arrow followed by a +4 m vertical arrow.",
+          "My example shows ___."
+        ],
+        [
+          "A classmate counts the diagonal and both parts as three separate trips. What is counted twice?",
+          "The diagonal already represents the two component displacements together.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Angle θ": [
+        [
+          "When you label an arrow with an angle, what does that angle tell someone?",
+          "The amount and direction of a turn from a stated reference axis.",
+          "In my words, this means ___."
+        ],
+        [
+          "What extra information do you need when a vector is labeled “30 degrees”?",
+          "The starting axis and which way to turn from it.",
+          "I can tell because ___."
+        ],
+        [
+          "Show 30 degrees north of east on a sketch.",
+          "Start along east, rotate 30 degrees toward north, and draw the arrow there.",
+          "My example shows ___."
+        ],
+        [
+          "Does 30 degrees east of north point the same way as 30 degrees north of east?",
+          "No. Measured from east, the first is 60 degrees and the second is 30 degrees.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "5": {
+    "cpa": {
+      "Starting position": [
+        [
+          "How would you explain starting position to a friend?",
+          "Where the object is when you start counting time.",
+          "In my words, this means ___."
+        ],
+        [
+          "At 0 s the cart is beside the +5 m mark. Where does its position graph begin?",
+          "At +5 m on the position axis.",
+          "I can tell because ___."
+        ],
+        [
+          "The cart starts at +5 m and moves 2 m left. What two positions would you mark?",
+          "Start at +5 m and finish at +3 m.",
+          "My example shows ___."
+        ],
+        [
+          "“The clock starts at zero, so the cart starts at zero.” What do the two zeros mean?",
+          "The clock’s zero sets the time. The meterstick’s zero sets a place.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Displacement": [
+        [
+          "How would you explain displacement to a friend?",
+          "The change from the starting position to the final position, with direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which two marks tell you the displacement even if the cart turns around?",
+          "Its start and finish. I subtract the starting position from the final one.",
+          "I can tell because ___."
+        ],
+        [
+          "Go from 2 m to 6 m and back to 4 m. What single arrow shows the displacement?",
+          "Draw one arrow from 2 m to 4 m. It points 2 m right.",
+          "My example shows ___."
+        ],
+        [
+          "Someone adds both legs and gets 6 m. What did they find?",
+          "They found distance traveled, counting all 4 m out and 2 m back.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Final position": [
+        [
+          "How would you explain final position to a friend?",
+          "Where an object ends up, measured from the chosen origin.",
+          "In my words, this means ___."
+        ],
+        [
+          "What must you combine with the starting position to locate the finish?",
+          "Add the signed displacement.",
+          "I can tell because ___."
+        ],
+        [
+          "A cart starts at +5 m and moves 7 m left. Where would you draw it?",
+          "At −2 m, two metres left of zero.",
+          "My example shows ___."
+        ],
+        [
+          "A partner reports 7 m because that is how far the cart traveled. What is missing?",
+          "Where the cart started and which way it went.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Prediction range": [
+        [
+          "How would you explain prediction range to a friend?",
+          "A span of positions that a forecast allows.",
+          "In my words, this means ___."
+        ],
+        [
+          "A forecast reads 10 ± 2 km. Which positions are at its ends?",
+          "8 km and 12 km.",
+          "I can tell because ___."
+        ],
+        [
+          "Where would you shade the allowed positions on a number line?",
+          "Shade the segment from 8 to 12 km with 10 km in the middle.",
+          "My example shows ___."
+        ],
+        [
+          "Someone circles only 10 km. What information disappears?",
+          "The forecast also allows positions on either side, up to 2 km away.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Initial position": [
+        [
+          "How would you explain initial position to a friend?",
+          "Where the object is when you start counting time.",
+          "In my words, this means ___."
+        ],
+        [
+          "At 0 s the cart is beside the +5 m mark. Where does its position graph begin?",
+          "At +5 m on the position axis.",
+          "I can tell because ___."
+        ],
+        [
+          "The cart starts at +5 m and moves 2 m left. What two positions would you mark?",
+          "Start at +5 m and finish at +3 m.",
+          "My example shows ___."
+        ],
+        [
+          "“The clock starts at zero, so the cart starts at zero.” What do the two zeros mean?",
+          "The clock’s zero sets the time. The meterstick’s zero sets a place.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Bound": [
+        [
+          "How would you explain bound to a friend?",
+          "An endpoint or stated limit on an allowed set of values.",
+          "In my words, this means ___."
+        ],
+        [
+          "For 10 ± 2 km, what is the farthest allowed position on either side?",
+          "The lower bound is 8 km and the upper bound is 12 km.",
+          "I can tell because ___."
+        ],
+        [
+          "Mark the bounds for a forecast of 15 ± 3 km.",
+          "I’d mark 12 km and 18 km and shade between them.",
+          "My example shows ___."
+        ],
+        [
+          "A student labels 2 km as the upper endpoint of 10 ± 2 km. What does the 2 mean?",
+          "It is the allowed offset from 10 km. The upper endpoint is 12 km.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Half-width": [
+        [
+          "How would you explain half-width to a friend?",
+          "The distance from the centre of a range to either endpoint.",
+          "In my words, this means ___."
+        ],
+        [
+          "A model allows 8 to 12 km. How far is either endpoint from 10 km?",
+          "2 km.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you write a range centered on 20 km with half-width 3 km?",
+          "20 ± 3 km, or 17 through 23 km.",
+          "My example shows ___."
+        ],
+        [
+          "Someone calls 6 km the half-width of 17 to 23 km. What did they measure?",
+          "6 km is the full span. Half of it is 3 km.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Assumption": [
+        [
+          "How would you explain assumption to a friend?",
+          "A condition we treat as true while using a model.",
+          "In my words, this means ___."
+        ],
+        [
+          "What must be true to predict another 2 m each second from a cart’s earlier motion?",
+          "It must keep moving at the same velocity.",
+          "I can tell because ___."
+        ],
+        [
+          "Write an assumption beside a straight-line forecast for XJ.",
+          "I assume the velocity changes so little during this minute that steady motion is a good approximation.",
+          "My example shows ___."
+        ],
+        [
+          "Is tomorrow’s camera reading an assumption once we measure it?",
+          "It is evidence we can use to test the assumption.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "6": {
+    "cpa": {
+      "Vector": [
+        [
+          "How would you explain vector to a friend?",
+          "A quantity with a size and a direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "What must you tell a partner so they can draw the same displacement arrow?",
+          "How long it represents and which way it points.",
+          "I can tell because ___."
+        ],
+        [
+          "Using 1 cm for 1 m, how would you draw 3 m west?",
+          "Draw a 3 cm arrow pointing west and label it 3 m.",
+          "My example shows ___."
+        ],
+        [
+          "Someone labels a trip “3 m” and stops. What information would make it a vector?",
+          "A direction, such as 3 m west.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Tip-to-tail": [
+        [
+          "How would you explain tip-to-tail to a friend?",
+          "A way to add vectors by starting the next arrow at the tip of the one before it.",
+          "In my words, this means ___."
+        ],
+        [
+          "Where do you put the tail of the north arrow after drawing the east arrow?",
+          "At the tip of the east arrow.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw 3 m east followed by 2 m north. Where is the final tip?",
+          "Three metres east and two metres north of the start.",
+          "My example shows ___."
+        ],
+        [
+          "Can you turn the north arrow to make the two arrows fit on the page?",
+          "I can slide it, but turning it would change the vector.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Component": [
+        [
+          "How would you explain component to a friend?",
+          "The signed part of a vector along one chosen axis.",
+          "In my words, this means ___."
+        ],
+        [
+          "If east and north are positive, which component is negative for a southeast trip?",
+          "The north–south component is negative; the eastward component is positive.",
+          "I can tell because ___."
+        ],
+        [
+          "What two arrows could you use to build a displacement of 3 m east and 4 m north?",
+          "A +3 m horizontal arrow followed by a +4 m vertical arrow.",
+          "My example shows ___."
+        ],
+        [
+          "A classmate counts the diagonal and both parts as three separate trips. What is counted twice?",
+          "The diagonal already represents the two component displacements together.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Resultant": [
+        [
+          "How would you explain resultant to a friend?",
+          "One vector that has the same overall effect as all the vectors added together.",
+          "In my words, this means ___."
+        ],
+        [
+          "Where does the single arrow start and end on a tip-to-tail drawing?",
+          "It goes from the tail of the first arrow to the tip of the last.",
+          "I can tell because ___."
+        ],
+        [
+          "Walk 3 m east, then 4 m north. What single arrow joins your start and finish?",
+          "A 5 m arrow pointing northeast, more north than east.",
+          "My example shows ___."
+        ],
+        [
+          "Someone labels the resultant 7 m. Which length did they add up?",
+          "The path length. The straight diagonal between start and finish is shorter.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Component": [
+        [
+          "How would you explain component to a friend?",
+          "The signed part of a vector along one chosen axis.",
+          "In my words, this means ___."
+        ],
+        [
+          "If east and north are positive, which component is negative for a southeast trip?",
+          "The north–south component is negative; the eastward component is positive.",
+          "I can tell because ___."
+        ],
+        [
+          "What two arrows could you use to build a displacement of 3 m east and 4 m north?",
+          "A +3 m horizontal arrow followed by a +4 m vertical arrow.",
+          "My example shows ___."
+        ],
+        [
+          "A classmate counts the diagonal and both parts as three separate trips. What is counted twice?",
+          "The diagonal already represents the two component displacements together.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Resultant": [
+        [
+          "How would you explain resultant to a friend?",
+          "One vector that has the same overall effect as all the vectors added together.",
+          "In my words, this means ___."
+        ],
+        [
+          "Where does the single arrow start and end on a tip-to-tail drawing?",
+          "It goes from the tail of the first arrow to the tip of the last.",
+          "I can tell because ___."
+        ],
+        [
+          "Walk 3 m east, then 4 m north. What single arrow joins your start and finish?",
+          "A 5 m arrow pointing northeast, more north than east.",
+          "My example shows ___."
+        ],
+        [
+          "Someone labels the resultant 7 m. Which length did they add up?",
+          "The path length. The straight diagonal between start and finish is shorter.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Magnitude": [
+        [
+          "How would you explain magnitude to a friend?",
+          "The size of a vector, without its direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "For a displacement of 5 m west, what part gives the magnitude?",
+          "5 m.",
+          "I can tell because ___."
+        ],
+        [
+          "A vector has perpendicular parts of 3 m and 4 m. How long is the diagonal?",
+          "5 m by the Pythagorean theorem.",
+          "My example shows ___."
+        ],
+        [
+          "A partner gives the magnitude as −5 m. What is the minus sign doing?",
+          "It may mark direction on an axis. The magnitude itself is 5 m.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Quadrant": [
+        [
+          "How would you explain quadrant to a friend?",
+          "One of four regions formed by the horizontal and vertical axes.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which way does an arrow point if its horizontal part is negative and its vertical part positive?",
+          "Left and up, in the upper-left quadrant.",
+          "I can tell because ___."
+        ],
+        [
+          "Sketch a vector with components +2 m and −3 m. Where is its tip relative to its tail?",
+          "Two metres right and three metres down, in the lower-right quadrant from the tail.",
+          "My example shows ___."
+        ],
+        [
+          "Do two vectors with the same length always point into the same quadrant?",
+          "No. Their component signs can differ even with the same length.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "7": {
+    "cpa": {
+      "Acceleration": [
+        [
+          "How would you explain acceleration to a friend?",
+          "How quickly velocity changes, including a change in direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart follows a bend at steady speed. Why is it accelerating?",
+          "Its direction changes, so its velocity changes.",
+          "I can tell because ___."
+        ],
+        [
+          "Positive is right. A cart goes from −2 to −6 m/s in 2 s. What acceleration fits?",
+          "Its velocity changes by −4 m/s in 2 s, so the average acceleration is −2 m/s².",
+          "My example shows ___."
+        ],
+        [
+          "A cart travels straight at −6 m/s the whole time. Does the minus sign mean it is accelerating?",
+          "No. Its velocity stays the same, so its acceleration is zero.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Speeding up": [
+        [
+          "How would you explain speeding up to a friend?",
+          "The size of the velocity is increasing.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart changes from −2 to −5 m/s. What happens to its speed?",
+          "It rises from 2 to 5 m/s, even though both velocities are negative.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw three equal-time dots for a cart speeding up to the right.",
+          "Place the dots from left to right with the second gap larger than the first.",
+          "My example shows ___."
+        ],
+        [
+          "A cart moves right with acceleration to the left. Is it speeding up before it turns?",
+          "It is slowing down while its velocity points right.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Slowing down": [
+        [
+          "How would you explain slowing down to a friend?",
+          "The size of the velocity is decreasing.",
+          "In my words, this means ___."
+        ],
+        [
+          "Velocity changes from −5 to −2 m/s. What happens to the speed?",
+          "It falls from 5 to 2 m/s while the object still moves left.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw velocity and acceleration arrows for a bike braking while moving right.",
+          "Draw velocity right and acceleration left.",
+          "My example shows ___."
+        ],
+        [
+          "“Negative acceleration always means slowing down.” What happens if velocity is negative too?",
+          "The object speeds up while it moves in the negative direction.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Turning": [
+        [
+          "How would you explain turning to a friend?",
+          "Changing the direction of motion.",
+          "In my words, this means ___."
+        ],
+        [
+          "A rider keeps the speedometer at 4 m/s around a bend. Which part of velocity changes?",
+          "The direction changes.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you draw two velocity arrows as a cart turns from east to north at steady speed?",
+          "Draw equal-length arrows, first east and then north.",
+          "My example shows ___."
+        ],
+        [
+          "A cart brakes on a straight line and still moves east. Has it turned?",
+          "Its speed changed, but its direction is still east.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Average acceleration": [
+        [
+          "How would you explain average acceleration to a friend?",
+          "The change in velocity divided by the time that change took.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which two velocity readings would you subtract, and in what order?",
+          "Final minus initial, using the same positive direction for both.",
+          "I can tell because ___."
+        ],
+        [
+          "A cart changes from −2 to +4 m/s in 3 s. What is its average acceleration?",
+          "The change is +6 m/s. Dividing by 3 s gives +2 m/s².",
+          "My example shows ___."
+        ],
+        [
+          "A partner divides the whole distance by time. What quantity did that give?",
+          "Average speed. Acceleration needs a change in velocity.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Speeding up": [
+        [
+          "How would you explain speeding up to a friend?",
+          "The size of the velocity is increasing.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart changes from −2 to −5 m/s. What happens to its speed?",
+          "It rises from 2 to 5 m/s, even though both velocities are negative.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw three equal-time dots for a cart speeding up to the right.",
+          "Place the dots from left to right with the second gap larger than the first.",
+          "My example shows ___."
+        ],
+        [
+          "A cart moves right with acceleration to the left. Is it speeding up before it turns?",
+          "It is slowing down while its velocity points right.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Slowing down": [
+        [
+          "How would you explain slowing down to a friend?",
+          "The size of the velocity is decreasing.",
+          "In my words, this means ___."
+        ],
+        [
+          "Velocity changes from −5 to −2 m/s. What happens to the speed?",
+          "It falls from 5 to 2 m/s while the object still moves left.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw velocity and acceleration arrows for a bike braking while moving right.",
+          "Draw velocity right and acceleration left.",
+          "My example shows ___."
+        ],
+        [
+          "“Negative acceleration always means slowing down.” What happens if velocity is negative too?",
+          "The object speeds up while it moves in the negative direction.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Reversal": [
+        [
+          "How would you explain reversal to a friend?",
+          "A change from moving in one direction to moving in the opposite direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "On a velocity–time graph, how can you tell a cart actually reversed?",
+          "Its velocity changes sign across zero.",
+          "I can tell because ___."
+        ],
+        [
+          "A cart goes from +2 m/s through zero to −1 m/s. Draw its direction before and after.",
+          "First draw a rightward arrow. After the stop, draw a leftward arrow.",
+          "My example shows ___."
+        ],
+        [
+          "A bus stops, then keeps going east. Does stopping prove it reversed?",
+          "No. It moved east on both sides of the stop.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "8": {
+    "cpa": {
+      "Steady velocity": [
+        [
+          "How would you explain steady velocity to a friend?",
+          "Motion whose speed and direction both stay the same.",
+          "In my words, this means ___."
+        ],
+        [
+          "Photographs are one second apart. What pattern would you look for?",
+          "Equal spacing along a straight line, with the object moving the same way.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw three positions for a cart moving 2 m right each second.",
+          "Put dots at 0, +2 and +4 m and label them 0, 1 and 2 s.",
+          "My example shows ___."
+        ],
+        [
+          "A bike circles a track at a steady speed. Is its velocity constant?",
+          "Its direction changes around the circle, so its velocity changes.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Constant acceleration": [
+        [
+          "How would you explain constant acceleration to a friend?",
+          "Velocity changes by equal amounts in equal times.",
+          "In my words, this means ___."
+        ],
+        [
+          "The velocities are 1, 3 and 5 m/s one second apart. What repeats?",
+          "The velocity gains 2 m/s every second.",
+          "I can tell because ___."
+        ],
+        [
+          "If those gains continue, what velocity would you write for the next second?",
+          "7 m/s. The acceleration is +2 m/s².",
+          "My example shows ___."
+        ],
+        [
+          "Someone adds 2 m to position every second and calls that speeding up. What pattern did they draw?",
+          "Equal displacements each second in one direction show steady velocity.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Average velocity": [
+        [
+          "How would you explain average velocity to a friend?",
+          "The change in position divided by the time between two readings.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart travels out and back. Which two points determine its average velocity?",
+          "The starting and final positions, along with the elapsed time.",
+          "I can tell because ___."
+        ],
+        [
+          "Right is positive. A cart goes from +8 m to +2 m in 3 s. What is its average velocity?",
+          "The displacement is −6 m. Dividing by 3 s gives −2 m/s.",
+          "My example shows ___."
+        ],
+        [
+          "“Average the two speeds, and you always get average velocity.” What is missing?",
+          "Direction and time spent moving each way matter. I’d use displacement divided by time.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Model selection": [
+        [
+          "How would you explain model selection to a friend?",
+          "Choosing a description of motion that fits the measurements.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which model fits velocity readings of 2, 4 and 6 m/s one second apart?",
+          "Constant acceleration fits because the velocity rises by equal amounts.",
+          "I can tell because ___."
+        ],
+        [
+          "Which model would you use for a cart moving straight at 3 m/s every second?",
+          "Steady velocity. I can use displacement equals velocity times time.",
+          "My example shows ___."
+        ],
+        [
+          "A friend chooses a formula because it is the shortest. What should you ask first?",
+          "What does the motion do, and are the formula’s assumptions true?",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Constant acceleration": [
+        [
+          "How would you explain constant acceleration to a friend?",
+          "Velocity changes by equal amounts in equal times.",
+          "In my words, this means ___."
+        ],
+        [
+          "The velocities are 1, 3 and 5 m/s one second apart. What repeats?",
+          "The velocity gains 2 m/s every second.",
+          "I can tell because ___."
+        ],
+        [
+          "If those gains continue, what velocity would you write for the next second?",
+          "7 m/s. The acceleration is +2 m/s².",
+          "My example shows ___."
+        ],
+        [
+          "Someone adds 2 m to position every second and calls that speeding up. What pattern did they draw?",
+          "Equal displacements each second in one direction show steady velocity.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Known quantities": [
+        [
+          "What do we mean by the known quantities in a problem?",
+          "The values the problem gives or that you have measured.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart starts at rest and is timed for 3 s. Which two values can you write down?",
+          "Initial velocity is 0 m/s and elapsed time is 3 s.",
+          "I can tell because ___."
+        ],
+        [
+          "A sensor reads +4 m at the start. How would you enter that known value?",
+          "Starting position is +4 m on our chosen axis.",
+          "My example shows ___."
+        ],
+        [
+          "A friend lists a guessed final speed among the given values. Where should it go?",
+          "List it as an unknown or a prediction until it is supplied or measured.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Displacement": [
+        [
+          "How would you explain displacement to a friend?",
+          "The change from the starting position to the final position, with direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which two marks tell you the displacement even if the cart turns around?",
+          "Its start and finish. I subtract the starting position from the final one.",
+          "I can tell because ___."
+        ],
+        [
+          "Go from 2 m to 6 m and back to 4 m. What single arrow shows the displacement?",
+          "Draw one arrow from 2 m to 4 m. It points 2 m right.",
+          "My example shows ___."
+        ],
+        [
+          "Someone adds both legs and gets 6 m. What did they find?",
+          "They found distance traveled, counting all 4 m out and 2 m back.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Cross-check": [
+        [
+          "How would you explain cross-check to a friend?",
+          "A second way to test whether a result makes sense.",
+          "In my words, this means ___."
+        ],
+        [
+          "You found displacement using an equation. What feature of a velocity–time graph could check it?",
+          "The signed area over the same interval.",
+          "I can tell because ___."
+        ],
+        [
+          "A cart stays at +3 m/s for 2 s. How can a graph check the result of 6 m?",
+          "A rectangle 3 m/s high and 2 s wide has area +6 m.",
+          "My example shows ___."
+        ],
+        [
+          "Someone copies the same number twice. What could actually catch a wrong answer?",
+          "An independent method, like graph area, units, or a measurement.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "9": {
+    "cpa": {
+      "Force": [
+        [
+          "How would you explain force to a friend?",
+          "A push or pull that one object exerts on another.",
+          "In my words, this means ___."
+        ],
+        [
+          "When your hand pushes a cart, what pushes and what receives the push?",
+          "My hand pushes, and the cart receives the force.",
+          "I can tell because ___."
+        ],
+        [
+          "Which force arrow would you draw while a hand pushes a cart right?",
+          "Draw a rightward arrow on the cart labeled “hand on cart.”",
+          "My example shows ___."
+        ],
+        [
+          "The hand lets go and the cart keeps rolling. Is the hand still pushing it?",
+          "No. The contact ended. The cart can keep moving after the push ends.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Net force": [
+        [
+          "How would you explain net force to a friend?",
+          "The vector sum of the forces acting on one chosen object.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two people push one cart in opposite directions. Why do the arrow directions matter?",
+          "Opposite pushes partly or completely cancel when we add them.",
+          "I can tell because ___."
+        ],
+        [
+          "One person pushes 6 N right and another 4 N left. What single arrow replaces both?",
+          "Draw 2 N to the right on the cart.",
+          "My example shows ___."
+        ],
+        [
+          "A student adds those pushes to get 10 N right. Which push did they count the wrong way?",
+          "The 4 N push goes left, so it subtracts from the rightward push.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Newton’s 1st law": [
+        [
+          "What does Newton’s first law say in your own words?",
+          "An object keeps its velocity unless an unbalanced force acts on it, as seen from an inertial frame.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart is already moving and its forces balance. What stays the same?",
+          "Its speed and its direction.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw a cart at three one-second intervals as it coasts right with zero net force.",
+          "Draw equally spaced positions from left to right.",
+          "My example shows ___."
+        ],
+        [
+          "A classmate says a rolling cart needs a forward net force every second. What would that force actually change?",
+          "A forward net force would accelerate the cart. Steady straight motion needs zero net force.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Inertia": [
+        [
+          "How would you explain inertia to a friend?",
+          "An object’s resistance to changes in its speed or direction. More mass means more inertia.",
+          "In my words, this means ___."
+        ],
+        [
+          "An empty cart and a loaded cart start at rest. The same net force pushes each for one second. Which gains less speed? Why?",
+          "The loaded cart gains less speed because it has more mass.",
+          "The ___ cart gains less speed because ___."
+        ],
+        [
+          "With balanced forces, where will a rolling cart be one second later and one second after that?",
+          "I’d draw three equally spaced carts in the direction it is already moving.",
+          "My example shows ___."
+        ],
+        [
+          "Someone points to the hand pushing the cart and says, “That push is inertia.” What would you tell them?",
+          "The hand supplies a force. Inertia is the cart’s resistance to a change in velocity.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Inertial frame": [
+        [
+          "How would you explain inertial frame to a friend?",
+          "A viewpoint in which an object with zero net force keeps its velocity.",
+          "In my words, this means ___."
+        ],
+        [
+          "A puck glides straight at steady speed. Would a camera moving straight at constant speed also see steady motion?",
+          "Yes. It may measure a different velocity, but it still sees a constant velocity.",
+          "I can tell because ___."
+        ],
+        [
+          "Which bus ride could serve as an inertial frame for watching a puck: cruising straight or turning?",
+          "The bus cruising straight at constant speed, approximately.",
+          "My example shows ___."
+        ],
+        [
+          "A bus brakes and a loose puck seems to surge forward inside it. Does that prove a forward force acted on the puck?",
+          "No. The braking bus is an accelerating frame. Its motion changed relative to the puck.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Net force": [
+        [
+          "How would you explain net force to a friend?",
+          "The vector sum of the forces acting on one chosen object.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two people push one cart in opposite directions. Why do the arrow directions matter?",
+          "Opposite pushes partly or completely cancel when we add them.",
+          "I can tell because ___."
+        ],
+        [
+          "One person pushes 6 N right and another 4 N left. What single arrow replaces both?",
+          "Draw 2 N to the right on the cart.",
+          "My example shows ___."
+        ],
+        [
+          "A student adds those pushes to get 10 N right. Which push did they count the wrong way?",
+          "The 4 N push goes left, so it subtracts from the rightward push.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Inertia": [
+        [
+          "What does inertia mean? Say it the way you’d explain it to a friend.",
+          "An object resists changes in its speed or direction. We call that inertia.",
+          "In my own words, inertia means …"
+        ],
+        [
+          "An empty cart and a loaded cart both start at rest. We push each with the same net force for one second. Which gains less speed? Why?",
+          "The loaded cart gains less speed. Its greater mass makes its velocity harder to change.",
+          "The ___ cart gains less speed because …"
+        ],
+        [
+          "A cart is already rolling right. The forces on it balance. Where would you draw it one second later? And one second after that?",
+          "I’d draw three carts equally spaced to the right and label them 0 s, 1 s and 2 s. The cart covers the same distance each second.",
+          "Label your three carts 0 s, 1 s and 2 s."
+        ],
+        [
+          "Someone points to the hand pushing the cart and says, “That push is inertia.” What would you tell them?",
+          "The hand exerts a force on the cart. Inertia is the cart’s resistance to a change in its speed or direction.",
+          "The hand supplies ___. The cart has ___."
+        ]
+      ],
+      "Equilibrium": [
+        [
+          "How would you explain equilibrium to a friend?",
+          "The forces on the object add to zero, so its velocity stays constant.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart rolls straight at steady speed. What must the horizontal forces add up to?",
+          "Zero newtons. The cart has no horizontal acceleration.",
+          "I can tell because ___."
+        ],
+        [
+          "Sketch the horizontal forces on a cart with a 3 N pull right and 3 N friction left.",
+          "Draw two equal arrows pointing opposite ways. Their vector sum is zero.",
+          "My example shows ___."
+        ],
+        [
+          "A tossed ball is briefly still at the top. Is it in equilibrium there?",
+          "No. Gravity still pulls it down, so its vertical velocity changes.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "10": {
+    "cpa": {
+      "Interaction": [
+        [
+          "How would you explain interaction to a friend?",
+          "Two objects act on each other through a push or pull.",
+          "In my words, this means ___."
+        ],
+        [
+          "In “the rope pulls the crate,” which two objects are interacting?",
+          "The rope and the crate.",
+          "I can tell because ___."
+        ],
+        [
+          "What interaction holds up a book resting on a table?",
+          "The table pushes up on the book, and the book pushes down on the table.",
+          "My example shows ___."
+        ],
+        [
+          "Someone names “moving right” as the object pushing a cart. What would you ask?",
+          "Which object actually touches or attracts the cart? Motion itself cannot exert a force.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Contact force": [
+        [
+          "How would you explain contact force to a friend?",
+          "A push or pull between objects whose surfaces touch.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which detail tells you the table’s push on a book is a contact force?",
+          "Their surfaces touch.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw the force a compressed spring exerts on a cart touching its right end.",
+          "Draw a rightward push on the cart and label the spring as the source.",
+          "My example shows ___."
+        ],
+        [
+          "Earth pulls on a falling ball after it leaves your hand. Is that a contact force?",
+          "No. Gravity acts even with no contact between the ball and Earth’s surface.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Non-contact force": [
+        [
+          "How would you explain non-contact force to a friend?",
+          "A push or pull between objects that acts across a gap.",
+          "In my words, this means ___."
+        ],
+        [
+          "A magnet tugs a paper clip before they touch. How can you tell contact is unnecessary?",
+          "The clip starts moving while there is still a visible gap.",
+          "I can tell because ___."
+        ],
+        [
+          "Which downward arrow belongs on a ball after you let go?",
+          "Earth’s gravitational pull on the ball.",
+          "My example shows ___."
+        ],
+        [
+          "A hand holds up a book. Which force disappears when the hand moves away?",
+          "The contact force from the hand disappears. Gravity continues.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Mass vs. weight": [
+        [
+          "How would you explain the difference between mass and weight?",
+          "Mass measures inertia in kilograms. Weight is the gravitational force on that mass, measured in newtons.",
+          "In my words, this means ___."
+        ],
+        [
+          "What changes when you take the same cart to the Moon: its mass or its weight?",
+          "Its mass stays the same. Its weight decreases because lunar gravity is weaker.",
+          "I can tell because ___."
+        ],
+        [
+          "On Earth, use 10 N/kg. What are the mass and weight of a 2 kg cart?",
+          "Mass is 2 kg and weight is about 20 N downward.",
+          "My example shows ___."
+        ],
+        [
+          "A label says “mass = 20 N.” What does the unit tell you?",
+          "Newtons measure force, so 20 N could describe weight.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Weight": [
+        [
+          "How would you explain weight to a friend?",
+          "The gravitational force a planet or other body exerts on an object.",
+          "In my words, this means ___."
+        ],
+        [
+          "When a book rests on a table, which object supplies its weight?",
+          "Earth supplies the gravitational pull.",
+          "I can tell because ___."
+        ],
+        [
+          "Using 10 N/kg, what arrow represents the weight of a 3 kg book?",
+          "An arrow of about 30 N pointing down toward Earth.",
+          "My example shows ___."
+        ],
+        [
+          "A book slides down a ramp. Should its whole weight arrow point along the ramp?",
+          "No. Weight points vertically down. Only a component points along the ramp.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Normal force": [
+        [
+          "How would you explain normal force to a friend?",
+          "The push of a surface on an object, perpendicular to that surface.",
+          "In my words, this means ___."
+        ],
+        [
+          "A crate rests on a ramp. Which way does the ramp push the crate?",
+          "Away from the ramp at a right angle to its surface.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you draw the normal force on a book on a level table?",
+          "A vertical upward arrow labeled “table on book.”",
+          "My example shows ___."
+        ],
+        [
+          "Someone draws the normal force along the ramp. What would you rotate?",
+          "Turn that arrow until it is perpendicular to the ramp. A friction arrow would lie along it.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Tension": [
+        [
+          "How would you explain tension to a friend?",
+          "The pull that a taut rope or cable exerts along its length.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which way does a slanted taut rope pull on a crate tied to its end?",
+          "Along the rope toward its other end.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw the force from a vertical cable on a hanging lamp.",
+          "Draw an upward arrow on the lamp along the cable.",
+          "My example shows ___."
+        ],
+        [
+          "Could a loose rope push a cart forward when you move its free end toward the cart?",
+          "No. A rope under tension pulls; a slack rope cannot supply that forward push.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Receiver": [
+        [
+          "How would you explain receiver to a friend?",
+          "The object a particular force acts on.",
+          "In my words, this means ___."
+        ],
+        [
+          "In “Earth pulls on the crate,” which object receives this force?",
+          "The crate receives Earth’s pull.",
+          "I can tell because ___."
+        ],
+        [
+          "The rope pulls up on a lamp. On which object’s diagram do you draw that arrow?",
+          "On the lamp, the receiver of the rope’s force.",
+          "My example shows ___."
+        ],
+        [
+          "“The cart moves right.” Can you name a force receiver from that statement alone?",
+          "It describes motion. I’d need to know which interaction or force we are naming.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "11": {
+    "cpa": {
+      "Fair test": [
+        [
+          "How would you explain fair test to a friend?",
+          "A comparison that changes one factor and holds other relevant conditions steady.",
+          "In my words, this means ___."
+        ],
+        [
+          "To test the effect of mass, what will you change and what will you keep the same?",
+          "Change moving mass while keeping net force and release method the same.",
+          "I can tell because ___."
+        ],
+        [
+          "How could you compare a light cart and a heavier cart fairly?",
+          "Use the same track, release and net force. Measure both accelerations.",
+          "My example shows ___."
+        ],
+        [
+          "One run uses a heavier cart and a stronger pull. Why can’t you tell what mass did?",
+          "Both mass and force changed, so either could affect the result.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Changed variable": [
+        [
+          "How would you explain changed variable to a friend?",
+          "The factor you deliberately vary between trials.",
+          "In my words, this means ___."
+        ],
+        [
+          "When you add blocks to the cart to test the effect of mass, what did you change?",
+          "The total moving mass.",
+          "I can tell because ___."
+        ],
+        [
+          "How could you label the runs so your partner can see exactly what varied?",
+          "Write the moving mass in kg beside each run, such as 0.5 kg and 1.0 kg.",
+          "My example shows ___."
+        ],
+        [
+          "The release point drifted accidentally. Is that the variable you meant to test?",
+          "No. It is an unwanted change that could affect the comparison.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Controls": [
+        [
+          "What are the controls in an experiment?",
+          "Conditions you keep alike across trials so you can interpret the comparison.",
+          "In my words, this means ___."
+        ],
+        [
+          "You test different cart masses. Why use the same hanging weight each time?",
+          "It keeps the driving force the same.",
+          "I can tell because ___."
+        ],
+        [
+          "Name two things you would set the same before each release.",
+          "The release position and track angle.",
+          "My example shows ___."
+        ],
+        [
+          "A partner lists cart mass as a control while adding mass each trial. Where does it belong?",
+          "It belongs under the changed variable.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Evidence": [
+        [
+          "How would you explain evidence to a friend?",
+          "An observation or measurement that helps you judge a claim.",
+          "In my words, this means ___."
+        ],
+        [
+          "What reading supports the claim that the cart reached 4 m in 2 s?",
+          "A frame showing the cart beside the 4 m mark when the timer reads 2 s.",
+          "I can tell because ___."
+        ],
+        [
+          "How could two measurements support a claim that one cart accelerated more?",
+          "Show both speed changes over the same time. The bigger change means greater average acceleration.",
+          "My example shows ___."
+        ],
+        [
+          "“I expected our cart to win.” Does that tell us which cart crossed first?",
+          "We need the finish times or an image of the crossing. The expectation is a guess.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "System mass": [
+        [
+          "How would you explain system mass to a friend?",
+          "The combined mass of everything included in the moving system.",
+          "In my words, this means ___."
+        ],
+        [
+          "If a cart and hanging mass accelerate together, which masses belong in the total?",
+          "The cart, hanger and all weights moving with them.",
+          "I can tell because ___."
+        ],
+        [
+          "A loaded cart is 0.8 kg and its loaded hanger is 0.2 kg. What mass accelerates?",
+          "1.0 kg for the combined system.",
+          "My example shows ___."
+        ],
+        [
+          "Why leave the fixed track out of the moving mass?",
+          "It stays on the bench and is outside the moving system.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Control": [
+        [
+          "How would you explain control to a friend?",
+          "Conditions you keep alike across trials so you can interpret the comparison.",
+          "In my words, this means ___."
+        ],
+        [
+          "You test different cart masses. Why use the same hanging weight each time?",
+          "It keeps the driving force the same.",
+          "I can tell because ___."
+        ],
+        [
+          "Name two things you would set the same before each release.",
+          "The release position and track angle.",
+          "My example shows ___."
+        ],
+        [
+          "A partner lists cart mass as a control while adding mass each trial. Where does it belong?",
+          "It belongs under the changed variable.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Inverse relationship": [
+        [
+          "How would you explain inverse relationship to a friend?",
+          "When one quantity grows by a factor, the other shrinks by that factor.",
+          "In my words, this means ___."
+        ],
+        [
+          "Keep the net force fixed. If the moving mass doubles, what happens to acceleration?",
+          "It halves.",
+          "I can tell because ___."
+        ],
+        [
+          "At 4 N, compare the accelerations of carts of 1 kg and 2 kg.",
+          "They accelerate at 4 m/s² and 2 m/s², respectively.",
+          "My example shows ___."
+        ],
+        [
+          "If both mass and net force double, must acceleration halve?",
+          "No. Their ratio stays the same. The inverse comparison holds at fixed net force.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Slope": [
+        [
+          "How would you explain slope to a friend?",
+          "The change in acceleration divided by the change in inverse mass. For a fixed net force, that slope equals the net force.",
+          "In my words, this means ___."
+        ],
+        [
+          "At the same net force, which graph should be straight: a against M or a against 1/M?",
+          "The graph of acceleration against 1/M should be straight.",
+          "I can tell because ___."
+        ],
+        [
+          "Acceleration rises by 2 m/s² when 1/M rises by 0.5 per kg. What is the slope?",
+          "2 divided by 0.5 gives 4 N of net force.",
+          "My example shows ___."
+        ],
+        [
+          "Someone says this slope is the mass. How can you check?",
+          "Divide the vertical units by the horizontal units. They give kg·m/s², or newtons.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "12": {
+    "cpa": {
+      "Driving force": [
+        [
+          "How would you explain driving force to a friend?",
+          "The applied force that drives the motion before opposing forces are taken into account.",
+          "In my words, this means ___."
+        ],
+        [
+          "A rope pulls right while friction acts left. Which one is the driving force on the cart?",
+          "The rope’s rightward pull.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw a 2 N driving pull and 0.4 N of friction. Which arrow is the driving force?",
+          "The 2 N rightward arrow. The net force is 1.6 N right.",
+          "My example shows ___."
+        ],
+        [
+          "Is the hanging weight always the same as the rope tension on the cart?",
+          "No. For the combined cart and hanger the hanging weight drives the system. The cart itself feels tension.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Total moving mass": [
+        [
+          "How would you explain total moving mass to a friend?",
+          "The sum of all the parts that accelerate together.",
+          "In my words, this means ___."
+        ],
+        [
+          "If you move a washer from the cart onto its hanger, what happens to total moving mass?",
+          "It stays the same because the washer still moves with the system.",
+          "I can tell because ___."
+        ],
+        [
+          "A 0.6 kg cart side and 0.1 kg hanger side move together. What total should you use?",
+          "0.7 kg.",
+          "My example shows ___."
+        ],
+        [
+          "A student adds a new washer from the bench to the hanger. Is moving mass still controlled?",
+          "No. The new washer adds mass to the moving system.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Proportional": [
+        [
+          "What does it mean to say acceleration is proportional to net force?",
+          "Two quantities change by the same factor, with a constant ratio.",
+          "In my words, this means ___."
+        ],
+        [
+          "At fixed mass, if net force triples, what happens to acceleration?",
+          "Acceleration triples too.",
+          "I can tell because ___."
+        ],
+        [
+          "For a 2 kg cart, compare the accelerations under 2 N and 4 N net.",
+          "They are 1 and 2 m/s². Doubling the force doubles the acceleration.",
+          "My example shows ___."
+        ],
+        [
+          "Two readings both rise, but one doubles and the other barely changes. Is that enough to call them proportional?",
+          "No. I’d check that the ratio stays constant.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Friction offset": [
+        [
+          "How would you explain friction offset to a friend?",
+          "A roughly constant opposing friction force shifts acceleration below the frictionless prediction for the same driving force.",
+          "In my words, this means ___."
+        ],
+        [
+          "If the pull is 3 N and opposing friction is 1 N, how much force accelerates the cart?",
+          "2 N in the direction of the pull.",
+          "I can tell because ___."
+        ],
+        [
+          "For a sliding 2 kg cart with 1 N opposing friction, what acceleration would a 3 N pull produce?",
+          "The net force is 2 N, so acceleration is 1 m/s².",
+          "My example shows ___."
+        ],
+        [
+          "A student uses the full 3 N pull as the net force. What did they leave out?",
+          "The 1 N friction force that opposes sliding.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Driving force": [
+        [
+          "How would you explain driving force to a friend?",
+          "The applied force that drives the motion before opposing forces are taken into account.",
+          "In my words, this means ___."
+        ],
+        [
+          "A rope pulls right while friction acts left. Which one is the driving force on the cart?",
+          "The rope’s rightward pull.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw a 2 N driving pull and 0.4 N of friction. Which arrow is the driving force?",
+          "The 2 N rightward arrow. The net force is 1.6 N right.",
+          "My example shows ___."
+        ],
+        [
+          "Is the hanging weight always the same as the rope tension on the cart?",
+          "No. For the combined cart and hanger the hanging weight drives the system. The cart itself feels tension.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Net force": [
+        [
+          "How would you explain net force to a friend?",
+          "The vector sum of the forces acting on one chosen object.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two people push one cart in opposite directions. Why do the arrow directions matter?",
+          "Opposite pushes partly or completely cancel when we add them.",
+          "I can tell because ___."
+        ],
+        [
+          "One person pushes 6 N right and another 4 N left. What single arrow replaces both?",
+          "Draw 2 N to the right on the cart.",
+          "My example shows ___."
+        ],
+        [
+          "A student adds those pushes to get 10 N right. Which push did they count the wrong way?",
+          "The 4 N push goes left, so it subtracts from the rightward push.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Slope": [
+        [
+          "How would you explain slope to a friend?",
+          "On a graph of acceleration against net force, the slope is acceleration gained per newton.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which cart has less mass if its acceleration rises more per newton?",
+          "The one with the steeper line. Its slope is 1 divided by mass.",
+          "I can tell because ___."
+        ],
+        [
+          "Net force rises 4 N and acceleration rises 2 m/s². What mass fits that slope?",
+          "The slope is 0.5 per kg, so the mass is 2 kg.",
+          "My example shows ___."
+        ],
+        [
+          "A partner reads the acceleration at one point and calls it slope. What two changes do you need?",
+          "The change in acceleration and the change in net force.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Friction offset": [
+        [
+          "How would you explain friction offset to a friend?",
+          "A roughly constant opposing friction force shifts acceleration below the frictionless prediction for the same driving force.",
+          "In my words, this means ___."
+        ],
+        [
+          "If the pull is 3 N and opposing friction is 1 N, how much force accelerates the cart?",
+          "2 N in the direction of the pull.",
+          "I can tell because ___."
+        ],
+        [
+          "For a sliding 2 kg cart with 1 N opposing friction, what acceleration would a 3 N pull produce?",
+          "The net force is 2 N, so acceleration is 1 m/s².",
+          "My example shows ___."
+        ],
+        [
+          "A student uses the full 3 N pull as the net force. What did they leave out?",
+          "The 1 N friction force that opposes sliding.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "13": {
+    "cpa": {
+      "Net force": [
+        [
+          "How would you explain net force to a friend?",
+          "The vector sum of the forces acting on one chosen object.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two people push one cart in opposite directions. Why do the arrow directions matter?",
+          "Opposite pushes partly or completely cancel when we add them.",
+          "I can tell because ___."
+        ],
+        [
+          "One person pushes 6 N right and another 4 N left. What single arrow replaces both?",
+          "Draw 2 N to the right on the cart.",
+          "My example shows ___."
+        ],
+        [
+          "A student adds those pushes to get 10 N right. Which push did they count the wrong way?",
+          "The 4 N push goes left, so it subtracts from the rightward push.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Newton’s second law": [
+        [
+          "What does Newton’s second law tell us about a cart?",
+          "For a fixed mass, the net force equals mass times acceleration.",
+          "In my words, this means ___."
+        ],
+        [
+          "Why add the forces before dividing by mass?",
+          "Acceleration depends on the combined force on the object.",
+          "I can tell because ___."
+        ],
+        [
+          "A 2 kg cart feels 7 N right and 3 N left. What acceleration do you predict?",
+          "The net force is 4 N right, so acceleration is 2 m/s² right.",
+          "My example shows ___."
+        ],
+        [
+          "A partner uses 7 N alone to find acceleration. Which part of the diagram contradicts that?",
+          "The leftward 3 N arrow also acts on the cart.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Direction": [
+        [
+          "How would you explain direction to a friend?",
+          "Which way a quantity points relative to a chosen axis or landmark.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart moves right while its net force points left. Which way does acceleration point?",
+          "Left, along the net force.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw arrows for a cart moving left and slowing down.",
+          "Draw velocity left and acceleration right.",
+          "My example shows ___."
+        ],
+        [
+          "“The biggest force points east, so the cart must be moving east.” What can we actually tell if the net force is east?",
+          "Its acceleration is east. We still need its velocity to know its direction of travel.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Balanced": [
+        [
+          "What does it mean to say the forces on a cart are balanced?",
+          "Forces on the same object add to zero in every direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart feels 5 N left and 5 N right. How can you tell its horizontal forces balance?",
+          "The arrows have equal lengths and opposite directions on the same cart.",
+          "I can tell because ___."
+        ],
+        [
+          "A book rests on a table. What two vertical arrows would you draw?",
+          "Equal arrows for Earth’s downward pull and the table’s upward push.",
+          "My example shows ___."
+        ],
+        [
+          "One cart pushes another, and the second pushes back. Do these two forces balance on the first cart?",
+          "No. They act on different carts.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Net force": [
+        [
+          "How would you explain net force to a friend?",
+          "The vector sum of the forces acting on one chosen object.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two people push one cart in opposite directions. Why do the arrow directions matter?",
+          "Opposite pushes partly or completely cancel when we add them.",
+          "I can tell because ___."
+        ],
+        [
+          "One person pushes 6 N right and another 4 N left. What single arrow replaces both?",
+          "Draw 2 N to the right on the cart.",
+          "My example shows ___."
+        ],
+        [
+          "A student adds those pushes to get 10 N right. Which push did they count the wrong way?",
+          "The 4 N push goes left, so it subtracts from the rightward push.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Acceleration": [
+        [
+          "How would you explain acceleration to a friend?",
+          "How quickly velocity changes, including a change in direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart follows a bend at steady speed. Why is it accelerating?",
+          "Its direction changes, so its velocity changes.",
+          "I can tell because ___."
+        ],
+        [
+          "Positive is right. A cart goes from −2 to −6 m/s in 2 s. What acceleration fits?",
+          "Its velocity changes by −4 m/s in 2 s, so the average acceleration is −2 m/s².",
+          "My example shows ___."
+        ],
+        [
+          "A cart travels straight at −6 m/s the whole time. Does the minus sign mean it is accelerating?",
+          "No. Its velocity stays the same, so its acceleration is zero.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Velocity": [
+        [
+          "How would you explain velocity to a friend?",
+          "How fast something moves and in which direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "Right is positive. What does a velocity of −2 m/s tell you?",
+          "The cart moves left at 2 m/s.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you show a cart going east at 3 m/s?",
+          "Draw a rightward arrow labeled 3 m/s east.",
+          "My example shows ___."
+        ],
+        [
+          "A speedometer reads 3 m/s. What would you still need for velocity?",
+          "The direction of travel.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Speed trend": [
+        [
+          "How would you explain speed trend to a friend?",
+          "Whether the size of velocity is increasing, decreasing or staying the same.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart moves left but accelerates right. What happens to its speed before it stops?",
+          "It slows down because acceleration opposes velocity.",
+          "I can tell because ___."
+        ],
+        [
+          "Velocities one second apart are −6, −4 and −2 m/s. Describe the trend.",
+          "The cart’s speed falls from 6 to 4 to 2 m/s.",
+          "My example shows ___."
+        ],
+        [
+          "A student says −2 to −6 m/s means the cart slowed. Which numbers should they compare?",
+          "Compare speeds, 2 and 6 m/s. The cart sped up.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "14": {
+    "cpa": {
+      "Interaction pair": [
+        [
+          "How would you explain interaction pair to a friend?",
+          "Two forces from one interaction: each object exerts one force on the other.",
+          "In my words, this means ___."
+        ],
+        [
+          "Earth pulls an apple down. What is the partner force, and which object feels it?",
+          "The apple pulls Earth toward the apple. Earth feels that force.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you label the pair when a hand pushes a cart?",
+          "“Hand on cart” on the cart and “cart on hand” on the hand, with equal opposite arrows.",
+          "My example shows ___."
+        ],
+        [
+          "Are the table’s push and Earth’s pull on one book a third-law pair?",
+          "No. Both act on the book and come from different interactions.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Equal and opposite": [
+        [
+          "What does “equal and opposite” tell you about a pair of interaction forces?",
+          "In a third-law pair, the two forces have the same size and point in opposite directions.",
+          "In my words, this means ___."
+        ],
+        [
+          "One skater pushes another with 30 N east. What force does the first skater feel from the second?",
+          "30 N west during that interaction.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw the arrows for two carts whose bumpers press together.",
+          "Draw equal-length arrows pointing away from the contact, one on each cart.",
+          "My example shows ___."
+        ],
+        [
+          "Do equal arrows guarantee equal accelerations for a heavy and a light skater?",
+          "No. For equal net forces, the lighter skater accelerates more.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Force receiver": [
+        [
+          "How would you explain force receiver to a friend?",
+          "The object that feels the named force.",
+          "In my words, this means ___."
+        ],
+        [
+          "In “the wall pushes on my hand,” where does that force arrow belong?",
+          "On my hand.",
+          "I can tell because ___."
+        ],
+        [
+          "When my hand pushes on the wall, which object receives that other force?",
+          "The wall. I’d put that arrow on a separate wall diagram.",
+          "My example shows ___."
+        ],
+        [
+          "Can I draw both contact forces of that pair on the hand?",
+          "Only the wall-on-hand force belongs there. The hand-on-wall force belongs on the wall.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Mass and acceleration": [
+        [
+          "How does mass affect acceleration for the same net force?",
+          "Under equal net forces, a smaller mass changes velocity faster.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two skaters push off with equal net force magnitudes. Which skater has greater acceleration?",
+          "The lighter skater.",
+          "I can tell because ___."
+        ],
+        [
+          "A 10 N net force acts separately on 2 kg and 5 kg carts. Compare their accelerations.",
+          "The 2 kg cart gets 5 m/s² and the 5 kg cart gets 2 m/s².",
+          "My example shows ___."
+        ],
+        [
+          "The lighter cart accelerates more. Does that prove it felt the larger interaction force?",
+          "No. Equal forces can cause different accelerations because the masses differ.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Force pair": [
+        [
+          "How would you explain force pair to a friend?",
+          "Two forces from one interaction: each object exerts one force on the other.",
+          "In my words, this means ___."
+        ],
+        [
+          "Earth pulls an apple down. What is the partner force, and which object feels it?",
+          "The apple pulls Earth toward the apple. Earth feels that force.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you label the pair when a hand pushes a cart?",
+          "“Hand on cart” on the cart and “cart on hand” on the hand, with equal opposite arrows.",
+          "My example shows ___."
+        ],
+        [
+          "Are the table’s push and Earth’s pull on one book a third-law pair?",
+          "No. Both act on the book and come from different interactions.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Receivers": [
+        [
+          "In an interaction pair, what are the two receivers?",
+          "Each object in an interaction pair receives a force from the other object.",
+          "In my words, this means ___."
+        ],
+        [
+          "In “the wall pushes on my hand,” where does that force arrow belong?",
+          "On my hand.",
+          "I can tell because ___."
+        ],
+        [
+          "When my hand pushes on the wall, which object receives that other force?",
+          "The wall. I’d put that arrow on a separate wall diagram.",
+          "My example shows ___."
+        ],
+        [
+          "Can I draw both contact forces of that pair on the hand?",
+          "Only the wall-on-hand force belongs there. The hand-on-wall force belongs on the wall.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Mass effect": [
+        [
+          "How does a cart’s mass affect its response to a push?",
+          "Under equal net forces, a smaller mass changes velocity faster.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two skaters push off with equal net force magnitudes. Which skater has greater acceleration?",
+          "The lighter skater.",
+          "I can tell because ___."
+        ],
+        [
+          "A 10 N net force acts separately on 2 kg and 5 kg carts. Compare their accelerations.",
+          "The 2 kg cart gets 5 m/s² and the 5 kg cart gets 2 m/s².",
+          "My example shows ___."
+        ],
+        [
+          "The lighter cart accelerates more. Does that prove it felt the larger interaction force?",
+          "No. Equal forces can cause different accelerations because the masses differ.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "System": [
+        [
+          "How would you explain system to a friend?",
+          "The object or group of objects you choose to analyze together.",
+          "In my words, this means ___."
+        ],
+        [
+          "Draw one boundary around two interacting carts. Where are their bumper forces relative to it?",
+          "Both forces are inside the boundary; they are internal to the pair of carts.",
+          "I can tell because ___."
+        ],
+        [
+          "If a hand pushes one cart from outside that boundary, where does its force go?",
+          "In the external-force sum for the two-cart system.",
+          "My example shows ___."
+        ],
+        [
+          "When you choose just one cart, can you still drop the force from the other cart?",
+          "No. The other cart is now outside the system, so its force is external.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "15": {
+    "cpa": {
+      "Free-body diagram": [
+        [
+          "How would you explain free-body diagram to a friend?",
+          "A drawing of the forces acting on one chosen object.",
+          "In my words, this means ___."
+        ],
+        [
+          "You are drawing a lamp hanging from a cable. What must be true of every arrow?",
+          "Each arrow must represent a force acting on the lamp.",
+          "I can tell because ___."
+        ],
+        [
+          "What arrows would you draw for a lamp hanging still?",
+          "Cable tension upward and weight downward, equal in length.",
+          "My example shows ___."
+        ],
+        [
+          "A student draws the lamp’s downward pull on the cable on the lamp diagram. Where does it belong?",
+          "On the cable’s diagram, since the cable receives that force.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Selected object": [
+        [
+          "How would you explain selected object to a friend?",
+          "The object whose forces you are drawing or analyzing.",
+          "In my words, this means ___."
+        ],
+        [
+          "You circle only the cart. Which force belongs: the hand on the cart or the cart on the hand?",
+          "The hand’s push on the cart.",
+          "I can tell because ___."
+        ],
+        [
+          "What would you put at the centre of a free-body diagram for a hanging lamp?",
+          "A dot or box labeled “lamp.” Every arrow acts on it.",
+          "My example shows ___."
+        ],
+        [
+          "A student switches to forces on the ceiling halfway through. How should they organize those?",
+          "Start a separate diagram with the ceiling as the selected object.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Interacting object": [
+        [
+          "How would you explain interacting object to a friend?",
+          "Another object that pushes, pulls or attracts the object you are studying.",
+          "In my words, this means ___."
+        ],
+        [
+          "For a book on a table, what objects account for the upward and downward forces?",
+          "The table pushes up and Earth pulls down.",
+          "I can tell because ___."
+        ],
+        [
+          "Which interacting object would you name beside the tension arrow on a hanging lamp?",
+          "The cable that pulls on the lamp.",
+          "My example shows ___."
+        ],
+        [
+          "Someone labels a force arrow “the book’s speed.” What interacting object does that name?",
+          "None. Speed describes motion; I need an actual source of a force.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Force source": [
+        [
+          "How would you explain force source to a friend?",
+          "The object that exerts a particular push or pull.",
+          "In my words, this means ___."
+        ],
+        [
+          "A floor pushes up on a crate. Which object is the source?",
+          "The floor is the source and the crate receives the push.",
+          "I can tell because ___."
+        ],
+        [
+          "What full label would you write next to the weight arrow on the crate?",
+          "“Earth on crate.” Earth supplies gravity.",
+          "My example shows ___."
+        ],
+        [
+          "A student says “right” is the source of a force. What does that word tell us instead?",
+          "It tells the direction. We still need to name what pushes or pulls.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Object": [
+        [
+          "In a force diagram, what do we mean by the object?",
+          "The object whose forces you are drawing or analyzing.",
+          "In my words, this means ___."
+        ],
+        [
+          "You circle only the cart. Which force belongs: the hand on the cart or the cart on the hand?",
+          "The hand’s push on the cart.",
+          "I can tell because ___."
+        ],
+        [
+          "What would you put at the centre of a free-body diagram for a hanging lamp?",
+          "A dot or box labeled “lamp.” Every arrow acts on it.",
+          "My example shows ___."
+        ],
+        [
+          "A student switches to forces on the ceiling halfway through. How should they organize those?",
+          "Start a separate diagram with the ceiling as the selected object.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "External force": [
+        [
+          "How would you explain external force to a friend?",
+          "A force exerted on a system by something outside its boundary.",
+          "In my words, this means ___."
+        ],
+        [
+          "Draw a boundary around a lamp alone. Why is the cable’s pull external?",
+          "The cable lies outside the boundary and acts on the lamp inside.",
+          "I can tell because ___."
+        ],
+        [
+          "If your system contains two carts and a hand pushes one from outside, what force would you include?",
+          "The hand’s push on the cart is external to the two-cart system.",
+          "My example shows ___."
+        ],
+        [
+          "If lamp and cable are both inside the boundary, should their mutual pull count as an external force?",
+          "No. It is an interaction between two parts of the system.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Force-arrow scale": [
+        [
+          "How would you explain force-arrow scale to a friend?",
+          "A consistent rule for how much force each length of arrow represents.",
+          "In my words, this means ___."
+        ],
+        [
+          "Your scale is 1 cm for 2 N. How long should a 6 N arrow be?",
+          "3 cm.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw 2 N left and 6 N right at that scale.",
+          "The left arrow is 1 cm long and the right arrow is 3 cm long.",
+          "My example shows ___."
+        ],
+        [
+          "Two arrows of equal length are labeled 2 N and 8 N on one diagram. What would you change?",
+          "Use the same scale. The 8 N arrow should be four times as long.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Net force": [
+        [
+          "How would you explain net force to a friend?",
+          "The vector sum of the forces acting on one chosen object.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two people push one cart in opposite directions. Why do the arrow directions matter?",
+          "Opposite pushes partly or completely cancel when we add them.",
+          "I can tell because ___."
+        ],
+        [
+          "One person pushes 6 N right and another 4 N left. What single arrow replaces both?",
+          "Draw 2 N to the right on the cart.",
+          "My example shows ___."
+        ],
+        [
+          "A student adds those pushes to get 10 N right. Which push did they count the wrong way?",
+          "The 4 N push goes left, so it subtracts from the rightward push.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "16": {
+    "cpa": {
+      "Normal force": [
+        [
+          "How would you explain normal force to a friend?",
+          "The push of a surface on an object, perpendicular to that surface.",
+          "In my words, this means ___."
+        ],
+        [
+          "A crate rests on a ramp. Which way does the ramp push the crate?",
+          "Away from the ramp at a right angle to its surface.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you draw the normal force on a book on a level table?",
+          "A vertical upward arrow labeled “table on book.”",
+          "My example shows ___."
+        ],
+        [
+          "Someone draws the normal force along the ramp. What would you rotate?",
+          "Turn that arrow until it is perpendicular to the ramp. A friction arrow would lie along it.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Weight": [
+        [
+          "How would you explain weight to a friend?",
+          "The gravitational force a planet or other body exerts on an object.",
+          "In my words, this means ___."
+        ],
+        [
+          "When a book rests on a table, which object supplies its weight?",
+          "Earth supplies the gravitational pull.",
+          "I can tell because ___."
+        ],
+        [
+          "Using 10 N/kg, what arrow represents the weight of a 3 kg book?",
+          "An arrow of about 30 N pointing down toward Earth.",
+          "My example shows ___."
+        ],
+        [
+          "A book slides down a ramp. Should its whole weight arrow point along the ramp?",
+          "No. Weight points vertically down. Only a component points along the ramp.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Component": [
+        [
+          "How would you explain component to a friend?",
+          "The part of a force along one chosen axis.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which part of the block’s weight pulls it down the ramp?",
+          "The component parallel to the ramp.",
+          "I can tell because ___."
+        ],
+        [
+          "How could you split one downward weight arrow using ramp axes?",
+          "Draw one part downhill and the other into the ramp. Together they give the downward weight.",
+          "My example shows ___."
+        ],
+        [
+          "Should the downhill component be added to the full weight as another force?",
+          "No. It is part of the same gravitational force.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Acceleration direction": [
+        [
+          "How would you explain acceleration direction to a friend?",
+          "The direction of the net force, which tells how velocity changes.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart rolls uphill on a frictionless ramp. Which way does it accelerate?",
+          "Downhill, along the unbalanced part of its weight.",
+          "I can tell because ___."
+        ],
+        [
+          "At the top of its trip, draw the acceleration arrow just as the cart stops.",
+          "Draw it downhill. Gravity still has a downhill component.",
+          "My example shows ___."
+        ],
+        [
+          "“The cart moves uphill, so acceleration points uphill.” Which arrows got mixed up?",
+          "Velocity points uphill during the climb. Acceleration points downhill.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Parallel axis": [
+        [
+          "How would you explain parallel axis to a friend?",
+          "An axis that runs along the ramp surface.",
+          "In my words, this means ___."
+        ],
+        [
+          "If downhill is positive, what sign does the along-ramp part of gravity have?",
+          "Positive, because it points downhill.",
+          "I can tell because ___."
+        ],
+        [
+          "Sketch axes for a ramp and mark the parallel axis.",
+          "Draw an axis along the incline with its arrow pointing downhill.",
+          "My example shows ___."
+        ],
+        [
+          "A partner uses the horizontal floor as the parallel axis. Which surface should they follow?",
+          "The surface of the ramp.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Perpendicular axis": [
+        [
+          "How would you explain perpendicular axis to a friend?",
+          "An axis at a right angle to the chosen surface.",
+          "In my words, this means ___."
+        ],
+        [
+          "If the positive axis points away from the ramp, what sign does the normal force have?",
+          "Positive. The ramp pushes outward.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw the perpendicular axis for a block on a tilted ramp.",
+          "Draw it at 90 degrees to the slope, pointing out of the surface.",
+          "My example shows ___."
+        ],
+        [
+          "A student draws that axis straight up on a tilted ramp. Why would you rotate it?",
+          "Vertical is only perpendicular to a horizontal surface.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Weight components": [
+        [
+          "What are the two components of weight on a ramp?",
+          "The parts of the downward gravitational force along and perpendicular to a chosen ramp.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which part of weight pulls downhill, and which presses into the ramp?",
+          "The parallel part points downhill. The perpendicular part points into the ramp.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw weight and its two parts. Which arrows should enter the two ramp-axis equations?",
+          "Use one component per axis. Together they represent the original downward weight.",
+          "My example shows ___."
+        ],
+        [
+          "A student adds weight and both of its components as three forces. What got counted twice?",
+          "The two components already represent all of the weight.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Constraint": [
+        [
+          "How would you explain constraint to a friend?",
+          "A physical restriction on how an object can move.",
+          "In my words, this means ___."
+        ],
+        [
+          "A block stays on a straight ramp. What is its acceleration perpendicular to the surface?",
+          "Zero, while it stays in contact and follows the flat ramp surface.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you use that fact to find the normal force when gravity and the surface are the only forces?",
+          "Balance the normal force against the component of weight into the ramp.",
+          "My example shows ___."
+        ],
+        [
+          "Does zero perpendicular acceleration mean zero downhill acceleration?",
+          "No. The block can accelerate along the ramp while staying on its surface.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "17": {
+    "cpa": {
+      "Static friction": [
+        [
+          "How would you explain static friction to a friend?",
+          "A friction force that opposes the tendency of touching surfaces to slide relative to each other.",
+          "In my words, this means ___."
+        ],
+        [
+          "You push a crate gently and it stays still. What force balances your sideways push?",
+          "Static friction from the floor acts in the opposite direction.",
+          "I can tell because ___."
+        ],
+        [
+          "A stationary crate on a level floor is pushed right with 3 N below the sliding threshold. Draw friction.",
+          "Draw 3 N left when no other horizontal force acts.",
+          "My example shows ___."
+        ],
+        [
+          "The crate is already sliding across the floor. Would the friction at that contact still be static?",
+          "It is kinetic friction while the surfaces slide past each other.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Maximum static friction": [
+        [
+          "How would you explain maximum static friction to a friend?",
+          "The largest static friction force the contact can supply before it slips.",
+          "In my words, this means ___."
+        ],
+        [
+          "The floor can supply up to 6 N. How much friction balances a gentle 2 N horizontal push?",
+          "2 N, while the crate remains at rest. It need not reach its maximum.",
+          "I can tell because ___."
+        ],
+        [
+          "With a 6 N limit and no other horizontal forces, what do you predict for a 7 N push?",
+          "The crate starts to slip because static friction cannot balance 7 N.",
+          "My example shows ___."
+        ],
+        [
+          "A friend writes 6 N for every trial, even with no sideways push. What does 6 N mean?",
+          "It is a ceiling, not the amount of friction in every trial.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Kinetic friction": [
+        [
+          "How would you explain kinetic friction to a friend?",
+          "The friction force between surfaces that are sliding past each other.",
+          "In my words, this means ___."
+        ],
+        [
+          "A crate slides right across a stationary floor. Which way does kinetic friction act on the crate?",
+          "Left, opposing its sliding relative to the floor.",
+          "I can tell because ___."
+        ],
+        [
+          "If the coefficient is 0.2 and the normal force is 10 N, what arrow would you draw?",
+          "A 2 N friction arrow opposite the sliding.",
+          "My example shows ___."
+        ],
+        [
+          "A crate stays put while you push gently. Should you use the kinetic-friction rule?",
+          "No. The surfaces are not sliding, so the friction is static.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Coefficient (μ)": [
+        [
+          "What does the coefficient of friction tell us about two surfaces?",
+          "A dimensionless number describing friction for a pair of surfaces in a specified friction model.",
+          "In my words, this means ___."
+        ],
+        [
+          "A sliding block has 2 N friction and 10 N normal force. How do you find the kinetic coefficient?",
+          "Divide 2 N by 10 N to get 0.2.",
+          "I can tell because ___."
+        ],
+        [
+          "With the same surfaces and a 20 N normal force, what sliding friction would μ = 0.2 predict?",
+          "4 N.",
+          "My example shows ___."
+        ],
+        [
+          "A student writes “μ = 0.2 N.” What happens to the units in the ratio?",
+          "The newtons cancel. The coefficient has no units.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Static friction": [
+        [
+          "How would you explain static friction to a friend?",
+          "A friction force that opposes the tendency of touching surfaces to slide relative to each other.",
+          "In my words, this means ___."
+        ],
+        [
+          "You push a crate gently and it stays still. What force balances your sideways push?",
+          "Static friction from the floor acts in the opposite direction.",
+          "I can tell because ___."
+        ],
+        [
+          "A stationary crate on a level floor is pushed right with 3 N below the sliding threshold. Draw friction.",
+          "Draw 3 N left when no other horizontal force acts.",
+          "My example shows ___."
+        ],
+        [
+          "The crate is already sliding across the floor. Would the friction at that contact still be static?",
+          "It is kinetic friction while the surfaces slide past each other.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Limit": [
+        [
+          "How would you explain limit to a friend?",
+          "The largest static friction force the contact can supply before it slips.",
+          "In my words, this means ___."
+        ],
+        [
+          "The floor can supply up to 6 N. How much friction balances a gentle 2 N horizontal push?",
+          "2 N, while the crate remains at rest. It need not reach its maximum.",
+          "I can tell because ___."
+        ],
+        [
+          "With a 6 N limit and no other horizontal forces, what do you predict for a 7 N push?",
+          "The crate starts to slip because static friction cannot balance 7 N.",
+          "My example shows ___."
+        ],
+        [
+          "A friend writes 6 N for every trial, even with no sideways push. What does 6 N mean?",
+          "It is a ceiling, not the amount of friction in every trial.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Kinetic friction": [
+        [
+          "How would you explain kinetic friction to a friend?",
+          "The friction force between surfaces that are sliding past each other.",
+          "In my words, this means ___."
+        ],
+        [
+          "A crate slides right across a stationary floor. Which way does kinetic friction act on the crate?",
+          "Left, opposing its sliding relative to the floor.",
+          "I can tell because ___."
+        ],
+        [
+          "If the coefficient is 0.2 and the normal force is 10 N, what arrow would you draw?",
+          "A 2 N friction arrow opposite the sliding.",
+          "My example shows ___."
+        ],
+        [
+          "A crate stays put while you push gently. Should you use the kinetic-friction rule?",
+          "No. The surfaces are not sliding, so the friction is static.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Normal force": [
+        [
+          "How would you explain normal force to a friend?",
+          "The push of a surface on an object, perpendicular to that surface.",
+          "In my words, this means ___."
+        ],
+        [
+          "A crate rests on a ramp. Which way does the ramp push the crate?",
+          "Away from the ramp at a right angle to its surface.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you draw the normal force on a book on a level table?",
+          "A vertical upward arrow labeled “table on book.”",
+          "My example shows ___."
+        ],
+        [
+          "Someone draws the normal force along the ramp. What would you rotate?",
+          "Turn that arrow until it is perpendicular to the ramp. A friction arrow would lie along it.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "18": {
+    "cpa": {
+      "Equilibrium": [
+        [
+          "How would you explain equilibrium to a friend?",
+          "The forces on the object add to zero, so its velocity stays constant.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart rolls straight at steady speed. What must the horizontal forces add up to?",
+          "Zero newtons. The cart has no horizontal acceleration.",
+          "I can tell because ___."
+        ],
+        [
+          "Sketch the horizontal forces on a cart with a 3 N pull right and 3 N friction left.",
+          "Draw two equal arrows pointing opposite ways. Their vector sum is zero.",
+          "My example shows ___."
+        ],
+        [
+          "A tossed ball is briefly still at the top. Is it in equilibrium there?",
+          "No. Gravity still pulls it down, so its vertical velocity changes.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Static and dynamic equilibrium": [
+        [
+          "What do static and dynamic equilibrium have in common? How do they differ?",
+          "Balanced forces can describe an object at rest or an object moving at constant velocity.",
+          "In my words, this means ___."
+        ],
+        [
+          "A parked cart and a cart rolling straight at steady speed both have zero net force. How do they differ?",
+          "The parked cart is in static equilibrium. The rolling cart is in dynamic equilibrium.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw equal-time dots for each cart.",
+          "For the parked cart, mark the same spot each time. For the rolling cart, space the marks equally along a line.",
+          "My example shows ___."
+        ],
+        [
+          "A bike turns at steady speed. Would that be dynamic equilibrium?",
+          "No. Its changing direction means it accelerates.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Missing force": [
+        [
+          "How would you explain missing force to a friend?",
+          "A force you work out from the others and the condition that their sum must balance.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart is in equilibrium with 7 N right. If there is only one other horizontal force, what must it be?",
+          "7 N left.",
+          "I can tell because ___."
+        ],
+        [
+          "Two cables supply 3 N and 5 N upward on a stationary object. What downward force completes the diagram?",
+          "8 N down balances 8 N up.",
+          "My example shows ___."
+        ],
+        [
+          "A partner adds another upward 8 N. What would happen to the vertical force sum?",
+          "It would increase upward instead of reaching zero.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Instantaneous rest": [
+        [
+          "How would you explain instantaneous rest to a friend?",
+          "Zero velocity at a particular instant.",
+          "In my words, this means ___."
+        ],
+        [
+          "At the top of a ball’s straight upward toss, what is zero and what is still acting?",
+          "Its velocity is zero for an instant. Gravity still acts downward.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you draw velocity and acceleration at that instant?",
+          "Write v = 0 and draw acceleration downward.",
+          "My example shows ___."
+        ],
+        [
+          "“It stopped, so the forces must balance.” What does the next instant show?",
+          "The ball starts down. Its velocity changes even though it was briefly zero.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Equilibrium": [
+        [
+          "How would you explain equilibrium to a friend?",
+          "The forces on the object add to zero, so its velocity stays constant.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart rolls straight at steady speed. What must the horizontal forces add up to?",
+          "Zero newtons. The cart has no horizontal acceleration.",
+          "I can tell because ___."
+        ],
+        [
+          "Sketch the horizontal forces on a cart with a 3 N pull right and 3 N friction left.",
+          "Draw two equal arrows pointing opposite ways. Their vector sum is zero.",
+          "My example shows ___."
+        ],
+        [
+          "A tossed ball is briefly still at the top. Is it in equilibrium there?",
+          "No. Gravity still pulls it down, so its vertical velocity changes.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Balance": [
+        [
+          "How would you explain balance to a friend?",
+          "The forces cancel on each axis.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two cables suspend a sign at rest. What must their upward components add up to?",
+          "The weight of the sign if gravity and the cables are the only forces.",
+          "I can tell because ___."
+        ],
+        [
+          "A sign weighs 12 N and two cables share the upward support equally. What is each vertical contribution?",
+          "6 N up from each cable.",
+          "My example shows ___."
+        ],
+        [
+          "The horizontal components cancel. Is that enough to show equilibrium?",
+          "I also have to check the vertical sum.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Symmetry": [
+        [
+          "How would you explain symmetry to a friend?",
+          "A matching arrangement that lets corresponding parts of a force diagram behave alike under matching loads.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two identical cables hold a centered sign at equal angles. What tells you their tensions match?",
+          "The left and right arrangements mirror each other and share the same centered load.",
+          "I can tell because ___."
+        ],
+        [
+          "Sketch equal tension arrows. What happens to the two horizontal components?",
+          "They point opposite ways and cancel. The vertical components add.",
+          "My example shows ___."
+        ],
+        [
+          "One cable is much steeper. Can you still assume the tensions are equal from symmetry alone?",
+          "No. The angles no longer match, so I need to check the force components.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Rest": [
+        [
+          "What does it mean for an object to be at rest at an instant?",
+          "Zero velocity at a particular instant.",
+          "In my words, this means ___."
+        ],
+        [
+          "At the top of a ball’s straight upward toss, what is zero and what is still acting?",
+          "Its velocity is zero for an instant. Gravity still acts downward.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you draw velocity and acceleration at that instant?",
+          "Write v = 0 and draw acceleration downward.",
+          "My example shows ___."
+        ],
+        [
+          "“It stopped, so the forces must balance.” What does the next instant show?",
+          "The ball starts down. Its velocity changes even though it was briefly zero.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "19": {
+    "cpa": {
+      "Distance vs. displacement": [
+        [
+          "How would you explain the difference between distance and displacement?",
+          "Distance counts the whole path. Displacement measures the directed change from start to finish.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which quantity can be zero after a walk that covers six metres?",
+          "Displacement, if I return to my starting point.",
+          "I can tell because ___."
+        ],
+        [
+          "Walk 4 m east and 1 m west. What distance and displacement would you record?",
+          "Distance is 5 m. Displacement is 3 m east.",
+          "My example shows ___."
+        ],
+        [
+          "Someone reports 5 m east as the displacement. Which part of the return trip did they miss?",
+          "The westward metre reduces the eastward displacement.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Net force": [
+        [
+          "How would you explain net force to a friend?",
+          "The vector sum of the forces acting on one chosen object.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two people push one cart in opposite directions. Why do the arrow directions matter?",
+          "Opposite pushes partly or completely cancel when we add them.",
+          "I can tell because ___."
+        ],
+        [
+          "One person pushes 6 N right and another 4 N left. What single arrow replaces both?",
+          "Draw 2 N to the right on the cart.",
+          "My example shows ___."
+        ],
+        [
+          "A student adds those pushes to get 10 N right. Which push did they count the wrong way?",
+          "The 4 N push goes left, so it subtracts from the rightward push.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Coordinate sign": [
+        [
+          "How would you explain coordinate sign to a friend?",
+          "A plus or minus sign shows a quantity’s direction along a chosen axis.",
+          "In my words, this means ___."
+        ],
+        [
+          "If right is positive, what sign goes on a 3 N force left?",
+          "−3 N.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you label a leftward velocity of 2 m/s when right is positive?",
+          "v = −2 m/s.",
+          "My example shows ___."
+        ],
+        [
+          "Does a negative velocity by itself mean the cart is slowing down?",
+          "No. It tells direction. I need a second reading or the acceleration to tell how speed changes.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Interaction pair": [
+        [
+          "How would you explain interaction pair to a friend?",
+          "Two forces from one interaction: each object exerts one force on the other.",
+          "In my words, this means ___."
+        ],
+        [
+          "Earth pulls an apple down. What is the partner force, and which object feels it?",
+          "The apple pulls Earth toward the apple. Earth feels that force.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you label the pair when a hand pushes a cart?",
+          "“Hand on cart” on the cart and “cart on hand” on the hand, with equal opposite arrows.",
+          "My example shows ___."
+        ],
+        [
+          "Are the table’s push and Earth’s pull on one book a third-law pair?",
+          "No. Both act on the book and come from different interactions.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Quantity": [
+        [
+          "What do physicists mean by a quantity?",
+          "The physical property a number describes, such as position, speed or force.",
+          "In my words, this means ___."
+        ],
+        [
+          "Two labels say 4 m and 4 m/s. What different questions could they answer?",
+          "The first could tell where a cart is. The second could tell how fast it moves.",
+          "I can tell because ___."
+        ],
+        [
+          "What label would make “−3” into a useful velocity reading?",
+          "Velocity = −3 m/s, with the positive direction specified.",
+          "My example shows ___."
+        ],
+        [
+          "A student writes “force = 6 m.” What clue tells you to check their work?",
+          "Metres measure length. A force needs force units such as newtons.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Sign": [
+        [
+          "How would you explain sign to a friend?",
+          "A plus or minus sign shows a quantity’s direction along a chosen axis.",
+          "In my words, this means ___."
+        ],
+        [
+          "If right is positive, what sign goes on a 3 N force left?",
+          "−3 N.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you label a leftward velocity of 2 m/s when right is positive?",
+          "v = −2 m/s.",
+          "My example shows ___."
+        ],
+        [
+          "Does a negative velocity by itself mean the cart is slowing down?",
+          "No. It tells direction. I need a second reading or the acceleration to tell how speed changes.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Force": [
+        [
+          "How would you explain force to a friend?",
+          "A push or pull that one object exerts on another.",
+          "In my words, this means ___."
+        ],
+        [
+          "When your hand pushes a cart, what pushes and what receives the push?",
+          "My hand pushes, and the cart receives the force.",
+          "I can tell because ___."
+        ],
+        [
+          "Which force arrow would you draw while a hand pushes a cart right?",
+          "Draw a rightward arrow on the cart labeled “hand on cart.”",
+          "My example shows ___."
+        ],
+        [
+          "The hand lets go and the cart keeps rolling. Is the hand still pushing it?",
+          "No. The contact ended. The cart can keep moving after the push ends.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Check": [
+        [
+          "How would you explain check to a friend?",
+          "A second way to test whether a result makes sense.",
+          "In my words, this means ___."
+        ],
+        [
+          "You found displacement using an equation. What feature of a velocity–time graph could check it?",
+          "The signed area over the same interval.",
+          "I can tell because ___."
+        ],
+        [
+          "A cart stays at +3 m/s for 2 s. How can a graph check the result of 6 m?",
+          "A rectangle 3 m/s high and 2 s wide has area +6 m.",
+          "My example shows ___."
+        ],
+        [
+          "Someone copies the same number twice. What could actually catch a wrong answer?",
+          "An independent method, like graph area, units, or a measurement.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "20": {
+    "cpa": {
+      "Force and motion": [
+        [
+          "How does a net force change motion?",
+          "Net force tells how motion changes. Starting velocity tells how the object is already moving.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart feels a net force right. What else tells you whether it is speeding up right now?",
+          "Its velocity. If it moves left, the rightward force initially slows it.",
+          "I can tell because ___."
+        ],
+        [
+          "Sketch a cart moving left while a net force points right. Which way does acceleration point?",
+          "Draw velocity left, net force right and acceleration right.",
+          "My example shows ___."
+        ],
+        [
+          "“The force points right, so the cart is already going right.” What evidence is missing?",
+          "A velocity reading or positions over time.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Constant net force": [
+        [
+          "How would you explain constant net force to a friend?",
+          "An overall force that stays the same in size and direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "If a cart’s mass and its net force both stay fixed, what stays fixed about the motion?",
+          "Its acceleration stays constant.",
+          "I can tell because ___."
+        ],
+        [
+          "A 2 kg cart feels 4 N right throughout two seconds. What acceleration would you label?",
+          "2 m/s² right throughout the interval.",
+          "My example shows ___."
+        ],
+        [
+          "Does constant net force always mean steady velocity?",
+          "Only a zero net force gives steady velocity. A constant nonzero force changes velocity.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Zero net force": [
+        [
+          "How would you explain zero net force to a friend?",
+          "All forces on the chosen object add to zero, so it has zero acceleration.",
+          "In my words, this means ___."
+        ],
+        [
+          "What happens to a moving cart’s velocity if its forces add to zero?",
+          "It keeps the same speed and direction.",
+          "I can tell because ___."
+        ],
+        [
+          "Draw a cart moving right at 2 m/s a second after its horizontal forces balance and stay balanced.",
+          "Place it 2 m farther right and keep the same velocity arrow.",
+          "My example shows ___."
+        ],
+        [
+          "Someone leaves every force off a moving cart because its net force is zero. What could still act?",
+          "Its weight and the table’s normal force can act and cancel.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Range": [
+        [
+          "How would you explain range to a friend?",
+          "The span from the lowest to the highest value a model allows.",
+          "In my words, this means ___."
+        ],
+        [
+          "What positions are included in 12 ± 2 m?",
+          "10 through 14 m, including both endpoints.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you mark the forecast on a number line?",
+          "Place 12 m at the centre and shade between 10 and 14 m.",
+          "My example shows ___."
+        ],
+        [
+          "A partner says only 12 m counts as a match. What do the endpoints show?",
+          "The model allows other positions within the stated range.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Force and motion": [
+        [
+          "How does a net force change motion?",
+          "Net force tells how motion changes. Starting velocity tells how the object is already moving.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart feels a net force right. What else tells you whether it is speeding up right now?",
+          "Its velocity. If it moves left, the rightward force initially slows it.",
+          "I can tell because ___."
+        ],
+        [
+          "Sketch a cart moving left while a net force points right. Which way does acceleration point?",
+          "Draw velocity left, net force right and acceleration right.",
+          "My example shows ___."
+        ],
+        [
+          "“The force points right, so the cart is already going right.” What evidence is missing?",
+          "A velocity reading or positions over time.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Interval": [
+        [
+          "How would you explain interval to a friend?",
+          "The stretch of time between a chosen start and finish.",
+          "In my words, this means ___."
+        ],
+        [
+          "The clock reads 3 s at the start and 7 s at the end. How long is the interval?",
+          "4 s.",
+          "I can tell because ___."
+        ],
+        [
+          "You are using velocities from 3 s and 7 s. Which strip of the graph belongs in your calculation?",
+          "Only the strip from 3 through 7 s.",
+          "My example shows ___."
+        ],
+        [
+          "A partner uses 7 s as the elapsed time. Which part did they include by accident?",
+          "The first 3 s, before the chosen interval began.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Reversal": [
+        [
+          "How would you explain reversal to a friend?",
+          "A change from moving in one direction to moving in the opposite direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "On a velocity–time graph, how can you tell a cart actually reversed?",
+          "Its velocity changes sign across zero.",
+          "I can tell because ___."
+        ],
+        [
+          "A cart goes from +2 m/s through zero to −1 m/s. Draw its direction before and after.",
+          "First draw a rightward arrow. After the stop, draw a leftward arrow.",
+          "My example shows ___."
+        ],
+        [
+          "A bus stops, then keeps going east. Does stopping prove it reversed?",
+          "No. It moved east on both sides of the stop.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Area": [
+        [
+          "How would you explain area to a friend?",
+          "On a velocity–time graph, the area represents displacement and its sign gives direction.",
+          "In my words, this means ___."
+        ],
+        [
+          "What do you do with the area below the time axis when you find displacement?",
+          "Count it as negative, then add it to the positive area.",
+          "I can tell because ___."
+        ],
+        [
+          "Sketch a rectangle at −2 m/s lasting 3 s. What displacement does it show?",
+          "Its signed area is −6 m.",
+          "My example shows ___."
+        ],
+        [
+          "Someone labels the area −2 m/s. Which graph reading did they use?",
+          "They read the height. Area also includes the time width and has units of metres.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "21": {
+    "cpa": {
+      "Reference point": [
+        [
+          "How would you explain reference point to a friend?",
+          "A named place used as the zero for position measurements.",
+          "In my words, this means ___."
+        ],
+        [
+          "A sign says “5 m east.” What place do we need to identify?",
+          "The point we measure from, such as the doorway.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you mark a cart 3 m west of a doorway chosen as zero?",
+          "Label the doorway 0 and put the cart 3 m west of it.",
+          "My example shows ___."
+        ],
+        [
+          "If I choose the table as zero instead, did the cart actually move?",
+          "No. Its coordinate changed because I changed the reference point.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Known quantity": [
+        [
+          "What makes a number a known quantity in a problem?",
+          "The values the problem gives or that you have measured.",
+          "In my words, this means ___."
+        ],
+        [
+          "A cart starts at rest and is timed for 3 s. Which two values can you write down?",
+          "Initial velocity is 0 m/s and elapsed time is 3 s.",
+          "I can tell because ___."
+        ],
+        [
+          "A sensor reads +4 m at the start. How would you enter that known value?",
+          "Starting position is +4 m on our chosen axis.",
+          "My example shows ___."
+        ],
+        [
+          "A friend lists a guessed final speed among the given values. Where should it go?",
+          "List it as an unknown or a prediction until it is supplied or measured.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Model assumption": [
+        [
+          "How would you explain model assumption to a friend?",
+          "A condition we treat as true while using a model.",
+          "In my words, this means ___."
+        ],
+        [
+          "What must be true to predict another 2 m each second from a cart’s earlier motion?",
+          "It must keep moving at the same velocity.",
+          "I can tell because ___."
+        ],
+        [
+          "Write an assumption beside a straight-line forecast for XJ.",
+          "I assume the velocity changes so little during this minute that steady motion is a good approximation.",
+          "My example shows ___."
+        ],
+        [
+          "Is tomorrow’s camera reading an assumption once we measure it?",
+          "It is evidence we can use to test the assumption.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Range": [
+        [
+          "How would you explain range to a friend?",
+          "The span from the lowest to the highest value a model allows.",
+          "In my words, this means ___."
+        ],
+        [
+          "What positions are included in 12 ± 2 m?",
+          "10 through 14 m, including both endpoints.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you mark the forecast on a number line?",
+          "Place 12 m at the centre and shade between 10 and 14 m.",
+          "My example shows ___."
+        ],
+        [
+          "A partner says only 12 m counts as a match. What do the endpoints show?",
+          "The model allows other positions within the stated range.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Reference frame": [
+        [
+          "How would you explain reference frame to a friend?",
+          "The viewpoint and coordinates used to measure positions and motion.",
+          "In my words, this means ___."
+        ],
+        [
+          "You report a cart at +5 m. What does a partner need to locate it?",
+          "The origin, the direction of the positive axis and the frame those are attached to.",
+          "I can tell because ___."
+        ],
+        [
+          "How could a seated passenger be at rest in one frame and moving in another?",
+          "The passenger stays at the same seat in the bus frame and moves past signs in the road frame.",
+          "My example shows ___."
+        ],
+        [
+          "Two people report different velocities. Does that alone prove one measured incorrectly?",
+          "They could be using different moving frames. I’d ask what each measured relative to.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Components": [
+        [
+          "What are the components of an arrow?",
+          "The signed parts of a vector along chosen axes.",
+          "In my words, this means ___."
+        ],
+        [
+          "If east and north are positive, which component is negative for a southeast trip?",
+          "The north–south component is negative; the eastward component is positive.",
+          "I can tell because ___."
+        ],
+        [
+          "What two arrows could you use to build a displacement of 3 m east and 4 m north?",
+          "A +3 m horizontal arrow followed by a +4 m vertical arrow.",
+          "My example shows ___."
+        ],
+        [
+          "A classmate counts the diagonal and both parts as three separate trips. What is counted twice?",
+          "The diagonal already represents the two component displacements together.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Units": [
+        [
+          "What do units tell you about a number?",
+          "The measurement scale that tells what a number means.",
+          "In my words, this means ___."
+        ],
+        [
+          "Before adding 2 m and 30 cm, what should you do?",
+          "Convert them to the same unit.",
+          "I can tell because ___."
+        ],
+        [
+          "How would you add those two lengths in metres?",
+          "30 cm is 0.30 m, so the total is 2.30 m.",
+          "My example shows ___."
+        ],
+        [
+          "A partner adds the numbers and gets 32 m. What went wrong?",
+          "They added metres and centimetres as though each unit were the same size.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Limit": [
+        [
+          "How would you explain limit to a friend?",
+          "A condition that restricts when a model can be used.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which change would make a steady-velocity forecast unreliable?",
+          "A significant change in speed or direction during the forecast interval.",
+          "I can tell because ___."
+        ],
+        [
+          "What limit would you write next to a one-minute straight-line prediction?",
+          "Use it only while changes in velocity are small enough for our required accuracy.",
+          "My example shows ___."
+        ],
+        [
+          "A partner uses the one-minute model for a year. What evidence would they need first?",
+          "Evidence that any change in velocity over that longer time stays small enough.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  },
+  "22": {
+    "cpa": {
+      "Claim": [
+        [
+          "How would you explain claim to a friend?",
+          "The specific statement you ask others to judge using evidence.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which part of your forecast tells the listener exactly what you expect?",
+          "The predicted position and time, with any stated range.",
+          "I can tell because ___."
+        ],
+        [
+          "Make a claim for a cart moving steadily east at 2 m/s from the origin.",
+          "I expect it to be 6 m east of the origin after 3 s.",
+          "My example shows ___."
+        ],
+        [
+          "“Here are my three readings.” What is still missing from your report?",
+          "The conclusion I draw from those readings.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Evidence": [
+        [
+          "How would you explain evidence to a friend?",
+          "An observation or measurement that helps you judge a claim.",
+          "In my words, this means ___."
+        ],
+        [
+          "What reading supports the claim that the cart reached 4 m in 2 s?",
+          "A frame showing the cart beside the 4 m mark when the timer reads 2 s.",
+          "I can tell because ___."
+        ],
+        [
+          "How could two measurements support a claim that one cart accelerated more?",
+          "Show both speed changes over the same time. The bigger change means greater average acceleration.",
+          "My example shows ___."
+        ],
+        [
+          "“I expected our cart to win.” Does that tell us which cart crossed first?",
+          "We need the finish times or an image of the crossing. The expectation is a guess.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Limitation": [
+        [
+          "How would you explain limitation to a friend?",
+          "A feature of the situation or the evidence that restricts how much we can trust a model.",
+          "In my words, this means ___."
+        ],
+        [
+          "Why would two positions a minute apart tell you little about motion an hour later?",
+          "The velocity might change after those observations.",
+          "I can tell because ___."
+        ],
+        [
+          "Name one condition that could make a straight-line forecast for XJ unreliable.",
+          "Gravity could bend its path enough to matter over a longer time.",
+          "My example shows ___."
+        ],
+        [
+          "“Our answer is bad.” How could that become a useful limitation?",
+          "Name a specific issue, such as position uncertainty or assuming constant velocity too long.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Revision": [
+        [
+          "How would you explain revision to a friend?",
+          "An update to a claim or model in response to new evidence or a corrected step.",
+          "In my words, this means ___."
+        ],
+        [
+          "Your predicted sighting is +6 km and the new image reads +5 km. What would you update?",
+          "I’d record the actual position and reconsider the steady-velocity forecast.",
+          "I can tell because ___."
+        ],
+        [
+          "What would you tell the next crew after that sighting?",
+          "The object moved 1 km in the last minute instead of the earlier 2 km. Start the next forecast from +5 km.",
+          "My example shows ___."
+        ],
+        [
+          "A team changes its answer only because another team disagrees. What would justify the change?",
+          "A measurement, a corrected calculation or a better-supported assumption.",
+          "I would change ___ because ___."
+        ]
+      ]
+    },
+    "honors": {
+      "Prediction": [
+        [
+          "How would you explain prediction to a friend?",
+          "A statement about what you expect to observe next.",
+          "In my words, this means ___."
+        ],
+        [
+          "Which part of a forecast could we check with the next camera image?",
+          "The position we expect at the time of that image.",
+          "I can tell because ___."
+        ],
+        [
+          "A tracker reads 0, 2, then 4 km a minute apart. Where would you look a minute later?",
+          "At 6 km if the same motion continues.",
+          "My example shows ___."
+        ],
+        [
+          "Someone calls yesterday’s recorded position a prediction. What would you call it?",
+          "It’s an observation. A prediction comes before the new reading.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Evidence": [
+        [
+          "How would you explain evidence to a friend?",
+          "An observation or measurement that helps you judge a claim.",
+          "In my words, this means ___."
+        ],
+        [
+          "What reading supports the claim that the cart reached 4 m in 2 s?",
+          "A frame showing the cart beside the 4 m mark when the timer reads 2 s.",
+          "I can tell because ___."
+        ],
+        [
+          "How could two measurements support a claim that one cart accelerated more?",
+          "Show both speed changes over the same time. The bigger change means greater average acceleration.",
+          "My example shows ___."
+        ],
+        [
+          "“I expected our cart to win.” Does that tell us which cart crossed first?",
+          "We need the finish times or an image of the crossing. The expectation is a guess.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Limit": [
+        [
+          "How would you explain limit to a friend?",
+          "A source of uncertainty or missing effect that limits what a conclusion can support.",
+          "In my words, this means ___."
+        ],
+        [
+          "Why might a position forecast based on two blurry pictures have a wide range?",
+          "Each position is uncertain, so the inferred velocity and future position are uncertain too.",
+          "I can tell because ___."
+        ],
+        [
+          "What limit could you mention when the team reports its best forecast?",
+          "We used a short observation interval, so a small error in either reading can change the estimated speed.",
+          "My example shows ___."
+        ],
+        [
+          "“Our forecast is definitely exact.” Which detail about the camera would you ask for?",
+          "Its position resolution or measurement uncertainty.",
+          "I would change ___ because ___."
+        ]
+      ],
+      "Revision": [
+        [
+          "How would you explain revision to a friend?",
+          "An update to a claim or model in response to new evidence or a corrected step.",
+          "In my words, this means ___."
+        ],
+        [
+          "Your predicted sighting is +6 km and the new image reads +5 km. What would you update?",
+          "I’d record the actual position and reconsider the steady-velocity forecast.",
+          "I can tell because ___."
+        ],
+        [
+          "What would you tell the next crew after that sighting?",
+          "The object moved 1 km in the last minute instead of the earlier 2 km. Start the next forecast from +5 km.",
+          "My example shows ___."
+        ],
+        [
+          "A team changes its answer only because another team disagrees. What would justify the change?",
+          "A measurement, a corrected calculation or a better-supported assumption.",
+          "I would change ___ because ___."
+        ]
+      ]
+    }
+  }
+}

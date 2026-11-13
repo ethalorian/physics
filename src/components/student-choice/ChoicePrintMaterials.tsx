@@ -16,10 +16,10 @@ export default function ChoicePrintMaterials({ packet, edition, teacher = false 
     <h4>Foundation lesson · Day {packet.day}</h4>
     <div className={s.actions}>
       {teacher && <a className={s.button} href={foundation.projector} target="_blank" rel="noreferrer">Project Foundation slides</a>}
-      <a className={s.link} href={foundation.choiceSheet} download>Frayer + doodle choice sheet (2 pages)</a>
-      <a className={s.link} href={foundation.seiPacket} download>SEI notes, reading + choice sheet (4 pages)</a>
+      <a className={s.link} href={foundation.choiceSheet} download>Four Frayer models + doodle choice sheet (4 pages)</a>
+      <a className={s.link} href={foundation.seiPacket} download>SEI notes, reading + four Frayer models and doodles (6 pages)</a>
     </div>
-    <p className={s.muted}>Print the Foundation choice sheet double-sided. Section E goes on the back for the final meeting.</p>
+    <p className={s.muted}>Print double-sided, flipping on the long edge. The vocabulary pages have one model for each word. The Section B drawing and the final-meeting Section E activity share the last sheet.</p>
   </section>}
   <p className={s.muted}>Open the downloaded PDF in your PDF reader to print. {print ? 'Notes + reading: Letter paper, 100% size, double-sided, flip on the long edge. The notes go on the front and the reading on the back, with opposite punch margins.' : 'Notebook: Letter paper, 100% size.'} Print practice pages one-sided.</p></div>
 }
