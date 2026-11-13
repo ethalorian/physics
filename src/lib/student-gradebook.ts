@@ -80,10 +80,11 @@ export function isStudentHomework(row: StudentGradebookRow, now = new Date()): b
   return isAssignedStudentWork(row) && !studentWorkComplete(row) && studentAssignmentPastDue(row.dueAt, now)
 }
 export function isAssignedStudentWork(row: StudentGradebookRow): boolean {
-  return !row.homeworkWaived && !row.archived && row.status !== 'excused' && !!row.dueAt && assignmentTermDay(row.dueAt) !== null
+  return !row.archived && row.status !== 'excused' && (!row.homeworkWaived || studentWorkComplete(row))
+    && !!row.dueAt && assignmentTermDay(row.dueAt) !== null
 }
 export function studentWorkComplete(row: StudentGradebookRow): boolean {
-  return ['pending', 'graded', 'completed'].includes(row.status)
+  return ['pending', 'graded', 'completed'].includes(row.status) || (row.homeworkWaived === true && row.status === 'revise')
 }
 /** Deadline changes are reflected while the page stays open, without changing saved work. */
 export function currentStudentRows(rows: StudentGradebookRow[], now = new Date()): StudentGradebookRow[] {

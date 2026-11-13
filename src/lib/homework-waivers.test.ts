@@ -24,6 +24,12 @@ test('returned feedback and grade history survive, with no catch-up action or la
   const revision = waivedHomeworkRow({...row,key:'reading:motion',status:'revise',feedback:'Review graph',submittedAt:'2026-10-21'},keys)
   assert.equal(revision.status,'revise'); assert.equal(revision.feedback,'Review graph')
   assert.equal(isStudentHomework(revision,now),false)
+  const sameTerm = [revision, {...row, key:'quiz:due'}, waivedHomeworkRow(row, keys)]
+  const total = studentHomeworkTotal(sameTerm, 'all', now)
+  assert.deepEqual([total.completed,total.assigned,total.percent],[1,2,50])
+  assert.equal(studentHomeworkTotal([waivedHomeworkRow({...row,feedback:'Start here'},keys)],'all',now).assigned,0)
+  assert.equal(studentHomeworkTotal([waivedHomeworkRow({...row,submittedAt:'2026-10-21'},keys)],'all',now).completed,1)
+  assert.equal(studentHomeworkTotal([{...revision,key:'reading:still-required',homeworkWaived:false}],'all',now).completed,0)
   const items = studentBannerAssignments([{ id:revision.key, kind:'reading', title:'Motion', due:row.dueAt,
     href:revision.href,complete:false,status:'Revise',action:'Open' }],[revision],'2026-11-13')
   assert.match(nextStudentHomeTask({items,today:'2026-11-13',loading:false,incomplete:false})!.title,/Congratulations/)

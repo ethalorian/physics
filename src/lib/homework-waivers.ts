@@ -14,8 +14,11 @@ export function calendarHomeworkRequired(item: { id: string; courseId?: string }
  * may still show its feedback and status without requiring another submission. */
 export function waivedHomeworkRow(row: StudentGradebookRow, keys: Set<string>): StudentGradebookRow {
   if (!keys.has(homeworkKey(row.key))) return row
-  if (row.status === 'revise') return { ...row, homeworkWaived: true }
-  if (!['missing','in_progress','upcoming'].includes(row.status)) return row
-  if (row.submittedAt || row.grade || row.hasReleasedResult || row.feedback) return { ...row, homeworkWaived: true }
+  const unfinished = ['missing', 'in_progress', 'upcoming'].includes(row.status)
+  if (row.status === 'revise' || (unfinished && row.submittedAt)) {
+    return { ...row, status: 'revise', statusLabel: 'Homework credit earned · revision optional', homeworkWaived: true }
+  }
+  if (!unfinished) return row
+  if (row.grade || row.hasReleasedResult || row.feedback) return { ...row, homeworkWaived: true }
   return { ...row, status: 'excused', statusLabel: 'Excused', homeworkWaived: true }
 }
