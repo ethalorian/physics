@@ -194,7 +194,7 @@ export const GET = withAuth(async (request, ctx) => {
       const context = video ? `Video ${video.sequence}` : reflection === 'graphic-novel' ? 'Graphic novel response' : reflection === 'manga' ? 'Manga' : reflection === 'story' ? 'Written Reflection' : lesson.unit
       return {
         id: `${video ? 'video' : 'lesson'}:${lesson.id}`, kind: video ? 'video' : 'lesson',
-        title: lesson.title, href: `/lessons/${lesson.slug}`, due: windows[lesson.id]?.due_at ?? null,
+        courseId: windows[lesson.id]?.courseId, title: lesson.title, href: `/lessons/${lesson.slug}`, due: windows[lesson.id]?.due_at ?? null,
         complete, status: state ? LESSON_COMPLETION_LABELS[state.state] : complete ? 'Submitted' : 'To do',
         action: complete ? 'View work' : video ? 'Open homework' : 'Open assignment', context,
       }

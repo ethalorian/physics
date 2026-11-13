@@ -1,5 +1,6 @@
 import { calendarAssigned } from '@/lib/calendar-assignment'
 import 'server-only'
+import { courseHomeworkWaivers } from './homework-waivers-server'
 import { readingExemptions } from './reading-exemptions-server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { readingRows } from './textbook-assignments-server'
@@ -17,15 +18,16 @@ export async function binderForReadingQuiz(quizId: string, courseId: string) {
  */
 export async function lockedReadingQuizPrerequisites(quizIds: string[], userId: string): Promise<Map<string, string>> {
   if (!quizIds.length) return new Map()
-  const links = await readingRows<{reading_id: string; reading_quiz_id: string}>((a,b) => supabaseAdmin.from('reading_syllabus_bundles').select('reading_id,reading_quiz_id').in('reading_quiz_id',quizIds).order('reading_quiz_id').range(a,b))
+  const links = await readingRows<{course_id: string; reading_id: string; reading_quiz_id: string}>((a,b) => supabaseAdmin.from('reading_syllabus_bundles').select('course_id,reading_id,reading_quiz_id').in('reading_quiz_id',quizIds).order('reading_quiz_id').range(a,b))
   if (!links.length) return new Map()
   const submissions = await readingRows<{assignment_id: string}>((a,b) => supabaseAdmin.from('textbook_submissions').select('assignment_id').in('assignment_id',links.map(l=>l.reading_id)).eq('user_id',userId).order('id').range(a,b))
   const ids = links.map(link => link.reading_id)
-  const [exemptions, removed] = await Promise.all([
+  const [exemptions, removed, waivers] = await Promise.all([
     readingExemptions(ids, userId),
     readingRows<{ id: string }>((a,b) => supabaseAdmin.from('textbook_assignments').select('id').in('id', ids).eq('status', 'archived').order('id').range(a,b)),
+    courseHomeworkWaivers([...new Set(links.map(l => l.course_id))]),
   ])
-  const complete = new Set([...submissions.map(s=>s.assignment_id), ...exemptions.map(e=>e.assignment_id), ...removed.map(a=>a.id)])
+  const complete = new Set([...waivers.filter(w => w.work_key.startsWith('reading:')).map(w => w.work_key.slice(8)), ...submissions.map(s=>s.assignment_id), ...exemptions.map(e=>e.assignment_id), ...removed.map(a=>a.id)])
   return new Map(links.filter(l=>!complete.has(l.reading_id)).map(l=>[l.reading_quiz_id,l.reading_id]))
 }
 

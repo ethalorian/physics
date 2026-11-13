@@ -60,7 +60,7 @@ export async function getStudentLessonGate(
 // never-released lessons stay invisible (no spoilers).
 // If the student is in several classes, the most permissive window wins:
 // open > scheduled (earliest open) > closed (latest close).
-export type LessonWindowStatus = { due_at?: string | null } & (
+export type LessonWindowStatus = { courseId?: string; due_at?: string | null } & (
   | { state: 'open'; opened_at: string | null; closes_at: string | null }
   | { state: 'scheduled'; opens_at: string }
   | { state: 'closed'; closed_at: string | null }
@@ -81,7 +81,7 @@ export async function getStudentLessonWindowStatuses(
   const out: Record<string, LessonWindowStatus> = {}
   for (const w of (data ?? []) as LessonWindow[]) {
     if(!calendarAssigned(true,w.due_at))continue
-    const next = { ...statusOf(w, now), due_at: w.due_at ?? null }
+    const next = { ...statusOf(w, now), courseId: w.course_id, due_at: w.due_at ?? null }
     const prev = out[w.lesson_id]
     if (!prev || rank(next) > rank(prev) || tieBreak(prev, next)) out[w.lesson_id] = next
   }

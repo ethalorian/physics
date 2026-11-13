@@ -1,3 +1,5 @@
+import { courseHomeworkWaivers } from '@/lib/homework-waivers-server'
+import { waivedHomeworkRow } from '@/lib/homework-waivers'
 import { supabaseAdmin } from '@/lib/supabase'
 import { calendarXpBadges, type MasteryXpReport } from '@/lib/assigned-mastery-xp'
 import { withAuth } from '@/lib/api-auth'
@@ -40,12 +42,12 @@ export const GET = withAuth(async (request, ctx) => {
     ? settingsRead.then(settings => loadStudentAttendance(course.id, userId, settings.terms)).catch(() => {
       result.warnings.push({ source: 'Meaningful attendance', message: 'Posted attendance could not load. Refresh to try again.' })
     }) : null
-  const [results, settings, xpReads, attendance] = await Promise.all([
+  const [results, settings, xpReads, attendance, waivers] = await Promise.all([
     loadAssessmentResults(ctx, course, 'all', { studentId: userId }), settingsRead,
     Promise.all(xpCourses.map(async c => {
       const { data, error } = await supabaseAdmin.rpc('student_mastery_xp', { p_course: c.id, p_user: userId })
       return { courseId: c.id, report: error ? null : data as MasteryXpReport | null }
-    })), attendanceRead,
+    })), attendanceRead, courseHomeworkWaivers(staff ? [course.id] : courses.map(c => c.id)),
   ])
   const xp = xpReads.find(read => read.courseId === course.id)
   if (xp && !xp.report) result.warnings.push({ source: 'Unit XP floor', message: 'Assigned mastery XP could not load. Refresh to try again.' })
@@ -79,7 +81,12 @@ export const GET = withAuth(async (request, ctx) => {
   let slugs = new Map<string, string>()
   try { slugs = new Map((await byIds<{ id: string; slug: string }>('lessons', 'id,slug', 'id', lessonIds, ['id'])).map(l => [l.id, l.slug])) }
   catch { result.warnings.push({ source: 'Assignment links', message: 'Some lesson links could not load. Use your class calendar to open those lessons.' }) }
-  result.rows = studentGradebookRows(results.activities, userId, settings, slugs)
+  const classWaivers = new Set(waivers.filter(w => w.course_id === course.id).map(w => w.work_key))
+  result.rows = studentGradebookRows(results.activities, userId, settings, slugs).map(row => waivedHomeworkRow(row, classWaivers))
+  if (!staff) {
+    result.calendarWaivers = {}
+    for (const w of waivers) (result.calendarWaivers[w.work_key] ??= []).push(w.course_id)
+  }
   // Batch prerequisite checks for this student’s ledger, without question or answer-key disclosure.
   try {
     const [missing,reviews] = await Promise.all([

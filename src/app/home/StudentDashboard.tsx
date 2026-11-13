@@ -23,6 +23,7 @@ import { sourceKey } from '@/lib/choice-calendar'
 import { assignmentCalendarDate, assignmentDeadline, assignmentTimingLabel, assignmentInView, prioritizeAssignments, type AssignmentView } from '@/lib/student-dashboard'
 import { dateLabel, deadlineDay, weekDates, type LearningActivity } from '@/lib/learning-week'
 import { moveDeadline, quizScheduleError, QUIZ_SCHEDULE_LABELS } from '@/lib/quiz-schedule'
+import { calendarHomeworkRequired } from '@/lib/homework-waivers'
 import { schoolDayKey } from '@/lib/school-day'
 import { calendarBannerAssignment, nextStudentHomeTask, studentBannerAssignments } from '@/lib/student-home-banner'
 import homeStyles from './home.module.css'
@@ -103,7 +104,7 @@ function DashboardContent({ children }: DashboardProps) {
   })))
   const workKey = (id: string) => id.replace(/^video:/, 'lesson:').replace(/^vocab:/, 'vocabulary:')
   const xpBadges = !staff && !progress.error && !progress.data?.staff ? progress.data?.calendarXp : undefined
-  const ordered = prioritizeAssignments<CalendarAssignment>((staff ? teacherItems : data.items)
+  const ordered = prioritizeAssignments<CalendarAssignment>((staff ? teacherItems : data.items.filter(item => item.complete || calendarHomeworkRequired(item, progress.data?.calendarWaivers)))
     .filter(item => staff || !choiceSourceStates.has(workKey(item.id)) || choiceSourceStates.get(workKey(item.id))?.chosen)
     .map(item => {
       const xpStatus = xpBadges?.[workKey(item.id)]

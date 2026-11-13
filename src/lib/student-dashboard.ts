@@ -1,6 +1,7 @@
 export type AssignmentKind = 'student_choice' | 'worksheet' | 'video' | 'lesson' | 'reading' | 'quiz' | 'vocabulary' | 'review'
 export type AssignmentView = 'todo' | 'overdue' | 'upcoming' | 'submitted'
 export interface StudentAssignment {
+  courseId?: string
   id: string
   kind: AssignmentKind
   title: string

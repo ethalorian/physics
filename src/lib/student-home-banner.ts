@@ -53,7 +53,7 @@ export function studentBannerAssignments(calendar: LearningActivity[], rows: Stu
   for (const row of rows) {
     const id = key(row.key)
     // A review may have a closing window without a gradebook deadline.
-    if (row.archived || row.status === 'excused') { items.delete(id); continue }
+    if (row.archived || row.homeworkWaived || row.status === 'excused') { items.delete(id); continue }
     if (!isAssignedStudentWork(row)) continue
     const item = items.get(id)
     if (item) item.complete = studentWorkComplete(row)
