@@ -1,15 +1,22 @@
-import { assignmentPresentation } from './assignment-presentation'
 import { deadlineDay, type LearningActivity } from './learning-week'
-import { assignmentCalendarDate, assignmentTimingLabel, prioritizeAssignments, type StudentAssignment } from './student-dashboard'
+import { assignmentCalendarDate, assignmentTimingLabel } from './student-dashboard'
 import { SCHOOL_TZ } from './school-day'
-import { studentAssignmentPastDue } from './student-gradebook'
+import { isAssignedStudentWork, studentWorkComplete, type StudentGradebookRow } from './student-gradebook'
 
-export interface StudentHomeTask {
-  kind: string
+export interface BannerAssignment {
+  id: string
   title: string
-  meta: string
+  day: string | null
+  timing: string
   href: string
   label: string
+  complete: boolean
+}
+
+export interface StudentHomeTask {
+  title: string
+  meta: string
+  links?: { id: string; title: string; href: string }[]
 }
 
 export function homeDeadlineLabel(due: string | null, today: string): string {
@@ -23,31 +30,60 @@ export function homeDeadlineLabel(due: string | null, today: string): string {
   return `${day < today ? 'Past due' : 'Due'} ${when}${time}`
 }
 
-/** Due work takes precedence; optional practice never claims completion after a failed load. */
-export function nextStudentHomeTask({ items, math, today, loading, incomplete, now = new Date(today + 'T12:00:00Z') }: {
-  items: StudentAssignment[]
-  math: LearningActivity | null
+export function calendarBannerAssignment(item: LearningActivity, today: string): BannerAssignment {
+  const due = assignmentCalendarDate(item)
+  const timing = item.prerequisiteText || (item.status === 'Complete reading first' ? 'Complete the required reading first' : '')
+    || (item.closesAt && !item.due ? assignmentTimingLabel(item) : homeDeadlineLabel(item.due, today))
+  return { id: item.id, title: item.title, day: item.kind === 'math' ? today : deadlineDay(due),
+    timing: item.kind === 'math' ? 'Math warm-up' : timing, href: item.href, label: item.action, complete: item.complete }
+}
+
+function gradebookBannerAssignment(row: StudentGradebookRow, today: string): BannerAssignment {
+  return {
+    id: row.key, title: row.title, day: deadlineDay(row.dueAt), complete: studentWorkComplete(row),
+    href: row.href, label: row.prerequisites?.length ? 'Open prerequisite' : 'Open assignment',
+    timing: row.prerequisites?.length ? row.statusLabel : homeDeadlineLabel(row.dueAt, today),
+  }
+}
+
+/** Use the ledger for recorded completion and the calendar for live assignment links and additional enrollments. */
+export function studentBannerAssignments(calendar: LearningActivity[], rows: StudentGradebookRow[], today: string) {
+  const key = (id: string) => id.replace(/^(reflection|video):/, 'lesson:')
+  const items = new Map(calendar.map(item => [key(item.id), calendarBannerAssignment(item, today)]))
+  for (const row of rows) {
+    const id = key(row.key)
+    // A review may have a closing window without a gradebook deadline.
+    if (row.archived || row.status === 'excused') { items.delete(id); continue }
+    if (!isAssignedStudentWork(row)) continue
+    const item = items.get(id)
+    if (item) item.complete = studentWorkComplete(row)
+    else items.set(id, gradebookBannerAssignment(row, today))
+  }
+  return [...items.values()]
+}
+
+export function nextStudentHomeTask({ items, today, loading, incomplete }: {
+  items: BannerAssignment[]
   today: string
   loading: boolean
   incomplete: boolean
-  now?: Date
 }): StudentHomeTask | null {
   if (loading) return null
-  const scheduled = items.filter(item => deadlineDay(assignmentCalendarDate(item)) !== null)
-  const pending = prioritizeAssignments(scheduled.filter(item => !item.complete), Date.parse(`${today}T12:00:00Z`))
-  const urgent = pending.find(item => { const due = deadlineDay(assignmentCalendarDate(item)); return due !== null && due <= today })
-  const next = urgent ?? (math && !math.complete && math.available !== false ? math : null) ?? pending[0]
-  if (next) {
-    const kind = assignmentPresentation(next).label
-    const homework = next.kind !== 'math' && studentAssignmentPastDue(assignmentCalendarDate(next), now)
-    return {
-      kind: homework ? kind === 'Assignment' ? 'Homework' : 'Homework · ' + kind : kind, title: next.title, href: next.href, label: next.action,
-      meta: next.kind === 'math' ? 'Ready to start' : next.status === 'Complete reading first' ? 'Complete the required reading first' : next.closesAt&&!next.due?assignmentTimingLabel(next):homeDeadlineLabel(next.due, today),
-    }
+  const todays = items.filter(item => item.day === today)
+  const remaining = todays.filter(item => !item.complete)
+  if (remaining.length) {
+    const [first, ...rest] = remaining
+    return { title: first.title, meta: first.timing,
+      links: [{ id: first.id, title: first.label, href: first.href }, ...rest.map(item => ({ id: item.id, title: item.title, href: item.href }))] }
   }
-  return incomplete
-    ? { kind: 'Keep learning', title: 'Explore your lessons', meta: 'Some assignments couldn’t load', href: '/lessons', label: 'Open lessons' }
-    : { kind: 'Keep exploring', title: scheduled.length?'You’re caught up':'No assignments on your calendar', meta: scheduled.length?'The work on your calendar is submitted. Videos are available anytime.':'Your teacher will add assigned work here. Videos are available anytime.', href: '/lessons', label: 'Watch a video' }
+  if (incomplete) return { title: 'Some assignments couldn’t load', meta: 'Refresh the page to check your work.' }
+  const earlier = items.filter(item => !item.complete && item.day && item.day < today)
+    .sort((a, b) => a.day!.localeCompare(b.day!))[0]
+  if (earlier) {
+    return { title: todays.length ? 'Today’s work is complete' : 'Nothing due today',
+      meta: earlier.title, links: [{ id: earlier.id, title: 'Get Caught Up', href: earlier.href }] }
+  }
+  return { title: 'Congratulations! You’re all caught up.', meta: 'Thank you for staying diligent with your work.' }
 }
 
 export const STUDENT_HOME_THEMES = [

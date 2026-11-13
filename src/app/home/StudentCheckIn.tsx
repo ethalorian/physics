@@ -72,16 +72,16 @@ export default function StudentCheckIn({ name, streak, points, loading, today, t
             ? <a href={reflection.url} target="_blank" rel="noopener noreferrer" aria-label={`${reflection.credit}. ${reflection.source} (opens in a new tab)`}>{reflection.credit}</a>
             : reflection.credit}</figcaption>
         </figure>
-        <div className={styles.nextTask} aria-label="Your next learning step" aria-busy={!task}>
-          <p className={styles.eyebrow}>{task ? `${task.kind === 'Keep exploring' || task.kind === 'Keep learning' ? '' : 'Next up · '}${task.kind}` : 'Your next step'}</p>
-          <h2>{task?.title ?? 'Checking your work…'}</h2>
-          <p className={styles.taskMeta}>{task?.meta ?? 'Finding your next learning step'}</p>
-          {task && <Link href={task.href} className={`${styles.raisedButton} ${styles.startLearning}`}>{task.label}<span className={styles.actionArrow}><ArrowRight size={18} aria-hidden="true" /></span></Link>}
+        <section className={styles.nextTask} aria-labelledby="todays-work-heading" aria-busy={!task}>
+          <h2 id="todays-work-heading" className={styles.workHeading}>Today’s Work</h2>
+          <p className={styles.taskTitle}>{task?.title ?? 'Checking today’s assignments…'}</p>
+          {task && <p className={styles.taskMeta}>{task.meta}</p>}
+          {task?.links?.map(link => <Link key={link.id} href={link.href} className={`${styles.raisedButton} ${styles.startLearning}`}>{link.title}<span className={styles.actionArrow}><ArrowRight size={18} aria-hidden="true" /></span></Link>)}
           <div className={styles.welcomeActions}>
             {progressHref ? <Link className={styles.raisedButton} href={progressHref}><Sprout size={17} aria-hidden="true" />My progress</Link> : onGrowth && <button type="button" className={styles.raisedButton} onClick={onGrowth} aria-controls="learning-dashboard-content" aria-current={growthActive ? 'page' : undefined}><Sprout size={17} aria-hidden="true" />My progress</button>}
             {feedbackHref ? <Link className={styles.feedback} href={feedbackHref}><MessageCircle size={16} aria-hidden="true" />Feedback</Link> : onFeedback && <button type="button" className={styles.feedback} onClick={onFeedback} aria-controls="learning-dashboard-content"><MessageCircle size={16} aria-hidden="true" />Feedback</button>}
           </div>
-        </div>
+        </section>
       </div>
       <div className={styles.progressRail}>
         {progressSummary}

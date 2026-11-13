@@ -24,7 +24,7 @@ import { assignmentCalendarDate, assignmentDeadline, assignmentTimingLabel, assi
 import { dateLabel, deadlineDay, weekDates, type LearningActivity } from '@/lib/learning-week'
 import { moveDeadline, quizScheduleError, QUIZ_SCHEDULE_LABELS } from '@/lib/quiz-schedule'
 import { schoolDayKey } from '@/lib/school-day'
-import { nextStudentHomeTask } from '@/lib/student-home-banner'
+import { calendarBannerAssignment, nextStudentHomeTask, studentBannerAssignments } from '@/lib/student-home-banner'
 import homeStyles from './home.module.css'
 import s from './LearningWeek.module.css'
 import AssignmentXpBadge from '@/components/student/AssignmentXpBadge'
@@ -50,7 +50,8 @@ function DashboardContent({ children }: DashboardProps) {
   const { data: session } = useSession()
   const [view, setView] = useState<View>('week')
   const resourceScope = JSON.stringify([session?.user?.email ?? '', session?.experience ?? null, progress.classId, progress.studentId])
-  const data = useLearningWeek({ scope: resourceScope, calendar: !children && (view === 'week' || view === 'growth') })
+  const previewStudent = progress.data?.staff ? progress.data.student?.id : undefined
+  const data = useLearningWeek({ scope: resourceScope, studentId: previewStudent, calendar: !children && (view === 'week' || view === 'growth') })
   const router = useRouter()
   const staff = !!data.readings.data?.staff
   const courses = staff ? data.readings.data?.courses ?? [] : []
@@ -165,7 +166,17 @@ function DashboardContent({ children }: DashboardProps) {
     } catch(error) {setSaveError(true);setSaveMessage((error as Error).message)}
     finally {savingRef.current=false;setSaving(false)}
   }
-  const bannerTask = nextStudentHomeTask({ items: ordered, math: mathToday, today, now: new Date(now), loading: (staff ? classWork.loading && !classWork.data : data.sources.some(source => source.loading && !source.data)) || (data.math.loading && !data.math.data) || (warmupCalendar.loading && !warmupCalendar.data) || ((!staff || !!choiceClassId) && choices.loading && !choices.data), incomplete: ((!staff || !!choiceClassId) && choices.error) || warmupCalendar.error || failed.length > 0 || data.math.error || !!classWork.error || !!classWork.data?.warnings.length })
+  const bannerStaff = progress.data?.staff ?? staff
+  const bannerItems = studentBannerAssignments(bannerStaff ? [] : ordered, progress.data?.rows ?? [], today)
+  if (mathToday && (previewStudent || !bannerStaff)) bannerItems.push(calendarBannerAssignment(mathToday, today))
+  const checkingBanner = (bannerStaff ? progress.loading : data.sources.some(source => source.loading && !source.data) || choices.loading && !choices.data)
+    || (data.math.loading && !data.math.data) || (warmupCalendar.loading && !warmupCalendar.data)
+  const incompleteBanner = progress.error || !!progress.data?.warnings.length || (!bannerStaff && (failed.length > 0 || choices.error))
+    || warmupCalendar.error || data.math.error || (scheduledWarmups.includes(today) && !data.math.data?.item && !data.math.data?.alreadySubmitted)
+  const bannerTask = bannerStaff && progress.data && !previewStudent
+    ? { title: 'Choose a student', meta: 'Select a student in the gradebook to see their work.' }
+    : nextStudentHomeTask({ items: bannerItems, today,
+        loading: checkingBanner || (!progress.data && progress.loading), incomplete: incompleteBanner })
 
   const calendar = (choicePlanning?: ChoiceCalendarContent) => <LearningCalendar dates={dates} today={today} day={mobileDay} offset={weekOffset} items={requiredCalendarItems} selectedId={selectedId} mathForDay={mathForDay} scheduledWarmups={scheduledWarmups} onWarmup={(date,assigned)=>void setWarmupDate(date,assigned)} noSchoolDates={data.pace.data?.noSchoolDates ?? []} mathLoading={data.math.loading} mathError={data.math.error} editable={editable} saving={saving} onSelect={select} onDay={setDay} onWeek={moveWeek} onToday={showWeek} onMore={(date, lane) => manage('all', { date, lane })} onUnscheduled={() => manage('unscheduled')} onScheduleIssues={() => manage('schedule-issues')} onMove={(item, date) => void schedule(item, date)} choices={choicePlanning} />
 

@@ -1,15 +1,18 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { dailyZenReflection, ZEN_REFLECTIONS } from './daily-zen'
-import { homeDeadlineLabel, nextStudentHomeTask, STUDENT_HOME_THEMES } from './student-home-banner'
+import { calendarBannerAssignment, studentBannerAssignments, homeDeadlineLabel, nextStudentHomeTask, STUDENT_HOME_THEMES } from './student-home-banner'
 import { schoolDayKey } from './school-day'
 import type { StudentAssignment } from './student-dashboard'
+import type { StudentGradebookRow } from './student-gradebook'
 import type { LearningActivity } from './learning-week'
 
 const today = '2026-10-22'
 const assignment = (patch: Partial<StudentAssignment> = {}): StudentAssignment => ({ id: 'reading:r1', kind: 'reading', title: 'Investigating motion', href: '/readings/r1', due: '2026-10-25', complete: false, status: 'To do', action: 'Start reading', ...patch })
 const math: LearningActivity = { id: 'math:today', kind: 'math', title: 'Slope as a rate of change', href: '/dashboard/math-spine/warmup', due: null, complete: false, status: 'Ready to start', action: 'Start math warm-up' }
-const task = (items: StudentAssignment[], overrides: Partial<Parameters<typeof nextStudentHomeTask>[0]> = {}) => nextStudentHomeTask({ items, math, today, loading: false, incomplete: false, ...overrides })
+const task = (items: LearningActivity[], flags: { loading?: boolean; incomplete?: boolean } = {}) => nextStudentHomeTask({
+  items: items.map(item => calendarBannerAssignment(item, today)), today, loading: false, incomplete: false, ...flags,
+})
 
 test('the approved collection provides 365 short, distinct days with explicit provenance', () => {
   const days = Array.from({ length: 365 }, (_, i) => new Date(Date.UTC(2026, 0, 1) + i * 86400000).toISOString().slice(0, 10))
@@ -34,30 +37,52 @@ test('the saying changes at Eastern midnight, not UTC midnight or a DST clock ch
   assert.throws(() => dailyZenReflection('2026-02-30'), RangeError)
 })
 
-test('due work takes precedence over optional future work and the warm-up', () => {
-  const overdue = assignment({ due: '2026-10-21T23:00:00Z' })
-  assert.equal(task([overdue])?.href, '/readings/r1')
-  const quiz = assignment({ id: 'quiz:q1', kind: 'quiz', quizSchedule: 'vocabulary', due: '2026-10-22', href: '/quizzes/q1', action: 'Start quiz' })
-  assert.equal(task([quiz])?.kind, 'Vocabulary quiz')
-  assert.equal(task([quiz])?.label, 'Start quiz')
-  assert.equal(task([assignment({ due: '2026-10-25' })])?.kind, 'Math warm-up')
-  assert.equal(task([assignment()], { math: null })?.kind, 'Reading & response')
+test('today shows every unfinished assignment and its warm-up ahead of older and future work', () => {
+  const earlier = assignment({ due: '2026-10-20' })
+  const quiz = assignment({ id: 'quiz:q', due: today, title: 'Motion quiz', href: '/quizzes/q', action: 'Start quiz' })
+  const later = assignment({ due: '2026-10-23' })
+  const result = task([earlier, later, quiz, math])
+  assert.equal(result?.title, 'Motion quiz')
+  assert.deepEqual(result?.links?.map(link => [link.title, link.href]), [['Start quiz', '/quizzes/q'], [math.title, math.href]])
+  assert.equal(task([earlier, { ...quiz, complete: true }, math])?.title, math.title)
 })
 
-test('submitted, unavailable, and prerequisite-gated work keep their real actions', () => {
-  assert.equal(task([assignment({ complete: true })])?.kind, 'Math warm-up')
-  assert.equal(task([assignment()], { math: { ...math, complete: true } })?.href, '/readings/r1')
-  assert.equal(task([assignment()], { math: { ...math, available: false } })?.href, '/readings/r1')
-  const locked = assignment({ kind: 'quiz', status: 'Complete reading first', action: 'Open required reading', due: today })
-  assert.equal(task([locked])?.href, '/readings/r1')
-  assert.equal(task([locked])?.label, 'Open required reading')
+test('the catch-up suggestion opens the oldest outstanding activity with its real action destination', () => {
+  const overdue = assignment({ due: '2026-10-18', href: '/readings/prerequisite', status: 'Complete reading first' })
+  const result = task([assignment({ due: '2026-10-20' }), overdue, { ...math, complete: true }])
+  assert.equal(result?.title, 'Today’s work is complete')
+  assert.deepEqual(result?.links?.map(link => [link.title, link.href]), [['Get Caught Up', overdue.href]])
+  assert.equal(task([overdue])?.title, 'Nothing due today')
 })
 
-test('completion is only claimed after assignment sources finish successfully', () => {
+test('future work does not prevent congratulations, and partial data never promises completion', () => {
+  const done = assignment({ due: today, complete: true })
+  assert.match(task([assignment(), done])!.title, /Congratulations/)
+  assert.match(task([done])!.meta, /diligent/)
+  assert.equal(task([done])?.links, undefined)
   assert.equal(task([], { loading: true }), null)
-  assert.equal(task([], { math: null })?.href, '/lessons')
-  assert.equal(task([], { math: null, incomplete: true })?.meta, 'Some assignments couldn’t load')
-  assert.doesNotMatch(task([], { math: null, incomplete: true })!.meta, /caught up/)
+  assert.match(task([assignment({ due: '2026-10-18' })], { incomplete: true })!.title, /couldn’t load/)
+  const known = assignment({ due: today })
+  assert.equal(task([known], { incomplete: true })?.title, known.title)
+})
+
+test('an Eastern deadline stays in today’s list through the school day and closing windows honor midnight', () => {
+  const lateToday = assignment({ due: '2026-10-23T01:00:00Z' })
+  assert.equal(task([lateToday])?.title, lateToday.title)
+  const closing = assignment({ due: null, closesAt: '2026-10-23T04:00:00Z' })
+  assert.equal(task([closing])?.title, closing.title)
+})
+
+test('a teacher preview uses the selected learner’s recorded state and prerequisite links', () => {
+  const row: StudentGradebookRow = { key: 'quiz:q', title: 'Motion quiz', href: '/readings/pre', kind: 'quiz',
+    unitIds: [], termId: null, manualTerm: false, dueAt: today, archived: false, status: 'upcoming', statusLabel: 'Locked · finish reading',
+    prerequisites: [{id:'pre',title:'Reading'}], grade: null, feedback: null, releasedAt: null, submittedAt: null }
+  const items = studentBannerAssignments([], [row, {...row,key:'done',status:'pending'}, {...row,key:'ex',status:'excused'}, {...row,key:'gone',archived:true}],today)
+  assert.deepEqual(items.map(item => [item.id,item.complete]), [['quiz:q', false], ['done',true]])
+  assert.deepEqual(nextStudentHomeTask({items,today,loading:false,incomplete:false})?.links, [{id:'quiz:q',title:'Open prerequisite',href:row.href}])
+  const own = studentBannerAssignments([assignment({id:'quiz:q',due:today}), assignment({id:'other-course',due:today})],
+    [{...row,status:'pending'}, {...row,key:'presentation:p',title:'Exit ticket',status:'missing'}], today)
+  assert.deepEqual(own.map(item => [item.id,item.complete]), [['quiz:q',true], ['other-course',false], ['presentation:p',false]])
 })
 
 test('deadline labels preserve school dates and the correct Eastern time', () => {
@@ -75,10 +100,6 @@ test('each calendar month has a distinct seasonal palette', () => {
   assert.equal(STUDENT_HOME_THEMES[11].name, 'Christmas & holidays')
 })
 
-test('undated legacy assignments never become the next assignment', () => {
-  const old = assignment({ id: 'interactive:old', title: 'Day 2 · How Do We Talk About Motion', due: null, href: '/interactive-assignments/old' })
-  assert.equal(task([old], { math: null })?.title, 'No assignments on your calendar')
-  const dated = assignment({ due: '2026-10-25', href: '/readings/scheduled' })
-  assert.equal(task([old, dated], { math: null })?.href, '/readings/scheduled')
-  assert.equal(task([{...old,due:'invalid'}], { math: null })?.kind, 'Keep exploring')
+test('undated and invalid assignments do not enter the daily or catch-up queue', () => {
+  for (const due of [null, 'invalid']) assert.match(task([assignment({due})])!.title, /Congratulations/)
 })
