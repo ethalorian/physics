@@ -10,7 +10,7 @@ import { teachingHref } from '@/lib/teaching-navigation'
 import s from './LiveClassroom.module.css'
 
 export default function LiveClassroom({ classId, unitId }: { classId: string | null; unitId: string }) {
-  if (!classId) return <section className={s.empty}><NotebookPen size={32} /><h2>Get ready for class</h2><p>Choose a class above to open guided practice, observations, and group activities.</p></section>
+  if (!classId) return <section className={s.empty}><NotebookPen size={32} /><h2>Get ready for class</h2><p>Choose a class above to open presentation, observations, and group activities.</p></section>
   if (['auto', 'all', 'unmapped'].includes(unitId)) return <section className={s.empty}><h2>Choose a course unit</h2><p>Select a unit above to prepare for teaching.</p></section>
   return <Classroom key={classId + unitId} classId={classId} unitId={unitId} />
 }
@@ -23,7 +23,7 @@ function Classroom({ classId, unitId }: { classId: string; unitId: string }) {
     const abort = new AbortController()
     setLoading(true); setError('')
     fetch('/api/present/plans?course_id=' + encodeURIComponent(classId), { signal: abort.signal })
-      .then(async response => { const data = await response.json(); if (!response.ok) throw Error(data.error || 'Guided activities could not load.'); return data })
+      .then(async response => { const data = await response.json(); if (!response.ok) throw Error(data.error || 'Presentations could not load.'); return data })
       .then(data => { if (!abort.signal.aborted) setPlans(data.plans ?? []) })
       .catch(e => { if (!abort.signal.aborted) setError(e.message) })
       .finally(() => { if (!abort.signal.aborted) setLoading(false) })
@@ -35,19 +35,19 @@ function Classroom({ classId, unitId }: { classId: string; unitId: string }) {
   const teachingTool = selected ? classDayTool(selected.unit_id, selected.day) : null
   const context = new URLSearchParams({ class: classId, unit: unitId })
   return <div className={s.root}>
-    <div className={s.intro}><div><p className={s.eyebrow}>IN THE CLASSROOM</p><h2>Work through the problems together.</h2><p>Guide worksheet and practice problems, make student thinking visible, and build explanations together.</p></div><Link href={teachingHref('guide', classId, unitId, selected?.day)}><BookOpen size={17} /> Course guide <ArrowRight size={16} /></Link></div>
+    <div className={s.intro}><div><p className={s.eyebrow}>IN THE CLASSROOM</p><h2>Teach from the binder.</h2><p>Choose an opening, model the ideas, and give students time to draw, explain, and practice.</p></div><Link href={teachingHref('guide', classId, unitId, selected?.day)}><BookOpen size={17} /> Course guide <ArrowRight size={16} /></Link></div>
     <section className={s.presenter} aria-labelledby="guided-practice-title">
-      <div className={s.presenterCopy}><NotebookPen size={28} /><p className={s.eyebrow}>WORKSHEETS & PRACTICE</p><h3 id="guided-practice-title">Guided problem solving</h3><p>Work through worksheet and practice problems together. Pause for students to try a step, compare strategies, and explain their reasoning.</p></div>
+      <div className={s.presenterCopy}><NotebookPen size={28} /><p className={s.eyebrow}>TEACH THE LESSON</p><h3 id="guided-practice-title">Class presentation</h3><p>Start with the learning target and success criteria. Unit 1 opens the Foundation presentation with three openings, Sections A–E, worksheet grids, and a custom timer.</p></div>
       <div className={s.launch}>
         <label>Course day<select aria-label="Live classroom course day" disabled={loading || !days.length} value={selected?.day ?? ''} onChange={event => router.replace(teachingHref('live', classId, unitId, Number(event.target.value)), { scroll: false })}>{!days.length && <option value="">{loading ? 'Loading course days…' : 'No course days available'}</option>}{days.map(plan => <option key={plan.id} value={plan.day}>{plan.title.match(/^(Day|Meeting|Week|Session) /i) ? plan.title : `Day ${plan.day} · ${plan.title}`}{plan.deck ? '' : ' · guide only'}</option>)}</select></label>
         {error && <p role="alert">{error} <button onClick={() => setRetry(value => value + 1)}>Retry</button></p>}
         {!loading && <>
           <div className={s.actions}>
-            {selected?.deck && <Link className={s.primary} href={planTeachHref(unitId, selected.day, classId)}>Open guided activity <ArrowRight size={18} /></Link>}
+            {selected?.deck && <Link className={s.primary} href={planTeachHref(unitId, selected.day, classId)}>Open presentation <ArrowRight size={18} /></Link>}
             {teachingTool && <Link className={s.secondary} href={classDayToolHref(teachingTool.day, classId, teachingTool.unit)} aria-describedby="live-teaching-tool-name"><MonitorPlay size={18} aria-hidden="true" />Open teaching tool <ArrowRight size={18} aria-hidden="true" /></Link>}
           </div>
           {selected && <p id="live-teaching-tool-name" className={s.toolName}>{teachingTool ? `Teaching tool: ${teachingTool.title}` : 'No teaching tool is available for this course day.'}</p>}
-          {!selected?.deck && <p>{selected ? 'This day has no guided activity yet. Its teaching notes are in the course guide.' : 'Use the course guide, observations, and group activities for this unit.'}</p>}
+          {!selected?.deck && <p>{selected ? 'This day has no presentation yet. Its teaching notes are in the course guide.' : 'Use the course guide, observations, and group activities for this unit.'}</p>}
         </>}
         <Link href={teachingHref('guide', classId, unitId, selected?.day)}>Read the teaching notes</Link>
       </div>

@@ -1,3 +1,4 @@
+import { foundationScenesFromSrc } from '@/lib/foundation-presentation'
 import { type BlockDocument, type DeckBlock, type ContentBlock, type InlineQuestion } from '@/data/content-blocks'
 import { presentationBinding } from '@/lib/presentation-bindings'
 import { buildSlides } from '@/lib/present-auto-slides'
@@ -20,7 +21,7 @@ export interface LiveCommandState {
 }
 export interface CommandLesson { id: string; title: string; content_blocks: BlockDocument }
 export interface PresentationData { session: CommandSession | null; lesson: CommandLesson | null; deck: DeckBlock | null; plan?: {plan_unit_id: string; plan_day: number; plan_track: string; title: string} | null; answerKeys?: Record<string, string> }
-export interface CommandSlide { binding?: string | null; label: string; notes: string; anchor: string | null }
+export interface CommandSlide { next?: number; prev?: number; binding?: string | null; label: string; notes: string; anchor: string | null }
 
 export async function commandRequest<T>(url: string, options?: RequestInit): Promise<T> {
   const controller = new AbortController()
@@ -48,6 +49,8 @@ export async function commandSlides(lesson: CommandLesson, deck: DeckBlock | nul
   if (!deck) return autoCommandSlides(lesson.content_blocks)
   const url = new URL(resolveDeckSrc(deck.src), window.location.origin)
   if (url.origin !== window.location.origin) throw new Error('Remote slide control requires a deck hosted on this site.')
+  const foundation=foundationScenesFromSrc(url.href)
+  if(foundation)return foundation.map(scene=>({...scene,anchor:null}))
   const response = await fetch(url, { signal })
   if (!response.ok) throw new Error('Could not read slide titles. Retry loading the presentation.')
   const slides = deckSlidesFromHtml(await response.text())

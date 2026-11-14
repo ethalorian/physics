@@ -78,10 +78,11 @@ window.createFoundationWorksheetBoard = function (React) {
       h('g', {className:'ws-ink'}, lines.map(line), draft && line(draft,'in-progress')));
   }
 
-  return function WorksheetBoard({day, track, questionNumber}) {
+  return function WorksheetBoard({day, track, questionNumber, onQuestion}) {
     const questions = window.foundationWorksheetQuestions[day][track];
     const initial = questions.find(q => q.number === Number(questionNumber)) || questions[0];
     const [number,setNumber] = React.useState(initial.number);
+    React.useEffect(()=>{if(questions.some(q=>q.number===Number(questionNumber)))setNumber(Number(questionNumber));},[questionNumber,questions]);
     const [view,setView] = React.useState('split');
     const [paper,setPaper] = React.useState('squares');
     const [color,setColor] = React.useState('Pencil');
@@ -97,7 +98,7 @@ window.createFoundationWorksheetBoard = function (React) {
       h('div',{className:'ws-topline'},h('h1',null,'Worksheet board'),
         h('a',{href:pdfUrl,target:'_blank',rel:'noreferrer'},'Open printed worksheet ↗')),
       h('div',{className:'ws-toolbar'},
-        picker('Worksheet question',number,questions.map(q=>[q.number,'#'+q.number+' · '+q.title]),value=>setNumber(Number(value))),
+        picker('Worksheet question',number,questions.map(q=>[q.number,'#'+q.number+' · '+q.title]),value=>onQuestion?onQuestion(Number(value)):setNumber(Number(value))),
         picker('View',view,views,setView),
         view !== 'question' && picker('Paper',paper,papers,setPaper)),
       h('div',{className:'ws-content','data-view':view},

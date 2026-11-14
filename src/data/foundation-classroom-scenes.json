@@ -1,0 +1,5370 @@
+{
+  "1-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Mark the sightings",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Uncover the next sighting",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the telescope report",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · What does the sensor show?",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Make a prediction",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · What does the report support?",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Test the prediction",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "1-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Mark the sightings",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Uncover the next sighting",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the telescope report",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Find the useful details",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Fit a relationship",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Challenge the prediction",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Design the observation",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "2-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Trace the round trip",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Walk the number line",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the odometer",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · A walk along the hallway",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Count the whole path",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Connect start to finish",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · A complete trip back",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "2-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Trace the round trip",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Walk the number line",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the odometer",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Track a signed route",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Change the coordinate convention",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · A closed path",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Different paths, same endpoints",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "3-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Trace the slopes",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Walk the falling line",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Read a graph aloud",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Read the motion picture",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Find the rate",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · A pause",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Draw a walk with a pause",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "3-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Trace the slopes",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Walk the falling line",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Read a graph aloud",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Interpret all three intervals",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Compare two averages",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · A line that misses the origin",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Construct the graph",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "4-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Shade the signed area",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Reverse the moving cart",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the graph caption",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Steady does not mean stopped",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Move, then wait",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · One diagonal motion",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Make the components visible",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "4-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Shade the signed area",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Reverse the moving cart",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the graph caption",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Add signed areas",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Resolve a northeast velocity",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Change the reference axis",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Draw velocity and displacement",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "5-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Draw the prediction range",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Place the two end markers",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the forecast",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Start plus change",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Predict leftward motion",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Match the time units",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Read the range",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "5-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Draw the prediction range",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Place the two end markers",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the forecast",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Units and a starting position",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Independent bounds",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · A negative velocity",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Show how the bound grows",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "6-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Join the arrows",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Walk two legs",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Fix the route map",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Finish the diagram or calculation",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · A trip that doubles back",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Use a new scale",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Add two diagonal arrows",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "6-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Join the arrows",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Walk two legs",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Fix the route map",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Complete, then check",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · A different quadrant",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Choose the correct component signs",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · The angle is measured from north",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "7-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Mark the changing velocity",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Read the speed at each beep",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the acceleration claim",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · A remote-control car speeds up",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Slowing before a crosswalk",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Running around a bend",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: a robot's route",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "7-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Mark the changing velocity",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Read the speed at each beep",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the acceleration claim",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · A test car changes direction",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Braking for stopped traffic",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Can a tiny thruster matter?",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: return the robot to its start",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "8-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Shade the braking graph",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Count the braking distance",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the shortcut",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Choose the relationship",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Build final velocity",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Find the distance while speeding up",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "8-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Shade the braking graph",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Count the braking distance",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the shortcut",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Solve and check",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · No time given",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · At the top",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "9-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Draw the cart",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Release the cart",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Fix the hand-push claim",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Balanced while moving",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · After release",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · The bus stops",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "9-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Draw the cart",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Release the cart",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Fix the hand-push claim",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Infer the motion constraint",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Inertia in a braking bus",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Engine-off spacecraft",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "10-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Name the source",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Lift some of the load",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the support force",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Which object gets the force?",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Mass and weight",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · After the throw",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "10-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Name the source",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Lift some of the load",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the support force",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Inventory the interactions",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Mass and weight in two places",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Normal is not always weight",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "11-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Compare the loaded carts",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Load the cart",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the lab conclusion",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Read the sample pattern",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Plan a fair test",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Record measurements honestly",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "11-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Compare the loaded carts",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Load the cart",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the lab conclusion",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Test an inverse relationship",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · System boundary",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Measured slope and repetitions",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "12-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Plot the force trials",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Double the net force",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the lab setup",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Read a proportional pattern",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Keep mass constant",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Graph the pattern",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "12-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Plot the force trials",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Double the net force",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the lab setup",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Interpret a force graph",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Design the controlled trial",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Both variables change",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "13-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Compare the force arrows",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Change one pull",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Fix the force calculation",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Read the arrows",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Balanced but moving",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Compare two masses",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "13-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Compare the force arrows",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Change one pull",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Fix the force calculation",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Work from force arrows",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Find an unknown force",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · From braking to force",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "14-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Draw both receivers",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Press palms together",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the tug-of-war claim",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Name both forces",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Heavy and light carts",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Balanced or a pair?",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "14-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Draw both receivers",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Press palms together",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the tug-of-war claim",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Equal forces, different results",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Name actual partners",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Horse plus cart",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "15-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Build one force diagram",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Hold and lift",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the extra arrow",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · A book at rest",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · After the hand lets go",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · A falling ball",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "15-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Build one force diagram",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Hold and lift",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the extra arrow",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Motionless lamp",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · A rough ramp",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Critique the extra arrows",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "16-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Choose the ramp axes",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Tilt the ramp",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the downhill arrow",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Horizontal case",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Use a given ramp component",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Moving up, accelerating down",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "16-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Choose the ramp axes",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Tilt the ramp",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the downhill arrow",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Angled pull",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Frictionless ramp",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Oppose upward motion",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "17-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Mark the first slip",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Pull until it slides",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the friction claim",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Below the limit",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Crossing the limit",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Can friction help?",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "17-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Mark the first slip",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Pull until it slides",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the friction claim",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Actual versus maximum",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Sliding case",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Estimate from data",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "18-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Balance the sign",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Share the load",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the equilibrium claim",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Find the balance",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · A still lamp",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Parked or cruising?",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "18-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Balance the sign",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Share the load",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the equilibrium claim",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Two component balance",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Two-rope hanger",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Change angle",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "19-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Find the first bad mark",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Audit my board work",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check a velocity subtraction",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Position is not velocity",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Net force is not one force",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · New measurements or observations",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "19-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Find the first bad mark",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Audit my board work",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check a velocity subtraction",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Find the first bad step",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Check the axis",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Fresh recheck",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "20-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Connect the four quantities",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Run the motion in stages",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the position shortcut",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Start with forces",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Predict motion",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Explain a limit",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "20-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Connect the four quantities",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Run the motion in stages",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the position shortcut",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · End point versus displacement",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Add bounds",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · A new force",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "21-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Set the reference frame",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Move the origin",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the mission handoff",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Organize the givens",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Find the central end point",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Start the bounds",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "21-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Set the reference frame",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Move the origin",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the mission handoff",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Plan and represent",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Central prediction",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Propagate bounded inputs",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "22-cpa": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Mark what changed",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Open the second report",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the mission statement",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Show the prediction",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Write a public briefing",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Defend and revise",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ],
+  "22-honors": [
+    {
+      "id": "opening",
+      "label": "Learning target · choose one opening",
+      "section": -1,
+      "notes": "Read the target and success criteria. Choose Draw along, Show what happens, or Test a claim; use one opening.",
+      "next": 1,
+      "prev": 0
+    },
+    {
+      "id": "draw",
+      "label": "Mark what changed",
+      "section": -1,
+      "opening": "draw",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "demo",
+      "label": "Open the second report",
+      "section": -1,
+      "opening": "demo",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "claim",
+      "label": "Check the mission statement",
+      "section": -1,
+      "opening": "claim",
+      "notes": "Model this opening, then move to the individual check. Students add to their doodle page.",
+      "next": 4,
+      "prev": 0
+    },
+    {
+      "id": "check",
+      "label": "Individual check · did we meet the target?",
+      "section": -1,
+      "opening": "check",
+      "notes": "Give students time to draw or explain before revealing the reasoning.",
+      "next": 6,
+      "prev": 3
+    },
+    {
+      "id": "A",
+      "label": "A · vocabulary / all four Frayer models",
+      "section": 0,
+      "notes": "Choose the word students need. Complete selected boxes during practice; all four words have printed Frayer models.",
+      "next": 6,
+      "prev": 4
+    },
+    {
+      "id": "B",
+      "label": "B · doodle along",
+      "section": 1,
+      "notes": "Model the marks students add to Section B. Ask what each mark means before showing your reasoning.",
+      "next": 7,
+      "prev": 4
+    },
+    {
+      "id": "C",
+      "label": "C · draw and color the note figure",
+      "section": 2,
+      "notes": "Reveal one mark at a time and wait for student pencils. You can annotate the figure on the projector.",
+      "next": 8,
+      "prev": 6
+    },
+    {
+      "id": "D",
+      "label": "D · worked example",
+      "section": 3,
+      "notes": "Reveal the rule, work, and answer one step at a time. Then move to a worksheet question.",
+      "next": 9,
+      "prev": 7
+    },
+    {
+      "id": "worksheet-3",
+      "label": "Worksheet #3 · Graph central and bounded positions",
+      "section": -2,
+      "question": 3,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 10,
+      "prev": 8
+    },
+    {
+      "id": "worksheet-4",
+      "label": "Worksheet #4 · Support your answer for the public",
+      "section": -2,
+      "question": 4,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 11,
+      "prev": 9
+    },
+    {
+      "id": "worksheet-5",
+      "label": "Worksheet #5 · Peer defense and revision",
+      "section": -2,
+      "question": 5,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 12,
+      "prev": 10
+    },
+    {
+      "id": "worksheet-6",
+      "label": "Worksheet #6 · Review: connect an earlier idea",
+      "section": -2,
+      "question": 6,
+      "notes": "Select Question + grid, Question only, or Grid only. Use the paper selector for squares, axes, dots, or blank paper. Students work in their binders.",
+      "next": 13,
+      "prev": 11
+    },
+    {
+      "id": "E",
+      "label": "E · final meeting / team transfer",
+      "section": 4,
+      "notes": "Save this for the final meeting. Teams choose a job, make their call, then respond to the incoming update.",
+      "next": 13,
+      "prev": 12
+    }
+  ]
+}

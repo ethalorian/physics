@@ -4,6 +4,7 @@ import fs from 'node:fs'
 import { activitiesForDeck } from './deck-activities'
 import { deckForDay } from '@/data/lesson-decks'
 import { coursePlanAssessment } from './course-plan-assessment'
+import { foundationPresentation } from './foundation-presentation'
 import worksheetCatalog from '@/data/worksheet-deck-activities.json'
 
 const ledger=JSON.parse(fs.readFileSync('resources/worksheet-decks/coverage.json','utf8'))
@@ -12,6 +13,12 @@ test('worksheet presets match the current course deck and exact problem start, w
   const unit='unit-'+d.unit
   const activities=activitiesForDeck({plan_unit_id:unit,plan_day:d.day,plan_track:d.track},[])
   if(coursePlanAssessment(unit,d.day)){assert.equal(activities.length,0);continue}
+  if(d.unit===1){
+   const foundation=foundationPresentation(d.day,d.track)!
+   assert.equal(activities.length,4)
+   for(const a of activities){assert.equal(a.src,foundation.src);assert.equal(foundation.scenes[a.slide-1].question,Number(a.id.split('-').at(-1)))}
+   continue
+  }
   assert.equal(activities.length,d.questions.filter((q:{role:string})=>q.role!=='worked').length)
   for(const activity of activities){
    const q=d.questions.find((q:{promptSlide:number})=>q.promptSlide+1===activity.slide)

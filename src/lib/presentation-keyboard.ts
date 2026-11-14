@@ -11,3 +11,8 @@ export function presentationKey(key: string, current: number, total: number): nu
   else return null
   return Math.max(0, Math.min(total - 1, index))
 }
+
+/** Branching openings rejoin the individual check instead of teaching all three. */
+export function presentationStep(slides: {next?: number; prev?: number}[], current: number, direction: 'next'|'prev') {
+  return slides[current]?.[direction] ?? Math.max(0,Math.min(slides.length-1,current+(direction==='next'?1:-1)))
+}

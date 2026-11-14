@@ -16,12 +16,24 @@ import { useTimerLeft, fmtTimer } from '@/components/lessons/PresentLiveProvider
 import { teachingCue } from '@/lib/teaching-content'
 
 /** Same renderers and viewport as the board. Private teaching notes never enter this preview. */
-export default function LivePreview({ lesson, deck, live, tools, binding, presentationOnly=false }: { lesson: CommandLesson; deck: DeckBlock | null; live: LiveCommandState; tools: ToolsState | null; binding?: string | null; presentationOnly?:boolean }) {
+export default function LivePreview({ lesson, deck, live, tools, binding, presentationOnly=false, onNavigate }: { lesson: CommandLesson; deck: DeckBlock | null; live: LiveCommandState; tools: ToolsState | null; binding?: string | null; presentationOnly?:boolean; onNavigate?:(index:number)=>void }) {
   const host = useRef<HTMLDivElement>(null), frame = useRef<HTMLIFrameElement>(null)
   const [width, setWidth] = useState(640)
   useEffect(() => { const resize = new ResizeObserver(() => setWidth(host.current?.clientWidth ?? 640)); if (host.current) resize.observe(host.current); return () => resize.disconnect() }, [])
   const deckSrc = deck?.src
+  const navigate=useRef(onNavigate)
+  navigate.current=onNavigate
+  const navigationCleanup=useRef<(()=>void)|null>(null)
+  useEffect(()=>()=>navigationCleanup.current?.(),[])
   const sync = useCallback(() => { const win = frame.current?.contentWindow ?? null; deckGo(win, live.session.current_slide); deckPresenting(win, true) }, [live.session.current_slide])
+  const loaded=()=>{
+    navigationCleanup.current?.()
+    const doc=frame.current?.contentDocument
+    const move=(event:Event)=>{const index=(event as CustomEvent<{index:number}>).detail?.index;if(Number.isSafeInteger(index)&&index>=0)navigate.current?.(index)}
+    doc?.addEventListener('classroomnavigate',move)
+    navigationCleanup.current=()=>doc?.removeEventListener('classroomnavigate',move)
+    sync()
+  }
   useEffect(() => { if (!deckSrc) return; sync(); const timer = setInterval(sync, 500); return () => clearInterval(timer) }, [sync, deckSrc]) // late custom-element initialization
   const autoSlides = useMemo(() => buildSlides(lesson.title, lesson.content_blocks), [lesson.title, lesson.content_blocks])
   const selected = lesson.content_blocks.blocks.find(b => b.id === live.session.projected_block_id)
@@ -32,8 +44,8 @@ export default function LivePreview({ lesson, deck, live, tools, binding, presen
   const left = useTimerLeft(live.session.timer_ends_at)
   const seiEnabled = tools?.tools?.sei_enabled ?? false
   return <figure className="m-0 min-w-0">{!presentationOnly&&<figcaption className="mb-2 text-sm font-semibold">Classroom screen preview</figcaption>}<div ref={host} className="relative aspect-video overflow-hidden rounded-xl border bg-black" aria-label="Live classroom preview">
-    <div style={{position:'absolute',left:0,top:0,width:1600,height:900,transform:`scale(${width / 1600})`,transformOrigin:'top left',pointerEvents:'none'}} inert>
-      {live.session.blackout ? <div style={{width:1600,height:900,background:'#000'}} /> : live.lobby || pulse || question?.type === 'question' ? <TeachingActivity embedded lesson={lesson.title} live={live} pulse={pulse} question={commandQuestion(question)} discussion={Boolean(question && tools?.tools?.discussion_block_id === question.id)} origin={typeof location === 'undefined' ? '' : location.origin} referenceBlocks={lesson.content_blocks.blocks} seiEnabled={seiEnabled} /> : deck && !selected && !canonical ? <iframe ref={frame} title="Authored slide preview" src={resolveDeckSrc(deck.src)} onLoad={sync} tabIndex={-1} style={{width:1600,height:900,border:0}} /> : <TeachingStage original={block?.teachingTool?.kind==='physics-explainer'&&!!block.teachingTool.source} embedded lesson={lesson.title} mode={blockMode(block)} footer={teachingCue(block)}><TeachingToolContext.Provider value={{role:'projector',states:live.session.teaching_tool_state??{}}}>{block ? <TeachingBlockContent block={block} lessonId={lesson.id} referenceBlocks={lesson.content_blocks.blocks} seiEnabled={seiEnabled} /> : <h1 className="teach-headline">{lesson.title}</h1>}</TeachingToolContext.Provider></TeachingStage>}
+    <div style={{position:'absolute',left:0,top:0,width:1600,height:900,transform:`scale(${width / 1600})`,transformOrigin:'top left',pointerEvents:onNavigate?'auto':'none'}} inert={!onNavigate}>
+      {live.session.blackout ? <div style={{width:1600,height:900,background:'#000'}} /> : live.lobby || pulse || question?.type === 'question' ? <TeachingActivity embedded lesson={lesson.title} live={live} pulse={pulse} question={commandQuestion(question)} discussion={Boolean(question && tools?.tools?.discussion_block_id === question.id)} origin={typeof location === 'undefined' ? '' : location.origin} referenceBlocks={lesson.content_blocks.blocks} seiEnabled={seiEnabled} /> : deck && !selected && !canonical ? <iframe ref={frame} title="Authored slide preview" src={resolveDeckSrc(deck.src)} onLoad={loaded} tabIndex={-1} style={{width:1600,height:900,border:0}} /> : <TeachingStage original={block?.teachingTool?.kind==='physics-explainer'&&!!block.teachingTool.source} embedded lesson={lesson.title} mode={blockMode(block)} footer={teachingCue(block)}><TeachingToolContext.Provider value={{role:'projector',states:live.session.teaching_tool_state??{}}}>{block ? <TeachingBlockContent block={block} lessonId={lesson.id} referenceBlocks={lesson.content_blocks.blocks} seiEnabled={seiEnabled} /> : <h1 className="teach-headline">{lesson.title}</h1>}</TeachingToolContext.Provider></TeachingStage>}
       {!live.session.blackout && left !== null && <div style={{position:'absolute',right:24,bottom:20,padding:'12px 24px',borderRadius: 'var(--radius-lg)',background:'var(--background)',fontSize:56}}>{fmtTimer(left)}</div>}
     </div>
   </div></figure>

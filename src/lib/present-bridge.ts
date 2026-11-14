@@ -12,7 +12,7 @@
  * live layer never knows which kind of deck it is driving (P-1).
  */
 
-export interface DeckSlide { label: string; notes: string; anchor?: string | null; binding?: string | null }
+export interface DeckSlide { next?: number; prev?: number; label: string; notes: string; anchor?: string | null; binding?: string | null }
 export interface DeckSnapshot { index: number; total: number; slides: DeckSlide[] }
 
 interface StageLike extends HTMLElement { index: number; length: number; goTo(i: number): void; next(): void; prev(): void }
@@ -40,6 +40,8 @@ export function readDeck(win: Window | null): DeckSnapshot | null {
     anchor: el.getAttribute('data-section-anchor'),
     binding: el.getAttribute('data-lesson-block'),
     notes: el.getAttribute('data-speaker-notes') ?? '',
+    ...(el.hasAttribute('data-next')?{next:Number(el.getAttribute('data-next'))}:{}),
+    ...(el.hasAttribute('data-prev')?{prev:Number(el.getAttribute('data-prev'))}:{}),
   }))
   let index = typeof stage.index === 'number' ? stage.index : 0
   if (typeof stage.index !== 'number') {

@@ -73,7 +73,7 @@ window.createFoundationOpening = function (React, BinderFigure) {
       shown && result(entry.explain));
   }
 
-  return function Opening({day,track,binder,continueLesson,teacher,active}) {
+  return function Opening({day,track,binder,continueLesson,teacher,active,command,onNavigate}) {
     const lesson=window.foundationOpeningLessons[day];
     const [mode,setMode]=React.useState(null);
     const [checking,setChecking]=React.useState(false);
@@ -83,11 +83,19 @@ window.createFoundationOpening = function (React, BinderFigure) {
     React.useEffect(()=>{
       if(controlsUsed.current) heading.current?.focus({preventScroll:true});
     },[mode,checking]);
+    React.useEffect(()=>{
+      if(!command||command.section!==-1)return;
+      if(command.opening==='check'){setMode(old=>old||'draw');setChecking(true)}
+      else {setMode(command.opening||null);setChecking(false)}
+      setAnswer(false);
+    },[command]);
     function choose(next) {
+      if(onNavigate){onNavigate(next||'opening');return}
       controlsUsed.current=true;
       setMode(next); setChecking(false); setAnswer(false);
     }
     function check(next) {
+      if(onNavigate){onNavigate(next?'check':mode||'draw');return}
       controlsUsed.current=true;
       setChecking(next); setAnswer(false);
     }

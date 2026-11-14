@@ -3,6 +3,7 @@ import worksheetCatalog from '@/data/worksheet-deck-activities.json'
 import { coursePlanAssessment } from '@/lib/course-plan-assessment'
 import etfCatalog from '@/data/trades-etf-deck-activities.json'
 import type { PresentationIdentity } from '@/lib/course-plan-presentation'
+import { foundationPresentation } from '@/lib/foundation-presentation'
 
 export interface DeckActivity {
   id: string
@@ -28,6 +29,16 @@ export function activitiesForDeck(identity: PresentationIdentity, targets: { id:
   const unit = identity.plan_unit_id ?? (legacy ? `unit-${legacy[1]}` : project ? 'proj-1' : etf ? `trades-etf-${etf[1]}` : null)
   const day = identity.plan_day ?? (legacy ? Number(legacy[2]) : project ? 10 + Number(project[1]) : etf ? Number(etf[2]) : null)
   const track = identity.plan_track === 'honors' ? 'honors' : 'cpa'
+  if(unit==='unit-1' && day) {
+    const foundation=foundationPresentation(day,track)
+    if(foundation)return worksheetCatalog.filter(a=>a.unitId===unit&&a.day===day&&a.track===track).flatMap(a=>{
+      const number=Number(a.id.split('-').at(-1))
+      const index=foundation.scenes.findIndex(scene=>scene.question===number)
+      if(index<0)return []
+      const target=targets.find(t=>t.slug===a.targetSlug)
+      return [{...a,src:foundation.src,slide:index+1,kind:a.kind as DeckActivity['kind'],targetId:target?.id??null,targetStatement:target?.statement??null}]
+    })
+  }
   if (unit && day && coursePlanAssessment(unit,day)) return []
   const worksheet = worksheetCatalog.some(a => a.unitId === unit && a.day === day && a.track === track)
   const source = worksheet ? worksheetCatalog : unit?.startsWith('trades-etf-') ? etfCatalog : catalog

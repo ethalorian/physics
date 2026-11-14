@@ -1,3 +1,4 @@
+import { foundationPresentation } from '@/lib/foundation-presentation'
 import { physicsExplainerBlocks } from '@/data/explainers/physics-explainers'
 import type { BlockDocument } from '@/data/content-blocks'
 import unit1TeachingDecks from './unit1-teaching-decks.json'
@@ -94,11 +95,15 @@ const LESSON_DECKS: Record<string, Record<number, DeckRef>> = {
 
 export const DECK_HUBS: Record<string, DeckRef> = {
  ...Object.fromEntries([1,2,3,4].map(unit=>[`trades-etf-${unit}`,{src:`/decks/trades-etf/unit-${unit}.html`,title:`ETF Unit ${unit} — Teaching decks`}])),
- 'unit-1': { src: '/decks/unit-1-teaching/index.html', title: 'Unit 1 — Teaching decks' },
+ 'unit-1': { src: '/foundations/unit-1/projector.html', title: 'Unit 1 — Foundation presentations' },
  'unit-2': { src: '/decks/classroom/Unit 2 - All Lesson Decks.dc.html', title: 'Unit 2 — All Lesson Decks' },
 }
 
 export function deckForDay(unit: string, day: number, track?: string | null): DeckRef | null {
+ if(unit==='unit-1') {
+   const foundation=foundationPresentation(day,track)
+   if(foundation)return {src:foundation.src,title:`${track==='cpa'||track==='cpa-sei'||track==='mvp'?'CPA':'Honors'} · Day ${day} — ${unit1TeachingDecks.find(deck=>deck.day===day)?.title??'Foundation lesson'}`}
+ }
  const assessment = coursePlanAssessment(unit, day)
  if (assessment) return {src: assessment.src, title: `Day ${day} — ${assessment.title}`}
  const worksheet = worksheetDecks.find(deck => deck.unit === unit && deck.day === day && deck.track === (track === 'cpa' || track === 'cpa-sei' ? 'cpa' : 'honors'))
@@ -183,7 +188,7 @@ export function withLessonPresentationDeck(document: BlockDocument, lesson: {uni
  if (!ref) return document
  return {...document, blocks:[...document.blocks.map(block => {
    if (block.type !== 'deck' || block.id !== `deck-u1-d${String(day).padStart(2,'0')}`) return block
-   // Deliberately drop the old index map: new prompt/solution pairs change its meaning.
+   // Old worksheet slide indices do not apply to the Foundation presentation.
    const updated = {...block, ...ref, navigation:'manual' as const, note:`${track === 'cpa' ? 'CPA' : 'Honors'} teaching edition. Authored anchors link matching lesson sections; additional practice is completed in the notebook.`}
    delete updated.slideMap
    return updated

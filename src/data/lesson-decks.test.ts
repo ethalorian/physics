@@ -1,12 +1,13 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { foundationPresentation } from '@/lib/foundation-presentation'
 import { deckForDay, resolveDeckSrc, withLessonPresentationDeck } from './lesson-decks'
 import type { BlockDocument, DeckBlock } from './content-blocks'
 
 test('all 22 days resolve to distinct teaching decks, including shared legacy days', () => {
   const paths = Array.from({length:22}, (_, i) => deckForDay('unit-1', i+1)?.src)
   assert.equal(new Set(paths).size, 22)
-  assert.ok(paths.every(src => src?.startsWith('/api/teacher/worksheets/unit-1/')))
+  assert.ok(paths.every(src => src?.startsWith('/foundations/unit-1/projector.html?day=')))
   for (const day of [11,12,21,22]) {
     const slug = `u1-d${day}`
     const document: BlockDocument = {schemaVersion:1,blocks:[
@@ -45,7 +46,7 @@ test('every CPA day has a separate deck; class track changes only the canonical 
     const doc:BlockDocument={schemaVersion:1,blocks:[{type:'deck',id:`deck-${slug}`,src:'/decks/old.html',title:'Old',slideMap:[{slide:3,section:2}]},evidence]}
     const cpa=withLessonPresentationDeck(doc,{unit_id:'unit-1',slug,lesson_number:day},'cpa')
     const honors=withLessonPresentationDeck(doc,{unit_id:'unit-1',slug,lesson_number:day},'honors')
-    assert.equal((cpa.blocks[0] as DeckBlock).src,`/api/teacher/worksheets/unit-1/${day}/presentation?track=cpa`)
+    assert.equal((cpa.blocks[0] as DeckBlock).src,foundationPresentation(day,'cpa')?.src)
     assert.equal((honors.blocks[0] as DeckBlock).src,deckForDay('unit-1',day)?.src)
     assert.equal((cpa.blocks[0] as DeckBlock).slideMap,undefined)
     assert.equal(cpa.blocks[1],evidence)
@@ -62,7 +63,7 @@ test('all 137 course-plan days have the correct practice or assessment presentat
  for(const [i,count] of counts.entries()) for(let day=1;day<=count;day++) for(const track of ['cpa','honors']){
  const deck=deckForDay('unit-'+(i+1),day,track);
  const assessment=(i>=1&&i<=6&&day>=count-1)||(i===7&&day===9);
- assert.equal(deck?.src,assessment?`/decks/course-assessments/unit-${i+1}-day-${day}.html`:`/api/teacher/worksheets/unit-${i+1}/${day}/presentation?track=${track}`);
+ assert.equal(deck?.src,i===0?foundationPresentation(day,track)?.src:assessment?`/decks/course-assessments/unit-${i+1}-day-${day}.html`:`/api/teacher/worksheets/unit-${i+1}/${day}/presentation?track=${track}`);
  assert.equal(deckForDay('unit-'+(i+1),day,track+'-sei')?.src,deck?.src);
  }
 });
