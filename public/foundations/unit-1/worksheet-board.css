@@ -1,0 +1,45 @@
+.worksheet-board { padding:1.4cqw 0 1cqw; color:var(--ink); --foreground:#22233a; --primary:#4b4ba8; --card:#fff; --figure-grid:#c6cbd9; --muted-foreground:#515466; }
+.ws-topline,.ws-toolbar,.ws-tools {display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.ws-topline {justify-content:space-between;margin-bottom:.7rem}
+.worksheet-board .ws-topline h1 {margin:0;font:600 clamp(2rem,3.25cqw,3.2rem)/1.1 var(--serif)}
+.ws-topline a {color:var(--indigo);text-underline-offset:.18em}
+.ws-toolbar {align-items:end;margin:0 0 1.1rem;}
+.ws-field {display:grid;gap:.28rem;max-width:100%;font:600 .82rem/1.4 var(--mono);color:var(--ink)}
+.ws-field select {background:#fff;color:var(--ink);max-width:100%;font:400 clamp(.88rem,1.1cqw,1.12rem)/1.25 var(--mono)}
+.ws-content {display:grid;align-items:start;gap:clamp(.8rem,1.6cqw,1.7rem)}
+.ws-content[data-view=split] {grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+.ws-question {background:white;border:1px solid var(--line);padding:clamp(.9rem,1.45cqw,1.5rem);border-top:3px solid var(--indigo);min-width:0;--muted:#efedf6}
+.ws-question h2 {font:600 clamp(1.55rem,2.6cqw,2.9rem)/1.09 var(--serif);margin:0 0 .5em}
+.ws-prompt {font:400 clamp(1.1rem,1.7cqw,1.85rem)/1.34 var(--serif);margin:.5em 0}
+.ws-content[data-view=question] .ws-question {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);column-gap:2rem}
+.ws-content[data-view=question] .ws-prompt {grid-column:1}
+.ws-content[data-view=question] figure {grid-column:2;grid-row:1/span 2}
+.ws-content[data-view=question] .ws-question:not(:has(figure)) {display:block}
+.ws-question figure {margin:.7rem 0 0;min-width:0}
+.ws-model svg {display:block;margin:auto;width:100%;height:auto;max-height:32cqw}
+.ws-question figcaption {font:400 clamp(.95rem,1.3cqw,1.35rem)/1.35 var(--serif);margin-top:.45em;color:var(--muted-foreground)}
+.ws-model .figure-line {fill:none;stroke:var(--foreground);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ws-model .figure-line.accent {stroke:var(--primary);stroke-width:3}
+.ws-model .figure-line.dashed {stroke-dasharray:5 5;stroke:var(--muted-foreground)}
+.ws-model .figure-object {fill:white;stroke:var(--foreground);stroke-width:2}
+.ws-model .figure-label {font:18px Arial,sans-serif;fill:var(--foreground)}
+.ws-model .figure-label.small {font-size:14px}
+.ws-model .grid path {stroke:var(--figure-grid);stroke-width:.7;fill:none}
+.ws-model .grid text {font:13px Arial,sans-serif;fill:var(--muted-foreground)}
+.ws-model .worksheet-table {overflow-x:auto}
+.ws-model table {border-collapse:collapse;width:100%}
+.ws-model th,.ws-model td {padding:.32em .5em;text-align:left;border:1px solid var(--line);font-size:clamp(.95rem,1.4cqw,1.5rem)}
+.ws-model th {background:#eeedf8}
+.ws-paper {width:100%;height:auto;border:1px solid #aab3c8;display:block;touch-action:none;background:white;cursor:crosshair}
+.ws-content[data-view=grid] .ws-drawing {width:min(100%,140vh);margin:auto}
+.ws-paper:focus-visible {outline:3px solid var(--indigo)}
+.ws-axes text {font:15px var(--mono);fill:#454d63}
+.ws-tools {margin:.55rem 0 0;gap:.6rem}
+.ws-tools label {display:flex;align-items:center;gap:.4rem}
+@container(max-width:700px){
+  .ws-content[data-view=split],.ws-content[data-view=question] .ws-question {display:block}
+  .ws-content[data-view=split] .ws-drawing {margin-top:.8rem}
+  .ws-model svg {max-height:52cqw}
+  .ws-toolbar {gap:.55rem}
+}
+.top button[aria-pressed=true] {background:#eeedf8;color:#292940;border-color:#a8a5c6}

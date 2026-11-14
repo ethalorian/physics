@@ -73,7 +73,7 @@ window.createFoundationOpening = function (React, BinderFigure) {
       shown && result(entry.explain));
   }
 
-  return function Opening({day,track,binder,continueLesson,teacher}) {
+  return function Opening({day,track,binder,continueLesson,teacher,active}) {
     const lesson=window.foundationOpeningLessons[day];
     const [mode,setMode]=React.useState(null);
     const [checking,setChecking]=React.useState(false);
@@ -93,13 +93,13 @@ window.createFoundationOpening = function (React, BinderFigure) {
     }
     React.useEffect(()=>{
       function key(e) {
-        if(e.defaultPrevented||e.altKey||e.ctrlKey||e.metaKey||e.target?.matches('input,select,textarea')||!mode)return;
+        if(!active||e.defaultPrevented||e.altKey||e.ctrlKey||e.metaKey||e.target?.matches('input,select,textarea')||!mode)return;
         if(e.key==='ArrowRight'){e.preventDefault();if(checking)continueLesson();else check(true);}
         if(e.key==='ArrowLeft'){e.preventDefault();if(checking)check(false);else choose(null);}
       }
       window.addEventListener('keydown',key);
       return ()=>window.removeEventListener('keydown',key);
-    },[mode,checking,continueLesson]);
+    },[mode,checking,continueLesson,active]);
     const entry=mode && lesson[mode];
     const title=checking?'Your turn':entry?entry.title:'Choose your opening';
     const focusWord=binder.words.find(word=>word.term===binder.focus);
