@@ -4,10 +4,15 @@ import { dailyZenReflection, ZEN_REFLECTIONS } from './daily-zen'
 import { calendarBannerAssignment, studentBannerAssignments, homeDeadlineLabel, nextStudentHomeTask, STUDENT_HOME_THEMES } from './student-home-banner'
 import { schoolDayKey } from './school-day'
 import type { StudentAssignment } from './student-dashboard'
-import type { StudentGradebookRow } from './student-gradebook'
+import type { StudentBannerCourse, StudentBannerRow, StudentGradebookRow } from './student-gradebook'
 import type { LearningActivity } from './learning-week'
 
 const today = '2026-10-22'
+const now = new Date(today + 'T16:00:00Z')
+const row = (patch: Partial<StudentBannerRow> = {}): StudentBannerRow => ({
+  key: 'quiz:q', title: 'Motion quiz', dueAt: '2026-10-19', archived: false,
+  status: 'missing', statusLabel: 'Missing', href: '/quizzes/q', ...patch,
+})
 const assignment = (patch: Partial<StudentAssignment> = {}): StudentAssignment => ({ id: 'reading:r1', kind: 'reading', title: 'Investigating motion', href: '/readings/r1', due: '2026-10-25', complete: false, status: 'To do', action: 'Start reading', ...patch })
 const math: LearningActivity = { id: 'math:today', kind: 'math', title: 'Slope as a rate of change', href: '/dashboard/math-spine/warmup', due: null, complete: false, status: 'Ready to start', action: 'Start math warm-up' }
 const task = (items: LearningActivity[], flags: { loading?: boolean; incomplete?: boolean } = {}) => nextStudentHomeTask({
@@ -48,11 +53,34 @@ test('today shows every unfinished assignment and its warm-up ahead of older and
 })
 
 test('the catch-up suggestion opens the oldest outstanding activity with its real action destination', () => {
-  const overdue = assignment({ due: '2026-10-18', href: '/readings/prerequisite', status: 'Complete reading first' })
-  const result = task([assignment({ due: '2026-10-20' }), overdue, { ...math, complete: true }])
+  const overdue = row({ key: 'quiz:old', dueAt: '2026-10-18', href: '/readings/prerequisite', prerequisites: [{id:'pre', title:'Required reading'}] })
+  const courses = [{courseId:'physics', rows:[row(), overdue]}]
+  const items = studentBannerAssignments([{ ...math, complete: true }], courses, today, now)
+  const result = nextStudentHomeTask({items, today, loading:false, incomplete:false})
   assert.equal(result?.title, 'Today’s work is complete')
   assert.deepEqual(result?.links?.map(link => [link.title, link.href]), [['Get Caught Up', overdue.href]])
-  assert.equal(task([overdue])?.title, 'Nothing due today')
+  assert.equal(nextStudentHomeTask({items:items.filter(item => item.day !== today), today, loading:false, incomplete:false})?.title, 'Nothing due today')
+})
+
+test('catch-up requires an outstanding gradebook row, even when the calendar says past due', () => {
+  const calendar = [assignment({id:'review:optional', due:null, closesAt:'2026-10-01'}),
+    assignment({id:'reading:removed', due:'2026-10-02'}), assignment({id:'quiz:q', due:'2026-10-04'})]
+  const choose = (courses: StudentBannerCourse[]) => nextStudentHomeTask({
+    items:studentBannerAssignments(calendar, courses, today, now), today, loading:false, incomplete:false,
+  })
+  for (const override of [{homeworkWaived:true}, {status:'revise' as const, homeworkWaived:true}, {status:'pending' as const},
+    {status:'graded' as const}, {status:'completed' as const}, {status:'excused' as const}, {archived:true},
+    {dueAt:null}, {dueAt:'2026-10-25'}]) {
+    assert.match(choose([{courseId:'A',rows:[row(override)]}])!.title, /Congratulations/)
+  }
+  const required = row({key:'interactive:lab', title:'Acceleration Studio', status:'in_progress', href:'/interactive-assignments/lab'})
+  const waived = row({key:'reflection:chapter',homeworkWaived:true})
+  const shared = row({key:'lesson:chapter',title:'Chapter response',dueAt:'2026-10-18',href:'/lessons/chapter'})
+  for (const courses of [[{courseId:'B',rows:[required,shared]}, {courseId:'A',rows:[waived]}],
+    [{courseId:'A',rows:[waived]}, {courseId:'B',rows:[required,shared]}]]) {
+    assert.equal(choose(courses)?.links?.[0].href, shared.href)
+  }
+  assert.equal(choose([{courseId:'A',rows:[waived,required]}])?.links?.[0].href,required.href)
 })
 
 test('future work does not prevent congratulations, and partial data never promises completion', () => {
@@ -77,11 +105,11 @@ test('a teacher preview uses the selected learner’s recorded state and prerequ
   const row: StudentGradebookRow = { key: 'quiz:q', title: 'Motion quiz', href: '/readings/pre', kind: 'quiz',
     unitIds: [], termId: null, manualTerm: false, dueAt: today, archived: false, status: 'upcoming', statusLabel: 'Locked · finish reading',
     prerequisites: [{id:'pre',title:'Reading'}], grade: null, feedback: null, releasedAt: null, submittedAt: null }
-  const items = studentBannerAssignments([], [row, {...row,key:'done',status:'pending'}, {...row,key:'ex',status:'excused'}, {...row,key:'gone',archived:true}],today)
+  const items = studentBannerAssignments([], [{courseId:'A',rows:[row, {...row,key:'done',status:'pending'}, {...row,key:'ex',status:'excused'}, {...row,key:'gone',archived:true}]}],today,now)
   assert.deepEqual(items.map(item => [item.id,item.complete]), [['quiz:q', false], ['done',true]])
   assert.deepEqual(nextStudentHomeTask({items,today,loading:false,incomplete:false})?.links, [{id:'quiz:q',title:'Open prerequisite',href:row.href}])
   const own = studentBannerAssignments([assignment({id:'quiz:q',due:today}), assignment({id:'other-course',due:today})],
-    [{...row,status:'pending'}, {...row,key:'presentation:p',title:'Exit ticket',status:'missing'}], today)
+    [{courseId:'A',rows:[{...row,status:'pending'}, {...row,key:'presentation:p',title:'Exit ticket',status:'missing'}]}], today, now)
   assert.deepEqual(own.map(item => [item.id,item.complete]), [['quiz:q',true], ['other-course',false], ['presentation:p',false]])
 })
 

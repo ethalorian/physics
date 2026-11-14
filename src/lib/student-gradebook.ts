@@ -12,7 +12,10 @@ export type StudentWorkStatus = 'missing' | 'pending' | 'revise' | 'graded' | 'c
 export const STUDENT_STATUS_LABELS: Record<StudentWorkStatus, string> = { missing: 'Missing', pending: 'Awaiting feedback', revise: 'Revise', graded: 'Graded', completed: 'Completed', in_progress: 'In progress', upcoming: 'To do', excused: 'Excused' }
 export type StudentGradebookRow = { homeworkWaived?: boolean; key: string; title: string; assignmentLabel?: string; kind: ResultKind; unitIds: string[]; dueAt: string | null; archived: boolean; termId: string | null; manualTerm: boolean; pairedKey?: string; prerequisites?: { id: string; title: string }[]; href: string; hasReleasedResult?: boolean; status: StudentWorkStatus; statusLabel: string; manualLetter?: string; grade: Omit<Grade, 'version'> | null; feedback: string | null; releasedAt: string | null; submittedAt: string | null }
 export type StudentLearningTarget = { id: string; statement: string; unitId: string; value: number | null; observations: { id: string; level: number; at: string; source: string }[] }
+export type StudentBannerRow = Pick<StudentGradebookRow, 'key' | 'title' | 'dueAt' | 'archived' | 'status' | 'statusLabel' | 'homeworkWaived' | 'prerequisites' | 'href'>
+export type StudentBannerCourse = { courseId: string; rows: StudentBannerRow[] }
 export type StudentProgressData = {
+  otherBannerCourses?: StudentBannerCourse[]
   calendarWaivers?: Record<string, string[]>
   staff: boolean; courseId: string | null; student: { id: string; name: string } | null
   courses: { id: string; name: string; section: string | null }[]; roster: { id: string; name: string }[]
@@ -76,14 +79,15 @@ export function recentStudentResults(rows: StudentGradebookRow[]) {
   return rows.filter(row => row.status !== 'excused' && (row.hasReleasedResult || row.grade || row.feedback))
     .sort((a, b) => date(b).localeCompare(date(a)))
 }
-export function isStudentHomework(row: StudentGradebookRow, now = new Date()): boolean {
+type StudentWorkState = Pick<StudentGradebookRow, 'archived' | 'status' | 'homeworkWaived' | 'dueAt'>
+export function isStudentHomework(row: StudentWorkState, now = new Date()): boolean {
   return isAssignedStudentWork(row) && !studentWorkComplete(row) && studentAssignmentPastDue(row.dueAt, now)
 }
-export function isAssignedStudentWork(row: StudentGradebookRow): boolean {
+export function isAssignedStudentWork(row: StudentWorkState): boolean {
   return !row.archived && row.status !== 'excused' && (!row.homeworkWaived || studentWorkComplete(row))
     && !!row.dueAt && assignmentTermDay(row.dueAt) !== null
 }
-export function studentWorkComplete(row: StudentGradebookRow): boolean {
+export function studentWorkComplete(row: Pick<StudentWorkState, 'status' | 'homeworkWaived'>): boolean {
   return ['pending', 'graded', 'completed'].includes(row.status) || (row.homeworkWaived === true && row.status === 'revise')
 }
 /** Deadline changes are reflected while the page stays open, without changing saved work. */

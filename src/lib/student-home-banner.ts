@@ -1,7 +1,8 @@
 import { deadlineDay, type LearningActivity } from './learning-week'
 import { assignmentCalendarDate, assignmentTimingLabel } from './student-dashboard'
 import { SCHOOL_TZ } from './school-day'
-import { isAssignedStudentWork, studentWorkComplete, type StudentGradebookRow } from './student-gradebook'
+import { isAssignedStudentWork, isStudentHomework, studentWorkComplete, type StudentBannerCourse, type StudentBannerRow } from './student-gradebook'
+import { homeworkKey } from './homework-waivers'
 
 export interface BannerAssignment {
   id: string
@@ -11,6 +12,7 @@ export interface BannerAssignment {
   href: string
   label: string
   complete: boolean
+  catchUp: boolean
 }
 
 export interface StudentHomeTask {
@@ -35,29 +37,35 @@ export function calendarBannerAssignment(item: LearningActivity, today: string):
   const timing = item.prerequisiteText || (item.status === 'Complete reading first' ? 'Complete the required reading first' : '')
     || (item.closesAt && !item.due ? assignmentTimingLabel(item) : homeDeadlineLabel(item.due, today))
   return { id: item.id, title: item.title, day: item.kind === 'math' ? today : deadlineDay(due),
-    timing: item.kind === 'math' ? 'Math warm-up' : timing, href: item.href, label: item.action, complete: item.complete }
+    timing: item.kind === 'math' ? 'Math warm-up' : timing, href: item.href, label: item.action, complete: item.complete, catchUp: false }
 }
 
-function gradebookBannerAssignment(row: StudentGradebookRow, today: string): BannerAssignment {
+function gradebookBannerAssignment(row: StudentBannerRow, today: string, now: Date): BannerAssignment {
   return {
     id: row.key, title: row.title, day: deadlineDay(row.dueAt), complete: studentWorkComplete(row),
-    href: row.href, label: row.prerequisites?.length ? 'Open prerequisite' : 'Open assignment',
+    catchUp: isStudentHomework(row, now), href: row.href, label: row.prerequisites?.length ? 'Open prerequisite' : 'Open assignment',
     timing: row.prerequisites?.length ? row.statusLabel : homeDeadlineLabel(row.dueAt, today),
   }
 }
 
-/** Use the ledger for recorded completion and the calendar for live assignment links and additional enrollments. */
-export function studentBannerAssignments(calendar: LearningActivity[], rows: StudentGradebookRow[], today: string) {
-  const key = (id: string) => id.replace(/^(reflection|video):/, 'lesson:')
-  const items = new Map(calendar.map(item => [key(item.id), calendarBannerAssignment(item, today)]))
-  for (const row of rows) {
-    const id = key(row.key)
-    // A review may have a closing window without a gradebook deadline.
-    if (row.archived || row.homeworkWaived || row.status === 'excused') { items.delete(id); continue }
-    if (!isAssignedStudentWork(row)) continue
-    const item = items.get(id)
-    if (item) item.complete = studentWorkComplete(row)
-    else items.set(id, gradebookBannerAssignment(row, today))
+/** The calendar supplies today's activities. Only a student's course ledger can add catch-up work. */
+export function studentBannerAssignments(calendar: LearningActivity[], courses: StudentBannerCourse[], today: string, now: Date) {
+  function key(id: string, courseId?: string) {
+    const work = homeworkKey(id)
+    return work.startsWith('lesson:') ? (courseId ?? '') + '/' + work : work
+  }
+  const items = new Map(calendar.map(item => [key(item.id, item.courseId), calendarBannerAssignment(item, today)]))
+  for (const { courseId, rows } of courses) {
+    for (const row of rows) {
+      const id = key(row.key, courseId)
+      if (row.archived || row.homeworkWaived || row.status === 'excused') { items.delete(id); continue }
+      if (!isAssignedStudentWork(row)) continue
+      const recorded = { ...gradebookBannerAssignment(row, today, now), id }
+      const live = items.get(id)
+      // Keep today's action wording. For overdue work, use the verified due date and prerequisite.
+      items.set(id, live && recorded.day === today && live.day === today && !row.prerequisites?.length
+        ? { ...live, id, complete: recorded.complete } : recorded)
+    }
   }
   return [...items.values()]
 }
@@ -77,8 +85,8 @@ export function nextStudentHomeTask({ items, today, loading, incomplete }: {
       links: [{ id: first.id, title: first.label, href: first.href }, ...rest.map(item => ({ id: item.id, title: item.title, href: item.href }))] }
   }
   if (incomplete) return { title: 'Some assignments couldn’t load', meta: 'Refresh the page to check your work.' }
-  const earlier = items.filter(item => !item.complete && item.day && item.day < today)
-    .sort((a, b) => a.day!.localeCompare(b.day!))[0]
+  const earlier = items.filter(item => item.catchUp && !item.complete && item.day && item.day < today)
+    .sort((a, b) => a.day!.localeCompare(b.day!) || a.title.localeCompare(b.title) || a.id.localeCompare(b.id))[0]
   if (earlier) {
     return { title: todays.length ? 'Today’s work is complete' : 'Nothing due today',
       meta: earlier.title, links: [{ id: earlier.id, title: 'Get Caught Up', href: earlier.href }] }

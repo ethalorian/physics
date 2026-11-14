@@ -31,7 +31,7 @@ test('returned feedback and grade history survive, with no catch-up action or la
   assert.equal(studentHomeworkTotal([waivedHomeworkRow({...row,submittedAt:'2026-10-21'},keys)],'all',now).completed,1)
   assert.equal(studentHomeworkTotal([{...revision,key:'reading:still-required',homeworkWaived:false}],'all',now).completed,0)
   const items = studentBannerAssignments([{ id:revision.key, kind:'reading', title:'Motion', due:row.dueAt,
-    href:revision.href,complete:false,status:'Revise',action:'Open' }],[revision],'2026-11-13')
+    href:revision.href,complete:false,status:'Revise',action:'Open' }],[{courseId:'A',rows:[revision]}],'2026-11-13',now)
   assert.match(nextStudentHomeTask({items,today:'2026-11-13',loading:false,incomplete:false})!.title,/Congratulations/)
 })
 test('a shared lesson is still required in any other course; the worksheet never waives its quiz', () => {

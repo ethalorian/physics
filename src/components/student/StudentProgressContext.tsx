@@ -22,11 +22,12 @@ type ProgressContext = {
 export const StudentProgressContext = createContext<ProgressContext | null>(null)
 
 /** The banner and assignment record share one request and one grading scope. */
-export function StudentProgressProvider({ children, classId, studentId, initialTerm, calendarXp = false }: {
+export function StudentProgressProvider({ children, classId, studentId, initialTerm, calendarXp = false, banner = false }: {
   children: ReactNode
   classId?: string | null
   studentId?: string
   calendarXp?: boolean
+  banner?: boolean
   initialTerm?: string
 }) {
   const [course, setCourse] = useState(classId ?? '')
@@ -34,6 +35,7 @@ export function StudentProgressProvider({ children, classId, studentId, initialT
   const [termChoice, setTerm] = useState<string | null>(initialTerm ?? null)
   const [now, setNow] = useState(Date.now)
   const params = new URLSearchParams()
+  if (banner) params.set('banner', '1')
   if (calendarXp) params.set('calendarXp', '1')
   if (course) params.set('class', course)
   if (student) params.set('student', student)

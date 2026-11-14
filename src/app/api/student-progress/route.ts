@@ -8,10 +8,40 @@ import { loadAssessmentResults } from '@/lib/assessment-results/server'
 import { byIds, read } from '@/lib/assessment-results/queries'
 import { loadGradingSettings } from '@/lib/grading-terms-server'
 import { loadStudentAttendance } from '@/lib/meaningful-attendance-server'
-import { emptyGradingSettings } from '@/lib/grading-terms'
+import { emptyGradingSettings, type GradingSettings } from '@/lib/grading-terms'
+import type { ResultsData } from '@/lib/assessment-results/types'
+import { lockedReadingQuizPrerequisites } from '@/lib/reading-quiz-access'
 import { studentGradebookRows, studentLabEntries, studentTransferEntries, type StudentProgressData } from '@/lib/student-gradebook'
 import { decayingAverage } from '@/data/curriculum-types'
 import { missingDailyLessons, missingReviewFoundations } from '@/lib/interactive-assignments/foundations/sequence-server'
+
+async function courseRows(results: ResultsData, userId: string, settings: GradingSettings, waivers: Awaited<ReturnType<typeof courseHomeworkWaivers>>, warnings: StudentProgressData['warnings']) {
+  const lessonIds = [...new Set(results.activities.filter(a => ['lesson', 'video', 'reflection'].includes(a.kind)).map(a => a.sourceId))]
+  let slugs = new Map<string, string>()
+  try { slugs = new Map((await byIds<{ id: string; slug: string }>('lessons', 'id,slug', 'id', lessonIds, ['id'])).map(l => [l.id, l.slug])) }
+  catch { warnings.push({ source: 'Assignment links', message: 'Some lesson links could not load. Use your class calendar to open those lessons.' }) }
+  const keys = new Set(waivers.filter(w => w.course_id === results.courseId).map(w => w.work_key))
+  const rows = studentGradebookRows(results.activities, userId, settings, slugs).map(row => waivedHomeworkRow(row, keys))
+  const quizIds = rows.filter(row => row.kind === 'quiz' && !row.archived).map(row => row.key.slice(5))
+  try {
+    const [readings, missing, reviews] = await Promise.all([
+      lockedReadingQuizPrerequisites(quizIds, userId), missingDailyLessons(quizIds, userId),
+      missingReviewFoundations(rows.filter(row => ['interactive','simulation'].includes(row.kind) && !row.archived).map(row => row.key.replace(/^interactive:/, '')), userId),
+    ])
+    return rows.map(row => {
+      const reading = row.kind === 'quiz' && readings.get(row.key.slice(5))
+      if (reading) {
+        const title = rows.find(r => r.key === 'reading:' + reading)?.title ?? 'Required reading'
+        return { ...row, prerequisites: [{id: reading, title}], href: '/readings/' + reading, statusLabel: 'Locked · finish reading' }
+      }
+      const prerequisites = [...missing.filter(item => 'quiz:' + item.quiz_id === row.key), ...reviews.filter(item => 'interactive:' + item.assignment_id === row.key)]
+      return prerequisites.length ? { ...row, prerequisites: prerequisites.map(({ id, title }) => ({ id, title })), href: '/interactive-assignments/' + prerequisites[0].id, statusLabel: 'Locked · finish ' + prerequisites.map(item => item.role).join(' and ') } : row
+    })
+  } catch {
+    warnings.push({ source: 'Lesson prerequisites', message: 'Some prerequisite information could not load. Open the assignment to check access.' })
+    return rows
+  }
+}
 
 export const GET = withAuth(async (request, ctx) => {
   const params = new URL(request.url).searchParams, staff = readingStaff(ctx)
@@ -77,28 +107,27 @@ export const GET = withAuth(async (request, ctx) => {
     } catch { return false }
     return true
   })()
-  const lessonIds = [...new Set(results.activities.filter(a => ['lesson', 'video', 'reflection'].includes(a.kind)).map(a => a.sourceId))]
-  let slugs = new Map<string, string>()
-  try { slugs = new Map((await byIds<{ id: string; slug: string }>('lessons', 'id,slug', 'id', lessonIds, ['id'])).map(l => [l.id, l.slug])) }
-  catch { result.warnings.push({ source: 'Assignment links', message: 'Some lesson links could not load. Use your class calendar to open those lessons.' }) }
-  const classWaivers = new Set(waivers.filter(w => w.course_id === course.id).map(w => w.work_key))
-  result.rows = studentGradebookRows(results.activities, userId, settings, slugs).map(row => waivedHomeworkRow(row, classWaivers))
+  const otherCourses = !staff && params.get('banner') === '1' ? courses.filter(c => c.id !== course.id) : []
+  const [rows, otherBannerCourses] = await Promise.all([
+    courseRows(results, userId, settings, waivers, result.warnings),
+    Promise.all(otherCourses.map(async other => {
+      try {
+        const ledger = await loadAssessmentResults(ctx, other, 'all', { studentId: userId })
+        if (ledger.warnings.length || !ledger.students.some(s => s.id === userId)) throw Error('Incomplete class record')
+        const otherRows = await courseRows(ledger, userId, emptyGradingSettings(), waivers, result.warnings)
+        return {courseId: other.id, rows: otherRows.map(({key, title, dueAt, archived, status, statusLabel, homeworkWaived, prerequisites, href}) =>
+          ({key, title, dueAt, archived, status, statusLabel, homeworkWaived, prerequisites, href}))}
+      } catch {
+        result.warnings.push({source: other.name, message: 'Assignments from this class could not load. Refresh to check your work.'})
+        return {courseId: other.id, rows: []}
+      }
+    })),
+  ])
+  result.rows = rows
+  if (otherBannerCourses.length) result.otherBannerCourses = otherBannerCourses
   if (!staff) {
     result.calendarWaivers = {}
     for (const w of waivers) (result.calendarWaivers[w.work_key] ??= []).push(w.course_id)
-  }
-  // Batch prerequisite checks for this student’s ledger, without question or answer-key disclosure.
-  try {
-    const [missing,reviews] = await Promise.all([
-      missingDailyLessons(result.rows.filter(row => row.kind === 'quiz' && !row.archived).map(row => row.key.replace(/^quiz:/, '')), userId),
-      missingReviewFoundations(result.rows.filter(row => ['interactive','simulation'].includes(row.kind) && !row.archived).map(row => row.key.replace(/^interactive:/, '')), userId),
-    ])
-    result.rows = result.rows.map(row => {
-      const prerequisites = [...missing.filter(item => 'quiz:' + item.quiz_id === row.key),...reviews.filter(item => 'interactive:' + item.assignment_id === row.key)]
-      return prerequisites.length ? { ...row, prerequisites: prerequisites.map(({ id, title }) => ({ id, title })), href: '/interactive-assignments/' + prerequisites[0].id, statusLabel: 'Locked · finish ' + prerequisites.map(item => item.role).join(' and ') } : row
-    })
-  } catch {
-    result.warnings.push({ source: 'Lesson prerequisites', message: 'Some prerequisite information could not load. Open the assignment to check access.' })
   }
   result.labEntries = studentLabEntries(results.activities, userId, settings)
   result.transferEntries = studentTransferEntries(results.activities, userId, settings)

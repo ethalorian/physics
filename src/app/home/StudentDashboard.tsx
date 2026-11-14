@@ -43,7 +43,7 @@ type DashboardProps = { children?: ReactNode; classId?: string; studentId?: stri
 export default function StudentDashboard(props: DashboardProps) {
   const { data: session } = useSession()
   const identity = JSON.stringify([session?.user?.email ?? '', session?.experience ?? null])
-  return <StudentProgressProvider key={identity} calendarXp={!props.children} classId={props.classId} studentId={props.studentId} initialTerm={props.initialTerm ?? (props.children ? 'all' : undefined)}><DashboardContent {...props}/></StudentProgressProvider>
+  return <StudentProgressProvider key={identity} banner calendarXp={!props.children} classId={props.classId} studentId={props.studentId} initialTerm={props.initialTerm ?? (props.children ? 'all' : undefined)}><DashboardContent {...props}/></StudentProgressProvider>
 }
 
 function DashboardContent({ children }: DashboardProps) {
@@ -168,7 +168,9 @@ function DashboardContent({ children }: DashboardProps) {
     finally {savingRef.current=false;setSaving(false)}
   }
   const bannerStaff = progress.data?.staff ?? staff
-  const bannerItems = studentBannerAssignments(bannerStaff ? [] : ordered, progress.data?.rows ?? [], today)
+  const bannerCourses = progress.data?.courseId
+    ? [{ courseId: progress.data.courseId, rows: progress.data.rows }, ...(progress.data.otherBannerCourses ?? [])] : []
+  const bannerItems = studentBannerAssignments(bannerStaff ? [] : ordered, bannerCourses, today, new Date(now))
   if (mathToday && (previewStudent || !bannerStaff)) bannerItems.push(calendarBannerAssignment(mathToday, today))
   const checkingBanner = (bannerStaff ? progress.loading : data.sources.some(source => source.loading && !source.data) || choices.loading && !choices.data)
     || (data.math.loading && !data.math.data) || (warmupCalendar.loading && !warmupCalendar.data)
@@ -177,7 +179,7 @@ function DashboardContent({ children }: DashboardProps) {
   const bannerTask = bannerStaff && progress.data && !previewStudent
     ? { title: 'Choose a student', meta: 'Select a student in the gradebook to see their work.' }
     : nextStudentHomeTask({ items: bannerItems, today,
-        loading: checkingBanner || (!progress.data && progress.loading), incomplete: incompleteBanner })
+        loading: checkingBanner || progress.loading, incomplete: incompleteBanner })
 
   const calendar = (choicePlanning?: ChoiceCalendarContent) => <LearningCalendar dates={dates} today={today} day={mobileDay} offset={weekOffset} items={requiredCalendarItems} selectedId={selectedId} mathForDay={mathForDay} scheduledWarmups={scheduledWarmups} onWarmup={(date,assigned)=>void setWarmupDate(date,assigned)} noSchoolDates={data.pace.data?.noSchoolDates ?? []} mathLoading={data.math.loading} mathError={data.math.error} editable={editable} saving={saving} onSelect={select} onDay={setDay} onWeek={moveWeek} onToday={showWeek} onMore={(date, lane) => manage('all', { date, lane })} onUnscheduled={() => manage('unscheduled')} onScheduleIssues={() => manage('schedule-issues')} onMove={(item, date) => void schedule(item, date)} choices={choicePlanning} />
 
