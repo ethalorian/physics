@@ -1,0 +1,635 @@
+{
+  "packets": [
+    {
+      "path": "cpa/day-01-choice.pdf",
+      "sha256": "ec959f0a3117a6fd4a23254b7296662ac52e8cb850df456317701809411150c2",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-02-choice.pdf",
+      "sha256": "ddd927eaf3ddf5f634f4031a96855b139e0405a6af9b236d1d3c5994c660f6de",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-03-choice.pdf",
+      "sha256": "083c5f2fc96f6038a804ac0603de6f77cd971dc5ae183bdcc984fa2a47f4b9be",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-04-choice.pdf",
+      "sha256": "0d0e7fac4157975f50a0d9642b1a6abf6112005fb04688294762d8b48723cf19",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-05-choice.pdf",
+      "sha256": "c92dd3a9ec6de3e12eacdd415684a35f63ac32de542e153eabcd3e14c22a7225",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-06-choice.pdf",
+      "sha256": "23f1986d6371fbd3e579439b446acb3d5cf682dde104aa3953598be4c5e02441",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-07-choice.pdf",
+      "sha256": "c696cf916ad03d3d16ef575b23cdc39f94f627071783b19d93ca024cc3d5c47e",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-08-choice.pdf",
+      "sha256": "88bc59941c711834d86c7debb14418bc47fe25ffc32a9cc222fa221b76eeb609",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-09-choice.pdf",
+      "sha256": "82d7375b3f658023a9ddec714887e10a3824a707917d4f26e48604f4e198a3b7",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-10-choice.pdf",
+      "sha256": "85290a37c925eeb99801e243aec3f64118160780e7f32f30a9d11a01501db344",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-11-choice.pdf",
+      "sha256": "a1dcd9ad7e4b855d113a4d6c16ee0cdae6ce1bce847fb5be122e2fa73a7a58dc",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-12-choice.pdf",
+      "sha256": "2084bd66fdc8761731b9fc4ce85f40cb08703ada4b9905f7d76f150e50e8d77e",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-13-choice.pdf",
+      "sha256": "332f2816ec9e5f078d0d1cfae4c537385367f2e82b5c12e8265e4c172974a6ff",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-14-choice.pdf",
+      "sha256": "3ac3f113c612177820a626589e1b85798356e69ad859c317a24ce143d23c5d42",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-15-choice.pdf",
+      "sha256": "0724b9af9291e1b412778ca46ab3b28c3e4de6567e4933bab0349ecde2aa8253",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-16-choice.pdf",
+      "sha256": "7e11781c8ecf40e6a43a719e28ce9f675cd6e6b8b9a2855b819deeeb51bcef34",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-17-choice.pdf",
+      "sha256": "eba5f9536ae804db2469a899945dc1ca7549848ff20013bb253f63d94cb4d5f2",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-18-choice.pdf",
+      "sha256": "79884588b019d19c7824593e4071b4482db872bcb004fc851f07223d9c8e1baa",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-19-choice.pdf",
+      "sha256": "a437294b35ae3718fa3904c4e46c30b7bccc4ebfcdd836d87658fe8724fd14ca",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-20-choice.pdf",
+      "sha256": "e768e632f67881292dc3f18460626c56e3eccbc16e8faaab0007b601ce342b93",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-21-choice.pdf",
+      "sha256": "a7495d8bc897aa1b6d2b1fa153d47ad87f9864a892e274fe32a8bcf03583ccda",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-22-choice.pdf",
+      "sha256": "5fdf474c267a3278ac2c6aeed4f729bac142f1f1d38a3f197b55d5fbe618d5e3",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-01-sei.pdf",
+      "sha256": "2de7b1f089b1834728736b9739f550588c2c61a1cbd2811480ffd8f67d6a4419",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-02-sei.pdf",
+      "sha256": "30bf409a8b4cc152ea12a6dfc29ed852d11ed7515aec3ba7fb4caf9c645da075",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-03-sei.pdf",
+      "sha256": "c1fa8a0679e21b9b24e107e32a7a18efccfc266de89a1f8c7b16e3025ecb53a9",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-04-sei.pdf",
+      "sha256": "ad512e9c334c05e690960b1f4d1801645ecbc51cb4a335ad55cd9b441618780b",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-05-sei.pdf",
+      "sha256": "4adc3b2e0aff6e6e8cd48943dd7dec5e5724089b16438d50fdb8e463c5964350",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-06-sei.pdf",
+      "sha256": "e84a04f4d95a224b7020afd8305d2c33b50a5975e7f7205f0827851f9c7e5576",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-07-sei.pdf",
+      "sha256": "6f3a7b74b0df13901176ccb6bfce00c33f6f89718b9bb3dcb0ea434c2d1fea3b",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-08-sei.pdf",
+      "sha256": "a8a159af01400d56e5ca0a604c396f75769a9cf28ee53d8d253fa7d8abffe31b",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-09-sei.pdf",
+      "sha256": "62d099226e4e284ca15a978ae91cb6c23eac0ed1b2c201f7e94ea377a861c44c",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-10-sei.pdf",
+      "sha256": "87097cbf159253e8390ead5cd29ae97a72a0fcad555d4baec719eeddb7cf4c63",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-11-sei.pdf",
+      "sha256": "ceec0aacd59123a811ac2a3ad51db8931772478c8761fcda93f8681b0ae2cf34",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-12-sei.pdf",
+      "sha256": "e4f668653460d537029914d84cf4651028afc3ca5f684e0d74e3b87ca3f29ef2",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-13-sei.pdf",
+      "sha256": "a75e2cc24a38dc56767bc1320c84e9dcf3765484e66dc7df47d0a7d1e3649a8b",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-14-sei.pdf",
+      "sha256": "52751646b9ede7ab0660011bdde63aeebbb0d18b404f31c2382cf6c8a3239c5e",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-15-sei.pdf",
+      "sha256": "0c459e01196c470c7ee0ba7525531415a8e02c925e856fd796bc9749de98ccc0",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-16-sei.pdf",
+      "sha256": "e8f901aeb6f90697149c4d1aa3a8ba1f0dd89c76609c7fb39e632d6789847a84",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-17-sei.pdf",
+      "sha256": "8452590f7f5ce84a5f19ac5a64871866de2be720a342597f4326f98ea66196fc",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-18-sei.pdf",
+      "sha256": "2d29ac28bdbbd738383a5ea5aa502313941a294e185d19ec1b39070638aa761b",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-19-sei.pdf",
+      "sha256": "382945570b6c5d80364bb0b9ac7061fb36d3604170f465eedf10a469ae026a0c",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-20-sei.pdf",
+      "sha256": "ab7dfd53f8a8f550a1964df5881f1e3ba150cd752db0037aeaf702a4f28c83f9",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-21-sei.pdf",
+      "sha256": "ea18091f2e1bc4366405bca0e0ff12be9547187a0293e84e2373155813b8dc72",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "cpa/day-22-sei.pdf",
+      "sha256": "3744e4559d15e50d19bc8e9bbf08d2ad143aa9240cee6e6f56e37face7f515ea",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-01-choice.pdf",
+      "sha256": "70b158b7d77086cd01d4509eff54a3f73a6d5d97bfa66dc4573374cc041c25a9",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-02-choice.pdf",
+      "sha256": "b1b25c8c3a16ce8b2280dc3268588472b01d71e9ef7061aa718eb0ebda3a7752",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-03-choice.pdf",
+      "sha256": "da769e0ac7def594c52ee485ef4a429e6c88163bc344bb1ea7b0984feb274977",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-04-choice.pdf",
+      "sha256": "9b6fd77ea7676118af28a708c319036658f19573f2dc9470f3874b87d3c06452",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-05-choice.pdf",
+      "sha256": "682484a7d4a2c9620eac97ad5ebde698ac90d5661e30469dedd6796b59c4aeb5",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-06-choice.pdf",
+      "sha256": "7f00cbf975a92ff245e30dfbae3182b751172e74e66b20377e4745d575d26449",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-07-choice.pdf",
+      "sha256": "18c594888c6e743cd8cfd015007863bf1d87d75ca4bc957385dee87b25f09470",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-08-choice.pdf",
+      "sha256": "05399605a3d8253dd5c006008b729725bf43456d3787b873d0a94eba9b60828f",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-09-choice.pdf",
+      "sha256": "e54758dec1c64617ea10b5ec4f68b23ca489651a5b89c96a669ef2245ecfc021",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-10-choice.pdf",
+      "sha256": "7e86da10f01940a65900bc9e685325250426ea8aac7cf9d8694f2baf8ab5c05a",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-11-choice.pdf",
+      "sha256": "8f05a3337257cf8fe90229cb6231f561f8f837c3b1e765b52671a62591e86825",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-12-choice.pdf",
+      "sha256": "fc72f67be43dff12d4b37ee3cef3510bb74ab7e7b125e2c29a11e1b7182c8770",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-13-choice.pdf",
+      "sha256": "10bfef92662a954235201d0c2845fbcfb1a9245bebff930de0d4c9e5f99254f9",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-14-choice.pdf",
+      "sha256": "fd0cd7f440e03c020208b0b36884699e56d9302066faa5da0d90006e8a6aaab6",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-15-choice.pdf",
+      "sha256": "929f1812ad707cba900c86b86ac59e7e25168b33964462a491ecea2dc8df20b5",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-16-choice.pdf",
+      "sha256": "a5bc8f2d12f12664f839b0ec399af70b2148c655e12b7305531131f72e024cf0",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-17-choice.pdf",
+      "sha256": "64b38f0149b33959e4c71da6c655dd80e098e6c3ff773f27ea6712fc0728645b",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-18-choice.pdf",
+      "sha256": "db9173bf362c999ae30d2ff33e85c62c4311e15322c14c4199c31f66d69c5ec9",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-19-choice.pdf",
+      "sha256": "4c3be9451d033952beb7bd3d785cbc609fdd4d0adc8a64edcf4c6c122013f094",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-20-choice.pdf",
+      "sha256": "39180ec9b61c52b8dea9d40fa8c25a35474eb0ad20b513de969f9befd820d247",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-21-choice.pdf",
+      "sha256": "502a6d1f80e0a4af7a1c4eda7dbba531f3b71672bb1373fad727892ebfcfd6cc",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-22-choice.pdf",
+      "sha256": "58b920de9d6a7bbeb2e317a3efb52579ca40192d56949e860ec77ab39f355a04",
+      "pages": 4,
+      "preservedPages": 3,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-01-sei.pdf",
+      "sha256": "c71047a6c83813ba6283aee64e8ba054ced1598fb9d307b60145857f36b440e0",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-02-sei.pdf",
+      "sha256": "bd0642aa11a537ed5854f23ce35f17d8146cfac275746ff8d7146c9490f12ec1",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-03-sei.pdf",
+      "sha256": "f168527ae5607410809ecae5215bae941491a73f0b6a02761630e5a6a599bfe5",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-04-sei.pdf",
+      "sha256": "b9bc7716a670d42d1a0e990c45bd4ecdbd3b1f49805fbdd4383542fb85685850",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-05-sei.pdf",
+      "sha256": "f6c849d96a5195ff6adfaf5779c0ec587b9af19c2863d2e241b60bd13d8ce428",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-06-sei.pdf",
+      "sha256": "1b25fe4fb5b450f2edef1f9c9c38a4d6884200ea71d4e21e526c807a4399678f",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-07-sei.pdf",
+      "sha256": "ae0a10c4a49635cc127b016a553f263616b7babe74df310d36ed26f2179e4c91",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-08-sei.pdf",
+      "sha256": "9a00cb846ce6a592105619a33ecb0d8541158114d5884190bb9f8e59da8a8721",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-09-sei.pdf",
+      "sha256": "f857e8512a8395732ae70c5d196ca3a447a1710e19d365e1db662abad76cfa20",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-10-sei.pdf",
+      "sha256": "430add24ddaad0adf017db3f4f18decb6a270c5c66bb35788d8549d72ac442f0",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-11-sei.pdf",
+      "sha256": "3a6fd666be76b6373a13a44ca8f8d51017fa7a2d9c686ae10ff8affef8ce1819",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-12-sei.pdf",
+      "sha256": "dafff2cb13866ab0f7c95b1a43c05494449b45d408384426a6db94406a132dba",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-13-sei.pdf",
+      "sha256": "9774a65aec6e2bb6272389577abb0705c19caa7fdff67064d091bec6f82cc9c2",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-14-sei.pdf",
+      "sha256": "cfc7752771c29b76db6aed170ff5e8d96f637b1e107f972873472e59a45361d3",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-15-sei.pdf",
+      "sha256": "fa8ab30d1373a6b96dff96c488302ab62408a64ca82e8cac18c3b1663a519684",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-16-sei.pdf",
+      "sha256": "66d3893fb1e589fb6b277a00ea501ab092485e15563a4e7a83275d852151b770",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-17-sei.pdf",
+      "sha256": "0400b09fc6fea8fe3ad814e66d1a20149de813aa9153aff014a0ad327cd74e74",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-18-sei.pdf",
+      "sha256": "fef127e67abbd2ff4650a3c495f2a74737009d4e502f422c67c900924c385768",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-19-sei.pdf",
+      "sha256": "faf88d25a41fe10aba2657a5e33ff84a3dd011b4a86f4824bd22195a103204f9",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-20-sei.pdf",
+      "sha256": "b092bc72fb181b565b12de4206cf4464a76c079a4f45fc1d903d8fa92f9304db",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-21-sei.pdf",
+      "sha256": "62fee7801380aabc76781e220ee7088bdd63cd0720ef2c9625292e961f275191",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    },
+    {
+      "path": "honors/day-22-sei.pdf",
+      "sha256": "c5e313895f68c0fe9a48e895fde97705d71d3921b1f047adc8f601956151e4a3",
+      "pages": 6,
+      "preservedPages": 5,
+      "graphicPhase": 0
+    }
+  ],
+  "revisedPages": 88,
+  "preservedPages": 352,
+  "rules": [
+    "P-1",
+    "P-2",
+    "G-1",
+    "G-2",
+    "C-2",
+    "C-4",
+    "C-8",
+    "T-1",
+    "T-3",
+    "FL-2",
+    "FL-3"
+  ]
+}
