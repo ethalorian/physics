@@ -31,3 +31,25 @@
   .opening-evidence {grid-template-columns:1fr}
   .opening-evidence li {grid-template-columns:2em 1fr}
 }
+
+/* Visual openings: one piece of evidence beside the question being taught. */
+.foundation-opening:is([data-mode="demo"],[data-mode="claim"]) h1 {font-size:clamp(2rem,3.4cqw,3.8rem);margin-bottom:.45em}
+.opening-visual-layout {display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:1.8cqw;align-items:start}
+.opening-visual-board {min-width:0}
+.opening-scene {margin:0;background:#fffefa;border:1px solid #d6d2e2;border-radius:10px;box-shadow:0 5px 20px #29263d08;overflow:hidden}
+.opening-scene svg {width:100%;height:auto;display:block;font-family:var(--sans,system-ui,sans-serif)}
+.opening-scene figcaption {border-top:1px solid #e8e3ed;padding:.7em 1em;font:500 clamp(.88rem,1.15cqw,1.3rem)/1.35 var(--sans,system-ui,sans-serif);color:var(--muted);background:#f7f5fb}
+.opening-visual-board>.opening-tools {padding:.85em 0 0;justify-content:space-between}
+.opening-visual-copy .opening-ask {font-size:clamp(1.1rem,1.65cqw,1.9rem);line-height:1.3;margin:.4em 0 .8em}
+.opening-visual-copy .opening-quote {font-size:clamp(1.35rem,2.1cqw,2.35rem);line-height:1.2;padding:.6em .65em;margin:.4em 0 .65em}
+.opening-visual-copy .opening-result {font-size:clamp(1rem,1.3cqw,1.5rem);line-height:1.35;margin:.85em 0 0}
+.opening-moments {list-style:none;margin:.7em 0 0;padding:0;display:grid;gap:.5em}
+.opening-moments li {display:grid;grid-template-columns:2em 1fr;gap:.5em;padding:.6em .7em;border:1px solid var(--line);border-radius:6px;font:500 clamp(1rem,1.35cqw,1.55rem)/1.25 var(--sans,system-ui,sans-serif);color:var(--muted)}
+.opening-moments li[data-current="true"] {background:#f0edf7;border-color:#afa3c9;color:var(--ink)}
+.opening-moments li span {font-family:var(--mono);color:var(--indigo)}
+@container (max-width:780px) {
+ .opening-visual-layout {grid-template-columns:1fr;gap:1rem}
+ .opening-visual-copy {padding-top:.5rem}
+ .opening-visual-copy .opening-ask {font-size:1.25rem}
+ .opening-visual-copy .opening-quote {font-size:1.5rem}
+}

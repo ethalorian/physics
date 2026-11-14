@@ -1,6 +1,7 @@
 /* Uses the same React instance and drawing surface as the A–E projector. */
 window.createFoundationOpening = function (React, BinderFigure) {
   const h = React.createElement;
+  const Visual = window.createFoundationOpeningVisual(React);
   const modes = [
     { id: 'draw', label: 'Draw along', symbol: 'draw' },
     { id: 'demo', label: 'Show what happens', symbol: 'demo' },
@@ -21,20 +22,6 @@ window.createFoundationOpening = function (React, BinderFigure) {
   function tag(text) { return h('div', {className:'opening-tag'}, text); }
   function result(text) { return h('p', {className:'opening-result',role:'status'}, text); }
 
-  function CartRelease({step}) {
-    const right = step === 0;
-    const arrow = (x,y,length,color,label) => h('g',null,
-      h('path',{d:'M'+x+' '+y+'h'+length, stroke:color,strokeWidth:5}),
-      h('path',{d:'M'+(x+length)+' '+y+'l'+(-Math.sign(length)*9)+' -6v12z',fill:color}),
-      h('text',{x:x+length/2,y:y-11,textAnchor:'middle',fill:color,fontSize:14},label));
-    return h('svg',{className:'cart-release',viewBox:'0 0 420 132',role:'img','aria-label':right?'Cart rolling right with equal opposing horizontal forces':'Cart still rolling right with friction to the left'},
-      h('path',{d:'M20 106h380',stroke:'#8e899e',strokeWidth:2}),
-      h('rect',{x:174,y:67,width:72,height:25,rx:4,fill:'#dcd9f3',stroke:'#28273e',strokeWidth:2}),
-      ...[188,231].map(x=>h('circle',{key:x,cx:x,cy:98,r:7,fill:'#28273e'})),
-      arrow(171,80,-67,'#ad4c20','friction'), right && arrow(249,80,67,'#ad4c20','pull'),
-      arrow(181,40,step===2?40:72,'#594394','velocity'));
-  }
-
   function Draw({binder, prompt}) {
     const [mark,setMark]=React.useState(0);
     const [strokes,setStrokes]=React.useState([]);
@@ -53,24 +40,27 @@ window.createFoundationOpening = function (React, BinderFigure) {
   }
   function Demo({entry,day}) {
     const [step,setStep]=React.useState(0);
-    return h(React.Fragment,null,
-      h('p',{className:'opening-ask'},entry.ask),
-      day===9 && h(CartRelease,{step}),
-      h('ol',{className:'opening-evidence','aria-label':'Demonstration observations','aria-live':'polite'},
-        entry.observations.map((text,i)=>h('li',{key:i,className:i>step?'pending':''},
-          h('small',null,'0'+(i+1)),i<=step?text:'Predict what comes next'))),
-      h('div',{className:'opening-tools'},
-        button('Back one observation',()=>setStep(step-1),{disabled:step===0}),
-        button('Reveal next observation',()=>setStep(step+1),{disabled:step===2})),
-      step===2 && result(entry.explain));
+    return h('div',{className:'opening-visual-layout'},
+      h('div',{className:'opening-visual-board'},h(Visual,{day,mode:'demo',step}),
+        h('div',{className:'opening-tools'},
+          button('Back one observation',()=>setStep(step-1),{disabled:step===0}),
+          button(step===2?'Replay the demonstration':'Reveal next observation',()=>setStep(step===2?0:step+1),{className:'primary'}))),
+      h('div',{className:'opening-visual-copy'},
+        tag('Ask before you reveal'),h('p',{className:'opening-ask'},entry.ask),
+        h('ol',{className:'opening-moments','aria-label':'Demonstration observations','aria-live':'polite'},
+          entry.observations.map((text,i)=>h('li',{key:i,'data-current':i===step},
+            h('span',null,'0'+(i+1)),i<=step?text:'Predict the next moment'))),
+        step===2 && result(entry.explain)));
   }
-  function Claim({entry}) {
+  function Claim({entry,day}) {
     const [shown,setShown]=React.useState(false);
-    return h(React.Fragment,null,
-      h('blockquote',{className:'opening-quote'},entry.quote),
-      h('p',{className:'opening-ask'},entry.ask),
-      button(shown?'Hide the explanation':'Show my explanation',()=>setShown(!shown),{'aria-expanded':shown}),
-      shown && result(entry.explain));
+    return h('div',{className:'opening-visual-layout'},
+      h('div',{className:'opening-visual-board'},h(Visual,{day,mode:'claim',revealed:shown})),
+      h('div',{className:'opening-visual-copy'},tag('A claim to investigate'),
+        h('blockquote',{className:'opening-quote'},entry.quote),
+        h('p',{className:'opening-ask'},entry.ask),
+        button(shown?'Hide the explanation':'Show my explanation',()=>setShown(!shown),{'aria-expanded':shown,className:'primary'}),
+        shown && result(entry.explain)));
   }
 
   return function Opening({day,track,binder,continueLesson,teacher,active,command,onNavigate}) {
@@ -111,7 +101,7 @@ window.createFoundationOpening = function (React, BinderFigure) {
     const entry=mode && lesson[mode];
     const title=checking?'Your turn':entry?entry.title:'Choose your opening';
     const focusWord=binder.words.find(word=>word.term===binder.focus);
-    return h('section',{className:'foundation-opening','aria-label':'Lesson opening'},
+    return h('section',{className:'foundation-opening','aria-label':'Lesson opening','data-mode':checking?'check':mode||'chooser'},
       tag(checking?'Individual check · 2 minutes':entry?modes.find(item=>item.id===mode).label+' · teacher model':'Direct instruction · about 10 minutes'),
       h('h1',{ref:heading,tabIndex:-1},title),
       !entry && h(React.Fragment,null,
@@ -122,7 +112,7 @@ window.createFoundationOpening = function (React, BinderFigure) {
             ()=>choose(item.id),{key:item.id,'data-opening':item.id}))),
         h('p',{className:'opening-binder'},'Open your notes and reading. We’ll use one of these openings together.')),
       entry && h('div',{hidden:checking},
-        mode==='draw'?h(Draw,{binder,prompt:lesson.draw.ask}):mode==='demo'?h(Demo,{entry,day}):h(Claim,{entry}),
+        mode==='draw'?h(Draw,{binder,prompt:lesson.draw.ask}):mode==='demo'?h(Demo,{entry,day}):h(Claim,{entry,day}),
         h('div',{className:'opening-actions'},button('Choose another opening',()=>choose(null)),button('Individual check →',()=>check(true),{className:'primary'}))),
       checking && h(React.Fragment,null,
         h('p',{className:'opening-ask'},lesson.check[track].ask),
